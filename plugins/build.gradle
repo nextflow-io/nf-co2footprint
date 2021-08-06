@@ -16,7 +16,7 @@
 
 plugins {
     id "java"
-    id "io.nextflow.nf-build-plugin" version "1.0.0"
+    id "io.nextflow.nf-build-plugin" version "1.0.1"
 }
 
 ext.github_organization = 'nextflow-io'
@@ -42,16 +42,16 @@ List<String> allPlugins() {
     return plugins
 }
 
-String verFromManifest(File file) {
+String metaFromManifest(String meta, File file) {
     def str = file.text
-    def regex = ~/(?m)^Plugin-Version:\s*([\w-\.]+)$/
+    def regex = ~/(?m)^$meta:\s*([\w-\.<>=]+)$/
     def m = regex.matcher(str)
     if( m.find() ) {
         def ver = m.group(1)
         //println "Set plugin '${file.parentFile.parentFile.parentFile.parentFile.name}' version=${ver}"
         return ver
     }
-    throw new GradleException("Cannot find version for plugin: $file")
+    throw new GradleException("Cannot find '$meta' for plugin: $file")
 }
 
 def timestamp = now()
@@ -66,7 +66,7 @@ subprojects {
         mavenCentral()
     }
 
-    version = verFromManifest(file('src/resources/META-INF/MANIFEST.MF'))
+    version = metaFromManifest('Plugin-Version',file('src/resources/META-INF/MANIFEST.MF'))
 
     /*
      * Creates plugin zip and json meta file in plugin `build/libs` directory
@@ -88,6 +88,7 @@ subprojects {
                 "version": "${project.version}",
                 "date": "${timestamp}",
                 "url": "https://github.com/${github_organization}/${project.name}/releases/download/${project.version}/${project.name}-${project.version}.zip",
+                "requires": "${metaFromManifest('Plugin-Requires',file('src/resources/META-INF/MANIFEST.MF'))}",
                 "sha512sum": "${computeSha512(zip)}"
               }
             """.stripIndent()
