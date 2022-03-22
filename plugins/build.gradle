@@ -72,6 +72,7 @@ subprojects {
      * Creates plugin zip and json meta file in plugin `build/libs` directory
      */
     task makeZip(type: Jar) {
+        group 'nextflow'
         into('classes') { with jar }
         into('lib') { from configurations.compile }
         manifest.from file('src/resources/META-INF/MANIFEST.MF')
@@ -93,24 +94,42 @@ subprojects {
               }
             """.stripIndent()
         }
+        outputs.file("$buildDir/libs/${project.name}-${project.version}.zip")
     }
 
+    /*
+     * Copy the plugin dependencies in the subproject `build/target/libs` directory
+     */
     task copyPluginLibs(type: Sync) {
+        group 'nextflow'
         from configurations.compile
         into 'build/target/libs'
     }
 
-    task copyPluginZip(type: Copy) {
-        from makeZip
+    /*
+     * Copy the plugin in the project root build/plugins directory
+     */
+    task copyPluginZip(type: Copy, dependsOn: project.tasks.findByName('makeZip')) {
+        group 'nextflow'
+        from project.tasks.findByName('makeZip')
         into "$rootProject.buildDir/plugins"
+        outputs.file("$rootProject.buildDir/plugins/${project.name}-${project.version}.zip")
+        doLast {
+            ant.unzip(
+                    src: "$rootProject.buildDir/plugins/${project.name}-${project.version}.zip",
+                    dest: "$rootProject.buildDir/plugins/${project.name}-${project.version}"
+            )
+        }
     }
 
-    task unzipPlugin(type: Copy, dependsOn: copyPluginZip) {
-        from zipTree("$rootProject.buildDir/plugins/${project.name}-${project.version}.zip")
-        into "$rootProject.buildDir/plugins/${project.name}-${project.version}"
-    }
+    /*
+    * "install" the plugin the project root build/plugins directory
+    */
+    project.parent.tasks.getByName("assemble").dependsOn << copyPluginZip
+
 
     task uploadPlugin(type: io.nextflow.gradle.tasks.GithubUploader, dependsOn: makeZip) {
+        group 'nextflow'
         assets = providers.provider {["$buildDir/libs/${project.name}-${project.version}.zip",
                                       "$buildDir/libs/${project.name}-${project.version}-meta.json" ]}
         release = providers.provider { project.version }
@@ -121,10 +140,9 @@ subprojects {
         skipExisting = true
     }
 
-    task upload(dependsOn: [uploadPlugin] ) { }
 }
 
-task upload(dependsOn: [subprojects.upload]) { }
+task upload(dependsOn: [subprojects.uploadPlugin]) { }
 
 classes.dependsOn subprojects.copyPluginLibs
-assemble.dependsOn subprojects.unzipPlugin
+
