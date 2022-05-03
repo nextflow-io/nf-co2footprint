@@ -4,12 +4,14 @@ import nextflow.Channel
 import nextflow.extension.ChannelExtensionDelegate
 import nextflow.plugin.Plugins
 import spock.lang.Specification
+import spock.lang.Timeout
 
 
 /**
  * @author : jorge <jorge.aguilera@seqera.io>
  *
  */
+@Timeout(10)
 class HelloDslTest extends Specification{
 
     def setup () {
@@ -19,12 +21,12 @@ class HelloDslTest extends Specification{
     def 'should perform a hi and create a channel' () {
         when:
         def SCRIPT = '''
-            channel.hello.sayHello() 
+            channel.hello.reverse('hi!') 
             '''
         and:
         def result = new MockScriptRunner([:]).setScript(SCRIPT).execute()
         then:
-        result.val == 'Hi'
+        result.val == '!ih'
         result.val == Channel.STOP
     }
 
@@ -42,6 +44,6 @@ class HelloDslTest extends Specification{
         result.val == Channel.STOP
 
         and:
-        HelloExtension.goodbyeMessage == 'Bye bye folks'
+        HelloExtension.goodbyeMessage == 'Bye bye folks'.toUpperCase()
     }
 }

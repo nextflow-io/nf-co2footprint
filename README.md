@@ -3,6 +3,9 @@
 This project shows how to implement a simple Nextflow plugin named `nf-hello` that intercepts 
 workflow execution events to print a message when the execution starts and on workflow completion.
 
+Also, this plugin enriches the `channel` with a `producer` a `consumer` methods (`sayHello` and `goodbye`)
+allowing to include them into the script 
+
 ## Plugin assets 
                     
 - `settings.gradle`
@@ -37,6 +40,18 @@ workflow execution events to print a message when the execution starts and on wo
 - `plugins/nf-hello/src/test` 
                              
     The plugin unit tests. 
+
+## ExtensionPointS
+
+ExtensionPoint is the basic interface who use nextflow-core to integrate plugins into it.
+It's only a basic interface and serves as starting point for more specialized extensions. 
+
+Among others, nextflow-core integrate following sub ExtensionPointS:
+
+- `TraceObserverFactory` to provide a list of TraceObserverS 
+- `ChannelExtensionPoint` to enrich the channel with custom methods
+
+In this plugin you can find examples for both of them
 
 ## Compile & run unit tests 
 

@@ -22,14 +22,14 @@ class ChannelExtensionHelloTest extends Specification{
         def helloExtension = new HelloExtension(); helloExtension.init(session)
 
         when:
-        def result = helloExtension.sayHello()
+        def result = helloExtension.reverse("Hi")
 
         then:
-        result.val == 'Hi'
+        result.val == 'iH'
         result.val == Channel.STOP
     }
 
-    def "should receive a hi from hello"(){
+    def "should consume a message from script"(){
 
         given:
         def session = Mock(Session)
@@ -48,6 +48,6 @@ class ChannelExtensionHelloTest extends Specification{
         then:
         result.val == 'Goodbye folks'
         result.val == Channel.STOP
-        helloExtension.goodbyeMessage == 'Goodbye folks'
+        helloExtension.goodbyeMessage == 'Goodbye folks'.toUpperCase()
     }
 }
