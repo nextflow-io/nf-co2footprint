@@ -3,15 +3,14 @@ package nextflow.hello
 import groovy.util.logging.Slf4j
 import groovyx.gpars.dataflow.DataflowReadChannel
 import groovyx.gpars.dataflow.DataflowWriteChannel
-import groovyx.gpars.dataflow.expression.DataflowExpression
 import nextflow.Channel
 import nextflow.Global
 import nextflow.Session
-import nextflow.extension.ChannelExtensionPoint
 import nextflow.extension.CH
 import nextflow.NF
 import nextflow.extension.DataflowHelper
-import nextflow.plugin.Scoped
+import nextflow.plugin.extension.Function
+import nextflow.plugin.extension.PluginExtensionPoint
 
 import java.util.concurrent.CompletableFuture
 
@@ -20,8 +19,7 @@ import java.util.concurrent.CompletableFuture
  *
  */
 @Slf4j
-@Scoped('hello')
-class HelloExtension extends ChannelExtensionPoint{
+class HelloExtension extends PluginExtensionPoint{
 
     /*
      * A session hold information about current execution of the script
@@ -105,6 +103,15 @@ class HelloExtension extends ChannelExtensionPoint{
             channel.bind(Channel.STOP)
         })
         future.exceptionally(this.&handlerException)
+    }
+
+    /*
+    * Generate a random string
+    * Using @Function annotation we allow this function can be imported into our script
+     */
+    @Function
+    String randomString(int length=9){
+        new Random().with {(1..length).collect {(('a'..'z')).join()[ nextInt((('a'..'z')).join().length())]}.join()}
     }
 
     /*

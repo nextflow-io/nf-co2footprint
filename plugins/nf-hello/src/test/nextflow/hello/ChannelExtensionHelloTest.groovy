@@ -3,7 +3,6 @@ package nextflow.hello
 import groovyx.gpars.dataflow.DataflowQueue
 import nextflow.Channel
 import nextflow.Session
-import nextflow.extension.ChannelExtensionDelegate
 import spock.lang.Specification
 
 
