@@ -68,17 +68,15 @@ class HelloDslTest extends Dsl2Spec{
         def SCRIPT = '''
             include {goodbye} from 'plugin/nf-hello'
             channel
-                .of('Bye bye folks')
+                .of('folks')
                 .goodbye() 
             '''
         and:
         def result = new MockScriptRunner([:]).setScript(SCRIPT).execute()
         then:
-        result.val == 'Bye bye folks'
+        result.val == 'Goodbye folks'
         result.val == Channel.STOP
-
-        and:
-        HelloExtension.goodbyeMessage == 'Bye bye folks'.toUpperCase()
+        
     }
 
     def 'can use an imported function' () {

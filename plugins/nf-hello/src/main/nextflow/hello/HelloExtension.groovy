@@ -1,24 +1,27 @@
 package nextflow.hello
 
+
+import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import groovyx.gpars.dataflow.DataflowReadChannel
 import groovyx.gpars.dataflow.DataflowWriteChannel
 import nextflow.Channel
-import nextflow.Global
 import nextflow.Session
 import nextflow.extension.CH
-import nextflow.NF
 import nextflow.extension.DataflowHelper
+import nextflow.plugin.extension.Factory
 import nextflow.plugin.extension.Function
+import nextflow.plugin.extension.Operator
 import nextflow.plugin.extension.PluginExtensionPoint
-
-import java.util.concurrent.CompletableFuture
-
 /**
+ * Example plugin extension showing how to implement a basic
+ * channel factory method, a channel operator and a custom function.
+ *
  * @author : jorge <jorge.aguilera@seqera.io>
  *
  */
 @Slf4j
+@CompileStatic
 class HelloExtension extends PluginExtensionPoint{
 
     /*
@@ -47,11 +50,12 @@ class HelloExtension extends PluginExtensionPoint{
      *
      * business logic can write into the channel once ready and values will be consumed from it
      */
+    @Factory
     DataflowWriteChannel reverse(String message) {
-        createReverseChannel(message)
+        final channel = CH.create()
+        session.addIgniter{ channel.bind(message.reverse()); channel.bind(Channel.STOP) }
+        return channel
     }
-
-    static String goodbyeMessage
 
     /*
     * goodbye is a `consumer` method as it receives values from a channel to perform some logic.
@@ -62,47 +66,19 @@ class HelloExtension extends PluginExtensionPoint{
     * - it returns a DataflowWriteChannel
     * - it has only one arguments of DataflowReadChannel class
     *
-    * a consumer method needs to proporcionate 2 closures:
+    * a consumer method needs to proportionate 2 closures:
     * - a closure to consume items (one by one)
     * - a finalizer closure
     *
     * in this case `goodbye` will consume a message and will store it as an upper case
     */
+    @Operator
     DataflowWriteChannel goodbye(DataflowReadChannel source) {
         final target = CH.createBy(source)
-        final next = {
-            goodbyeMessage = "$it".toString().toUpperCase()
-            target.bind(it)
-        }
-        final done = {
-            target.bind(Channel.STOP)
-        }
+        final next = { target.bind("Goodbye $it".toString()) }
+        final done = { target.bind(Channel.STOP) }
         DataflowHelper.subscribeImpl(source, [onNext: next, onComplete: done])
-        target
-    }
-
-    protected DataflowWriteChannel createReverseChannel(final String message){
-        final channel = CH.create()
-        if( NF.isDsl2() ){
-            session.addIgniter { ->
-                businessLogicHere(channel, message)
-            }
-        }else{
-            businessLogicHere(channel, message)
-        }
-        channel
-    }
-
-    /*
-    * businessLogicHere will send, across the channel, the message reversed
-    * and after will send an STOP signal to let know the channel it has been finished
-    */
-    protected static businessLogicHere(final DataflowWriteChannel channel, final String message){
-        def future = CompletableFuture.runAsync({
-            channel.bind(message.reverse())
-            channel.bind(Channel.STOP)
-        })
-        future.exceptionally(this.&handlerException)
+        return target
     }
 
     /*
@@ -111,16 +87,7 @@ class HelloExtension extends PluginExtensionPoint{
      */
     @Function
     String randomString(int length=9){
-        new Random().with {(1..length).collect {(('a'..'z')).join()[ nextInt((('a'..'z')).join().length())]}.join()}
+        new Random().with {(1..length).collect {(('a'..'z')).join(null)[ nextInt((('a'..'z')).join(null).length())]}.join(null)}
     }
 
-    /*
-    * an util class to trace exceptions
-    */
-    static private void handlerException(Throwable e) {
-        final error = e.cause ?: e
-        log.error(error.message, error)
-        final session = Global.session as Session
-        session?.abort(error)
-    }
 }
