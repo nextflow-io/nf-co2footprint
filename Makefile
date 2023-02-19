@@ -44,7 +44,12 @@ else
 	./gradlew ${mm}test --tests ${class}
 endif
 
-
+#
+# generate build zips under build/plugins
+# you can install the plugin copying manually these files to $HOME/.nextflow/plugins
+#
+buildPlugins:
+	./gradlew copyPluginZip
 
 #
 # Upload JAR artifacts to Maven Central

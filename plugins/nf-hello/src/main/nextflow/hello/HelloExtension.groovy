@@ -13,6 +13,7 @@ import nextflow.plugin.extension.Factory
 import nextflow.plugin.extension.Function
 import nextflow.plugin.extension.Operator
 import nextflow.plugin.extension.PluginExtensionPoint
+
 /**
  * Example plugin extension showing how to implement a basic
  * channel factory method, a channel operator and a custom function.
@@ -22,12 +23,26 @@ import nextflow.plugin.extension.PluginExtensionPoint
  */
 @Slf4j
 @CompileStatic
-class HelloExtension extends PluginExtensionPoint{
+class HelloExtension extends PluginExtensionPoint {
 
     /*
      * A session hold information about current execution of the script
      */
     private Session session
+
+    /*
+     * A Custom config extracted from nextflow.config under hello tag
+     * nextflow.config
+     * ---------------
+     * docker{
+     *   enabled = true
+     * }
+     * ...
+     * hello{
+     *    prefix = 'Mrs'
+     * }
+     */
+     private HelloConfig config
 
     /*
      * nf-core initializes the plugin once loaded and session is ready
@@ -36,35 +51,40 @@ class HelloExtension extends PluginExtensionPoint{
     @Override
     protected void init(Session session) {
         this.session = session
+        this.config = new HelloConfig(session.config.navigate('hello') as Map)
     }
 
     /*
-     * reverse is a `producer` method and will be available to the script because:
+     * {@code reverse} is a `producer` method and will be available to the script because:
      *
      * - it's public
      * - it returns a DataflowWriteChannel
+     * - it's marked with the @Factory annotation
      *
-     * nf-core will inspect the extension class and allow the script to call all these kind of methods
+     * The method can require arguments but it's not mandatory, it depends of the business logic of the method.
      *
-     * the method can require arguments but it's not mandatory, it depends of the business logic of the method
-     *
-     * business logic can write into the channel once ready and values will be consumed from it
      */
     @Factory
     DataflowWriteChannel reverse(String message) {
         final channel = CH.create()
-        session.addIgniter{ channel.bind(message.reverse()); channel.bind(Channel.STOP) }
+        session.addIgniter((action) -> reverseImpl(channel, message))
         return channel
     }
 
+    private void reverseImpl(DataflowWriteChannel channel, String message) {
+        channel.bind(message.reverse());
+        channel.bind(Channel.STOP)
+    }
+
     /*
-    * goodbye is a `consumer` method as it receives values from a channel to perform some logic.
+    * {@code goodbye} is a *consumer* method as it receives values from a channel to perform some logic.
     *
     * Consumer methods are introspected by nextflow-core and include into the DSL if the method:
     *
     * - it's public
     * - it returns a DataflowWriteChannel
     * - it has only one arguments of DataflowReadChannel class
+    * - it's marked with the @Operator annotation 
     *
     * a consumer method needs to proportionate 2 closures:
     * - a closure to consume items (one by one)
@@ -82,8 +102,9 @@ class HelloExtension extends PluginExtensionPoint{
     }
 
     /*
-    * Generate a random string
-    * Using @Function annotation we allow this function can be imported into our script
+     * Generate a random string
+     *
+     * Using @Function annotation we allow this function can be imported from the pipeline script
      */
     @Function
     String randomString(int length=9){

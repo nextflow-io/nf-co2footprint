@@ -22,7 +22,7 @@ import nextflow.Session
 import nextflow.trace.TraceObserver
 
 /**
- * Example pipeline events observer
+ * Example workflow events observer
  *
  * @author Paolo Di Tommaso <paolo.ditommaso@gmail.com>
  */

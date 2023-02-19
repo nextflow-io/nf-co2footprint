@@ -2,9 +2,13 @@
  
 This project shows how to implement a simple Nextflow plugin named `nf-hello` which intercepts workflow execution events to print a message when the execution starts and on workflow completion.
 
-The `nf-hello` plugin also enriches the `channel` object with a `producer` and `consumer` method (`sayHello` and `goodbye`) which can be used in a pipeline script.
+The `nf-hello` plugin also enriches the `channel` object with a `producer` and `consumer` method (`reverse` and `goodbye`) which can be used in a pipeline script.
 
-## Plugin Assets
+Also exposes some @FunctionS to be used in the pipeline as custom methods 
+
+   NOTE: this repo uses the name `nf-hello` as root name. In case you want to use this repo as starting point for a custom plugin, you need at least to change `settings.gradle` and rename `plugins/nf-hello` folder.
+
+## Plugin structure
                     
 - `settings.gradle`
     
@@ -31,19 +35,19 @@ The `nf-hello` plugin also enriches the `channel` object with a `producer` and `
     The plugin implementation sources.
 
 - `plugins/nf-hello/src/test` 
-                             
+
     The plugin unit tests. 
 
-## `ExtensionPoint`s
+## Plugin classes
 
-`ExtensionPoint` is the basic interface which uses nextflow-core to integrate plugins into it. It's only a basic interface and serves as starting point for more specialized extensions. 
+- `HelloConfig`: simple example how to handle configuration options provided via the Nextflow configuration file. 
 
-Among others, nextflow-core integrates the following sub `ExtensionPoint`s:
+- `HelloExtension`: show how create an extension class that can be used to create custom channel factories, operation and fuctions that can be imported in the pipeline script as DSL extensions.
 
-- `TraceObserverFactory` to provide a list of `TraceObserver`s 
-- `ChannelExtensionPoint` to enrich the `channel` object with custom methods
+- `HelloFactory` and `HelloObserver`: show how to intercept workflow runtime events and react correspondly with custom code.
 
-In this plugin you can find an example for each of these types.
+- `HelloPlugin`: the plugin entry point.
+
 
 ## Unit testing 
 
@@ -55,7 +59,7 @@ Run the following command in the project root directory (ie. where the file `set
 
 ## Testing and debugging
 
-To run and test the plugin in a development environment, configure a local Nextflow build with the following steps:
+To run and test the plugin in for development purpose, configure a local Nextflow build with the following steps:
 
 1. Clone the Nextflow repository in your computer into a sibling directory:
     ```bash
@@ -78,6 +82,14 @@ To run and test the plugin in a development environment, configure a local Nextf
     ```bash
     ./launch.sh run nextflow-io/hello -plugins nf-hello
     ```
+
+## Testing without Nextflow build
+
+The plugin can be tested without using a local Nextflow build using those steps:
+
+1. generate required artifacts with `make buildPlugins`
+2. copy build/plugins/your-plugin to `$HOME/.nextflow/plugins`
+3. create a pipeline with your plugin and see in action via `nextflow run ./my-pipeline-script.nf`
 
 ## Package, upload and publish
 
