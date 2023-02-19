@@ -15,5 +15,5 @@
  */
 
 rootProject.name = 'nf-hello'
-include 'plugins'
+include('plugins')
 include('plugins:nf-hello')
