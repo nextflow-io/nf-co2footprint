@@ -11,7 +11,7 @@ clean:
 	./gradlew clean
 
 compile:
-	./gradlew compileGroovy
+	./gradlew :nextflow:exportClasspath compileGroovy
 	@echo "DONE `date`"
 
 
