@@ -1,4 +1,4 @@
-package nextflow.hello
+package nextflow.co2footprint
 
 import groovy.transform.PackageScope
 
@@ -9,7 +9,7 @@ import groovy.transform.PackageScope
  * In this plugin, the user can configure how the messages are prefixed with a String, i.e.
  * due a nextflow.config
  *
- * hello {
+ * co2footprint {
  *     prefix = '>>'
  * }
  *
@@ -22,11 +22,11 @@ import groovy.transform.PackageScope
  *
  */
 @PackageScope
-class HelloConfig {
+class CO2FootprintConfig {
 
     final private String prefix
 
-    HelloConfig(Map map){
+    CO2FootprintConfig(Map map){
         def config = map ?: Collections.emptyMap()
         prefix = config.prefix ?: 'Mr.'
     }

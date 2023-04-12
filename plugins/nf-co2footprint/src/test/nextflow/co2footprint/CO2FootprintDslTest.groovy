@@ -1,4 +1,4 @@
-package nextflow.hello
+package nextflow.co2footprint
 
 import nextflow.Channel
 import nextflow.plugin.Plugins
@@ -14,12 +14,12 @@ import java.nio.file.Path
 
 
 /**
- * Unit test for Hello DSL
+ * Unit test for CO2Footprint DSL
  *
  * @author : jorge <jorge.aguilera@seqera.io>
  */
 @Timeout(10)
-class HelloDslTest extends Dsl2Spec{
+class CO2FootprintDslTest extends Dsl2Spec{
 
     @Shared String pluginsMode
 
@@ -54,7 +54,7 @@ class HelloDslTest extends Dsl2Spec{
     def 'should perform a hi and create a channel' () {
         when:
         def SCRIPT = '''
-            include {reverse} from 'plugin/nf-hello'
+            include {reverse} from 'plugin/nf-co2footprint'
             channel.reverse('hi!') 
             '''
         and:
@@ -67,7 +67,7 @@ class HelloDslTest extends Dsl2Spec{
     def 'should store a goodbye' () {
         when:
         def SCRIPT = '''
-            include {goodbye} from 'plugin/nf-hello'
+            include {goodbye} from 'plugin/nf-co2footprint'
             channel
                 .of('folks')
                 .goodbye() 
@@ -83,7 +83,7 @@ class HelloDslTest extends Dsl2Spec{
     def 'can use an imported function' () {
         when:
         def SCRIPT = '''
-            include {randomString} from 'plugin/nf-hello'
+            include {randomString} from 'plugin/nf-co2footprint'
             channel
                 .of( randomString(20) )                
             '''

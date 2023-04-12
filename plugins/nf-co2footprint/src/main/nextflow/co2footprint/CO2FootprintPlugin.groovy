@@ -14,29 +14,22 @@
  * limitations under the License.
  */
 
-package nextflow.hello
+package nextflow.co2footprint
 
 import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
-import nextflow.Session
-import nextflow.trace.TraceObserver
+import nextflow.plugin.BasePlugin
+import nextflow.plugin.Scoped
+import org.pf4j.PluginWrapper
 
 /**
- * Example workflow events observer
+ * Implements the CO2Footprint plugins entry point
  *
  * @author Paolo Di Tommaso <paolo.ditommaso@gmail.com>
  */
-@Slf4j
 @CompileStatic
-class HelloObserver implements TraceObserver {
+class CO2FootprintPlugin extends BasePlugin {
 
-    @Override
-    void onFlowCreate(Session session) {
-        log.info "Pipeline is starting! 🚀"
-    }
-
-    @Override
-    void onFlowComplete() {
-        log.info "Pipeline complete! 👋"
+    CO2FootprintPlugin(PluginWrapper wrapper) {
+        super(wrapper)
     }
 }

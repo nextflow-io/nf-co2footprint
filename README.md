@@ -24,7 +24,7 @@ Also exposes some @FunctionS to be used in the pipeline as custom methods
 
 - `plugins/nf-hello/src/resources/META-INF/MANIFEST.MF` 
     
-    Manifest file defining the plugin attributes e.g. name, version, etc. The attribute `Plugin-Class` declares the plugin main class. This class should extend the base class `nextflow.plugin.BasePlugin` e.g. `nextflow.hello.HelloPlugin`.
+    Manifest file defining the plugin attributes e.g. name, version, etc. The attribute `Plugin-Class` declares the plugin main class. This class should extend the base class `nextflow.plugin.BasePlugin` e.g. `nextflow.co2footprint.HelloPlugin`.
 
 - `plugins/nf-hello/src/resources/META-INF/extensions.idx`
     
@@ -44,7 +44,7 @@ Also exposes some @FunctionS to be used in the pipeline as custom methods
 
 - `HelloExtension`: show how create an extension class that can be used to create custom channel factories, operation and fuctions that can be imported in the pipeline script as DSL extensions.
 
-- `HelloFactory` and `HelloObserver`: show how to intercept workflow runtime events and react correspondly with custom code.
+- `CO2FootprintFactory` and `CO2FootprintObserver`: show how to intercept workflow runtime events and react correspondly with custom code.
 
 - `HelloPlugin`: the plugin entry point.
 

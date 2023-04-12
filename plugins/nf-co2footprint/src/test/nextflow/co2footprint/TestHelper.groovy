@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package nextflow.hello
+package nextflow.co2footprint
 
 import com.google.common.jimfs.Configuration
 import com.google.common.jimfs.Jimfs

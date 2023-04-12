@@ -1,4 +1,4 @@
-package nextflow.hello
+package nextflow.co2footprint
 
 
 import groovy.transform.CompileStatic
@@ -23,7 +23,7 @@ import nextflow.plugin.extension.PluginExtensionPoint
  */
 @Slf4j
 @CompileStatic
-class HelloExtension extends PluginExtensionPoint {
+class CO2FootprintExtension extends PluginExtensionPoint {
 
     /*
      * A session hold information about current execution of the script
@@ -31,18 +31,18 @@ class HelloExtension extends PluginExtensionPoint {
     private Session session
 
     /*
-     * A Custom config extracted from nextflow.config under hello tag
+     * A Custom config extracted from nextflow.config under CO2footprint tag
      * nextflow.config
      * ---------------
      * docker{
      *   enabled = true
      * }
      * ...
-     * hello{
+     * co2footprint{
      *    prefix = 'Mrs'
      * }
      */
-     private HelloConfig config
+     private CO2FootprintConfig config
 
     /*
      * nf-core initializes the plugin once loaded and session is ready
@@ -51,7 +51,7 @@ class HelloExtension extends PluginExtensionPoint {
     @Override
     protected void init(Session session) {
         this.session = session
-        this.config = new HelloConfig(session.config.navigate('hello') as Map)
+        this.config = new CO2FootprintConfig(session.config.navigate('co2footprint') as Map)
     }
 
     /*
