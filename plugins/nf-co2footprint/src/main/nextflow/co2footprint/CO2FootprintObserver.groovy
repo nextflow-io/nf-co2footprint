@@ -119,7 +119,7 @@ class CO2FootprintObserver implements TraceObserver {
 
         //writer.send { co2eFile.println("Test CO2 emission is:"); co2eFile.flush() }
         //writer.send { PrintWriter it -> it.println("Test CO2 emission is:"); it.flush() }
-        co2eFile.println("The CO2 emission is: ${co2}")
+        co2eFile.println("The total CO2 emission is: ${co2}")
 
         // write the remaining records
         // current.values().each { record -> co2eFile.println(render(record)) }
@@ -182,6 +182,9 @@ class CO2FootprintObserver implements TraceObserver {
             return
         }
 
+        //
+        co2 += computeTaskCO2footprint(trace)
+
         // save to the file
         // writer.send { PrintWriter it -> it.println(render( trace )); it.flush() }
     }
@@ -191,21 +194,41 @@ class CO2FootprintObserver implements TraceObserver {
     float computeTaskCO2footprint(TraceRecord trace) {
         // C = t * (nc * Pc * uc * nm * Pm) * PUE * CI * 0.001
         // as in https://doi.org/10.1002/advs.202100707
-        // t: runningtime in hours
-        // nc: number of cores
-        // Pc: power draw of a computing core
-        // uc: core usage factor (between 0 and 1)
-        // nm: size of memory available (gigabytes)
-        // Pm: power draw of memory (Watt)
-        // PUE: efficiency coefficient of the data centre
+        // TODO factor 0.001 ?
 
+        // Pc: power draw of a computing core
+        def pc = 12.0 // TODO does this need to be converted?
+        // Pm: power draw of memory (Watt)
         def pm  = 0.3725
+        // PUE: efficiency coefficient of the data centre
         def pue = 1.67
+        // CI: carbon intensity
         def ci  = 475
 
-        // TODO convert time as needed
-        //t   = task.realtime
+        // t: runningtime in hours
+        def t  = (trace.get('realtime') as Double)/3600000
+        log.info "realtime [h]: $t"
+        // nc: number of cores
+        def nc = trace.get('cpus') as Integer
+        log.info "cpus: $nc"
 
-        return 2
+        // nm: size of memory available (gigabytes) -> requested memory
+        if ( trace.get('memory') == null ) {
+            // TODO if 'memory' not set, returns null, hande somehow?
+            log.error "TraceRecord field 'memory' is not set!"
+            System.exit(1)
+        }
+        def nm = (trace.get('memory') as Long)/1000000000
+        log.info "memory: $nm"
+
+        // TODO handle if more memory/cpus used than requested?
+
+        // uc: core usage factor (between 0 and 1)
+        def uc = 1
+
+        def c = (t * nc * pc * uc * nm * pm * pue * ci * 0.001)
+        log.info "CO2: $c"
+
+        return c
     }
 }
