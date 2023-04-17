@@ -207,10 +207,10 @@ class CO2FootprintObserver implements TraceObserver {
 
         // t: runningtime in hours
         def t  = (trace.get('realtime') as Double)/3600000
-        log.info "realtime [h]: $t"
+        log.info "t: $t"
         // nc: number of cores
         def nc = trace.get('cpus') as Integer
-        log.info "cpus: $nc"
+        log.info "nc: $nc"
 
         // nm: size of memory available (gigabytes) -> requested memory
         if ( trace.get('memory') == null ) {
@@ -219,12 +219,24 @@ class CO2FootprintObserver implements TraceObserver {
             System.exit(1)
         }
         def nm = (trace.get('memory') as Long)/1000000000
-        log.info "memory: $nm"
+        log.info "nm: $nm"
 
         // TODO handle if more memory/cpus used than requested?
 
         // uc: core usage factor (between 0 and 1)
-        def uc = 1
+        // TODO if requested more than used, this is not taken into account, right?
+        def cpu_usage = trace.get('%cpu') as Double
+        log.info "cpu_usage: $cpu_usage"
+        if ( cpu_usage == null ) {
+            log.info "cpu_usage is null"
+            // TODO why is value null, because task was finished so fast that it was not captured? Or are there other reasons?
+            // Assuming requested cpus were used with 100%
+            cpu_usage = nc * 100
+        }
+        // TODO how to handle double, Double datatypes for ceiling?
+        def cpus_ceil = Math.ceil( cpu_usage / 100.0 as double )
+        def uc = cpu_usage / (100.0 * cpus_ceil)
+        log.info "uc: $uc"
 
         def c = (t * nc * pc * uc * nm * pm * pue * ci * 0.001)
         log.info "CO2: $c"
