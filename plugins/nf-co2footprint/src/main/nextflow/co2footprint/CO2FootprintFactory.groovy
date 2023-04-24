@@ -43,10 +43,12 @@ class CO2FootprintFactory implements TraceObserverFactory {
         this.config = session.config
 
         String fileName = CO2FootprintObserver.DEF_FILE_NAME
+        String summaryFileName = CO2FootprintObserver.DEF_SUMMARY_FILE_NAME
         def co2eFile = (fileName as Path).complete()
+        def co2eSummaryFile = (summaryFileName as Path).complete()
 
         final result = new ArrayList(2)
-        result.add( new CO2FootprintObserver(co2eFile) )
+        result.add( new CO2FootprintObserver(co2eFile, co2eSummaryFile) )
 
         return result
     }

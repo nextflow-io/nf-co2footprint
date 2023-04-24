@@ -42,10 +42,10 @@ import nextflow.processor.TaskProcessor
 @CompileStatic
 class CO2FootprintObserver implements TraceObserver {
 
-    // TODO
-    // onComplete: into same or separate file: sum of CO2 emissions etc.
+    // TODO which files should we generate here?
+    public static final String DEF_FILE_NAME         = "co2footprint-${TraceHelper.launchTimestampFmt()}.txt"
+    public static final String DEF_SUMMARY_FILE_NAME = "co2footprint-${TraceHelper.launchTimestampFmt()}.summary.txt"
 
-    public static final String DEF_FILE_NAME = "co2footprint-${TraceHelper.launchTimestampFmt()}.txt"
 
     // TODO add class member variables? 
     // region, cpu model energy consumption (for beginning) etc. ....
@@ -59,11 +59,13 @@ class CO2FootprintObserver implements TraceObserver {
      * The path where the file is created. It is set by the object constructor
      */
     private Path co2ePath
+    private Path co2eSummaryPath
 
     /**
      * The actual file object
      */
     private PrintWriter co2eFile
+    private PrintWriter co2eSummaryFile
 
     /**
      * Holds the the start time for tasks started/submitted but not yet completed
@@ -72,6 +74,7 @@ class CO2FootprintObserver implements TraceObserver {
     @PackageScope float total_co2 = 0.0
 
     private Agent<PrintWriter> writer
+    private Agent<PrintWriter> summaryWriter
 
 
     /**
@@ -79,8 +82,9 @@ class CO2FootprintObserver implements TraceObserver {
      *
      * @param co2eFile A path to the file where save the CO2 emission data
      */
-    CO2FootprintObserver( Path co2eFile ) {
+    CO2FootprintObserver( Path co2eFile, Path co2eSummaryFile ) {
         this.co2ePath = co2eFile
+        this.co2eSummaryPath = co2eSummaryFile
     }
 
     /** ONLY FOR TESTING PURPOSE */
@@ -99,12 +103,19 @@ class CO2FootprintObserver implements TraceObserver {
         if( parent )
             Files.createDirectories(parent)
 
+        def summaryParent = co2eSummaryPath.getParent()
+        if( summaryParent )
+            Files.createDirectories(summaryParent)
+
         // create a new trace file
-        co2eFile = new PrintWriter(TraceHelper.newFileWriter(co2ePath,overwrite, 'co2footprint'))
+        co2eFile = new PrintWriter(TraceHelper.newFileWriter(co2ePath, overwrite, 'co2footprint'))
+        co2eSummaryFile = new PrintWriter(TraceHelper.newFileWriter(co2eSummaryPath, overwrite, 'co2footprintsummary'))
 
         // launch the agent
         writer = new Agent<PrintWriter>(co2eFile)
-        //writer.send { co2eFile.println("Test 0"); co2eFile.flush() }
+        summaryWriter = new Agent<PrintWriter>(co2eSummaryFile)
+
+        writer.send { co2eFile.println("task_id\tCO2e"); co2eFile.flush() }
     }
 
     /**
@@ -119,10 +130,12 @@ class CO2FootprintObserver implements TraceObserver {
 
         //writer.send { co2eFile.println("Test CO2 emission is:"); co2eFile.flush() }
         //writer.send { PrintWriter it -> it.println("Test CO2 emission is:"); it.flush() }
-        co2eFile.println("The total CO2 emission is: ${co2}")
+        co2eSummaryFile.println("The total CO2 emission is: ${total_co2}")
+        co2eSummaryFile.flush()
+        co2eSummaryFile.close()
 
         // write the remaining records
-        // current.values().each { record -> co2eFile.println(render(record)) }
+        current.values().each { taskId, record -> co2eFile.println("${taskId}\t-") }
         co2eFile.flush()
         co2eFile.close()
     }
@@ -167,26 +180,29 @@ class CO2FootprintObserver implements TraceObserver {
         current.remove(taskId)
 
         //
-        total_co2 += computeTaskCO2footprint(trace)
+        def co2 = computeTaskCO2footprint(trace)
+        total_co2 += co2
 
         // save to the file
-        // writer.send { PrintWriter it -> it.println(render(trace)); it.flush() }
+        writer.send { PrintWriter it -> it.println("${taskId}\t${co2}"); it.flush() }
     }
 
 
     // TODO write footprint for each process?
     @Override
     void onProcessCached(TaskHandler handler, TraceRecord trace) {
+        def taskId = handler.task.id    // TODO "final" or "def"?
         // event was triggered by a stored task, ignore it
         if( trace == null ) {
             return
         }
 
         //
-        total_co2 += computeTaskCO2footprint(trace)
+        def co2 = computeTaskCO2footprint(trace)
+        total_co2 += co2
 
         // save to the file
-        // writer.send { PrintWriter it -> it.println(render( trace )); it.flush() }
+        writer.send { PrintWriter it -> it.println("${taskId}\t${co2}"); it.flush() }
     }
 
 
