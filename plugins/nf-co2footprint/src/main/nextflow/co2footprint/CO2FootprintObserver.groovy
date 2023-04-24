@@ -69,7 +69,7 @@ class CO2FootprintObserver implements TraceObserver {
      * Holds the the start time for tasks started/submitted but not yet completed
      */
     @PackageScope Map<TaskId,TraceRecord> current = new ConcurrentHashMap<>()
-    @PackageScope float co2 = 0.0
+    @PackageScope float total_co2 = 0.0
 
     private Agent<PrintWriter> writer
 
@@ -167,7 +167,7 @@ class CO2FootprintObserver implements TraceObserver {
         current.remove(taskId)
 
         //
-        co2 += computeTaskCO2footprint(trace)
+        total_co2 += computeTaskCO2footprint(trace)
 
         // save to the file
         // writer.send { PrintWriter it -> it.println(render(trace)); it.flush() }
@@ -183,7 +183,7 @@ class CO2FootprintObserver implements TraceObserver {
         }
 
         //
-        co2 += computeTaskCO2footprint(trace)
+        total_co2 += computeTaskCO2footprint(trace)
 
         // save to the file
         // writer.send { PrintWriter it -> it.println(render( trace )); it.flush() }
