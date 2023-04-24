@@ -35,6 +35,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
     private Map config
     private Session session
 
+    // TODO add createCO2ReportObserver() -> html
+
     @Override
     Collection<TraceObserver> create(Session session) {
         this.session = session
