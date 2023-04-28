@@ -19,6 +19,7 @@ package nextflow.co2footprint
 import java.nio.file.Path
 
 import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 import nextflow.Session
 import nextflow.trace.TraceObserver
 import nextflow.trace.TraceObserverFactory
@@ -29,10 +30,11 @@ import nextflow.trace.TraceFileObserver
  *
  * @author Paolo Di Tommaso <paolo.ditommaso@gmail.com>
  */
+@Slf4j
 @CompileStatic
 class CO2FootprintFactory implements TraceObserverFactory {
 
-    private Map config
+    private CO2FootprintConfig config
     private Session session
 
     // TODO add createCO2ReportObserver() -> html
@@ -40,10 +42,19 @@ class CO2FootprintFactory implements TraceObserverFactory {
     @Override
     Collection<TraceObserver> create(Session session) {
         this.session = session
-        this.config = session.config
+        if( session.config instanceof Map ) {
+            // TODO error if not checking before ...
+            this.config = new CO2FootprintConfig(session.config.navigate('co2footprint') as Map)
+        }
+        else if( !session.config ) {
+            this.config  = new CO2FootprintConfig(null)
+        }
+        else {
+            throw new IllegalArgumentException("Something wrong with session.config: $session.config ")
+        }
 
-        String fileName = CO2FootprintObserver.DEF_FILE_NAME
-        String summaryFileName = CO2FootprintObserver.DEF_SUMMARY_FILE_NAME
+        String fileName = this.config.getFile()
+        String summaryFileName = this.config.getSummaryFile()
         def co2eFile = (fileName as Path).complete()
         def co2eSummaryFile = (summaryFileName as Path).complete()
 

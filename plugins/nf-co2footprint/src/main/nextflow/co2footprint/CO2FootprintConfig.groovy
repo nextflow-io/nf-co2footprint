@@ -18,18 +18,31 @@ import groovy.transform.PackageScope
  * We anotate this class as @PackageScope to restrict the access of their methods only to class in the
  * same package
  *
- * @author : jorge <jorge.aguilera@seqera.io>
+ * @author : Sabrina Krakau <sabrinakrakau@gmail.com>
  *
  */
 @PackageScope
 class CO2FootprintConfig {
 
-    final private String prefix
+    // final private Boolean enabled
+    final private String  file
+    final private String  summaryFile
 
     CO2FootprintConfig(Map map){
         def config = map ?: Collections.emptyMap()
-        prefix = config.prefix ?: 'Mr.'
+        // if (config.enabled == null ) {
+        //     enabled = true
+        // } else {
+        //     enabled = false
+        //     return
+        // }
+        file = config.file ?: CO2FootprintObserver.DEF_FILE_NAME
+        summaryFile = config.summaryFile ?: CO2FootprintObserver.DEF_SUMMARY_FILE_NAME
     }
 
-    String getPrefix() { prefix }
+    // Boolean isEnabled() { enabled }
+
+    String getFile() { file }
+
+    String getSummaryFile() { summaryFile }
 }
