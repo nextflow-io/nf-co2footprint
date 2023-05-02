@@ -67,6 +67,7 @@ class CO2FootprintObserver implements TraceObserver {
     private PrintWriter co2eFile
     private PrintWriter co2eSummaryFile
 
+    private Map<String,Float> cpuData = ['default': (Float)12.0]
     /**
      * Holds the the start time for tasks started/submitted but not yet completed
      */
@@ -85,10 +86,23 @@ class CO2FootprintObserver implements TraceObserver {
     CO2FootprintObserver( Path co2eFile, Path co2eSummaryFile ) {
         this.co2ePath = co2eFile
         this.co2eSummaryPath = co2eSummaryFile
+
+        loadCpuTdpData(this.cpuData)
     }
 
     /** ONLY FOR TESTING PURPOSE */
     protected CO2FootprintObserver( ) {}
+
+    // Load file containing TDP values for different CPU models
+    protected void loadCpuTdpData(Map<String,Float> data) {
+        def inData = new InputStreamReader(this.class.getResourceAsStream('/cpu_tdp_values.csv')).text
+
+        for( String line : inData.readLines() ) {
+            def h = line.split(",")
+            if( h[0] != 'model_name' ) data[h[0]] = h[3].toFloat()
+        }
+        log.info "$data"
+    }
 
     /**
      * Create the trace file, in file already existing with the same name it is
@@ -213,7 +227,8 @@ class CO2FootprintObserver implements TraceObserver {
         // TODO factor 0.001 ?
 
         // Pc: power draw of a computing core
-        def pc = 12.0 // TODO does this need to be converted?
+        def pc = getCpuCoreTdp(trace)
+        log.info "pc: $pc"
         // Pm: power draw of memory (Watt)
         def pm  = 0.3725
         // PUE: efficiency coefficient of the data centre
@@ -258,5 +273,31 @@ class CO2FootprintObserver implements TraceObserver {
         log.info "CO2: $c"
 
         return c
+    }
+
+
+    float getCpuCoreTdp(TraceRecord trace) {
+        def cpu_model = trace.get('cpu_model').toString()   // TODO toString() in TraceRecord get()?
+        log.info "cpu model: $cpu_model"
+
+        // Look up CPU model specific TDP value
+        def c = 0
+        while ( true ) {
+            if ( cpuData.containsKey(cpu_model) ){
+                return cpuData[cpu_model]
+            } else if ( c < 2) {
+                // Trim suffixes, e.g. " Processor" or " 16-Core Processor", and try again
+                // TODO what are valid cases here?
+                def i = cpu_model.lastIndexOf(' ')
+                if ( i == -1 )
+                    break
+                else
+                    cpu_model = cpu_model.substring(0, i)
+            } else {
+                break
+            }
+            c++
+        }
+        return cpuData['default']
     }
 }
