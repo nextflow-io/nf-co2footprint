@@ -21,13 +21,16 @@ import spock.lang.Specification
 
 /**
  *
- * @author Paolo Di Tommaso <paolo.ditommaso@gmail.com>
+ * @author Sabrina Krakau <sabrinakrakau@gmail.com>
  */
 class CO2FootprintFactoryTest extends Specification {
 
     def 'should return observer' () {
         when:
-        def result = new CO2FootprintFactory().create(Mock(Session))
+        // TODO I am not sure if 'Mock(Session)' should be used instead of 'new Session()',
+        // but then one would need to test 'if( session.config instanceof Map )' in CO2FootprintFactory
+        // before calling the constructor of CO2FootprintConfig
+        def result = new CO2FootprintFactory().create(new Session())
         then:
         result.size()==1
         result[0] instanceof CO2FootprintObserver

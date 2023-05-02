@@ -28,7 +28,7 @@ import nextflow.trace.TraceFileObserver
 /**
  * Implements the validation observer factory
  *
- * @author Paolo Di Tommaso <paolo.ditommaso@gmail.com>
+ * @author Sabrina Krakau <sabrinakrakau@gmail.com>
  */
 @Slf4j
 @CompileStatic
@@ -42,16 +42,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
     @Override
     Collection<TraceObserver> create(Session session) {
         this.session = session
-        if( session.config instanceof Map ) {
-            // TODO error if not checking before ...
-            this.config = new CO2FootprintConfig(session.config.navigate('co2footprint') as Map)
-        }
-        else if( !session.config ) {
-            this.config  = new CO2FootprintConfig(null)
-        }
-        else {
-            throw new IllegalArgumentException("Something wrong with session.config: $session.config ")
-        }
+        this.config = new CO2FootprintConfig(session.config.navigate('co2footprint') as Map)
 
         String fileName = this.config.getFile()
         String summaryFileName = this.config.getSummaryFile()
