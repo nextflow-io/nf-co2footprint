@@ -44,10 +44,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
         this.session = session
         this.config = new CO2FootprintConfig(session.config.navigate('co2footprint') as Map)
 
-        String fileName = this.config.getFile()
-        String summaryFileName = this.config.getSummaryFile()
-        def co2eFile = (fileName as Path).complete()
-        def co2eSummaryFile = (summaryFileName as Path).complete()
+        def co2eFile = (this.config.getFile() as Path).complete()
+        def co2eSummaryFile = (this.config.getSummaryFile() as Path).complete()
 
         final result = new ArrayList(2)
         result.add( new CO2FootprintObserver(co2eFile, co2eSummaryFile) )
