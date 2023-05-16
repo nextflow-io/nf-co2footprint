@@ -27,10 +27,8 @@ class CO2FootprintFactoryTest extends Specification {
 
     def 'should return observer' () {
         when:
-        // TODO I am not sure if 'Mock(Session)' should be used instead of 'new Session()',
-        // but then one would need to test 'if( session.config instanceof Map )' in CO2FootprintFactory
-        // before calling the constructor of CO2FootprintConfig
-        def result = new CO2FootprintFactory().create(new Session())
+        def session = Mock(Session) { getConfig() >> [:] }
+        def result = new CO2FootprintFactory().create(session)
         then:
         result.size()==1
         result[0] instanceof CO2FootprintObserver
