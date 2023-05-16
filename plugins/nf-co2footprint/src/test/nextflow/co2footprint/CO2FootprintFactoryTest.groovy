@@ -21,13 +21,14 @@ import spock.lang.Specification
 
 /**
  *
- * @author Paolo Di Tommaso <paolo.ditommaso@gmail.com>
+ * @author Sabrina Krakau <sabrinakrakau@gmail.com>
  */
 class CO2FootprintFactoryTest extends Specification {
 
     def 'should return observer' () {
         when:
-        def result = new CO2FootprintFactory().create(Mock(Session))
+        def session = Mock(Session) { getConfig() >> [:] }
+        def result = new CO2FootprintFactory().create(session)
         then:
         result.size()==1
         result[0] instanceof CO2FootprintObserver
