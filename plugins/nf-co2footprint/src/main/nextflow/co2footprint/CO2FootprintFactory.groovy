@@ -35,19 +35,22 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
     private CO2FootprintConfig config
     private Session session
-
-    // TODO add createCO2ReportObserver() -> html
-
+    
     @Override
     Collection<TraceObserver> create(Session session) {
         this.session = session
         this.config = new CO2FootprintConfig(session.config.navigate('co2footprint') as Map)
 
+        final result = new ArrayList(2)
+        // Generate CO2 footprint text output files
         def co2eFile = (this.config.getFile() as Path).complete()
         def co2eSummaryFile = (this.config.getSummaryFile() as Path).complete()
 
-        final result = new ArrayList(2)
         result.add( new CO2FootprintTextFileObserver(co2eFile, co2eSummaryFile) )
+
+        // Generate CO2 footprint report with box-plot
+        def co2eReport = (CO2FootprintReportObserver.DEF_FILE_NAME as Path).complete()
+        result.add( new CO2FootprintReportObserver(co2eReport) )
 
         return result
     }

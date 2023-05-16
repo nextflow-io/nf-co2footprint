@@ -30,8 +30,9 @@ class CO2FootprintFactoryTest extends Specification {
         def session = Mock(Session) { getConfig() >> [:] }
         def result = new CO2FootprintFactory().create(session)
         then:
-        result.size()==1
+        result.size()==2
         result[0] instanceof CO2FootprintTextFileObserver
+        result[1] instanceof CO2FootprintReportObserver
     }
 
 }
