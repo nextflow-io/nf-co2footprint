@@ -40,7 +40,7 @@ import nextflow.processor.TaskProcessor
 
 @Slf4j
 @CompileStatic
-class CO2FootprintObserver implements TraceObserver {
+class CO2FootprintTextFileObserver implements TraceObserver {
 
     // TODO which files should we generate here?
     public static final String DEF_FILE_NAME         = "co2footprint-${TraceHelper.launchTimestampFmt()}.txt"
@@ -83,7 +83,7 @@ class CO2FootprintObserver implements TraceObserver {
      *
      * @param co2eFile A path to the file where save the CO2 emission data
      */
-    CO2FootprintObserver( Path co2eFile, Path co2eSummaryFile ) {
+    CO2FootprintTextFileObserver(Path co2eFile, Path co2eSummaryFile ) {
         this.co2ePath = co2eFile
         this.co2eSummaryPath = co2eSummaryFile
 
@@ -91,7 +91,7 @@ class CO2FootprintObserver implements TraceObserver {
     }
 
     /** ONLY FOR TESTING PURPOSE */
-    protected CO2FootprintObserver( ) {}
+    protected CO2FootprintTextFileObserver( ) {}
 
     // Load file containing TDP values for different CPU models
     protected void loadCpuTdpData(Map<String,Float> data) {
