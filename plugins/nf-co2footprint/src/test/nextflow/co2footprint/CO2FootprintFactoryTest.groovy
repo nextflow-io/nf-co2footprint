@@ -31,7 +31,7 @@ class CO2FootprintFactoryTest extends Specification {
         def result = new CO2FootprintFactory().create(session)
         then:
         result.size()==1
-        result[0] instanceof CO2FootprintObserver
+        result[0] instanceof CO2FootprintTextFileObserver
     }
 
 }

@@ -23,7 +23,6 @@ import groovy.util.logging.Slf4j
 import nextflow.Session
 import nextflow.trace.TraceObserver
 import nextflow.trace.TraceObserverFactory
-import nextflow.trace.TraceFileObserver
 
 /**
  * Implements the validation observer factory
@@ -48,7 +47,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         def co2eSummaryFile = (this.config.getSummaryFile() as Path).complete()
 
         final result = new ArrayList(2)
-        result.add( new CO2FootprintObserver(co2eFile, co2eSummaryFile) )
+        result.add( new CO2FootprintTextFileObserver(co2eFile, co2eSummaryFile) )
 
         return result
     }

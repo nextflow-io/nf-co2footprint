@@ -28,8 +28,8 @@ class CO2FootprintConfig {
 
     CO2FootprintConfig(Map map){
         def config = map ?: Collections.emptyMap()
-        file = config.file ?: CO2FootprintObserver.DEF_FILE_NAME
-        summaryFile = config.summaryFile ?: CO2FootprintObserver.DEF_SUMMARY_FILE_NAME
+        file = config.file ?: CO2FootprintTextFileObserver.DEF_FILE_NAME
+        summaryFile = config.summaryFile ?: CO2FootprintTextFileObserver.DEF_SUMMARY_FILE_NAME
     }
 
     String getFile() { file }
