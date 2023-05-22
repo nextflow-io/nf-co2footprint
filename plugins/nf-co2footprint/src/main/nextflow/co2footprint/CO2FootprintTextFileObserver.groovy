@@ -246,8 +246,7 @@ class CO2FootprintTextFileObserver implements TraceObserver {
         // nm: size of memory available (gigabytes) -> requested memory
         if ( trace.get('memory') == null ) {
             // TODO if 'memory' not set, returns null, hande somehow?
-            log.error "TraceRecord field 'memory' is not set!"
-            System.exit(1)
+            throw new Exception("TraceRecord field 'memory' is not set!")
         }
         def nm = (trace.get('memory') as Long)/1000000000
         log.info "nm: $nm"
