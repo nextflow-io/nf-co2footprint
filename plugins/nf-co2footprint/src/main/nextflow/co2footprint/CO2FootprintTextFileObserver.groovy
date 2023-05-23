@@ -47,7 +47,7 @@ class CO2FootprintTextFileObserver implements TraceObserver {
     public static final String DEF_SUMMARY_FILE_NAME = "co2footprint-${TraceHelper.launchTimestampFmt()}.summary.txt"
 
 
-    // TODO add class member variables? 
+    // TODO add class member variables?
     // region, cpu model energy consumption (for beginning) etc. ....
 
     /**
@@ -73,6 +73,7 @@ class CO2FootprintTextFileObserver implements TraceObserver {
      */
     @PackageScope Map<TaskId,TraceRecord> current = new ConcurrentHashMap<>()
     @PackageScope float total_co2 = 0.0
+    Closure co2eCl
 
     private Agent<PrintWriter> writer
     private Agent<PrintWriter> summaryWriter
@@ -83,11 +84,13 @@ class CO2FootprintTextFileObserver implements TraceObserver {
      *
      * @param co2eFile A path to the file where save the CO2 emission data
      */
-    CO2FootprintTextFileObserver(Path co2eFile, Path co2eSummaryFile ) {
+    CO2FootprintTextFileObserver(Path co2eFile, Path co2eSummaryFile, Closure co2eCl ) {
         this.co2ePath = co2eFile
         this.co2eSummaryPath = co2eSummaryFile
 
         loadCpuTdpData(this.cpuData)
+
+        this.co2eCl = co2eCl
     }
 
     /** ONLY FOR TESTING PURPOSE */
@@ -195,6 +198,7 @@ class CO2FootprintTextFileObserver implements TraceObserver {
 
         //
         def co2 = computeTaskCO2footprint(trace)
+        co2eCl.call("test", co2)
         total_co2 += co2
 
         // save to the file
@@ -213,6 +217,7 @@ class CO2FootprintTextFileObserver implements TraceObserver {
 
         //
         def co2 = computeTaskCO2footprint(trace)
+        //co2eCl.call(taskId, co2.toFloat())
         total_co2 += co2
 
         // save to the file
