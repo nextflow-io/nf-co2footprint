@@ -5,21 +5,14 @@ import groovy.util.logging.Slf4j
 
 @Slf4j
 @CompileStatic
-class CO2Records {
+class CO2Record {
 
-    //protected float co2e
-    Map<String,Float> co2eRecords = ['init': (Float)0.0]
+    public Float co2e
     // final? or something? to make sure for key value can be set only once?
 
-//    // TODO would that be OK to do? necessary to access values from closure!
-//    @Override
-//    void setProperty(String property, Object newValue) {
-//        getMetaClass().setProperty(this, property, newValue)
-//    }
+    CO2Record(Float co2e) {
+        this.co2e = co2e
+    }
 
-//    @Override
-//    public Object getProperty(String property) {
-//        return getMetaClass().getProperty(this, property);
-//    }
-
+    // TODO implement accordingly to TraceRecord
 }
