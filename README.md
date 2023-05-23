@@ -5,7 +5,10 @@ This Nextlow plugins implements the calculation of the CO2 footprint of running 
 ## Plugin classes
 
 - `CO2FootprintFactory`: Implements `TraceObserverFactory`. Implements the validation observer factory
-- `CO2FootprintTextFileObserver`: Implements `TraceObserver`. 
+- `CO2FootprintTextFileObserver`: Implements `TraceObserver`. Creates a trace file with CO2 footprint data.
+- `CO2FootprintConfig`: Defines the path of output files containing CO2 footprint results and the summary.
+- `CO2FootprintPlugin`: Implements the plugin entry point.
+- `CO2FootprintFactoryTest`: Tests for class `CO2FootprintFactory`.
 
 ## Unit testing 
 
