@@ -17,21 +17,66 @@
 package nextflow.co2footprint
 
 import nextflow.Session
-import spock.lang.Specification
+import nextflow.plugin.Plugins
+import nextflow.plugin.TestPluginDescriptorFinder
+import nextflow.plugin.TestPluginManager
+import nextflow.plugin.extension.PluginExtensionProvider
+import org.junit.Rule
+import org.pf4j.PluginDescriptorFinder
+import spock.lang.Shared
+import test.Dsl2Spec
+import test.OutputCapture
+
+import java.nio.file.Path
 
 /**
  *
  * @author Sabrina Krakau <sabrinakrakau@gmail.com>
  */
-class CO2FootprintFactoryTest extends Specification {
+class CO2FootprintFactoryTest extends Dsl2Spec {
+
+    @Rule
+    OutputCapture capture = new OutputCapture()
+
+    @Shared String pluginsMode
+
+    def setup() {
+        // reset previous instances
+        PluginExtensionProvider.reset()
+        // this need to be set *before* the plugin manager class is created
+        pluginsMode = System.getProperty('pf4j.mode')
+        System.setProperty('pf4j.mode', 'dev')
+        // the plugin root should
+        def root = Path.of('.').toAbsolutePath().normalize()
+        def manager = new TestPluginManager(root){
+            @Override
+            protected PluginDescriptorFinder createPluginDescriptorFinder() {
+                return new TestPluginDescriptorFinder(){
+                    @Override
+                    protected Path getManifestPath(Path pluginPath) {
+                        return pluginPath.resolve('build/resources/main/META-INF/MANIFEST.MF')
+                    }
+                }
+            }
+        }
+        Plugins.init(root, 'dev', manager)
+    }
+
+    def cleanup() {
+        Plugins.stop()
+        PluginExtensionProvider.reset()
+        pluginsMode ? System.setProperty('pf4j.mode',pluginsMode) : System.clearProperty('pf4j.mode')
+    }
 
     def 'should return observer' () {
         when:
         def session = Mock(Session) { getConfig() >> [:] }
-        def result = new CO2FootprintFactory().create(session)
+        def factory = new CO2FootprintFactory()
+        def result = factory.create(session)
         then:
-        result.size()==1
+        result.size()==2
         result[0] instanceof CO2FootprintTextFileObserver
+        result[1] instanceof CO2FootprintReportObserver
     }
 
 }
