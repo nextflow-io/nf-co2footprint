@@ -71,8 +71,7 @@ class CO2FootprintFactoryTest extends Dsl2Spec {
     def 'should return observer' () {
         when:
         def session = Mock(Session) { getConfig() >> [:] }
-        def factory = new CO2FootprintFactory()
-        def result = factory.create(session)
+        def result = new CO2FootprintFactory().create(session)
         then:
         result.size()==2
         result[0] instanceof CO2FootprintTextFileObserver
