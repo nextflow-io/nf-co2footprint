@@ -2,6 +2,7 @@ package nextflow.co2footprint
 
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
+import groovy.transform.InheritConstructors
 import nextflow.trace.ResourcesAggregator
 import nextflow.trace.TraceRecord
 import nextflow.Session
@@ -14,15 +15,12 @@ import nextflow.Session
  */
 @Slf4j
 @CompileStatic
+@InheritConstructors
 class CO2FootprintResourcesAggregator extends ResourcesAggregator {
 
     final private Map<String, CO2FootprintReportSummary> summaries = new LinkedHashMap<>()
 
     private CO2FootprintResourcesAggregator aggregator
-
-    CO2FootprintResourcesAggregator(Session session) {
-        super(session)
-    }
 
     @Override
     void aggregate(TraceRecord record) {

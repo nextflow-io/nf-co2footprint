@@ -3,6 +3,7 @@ package nextflow.co2footprint
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import groovy.text.GStringTemplateEngine
+import groovy.transform.InheritConstructors
 import nextflow.trace.ReportObserver
 import nextflow.trace.TraceHelper
 import nextflow.Session
@@ -18,18 +19,11 @@ import java.nio.file.Path
  */
 @Slf4j
 @CompileStatic
+@InheritConstructors
 class CO2FootprintReportObserver extends ReportObserver {
 
     static final public String DEF_FILE_NAME = "CO2Footprint-report-${TraceHelper.launchTimestampFmt()}.html"
 
-    /**
-     * Creates a report observer
-     *
-     * @param file The file path where to store the resulting HTML report document
-     */
-    CO2FootprintReportObserver( Path file ) {
-        super(file)
-    }
 
     /**
      * Create the trace file, in file already existing with the same name it is
@@ -86,6 +80,7 @@ class CO2FootprintReportObserver extends ReportObserver {
      * @param path A resource path location
      * @return The loaded template as a string
      */
+    @Override
     private String readTemplate( String path ) {
         StringWriter writer = new StringWriter();
         def res =  this.class.getClassLoader().getResourceAsStream( path )
