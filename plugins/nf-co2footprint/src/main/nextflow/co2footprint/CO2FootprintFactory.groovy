@@ -170,7 +170,9 @@ class CO2FootprintFactory implements TraceObserverFactory {
     }
 
 
-
+    /**
+     * Class to generate text output
+     */
     class CO2FootprintTextFileObserver implements TraceObserver {
 
         // TODO which files should we generate here?
@@ -338,7 +340,9 @@ class CO2FootprintFactory implements TraceObserverFactory {
     }
 
 
-
+    /**
+     * Class to generate HTML report with box-plots
+     */
     class CO2FootprintReportObserver implements TraceObserver {
 
         static final public String DEF_FILE_NAME = "CO2Footprint-report-${TraceHelper.launchTimestampFmt()}.html"
