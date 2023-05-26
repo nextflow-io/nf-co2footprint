@@ -40,7 +40,7 @@ class CO2FootprintResourcesAggregator {
      *
      * @param record A {@link nextflow.trace.TraceRecord} object representing a task executed
      */
-    void aggregate(TraceRecord record) {
+    void aggregate(TraceRecord record, CO2Record co2record) {
         // aggregate on the process simple name
         // therefore all nested process are kept together
         def process = record.getSimpleName()
@@ -48,7 +48,7 @@ class CO2FootprintResourcesAggregator {
         if( !summary ) {
             summaries.put(process, summary=new CO2FootprintReportSummary())
         }
-        summary.add(record)
+        summary.add(record, co2record)
     }
 
     /**
@@ -57,7 +57,6 @@ class CO2FootprintResourcesAggregator {
      * @return A {@link Map} holding the summary stats for each process
      */
     protected Map<String,Map> computeSummaryMap() {
-
         final result = new LinkedHashMap<String,Map>(summaries.size())
 
         // summary stats can be expensive on big workflow

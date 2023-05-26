@@ -498,11 +498,11 @@ class CO2FootprintFactory implements TraceObserverFactory {
             }
 
             log.info "TEST "
-            log.info "${co2eRecords[ trace.taskId ].co2e}"
+            log.info "${co2eRecords[ trace.taskId ].getCO2e()}"
 
             synchronized (records) {
                 records[ trace.taskId ] = trace
-                aggregate(trace)
+                aggregate(trace, co2eRecords[ trace.taskId ])
             }
         }
 
@@ -523,7 +523,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             // remove the record from the current records
             synchronized (records) {
                 records[ trace.taskId ] = trace
-                aggregate(trace)
+                aggregate(trace, co2eRecords[ trace.taskId ])
             }
         }
 
@@ -533,8 +533,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
          *
          * @param record A {@link TraceRecord} object representing a task executed
          */
-        protected void aggregate(TraceRecord record) {
-            aggregator.aggregate(record)
+        protected void aggregate(TraceRecord record, CO2Record co2record) {
+            aggregator.aggregate(record, co2record)
         }
 
         /**

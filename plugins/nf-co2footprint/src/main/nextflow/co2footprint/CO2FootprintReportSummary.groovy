@@ -27,48 +27,20 @@ import nextflow.trace.TraceRecord
  * @author Paolo Di Tommaso <paolo.ditommaso@gmail.com>
  */
 
+@Slf4j
 @CompileStatic
 class CO2FootprintReportSummary {
 
     private static Map<String,Closure<Double>> mappers = [:]
 
     static {
-        mappers.cpu = { TraceRecord record -> record.get('%cpu') as Double }
-        mappers.mem = { TraceRecord record -> record.get('peak_rss') as Double }
-        mappers.vmem = { TraceRecord record -> record.get('peak_vmem') as Double }
-        mappers.time = { TraceRecord record -> record.get('realtime') as Double }
-        mappers.reads = { TraceRecord record -> record.get('rchar') as Double }
-        mappers.writes = { TraceRecord record -> record.get('wchar') as Double}
-
-        mappers.cpuUsage = { TraceRecord record ->
-            final Double pcpu = record.get('%cpu') as Double
-            final int ncpu = (record.get('cpus') ?: 1) as int
-            if( !pcpu )
-                return null
-            return pcpu / ncpu as Double
-        }
-
-        mappers.memUsage = { TraceRecord record ->
-            final mem = record.get('peak_rss') as Double
-            final request = record.get('memory') as Long
-            if( !mem ) return null
-            if( !request ) return null
-            return mem / request * 100 as Double
-        }
-
-        mappers.timeUsage = { TraceRecord record ->
-            final realtime = record.get('realtime') as Long
-            final request = record.get('time') as Long
-            if( !realtime ) return null
-            if( !request ) return null
-            return realtime / request * 100 as Double
-        }
+        mappers.co2e = { CO2Record co2record -> co2record.getCO2e() as Double }
     }
 
 
 
     /**
-     * Hold the summary for each series ie. cpu, memory, time, disk reads, disk writes
+     * Hold the summary for each series ie. co2e (only currently)
      */
     private Map<String, Summary> series
 
@@ -85,7 +57,7 @@ class CO2FootprintReportSummary {
     }
 
     /**
-     * @return The list of series names eg `cpu`, `time`, etc
+     * @return The list of series names eg `co2e` (only currently)
      */
     List<String> getNames() { names }
 
@@ -94,10 +66,10 @@ class CO2FootprintReportSummary {
      *
      * @param record A {@link TraceRecord} representing a computed task
      */
-    void add( TraceRecord record ) {
+    void add( TraceRecord record, CO2Record co2record ) {
         for( int i=0; i< names.size(); i++ ) {
             final name = names[i]
-            series[name].add(record)
+            series[name].add(record, co2record)
         }
     }
 
@@ -105,7 +77,7 @@ class CO2FootprintReportSummary {
      * Compute the summary stats for the collected tasks
      *
      * @param
-     *      name A series name eg {@code cpu}, {@code time}, etc
+     *      name A series name eg {@code co2e} (only currently)
      * @return
      *      A {@link Map} holding the summary containing the following stats:
      *      - min: minimal value
@@ -121,6 +93,7 @@ class CO2FootprintReportSummary {
      *      - maxLabel: label fot the task reporting the max value
      */
     Map<String,?> compute(String name) {
+
         if( !names.contains(name) )
             throw new IllegalArgumentException("Invalid status field name: $name -- it must be one of the following: ${names.join(',')}")
 
@@ -134,7 +107,7 @@ class CO2FootprintReportSummary {
     @CompileStatic
     static class Summary {
 
-        private List<TraceRecord> tasks
+        private List<CO2Record> tasks
 
         private Closure<Double> metric
 
@@ -180,12 +153,12 @@ class CO2FootprintReportSummary {
             Math.round( value * 100 ) / 100
         }
 
-        void add( TraceRecord record ) {
-            final Double value = metric.call(record)
+        void add( TraceRecord record, CO2Record co2record ) {
+            final Double value = metric.call(co2record)
             if( value == null )
                 return
             count++
-            tasks.add(record)
+            tasks.add(co2record)
             total += value
             if( min==null || value<min ) {
                 min = value
@@ -219,7 +192,7 @@ class CO2FootprintReportSummary {
                 return null
 
             final result = new LinkedHashMap<String,?>(12)
-            final sorted = tasks.sort( false, { TraceRecord record -> metric.call(record) } )
+            final sorted = tasks.sort( false, { CO2Record co2record -> metric.call(co2record) } )
 
             result.mean = round(total / count as double)
             result.min = round(quantile(sorted, 0))
@@ -227,6 +200,7 @@ class CO2FootprintReportSummary {
             result.q2 = round(quantile(sorted, 50))
             result.q3 = round(quantile(sorted, 75))
             result.max = round(quantile(sorted, 100))
+
             // discard entry with all zero 
             if( result.min == 0 && result.min == result.max  )
                 return null

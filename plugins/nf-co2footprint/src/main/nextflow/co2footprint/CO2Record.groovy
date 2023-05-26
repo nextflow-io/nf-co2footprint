@@ -7,7 +7,7 @@ import groovy.util.logging.Slf4j
 @CompileStatic
 class CO2Record {
 
-    public Float co2e
+    private Float co2e
     // final? or something? to make sure for key value can be set only once?
 
     CO2Record(Float co2e) {
@@ -15,4 +15,5 @@ class CO2Record {
     }
 
     // TODO implement accordingly to TraceRecord
+    Float getCO2e() { co2e }
 }
