@@ -73,59 +73,21 @@ $(function() {
   }
 
   // Plot histograms of resource usage
-  var cpu_raw_data = [];
-  var cpu_usage_data = [];
-  var mem_raw_data = [];
-  var mem_usage_data = [];
-  var vmem_raw_data = [];
-  var time_raw_data = [];
-  var time_usage_data = [];
-  var reads_raw_data = [];
-  var writes_raw_data = [];
+  var co2e_data = [];
   for(var pname in window.data_byprocess){
     if( !window.data_byprocess.hasOwnProperty(pname) )
         continue;
     var smry = window.data_byprocess[pname];
-    cpu_raw_data.push({y: smry.cpu, name: pname, type:'box', boxmean: true, boxpoints: false});
-    cpu_usage_data.push({y: smry.cpuUsage, name: pname, type:'box', boxmean: true, boxpoints: false});
-    mem_raw_data.push({y: norm_mem(smry.mem), name: pname, type:'box', boxmean: true, boxpoints: false});
-    mem_usage_data.push({y: smry.memUsage, name: pname, type:'box', boxmean: true, boxpoints: false});
-    vmem_raw_data.push({y: norm_mem(smry.vmem), name: pname, type:'box', boxmean: true, boxpoints: false});
-    time_raw_data.push({y: smry.time, name: pname, type:'box', boxmean: true, boxpoints: false});
-    time_usage_data.push({y: smry.timeUsage, name: pname, type:'box', boxmean: true, boxpoints: false});
-    reads_raw_data.push({y: norm_mem(smry.reads), name: pname, type:'box', boxmean: true, boxpoints: false});
-    writes_raw_data.push({y: norm_mem(smry.writes), name: pname, type:'box', boxmean: true, boxpoints: false});
+    co2e_data.push({y: smry.co2e, name: pname, type:'box', boxmean: true, boxpoints: false});
   }
 
-  Plotly.newPlot('cpuplot', cpu_raw_data, { title: 'CPU Usage', yaxis: {title: '% single core CPU usage', tickformat: '.1f', rangemode: 'tozero'} });
-  Plotly.newPlot('memplot', mem_raw_data, { title: 'Physical Memory Usage', yaxis: {title: 'Memory', tickformat: '.4s', rangemode: 'tozero'} });
-  Plotly.newPlot('timeplot', time_raw_data, { title: 'Task execution real-time', yaxis: {title: 'Execution time (minutes)', tickformat: '.1f', rangemode: 'tozero'} });
-  Plotly.newPlot('readplot', reads_raw_data, { title: 'Number of bytes read', yaxis: {title: 'Read bytes', tickformat: '.4s', rangemode: 'tozero'} });
+  Plotly.newPlot('co2eplot', co2e_data, { title: 'CO2 emission', yaxis: {title: 'CO2 emission (g)', tickformat: '.1f', rangemode: 'tozero'} });
+
 
   // Only plot tabbed plots when shown
-  $('#pctcpuplot_tablink').on('shown.bs.tab', function (e) {
-    if($('#pctcpuplot').is(':empty')){
-      Plotly.newPlot('pctcpuplot', cpu_usage_data, { title: '% Requested CPU Used', yaxis: {title: '% Allocated CPUs Used', tickformat: '.1f', rangemode: 'tozero'} });
-    }
-  });
-  $('#pctmemplot_tablink').on('shown.bs.tab', function (e) {
-    if($('#pctmemplot').is(':empty')){
-        Plotly.newPlot('pctmemplot', mem_usage_data, { title: '% Requested Physical Memory Used', yaxis: {title: '% Memory', tickformat: '.1f', rangemode: 'tozero'} });
-    }
-  });
-  $('#vmemplot_tablink').on('shown.bs.tab', function (e) {
-    if($('#vmemplot').is(':empty')){
-        Plotly.newPlot('vmemplot', vmem_raw_data, { title: 'Virtual Memory Usage', yaxis: {title: 'Memory', tickformat: '.4s', rangemode: 'tozero'} });
-    }
-  });
-  $('#pcttimeplot_tablink').on('shown.bs.tab', function (e) {
-    if($('#pcttimeplot').is(':empty')){
-        Plotly.newPlot('pcttimeplot', time_usage_data, { title: '% Requested Time Used', yaxis: {title: '% Allocated Time Used', tickformat: '.1f', rangemode: 'tozero'} });
-    }
-  });
-  $('#writeplot_tablink').on('shown.bs.tab', function (e) {
-    if($('#writeplot').is(':empty')){
-        Plotly.newPlot('writeplot', writes_raw_data, { title: 'Number of bytes written', yaxis: {title: 'Written bytes', tickformat: '.4s', rangemode: 'tozero'}});
+  $('#pctco2eplot_tablink').on('shown.bs.tab', function (e) {
+    if($('#pctco2eplot').is(':empty')){
+      Plotly.newPlot('pctco2eplot', co2e_data, { title: '% ?', yaxis: {title: '% ?', tickformat: '.1f', rangemode: 'tozero'} });
     }
   });
 

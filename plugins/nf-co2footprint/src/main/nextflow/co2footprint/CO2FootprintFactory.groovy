@@ -313,7 +313,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
             //
             def co2 = computeTaskCO2footprint(trace)
-            co2eRecords[taskId] = new CO2Record((Float) co2)
+            co2eRecords[taskId] = new CO2Record((Float) co2, trace.get('name').toString())
             total_co2 += co2
 
             // save to the file
@@ -331,7 +331,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
             //
             def co2 = computeTaskCO2footprint(trace)
-            co2eRecords[taskId] = new CO2Record((Float) co2)
+            co2eRecords[taskId] = new CO2Record((Float) co2, trace.get('name').toString())
             total_co2 += co2
 
             // save to the file
@@ -502,7 +502,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
             synchronized (records) {
                 records[ trace.taskId ] = trace
-                aggregate(trace, co2eRecords[ trace.taskId ])
+                aggregate(co2eRecords[ trace.taskId ], trace.getSimpleName())
             }
         }
 
@@ -523,7 +523,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             // remove the record from the current records
             synchronized (records) {
                 records[ trace.taskId ] = trace
-                aggregate(trace, co2eRecords[ trace.taskId ])
+                aggregate(co2eRecords[ trace.taskId ], trace.getSimpleName())
             }
         }
 
@@ -533,8 +533,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
          *
          * @param record A {@link TraceRecord} object representing a task executed
          */
-        protected void aggregate(TraceRecord record, CO2Record co2record) {
-            aggregator.aggregate(record, co2record)
+        protected void aggregate(CO2Record co2record, String process) {
+            aggregator.aggregate(co2record, process)
         }
 
         /**
@@ -632,6 +632,5 @@ class CO2FootprintFactory implements TraceObserverFactory {
         }
 
     }
-
 
 }

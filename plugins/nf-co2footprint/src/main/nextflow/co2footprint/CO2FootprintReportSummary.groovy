@@ -66,10 +66,10 @@ class CO2FootprintReportSummary {
      *
      * @param record A {@link TraceRecord} representing a computed task
      */
-    void add( TraceRecord record, CO2Record co2record ) {
+    void add( CO2Record co2record ) {
         for( int i=0; i< names.size(); i++ ) {
             final name = names[i]
-            series[name].add(record, co2record)
+            series[name].add(co2record)
         }
     }
 
@@ -136,13 +136,13 @@ class CO2FootprintReportSummary {
         }
 
         private void label( def r, int q) {
-            if( r instanceof TraceRecord ) {
+            if( r instanceof CO2Record ) {
                 switch(q) {
-                    case 0: minLabel = r.get('name'); break
-                    case 25: q1Label = r.get('name'); break
-                    case 50: q2Label = r.get('name'); break
-                    case 75: q3Label = r.get('name'); break
-                    case 100: maxLabel = r.get('name'); break
+                    case 0: minLabel = r.getName(); break
+                    case 25: q1Label = r.getName(); break
+                    case 50: q2Label = r.getName(); break
+                    case 75: q3Label = r.getName(); break
+                    case 100: maxLabel = r.getName(); break
                     default:
                         log.debug "Invalid summary stats quantile: $q"
                 }
@@ -153,7 +153,7 @@ class CO2FootprintReportSummary {
             Math.round( value * 100 ) / 100
         }
 
-        void add( TraceRecord record, CO2Record co2record ) {
+        void add( CO2Record co2record ) {
             final Double value = metric.call(co2record)
             if( value == null )
                 return
@@ -162,11 +162,11 @@ class CO2FootprintReportSummary {
             total += value
             if( min==null || value<min ) {
                 min = value
-                minLabel = record.get('name')
+                minLabel = co2record.getName()
             }
             if( max==null || value>max ) {
                 max = value
-                maxLabel = record.get('name')
+                maxLabel = co2record.getName()
             }
         }
 
