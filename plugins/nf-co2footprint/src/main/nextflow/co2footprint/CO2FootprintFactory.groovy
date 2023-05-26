@@ -575,10 +575,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
                             readTemplate('nextflow/trace/assets/datatables.min.js'),
                             readTemplate('nextflow/trace/assets/moment.min.js'),
                             readTemplate('nextflow/trace/assets/plotly.min.js'),
-                            readTemplate('nextflow/trace/assets/ReportTemplate.js')
+                            readTemplate('assets/CO2FootprintReportTemplate.js')
                     ]
             ]
-            final tpl = readTemplate('nextflow/trace/ReportTemplate.html')
+            final tpl = readTemplate('CO2FootprintReportTemplate.html')
             def engine = new GStringTemplateEngine()
             def html_template = engine.createTemplate(tpl)
             def html_output = html_template.make(tpl_fields).toString()
