@@ -116,7 +116,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
     // Core function to compute CO2 emissions for each task
     float computeTaskCO2footprint(TraceRecord trace) {
-        // C = t * (nc * Pc * uc * nm * Pm) * PUE * CI * 0.001
+        // C = t * (nc * Pc * uc + nm * Pm) * PUE * CI * 0.001
         // as in https://doi.org/10.1002/advs.202100707
         // TODO factor 0.001 ?
 
@@ -163,7 +163,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
         def uc = cpu_usage / (100.0 * cpus_ceil)
         log.info "uc: $uc"
 
-        def c = (t * nc * pc * uc * nm * pm * pue * ci * 0.001)
+        // [g]
+        def c = t * (nc * pc * uc + nm * pm) * pue * ci * 0.001
         log.info "CO2: $c"
 
         return c
