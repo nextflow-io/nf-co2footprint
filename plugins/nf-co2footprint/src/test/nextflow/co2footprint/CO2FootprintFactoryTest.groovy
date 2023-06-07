@@ -17,6 +17,7 @@
 package nextflow.co2footprint
 
 import nextflow.Session
+import nextflow.trace.TraceRecord
 import spock.lang.Specification
 
 /**
@@ -24,6 +25,10 @@ import spock.lang.Specification
  * @author Sabrina Krakau <sabrinakrakau@gmail.com>
  */
 class CO2FootprintFactoryTest extends Specification {
+
+    private BigDecimal round( double value ) {
+        Math.round( value * 100 ) / 100
+    }
 
     def 'should return observer' () {
         when:
@@ -35,4 +40,18 @@ class CO2FootprintFactoryTest extends Specification {
         result[1] instanceof CO2FootprintFactory.CO2FootprintReportObserver
     }
 
+    def 'test co2e calculation' () {
+        given:
+        def traceRecord = new TraceRecord()
+        traceRecord.realtime = (1 as Long) * (3600000 as Long)
+        traceRecord.cpus = 1
+        traceRecord.cpu_model = "Unknown model"
+        traceRecord.'%cpu' = 100.0
+        traceRecord.memory = (7 as Long) * (1000000000 as Long)
+
+        def result = new CO2FootprintFactory().computeTaskCO2footprint(traceRecord)
+
+        expect:
+        round(result) == 11.59
+    }
 }
