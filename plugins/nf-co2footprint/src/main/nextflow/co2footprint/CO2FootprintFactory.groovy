@@ -118,16 +118,17 @@ class CO2FootprintFactory implements TraceObserverFactory {
     float computeTaskCO2footprint(TraceRecord trace) {
         // C = t * (nc * Pc * uc + nm * Pm) * PUE * CI * 0.001
         // as in https://doi.org/10.1002/advs.202100707
-        // TODO factor 0.001 ?
+        // PSF: pragmatic scaling factor -> not used here since we aim at the CO2e of one pipeline run
+        // Factor 0.001 needed to convert Pc and Pm from W to kW
 
-        // Pc: power draw of a computing core
+        // Pc: power draw of a computing core  [W]
         def pc = getCpuCoreTdp(trace)
         log.info "pc: $pc"
-        // Pm: power draw of memory (Watt)
+        // Pm: power draw of memory [W per GB]
         def pm  = 0.3725
         // PUE: efficiency coefficient of the data centre
         def pue = 1.67
-        // CI: carbon intensity
+        // CI: carbon intensity [gCO2e kWh−1]
         def ci  = 475
 
         // t: runningtime in hours
@@ -137,7 +138,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         def nc = trace.get('cpus') as Integer
         log.info "nc: $nc"
 
-        // nm: size of memory available (gigabytes) -> requested memory
+        // nm: size of memory available [GB] -> requested memory
         if ( trace.get('memory') == null ) {
             // TODO if 'memory' not set, returns null, hande somehow?
             log.error "TraceRecord field 'memory' is not set!"
