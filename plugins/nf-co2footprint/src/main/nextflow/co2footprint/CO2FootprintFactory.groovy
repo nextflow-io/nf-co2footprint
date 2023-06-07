@@ -119,35 +119,23 @@ class CO2FootprintFactory implements TraceObserverFactory {
     List<Double> computeTaskCO2footprint(TraceRecord trace) {
         // C = t * (nc * Pc * uc + nm * Pm) * PUE * CI * 0.001
         // as in https://doi.org/10.1002/advs.202100707
-        // TODO factor 0.001 ?
+        // PSF: pragmatic scaling factor -> not used here since we aim at the CO2e of one pipeline run
+        // Factor 0.001 needed to convert Pc and Pm from W to kW
 
-        // Pc: power draw of a computing core
-        def pc = getCpuCoreTdp(trace)
-        log.info "pc: $pc"
-        // Pm: power draw of memory (Watt)
-        def pm  = 0.3725
-        // PUE: efficiency coefficient of the data centre
-        def pue = 1.67
-        // CI: carbon intensity
-        def ci  = 475
-
-        // t: runningtime in hours
+        // t: runtime in hours
         def t  = (trace.get('realtime') as Double)/3600000
         log.info "t: $t"
+
+        /**
+         * Factors of core power usage
+         */
         // nc: number of cores
         def nc = trace.get('cpus') as Integer
         log.info "nc: $nc"
 
-        // nm: size of memory available (gigabytes) -> requested memory
-        if ( trace.get('memory') == null ) {
-            // TODO if 'memory' not set, returns null, hande somehow?
-            log.error "TraceRecord field 'memory' is not set!"
-            System.exit(1)
-        }
-        def nm = (trace.get('memory') as Long)/1000000000
-        log.info "nm: $nm"
-
-        // TODO handle if more memory/cpus used than requested?
+        // Pc: power draw of a computing core  [W]
+        def pc = getCpuCoreTdp(trace)
+        log.info "pc: $pc"
 
         // uc: core usage factor (between 0 and 1)
         // TODO if requested more than used, this is not taken into account, right?
@@ -164,11 +152,39 @@ class CO2FootprintFactory implements TraceObserverFactory {
         def uc = cpu_usage / (100.0 * cpus_ceil)
         log.info "uc: $uc"
 
-        // Calculate energy consumption
+        /**
+         * Factors of memory power usage
+         */
+        // nm: size of memory available [GB] -> requested memory
+        if ( trace.get('memory') == null ) {
+            // TODO if 'memory' not set, returns null, hande somehow?
+            log.error "TraceRecord field 'memory' is not set!"
+            System.exit(1)
+        }
+        def nm = (trace.get('memory') as Long)/1000000000
+        log.info "nm: $nm"
+        // TODO handle if more memory/cpus used than requested?
+
+        // Pm: power draw of memory [W per GB]
+        def pm  = 0.3725
+
+        /**
+         * Remaining factors
+         */
+        // PUE: efficiency coefficient of the data centre
+        def pue = 1.67
+        // CI: carbon intensity [gCO2e kWh−1]
+        def ci  = 475
+
+        /**
+         * Calculate energy consumption
+         */
         def Double e = (t * (nc * pc * uc + nm * pm) * pue * 0.001) as Double
         log.info "E: $e"
 
-        // Calculate Carbon Footprint
+        /*
+         * Resulting CO2 emission
+         */
         def Double c = (e * ci) as Double
         log.info "CO2: $c"
 
