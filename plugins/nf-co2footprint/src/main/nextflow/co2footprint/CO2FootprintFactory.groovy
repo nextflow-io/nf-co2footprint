@@ -370,7 +370,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             total_co2 += co2
 
             // save to the file
-            writer.send { PrintWriter it -> it.println("${taskId}\t${convertToReadableUnits(eConsumption,5)}\t${convertToReadableUnits(co2)}"); it.flush() }
+            writer.send { PrintWriter it -> it.println("${taskId}\t${convertToReadableUnits(eConsumption,5)}Wh\t${convertToReadableUnits(co2)}g"); it.flush() }
         }
 
 
@@ -391,7 +391,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             total_co2 += co2
 
             // save to the file
-            writer.send { PrintWriter it -> it.println("${taskId}\t${convertToReadableUnits(eConsumption,5)}\t${convertToReadableUnits(co2)}"); it.flush() }
+            writer.send { PrintWriter it -> it.println("${taskId}\t${convertToReadableUnits(eConsumption,5)Wh}Wh\t${convertToReadableUnits(co2)}g"); it.flush() }
         }
     }
 
