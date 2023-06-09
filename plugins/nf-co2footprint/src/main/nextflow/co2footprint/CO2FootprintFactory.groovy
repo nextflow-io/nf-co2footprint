@@ -115,6 +115,31 @@ class CO2FootprintFactory implements TraceObserverFactory {
     }
 
 
+    private String convertToReadableUnits(double value, int unitIndex=4) {
+        def units = ['p', 'n', 'u', 'm', ' ', 'K', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, mili, 0, Kilo, Mega, Giga, Tera, Peta, Exa
+        
+        while (value >= 1000 && unitIndex < units.size() - 1) {
+            value /= 1000
+            unitIndex++
+        }
+        while (value <= 1 && unitIndex > 0) {
+            value *= 1000
+            unitIndex--
+        }
+        
+        def formattedValue = value.toString()
+        
+        if (value % 1 == 0) {
+            formattedValue = value.toInteger().toString()
+        } else if (value % 0.1 == 0) {
+            formattedValue = String.format('%.1f', value)
+        } else if (value % 0.01 == 0) {
+            formattedValue = String.format('%.2f', value)
+        }
+        
+        return "${formattedValue}${units[unitIndex]}"
+    }
+
     // Core function to compute CO2 emissions for each task
     List<Double> computeTaskCO2footprint(TraceRecord trace) {
         // C = t * (nc * Pc * uc + nm * Pm) * PUE * CI * 0.001
@@ -177,13 +202,13 @@ class CO2FootprintFactory implements TraceObserverFactory {
         def ci  = 475
 
         /**
-         * Calculate energy consumption
+         * Calculate energy consumption [kWh]
          */
         def Double e = (t * (nc * pc * uc + nm * pm) * pue * 0.001) as Double
         log.info "E: $e"
 
         /*
-         * Resulting CO2 emission
+         * Resulting CO2 emission [gCO2e]
          */
         def Double c = (e * ci) as Double
         log.info "CO2: $c"
@@ -345,7 +370,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             total_co2 += co2
 
             // save to the file
-            writer.send { PrintWriter it -> it.println("${taskId}\t${eConsumption}\t${co2}"); it.flush() }
+            writer.send { PrintWriter it -> it.println("${taskId}\t${convertToReadableUnits(eConsumption,5)}\t${convertToReadableUnits(co2)}"); it.flush() }
         }
 
 
@@ -366,7 +391,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             total_co2 += co2
 
             // save to the file
-            writer.send { PrintWriter it -> it.println("${taskId}\t${eConsumption}\t${co2}"); it.flush() }
+            writer.send { PrintWriter it -> it.println("${taskId}\t${convertToReadableUnits(eConsumption,5)}\t${convertToReadableUnits(co2)}"); it.flush() }
         }
     }
 
