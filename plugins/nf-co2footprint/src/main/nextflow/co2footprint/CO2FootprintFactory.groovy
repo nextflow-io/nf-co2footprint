@@ -127,17 +127,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             unitIndex--
         }
         
-        def formattedValue = value.toString()
-        
-        if (value % 1 == 0) {
-            formattedValue = value.toInteger().toString()
-        } else if (value % 0.1 == 0) {
-            formattedValue = String.format('%.1f', value)
-        } else if (value % 0.01 == 0) {
-            formattedValue = String.format('%.2f', value)
-        }
-        
-        return "${formattedValue}${units[unitIndex]}"
+        return "${value}${units[unitIndex]}"
     }
 
     // Core function to compute CO2 emissions for each task
