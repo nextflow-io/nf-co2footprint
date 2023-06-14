@@ -35,12 +35,13 @@ class CO2FootprintReportSummary {
 
     static {
         mappers.co2e = { CO2Record co2record -> co2record.getCO2e() as Double }
+        mappers.energy = { CO2Record co2record -> co2record.getEnergyConsumption() as Double }
     }
 
 
 
     /**
-     * Hold the summary for each series ie. co2e (only currently)
+     * Hold the summary for each series ie. co2e
      */
     private Map<String, Summary> series
 
@@ -57,7 +58,7 @@ class CO2FootprintReportSummary {
     }
 
     /**
-     * @return The list of series names eg `co2e` (only currently)
+     * @return The list of series names eg `co2e`
      */
     List<String> getNames() { names }
 
@@ -77,7 +78,7 @@ class CO2FootprintReportSummary {
      * Compute the summary stats for the collected tasks
      *
      * @param
-     *      name A series name eg {@code co2e} (only currently)
+     *      name A series name eg {@code co2e} 
      * @return
      *      A {@link Map} holding the summary containing the following stats:
      *      - min: minimal value
