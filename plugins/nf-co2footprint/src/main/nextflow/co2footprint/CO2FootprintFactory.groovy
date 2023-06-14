@@ -18,6 +18,7 @@ package nextflow.co2footprint
 
 import groovy.text.GStringTemplateEngine
 import groovy.transform.PackageScope
+import groovy.transform.PackageScopeTarget
 import groovyx.gpars.agent.Agent
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskProcessor
@@ -45,6 +46,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 @Slf4j
 @CompileStatic
+@PackageScope(PackageScopeTarget.FIELDS)
 class CO2FootprintFactory implements TraceObserverFactory {
 
     private CO2FootprintConfig config
@@ -53,7 +55,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
     // TODO make sure for key value can be set only once?
 
     private Map<String, Float> cpuData = ['default': (Float) 12.0]
-    @PackageScope
     Double total_energy = 0
     Double total_co2 = 0
 
