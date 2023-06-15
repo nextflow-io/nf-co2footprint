@@ -73,29 +73,20 @@ $(function() {
   }
 
   // Plot histograms of resource usage
-  //// Co2e
   var co2e_data = [];
-  for(var pname in window.data_byprocess){
-    if( !window.data_byprocess.hasOwnProperty(pname) )
-        continue;
-    var smry = window.data_byprocess[pname];
-    co2e_data.push({y: smry.co2e, name: pname, type:'box', boxmean: true, boxpoints: false});
-  }
-
-  Plotly.newPlot('co2eplot', co2e_data, { title: 'CO2 emission', yaxis: {title: 'CO2 emission (g)', tickformat: '.1f', rangemode: 'tozero'} });
-
-  //// energy consumption
   var energy_data = [];
   for(var pname in window.data_byprocess){
     if( !window.data_byprocess.hasOwnProperty(pname) )
         continue;
     var smry = window.data_byprocess[pname];
+    co2e_data.push({y: smry.co2e, name: pname, type:'box', boxmean: true, boxpoints: false});
     energy_data.push({y: smry.energy, name: pname, type:'box', boxmean: true, boxpoints: false});
+
   }
 
+  Plotly.newPlot('co2eplot', co2e_data, { title: 'CO2 emission', yaxis: {title: 'CO2 emission (g)', tickformat: '.1f', rangemode: 'tozero'} });
   Plotly.newPlot('energyplot', energy_data, { title: 'Energy consumption', yaxis: {title: 'Energy consumption (Wh)', tickformat: '.1f', rangemode: 'tozero'} });
-  //
-
+  
   // Only plot tabbed plots when shown
   $('#pctco2eplot_tablink').on('shown.bs.tab', function (e) {
     if($('#pctco2eplot').is(':empty')){
