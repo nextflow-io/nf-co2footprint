@@ -24,6 +24,7 @@ import nextflow.processor.TaskProcessor
 import nextflow.script.WorkflowMetadata
 import nextflow.trace.TraceHelper
 import nextflow.trace.TraceRecord
+import nextflow.co2footprint.HelperFunctions
 
 import java.nio.file.Files
 import java.nio.file.Path
@@ -113,22 +114,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         }
         return cpuData['default']
     }
-
-
-    private String convertToReadableUnits(double value, int unitIndex=4) {
-        def units = ['p', 'n', 'u', 'm', ' ', 'K', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, mili, 0, Kilo, Mega, Giga, Tera, Peta, Exa
-        
-        while (value >= 1000 && unitIndex < units.size() - 1) {
-            value /= 1000
-            unitIndex++
-        }
-        while (value <= 1 && unitIndex > 0) {
-            value *= 1000
-            unitIndex--
-        }
-        
-        return "${value}${units[unitIndex]}"
-    }
+    
 
     // Core function to compute CO2 emissions for each task
     List<Double> computeTaskCO2footprint(TraceRecord trace) {
@@ -360,7 +346,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             total_co2 += co2
 
             // save to the file
-            writer.send { PrintWriter it -> it.println("${taskId}\t${convertToReadableUnits(eConsumption,5)}Wh\t${convertToReadableUnits(co2)}g"); it.flush() }
+            writer.send { PrintWriter it -> it.println("${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,5)}Wh\t${HelperFunctions.convertToReadableUnits(co2)}g"); it.flush() }
         }
 
 
@@ -381,7 +367,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             total_co2 += co2
 
             // save to the file
-            writer.send { PrintWriter it -> it.println("${taskId}\t${convertToReadableUnits(eConsumption,5)}Wh\t${convertToReadableUnits(co2)}g"); it.flush() }
+            writer.send { PrintWriter it -> it.println("${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,5)}Wh\t${HelperFunctions.convertToReadableUnits(co2)}g"); it.flush() }
         }
     }
 
