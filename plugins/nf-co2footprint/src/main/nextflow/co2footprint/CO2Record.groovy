@@ -3,6 +3,8 @@ package nextflow.co2footprint
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
+import nextflow.co2footprint.HelperFunctions
+
 @Slf4j
 @CompileStatic
 class CO2Record {
@@ -20,6 +22,8 @@ class CO2Record {
 
     // TODO implement accordingly to TraceRecord
     Double getEnergyConsumption() { energy }
+    String getEnergyConsumptionReadable() { HelperFunctions.convertToReadableUnits(energy) }
+    String getCO2eReadable() { HelperFunctions.convertToReadableUnits(co2e) }
     Double getCO2e() { co2e }
     String getName() { name }
 }
