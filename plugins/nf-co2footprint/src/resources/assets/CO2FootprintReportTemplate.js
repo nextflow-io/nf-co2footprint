@@ -73,6 +73,7 @@ $(function() {
   }
 
   // Plot histograms of resource usage
+  //// Co2e
   var co2e_data = [];
   var energy_data = [];
   for(var pname in window.data_byprocess){
