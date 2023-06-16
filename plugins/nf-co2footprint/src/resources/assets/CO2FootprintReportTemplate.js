@@ -93,6 +93,7 @@ $(function() {
       Plotly.newPlot('pctco2eplot', co2e_data, { title: '% ?', yaxis: {title: '% ?', tickformat: '.1f', rangemode: 'tozero'} });
     }
   });*/
+  // Kept as an example of how to hide tabbed plots, currently we don't have tabbed plots
 
   // Humanize duration
   function humanize(duration){
@@ -192,7 +193,7 @@ $(function() {
               return '<code>'+script+'</code>';
             }
           },
-          { title: 'CO2 emissions', data: 'CO2e' },
+          { title: 'CO2 emissions', data: 'co2e' },
           { title: 'energy consumption', data: 'energy' },
           //{ title: 'allocated memory', data: 'memory', type: 'num', render: make_memory }, // kept as an example of using render
         ],

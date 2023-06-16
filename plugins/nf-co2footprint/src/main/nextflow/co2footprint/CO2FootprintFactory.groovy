@@ -448,6 +448,13 @@ class CO2FootprintFactory implements TraceObserverFactory {
         }
 
         /**
+         * @return The map of collected {@link CO2Record}s
+         */
+        protected Map<TaskId,CO2Record> getCO2Records() {
+            co2eRecords
+        }
+
+        /**
          * Set the number max allowed tasks. If this number is exceed the the tasks
          * json in not included in the final report
          *
@@ -531,8 +538,9 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 return
             }
 
-            log.info "TEST "
-            log.info "${co2eRecords[ trace.taskId ].getCO2e()}"
+            //log.info "TEST "
+            //log.info "${co2eRecords[ trace.taskId ].getCO2e()}"
+            //log.info "$co2eRecords"
 
             synchronized (records) {
                 records[ trace.taskId ] = trace
@@ -576,7 +584,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
          */
         protected String renderTasksJson() {
             final r = getRecords()
-            r.size()<=maxTasks ? renderJsonData(r.values()) : 'null'
+            final co2r = getCO2Records()
+            co2r.size()<=maxTasks ? renderJsonData(r.values(), co2r.values()) : 'null'
         }
 
         protected String renderSummaryJson() {
@@ -612,6 +621,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                             readTemplate('assets/CO2FootprintReportTemplate.js')
                     ]
             ]
+            //log.info "${tpl_fields['payload']}"
             final tpl = readTemplate('CO2FootprintReportTemplate.html')
             def engine = new GStringTemplateEngine()
             def html_template = engine.createTemplate(tpl)
@@ -631,21 +641,27 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * Render the executed tasks json payload
          *
          * @param data A collection of {@link TraceRecord}s representing the tasks executed
+         * @param dataCO2 A collection of {@link CO2Record}s representing the tasks executed
          * @return The rendered json payload
          */
-        protected String renderJsonData(Collection<TraceRecord> data) {
+        protected String renderJsonData(Collection<TraceRecord> data, Collection<CO2Record> dataCO2) {
             def List<String> formats = null
             def List<String> fields = null
+            def List<String> co2Formats = null
+            def List<String> co2Fields = null
             def result = new StringBuilder()
             result << '[\n'
-            int i=0
-            for( TraceRecord record : data ) {
-                if( i++ ) result << ','
+            for (int i = 0; i < data.size(); i++) {
+                if( i ) result << ','
                 if( !formats ) formats = TraceRecord.FIELDS.values().collect { it!='str' ? 'num' : 'str' }
                 if( !fields ) fields = TraceRecord.FIELDS.keySet() as List
-                record.renderJson(result,fields,formats)
+                data[i].renderJson(result,fields,formats)
+                if( !co2Formats ) co2Formats = CO2Record.FIELDS.values().collect { it!='str' ? 'num' : 'str' }
+                if( !co2Fields ) co2Fields = CO2Record.FIELDS.keySet() as List
+                dataCO2[i].renderJson(result,co2Fields,co2Formats)
             }
             result << ']'
+            log.info "$result"
             return result.toString()
         }
 
