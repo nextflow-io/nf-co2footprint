@@ -96,8 +96,24 @@ $(function() {
   });*/
   // Kept as an example of how to hide tabbed plots, currently we don't have tabbed plots
 
+  // Convert to readable units
+  function readable_units(value, unit_index) {
+    units = ['p', 'n', 'u', 'm', ' ', 'K', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, mili, 0, Kilo, Mega, Giga, Tera, Peta, Exa
+    
+    while (value >= 1000 && unit_index < units.length - 1) {
+        value /= 1000;
+        unit_index++;
+    }
+    while (value <= 1 && unit_index > 0) {
+        value *= 1000;
+        unit_index--;
+    }
+    
+    return value + units[unit_index];
+}
+  
   // Humanize duration
-  function humanize(duration){
+  /*function humanize(duration){
     if (duration.days() > 0) {
       return duration.days() + "d " + duration.hours() + "h"
     }
@@ -108,10 +124,34 @@ $(function() {
       return duration.minutes() + "m " + duration.seconds() + "s"
     }
     return duration.asSeconds().toFixed(1) + "s"
-  }
+  }*/
 
   // Build the trace table
-  function make_duration(ms, type){
+  function make_co2e(ms, type){
+    if (type === 'sort') {
+      return parseInt(ms);
+    }
+    if($('#nf-table-humanreadable').val() == 'false'){
+      return ms;
+    }
+    if (ms == '-' || ms == 0){
+      return ms;
+    }
+    return readable_units(ms, 4) + 'g';
+  }
+  function make_energy(ms, type){
+    if (type === 'sort') {
+      return parseInt(ms);
+    }
+    if($('#nf-table-humanreadable').val() == 'false'){
+      return ms;
+    }
+    if (ms == '-' || ms == 0){
+      return ms;
+    }
+    return readable_units(ms, 5) + 'Wh';
+  }
+  /*function make_duration(ms, type){
     if (type === 'sort') {
       return parseInt(ms);
     }
@@ -157,7 +197,7 @@ $(function() {
         ++u;
     } while(Math.abs(bytes) >= thresh && u < units.length - 1);
     return bytes.toFixed(3)+' '+units[u];
-  }
+  }*/
   function make_tasks_table(){
     // reset
       if ( $.fn.dataTable.isDataTable( '#tasks_table' ) ) {
@@ -194,9 +234,8 @@ $(function() {
               return '<code>'+script+'</code>';
             }
           },
-          { title: 'CO2 emissions', data: 'co2e' },
-          { title: 'energy consumption', data: 'energy' },
-          //{ title: 'allocated memory', data: 'memory', type: 'num', render: make_memory }, // kept as an example of using render
+          { title: 'CO2 emissions', data: 'co2e', render: make_co2e },
+          { title: 'energy consumption', data: 'energy', render: make_energy },
         ],
         "deferRender": true,
         "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
