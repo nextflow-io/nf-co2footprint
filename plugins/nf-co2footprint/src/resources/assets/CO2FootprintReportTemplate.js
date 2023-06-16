@@ -68,14 +68,20 @@ $(function() {
             return moment.duration(d).asMinutes().toFixed(1);
           });
         } else if (key == "co2e") {
-          window.data_byprocess[proc][key] = window.data_byprocess[proc][key].map(function(value){
+          window.data_byprocess[proc]['co2e_readable'] = window.data_byprocess[proc][key].map(function(value){
             [value_co2e, units_co2e] = readable_units_value(value, 4)
             return value_co2e;
           });
-        } else if (key == "energy") {
           window.data_byprocess[proc][key] = window.data_byprocess[proc][key].map(function(value){
-            [value_energy, units_energy] = readable_units_value(value, 4)
+            return Math.round(value);
+          });
+        } else if (key == "energy") {
+          window.data_byprocess[proc]['energy_readable'] = window.data_byprocess[proc][key].map(function(value){
+            [value_energy, units_energy] = readable_units_value(value, 5)
             return value_energy;
+          });
+          window.data_byprocess[proc][key] = window.data_byprocess[proc][key].map(function(value){
+            return Math.round(value);
           });
         }
       }
@@ -102,25 +108,33 @@ $(function() {
   //// Co2e
   var co2e_data = [];
   var energy_data = [];
+  var co2e_data_read = [];
+  var energy_data_read = [];
   for(var pname in window.data_byprocess){
     if( !window.data_byprocess.hasOwnProperty(pname) )
         continue;
     var smry = window.data_byprocess[pname];
     co2e_data.push({y: smry.co2e, name: pname, type:'box', boxmean: true, boxpoints: false});
     energy_data.push({y: smry.energy, name: pname, type:'box', boxmean: true, boxpoints: false});
+    co2e_data_read.push({y: smry.co2e_readable, name: pname, type:'box', boxmean: true, boxpoints: false});
+    energy_data_read.push({y: smry.energy_readable, name: pname, type:'box', boxmean: true, boxpoints: false});
 
   }
 
-  Plotly.newPlot('co2eplot', co2e_data, { title: 'CO2 emission', yaxis: {title: 'CO2 emission ('+units_co2e+'g)', tickformat: '.1f', rangemode: 'tozero'} });
-  Plotly.newPlot('energyplot', energy_data, { title: 'Energy consumption', yaxis: {title: 'Energy consumption ('+units_energy+'Wh)', tickformat: '.1f', rangemode: 'tozero'} });
+  Plotly.newPlot('co2eplot', co2e_data, { title: 'CO2 emission', yaxis: {title: 'CO2 emission (g)', tickformat: '.1f', rangemode: 'tozero'} });
+  Plotly.newPlot('energyplot', energy_data, { title: 'Energy consumption', yaxis: {title: 'Energy consumption (Wh)', tickformat: '.1f', rangemode: 'tozero'} });
   
   // Only plot tabbed plots when shown
-  /*$('#pctco2eplot_tablink').on('shown.bs.tab', function (e) {
+  $('#pctco2eplot_tablink').on('shown.bs.tab', function (e) {
     if($('#pctco2eplot').is(':empty')){
-      Plotly.newPlot('pctco2eplot', co2e_data, { title: '% ?', yaxis: {title: '% ?', tickformat: '.1f', rangemode: 'tozero'} });
+      Plotly.newPlot('pctco2eplot', co2e_data_read, { title: 'CO2 emission', yaxis: {title: 'CO2 emission ('+units_co2e+'g)', tickformat: '.1f', rangemode: 'tozero'} });
     }
-  });*/
-  // Kept as an example of how to hide tabbed plots, currently we don't have tabbed plots
+  })
+  $('#pctenergyplot_tablink').on('shown.bs.tab', function (e) {
+    if($('#pctenergyplot').is(':empty')){
+      Plotly.newPlot('pctenergyplot', energy_data_read, { title: 'Energy consumption', yaxis: {title: 'Energy consumption ('+units_energy+'Wh)', tickformat: '.1f', rangemode: 'tozero'} });
+    }
+  })
 
   // Convert to readable units
   function readable_units(value, unit_index) {
