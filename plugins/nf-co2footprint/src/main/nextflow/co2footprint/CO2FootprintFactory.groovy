@@ -661,7 +661,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 dataCO2[i].renderJson(result,co2Fields,co2Formats)
             }
             result << ']'
-            log.info "$result"
             return result.toString()
         }
 
