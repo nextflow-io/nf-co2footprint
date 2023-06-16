@@ -195,16 +195,16 @@ class CO2FootprintReportSummary {
             final result = new LinkedHashMap<String,?>(12)
             final sorted = tasks.sort( false, { CO2Record co2record -> metric.call(co2record) } )
 
-            result.mean = round(total / count as double)
-            result.min = round(quantile(sorted, 0))
-            result.q1 = round(quantile(sorted, 25))
-            result.q2 = round(quantile(sorted, 50))
-            result.q3 = round(quantile(sorted, 75))
-            result.max = round(quantile(sorted, 100))
+            result.mean = total / count as double
+            result.min = quantile(sorted, 0)
+            result.q1 = quantile(sorted, 25)
+            result.q2 = quantile(sorted, 50)
+            result.q3 = quantile(sorted, 75)
+            result.max = quantile(sorted, 100)
 
             // discard entry with all zero 
-            if( result.min == 0 && result.min == result.max  )
-                return null
+            //if( result.min == 0 && result.min == result.max  )
+            //    return null
 
             result.minLabel = minLabel
             result.maxLabel = maxLabel
