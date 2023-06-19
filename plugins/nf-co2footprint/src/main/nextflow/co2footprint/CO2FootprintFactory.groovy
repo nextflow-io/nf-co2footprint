@@ -349,14 +349,15 @@ class CO2FootprintFactory implements TraceObserverFactory {
             def pue = computation_results[8]
             def ci = computation_results[9]
 
+            def Map valuesMap = new LinkedHashMap<>(['energy': eConsumption, 'co2e': co2, 'name': trace.get('name').toString(), 'time': t, 'cores': nc, 'core_power': pc, 'core_usage': uc, 'memory': nm, 'memory_power': pm, 'pue': pue, 'ci': ci])
 
-            co2eRecords[taskId] = new CO2Record((Double) eConsumption, (Double) co2, trace.get('name').toString())
+            co2eRecords[taskId] = new CO2Record((Double) eConsumption, (Double) co2, trace.get('name').toString(), valuesMap)
             total_energy += eConsumption
             total_co2 += co2
 
             // save to the file
             writer.send { PrintWriter it -> it.println("${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,5)}Wh\t${HelperFunctions.convertToReadableUnits(co2)}g\t\
-            ${t} hours\t${nc}\t${pc}\t${uc}\t${HelperFunctions.convertToReadableUnits(nm,8)}b\t${HelperFunctions.convertToReadableUnits(pm)}W\t${pue}\t${HelperFunctions.convertToReadableUnits(ci)}g/kWh"); it.flush() }
+            ${t} hours\t${nc}\t${pc}\t${uc}\t${HelperFunctions.convertToReadableUnits(nm,8)}B\t${HelperFunctions.convertToReadableUnits(pm)}W\t${pue}\t${HelperFunctions.convertToReadableUnits(ci)}g/kWh"); it.flush() }
         }
 
 
@@ -381,13 +382,15 @@ class CO2FootprintFactory implements TraceObserverFactory {
             def pue = computation_results[8]
             def ci = computation_results[9]
 
-            co2eRecords[taskId] = new CO2Record((Double) eConsumption, (Double) co2, trace.get('name').toString())
+            def Map valuesMap = new LinkedHashMap<>(['energy': eConsumption, 'co2e': co2, 'name': trace.get('name').toString(), 'time': t, 'cores': nc, 'core_power': pc, 'core_usage': uc, 'memory': nm, 'memory_power': pm, 'pue': pue, 'ci': ci])
+
+            co2eRecords[taskId] = new CO2Record((Double) eConsumption, (Double) co2, trace.get('name').toString(), valuesMap)
             total_energy += eConsumption
             total_co2 += co2
 
             // save to the file
             writer.send { PrintWriter it -> it.println("${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,5)}Wh\t${HelperFunctions.convertToReadableUnits(co2)}g\t\
-            ${t} hours\t${nc}\t${pc}\t${uc}\t${HelperFunctions.convertToReadableUnits(nm,8)}b\t${HelperFunctions.convertToReadableUnits(pm)}W\t${pue}\t${HelperFunctions.convertToReadableUnits(ci)}g/kWh"); it.flush() }
+            ${t} hours\t${nc}\t${pc}\t${uc}\t${HelperFunctions.convertToReadableUnits(nm,8)}B\t${HelperFunctions.convertToReadableUnits(pm)}W\t${pue}\t${HelperFunctions.convertToReadableUnits(ci)}g/kWh"); it.flush() }
         }
     }
 

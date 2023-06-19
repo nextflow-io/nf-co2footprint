@@ -63,11 +63,7 @@ $(function() {
             window.data_byprocess[proc][key].push(metrics[key].q3);
             window.data_byprocess[proc][key].push(metrics[key].max);
         }
-        if (key == "time") {
-          window.data_byprocess[proc][key] = window.data_byprocess[proc][key].map(function(d,i){
-            return moment.duration(d).asMinutes().toFixed(1);
-          });
-        } else if (key == "co2e") {
+        if (key == "co2e") {
           window.data_byprocess[proc]['co2e_readable'] = window.data_byprocess[proc][key].map(function(value){
             [value_co2e, units_co2e] = readable_units_value(value, 4)
             return value_co2e;
@@ -153,21 +149,25 @@ $(function() {
   }
   
   // Humanize duration
-  /*function humanize(duration){
-    if (duration.days() > 0) {
-      return duration.days() + "d " + duration.hours() + "h"
+  function humanize(duration){
+    days = Math.floor(duration / 24);
+    hours = duration % 24;
+    minutes = hours % 60;
+    seconds = minutes % 60;
+    if (days > 0) {
+      return days + "d " + hours + "h"
     }
-    if (duration.hours() > 0) {
-      return duration.hours() + "h " + duration.minutes() + "m"
+    if (hours > 0) {
+      return hours + "h " + minutes + "m"
     }
-    if (duration.minutes() > 0) {
-      return duration.minutes() + "m " + duration.seconds() + "s"
+    if (minutes > 0) {
+      return minutes + "m " + seconds + "s"
     }
-    return duration.asSeconds().toFixed(1) + "s"
-  }*/
+    return seconds.toFixed(1) + "s"
+  }
 
   // Build the trace table
-  function make_co2e(ms, type){
+  function make_index0(ms, type){
     if (type === 'sort') {
       return parseInt(ms);
     }
@@ -191,7 +191,7 @@ $(function() {
     }
     return readable_units(ms, 5) + 'Wh';
   }
-  /*function make_duration(ms, type){
+  function make_time(ms, type){
     if (type === 'sort') {
       return parseInt(ms);
     }
@@ -201,9 +201,9 @@ $(function() {
     if (ms == '-' || ms == 0){
       return ms;
     }
-    return humanize(moment.duration( parseInt(ms) ));
+    return humanize(parseInt(ms));
   }
-  function make_date(ms, type){
+  function make_memory(ms, type){
     if (type === 'sort') {
       return parseInt(ms);
     }
@@ -213,31 +213,9 @@ $(function() {
     if (ms == '-' || ms == 0){
       return ms;
     }
-    return moment( parseInt(ms) ).format();
+    return readable_units(ms, 8) + 'B';
   }
-  function make_memory(bytes, type){
-    if (type === 'sort') {
-      return parseInt(bytes);
-    }
-    if($('#nf-table-humanreadable').val() == 'false'){
-      return bytes;
-    }
-    if (bytes == '-' || bytes == 0){
-      return bytes;
-    }
-    // https://stackoverflow.com/a/14919494
-    var thresh = 1024;
-    if(Math.abs(bytes) < thresh) {
-      return bytes + ' B';
-    }
-    var units = ['kB','MB','GB','TB','PB','EB','ZB','YB'];
-    var u = -1;
-    do {
-        bytes /= thresh;
-        ++u;
-    } while(Math.abs(bytes) >= thresh && u < units.length - 1);
-    return bytes.toFixed(3)+' '+units[u];
-  }*/
+
   function make_tasks_table(){
     // reset
       if ( $.fn.dataTable.isDataTable( '#tasks_table' ) ) {
@@ -274,8 +252,16 @@ $(function() {
               return '<code>'+script+'</code>';
             }
           },
-          { title: 'CO2 emissions', data: 'co2e', render: make_co2e },
+          { title: 'CO2 emissions', data: 'co2e', render: make_index0 },
           { title: 'energy consumption', data: 'energy', render: make_energy },
+          { title: 'Time', data: 'time', render: make_time },
+          { title: 'Number of cores', data: 'cores' },
+          { title: 'Power draw of a computing core', data: 'core_power' },
+          { title: 'Core usage factor', data: 'core_usage' },
+          { title: 'Size of memory available', data: 'memory', render: make_memory },
+          { title: 'Power draw of memory', data: 'memory_power', render: make_index0 },
+          { title: 'Efficiency coefficient of the data center', data: 'pue' },
+          { title: 'Carbon intensity', data: 'ci', render: make_index0 },
         ],
         "deferRender": true,
         "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
@@ -283,7 +269,7 @@ $(function() {
         "colReorder": true,
         "columnDefs": [
           { className: "id", "targets": [ 0,1,2,3 ] },
-          { className: "meta", "targets": [ 4 ] },
+          { className: "meta", "targets": [ 4,7,8,9,10,11,12,13,14 ] },
           { className: "metrics", "targets": [ 5,6 ] }
         ],
         "buttons": [

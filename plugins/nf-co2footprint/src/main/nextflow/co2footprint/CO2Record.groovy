@@ -17,17 +17,25 @@ class CO2Record extends TraceRecord {
     private String name
     // final? or something? to make sure for key value can be set only once?
 
-    CO2Record(Double energy, Double co2e, String name) {
+    CO2Record(Double energy, Double co2e, String name, Map store=[:]) {
         this.energy = energy
         this.co2e = co2e
         this.name = name
-        this.store = new LinkedHashMap<>(['energy': energy, 'co2e': co2e, 'name': name])
+        this.store = store
     }
 
     final public static Map<String,String> FIELDS = [
-        co2e:   'num',
-        energy: 'num',
-        name:   'str'
+        co2e:         'num',
+        energy:       'num',
+        name:         'str',
+        time:         'num',
+        cores:        'num',
+        core_power:   'num',
+        core_usage:   'num',
+        memory:       'num',
+        memory_power: 'num',
+        pue:          'num',
+        ci:           'num'
     ]
 
     // TODO implement accordingly to TraceRecord
