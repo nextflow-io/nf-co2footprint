@@ -287,7 +287,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             //writer.send { co2eFile.println("Test CO2 emission is:"); co2eFile.flush() }
             //writer.send { PrintWriter it -> it.println("Test CO2 emission is:"); it.flush() }
             co2eSummaryFile.println("The total CO2 emission is: ${HelperFunctions.convertToReadableUnits(total_co2)}g")
-            co2eSummaryFile.println("The total energy consumption is: ${HelperFunctions.convertToReadableUnits(total_energy)}Wh")
+            co2eSummaryFile.println("The total energy consumption is: ${HelperFunctions.convertToReadableUnits(total_energy,5)}Wh")
             co2eSummaryFile.flush()
             co2eSummaryFile.close()
 
