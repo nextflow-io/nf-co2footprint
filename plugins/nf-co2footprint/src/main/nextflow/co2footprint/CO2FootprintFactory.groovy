@@ -190,7 +190,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         def Double c = (e * ci) as Double
         log.info "CO2: $c"
 
-        return [e, c]
+        return [e, c, t as Double, nc as Double, pc as Double, uc as Double, nm as Double, pm as Double, pue as Double, ci as Double]
     }
 
 
@@ -271,7 +271,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             writer = new Agent<PrintWriter>(co2eFile)
             summaryWriter = new Agent<PrintWriter>(co2eSummaryFile)
 
-            writer.send { co2eFile.println("task_id\tenergy_consumption\tCO2e"); co2eFile.flush() }
+            writer.send { co2eFile.println("task_id\tenergy_consumption\tCO2e\ttime\tnumber_of_cores\tpower_draw_of_a_computing_core\tcore_usage_factor\tsize_of_memory_available\tpower_draw_of_memory\tefficiency_coefficient_of_the_data_center\tcarbon_intensity"); co2eFile.flush() }
         }
 
         /**
@@ -340,7 +340,14 @@ class CO2FootprintFactory implements TraceObserverFactory {
             def computation_results = computeTaskCO2footprint(trace)
             def eConsumption = computation_results[0]
             def co2 = computation_results[1]
-
+            def t = computation_results[2]
+            def nc = computation_results[3]
+            def pc = computation_results[4]
+            def uc = computation_results[5]
+            def nm = computation_results[6]
+            def pm = computation_results[7]
+            def pue = computation_results[8]
+            def ci = computation_results[9]
 
 
             co2eRecords[taskId] = new CO2Record((Double) eConsumption, (Double) co2, trace.get('name').toString())
@@ -348,7 +355,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
             total_co2 += co2
 
             // save to the file
-            writer.send { PrintWriter it -> it.println("${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,5)}Wh\t${HelperFunctions.convertToReadableUnits(co2)}g"); it.flush() }
+            writer.send { PrintWriter it -> it.println("${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,5)}Wh\t${HelperFunctions.convertToReadableUnits(co2)}g\t\
+            ${t} hours\t${nc}\t${pc}\t${uc}\t${HelperFunctions.convertToReadableUnits(nm,8)}b\t${HelperFunctions.convertToReadableUnits(pm)}W\t${pue}\t${HelperFunctions.convertToReadableUnits(ci)}g/kWh"); it.flush() }
         }
 
 
@@ -364,12 +372,22 @@ class CO2FootprintFactory implements TraceObserverFactory {
             def computation_results = computeTaskCO2footprint(trace)
             def eConsumption = computation_results[0]
             def co2 = computation_results[1]
+            def t = computation_results[2]
+            def nc = computation_results[3]
+            def pc = computation_results[4]
+            def uc = computation_results[5]
+            def nm = computation_results[6]
+            def pm = computation_results[7]
+            def pue = computation_results[8]
+            def ci = computation_results[9]
+
             co2eRecords[taskId] = new CO2Record((Double) eConsumption, (Double) co2, trace.get('name').toString())
             total_energy += eConsumption
             total_co2 += co2
 
             // save to the file
-            writer.send { PrintWriter it -> it.println("${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,5)}Wh\t${HelperFunctions.convertToReadableUnits(co2)}g"); it.flush() }
+            writer.send { PrintWriter it -> it.println("${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,5)}Wh\t${HelperFunctions.convertToReadableUnits(co2)}g\t\
+            ${t} hours\t${nc}\t${pc}\t${uc}\t${HelperFunctions.convertToReadableUnits(nm,8)}b\t${HelperFunctions.convertToReadableUnits(pm)}W\t${pue}\t${HelperFunctions.convertToReadableUnits(ci)}g/kWh"); it.flush() }
         }
     }
 
