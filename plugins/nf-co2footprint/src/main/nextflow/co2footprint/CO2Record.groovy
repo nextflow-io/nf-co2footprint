@@ -27,7 +27,6 @@ class CO2Record extends TraceRecord {
     final public static Map<String,String> FIELDS = [
         co2e:         'num',
         energy:       'num',
-        name:         'str',
         time:         'num',
         cores:        'num',
         core_power:   'num',
@@ -35,7 +34,8 @@ class CO2Record extends TraceRecord {
         memory:       'num',
         memory_power: 'num',
         pue:          'num',
-        ci:           'num'
+        ci:           'num',
+        name:         'str'
     ]
 
     // TODO implement accordingly to TraceRecord

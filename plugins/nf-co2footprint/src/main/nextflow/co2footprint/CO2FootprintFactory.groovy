@@ -642,7 +642,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
                             readTemplate('assets/CO2FootprintReportTemplate.js')
                     ]
             ]
-            //log.info "${tpl_fields['payload']}"
             final tpl = readTemplate('CO2FootprintReportTemplate.html')
             def engine = new GStringTemplateEngine()
             def html_template = engine.createTemplate(tpl)
