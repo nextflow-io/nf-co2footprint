@@ -118,7 +118,7 @@ $(function() {
   }
 
   Plotly.newPlot('co2eplot', co2e_data, { title: 'CO2 emission', yaxis: {title: 'CO2 emission (g)', tickformat: '.1f', rangemode: 'tozero'} });
-  Plotly.newPlot('energyplot', energy_data, { title: 'Energy consumption', yaxis: {title: 'Energy consumption (Wh)', tickformat: '.1f', rangemode: 'tozero'} });
+  Plotly.newPlot('energyplot', energy_data, { title: 'Energy consumption', yaxis: {title: 'Energy consumption (KWh)', tickformat: '.1f', rangemode: 'tozero'} });
   
   // Only plot tabbed plots when shown
   $('#pctco2eplot_tablink').on('shown.bs.tab', function (e) {
@@ -150,20 +150,25 @@ $(function() {
   
   // Humanize duration
   function humanize(duration){
-    days = Math.floor(duration / 24);
-    hours = duration % 24;
-    minutes = hours % 60;
-    seconds = minutes % 60;
-    if (days > 0) {
-      return days + "d " + hours + "h"
+    if (duration > 24) {
+      days = Math.floor(duration / 24);
+      hours = Math.floor(duration % 24);
+      return days + "d " + hours + "h";
     }
-    if (hours > 0) {
-      return hours + "h " + minutes + "m"
+    if (duration >= 1) {
+      minutes = Math.floor(hours % 60);
+      return Math.floor(duration) + "h" + minutes + "m";
     }
-    if (minutes > 0) {
-      return minutes + "m " + seconds + "s"
+    if (duration < 1) {
+      minutes = Math.floor(duration * 60);
+      if (minutes >= 1) {
+        seconds = Math.floor(duration * 60 % 60);
+        return minutes + "m " + seconds + "s";
+      }
+      seconds = Math.floor(duration * 60 * 60);
+      return seconds.toFixed(1) + "s";
     }
-    return seconds.toFixed(1) + "s"
+    return Math.floor(duration * 60 * 60).toFixed(1) + "s";
   }
 
   // Build the trace table
@@ -201,7 +206,7 @@ $(function() {
     if (ms == '-' || ms == 0){
       return ms;
     }
-    return humanize(parseInt(ms));
+    return humanize(ms);
   }
   function make_memory(ms, type){
     if (type === 'sort') {
