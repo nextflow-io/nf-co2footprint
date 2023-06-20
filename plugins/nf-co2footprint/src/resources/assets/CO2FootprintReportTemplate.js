@@ -145,7 +145,7 @@ $(function() {
         unit_index--;
     }
     
-    return value + units[unit_index];
+    return Math.floor(value) + units[unit_index];
   }
   
   // Humanize duration
