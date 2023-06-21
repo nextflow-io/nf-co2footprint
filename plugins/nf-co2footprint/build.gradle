@@ -50,7 +50,7 @@ sourceSets {
 }
 
 ext{
-    nextflowVersion = '22.10.0'
+    nextflowVersion = '23.04.0'
 }
 
 dependencies {
@@ -61,10 +61,10 @@ dependencies {
     // add here plugins depepencies
 
     // test configuration
-    testImplementation "org.codehaus.groovy:groovy:3.0.10"
-    testImplementation "org.codehaus.groovy:groovy-nio:3.0.10"
+    testImplementation "org.codehaus.groovy:groovy:3.0.17"
+    testImplementation "org.codehaus.groovy:groovy-nio:3.0.17"
     testImplementation "io.nextflow:nextflow:$nextflowVersion"
-    testImplementation ("org.codehaus.groovy:groovy-test:3.0.10") { exclude group: 'org.codehaus.groovy' }
+    testImplementation ("org.codehaus.groovy:groovy-test:3.0.17") { exclude group: 'org.codehaus.groovy' }
     testImplementation ("cglib:cglib-nodep:3.3.0")
     testImplementation ("org.objenesis:objenesis:3.1")
     testImplementation ("org.spockframework:spock-core:2.2-groovy-3.0") { exclude group: 'org.codehaus.groovy'; exclude group: 'net.bytebuddy' }
