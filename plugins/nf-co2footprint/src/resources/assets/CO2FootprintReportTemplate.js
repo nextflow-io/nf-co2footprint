@@ -264,9 +264,9 @@ $(function() {
           { title: 'Power draw of a computing core', data: 'core_power' },
           { title: 'Core usage factor', data: 'core_usage' },
           { title: 'Size of memory available', data: 'memory', render: make_memory },
-          { title: 'Power draw of memory', data: 'memory_power', render: make_index0 },
-          { title: 'Efficiency coefficient of the data center', data: 'pue' },
-          { title: 'Carbon intensity', data: 'ci', render: make_index0 },
+          //{ title: 'Power draw of memory', data: 'memory_power', render: make_index0 },
+          //{ title: 'Efficiency coefficient of the data center', data: 'pue' },
+          //{ title: 'Carbon intensity', data: 'ci', render: make_index0 },
         ],
         "deferRender": true,
         "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
@@ -274,7 +274,7 @@ $(function() {
         "colReorder": true,
         "columnDefs": [
           { className: "id", "targets": [ 0,1,2,3 ] },
-          { className: "meta", "targets": [ 4,7,8,9,10,11,12,13,14 ] },
+          { className: "meta", "targets": [ 4,7,8,9,10,11 ] },
           { className: "metrics", "targets": [ 5,6 ] }
         ],
         "buttons": [
