@@ -49,9 +49,12 @@ class CO2FootprintFactoryTest extends Specification {
         traceRecord.'%cpu' = 100.0
         traceRecord.memory = (7 as Long) * (1000000000 as Long)
 
-        def result = new CO2FootprintFactory().computeTaskCO2footprint(traceRecord)
+        def results = new CO2FootprintFactory().computeTaskCO2footprint(traceRecord)
 
         expect:
-        round(result) == 11.59
+        // Energy consumption converted to Wh
+        round(results[0]*1000) == 24.39
+        // CO2 in g
+        round(results[1]) == 11.59
     }
 }
