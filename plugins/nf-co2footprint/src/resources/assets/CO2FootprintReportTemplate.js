@@ -149,7 +149,7 @@ $(function() {
         unit_index--;
     }
     
-    return value + units[unit_index];
+    return value + ' ' + units[unit_index];
   }
   
   // Humanize duration
@@ -309,7 +309,7 @@ $(function() {
 
       // Insert column filter button group
       table.buttons().container()
-         .prependTo( $('#tasks_table_filter') );
+        .prependTo( $('#tasks_table_filter') );
 
       // Column filter button group onClick event to highlight active filter
       $('.buttons-colvisGroup').click(function(){
