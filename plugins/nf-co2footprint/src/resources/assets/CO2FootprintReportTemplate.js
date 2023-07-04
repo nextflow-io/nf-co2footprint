@@ -243,6 +243,15 @@ $(function() {
       if ( $.fn.dataTable.isDataTable( '#tasks_table' ) ) {
         $('#tasks_table').DataTable().destroy();
       }
+
+      // Column titles
+      var energyConsumptionTitle = 'energy consumption (Wh)'; // Default column title
+      var co2EmissionsTitle = 'CO2 emissions (g)';
+      if ($('#nf-table-humanreadable').val() == 'true') {
+        energyConsumptionTitle = 'energy consumption'; // Change the column title if the button is selected
+        co2EmissionsTitle = 'CO2 emissions';
+      }
+
       var table = $('#tasks_table').DataTable({
         data: window.data.trace,
         columns: [
@@ -274,8 +283,8 @@ $(function() {
               return '<code>'+script+'</code>';
             }
           },
-          { title: 'CO2 emissions', data: 'co2e', render: make_co2e },
-          { title: 'energy consumption', data: 'energy', render: make_energy },
+          { title: co2EmissionsTitle, data: 'co2e', render: make_co2e },
+          { title: energyConsumptionTitle, data: 'energy', render: make_energy },
         ],
         "deferRender": true,
         "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
