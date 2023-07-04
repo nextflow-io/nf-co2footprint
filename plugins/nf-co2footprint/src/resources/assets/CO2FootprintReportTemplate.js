@@ -67,7 +67,7 @@ $(function() {
           window.data_byprocess[proc][key] = window.data_byprocess[proc][key].map(function(d,i){
             return moment.duration(d).asMinutes().toFixed(1);
           });
-        } else if (key == "co2e") {
+        } /*else if (key == "co2e") {
           window.data_byprocess[proc]['co2e_readable'] = window.data_byprocess[proc][key].map(function(value){
             [value_co2e, units_co2e] = readable_units_value(value, 4)
             return value_co2e;
@@ -83,12 +83,12 @@ $(function() {
           window.data_byprocess[proc][key] = window.data_byprocess[proc][key].map(function(value){
             return Math.round(value);
           });
-        }
+        }*/
       }
     }
   }
 
-  // Convert to readable units for plots
+  /*// Convert to readable units for plots
   function readable_units_value(value, unit_index) {
     units = ['p', 'n', 'u', 'm', ' ', 'K', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, mili, 0, Kilo, Mega, Giga, Tera, Peta, Exa
     
@@ -102,7 +102,7 @@ $(function() {
     }
     
     return [ value, units[unit_index] ];
-  }
+  }*/
 
   // Plot histograms of resource usage
   //// Co2e
@@ -124,7 +124,7 @@ $(function() {
   Plotly.newPlot('co2eplot', co2e_data, { title: 'CO2 emission', yaxis: {title: 'CO2 emission (g)', tickformat: '.1f', rangemode: 'tozero'} });
   Plotly.newPlot('energyplot', energy_data, { title: 'Energy consumption', yaxis: {title: 'Energy consumption (Wh)', tickformat: '.1f', rangemode: 'tozero'} });
   
-  // Only plot tabbed plots when shown
+  /*// Only plot tabbed plots when shown
   $('#pctco2eplot_tablink').on('shown.bs.tab', function (e) {
     if($('#pctco2eplot').is(':empty')){
       Plotly.newPlot('pctco2eplot', co2e_data_read, { title: 'CO2 emission', yaxis: {title: 'CO2 emission ('+units_co2e+'g)', tickformat: '.1f', rangemode: 'tozero'} });
@@ -134,7 +134,7 @@ $(function() {
     if($('#pctenergyplot').is(':empty')){
       Plotly.newPlot('pctenergyplot', energy_data_read, { title: 'Energy consumption', yaxis: {title: 'Energy consumption ('+units_energy+'Wh)', tickformat: '.1f', rangemode: 'tozero'} });
     }
-  })
+  })*/
 
   // Convert to readable units
   function readable_units(value, unit_index) {
