@@ -190,6 +190,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
         def Double c = (e * ci) as Double
         log.info "CO2: $c"
 
+        // Return values in mWh and mg
+        e = e * 1000000
+        c = c * 1000
+
         return [e, c]
     }
 
