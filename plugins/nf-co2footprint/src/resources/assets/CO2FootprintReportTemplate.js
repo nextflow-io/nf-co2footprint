@@ -1,21 +1,15 @@
 // JavaScript used to power the Nextflow Report Template output.
 window.data_byprocess = {};
 
-/* helper functions that takes an array of numbers each of each
-   is a integer representing a number of bytes and normalise to base 2 scale */
-function norm_mem( list ) {
+/* helper functions that takes an array of numbers 
+    units are in miliWh or milig and are converted to its base unit */
+function norm_units( list ) {
   if( list == null ) return null;
   var result = new Array(list.length);
   for( i=0; i<list.length; i++ ) {
     var value = list[i];
-    var x = Math.floor(Math.log10(value) / Math.log10(1024));
-    if( x == 0 )
-      value = value/1.024;
-    else {
-      for( j=0; j<x; j++ )
-        value = value / 1.024;
-    }
-    result[i] = Math.round(value);
+    var x = Math.floor(value / 1000);
+    result[i] = Math.round(x);
   }
   return result;
 }
@@ -76,20 +70,16 @@ $(function() {
   //// Co2e
   var co2e_data = [];
   var energy_data = [];
-  var co2e_data_read = [];
-  var energy_data_read = [];
   for(var pname in window.data_byprocess){
     if( !window.data_byprocess.hasOwnProperty(pname) )
         continue;
     var smry = window.data_byprocess[pname];
-    co2e_data.push({y: smry.co2e, name: pname, type:'box', boxmean: true, boxpoints: false});
-    energy_data.push({y: smry.energy, name: pname, type:'box', boxmean: true, boxpoints: false});
-    co2e_data_read.push({y: smry.co2e_readable, name: pname, type:'box', boxmean: true, boxpoints: false});
-    energy_data_read.push({y: smry.energy_readable, name: pname, type:'box', boxmean: true, boxpoints: false});
+    co2e_data.push({y: norm_units(smry.co2e), name: pname, type:'box', boxmean: true, boxpoints: false});
+    energy_data.push({y: norm_units(smry.energy), name: pname, type:'box', boxmean: true, boxpoints: false});
   }
 
-  Plotly.newPlot('co2eplot', co2e_data, { title: 'CO2 emission', yaxis: {title: 'CO2 emission (g)', tickformat: '.1f', rangemode: 'tozero'} });
-  Plotly.newPlot('energyplot', energy_data, { title: 'Energy consumption', yaxis: {title: 'Energy consumption (Wh)', tickformat: '.1f', rangemode: 'tozero'} });
+  Plotly.newPlot('co2eplot', co2e_data, { title: 'CO2 emission', yaxis: {title: 'CO2 emission (g)', tickformat: '.4s', rangemode: 'tozero'} });
+  Plotly.newPlot('energyplot', energy_data, { title: 'Energy consumption', yaxis: {title: 'Energy consumption (Wh)', tickformat: '.4s', rangemode: 'tozero'} });
 
   // Convert to readable units
   function readable_units(value, unit_index) {
