@@ -32,8 +32,8 @@ class CO2Record extends TraceRecord {
 
     // TODO implement accordingly to TraceRecord
     Double getEnergyConsumption() { energy }
-    String getEnergyConsumptionReadable() { HelperFunctions.convertToReadableUnits(energy,5) }
-    String getCO2eReadable() { HelperFunctions.convertToReadableUnits(co2e) }
+    String getEnergyConsumptionReadable() { HelperFunctions.convertToReadableUnits(energy,3) }
+    String getCO2eReadable() { HelperFunctions.convertToReadableUnits(co2e,3) }
     Double getCO2e() { co2e }
     String getName() { name }
 
