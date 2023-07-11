@@ -8,7 +8,7 @@ function norm_units( list ) {
   var result = new Array(list.length);
   for( i=0; i<list.length; i++ ) {
     var value = list[i];
-    var x = Math.floor(value / 1000);
+    var x = value / 1000;
     result[i] = Math.round(x);
   }
   return result;
@@ -78,8 +78,8 @@ $(function() {
     energy_data.push({y: norm_units(smry.energy), name: pname, type:'box', boxmean: true, boxpoints: false});
   }
 
-  Plotly.newPlot('co2eplot', co2e_data, { title: 'CO2 emission', yaxis: {title: 'CO2 emission (g)', tickformat: '.4s', rangemode: 'tozero'} });
-  Plotly.newPlot('energyplot', energy_data, { title: 'Energy consumption', yaxis: {title: 'Energy consumption (Wh)', tickformat: '.4s', rangemode: 'tozero'} });
+  Plotly.newPlot('co2eplot', co2e_data, { title: 'CO2 emission', yaxis: {title: 'CO2 emission (g)', tickformat: '.2e', rangemode: 'tozero'} });
+  Plotly.newPlot('energyplot', energy_data, { title: 'Energy consumption', yaxis: {title: 'Energy consumption (Wh)', tickformat: '.2s', rangemode: 'tozero'} });
 
   // Convert to readable units
   function readable_units(value, unit_index) {
