@@ -8,8 +8,7 @@ function norm_units( list ) {
   var result = new Array(list.length);
   for( i=0; i<list.length; i++ ) {
     var value = list[i];
-    var x = value / 1000;
-    result[i] = Math.round(x);
+    result[i] = value / 1000;
   }
   return result;
 }
