@@ -66,7 +66,6 @@ $(function() {
   }
 
   // Plot histograms of resource usage
-  //// Co2e
   var co2e_data = [];
   var energy_data = [];
   for(var pname in window.data_byprocess){
@@ -77,8 +76,25 @@ $(function() {
     energy_data.push({y: norm_units(smry.energy), name: pname, type:'box', boxmean: true, boxpoints: false});
   }
 
-  Plotly.newPlot('co2eplot', co2e_data, { title: 'CO2 emission', yaxis: {title: 'CO2 emission (g)', tickformat: '.2e', rangemode: 'tozero'} });
-  Plotly.newPlot('energyplot', energy_data, { title: 'Energy consumption', yaxis: {title: 'Energy consumption (Wh)', tickformat: '.2s', rangemode: 'tozero'} });
+  // Decide yaxis tickformat
+  co2e_data.forEach(function (p) {
+    max = 0;
+    if (p !== null) {
+      max = Math.max(max, p.y);
+    }
+  });
+  var co2e_tickformat = (max <= 4) ? ('.2f') : ('.2s');
+  energy_data.forEach(function (p) {
+    max = 0;
+    if (p !== null) {
+      max = Math.max(max, p.y);
+    }
+  });
+  var energy_tickformat = (max <= 4) ? ('.2f') : ('.2s');
+  
+
+  Plotly.newPlot('co2eplot', co2e_data, { title: 'CO2 emission', yaxis: {title: 'CO2 emission (g)', tickformat: co2e_tickformat, rangemode: 'tozero'} });
+  Plotly.newPlot('energyplot', energy_data, { title: 'Energy consumption', yaxis: {title: 'Energy consumption (Wh)', tickformat: energy_tickformat, rangemode: 'tozero'} });
 
   // Convert to readable units
   function readable_units(value, unit_index) {
