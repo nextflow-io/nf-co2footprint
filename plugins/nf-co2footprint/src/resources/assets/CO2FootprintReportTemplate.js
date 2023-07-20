@@ -79,15 +79,24 @@ $(function() {
   // Decide yaxis tickformat
   co2e_data.forEach(function (p) {
     max = 0;
-    if (p !== null) {
-      max = Math.max(max, p.y);
+    if (p != null) {
+      if (Array.isArray(p.y)) {
+        max = Math.max(max, ...p.y);
+      } else {
+        max = Math.max(max, p.y);
+      }
+      
     }
   });
   var co2e_tickformat = (max <= 4) ? ('.2f') : ('.2s');
   energy_data.forEach(function (p) {
     max = 0;
-    if (p !== null) {
-      max = Math.max(max, p.y);
+    if (p != null) {
+      if (Array.isArray(p.y)) {
+        max = Math.max(max, ...p.y);
+      } else {
+        max = Math.max(max, p.y);
+      }
     }
   });
   var energy_tickformat = (max <= 4) ? ('.2f') : ('.2s');
