@@ -88,7 +88,7 @@ $(function() {
       
     }
   });
-  var co2e_tickformat = (max <= 4) ? ('.2f') : ('.2s');
+  var co2e_tickformat = (max <= 4) ? ('.2f') : ('.3s');
   energy_data.forEach(function (p) {
     max = 0;
     if (p != null) {
@@ -99,7 +99,7 @@ $(function() {
       }
     }
   });
-  var energy_tickformat = (max <= 4) ? ('.2f') : ('.2s');
+  var energy_tickformat = (max <= 4) ? ('.2f') : ('.3s');
   
 
   Plotly.newPlot('co2eplot', co2e_data, { title: 'CO2 emission', yaxis: {title: 'CO2 emission (g)', tickformat: co2e_tickformat, rangemode: 'tozero'} });
