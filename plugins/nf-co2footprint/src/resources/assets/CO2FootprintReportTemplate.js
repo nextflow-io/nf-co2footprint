@@ -2,7 +2,7 @@
 window.data_byprocess = {};
 
 /* helper functions that takes an array of numbers 
-    units are in miliWh or milig and are converted to its base unit */
+    units are in milliwatt-hours (mWh) or milligramm (mg) and are converted to its base unit */
 function norm_units( list ) {
   if( list == null ) return null;
   var result = new Array(list.length);
