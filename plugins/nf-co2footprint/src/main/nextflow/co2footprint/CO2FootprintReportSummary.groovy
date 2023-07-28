@@ -202,9 +202,12 @@ class CO2FootprintReportSummary {
             result.q3 = quantile(sorted, 75)
             result.max = quantile(sorted, 100)
 
-            // discard entry with all zero 
-            //if( result.min == 0 && result.min == result.max  )
-            //    return null
+            /* 
+                Unlike the Nextflow Report, we are not rounding the results nor discarding entries with all zeros.
+                This decision is taken to avoid the loss of information in the report. 
+                Plots will show values of 0, making the representation of all processes consistent.
+                This class reports all values in mili-unit to increase precision. Values are converted to the required units by CO2FootprintReportTemplate.js
+            */           
 
             result.minLabel = minLabel
             result.maxLabel = maxLabel
