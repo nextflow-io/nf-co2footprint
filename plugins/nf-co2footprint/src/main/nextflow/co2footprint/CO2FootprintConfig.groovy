@@ -11,6 +11,7 @@ import groovy.transform.PackageScope
  * co2footprint {
  *     file = "co2footprint.txt"
  *     summaryFile = "co2footprint.summary.txt"
+ *     pue = 1.4
  * }
  *
  *
@@ -25,14 +26,18 @@ class CO2FootprintConfig {
 
     final private String  file
     final private String  summaryFile
+    final private Double  pue // PUE: power usage effectiveness (efficiency coefficient of the data centre)
 
     CO2FootprintConfig(Map map){
         def config = map ?: Collections.emptyMap()
         file = config.file ?: CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_FILE_NAME
         summaryFile = config.summaryFile ?: CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_SUMMARY_FILE_NAME
+        pue = config.pue ?: 1.67
     }
 
     String getFile() { file }
 
     String getSummaryFile() { summaryFile }
+
+    Double getPUE() { pue }
 }

@@ -49,7 +49,10 @@ class CO2FootprintFactoryTest extends Specification {
         traceRecord.'%cpu' = 100.0
         traceRecord.memory = (7 as Long) * (1000000000 as Long)
 
-        def results = new CO2FootprintFactory().computeTaskCO2footprint(traceRecord)
+        def session = Mock(Session) { getConfig() >> [:] }
+        def factory = new CO2FootprintFactory()
+        factory.create(session)
+        def results = factory.computeTaskCO2footprint(traceRecord)
 
         expect:
         // Energy consumption converted to Wh and compared to result from www.green-algorithms.org
