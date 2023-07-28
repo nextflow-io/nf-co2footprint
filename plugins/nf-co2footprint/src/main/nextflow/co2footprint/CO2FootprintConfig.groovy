@@ -26,7 +26,7 @@ class CO2FootprintConfig {
 
     final private String  file
     final private String  summaryFile
-    final private Double  pue // PUE: power usage effectiveness (efficiency coefficient of the data centre)
+    final private Double  pue   // PUE: power usage effectiveness efficiency, coefficient of the data centre
 
     CO2FootprintConfig(Map map){
         def config = map ?: Collections.emptyMap()
