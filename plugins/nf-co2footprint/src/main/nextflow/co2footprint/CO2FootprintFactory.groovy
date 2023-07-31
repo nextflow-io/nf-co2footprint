@@ -176,7 +176,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // PUE: efficiency coefficient of the data centre
         def pue = config.getPUE()
         // CI: carbon intensity [gCO2e kWh−1]
-        def ci  = 475
+        def ci  = config.getCI()
 
         /**
          * Calculate energy consumption [kWh]
