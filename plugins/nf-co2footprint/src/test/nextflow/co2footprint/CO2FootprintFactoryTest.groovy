@@ -52,9 +52,9 @@ class CO2FootprintFactoryTest extends Specification {
         def results = new CO2FootprintFactory().computeTaskCO2footprint(traceRecord)
 
         expect:
-        // Energy consumption in mWh
-        round(results[0]) == 24394.53
-        // CO2 in mg
-        round(results[1]) == 11587.40
+        // Energy consumption converted to Wh and compared to result from www.green-algorithms.org
+        round(results[0]/1000) == 24.39
+        // CO2 converted to g
+        round(results[1]/1000) == 11.59
     }
 }
