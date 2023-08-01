@@ -81,4 +81,47 @@ class CO2FootprintFactoryTest extends Specification {
         // CO2 in g
         round(results[1]/1000) == 9.71
     }
+
+    def 'test co2e calculation with CI value retrieved for Germany' () {
+        given:
+        def traceRecord = new TraceRecord()
+        traceRecord.realtime = (1 as Long) * (3600000 as Long)
+        traceRecord.cpus = 1
+        traceRecord.cpu_model = "Unknown model"
+        traceRecord.'%cpu' = 100.0
+        traceRecord.memory = (7 as Long) * (1000000000 as Long)
+
+        def session = Mock(Session) { getConfig() >> [co2footprint: [country: 'Germany']] }
+        def factory = new CO2FootprintFactory()
+        factory.create(session)
+        def results = factory.computeTaskCO2footprint(traceRecord)
+
+        expect:
+        // Energy consumption converted to Wh and compared to result from www.green-algorithms.org
+        round(results[0]/1000) == 24.39
+        // CO2 in g
+        round(results[1]/1000) == 8.26
+    }
+
+    def 'test co2e calculation for custom CI value' () {
+        given:
+        def traceRecord = new TraceRecord()
+        traceRecord.realtime = (1 as Long) * (3600000 as Long)
+        traceRecord.cpus = 1
+        traceRecord.cpu_model = "Unknown model"
+        traceRecord.'%cpu' = 100.0
+        traceRecord.memory = (7 as Long) * (1000000000 as Long)
+
+        // Using current CI value for Germany, but passed over directly as CI value
+        def session = Mock(Session) { getConfig() >> [co2footprint: [ci: 338.66]] }
+        def factory = new CO2FootprintFactory()
+        factory.create(session)
+        def results = factory.computeTaskCO2footprint(traceRecord)
+
+        expect:
+        // Energy consumption converted to Wh and compared to result from www.green-algorithms.org (for location Germany)
+        round(results[0]/1000) == 24.39
+        // CO2 in g
+        round(results[1]/1000) == 8.26
+    }
 }
