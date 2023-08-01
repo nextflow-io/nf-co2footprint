@@ -66,11 +66,8 @@ class CO2FootprintConfig {
     }
 
     String getFile() { file }
-
     String getSummaryFile() { summaryFile }
-
     Double getCI() { ci }
-
     Double getPUE() { pue }
     Double getPowerdrawMem() { powerdrawMem }
 }
