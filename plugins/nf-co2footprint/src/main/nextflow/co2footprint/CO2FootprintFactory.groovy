@@ -168,7 +168,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // TODO handle if more memory/cpus used than requested?
 
         // Pm: power draw of memory [W per GB]
-        def pm  = 0.3725
+        def pm  = config.getPowerdrawMem()
 
         /**
          * Remaining factors
