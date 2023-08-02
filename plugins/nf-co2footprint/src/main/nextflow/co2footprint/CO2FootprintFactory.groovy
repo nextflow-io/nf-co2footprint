@@ -61,12 +61,14 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
     // Load file containing TDP values for different CPU models
     protected void loadCpuTdpData(Map<String, Float> data) {
-        def inData = new InputStreamReader(this.class.getResourceAsStream('/cpu_tdp_values.csv')).text
+        def dataReader = new InputStreamReader(this.class.getResourceAsStream('/cpu_tdp_values.csv'))
 
-        for (String line : inData.readLines()) {
+        String line
+        while ( line = dataReader.readLine() ) {
             def h = line.split(",")
             if (h[0] != 'model_name') data[h[0]] = h[3].toFloat()
         }
+        dataReader.close()
         log.info "$data"
     }
 
@@ -176,7 +178,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // PUE: efficiency coefficient of the data centre
         def pue = config.getPUE()
         // CI: carbon intensity [gCO2e kWh−1]
-        def ci  = 475
+        def ci  = config.getCI()
 
         /**
          * Calculate energy consumption [kWh]

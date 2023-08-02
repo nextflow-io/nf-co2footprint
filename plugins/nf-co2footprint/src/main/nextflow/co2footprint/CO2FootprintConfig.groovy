@@ -11,6 +11,7 @@ import groovy.transform.PackageScope
  * co2footprint {
  *     file = "co2footprint.txt"
  *     summaryFile = "co2footprint.summary.txt"
+ *     ci = 300
  *     pue = 1.4
  *     powerdrawMem = 0.67
  * }
@@ -27,21 +28,50 @@ class CO2FootprintConfig {
 
     final private String  file
     final private String  summaryFile
+    final private Double  ci    // CI: carbon intensity
     final private Double  pue   // PUE: power usage effectiveness efficiency, coefficient of the data centre
     final private Double  powerdrawMem  // Power draw of memory [W per GB]
+
+    // Retrieve CI value from file containing CI values for different locations
+    protected Double retrieveCi(String country) {
+        def dataReader = new InputStreamReader(this.class.getResourceAsStream('/ci_values.csv'))
+
+        Double localCi = 0.0
+        String line
+        while ( line = dataReader.readLine() ) {
+            def row = line.split(",")
+            if (row[0] == country) {
+                localCi = row[1].toFloat()
+                break
+            }
+        }
+        dataReader.close()
+        if (localCi == 0.0)
+            throw new IllegalArgumentException("Invalid 'country' parameter: $country. Could not be found in 'ci_values.csv'.")
+
+        return localCi
+    }
 
     CO2FootprintConfig(Map map){
         def config = map ?: Collections.emptyMap()
         file = config.file ?: CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_FILE_NAME
         summaryFile = config.summaryFile ?: CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_SUMMARY_FILE_NAME
+
+        ci = 475
+        if (config.ci && config.country)
+            throw new IllegalArgumentException("Invalid combination of 'ci' and 'country' parameters specified for the CO2Footprint plugin. Please specify either 'ci' and 'country'!")
+        if (config.ci)
+            ci = config.ci
+        if (config.country)
+            ci = retrieveCi(config.country)
+
         pue = config.pue ?: 1.67
         powerdrawMem = config.powerdrawMem ?: 0.3725
     }
 
     String getFile() { file }
-
     String getSummaryFile() { summaryFile }
-
+    Double getCI() { ci }
     Double getPUE() { pue }
     Double getPowerdrawMem() { powerdrawMem }
 }
