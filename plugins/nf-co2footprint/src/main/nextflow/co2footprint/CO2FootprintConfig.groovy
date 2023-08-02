@@ -34,14 +34,18 @@ class CO2FootprintConfig {
 
     // Retrieve CI value from file containing CI values for different locations
     protected Double retrieveCi(String country) {
-        def inData = new InputStreamReader(this.class.getResourceAsStream('/ci_values.csv')).text
+        def dataReader = new InputStreamReader(this.class.getResourceAsStream('/ci_values.csv'))
 
         Double localCi = 0.0
-        for (String line : inData.readLines()) {
+        String line
+        while ( line = dataReader.readLine() ) {
             def row = line.split(",")
-            if (row[0] == country)
+            if (row[0] == country) {
                 localCi = row[1].toFloat()
+                break
+            }
         }
+        dataReader.close()
         if (localCi == 0.0)
             throw new IllegalArgumentException("Invalid 'country' parameter: $country. Could not be found in 'ci_values.csv'.")
 
