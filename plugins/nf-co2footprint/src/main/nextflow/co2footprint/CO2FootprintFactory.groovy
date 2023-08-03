@@ -385,7 +385,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
      */
     class CO2FootprintReportObserver implements TraceObserver {
 
-        static final public String DEF_REPORT_FILE_NAME = "CO2Footprint-report-${TraceHelper.launchTimestampFmt()}.html"
+        static final public String DEF_REPORT_FILE_NAME = "co2footprint-report-${TraceHelper.launchTimestampFmt()}.html"
 
         static final public int DEF_MAX_TASKS = 10_000
 
