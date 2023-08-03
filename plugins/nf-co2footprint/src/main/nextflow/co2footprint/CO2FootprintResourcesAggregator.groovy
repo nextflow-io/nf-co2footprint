@@ -14,7 +14,7 @@ import java.util.concurrent.Future
 /**
  * Collect and aggregate execution metrics used by execution report
  * 
- * @author Paolo Di Tommaso <paolo.ditommaso@gmail.com>
+ * @author Júlia Mir Pedrol <mirp.julia@gmail.com>, Sabrina Krakau <sabrinakrakau@gmail.com>
  */
 @Slf4j
 @CompileStatic

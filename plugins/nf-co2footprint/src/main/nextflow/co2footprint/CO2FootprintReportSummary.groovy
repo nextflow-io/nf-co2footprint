@@ -24,7 +24,7 @@ import nextflow.trace.TraceRecord
 /**
  * Model a process summary data used to render box-plots in the execution HTML report
  *
- * @author Paolo Di Tommaso <paolo.ditommaso@gmail.com>
+ * @author Júlia Mir Pedrol <mirp.julia@gmail.com>, Sabrina Krakau <sabrinakrakau@gmail.com>
  */
 
 @Slf4j
