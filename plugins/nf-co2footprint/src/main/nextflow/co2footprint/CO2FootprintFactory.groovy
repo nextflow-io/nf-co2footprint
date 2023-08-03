@@ -42,7 +42,7 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * Implements the CO2Footprint observer factory
  *
- * @author Sabrina Krakau <sabrinakrakau@gmail.com>
+ * @author Júlia Mir Pedrol <mirp.julia@gmail.com>, Sabrina Krakau <sabrinakrakau@gmail.com>
  */
 @Slf4j
 @CompileStatic

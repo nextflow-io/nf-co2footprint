@@ -20,7 +20,7 @@ import groovy.transform.PackageScope
  * We anotate this class as @PackageScope to restrict the access of their methods only to class in the
  * same package
  *
- * @author : Sabrina Krakau <sabrinakrakau@gmail.com>
+ * @author Júlia Mir Pedrol <mirp.julia@gmail.com>, Sabrina Krakau <sabrinakrakau@gmail.com>
  *
  */
 @PackageScope

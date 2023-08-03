@@ -22,7 +22,7 @@ import spock.lang.Specification
 
 /**
  *
- * @author Sabrina Krakau <sabrinakrakau@gmail.com>
+ * @author Júlia Mir Pedrol <mirp.julia@gmail.com>, Sabrina Krakau <sabrinakrakau@gmail.com>
  */
 class CO2FootprintFactoryTest extends Specification {
 

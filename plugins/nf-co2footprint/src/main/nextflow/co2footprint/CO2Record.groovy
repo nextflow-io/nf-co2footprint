@@ -8,6 +8,10 @@ import groovy.json.StringEscapeUtils
 
 import nextflow.co2footprint.HelperFunctions
 
+/**
+ *
+ * @author Júlia Mir Pedrol <mirp.julia@gmail.com>, Sabrina Krakau <sabrinakrakau@gmail.com>
+ */
 @Slf4j
 @CompileStatic
 class CO2Record extends TraceRecord {
