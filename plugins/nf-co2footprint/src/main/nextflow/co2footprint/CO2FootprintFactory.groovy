@@ -86,7 +86,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         result.add( new CO2FootprintTextFileObserver(co2eFile, co2eSummaryFile) )
 
         // Generate CO2 footprint report with box-plot
-        def co2eReport = (CO2FootprintReportObserver.DEF_FILE_NAME as Path).complete()
+        def co2eReport = (this.config.getReportFile() as Path).complete()
         result.add( new CO2FootprintReportObserver(co2eReport) )
 
         return result
@@ -385,7 +385,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
      */
     class CO2FootprintReportObserver implements TraceObserver {
 
-        static final public String DEF_FILE_NAME = "CO2Footprint-report-${TraceHelper.launchTimestampFmt()}.html"
+        static final public String DEF_REPORT_FILE_NAME = "CO2Footprint-report-${TraceHelper.launchTimestampFmt()}.html"
 
         static final public int DEF_MAX_TASKS = 10_000
 

@@ -28,6 +28,7 @@ class CO2FootprintConfig {
 
     final private String  file
     final private String  summaryFile
+    final private String  reportFile
     final private Double  ci    // CI: carbon intensity
     final private Double  pue   // PUE: power usage effectiveness efficiency, coefficient of the data centre
     final private Double  powerdrawMem  // Power draw of memory [W per GB]
@@ -56,6 +57,7 @@ class CO2FootprintConfig {
         def config = map ?: Collections.emptyMap()
         file = config.file ?: CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_FILE_NAME
         summaryFile = config.summaryFile ?: CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_SUMMARY_FILE_NAME
+        reportFile = config.reportFile ?: CO2FootprintFactory.CO2FootprintReportObserver.DEF_REPORT_FILE_NAME
 
         ci = 475
         if (config.ci && config.country)
@@ -71,6 +73,7 @@ class CO2FootprintConfig {
 
     String getFile() { file }
     String getSummaryFile() { summaryFile }
+    String getReportFile() { reportFile }
     Double getCI() { ci }
     Double getPUE() { pue }
     Double getPowerdrawMem() { powerdrawMem }
