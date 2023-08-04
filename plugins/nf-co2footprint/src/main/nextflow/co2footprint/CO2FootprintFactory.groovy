@@ -183,14 +183,12 @@ class CO2FootprintFactory implements TraceObserverFactory {
         /**
          * Calculate energy consumption [kWh]
          */
-        def Double e = (t * (nc * pc * uc + nm * pm) * pue * 0.001) as Double
-        log.info "E: $e"
+        Double e = (t * (nc * pc * uc + nm * pm) * pue * 0.001) as Double
 
         /*
          * Resulting CO2 emission [gCO2e]
          */
-        def Double c = (e * ci) as Double
-        log.info "CO2: $c"
+        Double c = (e * ci)
 
         // Return values in mWh and mg
         e = e * 1000000
