@@ -155,12 +155,13 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * Factors of memory power usage
          */
         // nm: size of memory available [GB] -> requested memory
-        if ( trace.get('memory') == null ) {
+        Long memory = trace.get('memory') as Long
+        if ( memory == null ) {
             // TODO if 'memory' not set, returns null, hande somehow?
             log.error "TraceRecord field 'memory' is not set!"
             System.exit(1)
         }
-        Double nm = (trace.get('memory') as Long)/1000000000 as Double
+        Double nm = memory/1000000000 as Double
         // TODO handle if more memory/cpus used than requested?
 
         // Pm: power draw of memory [W per GB]
@@ -188,7 +189,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         e = e * 1000000
         c = c * 1000
 
-        return [e, c, t, nc, pc, uc, nm]
+        return [e, c, t, nc, pc, uc, memory]
     }
 
 
@@ -361,7 +362,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                     cpus,
                     (Double) powerdrawCPU,
                     (Double) cpu_usage,
-                    (Double) memory,
+                    (Long) memory,
                     trace.get('name').toString()
             )
             total_energy += eConsumption
@@ -376,7 +377,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                         + "${cpus}\t"
                         + "${powerdrawCPU}\t"
                         + "${cpu_usage}\t"
-                        + "${memory}GB\t"
+                        + "${HelperFunctions.convertBytesToReadableUnits(memory)}"
                 );
                 it.flush()
             }
@@ -408,7 +409,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                     cpus,
                     (Double) powerdrawCPU,
                     (Double) cpu_usage,
-                    (Double) memory,
+                    (Long) memory,
                     trace.get('name').toString()
             )
             total_energy += eConsumption
@@ -418,12 +419,12 @@ class CO2FootprintFactory implements TraceObserverFactory {
             writer.send {
                 PrintWriter it -> it.println(
                         "${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,3)}Wh\t"
-                        + "${HelperFunctions.convertToReadableUnits(co2,3)}g"
+                        + "${HelperFunctions.convertToReadableUnits(co2,3)}g\t"
                         + "${time}h\t"
                         + "${cpus}\t"
                         + "${powerdrawCPU}\t"
                         + "${cpu_usage}\t"
-                        + "${memory}GB\t"
+                        + "${HelperFunctions.convertBytesToReadableUnits(memory)}"
                 );
                 it.flush()
             }

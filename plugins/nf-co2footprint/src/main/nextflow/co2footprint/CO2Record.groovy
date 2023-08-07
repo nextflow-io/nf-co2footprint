@@ -22,11 +22,11 @@ class CO2Record extends TraceRecord {
     private Integer cpus
     private Double powerdrawCPU
     private Double cpuUsage
-    private Double memory
+    private Long memory
     private String name
     // final? or something? to make sure for key value can be set only once?
 
-    CO2Record(Double energy, Double co2e, Double time, Integer cpus, Double powerdrawCPU, Double cpuUsage, Double memory, String name) {
+    CO2Record(Double energy, Double co2e, Double time, Integer cpus, Double powerdrawCPU, Double cpuUsage, Long memory, String name) {
         this.energy = energy
         this.co2e = co2e
         this.time = time
