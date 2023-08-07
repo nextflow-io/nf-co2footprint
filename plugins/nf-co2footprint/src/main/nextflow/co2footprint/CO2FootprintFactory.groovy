@@ -127,7 +127,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // Factor 0.001 needed to convert Pc and Pm from W to kW
 
         // t: runtime in hours
-        Double t = (trace.get('realtime') as Double)/3600000 as Double
+        Double realtime = trace.get('realtime') as Double
+        Double t = realtime/3600000 as Double
 
         /**
          * Factors of core power usage
@@ -189,7 +190,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         e = e * 1000000
         c = c * 1000
 
-        return [e, c, t, nc, pc, uc, memory]
+        return [e, c, realtime, nc, pc, uc, memory]
     }
 
 
@@ -373,7 +374,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 PrintWriter it -> it.println(
                         "${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,3)}Wh\t"
                         + "${HelperFunctions.convertToReadableUnits(co2,3)}g\t"
-                        + "${time}h\t"
+                        + "${HelperFunctions.convertMillisecondsToReadableUnits(time)}\t"
                         + "${cpus}\t"
                         + "${powerdrawCPU}\t"
                         + "${cpu_usage}\t"
@@ -420,7 +421,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 PrintWriter it -> it.println(
                         "${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,3)}Wh\t"
                         + "${HelperFunctions.convertToReadableUnits(co2,3)}g\t"
-                        + "${time}h\t"
+                        + "${HelperFunctions.convertMillisecondsToReadableUnits(time)}\t"
                         + "${cpus}\t"
                         + "${powerdrawCPU}\t"
                         + "${cpu_usage}\t"
