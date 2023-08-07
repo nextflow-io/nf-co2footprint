@@ -14,7 +14,7 @@ public class HelperFunctions {
             unitIndex--
         }
         
-        return "${value}${units[unitIndex]}"
+        return "${value} ${units[unitIndex]}"
     }
 
     static public String convertBytesToReadableUnits(double value) {
