@@ -54,19 +54,19 @@ class CO2FootprintFactory implements TraceObserverFactory {
     final private Map<TaskId,CO2Record> co2eRecords = new ConcurrentHashMap<>()
     // TODO make sure for key value can be set only once?
 
-    private Map<String, Float> cpuData = ['default': (Float) 12.0]
+    private Map<String, Double> cpuData = ['default': (Double) 12.0]
     Double total_energy = 0
     Double total_co2 = 0
 
 
     // Load file containing TDP values for different CPU models
-    protected void loadCpuTdpData(Map<String, Float> data) {
+    protected void loadCpuTdpData(Map<String, Double> data) {
         def dataReader = new InputStreamReader(this.class.getResourceAsStream('/cpu_tdp_values.csv'))
 
         String line
         while ( line = dataReader.readLine() ) {
             def h = line.split(",")
-            if (h[0] != 'model_name') data[h[0]] = h[3].toFloat()
+            if (h[0] != 'model_name') data[h[0]] = h[3].toDouble()
         }
         dataReader.close()
         log.info "$data"
@@ -93,7 +93,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
     }
 
     
-    float getCpuCoreTdp(TraceRecord trace) {
+    Double getCpuCoreTdp(TraceRecord trace) {
         def cpu_model = trace.get('cpu_model').toString()   // TODO toString() in TraceRecord get()?
         log.info "cpu model: $cpu_model"
 
