@@ -121,19 +121,24 @@ $(function() {
     return value + ' ' + units[unit_index];
   }
   
-  // Humanize duration
-  /*function humanize(duration){
-    if (duration.days() > 0) {
-      return duration.days() + "d " + duration.hours() + "h"
+  // Convert miliseconds to readable units
+  function readable_units_time(duration){
+    if (duration < 1000) {
+      return duration + "ms"
+    } else {
+      hours = Math.floor(duration / 3600000);
+      minutes = Math.floor((duration % 3600000) / 60000);
+      seconds = Math.floor(duration % 60000) / 1000;
+
+      if (duration < 60000) {
+        return seconds + "s";
+      } else if (duration < 3600000) {
+        return minutes + "m " + seconds + "s";
+      } else {
+        return hours + "h " + minutes + "m " + seconds + "s";
+      }
     }
-    if (duration.hours() > 0) {
-      return duration.hours() + "h " + duration.minutes() + "m"
-    }
-    if (duration.minutes() > 0) {
-      return duration.minutes() + "m " + duration.seconds() + "s"
-    }
-    return duration.asSeconds().toFixed(1) + "s"
-  }*/
+  }
 
   // Build the trace table
   function make_co2e(ms, type){
@@ -160,7 +165,7 @@ $(function() {
     }
     return readable_units(ms, 3) + 'Wh';
   }
-  /*function make_duration(ms, type){
+  function make_time(ms, type){
     if (type === 'sort') {
       return parseInt(ms);
     }
@@ -170,9 +175,9 @@ $(function() {
     if (ms == '-' || ms == 0){
       return ms;
     }
-    return humanize(moment.duration( parseInt(ms) ));
+    return readable_units_time(ms);
   }
-  function make_date(ms, type){
+  /*function make_date(ms, type){
     if (type === 'sort') {
       return parseInt(ms);
     }
