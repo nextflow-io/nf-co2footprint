@@ -259,6 +259,11 @@ $(function() {
           },
           { title: co2EmissionsTitle, data: 'co2e', render: make_co2e },
           { title: energyConsumptionTitle, data: 'energy', render: make_energy },
+          { title: 'Time', data: 'time', render: make_time },
+          { title: 'Number of cores', data: 'cpus' },
+          { title: 'Power draw of a computing core', data: 'powerdrawCPU' },
+          { title: 'Core usage factor', data: 'cpuUsage' },
+          { title: 'Memory', data: 'memory', render: make_memory },
         ],
         "deferRender": true,
         "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
@@ -266,7 +271,7 @@ $(function() {
         "colReorder": true,
         "columnDefs": [
           { className: "id", "targets": [ 0,1,2,3 ] },
-          { className: "meta", "targets": [ 4 ] },
+          { className: "meta", "targets": [ 4,7,8,9,10,11 ] },
           { className: "metrics", "targets": [ 5,6 ] }
         ],
         "buttons": [
