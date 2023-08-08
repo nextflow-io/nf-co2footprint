@@ -13,7 +13,7 @@ public class HelperFunctions {
             value *= 1000
             unitIndex--
         }
-        
+        value = Math.round( value * 100 ) / 100
         return "${value} ${units[unitIndex]}"
     }
 
