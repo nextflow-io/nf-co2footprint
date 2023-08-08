@@ -5,9 +5,12 @@ import groovy.util.logging.Slf4j
 import nextflow.trace.TraceRecord
 import groovy.json.StringEscapeUtils
 
-
 import nextflow.co2footprint.HelperFunctions
 
+/**
+ *
+ * @author Júlia Mir Pedrol <mirp.julia@gmail.com>, Sabrina Krakau <sabrinakrakau@gmail.com>
+ */
 @Slf4j
 @CompileStatic
 class CO2Record extends TraceRecord {
@@ -21,7 +24,7 @@ class CO2Record extends TraceRecord {
         this.energy = energy
         this.co2e = co2e
         this.name = name
-        this.store = store
+        this.store = new LinkedHashMap<>(['energy': energy, 'co2e': co2e, 'name': name])
     }
 
     final public static Map<String,String> FIELDS = [
@@ -40,8 +43,8 @@ class CO2Record extends TraceRecord {
 
     // TODO implement accordingly to TraceRecord
     Double getEnergyConsumption() { energy }
-    String getEnergyConsumptionReadable() { HelperFunctions.convertToReadableUnits(energy,5) }
-    String getCO2eReadable() { HelperFunctions.convertToReadableUnits(co2e) }
+    String getEnergyConsumptionReadable() { HelperFunctions.convertToReadableUnits(energy,3) }
+    String getCO2eReadable() { HelperFunctions.convertToReadableUnits(co2e,3) }
     Double getCO2e() { co2e }
     String getName() { name }
 

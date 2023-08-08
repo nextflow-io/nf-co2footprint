@@ -3,4 +3,4 @@ Plugin-Id: nf-co2footprint
 Plugin-Version: 0.4.0
 Plugin-Class: nextflow.co2footprint.CO2FootprintPlugin
 Plugin-Provider: nextflow
-Plugin-Requires: >=22.10.0
+Plugin-Requires: >=23.07.0

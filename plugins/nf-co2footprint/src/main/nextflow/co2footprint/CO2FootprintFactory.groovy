@@ -42,7 +42,7 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * Implements the CO2Footprint observer factory
  *
- * @author Sabrina Krakau <sabrinakrakau@gmail.com>
+ * @author Júlia Mir Pedrol <mirp.julia@gmail.com>, Sabrina Krakau <sabrinakrakau@gmail.com>
  */
 @Slf4j
 @CompileStatic
@@ -61,12 +61,14 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
     // Load file containing TDP values for different CPU models
     protected void loadCpuTdpData(Map<String, Float> data) {
-        def inData = new InputStreamReader(this.class.getResourceAsStream('/cpu_tdp_values.csv')).text
+        def dataReader = new InputStreamReader(this.class.getResourceAsStream('/cpu_tdp_values.csv'))
 
-        for (String line : inData.readLines()) {
+        String line
+        while ( line = dataReader.readLine() ) {
             def h = line.split(",")
             if (h[0] != 'model_name') data[h[0]] = h[3].toFloat()
         }
+        dataReader.close()
         log.info "$data"
     }
 
@@ -84,7 +86,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         result.add( new CO2FootprintTextFileObserver(co2eFile, co2eSummaryFile) )
 
         // Generate CO2 footprint report with box-plot
-        def co2eReport = (CO2FootprintReportObserver.DEF_FILE_NAME as Path).complete()
+        def co2eReport = (this.config.getReportFile() as Path).complete()
         result.add( new CO2FootprintReportObserver(co2eReport) )
 
         return result
@@ -168,15 +170,15 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // TODO handle if more memory/cpus used than requested?
 
         // Pm: power draw of memory [W per GB]
-        def pm  = 0.3725
+        def pm  = config.getPowerdrawMem()
 
         /**
          * Remaining factors
          */
         // PUE: efficiency coefficient of the data centre
-        def pue = 1.67
+        def pue = config.getPUE()
         // CI: carbon intensity [gCO2e kWh−1]
-        def ci  = 475
+        def ci  = config.getCI()
 
         /**
          * Calculate energy consumption [kWh]
@@ -189,6 +191,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
          */
         def Double c = (e * ci) as Double
         log.info "CO2: $c"
+
+        // Return values in mWh and mg
+        e = e * 1000000
+        c = c * 1000
 
         return [e, c, t as Double, nc as Double, pc as Double, uc as Double, nm as Double, pm as Double, pue as Double, ci as Double]
     }
@@ -286,8 +292,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
             //writer.send { co2eFile.println("Test CO2 emission is:"); co2eFile.flush() }
             //writer.send { PrintWriter it -> it.println("Test CO2 emission is:"); it.flush() }
-            co2eSummaryFile.println("The total CO2 emission is: ${HelperFunctions.convertToReadableUnits(total_co2)}g")
-            co2eSummaryFile.println("The total energy consumption is: ${HelperFunctions.convertToReadableUnits(total_energy,5)}Wh")
+            co2eSummaryFile.println("The total CO2 emission is: ${HelperFunctions.convertToReadableUnits(total_co2,3)}g")
+            co2eSummaryFile.println("The total energy consumption is: ${HelperFunctions.convertToReadableUnits(total_energy,3)}Wh")
             co2eSummaryFile.flush()
             co2eSummaryFile.close()
 
@@ -356,7 +362,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             total_co2 += co2
 
             // save to the file
-            writer.send { PrintWriter it -> it.println("${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,5)}Wh\t${HelperFunctions.convertToReadableUnits(co2)}g\t\
+            writer.send { PrintWriter it -> it.println("${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,3)}Wh\t${HelperFunctions.convertToReadableUnits(co2,3)}g\t\
             ${t} hours\t${nc}\t${pc}\t${uc}\t${HelperFunctions.convertToReadableUnits(nm,8)}B\t${HelperFunctions.convertToReadableUnits(pm)}W\t${pue}\t${HelperFunctions.convertToReadableUnits(ci)}g/kWh"); it.flush() }
         }
 
@@ -389,7 +395,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             total_co2 += co2
 
             // save to the file
-            writer.send { PrintWriter it -> it.println("${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,5)}Wh\t${HelperFunctions.convertToReadableUnits(co2)}g\t\
+            writer.send { PrintWriter it -> it.println("${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,3)}Wh\t${HelperFunctions.convertToReadableUnits(co2,3)}g\t\
             ${t} hours\t${nc}\t${pc}\t${uc}\t${HelperFunctions.convertToReadableUnits(nm,8)}B\t${HelperFunctions.convertToReadableUnits(pm)}W\t${pue}\t${HelperFunctions.convertToReadableUnits(ci)}g/kWh"); it.flush() }
         }
     }
@@ -400,7 +406,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
      */
     class CO2FootprintReportObserver implements TraceObserver {
 
-        static final public String DEF_FILE_NAME = "CO2Footprint-report-${TraceHelper.launchTimestampFmt()}.html"
+        static final public String DEF_REPORT_FILE_NAME = "co2footprint-report-${TraceHelper.launchTimestampFmt()}.html"
 
         static final public int DEF_MAX_TASKS = 10_000
 
@@ -642,6 +648,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                             readTemplate('assets/CO2FootprintReportTemplate.js')
                     ]
             ]
+            //log.info "${tpl_fields['payload']}"
             final tpl = readTemplate('CO2FootprintReportTemplate.html')
             def engine = new GStringTemplateEngine()
             def html_template = engine.createTemplate(tpl)
