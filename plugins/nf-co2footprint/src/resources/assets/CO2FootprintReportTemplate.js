@@ -140,6 +140,19 @@ $(function() {
     }
   }
 
+  // Convert bytes to readable units
+  function readable_units_memory(bytes){
+    units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']  // Units: Byte, Kilobyte, Megabyte, Gigabyte, Terabyte, Petabyte, Exabyte
+    unit_index=0
+
+    while (bytes >= 1024 && unit_index < units.length - 1) {
+      bytes /= 1024;
+      unit_index++;
+    }
+    
+    return bytes + ' ' + units[unit_index];
+  }  
+
   // Build the trace table
   function make_co2e(ms, type){
     if (type === 'sort') {
@@ -177,7 +190,7 @@ $(function() {
     }
     return readable_units_time(ms);
   }
-  /*function make_date(ms, type){
+  function make_memory(ms, type){
     if (type === 'sort') {
       return parseInt(ms);
     }
@@ -187,31 +200,8 @@ $(function() {
     if (ms == '-' || ms == 0){
       return ms;
     }
-    return moment( parseInt(ms) ).format();
+    return readable_units_memory(ms);
   }
-  function make_memory(bytes, type){
-    if (type === 'sort') {
-      return parseInt(bytes);
-    }
-    if($('#nf-table-humanreadable').val() == 'false'){
-      return bytes;
-    }
-    if (bytes == '-' || bytes == 0){
-      return bytes;
-    }
-    // https://stackoverflow.com/a/14919494
-    var thresh = 1024;
-    if(Math.abs(bytes) < thresh) {
-      return bytes + ' B';
-    }
-    var units = ['kB','MB','GB','TB','PB','EB','ZB','YB'];
-    var u = -1;
-    do {
-        bytes /= thresh;
-        ++u;
-    } while(Math.abs(bytes) >= thresh && u < units.length - 1);
-    return bytes.toFixed(3)+' '+units[u];
-  }*/
   function make_tasks_table(){
     // reset
       if ( $.fn.dataTable.isDataTable( '#tasks_table' ) ) {
