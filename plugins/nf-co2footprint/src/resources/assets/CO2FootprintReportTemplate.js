@@ -118,6 +118,7 @@ $(function() {
         unit_index--;
     }
     
+    value = Math.round( value * 100 ) / 100;
     return value + ' ' + units[unit_index];
   }
   
