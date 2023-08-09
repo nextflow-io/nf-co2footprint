@@ -18,7 +18,7 @@ public class HelperFunctions {
     }
 
     static public String convertBytesToReadableUnits(double value) {
-        def units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']  // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
+        def units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']  // Units: Byte, Kilobyte, Megabyte, Gigabyte, Terabyte, Petabyte, Exabyte
         int unitIndex=0
 
         while (value >= 1024 && unitIndex < units.size() - 1) {
