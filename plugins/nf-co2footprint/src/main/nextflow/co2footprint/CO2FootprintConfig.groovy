@@ -42,7 +42,7 @@ class CO2FootprintConfig {
         while ( line = dataReader.readLine() ) {
             def row = line.split(",")
             if (row[0] == country) {
-                localCi = row[1].toFloat()
+                localCi = row[1].toDouble()
                 break
             }
         }

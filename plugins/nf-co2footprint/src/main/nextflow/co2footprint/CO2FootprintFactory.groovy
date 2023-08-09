@@ -54,19 +54,19 @@ class CO2FootprintFactory implements TraceObserverFactory {
     final private Map<TaskId,CO2Record> co2eRecords = new ConcurrentHashMap<>()
     // TODO make sure for key value can be set only once?
 
-    private Map<String, Float> cpuData = ['default': (Float) 12.0]
+    private Map<String, Double> cpuData = ['default': (Double) 12.0]
     Double total_energy = 0
     Double total_co2 = 0
 
 
     // Load file containing TDP values for different CPU models
-    protected void loadCpuTdpData(Map<String, Float> data) {
+    protected void loadCpuTdpData(Map<String, Double> data) {
         def dataReader = new InputStreamReader(this.class.getResourceAsStream('/cpu_tdp_values.csv'))
 
         String line
         while ( line = dataReader.readLine() ) {
             def h = line.split(",")
-            if (h[0] != 'model_name') data[h[0]] = h[3].toFloat()
+            if (h[0] != 'model_name') data[h[0]] = h[3].toDouble()
         }
         dataReader.close()
         log.info "$data"
@@ -93,7 +93,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
     }
 
     
-    float getCpuCoreTdp(TraceRecord trace) {
+    Double getCpuCoreTdp(TraceRecord trace) {
         def cpu_model = trace.get('cpu_model').toString()   // TODO toString() in TraceRecord get()?
         log.info "cpu model: $cpu_model"
 
@@ -127,24 +127,21 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // Factor 0.001 needed to convert Pc and Pm from W to kW
 
         // t: runtime in hours
-        def t  = (trace.get('realtime') as Double)/3600000
-        log.info "t: $t"
+        Double realtime = trace.get('realtime') as Double
+        Double t = realtime/3600000 as Double
 
         /**
          * Factors of core power usage
          */
         // nc: number of cores
-        def nc = trace.get('cpus') as Integer
-        log.info "nc: $nc"
+        Double nc = trace.get('cpus') as Integer
 
         // Pc: power draw of a computing core  [W]
-        def pc = getCpuCoreTdp(trace)
-        log.info "pc: $pc"
+        Double pc = getCpuCoreTdp(trace)
 
         // uc: core usage factor (between 0 and 1)
         // TODO if requested more than used, this is not taken into account, right?
-        def cpu_usage = trace.get('%cpu') as Double
-        log.info "cpu_usage: $cpu_usage"
+        Double cpu_usage = trace.get('%cpu') as Double
         if ( cpu_usage == null ) {
             log.info "cpu_usage is null"
             // TODO why is value null, because task was finished so fast that it was not captured? Or are there other reasons?
@@ -152,51 +149,48 @@ class CO2FootprintFactory implements TraceObserverFactory {
             cpu_usage = nc * 100
         }
         // TODO how to handle double, Double datatypes for ceiling?
-        def cpus_ceil = Math.ceil( cpu_usage / 100.0 as double )
-        def uc = cpu_usage / (100.0 * cpus_ceil)
-        log.info "uc: $uc"
+        Double cpus_ceil = Math.ceil( cpu_usage / 100.0 as double )
+        Double uc = cpu_usage / (100.0 * cpus_ceil) as Double
 
         /**
          * Factors of memory power usage
          */
         // nm: size of memory available [GB] -> requested memory
-        if ( trace.get('memory') == null ) {
+        Long memory = trace.get('memory') as Long
+        if ( memory == null ) {
             // TODO if 'memory' not set, returns null, hande somehow?
             log.error "TraceRecord field 'memory' is not set!"
             System.exit(1)
         }
-        def nm = (trace.get('memory') as Long)/1000000000
-        log.info "nm: $nm"
+        Double nm = memory/1000000000 as Double
         // TODO handle if more memory/cpus used than requested?
 
         // Pm: power draw of memory [W per GB]
-        def pm  = config.getPowerdrawMem()
+        Double pm  = config.getPowerdrawMem()
 
         /**
          * Remaining factors
          */
         // PUE: efficiency coefficient of the data centre
-        def pue = config.getPUE()
+        Double pue = config.getPUE()
         // CI: carbon intensity [gCO2e kWh−1]
         def ci  = config.getCI()
 
         /**
          * Calculate energy consumption [kWh]
          */
-        def Double e = (t * (nc * pc * uc + nm * pm) * pue * 0.001) as Double
-        log.info "E: $e"
+        Double e = (t * (nc * pc * uc + nm * pm) * pue * 0.001) as Double
 
         /*
          * Resulting CO2 emission [gCO2e]
          */
-        def Double c = (e * ci) as Double
-        log.info "CO2: $c"
+        Double c = (e * ci)
 
         // Return values in mWh and mg
         e = e * 1000000
         c = c * 1000
 
-        return [e, c]
+        return [e, c, realtime, nc, pc, uc, memory]
     }
 
 
@@ -277,7 +271,17 @@ class CO2FootprintFactory implements TraceObserverFactory {
             writer = new Agent<PrintWriter>(co2eFile)
             summaryWriter = new Agent<PrintWriter>(co2eSummaryFile)
 
-            writer.send { co2eFile.println("task_id\tenergy_consumption\tCO2e"); co2eFile.flush() }
+            writer.send { co2eFile.println(
+                    "task_id\t"
+                    + "energy_consumption\t"
+                    + "CO2e\t"
+                    + "time\t"
+                    + "cpus\t"
+                    + "powerdraw_cpu\t"
+                    + "cpu_usage\t"
+                    + "requested_memory"
+                ); co2eFile.flush()
+            }
         }
 
         /**
@@ -346,15 +350,38 @@ class CO2FootprintFactory implements TraceObserverFactory {
             def computation_results = computeTaskCO2footprint(trace)
             def eConsumption = computation_results[0]
             def co2 = computation_results[1]
+            def time = computation_results[2]
+            def cpus = computation_results[3] as Integer
+            def powerdrawCPU = computation_results[4]
+            def cpu_usage = computation_results[5]
+            def memory = computation_results[6]
 
-
-
-            co2eRecords[taskId] = new CO2Record((Double) eConsumption, (Double) co2, trace.get('name').toString())
+            co2eRecords[taskId] = new CO2Record(
+                    (Double) eConsumption,
+                    (Double) co2,
+                    (Double) time,
+                    cpus,
+                    (Double) powerdrawCPU,
+                    (Double) cpu_usage,
+                    (Long) memory,
+                    trace.get('name').toString()
+            )
             total_energy += eConsumption
             total_co2 += co2
 
             // save to the file
-            writer.send { PrintWriter it -> it.println("${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,3)}Wh\t${HelperFunctions.convertToReadableUnits(co2,3)}g"); it.flush() }
+            writer.send {
+                PrintWriter it -> it.println(
+                        "${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,3)}Wh\t"
+                        + "${HelperFunctions.convertToReadableUnits(co2,3)}g\t"
+                        + "${HelperFunctions.convertMillisecondsToReadableUnits(time)}\t"
+                        + "${cpus}\t"
+                        + "${powerdrawCPU}\t"
+                        + "${cpu_usage}\t"
+                        + "${HelperFunctions.convertBytesToReadableUnits(memory)}"
+                );
+                it.flush()
+            }
         }
 
 
@@ -370,12 +397,38 @@ class CO2FootprintFactory implements TraceObserverFactory {
             def computation_results = computeTaskCO2footprint(trace)
             def eConsumption = computation_results[0]
             def co2 = computation_results[1]
-            co2eRecords[taskId] = new CO2Record((Double) eConsumption, (Double) co2, trace.get('name').toString())
+            def time = computation_results[2]
+            def cpus = computation_results[3] as Integer
+            def powerdrawCPU = computation_results[4]
+            def cpu_usage = computation_results[5]
+            def memory = computation_results[6]
+
+            co2eRecords[taskId] = new CO2Record(
+                    (Double) eConsumption,
+                    (Double) co2,
+                    (Double) time,
+                    cpus,
+                    (Double) powerdrawCPU,
+                    (Double) cpu_usage,
+                    (Long) memory,
+                    trace.get('name').toString()
+            )
             total_energy += eConsumption
             total_co2 += co2
 
             // save to the file
-            writer.send { PrintWriter it -> it.println("${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,3)}Wh\t${HelperFunctions.convertToReadableUnits(co2,3)}g"); it.flush() }
+            writer.send {
+                PrintWriter it -> it.println(
+                        "${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,3)}Wh\t"
+                        + "${HelperFunctions.convertToReadableUnits(co2,3)}g\t"
+                        + "${HelperFunctions.convertMillisecondsToReadableUnits(time)}\t"
+                        + "${cpus}\t"
+                        + "${powerdrawCPU}\t"
+                        + "${cpu_usage}\t"
+                        + "${HelperFunctions.convertBytesToReadableUnits(memory)}"
+                );
+                it.flush()
+            }
         }
     }
 
