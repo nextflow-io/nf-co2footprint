@@ -118,22 +118,41 @@ $(function() {
         unit_index--;
     }
     
+    value = Math.round( value * 100 ) / 100;
     return value + ' ' + units[unit_index];
   }
   
-  // Humanize duration
-  /*function humanize(duration){
-    if (duration.days() > 0) {
-      return duration.days() + "d " + duration.hours() + "h"
+  // Convert miliseconds to readable units
+  function readable_units_time(duration){
+    if (duration < 1000) {
+      return duration + "ms"
+    } else {
+      hours = Math.floor(duration / 3600000);
+      minutes = Math.floor((duration % 3600000) / 60000);
+      seconds = Math.floor(duration % 60000) / 1000;
+
+      if (duration < 60000) {
+        return seconds + "s";
+      } else if (duration < 3600000) {
+        return minutes + "m " + seconds + "s";
+      } else {
+        return hours + "h " + minutes + "m " + seconds + "s";
+      }
     }
-    if (duration.hours() > 0) {
-      return duration.hours() + "h " + duration.minutes() + "m"
+  }
+
+  // Convert bytes to readable units
+  function readable_units_memory(bytes){
+    units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']  // Units: Byte, Kilobyte, Megabyte, Gigabyte, Terabyte, Petabyte, Exabyte
+    unit_index=0
+
+    while (bytes >= 1024 && unit_index < units.length - 1) {
+      bytes /= 1024;
+      unit_index++;
     }
-    if (duration.minutes() > 0) {
-      return duration.minutes() + "m " + duration.seconds() + "s"
-    }
-    return duration.asSeconds().toFixed(1) + "s"
-  }*/
+    
+    return bytes + ' ' + units[unit_index];
+  }  
 
   // Build the trace table
   function make_co2e(ms, type){
@@ -160,7 +179,7 @@ $(function() {
     }
     return readable_units(ms, 3) + 'Wh';
   }
-  /*function make_duration(ms, type){
+  function make_time(ms, type){
     if (type === 'sort') {
       return parseInt(ms);
     }
@@ -170,9 +189,9 @@ $(function() {
     if (ms == '-' || ms == 0){
       return ms;
     }
-    return humanize(moment.duration( parseInt(ms) ));
+    return readable_units_time(ms);
   }
-  function make_date(ms, type){
+  function make_memory(ms, type){
     if (type === 'sort') {
       return parseInt(ms);
     }
@@ -182,31 +201,8 @@ $(function() {
     if (ms == '-' || ms == 0){
       return ms;
     }
-    return moment( parseInt(ms) ).format();
+    return readable_units_memory(ms);
   }
-  function make_memory(bytes, type){
-    if (type === 'sort') {
-      return parseInt(bytes);
-    }
-    if($('#nf-table-humanreadable').val() == 'false'){
-      return bytes;
-    }
-    if (bytes == '-' || bytes == 0){
-      return bytes;
-    }
-    // https://stackoverflow.com/a/14919494
-    var thresh = 1024;
-    if(Math.abs(bytes) < thresh) {
-      return bytes + ' B';
-    }
-    var units = ['kB','MB','GB','TB','PB','EB','ZB','YB'];
-    var u = -1;
-    do {
-        bytes /= thresh;
-        ++u;
-    } while(Math.abs(bytes) >= thresh && u < units.length - 1);
-    return bytes.toFixed(3)+' '+units[u];
-  }*/
   function make_tasks_table(){
     // reset
       if ( $.fn.dataTable.isDataTable( '#tasks_table' ) ) {
@@ -254,6 +250,11 @@ $(function() {
           },
           { title: co2EmissionsTitle, data: 'co2e', render: make_co2e },
           { title: energyConsumptionTitle, data: 'energy', render: make_energy },
+          { title: 'Time', data: 'time', render: make_time },
+          { title: 'Number of cores', data: 'cpus' },
+          { title: 'Power draw of a computing core', data: 'powerdrawCPU' },
+          { title: 'Core usage factor', data: 'cpuUsage' },
+          { title: 'Memory', data: 'memory', render: make_memory },
         ],
         "deferRender": true,
         "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
@@ -261,7 +262,7 @@ $(function() {
         "colReorder": true,
         "columnDefs": [
           { className: "id", "targets": [ 0,1,2,3 ] },
-          { className: "meta", "targets": [ 4 ] },
+          { className: "meta", "targets": [ 4,7,8,9,10,11 ] },
           { className: "metrics", "targets": [ 5,6 ] }
         ],
         "buttons": [
