@@ -658,6 +658,17 @@ class CO2FootprintFactory implements TraceObserverFactory {
         }
 
         /**
+         * Render the total co2 footprint values for html report
+         *
+         * @param data A collection of {@link TraceRecord}s representing the tasks executed
+         * @param dataCO2 A collection of {@link CO2Record}s representing the tasks executed
+         * @return The rendered json
+         */
+        protected Map renderCO2TotalsJson() {
+            [ co2:HelperFunctions.convertToReadableUnits(total_co2,3), energy:HelperFunctions.convertToReadableUnits(total_energy,3) ]
+        }
+
+        /**
          * Render the report HTML document
          */
         protected void renderHtml() {
@@ -666,6 +677,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             final tpl_fields = [
                     workflow : getWorkflowMetadata(),
                     payload : renderPayloadJson(),
+                    co2_totals: renderCO2TotalsJson(),
                     assets_css : [
                             readTemplate('nextflow/trace/assets/bootstrap.min.css'),
                             readTemplate('nextflow/trace/assets/datatables.min.css')

@@ -199,6 +199,17 @@
         <dt class="col-sm-3">Nextflow version</dt>
         <dd class="col-sm-9">version ${workflow.nextflow.version}, build ${workflow.nextflow.build} (${workflow.nextflow.timestamp})</dd>
       </dl>
+
+      <dl>
+        <dt>Total CO2 footprint measures</dt>
+        <dd>
+          <dt class="col-sm-3">Total CO2 emission</dt>
+          <dd class="col-sm-9"><samp>${co2_totals.co2} g</samp></dd>
+
+          <dt class="col-sm-3">Total energy consumption</dt>
+          <dd class="col-sm-9"><samp>${co2_totals.energy} Wh</samp></dd>
+        </dd>
+      </dl>
     </div>
   </div>
 
