@@ -219,6 +219,16 @@
 
         <dt class="col-sm-6">Km by plane</dt>
         <dd class="col-sm-3">${co2_totals.plane}</dd>
+
+        <% if (co2_totals.plane_percent) { %>
+        <dt class="col-sm-6">Percentage of a flight Paris - London</dt>
+        <dd class="col-sm-3">${co2_totals.plane_percent}%</dd>
+        <% } %>
+
+        <% if (co2_totals.plane_flights) { %>
+        <dt class="col-sm-6">Number of flights Paris - London</dt>
+        <dd class="col-sm-3">${co2_totals.plane_flights}</dd>
+        <% } %>
       </dl>
     </div>
   </div>
