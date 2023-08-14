@@ -21,6 +21,7 @@
   <meta name="description" content="Nextflow workflow report for run id [${workflow.runName}]">
   <meta name="author" content="Sabrina Krakau">
   <link rel="icon" type="image/png" href="https://www.nextflow.io/img/favicon.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <title>[${workflow.runName}] Nextflow Workflow Report</title>
 
@@ -211,22 +212,22 @@
 
       <p>This is equivalent to:</p>
       <dl class="row small">
-        <dt class="col-sm-6">Months a tree would need to sequester this amount of CO2</dt>
+        <dt class="col-sm-6"><i class="fa fa-tree"></i> Months a tree would need to sequester this amount of CO2</dt>
         <dd class="col-sm-3">${co2_totals.tree}</dd>
 
-        <dt class="col-sm-6">Km by car</dt>
+        <dt class="col-sm-6"><i class="fa fa-car"></i> Km by car</dt>
         <dd class="col-sm-3">${co2_totals.car}</dd>
 
-        <dt class="col-sm-6">Km by plane</dt>
+        <dt class="col-sm-6"><i class="fa fa-plane"></i> Km by plane</dt>
         <dd class="col-sm-3">${co2_totals.plane}</dd>
 
         <% if (co2_totals.plane_percent) { %>
-        <dt class="col-sm-6">Percentage of a flight Paris - London</dt>
+        <dt class="col-sm-6"><i class="fa fa-plane"></i> Percentage of a flight Paris - London</dt>
         <dd class="col-sm-3">${co2_totals.plane_percent}%</dd>
         <% } %>
 
         <% if (co2_totals.plane_flights) { %>
-        <dt class="col-sm-6">Number of flights Paris - London</dt>
+        <dt class="col-sm-6"><i class="fa fa-plane"></i> Number of flights Paris - London</dt>
         <dd class="col-sm-3">${co2_totals.plane_flights}</dd>
         <% } %>
       </dl>
