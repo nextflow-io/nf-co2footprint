@@ -194,6 +194,25 @@ class CO2FootprintFactory implements TraceObserverFactory {
     }
 
 
+    // Compute CO2 footprint equivalences
+    List<Double> computeCO2footprintEquivalences() {
+        /*
+         * The estimated emission of the average passanger car is 175 gCO2e/Km in Europe and 251 gCO2/Km in the US
+         * The estimated emission of flying on a jet aircraft in economy classs is between 139 and 244 gCO2e/Km
+         * The estimated sequestered CO2 of a mature tree is ~1 Kg per month (917 g)
+         */
+        String country = config.getCountry()
+        Double car = total_co2 / 251 as Double
+        if (country && country != 'United States of America') {
+            car = total_co2 / 175 as Double
+        }
+        Double plane = total_co2 / 244 as Double
+        Double tree = total_co2 / 917 as Double
+
+        return [car.round(2), plane.round(2), tree.round(2)]
+    }
+
+
     /**
      * Class to generate text output
      */
@@ -665,7 +684,13 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * @return The rendered json
          */
         protected Map renderCO2TotalsJson() {
-            [ co2:HelperFunctions.convertToReadableUnits(total_co2,3), energy:HelperFunctions.convertToReadableUnits(total_energy,3) ]
+            List equivalences = computeCO2footprintEquivalences()
+            [ co2:HelperFunctions.convertToReadableUnits(total_co2,3), 
+              energy:HelperFunctions.convertToReadableUnits(total_energy,3),
+              car: equivalences[0],
+              plane: equivalences[1],
+              tree: equivalences[2]
+            ]
         }
 
         /**

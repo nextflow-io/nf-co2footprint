@@ -200,15 +200,25 @@
         <dd class="col-sm-9">version ${workflow.nextflow.version}, build ${workflow.nextflow.build} (${workflow.nextflow.timestamp})</dd>
       </dl>
 
-      <dl>
-        <dt>Total CO2 footprint measures</dt>
-        <dd>
-          <dt class="col-sm-3">Total CO2 emission</dt>
-          <dd class="col-sm-9"><samp>${co2_totals.co2} g</samp></dd>
+      <dt>Total CO2 footprint measures</dt>
+      <dl class="row small">
+        <dt class="col-sm-3">Total CO2 emission</dt>
+        <dd class="col-sm-9">${co2_totals.co2} g</dd>
 
-          <dt class="col-sm-3">Total energy consumption</dt>
-          <dd class="col-sm-9"><samp>${co2_totals.energy} Wh</samp></dd>
-        </dd>
+        <dt class="col-sm-3">Total energy consumption</dt>
+        <dd class="col-sm-9">${co2_totals.energy} Wh</dd>
+      </dl>
+
+      <p>This is equivalent to:</p>
+      <dl class="row small">
+        <dt class="col-sm-6">Months a tree would need to sequester this amount of CO2</dt>
+        <dd class="col-sm-3">${co2_totals.tree}</dd>
+
+        <dt class="col-sm-6">Km by car</dt>
+        <dd class="col-sm-3">${co2_totals.car}</dd>
+
+        <dt class="col-sm-6">Km by plane</dt>
+        <dd class="col-sm-3">${co2_totals.plane}</dd>
       </dl>
     </div>
   </div>
