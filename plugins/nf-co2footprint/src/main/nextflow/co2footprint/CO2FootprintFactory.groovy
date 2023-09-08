@@ -197,8 +197,9 @@ class CO2FootprintFactory implements TraceObserverFactory {
     // Compute CO2 footprint equivalences
     List<Double> computeCO2footprintEquivalences() {
         /*
-         * The estimated emission of the average passanger car is 175 gCO2e/Km in Europe and 251 gCO2/Km in the US
-         * The estimated emission of flying on a jet aircraft in economy classs is between 139 and 244 gCO2e/Km
+         * The following values were taken from the Green Algorithms publication (https://doi.org/10.1002/advs.202100707):
+         * The estimated emission of the average passenger car is 175 gCO2e/Km in Europe and 251 gCO2/Km in the US
+         * The estimated emission of flying on a jet aircraft in economy class is between 139 and 244 gCO2e/Km
          * The estimated sequestered CO2 of a mature tree is ~1 Kg per month (917 g)
          * A reference flight Paris to London spends 50000 gCO2
          */
