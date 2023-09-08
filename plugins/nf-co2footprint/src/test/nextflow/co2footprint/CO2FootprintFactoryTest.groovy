@@ -17,8 +17,18 @@
 package nextflow.co2footprint
 
 import nextflow.Session
+import nextflow.executor.Executor
+import nextflow.executor.NopeTaskHandler
+import nextflow.processor.TaskConfig
+import nextflow.processor.TaskHandler
+import nextflow.processor.TaskId
+import nextflow.processor.TaskProcessor
+import nextflow.processor.TaskRun
 import nextflow.trace.TraceRecord
+import nextflow.util.CacheHelper
 import spock.lang.Specification
+
+import java.nio.file.Path
 
 /**
  *
@@ -123,5 +133,35 @@ class CO2FootprintFactoryTest extends Specification {
         round(results[0]/1000) == 24.39
         // CO2 in g
         round(results[1]/1000) == 8.26
+    }
+
+    def 'test calculation of total CO2e and energy consumption' () {
+        given:
+        def traceRecord = new TraceRecord()
+        traceRecord.task_id = 111
+        traceRecord.realtime = (1 as Long) * (3600000 as Long)
+        traceRecord.cpus = 1
+        traceRecord.cpu_model = "Unknown model"
+        traceRecord.'%cpu' = 100.0
+        traceRecord.memory = (7 as Long) * (1000000000 as Long)
+
+        def session = Mock(Session) { getConfig() >> [:] }
+        // Create a handler
+        def task = new TaskRun(id: TaskId.of(111))
+        task.processor = Mock(TaskProcessor)
+        def handler = new NopeTaskHandler(task)
+
+        def factory = new CO2FootprintFactory()
+        def textFileObserver = factory.create(session)[0]
+
+        textFileObserver.onFlowCreate(session)
+        textFileObserver.onProcessStart(handler, traceRecord)
+        textFileObserver.onProcessComplete(handler, traceRecord)
+
+        expect:
+        // Energy consumption converted to Wh
+        round(factory.total_energy/1000) == 24.39
+        // Total CO2 in g
+        round(factory.total_co2/1000) == 11.59
     }
 }
