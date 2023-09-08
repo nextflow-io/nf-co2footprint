@@ -31,6 +31,10 @@ import spock.lang.Specification
 import java.nio.file.Path
 
 /**
+ * This class implements various tests.
+ *
+ * For testing the actual calculations of the CO2e, energy consumption and equivalence values,
+ * the results are compared against values retrieved from http://calculator.green-algorithms.org/ v2.2.
  *
  * @author Júlia Mir Pedrol <mirp.julia@gmail.com>, Sabrina Krakau <sabrinakrakau@gmail.com>
  */
