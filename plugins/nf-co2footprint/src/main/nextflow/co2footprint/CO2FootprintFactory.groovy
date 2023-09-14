@@ -644,7 +644,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         protected String renderTasksJson() {
             final r = getRecords()
             final co2r = getCO2Records()
-            co2r.size()<=maxTasks ? renderJsonData(r.values(), co2r.values()) : 'null'
+            co2r.size()<=maxTasks ? renderJsonData(r.values(), co2r) : 'null'
         }
 
         protected String renderSummaryJson() {
@@ -715,7 +715,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * @param dataCO2 A collection of {@link CO2Record}s representing the tasks executed
          * @return The rendered json payload
          */
-        protected String renderJsonData(Collection<TraceRecord> data, Collection<CO2Record> dataCO2) {
+        protected String renderJsonData(Collection<TraceRecord> data, Map<TaskId,CO2Record> dataCO2) {
             def List<String> formats = null
             def List<String> fields = null
             def List<String> co2Formats = null
@@ -729,7 +729,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 data[i].renderJson(result,fields,formats)
                 if( !co2Formats ) co2Formats = CO2Record.FIELDS.values().collect { it!='str' ? 'num' : 'str' }
                 if( !co2Fields ) co2Fields = CO2Record.FIELDS.keySet() as List
-                dataCO2[i].renderJson(result,co2Fields,co2Formats)
+                dataCO2[data[i].getTaskId()].renderJson(result,co2Fields,co2Formats)
             }
             result << ']'
             return result.toString()
