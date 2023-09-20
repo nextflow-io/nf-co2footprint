@@ -203,21 +203,22 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * The estimated sequestered CO2 of a mature tree is ~1 Kg per month (917 g)
          * A reference flight Paris to London spends 50000 gCO2
          */
+        def gCO2 = total_co2 / 1000 as Double
         String country = config.getCountry()
-        Double car = total_co2 / 251 as Double
-        if (country && country != 'United States of America') {
-            car = total_co2 / 175 as Double
+        Double car = gCO2 / 175 as Double
+        if (country && country == 'United States of America') {
+            car = gCO2 / 251 as Double
         }
-        Double tree = total_co2 / 917 as Double
+        Double tree = gCO2 / 917 as Double
         car = car.round(2)
         tree = tree.round(2)
         Double plane_percent
         Double plane_flights
-        if (total_co2 <= 50000) {
-            plane_percent = total_co2 * 100 / 50000 as Double
+        if (gCO2 <= 50000) {
+            plane_percent = gCO2 * 100 / 50000 as Double
             plane_percent = plane_percent.round(2)
         } else {
-            plane_flights = total_co2 / 50000 as Double
+            plane_flights = gCO2 / 50000 as Double
             plane_flights = plane_flights.round(2)
         }
 
