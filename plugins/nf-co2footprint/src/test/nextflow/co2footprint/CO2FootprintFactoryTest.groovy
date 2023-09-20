@@ -168,4 +168,39 @@ class CO2FootprintFactoryTest extends Specification {
         // Total CO2 in g
         round(factory.total_co2/1000) == 11.59
     }
+
+    def 'test calculation of CO2 equivalences' () {
+        given:
+        def traceRecord = new TraceRecord()
+        traceRecord.task_id = 111
+        traceRecord.realtime = (1 as Long) * (3600000 as Long)
+        traceRecord.cpus = 1
+        traceRecord.cpu_model = "Unknown model"
+        traceRecord.'%cpu' = 100.0
+        traceRecord.memory = (7 as Long) * (1000000000 as Long)
+
+        def session = Mock(Session) { getConfig() >> [:] }
+        // Create a handler
+        def task = new TaskRun(id: TaskId.of(111))
+        task.processor = Mock(TaskProcessor)
+        def handler = new NopeTaskHandler(task)
+
+        def factory = new CO2FootprintFactory()
+        def textFileObserver = factory.create(session)[0]
+
+        textFileObserver.onFlowCreate(session)
+        textFileObserver.onProcessStart(handler, traceRecord)
+        textFileObserver.onProcessComplete(handler, traceRecord)
+
+        def results = factory.computeCO2footprintEquivalences()
+
+        expect:
+        // Values compared to result from www.green-algorithms.org
+        // Car Km
+        results[0] == 0.07
+        // Tree months
+        results[1] == 0.01
+        // Plane percent
+        results[2] == 0.02
+    }
 }
