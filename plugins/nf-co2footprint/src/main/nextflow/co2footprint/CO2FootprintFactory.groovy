@@ -69,7 +69,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             if (h[0] != 'model_name') data[h[0]] = h[3].toDouble()
         }
         dataReader.close()
-        log.info "$data"
+        log.debug "$data"
     }
 
     @Override
@@ -95,7 +95,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
     
     Double getCpuCoreTdp(TraceRecord trace) {
         def cpu_model = trace.get('cpu_model').toString()   // TODO toString() in TraceRecord get()?
-        log.info "cpu model: $cpu_model"
 
         // Look up CPU model specific TDP value
         def c = 0
@@ -143,7 +142,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // TODO if requested more than used, this is not taken into account, right?
         Double cpu_usage = trace.get('%cpu') as Double
         if ( cpu_usage == null ) {
-            log.info "cpu_usage is null"
+            log.warn "cpu_usage is null"
             // TODO why is value null, because task was finished so fast that it was not captured? Or are there other reasons?
             // Assuming requested cpus were used with 100%
             cpu_usage = nc * 100
@@ -628,10 +627,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 log.debug "WARN: Unable to find trace record for task id=${handler.task?.id}"
                 return
             }
-
-            //log.info "TEST "
-            //log.info "${co2eRecords[ trace.taskId ].getCO2e()}"
-            //log.info "$co2eRecords"
 
             synchronized (records) {
                 records[ trace.taskId ] = trace
