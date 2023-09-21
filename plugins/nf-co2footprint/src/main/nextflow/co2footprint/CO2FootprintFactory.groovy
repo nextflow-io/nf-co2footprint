@@ -193,6 +193,38 @@ class CO2FootprintFactory implements TraceObserverFactory {
     }
 
 
+    // Compute CO2 footprint equivalences
+    List<Double> computeCO2footprintEquivalences() {
+        /*
+         * The following values were taken from the Green Algorithms publication (https://doi.org/10.1002/advs.202100707):
+         * The estimated emission of the average passenger car is 175 gCO2e/Km in Europe and 251 gCO2/Km in the US
+         * The estimated emission of flying on a jet aircraft in economy class is between 139 and 244 gCO2e/Km
+         * The estimated sequestered CO2 of a mature tree is ~1 Kg per month (917 g)
+         * A reference flight Paris to London spends 50000 gCO2
+         */
+        def gCO2 = total_co2 / 1000 as Double
+        String country = config.getCountry()
+        Double car = gCO2 / 175 as Double
+        if (country && country == 'United States of America') {
+            car = gCO2 / 251 as Double
+        }
+        Double tree = gCO2 / 917 as Double
+        car = car.round(2)
+        tree = tree.round(2)
+        Double plane_percent
+        Double plane_flights
+        if (gCO2 <= 50000) {
+            plane_percent = gCO2 * 100 / 50000 as Double
+            plane_percent = plane_percent.round(2)
+        } else {
+            plane_flights = gCO2 / 50000 as Double
+            plane_flights = plane_flights.round(2)
+        }
+
+        return [car, tree, plane_percent, plane_flights]
+    }
+
+
     /**
      * Class to generate text output
      */
@@ -660,7 +692,14 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * @return The rendered json
          */
         protected Map renderCO2TotalsJson() {
-            [ co2:HelperFunctions.convertToReadableUnits(total_co2,3), energy:HelperFunctions.convertToReadableUnits(total_energy,3) ]
+            List equivalences = computeCO2footprintEquivalences()
+            [ co2:HelperFunctions.convertToReadableUnits(total_co2,3), 
+              energy:HelperFunctions.convertToReadableUnits(total_energy,3),
+              car: equivalences[0],
+              tree: equivalences[1],
+              plane_percent: equivalences[2],
+              plane_flights: equivalences[3]
+            ]
         }
 
         /**

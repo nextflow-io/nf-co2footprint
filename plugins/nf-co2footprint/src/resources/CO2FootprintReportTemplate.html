@@ -21,6 +21,7 @@
   <meta name="description" content="Nextflow workflow report for run id [${workflow.runName}]">
   <meta name="author" content="Sabrina Krakau">
   <link rel="icon" type="image/png" href="https://www.nextflow.io/img/favicon.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <title>[${workflow.runName}] Nextflow Workflow Report</title>
 
@@ -209,6 +210,31 @@
         <dd class="col-sm-9">${co2_totals.energy}Wh</dd>
       </dl>
       </dl>
+
+      <p>This is equivalent to:</p>
+      <dl class="row small">
+        <dt class="col-sm-6"><i class="fa fa-tree"></i> Months a tree would need to sequester this amount of CO2</dt>
+        <dd class="col-sm-3">${co2_totals.tree}</dd>
+
+        <dt class="col-sm-6"><i class="fa fa-car"></i> Km by car</dt>
+        <dd class="col-sm-3">${co2_totals.car}</dd>
+
+        <% if (co2_totals.plane_percent) { %>
+        <dt class="col-sm-6"><i class="fa fa-plane"></i> Percentage of a flight Paris - London</dt>
+        <dd class="col-sm-3">${co2_totals.plane_percent}%</dd>
+        <% } %>
+
+        <% if (co2_totals.plane_flights) { %>
+        <dt class="col-sm-6"><i class="fa fa-plane"></i> Number of flights Paris - London</dt>
+        <dd class="col-sm-3">${co2_totals.plane_flights}</dd>
+        <% } %>
+      </dl>
+
+      <p>The calculation of these values is based on the carbon footprint computation method
+        developed in the Green Algorithms project: www.green-algorithms.org</p>
+      <p>Lannelongue, L., Grealey, J., Inouye, M.,
+        Green Algorithms: Quantifying the Carbon Footprint of Computation.
+        Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707</p>
     </div>
   </div>
 
