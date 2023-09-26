@@ -59,7 +59,7 @@ The following parameters are currently available:
 
 ## Credits
 
-The nf-co2footprint plugin is mainly developed by [Sabrina Krakau](https://github.com/skrakau) and [Júlia Mir-Pedrol](https://github.com/mirpedrol) at [QBiC](https://www.qbic.uni-tuebingen.de/).
+The nf-co2footprint plugin is mainly developed and maintained by [Sabrina Krakau](https://github.com/skrakau) and [Júlia Mir-Pedrol](https://github.com/mirpedrol) at [QBiC](https://www.qbic.uni-tuebingen.de/).
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
