@@ -1,112 +1,67 @@
-# nf-hello plugin 
- 
-This project shows how to implement a simple Nextflow plugin named `nf-hello` which intercepts workflow execution events to print a message when the execution starts and on workflow completion.
+# nf-co2footprint plugin [WIP]
 
-The `nf-hello` plugin also enriches the `channel` object with a `producer` and `consumer` method (`reverse` and `goodbye`) which can be used in a pipeline script.
+A Nextflow plugin to estimate the CO2 footprint of pipeline runs.
 
-Also exposes some @FunctionS to be used in the pipeline as custom methods 
+## Introduction
 
-   NOTE: this repo uses the name `nf-hello` as root name. In case you want to use this repo as starting point for a custom plugin, you need at least to change `settings.gradle` and rename `plugins/nf-hello` folder.
+The nf-co2footprint plugin estimates the energy consumption for each pipeline task based on the Nextflow resource usage metrics and information about the power consumption of the underlying compute system.
+The carbon intensity of the energy production is then used to estimate the respective CO2 emission.
 
-## Plugin structure
-                    
-- `settings.gradle`
-    
-    Gradle project settings. 
+The calculation is based on the carbon footprint computation method
+developed in the Green Algorithms project: www.green-algorithms.org
 
-- `plugins/nf-hello`
-    
-    The plugin implementation base directory.
+> **Green Algorithms: Quantifying the Carbon Footprint of Computation.**
+> 
+> Lannelongue, L., Grealey, J., Inouye, M.,
+> 
+> Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707
 
-- `plugins/nf-hello/build.gradle` 
-    
-    Plugin Gradle build file. Project dependencies should be added here.
+The nf-co2footprint plugin generates a detailed TXT carbon footprint report containing the energy consumption, the estimated CO2 emission and other relevant metrics for each task.
+Additionally, an HTML report is generated with information about the carbon footprint of the whole pipeline run and containing plots showing, for instance, an overview of the CO2 emissions for the different processes.
 
-- `plugins/nf-hello/src/resources/META-INF/MANIFEST.MF` 
-    
-    Manifest file defining the plugin attributes e.g. name, version, etc. The attribute `Plugin-Class` declares the plugin main class. This class should extend the base class `nextflow.plugin.BasePlugin` e.g. `nextflow.co2footprint.HelloPlugin`.
+## Quick Start
 
-- `plugins/nf-hello/src/resources/META-INF/extensions.idx`
-    
-    This file declares one or more extension classes provided by the plugin. Each line should contain the fully qualified name of a Java class that implements the `org.pf4j.ExtensionPoint` interface (or a sub-interface).
+Declare the plugin in your Nextflow pipeline configuration file:
 
-- `plugins/nf-hello/src/main` 
-
-    The plugin implementation sources.
-
-- `plugins/nf-hello/src/test` 
-
-    The plugin unit tests. 
-
-## Plugin classes
-
-- `HelloConfig`: simple example how to handle configuration options provided via the Nextflow configuration file. 
-
-- `HelloExtension`: show how create an extension class that can be used to create custom channel factories, operation and fuctions that can be imported in the pipeline script as DSL extensions.
-
-- `CO2FootprintFactory` and `CO2FootprintObserver`: show how to intercept workflow runtime events and react correspondly with custom code.
-
-- `HelloPlugin`: the plugin entry point.
-
-
-## Unit testing 
-
-Run the following command in the project root directory (ie. where the file `settings.gradle` is located):
-
-```bash
-./gradlew check
+```groovy title="nextflow.config"
+plugins {
+  id 'nf-co2footprint'
+}
 ```
 
-## Testing and debugging
+This is all that is needed - Nextflow will automatically fetch the plugin code at run time.
 
-To run and test the plugin in for development purpose, configure a local Nextflow build with the following steps:
+## Customising parameters
 
-1. Clone the Nextflow repository in your computer into a sibling directory:
-    ```bash
-    git clone --depth 1 https://github.com/nextflow-io/nextflow ../nextflow
-    ```
-  
-2. Configure the plugin build to use the local Nextflow code:
-    ```bash
-    echo "includeBuild('../nextflow')" >> settings.gradle
-    ```
-  
-   (Make sure to not add it more than once!)
+You can adjust the nf-co2footprint plugin parameters in your config file as follows:
 
-3. Compile the plugin alongside the Nextflow code:
-    ```bash
-    make compile
-    ```
+```groovy title="nextflow.config"
+co2footprint {
+    file        = "${params.outdir}/co2footprint.txt"
+    reportFile  = "${params.outdir}/co2footprint_report.html"
+    ci          = 300
+    pue         = 1.4
+}
+```
 
-4. Run Nextflow with the plugin, using `./launch.sh` as a drop-in replacement for the `nextflow` command, and adding the option `-plugins nf-hello` to load the plugin:
-    ```bash
-    ./launch.sh run nextflow-io/hello -plugins nf-hello
-    ```
+Include the config file for your pipeline run using the `-c` Nextflow parameter, for example as follows:
 
-## Testing without Nextflow build
+```bash
+nextflow run nextflow-io/hello -c nextflow.config
+```
 
-The plugin can be tested without using a local Nextflow build using those steps:
+The following parameters are currently available:
+- `file`: Name of the TXT carbon footprint report containing the energy consumption, the estimated CO2 emission and other relevant metrics for each task.
+- `reportFile`: Name of the HTML report containing information about the entire carbon footprint, overview plots and more detailed task-specific metrics.
+- `ci`: carbon intensity of the respective energy production.
+- `pue`: power usage effectiveness, efficiency coefficient of the data centre.
+- `powerdrawMem`: power draw from memory.
 
-1. generate required artifacts with `make buildPlugins`
-2. copy build/plugins/your-plugin to `$HOME/.nextflow/plugins`
-3. create a pipeline with your plugin and see in action via `nextflow run ./my-pipeline-script.nf`
+## Credits
 
-## Package, upload and publish
+The nf-co2footprint plugin is mainly developed and maintained by [Sabrina Krakau](https://github.com/skrakau) and [Júlia Mir-Pedrol](https://github.com/mirpedrol) at [QBiC](https://www.qbic.uni-tuebingen.de/).
 
-The project should be hosted in a GitHub repository whose name should match the name of the plugin, that is the name of the directory in the `plugins` folder (e.g. `nf-hello`).
+We thank the following people for their extensive assistance in the development of this pipeline:
 
-Follow these steps to package, upload and publish the plugin:
-
-1. Create a file named `gradle.properties` in the project root containing the following attributes (this file should not be committed to Git):
-
-   * `github_organization`: the GitHub organisation where the plugin repository is hosted.
-   * `github_username`: The GitHub username granting access to the plugin repository.
-   * `github_access_token`: The GitHub access token required to upload and commit changes to the plugin repository.
-   * `github_commit_email`: The email address associated with your GitHub account.
-
-2. Use the following command to package and create a release for your plugin on GitHub:
-    ```bash
-    ./gradlew :plugins:nf-hello:upload
-    ```
-
-3. Create a pull request against [nextflow-io/plugins](https://github.com/nextflow-io/plugins/blob/main/plugins.json) to make the plugin accessible to Nextflow.
+- [Phil Ewels](https://github.com/ewels)
+- [Paolo Di Tommaso](https://github.com/pditommaso)
