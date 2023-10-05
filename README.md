@@ -1,11 +1,11 @@
 # nf-co2footprint plugin [WIP]
 
-A Nextflow plugin to estimate the CO2 footprint of pipeline runs.
+A Nextflow plugin to estimate the CO<sub>2</sub> footprint of pipeline runs.
 
 ## Introduction
 
 The nf-co2footprint plugin estimates the energy consumption for each pipeline task based on the Nextflow resource usage metrics and information about the power consumption of the underlying compute system.
-The carbon intensity of the energy production is then used to estimate the respective CO2 emission.
+The carbon intensity of the energy production is then used to estimate the respective CO<sub>2</sub> emission.
 
 The calculation is based on the carbon footprint computation method
 developed in the Green Algorithms project: www.green-algorithms.org
@@ -16,8 +16,8 @@ developed in the Green Algorithms project: www.green-algorithms.org
 > 
 > Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707
 
-The nf-co2footprint plugin generates a detailed TXT carbon footprint report containing the energy consumption, the estimated CO2 emission and other relevant metrics for each task.
-Additionally, an HTML report is generated with information about the carbon footprint of the whole pipeline run and containing plots showing, for instance, an overview of the CO2 emissions for the different processes.
+The nf-co2footprint plugin generates a detailed TXT carbon footprint report containing the energy consumption, the estimated CO<sub>2</sub> emission and other relevant metrics for each task.
+Additionally, an HTML report is generated with information about the carbon footprint of the whole pipeline run and containing plots showing, for instance, an overview of the CO<sub>2</sub> emissions for the different processes.
 
 ## Quick Start
 
@@ -51,7 +51,7 @@ nextflow run nextflow-io/hello -c nextflow.config
 ```
 
 The following parameters are currently available:
-- `file`: Name of the TXT carbon footprint report containing the energy consumption, the estimated CO2 emission and other relevant metrics for each task.
+- `file`: Name of the TXT carbon footprint report containing the energy consumption, the estimated CO<sub>2</sub> emission and other relevant metrics for each task.
 - `reportFile`: Name of the HTML report containing information about the entire carbon footprint, overview plots and more detailed task-specific metrics.
 - `ci`: carbon intensity of the respective energy production.
 - `pue`: power usage effectiveness, efficiency coefficient of the data centre.
