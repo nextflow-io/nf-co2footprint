@@ -1,5 +1,5 @@
 ---
-title: CO2footprint
+title: CO2footprint-measures
 description: Definition of CO2 footprint
 hide:
   - toc
@@ -13,9 +13,10 @@ For this, the amounts of other gases are converted to the amount of CO<sub>2</su
 
 The equation used for the calculation of the carbon footprint ($C$) is:
 
-$(C = t * (n_c * P_c * u_c + n_m * P_m) * PUE * CI)$
+$C = t * (n_c * P_c * u_c + n_m * P_m) * PUE * CI$
 
 Being:
+
 - **$t$** the running time of the computation (hours) 
 - **$n_c$** the number of cores
 - **$n_m$** the size of memory available (gigabytes)
