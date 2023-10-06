@@ -102,7 +102,7 @@ $(function() {
   var energy_tickformat = (max <= 4) ? ('.2f') : ('.3s');
   
 
-  Plotly.newPlot('co2eplot', co2e_data, { title: 'CO2 emission', yaxis: {title: 'CO2 emission (g)', tickformat: co2e_tickformat, rangemode: 'tozero'} });
+  Plotly.newPlot('co2eplot', co2e_data, { title: 'CO2e emission', yaxis: {title: 'CO2e emission (g)', tickformat: co2e_tickformat, rangemode: 'tozero'} });
   Plotly.newPlot('energyplot', energy_data, { title: 'Energy consumption', yaxis: {title: 'Energy consumption (Wh)', tickformat: energy_tickformat, rangemode: 'tozero'} });
 
   // Convert to readable units
@@ -211,10 +211,10 @@ $(function() {
 
       // Column titles
       var energyConsumptionTitle = 'energy consumption (mWh)'; // Default column title
-      var co2EmissionsTitle = 'CO2 emissions (mg)';
+      var co2EmissionsTitle = 'CO2e emissions (mg)';
       if ($('#nf-table-humanreadable').val() == 'true') {
         energyConsumptionTitle = 'energy consumption'; // Change the column title if the button is selected
-        co2EmissionsTitle = 'CO2 emissions';
+        co2EmissionsTitle = 'CO2e emissions';
       }
 
       var table = $('#tasks_table').DataTable({
