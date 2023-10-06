@@ -19,17 +19,29 @@ developed in the Green Algorithms project: www.green-algorithms.org
 The nf-co2footprint plugin generates a detailed TXT carbon footprint report containing the energy consumption, the estimated CO<sub>2</sub> emission and other relevant metrics for each task.
 Additionally, an HTML report is generated with information about the carbon footprint of the whole pipeline run and containing plots showing, for instance, an overview of the CO<sub>2</sub> emissions for the different processes.
 
+
+## Testing the plugin prior release
+
+The plugin can be tested prior release without using a local Nextflow build using the following steps:
+
+1. Build the plugin: `make buildPlugins`
+2. Copy `build/plugins/nf-co2footprint-<version>` to `$HOME/.nextflow/plugins`
+
+The details on how to build and test the plugin during development using a local Nextflow build you can find in the [nf-hello README](https://github.com/nextflow-io/nf-hello/tree/master#readme).
+
 ## Quick Start
 
 Declare the plugin in your Nextflow pipeline configuration file:
 
 ```groovy title="nextflow.config"
 plugins {
-  id 'nf-co2footprint'
+  id 'nf-co2footprint@0.4.0'    
 }
 ```
+<!-- NOTE: currently seems to only work with pinned version  -->
 
-This is all that is needed - Nextflow will automatically fetch the plugin code at run time.
+This is all that is needed.
+<!-- - Nextflow will automatically fetch the plugin code at run time. -->
 
 ## Customising parameters
 
