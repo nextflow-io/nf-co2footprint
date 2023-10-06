@@ -16,7 +16,7 @@ nav:
 theme:
   name: material
   icon:
-    logo: octicons/checklist-16
+    logo: octicons/cloud-16
     repo: fontawesome/brands/github
   palette:
     # Palette toggle for dark mode
