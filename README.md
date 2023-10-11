@@ -2,6 +2,8 @@
 
 A Nextflow plugin to estimate the CO<sub>2</sub> footprint of pipeline runs.
 
+## 📚 Docs 👉🏻 <https://nextflow-io.github.io/nf-co2footprint>
+
 ## Introduction
 
 The nf-co2footprint plugin estimates the energy consumption for each pipeline task based on the Nextflow resource usage metrics and information about the power consumption of the underlying compute system.
@@ -19,16 +21,6 @@ developed in the Green Algorithms project: www.green-algorithms.org
 The nf-co2footprint plugin generates a detailed TXT carbon footprint report containing the energy consumption, the estimated CO<sub>2</sub> emission and other relevant metrics for each task.
 Additionally, an HTML report is generated with information about the carbon footprint of the whole pipeline run and containing plots showing, for instance, an overview of the CO<sub>2</sub> emissions for the different processes.
 
-
-## Testing the plugin prior release
-
-The plugin can be tested prior release without using a local Nextflow build using the following steps:
-
-1. Build the plugin: `make buildPlugins`
-2. Copy `build/plugins/nf-co2footprint-<version>` to `$HOME/.nextflow/plugins`
-
-The details on how to build and test the plugin during development using a local Nextflow build you can find in the [nf-hello README](https://github.com/nextflow-io/nf-hello/tree/master#readme).
-
 ## Quick Start
 
 Declare the plugin in your Nextflow pipeline configuration file:
@@ -38,36 +30,13 @@ plugins {
   id 'nf-co2footprint@0.4.0'    
 }
 ```
-<!-- NOTE: currently seems to only work with pinned version  -->
 
-This is all that is needed.
-<!-- - Nextflow will automatically fetch the plugin code at run time. -->
+This is all that is needed. Run your pipeline with the usual command.
 
-## Customising parameters
+You can find more information on plugins in the [Nextflow documentation](https://www.nextflow.io/docs/latest/plugins.html#plugins).
 
-You can adjust the nf-co2footprint plugin parameters in your config file as follows:
-
-```groovy title="nextflow.config"
-co2footprint {
-    file        = "${params.outdir}/co2footprint.txt"
-    reportFile  = "${params.outdir}/co2footprint_report.html"
-    ci          = 300
-    pue         = 1.4
-}
-```
-
-Include the config file for your pipeline run using the `-c` Nextflow parameter, for example as follows:
-
-```bash
-nextflow run nextflow-io/hello -c nextflow.config
-```
-
-The following parameters are currently available:
-- `file`: Name of the TXT carbon footprint report containing the energy consumption, the estimated CO<sub>2</sub> emission and other relevant metrics for each task.
-- `reportFile`: Name of the HTML report containing information about the entire carbon footprint, overview plots and more detailed task-specific metrics.
-- `ci`: carbon intensity of the respective energy production.
-- `pue`: power usage effectiveness, efficiency coefficient of the data centre.
-- `powerdrawMem`: power draw from memory.
+> [!NOTE]
+> To test the plugin prior to its first release, refer to the [contributing documentation](contributing/setup.md).
 
 ## Credits
 
