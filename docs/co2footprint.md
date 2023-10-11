@@ -17,12 +17,12 @@ $C = t * (n_c * P_c * u_c + n_m * P_m) * PUE * CI$
 
 Being:
 
-- **$t$** the running time of the computation (hours) 
+- **$t$** the running time of the computation (h) 
 - **$n_c$** the number of cores
-- **$n_m$** the size of memory available (gigabytes)
+- **$n_m$** the size of memory available (GB)
 - **$u_c$** the core usage factor (between 0 and 1)
-- **$P_c$** the power draw of a computing core 
-- **$P_m$** the power draw of memory (Watt)
+- **$P_c$** the power draw of a computing core (W)
+- **$P_m$** the power draw of memory (W, per GB)
 - **$PUE$** the efficiency coefficient of the data centre
 - **$CI$** the carbon intensity of energy production, which represents carbon footprint of producing 1 kWh of energy for a given country and energy mix.
 
