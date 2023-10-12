@@ -15,19 +15,16 @@ The formula used for the calculation of the carbon footprint ($C$) is:
 
 $C = t \cdot (n_c \cdot P_c \cdot u_c + n_m \cdot P_m) \cdot PUE \cdot CI$
 
-Being:
-$$
-\begin{alignat*}{2}
-t & =  \text{the running time of the computation (h)} \\
-n_c & =  \text{the number of cores} \\
-n_m & =  \text{the size of memory available (GB)} \\
-u_c & =  \text{the core usage factor (between 0 and 1)} \\
-P_c & =  \text{the power draw of a computing core (W)} \\
-P_m & =  \text{the power draw of memory (W, per GB)} \\
-PUE & =  \text{the efficiency coefficient of the data centre} \\
-CI & = \text{the carbon intensity of energy production, which represents the carbon footprint of producing 1 kWh of energy for a given country and energy mix}
-\end{alignat*}
-$$
+where
+
+**$t$** = the running time of the computation (h)<br/>
+**$n_c$** = the number of cores<br/>
+**$n_m$** = the size of memory available (GB)<br/>
+**$u_c$** = the core usage factor (between 0 and 1)<br/>
+**$P_c$** = the power draw of a computing core (W)<br/>
+**$P_m$** = the power draw of memory (W, per GB)<br/>
+**$PUE$** = the efficiency coefficient of the data centre<br/>
+**$CI$** = the carbon intensity of energy production, which represents the carbon footprint of producing 1 kWh of energy for a given country and energy mix
 
 ## References
 
