@@ -75,6 +75,27 @@ class CO2FootprintFactoryTest extends Specification {
         round(results[1]/1000) == 11.59
     }
 
+    def 'test co2e calculation for specific cpu_model' () {
+        given:
+        def traceRecord = new TraceRecord()
+        traceRecord.realtime = (1 as Long) * (3600000 as Long)
+        traceRecord.cpus = 1
+        traceRecord.cpu_model = "AMD EPYC 7251"
+        traceRecord.'%cpu' = 100.0
+        traceRecord.memory = (7 as Long) * (1000000000 as Long)
+
+        def session = Mock(Session) { getConfig() >> [:] }
+        def factory = new CO2FootprintFactory()
+        factory.create(session)
+        def results = factory.computeTaskCO2footprint(traceRecord)
+
+        expect:
+        // Energy consumption converted to Wh and compared to result from www.green-algorithms.org
+        round(results[0]/1000) == 29.40
+        // CO2 in g
+        round(results[1]/1000) == 13.97
+    }
+
     def 'test co2e calculation with non-default pue' () {
         given:
         def traceRecord = new TraceRecord()
