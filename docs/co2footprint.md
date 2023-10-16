@@ -26,6 +26,10 @@ where
 **$PUE$** = the efficiency coefficient of the data centre<br/>
 **$CI$** = the carbon intensity of energy production, which represents the carbon footprint of producing 1 kWh of energy for a given country and energy mix
 
+## Used data
+
+The CPU TDP data from the Green Algorithms project is used to retrieve model-specific CPU power draw values.
+
 ## References
 
 > **Green Algorithms: Quantifying the Carbon Footprint of Computation.**
