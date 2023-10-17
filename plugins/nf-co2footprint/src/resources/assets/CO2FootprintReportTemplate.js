@@ -255,6 +255,7 @@ $(function() {
           { title: 'Power draw of a computing core', data: 'powerdrawCPU' },
           { title: 'Core usage factor', data: 'cpuUsage' },
           { title: 'Memory', data: 'memory', render: make_memory },
+          { title: 'CPU model', data: 'cpu_model' },
         ],
         "deferRender": true,
         "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
