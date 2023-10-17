@@ -60,12 +60,13 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
     // Load file containing TDP values for different CPU models
     protected void loadCpuTdpData(Map<String, Double> data) {
-        def dataReader = new InputStreamReader(this.class.getResourceAsStream('/cpu_tdp_values.csv'))
+        def dataReader = new InputStreamReader(this.class.getResourceAsStream('/TDP_cpu.v2.2.csv'))
 
-        String line
+        // Skip first line containing additional comments
+        String line = dataReader.readLine()
         while ( line = dataReader.readLine() ) {
             def h = line.split(",")
-            if (h[0] != 'model_name') data[h[0]] = h[3].toDouble()
+            if ( h[0] != 'model' ) data[h[0]] = h[3].toDouble()
         }
         dataReader.close()
         log.debug "$data"
