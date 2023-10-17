@@ -304,6 +304,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
             writer.send { co2eFile.println(
                     "task_id\t"
+                    + "name\t"
                     + "energy_consumption\t"
                     + "CO2e\t"
                     + "time\t"
@@ -403,7 +404,9 @@ class CO2FootprintFactory implements TraceObserverFactory {
             // save to the file
             writer.send {
                 PrintWriter it -> it.println(
-                        "${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,3)}Wh\t"
+                        "${taskId}\t"
+                        + "${trace.get('name').toString()}\t"
+                        + "${HelperFunctions.convertToReadableUnits(eConsumption,3)}Wh\t"
                         + "${HelperFunctions.convertToReadableUnits(co2,3)}g\t"
                         + "${HelperFunctions.convertMillisecondsToReadableUnits(time)}\t"
                         + "${cpus}\t"
@@ -450,7 +453,9 @@ class CO2FootprintFactory implements TraceObserverFactory {
             // save to the file
             writer.send {
                 PrintWriter it -> it.println(
-                        "${taskId}\t${HelperFunctions.convertToReadableUnits(eConsumption,3)}Wh\t"
+                        "${taskId}\t"
+                        + "${trace.get('name').toString()}\t"
+                        + "${HelperFunctions.convertToReadableUnits(eConsumption,3)}Wh\t"
                         + "${HelperFunctions.convertToReadableUnits(co2,3)}g\t"
                         + "${HelperFunctions.convertMillisecondsToReadableUnits(time)}\t"
                         + "${cpus}\t"
