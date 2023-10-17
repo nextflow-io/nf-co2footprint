@@ -61,8 +61,8 @@ class CO2FootprintConfig {
         reportFile = config.reportFile ?: CO2FootprintFactory.CO2FootprintReportObserver.DEF_REPORT_FILE_NAME
 
         ci = 475
-        if (config.ci && config.country)
-            throw new IllegalArgumentException("Invalid combination of 'ci' and 'location' parameters specified for the CO2Footprint plugin. Please specify either 'ci' and 'location'!")
+        if (config.ci && config.location)
+            throw new IllegalArgumentException("Invalid combination of 'ci' and 'location' parameters specified for the CO2Footprint plugin. Please specify either 'ci' or 'location'!")
         if (config.ci)
             ci = config.ci
         if (config.location) {

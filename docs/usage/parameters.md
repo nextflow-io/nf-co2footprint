@@ -26,10 +26,11 @@ The following parameters are currently available:
 
 - `file`: Name of the TXT carbon footprint report containing the energy consumption, the estimated CO<sub>2</sub> emission and other relevant metrics for each task.
 - `reportFile`: Name of the HTML report containing information about the entire carbon footprint, overview plots and more detailed task-specific metrics.
-- `ci`: carbon intensity of the respective energy production.
+- `ci`: carbon intensity of the respective energy production. Mutually exclusive with the `location` parameter.
 - `location`: location code to automatically retrieve a location-specific CI value.
 For countries, these are [ISO alpha-2 codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). 
 For regions, it’s the ISO alpha-2 code for the country, followed by an identifier for the state, e.g. US-CA for “California, USA”.
 You can find the available data [here](../../plugins/nf-co2footprint/src/resources/CI_aggregated.v2.2.csv).
+Mutually exclusive with the `ci` parameter.
 - `pue`: power usage effectiveness, efficiency coefficient of the data centre.
 - `powerdrawMem`: power draw from memory.
