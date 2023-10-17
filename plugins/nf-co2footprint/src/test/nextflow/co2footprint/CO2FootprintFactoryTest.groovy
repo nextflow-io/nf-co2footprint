@@ -126,7 +126,7 @@ class CO2FootprintFactoryTest extends Specification {
         traceRecord.'%cpu' = 100.0
         traceRecord.memory = (7 as Long) * (1000000000 as Long)
 
-        def session = Mock(Session) { getConfig() >> [co2footprint: [country: 'Germany']] }
+        def session = Mock(Session) { getConfig() >> [co2footprint: [location: 'DE']] }
         def factory = new CO2FootprintFactory()
         factory.create(session)
         def results = factory.computeTaskCO2footprint(traceRecord)
