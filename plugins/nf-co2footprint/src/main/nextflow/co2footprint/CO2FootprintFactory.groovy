@@ -398,7 +398,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
                     (Double) powerdrawCPU,
                     (Double) cpu_usage,
                     (Long) memory,
-                    trace.get('name').toString()
+                    trace.get('name').toString(),
+                    trace.get('cpu_model').toString()
             )
             total_energy += eConsumption
             total_co2 += co2
@@ -449,7 +450,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
                     (Double) powerdrawCPU,
                     (Double) cpu_usage,
                     (Long) memory,
-                    trace.get('name').toString()
+                    trace.get('name').toString(),
+                    trace.get('cpu_model').toString()
             )
             total_energy += eConsumption
             total_co2 += co2

@@ -24,9 +24,10 @@ class CO2Record extends TraceRecord {
     private Double cpuUsage
     private Long memory
     private String name
+    private String cpu_model
     // final? or something? to make sure for key value can be set only once?
 
-    CO2Record(Double energy, Double co2e, Double time, Integer cpus, Double powerdrawCPU, Double cpuUsage, Long memory, String name) {
+    CO2Record(Double energy, Double co2e, Double time, Integer cpus, Double powerdrawCPU, Double cpuUsage, Long memory, String name, String cpu_model) {
         this.energy = energy
         this.co2e = co2e
         this.time = time
@@ -35,6 +36,7 @@ class CO2Record extends TraceRecord {
         this.cpuUsage = cpuUsage
         this.memory = memory
         this.name = name
+        this.cpu_model = cpu_model
         this.store = new LinkedHashMap<>([
                 'energy':           energy,
                 'co2e':             co2e,
@@ -43,7 +45,8 @@ class CO2Record extends TraceRecord {
                 'powerdrawCPU':     powerdrawCPU,
                 'cpuUsage':         cpuUsage,
                 'memory':           memory,
-                'name':             name
+                'name':             name,
+                'cpu_model':        cpu_model
         ])
     }
 
@@ -55,7 +58,8 @@ class CO2Record extends TraceRecord {
         powerdrawCPU:   'num',
         cpuUsage:       'num',
         memory:         'num',
-        name:           'str'
+        name:           'str',
+        cpu_model:      'str'
     ]
 
     // TODO implement accordingly to TraceRecord
