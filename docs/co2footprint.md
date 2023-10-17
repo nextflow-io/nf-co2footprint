@@ -26,6 +26,8 @@ where
 **$PUE$** = the efficiency coefficient of the data centre<br/>
 **$CI$** = the carbon intensity of energy production, which represents the carbon footprint of producing 1 kWh of energy for a given country and energy mix
 
+Note that the usage of GPUs is not yet supported.
+
 ## Used data
 
 If the `location` parameter is specified, the plugin makes use of [location-specific CI data](../../plugins/nf-co2footprint/src/resources/CI_aggregated.v2.2.csv) that was copied from the Green Algorithms project [green-algorithms-tool/data](https://github.com/GreenAlgorithms/green-algorithms-tool/tree/master/data).
