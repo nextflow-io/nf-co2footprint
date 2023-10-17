@@ -311,6 +311,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                     + "time\t"
                     + "cpus\t"
                     + "powerdraw_cpu\t"
+                    + "cpu_model\t"
                     + "cpu_usage\t"
                     + "requested_memory"
                 ); co2eFile.flush()
@@ -413,6 +414,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                         + "${HelperFunctions.convertMillisecondsToReadableUnits(time)}\t"
                         + "${cpus}\t"
                         + "${powerdrawCPU}\t"
+                        + "${trace.get('cpu_model').toString()}\t"
                         + "${cpu_usage}\t"
                         + "${HelperFunctions.convertBytesToReadableUnits(memory)}"
                 );
@@ -463,6 +465,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                         + "${HelperFunctions.convertMillisecondsToReadableUnits(time)}\t"
                         + "${cpus}\t"
                         + "${powerdrawCPU}\t"
+                        + "${trace.get('cpu_model').toString()}\t"
                         + "${cpu_usage}\t"
                         + "${HelperFunctions.convertBytesToReadableUnits(memory)}"
                 );
