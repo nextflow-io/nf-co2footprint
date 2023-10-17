@@ -85,9 +85,9 @@ class CO2Record extends TraceRecord {
         result.deleteCharAt(result.length() - 1); // remove the last character "}"
         result << ','
         for( int i=0; i<fields.size(); i++ ) {
-            if( i ) result << ','
             String name = fields[i]
             if ( name == 'name' ) continue // skip the name field (it's already in the key)
+            if ( i ) result << ','
             String format = i<formats?.size() ? formats[i] : null
             String value = StringEscapeUtils.escapeJavaScript(getFmtStr(name, format) ?: NA)
             result << QUOTE << name << QUOTE << ":" << QUOTE << value << QUOTE
