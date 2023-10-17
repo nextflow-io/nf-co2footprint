@@ -25,7 +25,6 @@ import nextflow.processor.TaskProcessor
 import nextflow.script.WorkflowMetadata
 import nextflow.trace.TraceHelper
 import nextflow.trace.TraceRecord
-import nextflow.co2footprint.HelperFunctions
 
 import java.nio.file.Files
 import java.nio.file.Path
@@ -203,9 +202,9 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * A reference flight Paris to London spends 50000 gCO2
          */
         def gCO2 = total_co2 / 1000 as Double
-        String country = config.getCountry()
+        String location = config.getLocation()
         Double car = gCO2 / 175 as Double
-        if (country && country == 'United States of America') {
+        if (location && (location != 'US' || !location.startsWith('US-'))) {
             car = gCO2 / 251 as Double
         }
         Double tree = gCO2 / 917 as Double
