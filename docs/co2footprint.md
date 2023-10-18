@@ -26,7 +26,9 @@ where
 **$PUE$** = the efficiency coefficient of the data centre<br/>
 **$CI$** = the carbon intensity of energy production, which represents the carbon footprint of producing 1 kWh of energy for a given country and energy mix
 
-Note that the usage of GPUs is not yet supported.
+!!! warning
+
+    Note that the usage of GPUs is not yet supported.
 
 ## Used data
 
