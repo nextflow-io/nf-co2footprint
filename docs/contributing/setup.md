@@ -18,13 +18,16 @@ To compile and run the tests use the following command:
 The plugin can be tested prior release without using a local Nextflow build using the following steps:
 
 1. Build the plugin: 
+
 ```bash
 make buildPlugins
+```
+
 2. Copy `build/plugins/nf-co2footprint-<version>` to `$HOME/.nextflow/plugins`
 4. Run nextflow with this command:
 
    ```bash
-   ./launch.sh run -plugins nf-co2footprint@0.1.0 <script/pipeline name> [pipeline params]
+   ./launch.sh run -plugins nf-co2footprint@0.4.0 <script/pipeline name> [pipeline params]
    ```
 
 ## Launch it with Nextflow
@@ -34,7 +37,7 @@ To test with Nextflow for development purpose:
 1. Clone the Nextflow repo into a sibling directory
 
    ```bash
-   cd .. && https://github.com/nextflow-io/nextflow
+   cd .. && git clone https://github.com/nextflow-io/nextflow
    cd nextflow && ./gradlew exportClasspath
    ```
 
