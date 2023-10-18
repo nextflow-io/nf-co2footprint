@@ -18,8 +18,11 @@ To compile and run the tests use the following command:
 The plugin can be tested prior release without using a local Nextflow build using the following steps:
 
 1. Build the plugin: 
+
 ```bash
 make buildPlugins
+```
+
 2. Copy `build/plugins/nf-co2footprint-<version>` to `$HOME/.nextflow/plugins`
 4. Run nextflow with this command:
 
