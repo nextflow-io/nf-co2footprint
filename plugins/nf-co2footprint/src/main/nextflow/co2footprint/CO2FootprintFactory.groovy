@@ -74,9 +74,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
     @Override
     Collection<TraceObserver> create(Session session) {
-        this.session = session
-        this.config = new CO2FootprintConfig(session.config.navigate('co2footprint') as Map)
         loadCpuTdpData(this.cpuData)
+
+        this.session = session
+        this.config = new CO2FootprintConfig(session.config.navigate('co2footprint') as Map, this.cpuData)
 
         final result = new ArrayList(2)
         // Generate CO2 footprint text output files

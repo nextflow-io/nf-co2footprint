@@ -1,7 +1,7 @@
 package nextflow.co2footprint
 
 import groovy.transform.PackageScope
-
+import groovy.util.logging.Slf4j
 
 /**
  * This class allows model an specific configuration, extracting values from a map and converting
@@ -23,6 +23,7 @@ import groovy.transform.PackageScope
  * @author Júlia Mir Pedrol <mirp.julia@gmail.com>, Sabrina Krakau <sabrinakrakau@gmail.com>
  *
  */
+@Slf4j
 @PackageScope
 class CO2FootprintConfig {
 
@@ -54,7 +55,22 @@ class CO2FootprintConfig {
         return localCi
     }
 
-    CO2FootprintConfig(Map map){
+    // Load user provided file containing custom TDP values for different CPU models
+    protected void loadCustomCpuTdpData(Map<String, Double> data, String customCpuTdpFile) {
+        new File(customCpuTdpFile).withReader(){ reader ->
+            String line
+            while( line = reader.readLine() ) {
+                def h = line.split(",")
+                if ( h[0] != 'model' ) {
+                    if ( data.containsKey(h[0]) ) log.warn "Already existing CPU model specific TDP value for ${h[0]} is overwritten with provided custom value: ${h[3]}"
+                    data[h[0]] = h[3].toDouble()
+                }
+            }
+        }
+        log.debug "$data"
+    }
+
+    CO2FootprintConfig(Map map, Map<String, Double> cpuData){
         def config = map ?: Collections.emptyMap()
         file = config.file ?: CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_FILE_NAME
         summaryFile = config.summaryFile ?: CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_SUMMARY_FILE_NAME
@@ -72,6 +88,9 @@ class CO2FootprintConfig {
 
         pue = config.pue ?: 1.67
         powerdrawMem = config.powerdrawMem ?: 0.3725
+
+        if (config.customCpuTdpFile)
+            loadCustomCpuTdpData(cpuData, config.customCpuTdpFile)
     }
 
     String getFile() { file }
