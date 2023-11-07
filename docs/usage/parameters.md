@@ -34,3 +34,7 @@ You can find the available data [here](../../plugins/nf-co2footprint/src/resourc
 Mutually exclusive with the `ci` parameter.
 - `pue`: power usage effectiveness, efficiency coefficient of the data centre.
 - `powerdrawMem`: power draw from memory.
+- `customCpuTdpFile`: Input CSV file containing custom CPU TDP data.
+This should contain the following columns: `model`,`TDP`,`n_cores`,`TDP_per_core`.
+Note that this overwrites TDP values for already provided CPU models.
+You can find the by default used TDP data [here](../../plugins/nf-co2footprint/src/resources/TDP_cpu.v2.2.csv).
