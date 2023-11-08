@@ -115,6 +115,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             }
             c++
         }
+        log.warn "Could not find CPU model ${cpu_model} in given TDP data. Using default CPU power draw value!"
         return cpuData['default']
     }
 
