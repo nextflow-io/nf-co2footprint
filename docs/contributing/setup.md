@@ -27,7 +27,7 @@ make buildPlugins
 4. Run nextflow with this command:
 
    ```bash
-   ./launch.sh run -plugins nf-co2footprint@0.4.0 <script/pipeline name> [pipeline params]
+   nextflow run -plugins nf-co2footprint@0.4.0 <script/pipeline name> [pipeline params]
    ```
 
 ## Launch it with Nextflow
