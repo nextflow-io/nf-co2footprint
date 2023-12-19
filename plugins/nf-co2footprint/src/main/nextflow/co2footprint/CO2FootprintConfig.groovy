@@ -35,6 +35,7 @@ class CO2FootprintConfig {
     final private Double  pue   // PUE: power usage effectiveness efficiency, coefficient of the data centre
     final private Double  powerdrawMem  // Power draw of memory [W per GB]
     final private Boolean ignoreCpuModel
+    final private Double powerdrawCpuDefault
 
     // Retrieve CI value from file containing CI values for different locations
     protected Double retrieveCi(String location) {
@@ -90,6 +91,8 @@ class CO2FootprintConfig {
 
         pue = config.pue ?: 1.67
         powerdrawMem = config.powerdrawMem ?: 0.3725
+        powerdrawCpuDefault = config.powerdrawCpuDefault ?: 12.0
+        cpuData['default'] = powerdrawCpuDefault
 
         if (config.customCpuTdpFile)
             loadCustomCpuTdpData(cpuData, config.customCpuTdpFile)

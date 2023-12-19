@@ -53,7 +53,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
     final private Map<TaskId,CO2Record> co2eRecords = new ConcurrentHashMap<>()
     // TODO make sure for key value can be set only once?
 
-    private Map<String, Double> cpuData = ['default': (Double) 12.0]
+    private Map<String, Double> cpuData = [:]
     Double total_energy = 0
     Double total_co2 = 0
 
