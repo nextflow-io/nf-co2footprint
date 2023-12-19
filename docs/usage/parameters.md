@@ -39,3 +39,5 @@ Mutually exclusive with the `ci` parameter.
 This should contain the following columns: `model`,`TDP`,`n_cores`,`TDP_per_core`.
 Note that this overwrites TDP values for already provided CPU models.
 You can find the by default used TDP data [here](../../plugins/nf-co2footprint/src/resources/TDP_cpu.v2.2.csv).
+- `ignoreCpuModel`: ignore the retrieved Nextflow trace `cpu_model` name and use the default CPU power draw value. This is useful, if the cpu model information provided by the linux kernel is not correct, for example, in the case of VMs emulating a different CPU architecture.
+- `powerdrawCpuDefault`: the default value used as the power draw from a computing core. This is only applied if the parameter `ignoreCpuModel` is set or if the retrieved `cpu_model` could not be found in the given CPU TDP data.
