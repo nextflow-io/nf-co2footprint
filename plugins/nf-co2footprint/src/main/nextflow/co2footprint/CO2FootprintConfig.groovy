@@ -34,6 +34,7 @@ class CO2FootprintConfig {
     final private Double  ci    // CI: carbon intensity
     final private Double  pue   // PUE: power usage effectiveness efficiency, coefficient of the data centre
     final private Double  powerdrawMem  // Power draw of memory [W per GB]
+    final private Boolean ignoreCpuModel
 
     // Retrieve CI value from file containing CI values for different locations
     protected Double retrieveCi(String location) {
@@ -75,6 +76,7 @@ class CO2FootprintConfig {
         file = config.file ?: CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_FILE_NAME
         summaryFile = config.summaryFile ?: CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_SUMMARY_FILE_NAME
         reportFile = config.reportFile ?: CO2FootprintFactory.CO2FootprintReportObserver.DEF_REPORT_FILE_NAME
+        ignoreCpuModel = config.ignoreCpuModel ?: false
 
         ci = 475
         if (config.ci && config.location)
@@ -96,6 +98,7 @@ class CO2FootprintConfig {
     String getFile() { file }
     String getSummaryFile() { summaryFile }
     String getReportFile() { reportFile }
+    Boolean getIgnoreCpuModel() { ignoreCpuModel }
     String getLocation() { location }
     Double getCI() { ci }
     Double getPUE() { pue }

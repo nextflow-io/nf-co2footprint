@@ -138,7 +138,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         Double nc = trace.get('cpus') as Integer
 
         // Pc: power draw of a computing core  [W]
-        Double pc = getCpuCoreTdp(trace)
+        Double pc = config.getIgnoreCpuModel() ? cpuData['default'] : getCpuCoreTdp(trace)
 
         // uc: core usage factor (between 0 and 1)
         // TODO if requested more than used, this is not taken into account, right?
