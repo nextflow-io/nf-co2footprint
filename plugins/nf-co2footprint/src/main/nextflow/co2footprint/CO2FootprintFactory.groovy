@@ -304,6 +304,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             writer = new Agent<PrintWriter>(co2eFile)
             summaryWriter = new Agent<PrintWriter>(co2eSummaryFile)
 
+            String cpu_model_string = config.getIgnoreCpuModel()? "" : "cpu_model\t"
             writer.send { co2eFile.println(
                     "task_id\t"
                     + "name\t"
@@ -313,7 +314,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                     + "time\t"
                     + "cpus\t"
                     + "powerdraw_cpu\t"
-                    + (config.getIgnoreCpuModel()? "" : "cpu_model\t")
+                    + cpu_model_string
                     + "cpu_usage\t"
                     + "requested_memory"
                 ); co2eFile.flush()
@@ -401,12 +402,13 @@ class CO2FootprintFactory implements TraceObserverFactory {
                     (Double) cpu_usage,
                     (Long) memory,
                     trace.get('name').toString(),
-                    trace.get('cpu_model').toString()
+                    config.getIgnoreCpuModel() ? "" : trace.get('cpu_model').toString()
             )
             total_energy += eConsumption
             total_co2 += co2
 
             // save to the file
+            String cpu_model_string = config.getIgnoreCpuModel()? "" : "${trace.get('cpu_model').toString()}\t"
             writer.send {
                 PrintWriter it -> it.println(
                         "${taskId}\t"
@@ -417,7 +419,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                         + "${HelperFunctions.convertMillisecondsToReadableUnits(time)}\t"
                         + "${cpus}\t"
                         + "${powerdrawCPU}\t"
-                        + (config.getIgnoreCpuModel()? "" : "${trace.get('cpu_model').toString()}\t")
+                        + cpu_model_string
                         + "${cpu_usage}\t"
                         + "${HelperFunctions.convertBytesToReadableUnits(memory)}"
                 );
@@ -453,12 +455,13 @@ class CO2FootprintFactory implements TraceObserverFactory {
                     (Double) cpu_usage,
                     (Long) memory,
                     trace.get('name').toString(),
-                    trace.get('cpu_model').toString()
+                    config.getIgnoreCpuModel() ? "" : trace.get('cpu_model').toString()
             )
             total_energy += eConsumption
             total_co2 += co2
 
             // save to the file
+            String cpu_model_string = config.getIgnoreCpuModel()? "" : "${trace.get('cpu_model').toString()}\t"
             writer.send {
                 PrintWriter it -> it.println(
                         "${taskId}\t"
@@ -469,7 +472,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                         + "${HelperFunctions.convertMillisecondsToReadableUnits(time)}\t"
                         + "${cpus}\t"
                         + "${powerdrawCPU}\t"
-                        + (config.getIgnoreCpuModel()? "" : "${trace.get('cpu_model').toString()}\t")
+                        + cpu_model_string
                         + "${cpu_usage}\t"
                         + "${HelperFunctions.convertBytesToReadableUnits(memory)}"
                 );
