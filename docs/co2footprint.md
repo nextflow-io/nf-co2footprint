@@ -11,9 +11,9 @@ A CO<sub>2</sub> equivalent (CO<sub>2</sub>e) is a metric used to compare the em
 
 For this, the amounts of other gases are converted to the amount of CO<sub>2</sub> that would have the same impact on global warming (over a 100-year period).
 
-The formula used for the calculation of the carbon footprint ($C$) of one Nextflow task is:
+The formula used for the calculation of the carbon footprint ($CO_2e$) of one Nextflow task is:
 
-$C = t \cdot (n_c \cdot P_c \cdot u_c + n_m \cdot P_m) \cdot PUE \cdot CI$
+$CO_2e = t \cdot (n_c \cdot P_c \cdot u_c + n_m \cdot P_m) \cdot PUE \cdot CI$
 
 where
 
