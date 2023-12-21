@@ -46,7 +46,7 @@ The plugin can be tested without using a local Nextflow build using the followin
 1. Compile and install the plugin code
 
    ```bash
-   make compile
+   ./gradlew compileGroovy
    make install
    ```
 
