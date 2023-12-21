@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Plugin-Id: nf-co2footprint
-Plugin-Version: 0.1.0
+Plugin-Version: 1.0.0-beta
 Plugin-Class: nextflow.co2footprint.CO2FootprintPlugin
 Plugin-Provider: nextflow
 Plugin-Requires: >=23.07.0
