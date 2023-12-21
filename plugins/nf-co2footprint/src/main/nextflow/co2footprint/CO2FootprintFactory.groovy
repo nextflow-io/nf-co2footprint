@@ -331,10 +331,11 @@ class CO2FootprintFactory implements TraceObserverFactory {
             // wait for termination and flush the agent content
             writer.await()
 
-            //writer.send { co2eFile.println("Test CO2 emission is:"); co2eFile.flush() }
-            //writer.send { PrintWriter it -> it.println("Test CO2 emission is:"); it.flush() }
-            co2eSummaryFile.println("The total CO2 emission is: ${HelperFunctions.convertToReadableUnits(total_co2,3)}g")
-            co2eSummaryFile.println("The total energy consumption is: ${HelperFunctions.convertToReadableUnits(total_energy,3)}Wh")
+            co2eSummaryFile.println("Total CO2e footprint measures of this workflow run")
+            co2eSummaryFile.println("CO2e emissions: ${HelperFunctions.convertToReadableUnits(total_co2,3)}g")
+            co2eSummaryFile.println("Energy consumption: ${HelperFunctions.convertToReadableUnits(total_energy,3)}Wh")
+            co2eSummaryFile.println("\nThe calculation of these values is based on the carbon footprint computation method developed in the Green Algorithms project.")
+            co2eSummaryFile.println("Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation. Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707")
             co2eSummaryFile.flush()
             co2eSummaryFile.close()
 
