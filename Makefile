@@ -1,11 +1,15 @@
 
 config ?= compileClasspath
+version ?= $(shell grep 'Plugin-Version' plugins/nf-co2footprint/src/resources/META-INF/MANIFEST.MF | awk '{ print $$2 }')
 
 ifdef module 
 mm = :${module}:
 else 
 mm = 
 endif 
+
+NXF_HOME ?= $$HOME/.nextflow
+NXF_PLUGINS_DIR ?= $(NXF_HOME)/plugins
 
 clean:
 	./gradlew clean
@@ -43,6 +47,11 @@ ifndef class
 else
 	./gradlew ${mm}test --tests ${class}
 endif
+
+install:
+	./gradlew copyPluginZip
+	rm -rf ${NXF_PLUGINS_DIR}/nf-co2footprint-${version}
+	cp -r build/plugins/nf-co2footprint-${version} ${NXF_PLUGINS_DIR}
 
 #
 # generate build zips under build/plugins
