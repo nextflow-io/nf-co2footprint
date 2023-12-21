@@ -27,7 +27,7 @@ Declare the plugin in your Nextflow pipeline configuration file:
 
 ```groovy title="nextflow.config"
 plugins {
-  id 'nf-co2footprint@0.4.0'    
+  id 'nf-co2footprint@0.1.0'    
 }
 ```
 
