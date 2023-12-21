@@ -44,7 +44,7 @@ To test with Nextflow for development purpose:
 
 ## Alternative: Launch without a local Nextflow build
 
-The plugin can be tested prior release without using a local Nextflow build using the following steps:
+The plugin can be tested without using a local Nextflow build using the following steps:
 
 !!! warning
 
