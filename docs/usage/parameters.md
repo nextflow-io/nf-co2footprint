@@ -25,20 +25,28 @@ nextflow run nextflow-io/hello -c nextflow.config
 The following parameters are currently available:
 
 - `file`: Name of the TXT carbon footprint report containing the energy consumption, the estimated CO<sub>2</sub> emission and other relevant metrics for each task.
+Default: `co2footprint-<timestamp>.txt`.
 - `summaryFile`: Name of the TXT carbon footprint summary file containing the total energy consumption and the total estimated CO<sub>2</sub> emission of the pipeline run.
+Default: `co2footprint-<timestamp>.summary.txt`.
 - `reportFile`: Name of the HTML report containing information about the entire carbon footprint, overview plots and more detailed task-specific metrics.
+Default: `co2footprint-report-<timestamp>.html`.
 - `ci`: carbon intensity of the respective energy production. Mutually exclusive with the `location` parameter.
+Default: 475.
 - `location`: location code to automatically retrieve a location-specific CI value.
 For countries, these are [ISO alpha-2 codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). 
 For regions, it’s the ISO alpha-2 code for the country, followed by an identifier for the state, e.g. US-CA for “California, USA”.
 You can find the available data [here](../../plugins/nf-co2footprint/src/resources/CI_aggregated.v2.2.csv).
 Mutually exclusive with the `ci` parameter.
+Default: `null`.
 - `pue`: power usage effectiveness, efficiency coefficient of the data centre.
+Default: 1.67.
 - `powerdrawMem`: power draw from memory.
+Default: 0.3725.
 - `customCpuTdpFile`: Input CSV file containing custom CPU TDP data.
 This should contain the following columns: `model`,`TDP`,`n_cores`,`TDP_per_core`.
 Note that this overwrites TDP values for already provided CPU models.
 You can find the by default used TDP data [here](../../plugins/nf-co2footprint/src/resources/TDP_cpu.v2.2.csv).
+Default: `null`.
 - `ignoreCpuModel`: ignore the retrieved Nextflow trace `cpu_model` name and use the default CPU power draw value.
 This is useful, if the cpu model information provided by the linux kernel is not correct, for example, in the case of VMs emulating a different CPU architecture.
 Default: `false`.
