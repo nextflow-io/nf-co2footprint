@@ -154,7 +154,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // TODO if requested more than used, this is not taken into account, right?
         Double cpu_usage = trace.get('%cpu') as Double
         if ( cpu_usage == null ) {
-            warnings << "cpu_usage is null"
+            warnings << "The reported CPU usage is null for at least one task. Assuming 100% usage for each requested CPU!"
             // TODO why is value null, because task was finished so fast that it was not captured? Or are there other reasons?
             // Assuming requested cpus were used with 100%
             cpu_usage = nc * 100
