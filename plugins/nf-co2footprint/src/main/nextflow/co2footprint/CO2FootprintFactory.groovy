@@ -357,7 +357,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             // Log warnings
             if( hasWarnings() ) {
                 def filteredWarnings = getWarnings().unique( false )
-                def msg = "\033[0;33mThe following warnings were generated during the execution of the workflow:\n\t- " + filteredWarnings.join('\n\t- ').trim() + "\n\033[0m"
+                def msg = "\033[0;33mThe nf-co2footprint plugin generated the following warnings during the execution of the workflow:\n\t- " + filteredWarnings.join('\n\t- ').trim() + "\n\033[0m"
                 log.warn(msg)
             }
         }
@@ -607,12 +607,12 @@ class CO2FootprintFactory implements TraceObserverFactory {
          */
         @Override
         void onFlowComplete() {
-            log.debug "Workflow completed -- rendering execution report"
+            log.debug "Workflow completed -- rendering CO2e footprint report"
             try {
                 renderHtml()
             }
             catch (Exception e) {
-                log.warn "Failed to render execution report -- see the log file for details", e
+                log.warn "Failed to render CO2e footprint report -- see the log file for details", e
             }
         }
 
