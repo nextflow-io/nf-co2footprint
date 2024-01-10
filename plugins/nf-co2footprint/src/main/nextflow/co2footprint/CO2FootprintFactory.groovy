@@ -48,6 +48,12 @@ import java.util.concurrent.ConcurrentHashMap
 @PackageScope(PackageScopeTarget.FIELDS)
 class CO2FootprintFactory implements TraceObserverFactory {
 
+    // Handle logging messages
+    private List<String> warnings = []
+
+    boolean hasWarnings() { warnings.size() > 0 }
+    List<String> getWarnings() { warnings }
+
     private CO2FootprintConfig config
     private Session session
     final private Map<TaskId,CO2Record> co2eRecords = new ConcurrentHashMap<>()
@@ -96,6 +102,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
     
     Double getCpuCoreTdp(TraceRecord trace) {
         def cpu_model = trace.get('cpu_model').toString()   // TODO toString() in TraceRecord get()?
+        if ( cpu_model == null || cpu_model == "null" ) {
+            warnings << "The CPU model could not be detected for at least one task. Using default CPU power draw value!"
+            return cpuData['default']
+        }
 
         // Look up CPU model specific TDP value
         def c = 0
@@ -115,7 +125,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             }
             c++
         }
-        log.warn "Could not find CPU model ${cpu_model} in given TDP data. Using default CPU power draw value!"
+        warnings << "Could not find CPU model ${cpu_model} in given TDP data. Using default CPU power draw value!".toString()
         return cpuData['default']
     }
 
@@ -144,7 +154,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // TODO if requested more than used, this is not taken into account, right?
         Double cpu_usage = trace.get('%cpu') as Double
         if ( cpu_usage == null ) {
-            log.debug "cpu_usage is null"
+            warnings << "The reported CPU usage is null for at least one task. Assuming 100% usage for each requested CPU!"
             // TODO why is value null, because task was finished so fast that it was not captured? Or are there other reasons?
             // Assuming requested cpus were used with 100%
             cpu_usage = nc * 100
@@ -343,6 +353,13 @@ class CO2FootprintFactory implements TraceObserverFactory {
             current.values().each { taskId, record -> co2eFile.println("${taskId}\t-") }
             co2eFile.flush()
             co2eFile.close()
+
+            // Log warnings
+            if( hasWarnings() ) {
+                def filteredWarnings = getWarnings().unique( false )
+                def msg = "\033[0;33mThe nf-co2footprint plugin generated the following warnings during the execution of the workflow:\n\t- " + filteredWarnings.join('\n\t- ').trim() + "\n\033[0m"
+                log.warn(msg)
+            }
         }
 
         @Override
@@ -590,12 +607,12 @@ class CO2FootprintFactory implements TraceObserverFactory {
          */
         @Override
         void onFlowComplete() {
-            log.debug "Workflow completed -- rendering execution report"
+            log.debug "Workflow completed -- rendering CO2e footprint report"
             try {
                 renderHtml()
             }
             catch (Exception e) {
-                log.warn "Failed to render execution report -- see the log file for details", e
+                log.warn "Failed to render CO2e footprint report -- see the log file for details", e
             }
         }
 
