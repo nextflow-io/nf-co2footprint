@@ -11,7 +11,7 @@ You can adjust the nf-co2footprint plugin parameters in your config file as foll
 def co2_timestamp = new java.util.Date().format( 'yyyy-MM-dd_HH-mm-ss')
 
 co2footprint {
-    file        = "${params.outdir}/co2footprint_trace_${co2_timestamp}.txt"
+    traceFile   = "${params.outdir}/co2footprint_trace_${co2_timestamp}.txt"
     reportFile  = "${params.outdir}/co2footprint_report_${co2_timestamp}.html"
     ci          = 300
     pue         = 1.4
@@ -26,7 +26,7 @@ nextflow run nextflow-io/hello -c nextflow.config
 
 The following parameters are currently available:
 
-- `file`: Name of the TXT carbon footprint report containing the energy consumption, the estimated CO<sub>2</sub> emission and other relevant metrics for each task.
+- `traceFile`: Name of the TXT carbon footprint report containing the energy consumption, the estimated CO<sub>2</sub> emission and other relevant metrics for each task.
 Default: `co2footprint_trace_<timestamp>.txt`.
 - `summaryFile`: Name of the TXT carbon footprint summary file containing the total energy consumption and the total estimated CO<sub>2</sub> emission of the pipeline run.
 Default: `co2footprint_summary_<timestamp>.txt`.

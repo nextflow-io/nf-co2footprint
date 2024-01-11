@@ -9,7 +9,7 @@ import groovy.util.logging.Slf4j
  * In this plugin, the user can configure the output file names of the CO2 footprint calculations
  *
  * co2footprint {
- *     file = "co2footprint_trace.txt"
+ *     traceFile = "co2footprint_trace.txt"
  *     summaryFile = "co2footprint_summary.txt"
  *     ci = 300
  *     pue = 1.4
@@ -27,7 +27,7 @@ import groovy.util.logging.Slf4j
 @PackageScope
 class CO2FootprintConfig {
 
-    final private String  file
+    final private String  traceFile
     final private String  summaryFile
     final private String  reportFile
     final private String  location
@@ -74,7 +74,7 @@ class CO2FootprintConfig {
 
     CO2FootprintConfig(Map map, Map<String, Double> cpuData){
         def config = map ?: Collections.emptyMap()
-        file = config.file ?: CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_FILE_NAME
+        traceFile = config.traceFile ?: CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_TRACE_FILE_NAME
         summaryFile = config.summaryFile ?: CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_SUMMARY_FILE_NAME
         reportFile = config.reportFile ?: CO2FootprintFactory.CO2FootprintReportObserver.DEF_REPORT_FILE_NAME
         ignoreCpuModel = config.ignoreCpuModel ?: false
@@ -98,7 +98,7 @@ class CO2FootprintConfig {
             loadCustomCpuTdpData(cpuData, config.customCpuTdpFile)
     }
 
-    String getFile() { file }
+    String getTraceFile() { traceFile }
     String getSummaryFile() { summaryFile }
     String getReportFile() { reportFile }
     Boolean getIgnoreCpuModel() { ignoreCpuModel }
