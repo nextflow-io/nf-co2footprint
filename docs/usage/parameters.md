@@ -9,7 +9,7 @@ You can adjust the nf-co2footprint plugin parameters in your config file as foll
 
 ```groovy title="nextflow.config"
 co2footprint {
-    file        = "${params.outdir}/co2footprint.txt"
+    file        = "${params.outdir}/co2footprint_trace.txt"
     reportFile  = "${params.outdir}/co2footprint_report.html"
     ci          = 300
     pue         = 1.4
@@ -25,11 +25,11 @@ nextflow run nextflow-io/hello -c nextflow.config
 The following parameters are currently available:
 
 - `file`: Name of the TXT carbon footprint report containing the energy consumption, the estimated CO<sub>2</sub> emission and other relevant metrics for each task.
-Default: `co2footprint-<timestamp>.txt`.
+Default: `co2footprint_trace_<timestamp>.txt`.
 - `summaryFile`: Name of the TXT carbon footprint summary file containing the total energy consumption and the total estimated CO<sub>2</sub> emission of the pipeline run.
-Default: `co2footprint-<timestamp>.summary.txt`.
+Default: `co2footprint_summary_<timestamp>.txt`.
 - `reportFile`: Name of the HTML report containing information about the entire carbon footprint, overview plots and more detailed task-specific metrics.
-Default: `co2footprint-report-<timestamp>.html`.
+Default: `co2footprint_report_<timestamp>.html`.
 - `ci`: carbon intensity of the respective energy production. Mutually exclusive with the `location` parameter.
 Default: 475.
 - `location`: location code to automatically retrieve a location-specific CI value.

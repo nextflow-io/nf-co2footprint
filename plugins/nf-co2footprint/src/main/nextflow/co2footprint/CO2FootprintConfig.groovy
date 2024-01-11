@@ -9,8 +9,8 @@ import groovy.util.logging.Slf4j
  * In this plugin, the user can configure the output file names of the CO2 footprint calculations
  *
  * co2footprint {
- *     file = "co2footprint.txt"
- *     summaryFile = "co2footprint.summary.txt"
+ *     file = "co2footprint_trace.txt"
+ *     summaryFile = "co2footprint_summary.txt"
  *     ci = 300
  *     pue = 1.4
  *     powerdrawMem = 0.67
