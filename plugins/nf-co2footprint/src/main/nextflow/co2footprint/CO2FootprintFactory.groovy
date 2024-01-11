@@ -160,8 +160,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
             cpu_usage = nc * 100
         }
         // TODO how to handle double, Double datatypes for ceiling?
-        Double cpus_ceil = Math.ceil( cpu_usage / 100.0 as double )
-        Double uc = cpu_usage / (100.0 * cpus_ceil) as Double
+        if ( cpu_usage == 0.0 ) {
+            warnings << "The reported CPU usage is 0.0 for at last one task!"
+        }
+        Double uc = cpu_usage / (100.0 * nc) as Double
 
         /**
          * Factors of memory power usage
