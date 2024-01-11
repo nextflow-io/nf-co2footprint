@@ -87,10 +87,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
         final result = new ArrayList(2)
         // Generate CO2 footprint text output files
-        def co2eFile = (this.config.getFile() as Path).complete()
+        def co2eTraceFile = (this.config.getTraceFile() as Path).complete()
         def co2eSummaryFile = (this.config.getSummaryFile() as Path).complete()
 
-        result.add( new CO2FootprintTextFileObserver(co2eFile, co2eSummaryFile) )
+        result.add( new CO2FootprintTextFileObserver(co2eTraceFile, co2eSummaryFile) )
 
         // Generate CO2 footprint report with box-plot
         def co2eReport = (this.config.getReportFile() as Path).complete()
@@ -243,8 +243,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
     class CO2FootprintTextFileObserver implements TraceObserver {
 
         // TODO which files should we generate here?
-        public static final String DEF_FILE_NAME = "co2footprint-${TraceHelper.launchTimestampFmt()}.txt"
-        public static final String DEF_SUMMARY_FILE_NAME = "co2footprint-${TraceHelper.launchTimestampFmt()}.summary.txt"
+        public static final String DEF_TRACE_FILE_NAME = "co2footprint_trace_${TraceHelper.launchTimestampFmt()}.txt"
+        public static final String DEF_SUMMARY_FILE_NAME = "co2footprint_summary_${TraceHelper.launchTimestampFmt()}.txt"
 
         /**
          * Overwrite existing trace file (required in some cases, as rolling filename has been deprecated)
@@ -252,15 +252,15 @@ class CO2FootprintFactory implements TraceObserverFactory {
         boolean overwrite = true
 
         /**
-         * The path where the file is created. It is set by the object constructor
+         * The path where the files are created. It is set by the object constructor
          */
-        private Path co2ePath
+        private Path co2eTracePath
         private Path co2eSummaryPath
 
         /**
          * The actual file object
          */
-        private PrintWriter co2eFile
+        private PrintWriter co2eTraceFile
         private PrintWriter co2eSummaryFile
 
 
@@ -271,17 +271,17 @@ class CO2FootprintFactory implements TraceObserverFactory {
         Map<TaskId, TraceRecord> current = new ConcurrentHashMap<>()
 
 
-        private Agent<PrintWriter> writer
+        private Agent<PrintWriter> traceWriter
         private Agent<PrintWriter> summaryWriter
 
 
         /**
          * Create the trace observer
          *
-         * @param co2eFile A path to the file where save the CO2 emission data
+         * @param co2eTraceFile A path to the file where save the CO2 emission data
          */
-        CO2FootprintTextFileObserver(Path co2eFile, Path co2eSummaryFile) {
-            this.co2ePath = co2eFile
+        CO2FootprintTextFileObserver(Path co2eTraceFile, Path co2eSummaryFile) {
+            this.co2eTracePath = co2eTraceFile
             this.co2eSummaryPath = co2eSummaryFile
         }
 
@@ -295,10 +295,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
          */
         @Override
         void onFlowCreate(Session session) {
-            log.debug "Workflow started -- co2e file: ${co2ePath.toUriString()}"
+            log.debug "Workflow started -- co2e traceFile: ${co2eTracePath.toUriString()}"
 
             // make sure parent path exists
-            def parent = co2ePath.getParent()
+            def parent = co2eTracePath.getParent()
             if (parent)
                 Files.createDirectories(parent)
 
@@ -307,15 +307,15 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 Files.createDirectories(summaryParent)
 
             // create a new trace file
-            co2eFile = new PrintWriter(TraceHelper.newFileWriter(co2ePath, overwrite, 'co2footprint'))
+            co2eTraceFile = new PrintWriter(TraceHelper.newFileWriter(co2eTracePath, overwrite, 'co2footprint'))
             co2eSummaryFile = new PrintWriter(TraceHelper.newFileWriter(co2eSummaryPath, overwrite, 'co2footprintsummary'))
 
             // launch the agent
-            writer = new Agent<PrintWriter>(co2eFile)
+            traceWriter = new Agent<PrintWriter>(co2eTraceFile)
             summaryWriter = new Agent<PrintWriter>(co2eSummaryFile)
 
             String cpu_model_string = config.getIgnoreCpuModel()? "" : "cpu_model\t"
-            writer.send { co2eFile.println(
+            traceWriter.send { co2eTraceFile.println(
                     "task_id\t"
                     + "name\t"
                     + "status\t"
@@ -327,7 +327,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                     + cpu_model_string
                     + "cpu_usage\t"
                     + "requested_memory"
-                ); co2eFile.flush()
+                ); co2eTraceFile.flush()
             }
         }
 
@@ -336,10 +336,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
          */
         @Override
         void onFlowComplete() {
-            log.debug "Workflow completed -- saving trace file"
+            log.debug "Workflow completed -- saving trace and summary file"
 
             // wait for termination and flush the agent content
-            writer.await()
+            traceWriter.await()
 
             co2eSummaryFile.println("Total CO2e footprint measures of this workflow run")
             co2eSummaryFile.println("CO2e emissions: ${HelperFunctions.convertToReadableUnits(total_co2,3)}g")
@@ -350,9 +350,9 @@ class CO2FootprintFactory implements TraceObserverFactory {
             co2eSummaryFile.close()
 
             // write the remaining records
-            current.values().each { taskId, record -> co2eFile.println("${taskId}\t-") }
-            co2eFile.flush()
-            co2eFile.close()
+            current.values().each { taskId, record -> co2eTraceFile.println("${taskId}\t-") }
+            co2eTraceFile.flush()
+            co2eTraceFile.close()
 
             // Log warnings
             if( hasWarnings() ) {
@@ -427,7 +427,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
             // save to the file
             String cpu_model_string = config.getIgnoreCpuModel()? "" : "${trace.get('cpu_model').toString()}\t"
-            writer.send {
+            traceWriter.send {
                 PrintWriter it -> it.println(
                         "${taskId}\t"
                         + "${trace.get('name').toString()}\t"
@@ -480,7 +480,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
             // save to the file
             String cpu_model_string = config.getIgnoreCpuModel()? "" : "${trace.get('cpu_model').toString()}\t"
-            writer.send {
+            traceWriter.send {
                 PrintWriter it -> it.println(
                         "${taskId}\t"
                         + "${trace.get('name').toString()}\t"
@@ -505,7 +505,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
      */
     class CO2FootprintReportObserver implements TraceObserver {
 
-        static final public String DEF_REPORT_FILE_NAME = "co2footprint-report-${TraceHelper.launchTimestampFmt()}.html"
+        static final public String DEF_REPORT_FILE_NAME = "co2footprint_report_${TraceHelper.launchTimestampFmt()}.html"
 
         static final public int DEF_MAX_TASKS = 10_000
 

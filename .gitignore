@@ -11,5 +11,6 @@
 build
 work
 out
-co2footprint-*.txt
+co2footprint_*.txt
+co2footprint_*.html
 site
