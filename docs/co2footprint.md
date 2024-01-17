@@ -27,6 +27,7 @@ where
 **$CI$** = the carbon intensity of energy production, which represents the carbon footprint of producing 1 kWh of energy for a given country and energy mix
 
 For the final CO<sub>2</sub>e estimation of a pipeline run, the values of all cached and completed tasks are summed up.
+This includes failed tasks as well.
 
 !!! warning
 
