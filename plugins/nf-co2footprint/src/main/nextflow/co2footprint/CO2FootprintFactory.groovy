@@ -361,6 +361,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
             co2eSummaryFile.println("Energy consumption: ${HelperFunctions.convertToReadableUnits(total_energy,3)}Wh")
             co2eSummaryFile.println("\nThe calculation of these values is based on the carbon footprint computation method developed in the Green Algorithms project.")
             co2eSummaryFile.println("Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation. Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707")
+            co2eSummaryFile.println()
+            co2eSummaryFile.println("nf-co2footprint plugin version: ${version}")
             co2eSummaryFile.flush()
             co2eSummaryFile.close()
 
