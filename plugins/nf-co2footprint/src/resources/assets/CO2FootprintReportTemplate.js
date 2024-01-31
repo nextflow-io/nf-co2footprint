@@ -66,44 +66,48 @@ $(function() {
   }
 
   // Plot histograms of resource usage
-  var co2e_data = [];
-  var energy_data = [];
+  var data = [];
   for(var pname in window.data_byprocess){
     if( !window.data_byprocess.hasOwnProperty(pname) )
         continue;
     var smry = window.data_byprocess[pname];
-    co2e_data.push({y: norm_units(smry.co2e), name: pname, type:'box', boxmean: true, boxpoints: false});
-    energy_data.push({y: norm_units(smry.energy), name: pname, type:'box', boxmean: true, boxpoints: false});
+    data.push({x:pname, y: norm_units(smry.co2e), name: pname, legendgroup: pname, type:'box', boxmean: true, boxpoints: false});
+    data.push({x:pname, y: norm_units(smry.energy), name: pname, legendgroup: pname, yaxis: 'y2', type:'box', boxmean: true, boxpoints: false});
   }
-
-  // Decide yaxis tickformat
-  co2e_data.forEach(function (p) {
-    max = 0;
-    if (p != null) {
-      if (Array.isArray(p.y)) {
-        max = Math.max(max, ...p.y);
-      } else {
-        max = Math.max(max, p.y);
-      }
-      
-    }
-  });
-  var co2e_tickformat = (max <= 4) ? ('.2f') : ('.3s');
-  energy_data.forEach(function (p) {
-    max = 0;
-    if (p != null) {
-      if (Array.isArray(p.y)) {
-        max = Math.max(max, ...p.y);
-      } else {
-        max = Math.max(max, p.y);
-      }
-    }
-  });
-  var energy_tickformat = (max <= 4) ? ('.2f') : ('.3s');
   
-
-  Plotly.newPlot('co2eplot', co2e_data, { title: 'CO2e emission', yaxis: {title: 'CO2e emission (g)', tickformat: co2e_tickformat, rangemode: 'tozero'} });
-  Plotly.newPlot('energyplot', energy_data, { title: 'Energy consumption', yaxis: {title: 'Energy consumption (Wh)', tickformat: energy_tickformat, rangemode: 'tozero'} });
+  var layout = {
+    title: 'CO2 emission & energy consumption',
+    xaxis: {domain: [0.2, 1]},
+    yaxis: {title: 'CO2e emission (g)',
+            rangemode: 'tozero',
+            tickformatstops: [{
+              "dtickrange": [null, 4],
+              "value": ".2f"
+            },
+            {
+              "dtickrange": [4, null],
+              "value": ".3s"
+            }]
+    },
+    yaxis2: {title: 'Energy consumption (Wh)',
+            rangemode: 'tozero',
+            gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
+            overlaying: 'y',
+            side: 'left',
+            anchor: 'free',
+            position: 0.1,
+            tickformatstops: [{
+              "dtickrange": [null, 4],
+              "value": ".2f"
+            },
+            {
+              "dtickrange": [4, null],
+              "value": ".3s"
+            }]
+          },
+  };
+  
+  Plotly.newPlot('co2eplot', data, layout);
 
   // Convert to readable units
   function readable_units(value, unit_index) {
