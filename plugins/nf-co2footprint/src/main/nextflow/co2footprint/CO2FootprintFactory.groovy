@@ -48,6 +48,7 @@ import java.util.concurrent.ConcurrentHashMap
 @PackageScope(PackageScopeTarget.FIELDS)
 class CO2FootprintFactory implements TraceObserverFactory {
 
+    private String version
     // Handle logging messages
     private List<String> warnings = []
 
@@ -63,6 +64,15 @@ class CO2FootprintFactory implements TraceObserverFactory {
     Double total_energy = 0
     Double total_co2 = 0
 
+    protected void getPluginVersion() {
+        def reader = new InputStreamReader(this.class.getResourceAsStream('/META-INF/MANIFEST.MF'))
+        String line
+        while ( (line = reader.readLine()) && !version ) {
+            def h = line.split(": ")
+            if ( h[0] == 'Plugin-Version' ) this.version = h[1]
+        }
+        reader.close()
+    }
 
     // Load file containing TDP values for different CPU models
     protected void loadCpuTdpData(Map<String, Double> data) {
@@ -80,6 +90,9 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
     @Override
     Collection<TraceObserver> create(Session session) {
+        getPluginVersion()
+        log.info "nf-co2footprint plugin  ~  version ${this.version}"
+
         loadCpuTdpData(this.cpuData)
 
         this.session = session
@@ -348,6 +361,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
             co2eSummaryFile.println("Energy consumption: ${HelperFunctions.convertToReadableUnits(total_energy,3)}Wh")
             co2eSummaryFile.println("\nThe calculation of these values is based on the carbon footprint computation method developed in the Green Algorithms project.")
             co2eSummaryFile.println("Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation. Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707")
+            co2eSummaryFile.println()
+            co2eSummaryFile.println("nf-co2footprint plugin version: ${version}")
             co2eSummaryFile.flush()
             co2eSummaryFile.close()
 
@@ -744,12 +759,12 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * Render the report HTML document
          */
         protected void renderHtml() {
-
             // render HTML report template
             final tpl_fields = [
                     workflow : getWorkflowMetadata(),
                     payload : renderPayloadJson(),
                     co2_totals: renderCO2TotalsJson(),
+                    plugin_version: version,
                     assets_css : [
                             readTemplate('nextflow/trace/assets/bootstrap.min.css'),
                             readTemplate('nextflow/trace/assets/datatables.min.css')
