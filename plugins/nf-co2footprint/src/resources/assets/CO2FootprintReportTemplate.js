@@ -72,39 +72,34 @@ $(function() {
         continue;
     var smry = window.data_byprocess[pname];
     data.push({x:pname, y: norm_units(smry.co2e), name: pname, legendgroup: pname, type:'box', boxmean: true, boxpoints: false});
-    data.push({x:pname, y: norm_units(smry.energy), name: pname, legendgroup: pname, yaxis: 'y2', type:'box', boxmean: true, boxpoints: false});
+    // energy will be plotted with transparent color, hiding hover info and legend, but linked to tye right y-axis
+    data.push({x:pname, y: norm_units(smry.energy), name: pname, legendgroup: pname, type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend:false, hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'});
   }
   
+  var tickformat = [{
+    "dtickrange": [null, 4],
+    "value": ".2f"
+  },
+  {
+    "dtickrange": [4, null],
+    "value": ".3s"
+  }];
+
   var layout = {
     title: 'CO2 emission & energy consumption',
+    legend: {x: 1.1},
     xaxis: {domain: [0.2, 1]},
     yaxis: {title: 'CO2e emission (g)',
             rangemode: 'tozero',
-            tickformatstops: [{
-              "dtickrange": [null, 4],
-              "value": ".2f"
-            },
-            {
-              "dtickrange": [4, null],
-              "value": ".3s"
-            }]
+            tickformatstops: tickformat
     },
     yaxis2: {title: 'Energy consumption (Wh)',
             rangemode: 'tozero',
             gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
             overlaying: 'y',
-            side: 'left',
-            anchor: 'free',
-            position: 0.1,
-            tickformatstops: [{
-              "dtickrange": [null, 4],
-              "value": ".2f"
-            },
-            {
-              "dtickrange": [4, null],
-              "value": ".3s"
-            }]
-          },
+            side: 'right',
+            tickformatstops: tickformat
+    },
   };
   
   Plotly.newPlot('co2eplot', data, layout);
