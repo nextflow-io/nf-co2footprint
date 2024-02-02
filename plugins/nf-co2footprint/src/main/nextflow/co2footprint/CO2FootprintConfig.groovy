@@ -27,15 +27,15 @@ import groovy.util.logging.Slf4j
 @PackageScope
 class CO2FootprintConfig {
 
-    final private String  traceFile
-    final private String  summaryFile
-    final private String  reportFile
-    final private String  location
-    final private Double  ci    // CI: carbon intensity
-    final private Double  pue   // PUE: power usage effectiveness efficiency, coefficient of the data centre
-    final private Double  powerdrawMem  // Power draw of memory [W per GB]
-    final private Boolean ignoreCpuModel
-    final private Double powerdrawCpuDefault
+    private String  traceFile = CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_TRACE_FILE_NAME
+    private String  summaryFile = CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_SUMMARY_FILE_NAME
+    private String  reportFile = CO2FootprintFactory.CO2FootprintReportObserver.DEF_REPORT_FILE_NAME
+    private String  location
+    private Double  ci = 475   // CI: carbon intensity
+    private Double  pue = 1.67  // PUE: power usage effectiveness efficiency, coefficient of the data centre
+    private Double  powerdrawMem = 0.3725 // Power draw of memory [W per GB]
+    private Boolean ignoreCpuModel = false
+    private Double  powerdrawCpuDefault = 12.0
 
     // Retrieve CI value from file containing CI values for different locations
     protected Double retrieveCi(String location) {
@@ -51,8 +51,9 @@ class CO2FootprintConfig {
             }
         }
         dataReader.close()
-        if (localCi == 0.0)
+        if (localCi == 0.0) {
             throw new IllegalArgumentException("Invalid 'location' parameter: $location. Could not be found in 'CI_aggregated.v2.2.csv'.")
+        }
 
         return localCi
     }
@@ -74,28 +75,42 @@ class CO2FootprintConfig {
 
     CO2FootprintConfig(Map map, Map<String, Double> cpuData){
         def config = map ?: Collections.emptyMap()
-        traceFile = config.traceFile ?: CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_TRACE_FILE_NAME
-        summaryFile = config.summaryFile ?: CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_SUMMARY_FILE_NAME
-        reportFile = config.reportFile ?: CO2FootprintFactory.CO2FootprintReportObserver.DEF_REPORT_FILE_NAME
-        ignoreCpuModel = config.ignoreCpuModel ?: false
-
-        ci = 475
-        if (config.ci && config.location)
+        if (config.traceFile) {
+            traceFile = config.traceFile
+        }
+        if (config.summaryFile) {
+            summaryFile = config.summaryFile
+        }
+        if (config.reportFile) {
+            reportFile = config.reportFile
+        }
+        if (config.ignoreCpuModel) {
+            ignoreCpuModel = config.ignoreCpuModel
+        }
+        if (config.ci && config.location) {
             throw new IllegalArgumentException("Invalid combination of 'ci' and 'location' parameters specified for the CO2Footprint plugin. Please specify either 'ci' or 'location'!")
-        if (config.ci)
+        }
+        if (config.ci) {
             ci = config.ci
+        }
         if (config.location) {
             ci = retrieveCi(config.location)
             location = config.location
         }
-
-        pue = config.pue ?: 1.67
-        powerdrawMem = config.powerdrawMem ?: 0.3725
-        powerdrawCpuDefault = config.powerdrawCpuDefault ?: 12.0
+        if (config.pue) {
+            pue = config.pue
+        }
+        if (config.powerdrawMem) {
+            powerdrawMem = config.powerdrawMem
+        }
+        if (config.powerdrawCpuDefault) {
+            powerdrawCpuDefault = config.powerdrawCpuDefault
+        }
         cpuData['default'] = powerdrawCpuDefault
 
-        if (config.customCpuTdpFile)
+        if (config.customCpuTdpFile) {
             loadCustomCpuTdpData(cpuData, config.customCpuTdpFile)
+        }
     }
 
     String getTraceFile() { traceFile }
