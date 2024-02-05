@@ -118,7 +118,7 @@ class CO2FootprintConfig {
     String getReportFile() { reportFile }
     Boolean getIgnoreCpuModel() { ignoreCpuModel }
     String getLocation() { location }
-    Double getCI() { ci }
-    Double getPUE() { pue }
+    Double getCi() { ci }
+    Double getPue() { pue }
     Double getPowerdrawMem() { powerdrawMem }
 }
