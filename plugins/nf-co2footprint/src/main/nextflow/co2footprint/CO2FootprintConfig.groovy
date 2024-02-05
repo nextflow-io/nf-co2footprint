@@ -126,6 +126,7 @@ class CO2FootprintConfig {
     Double getPowerdrawCpuDefault() { powerdrawCpuDefault }
     String getCustomCpuTdpFile() { customCpuTdpFile }
 
+    // Different functions to collect options for reporting, grouped by purpose
     SortedMap<String, Object> collectInputFileOptions() {
         Map<String, Object> newMap = [:]
         newMap["customCpuTdpFile"] = customCpuTdpFile
