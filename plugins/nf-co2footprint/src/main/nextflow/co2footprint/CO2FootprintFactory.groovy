@@ -363,6 +363,11 @@ class CO2FootprintFactory implements TraceObserverFactory {
             co2eSummaryFile.println("Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation. Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707")
             co2eSummaryFile.println()
             co2eSummaryFile.println("nf-co2footprint plugin version: ${version}")
+            co2eSummaryFile.println()
+            co2eSummaryFile.println("nf-co2footprint options")
+            config.collectInputFileOptions().each { co2eSummaryFile.println("${it.key}: ${it.value}") }
+            config.collectOutputFileOptions().each { co2eSummaryFile.println("${it.key}: ${it.value}") }
+            config.collectCO2CalcOptions().each { co2eSummaryFile.println("${it.key}: ${it.value}") }
             co2eSummaryFile.flush()
             co2eSummaryFile.close()
 

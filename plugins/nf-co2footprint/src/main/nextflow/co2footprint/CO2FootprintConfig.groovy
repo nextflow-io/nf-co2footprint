@@ -30,12 +30,13 @@ class CO2FootprintConfig {
     private String  traceFile = CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_TRACE_FILE_NAME
     private String  summaryFile = CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_SUMMARY_FILE_NAME
     private String  reportFile = CO2FootprintFactory.CO2FootprintReportObserver.DEF_REPORT_FILE_NAME
-    private String  location
+    private String  location = null
     private Double  ci = 475   // CI: carbon intensity
     private Double  pue = 1.67  // PUE: power usage effectiveness efficiency, coefficient of the data centre
     private Double  powerdrawMem = 0.3725 // Power draw of memory [W per GB]
     private Boolean ignoreCpuModel = false
     private Double  powerdrawCpuDefault = 12.0
+    private String  customCpuTdpFile = null
 
     // Retrieve CI value from file containing CI values for different locations
     protected Double retrieveCi(String location) {
@@ -109,6 +110,7 @@ class CO2FootprintConfig {
         cpuData['default'] = powerdrawCpuDefault
 
         if (config.customCpuTdpFile) {
+            customCpuTdpFile = config.customCpuTdpFile
             loadCustomCpuTdpData(cpuData, config.customCpuTdpFile)
         }
     }
@@ -121,4 +123,29 @@ class CO2FootprintConfig {
     Double getCi() { ci }
     Double getPue() { pue }
     Double getPowerdrawMem() { powerdrawMem }
+    Double getPowerdrawCpuDefault() { powerdrawCpuDefault }
+    String getCustomCpuTdpFile() { customCpuTdpFile }
+
+    SortedMap<String, Object> collectInputFileOptions() {
+        Map<String, Object> newMap = [:]
+        newMap["customCpuTdpFile"] = customCpuTdpFile
+        return newMap.sort()
+    }
+    SortedMap<String, Object> collectOutputFileOptions() {
+        Map<String, Object> newMap = [:]
+        newMap["traceFile"] = traceFile
+        newMap["summaryFile"] = summaryFile
+        newMap["reportFile"] = reportFile
+        return newMap.sort()
+    }
+    SortedMap<String, Object> collectCO2CalcOptions() {
+        Map<String, Object> newMap = [:]
+        newMap["location"] = location
+        newMap["ci"] = ci   // Might be indirectly determined for location parameter
+        newMap["pue"] = pue
+        newMap["powerdrawMem"] = powerdrawMem
+        newMap["powerdrawCpuDefault"] = powerdrawCpuDefault
+        newMap["ignoreCpuModel"] = ignoreCpuModel
+        return newMap.sort()
+    }
 }
