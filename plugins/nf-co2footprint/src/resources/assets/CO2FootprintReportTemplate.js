@@ -86,7 +86,7 @@ $(function() {
   }];
 
   var layout = {
-    title: 'CO2 emission & energy consumption',
+    title: 'CO<sub>2</sub> emission & energy consumption',
     legend: {x: 1.1},
     xaxis: {domain: [0.2, 1]},
     yaxis: {title: 'CO2e emission (g)',
