@@ -301,7 +301,7 @@ $(function() {
 
       // Default filter highlight
       $(".buttons-colvisGroup:contains('All')").click();
-    }
+  }
 
   if( window.data.trace==null ) {
       // nascondere
@@ -317,5 +317,29 @@ $(function() {
       make_tasks_table();
   }
 
+  function make_options_columns(){
+    var columns = [];
+    for (key in window.options) {
+      columns.push({ title: String(key), data: String(window.options[key]) });
+    }
+    return columns;
+  }
 
+  // Create options table
+  function make_options_table(){
+    // reset
+    if ( $.fn.dataTable.isDataTable( '#options_table' ) ) {
+      $('#options_table').DataTable().destroy();
+    }
+
+    var table = $('#options_table').DataTable({
+      data: window.options,
+      columns: make_options_columns(),
+        "deferRender": true,
+        "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
+    });
+  }
+
+  // Make the table on page load
+  make_options_table();
 });

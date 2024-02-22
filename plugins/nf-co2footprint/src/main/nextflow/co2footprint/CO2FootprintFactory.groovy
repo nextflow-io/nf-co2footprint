@@ -183,6 +183,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
          */
         // nm: size of memory available [GB] -> requested memory
         Long memory = trace.get('memory') as Long
+        memory = 1000000
         if ( memory == null ) {
             // TODO if 'memory' not set, returns null, hande somehow?
             log.error "TraceRecord field 'memory' is not set!"
@@ -743,6 +744,28 @@ class CO2FootprintFactory implements TraceObserverFactory {
         }
 
         /**
+         * @return The options json payload
+         */
+        protected String renderOptionsJson() {
+            final all_options = config.collectInputFileOptions() + config.collectOutputFileOptions() + config.collectCO2CalcOptions()
+            def result = new StringBuilder()
+            result << "{"
+            def fields = all_options.keySet() as List
+            
+            // Render JSON
+            final QUOTE = '"'
+            for( int i=0; i<fields.size(); i++ ) {
+                if(i) result << ','
+                String name = fields[i]
+                String value = all_options[name].toString()
+                result << QUOTE << name << QUOTE << ":" << QUOTE << value << QUOTE
+            }
+            result << "}"
+
+            return result.toString()
+        }
+
+        /**
          * Render the total co2 footprint values for html report
          *
          * @param data A collection of {@link TraceRecord}s representing the tasks executed
@@ -782,7 +805,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
                             readTemplate('nextflow/trace/assets/moment.min.js'),
                             readTemplate('nextflow/trace/assets/plotly.min.js'),
                             readTemplate('assets/CO2FootprintReportTemplate.js')
-                    ]
+                    ],
+                    options : renderOptionsJson()
             ]
             //log.info "${tpl_fields['payload']}"
             final tpl = readTemplate('CO2FootprintReportTemplate.html')
