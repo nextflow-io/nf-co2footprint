@@ -749,7 +749,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         protected String renderOptionsJson() {
             final all_options = config.collectInputFileOptions() + config.collectOutputFileOptions() + config.collectCO2CalcOptions()
             def result = new StringBuilder()
-            result << "{"
+            result << "["
             def fields = all_options.keySet() as List
             
             // Render JSON
@@ -758,9 +758,11 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 if(i) result << ','
                 String name = fields[i]
                 String value = all_options[name].toString()
-                result << QUOTE << name << QUOTE << ":" << QUOTE << value << QUOTE
+                result << "{" << QUOTE << "option" << QUOTE << ":" << QUOTE << name << QUOTE << ","
+                result << QUOTE << "value" << QUOTE << ":" << QUOTE << value << QUOTE << "}"
+                //result << QUOTE << name << QUOTE << ":" << QUOTE << value << QUOTE
             }
-            result << "}"
+            result << "]"
 
             return result.toString()
         }

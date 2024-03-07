@@ -317,14 +317,6 @@ $(function() {
       make_tasks_table();
   }
 
-  function make_options_columns(){
-    var columns = [];
-    for (key in window.options) {
-      columns.push({ title: String(key), data: String(window.options[key]) });
-    }
-    return columns;
-  }
-
   // Create options table
   function make_options_table(){
     // reset
@@ -334,7 +326,10 @@ $(function() {
 
     var table = $('#options_table').DataTable({
       data: window.options,
-      columns: make_options_columns(),
+      columns: [
+          { title: "Option", data: "option" },
+          { title: "Value", data: "value" }
+        ],
         "deferRender": true,
         "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
     });
