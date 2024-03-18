@@ -748,10 +748,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
             List equivalences = computeCO2footprintEquivalences()
             [ co2:HelperFunctions.convertToReadableUnits(total_co2,3), 
               energy:HelperFunctions.convertToReadableUnits(total_energy,3),
-              car: equivalences[0],
-              tree: equivalences[1],
-              plane_percent: equivalences[2],
-              plane_flights: equivalences[3]
+              car: equivalences[0]?HelperFunctions.convertToScientificNotation(equivalences[0]):null,
+              tree: equivalences[1]?HelperFunctions.convertToScientificNotation(equivalences[1]):null,
+              plane_percent: equivalences[2]?HelperFunctions.convertToScientificNotation(equivalences[2]):null,
+              plane_flights: equivalences[3]?HelperFunctions.convertToScientificNotation(equivalences[3]):null
             ]
         }
 

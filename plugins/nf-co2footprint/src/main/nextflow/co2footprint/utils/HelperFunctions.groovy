@@ -2,6 +2,15 @@ package nextflow.co2footprint
 
 public class HelperFunctions {
 
+    static public String convertToScientificNotation(double value) {
+        if (value == 0) {
+            return value.toString()
+        } else if (value == null) {
+            return null
+        }
+        return String.format('%e', value)
+    }
+
     static public String convertToReadableUnits(double value, int unitIndex=4) {
         def units = ['p', 'n', 'u', 'm', ' ', 'K', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
         
