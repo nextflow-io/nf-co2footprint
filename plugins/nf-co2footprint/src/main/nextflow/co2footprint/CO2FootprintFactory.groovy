@@ -183,7 +183,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
          */
         // nm: size of memory available [GB] -> requested memory
         Long memory = trace.get('memory') as Long
-        memory = 1000000
         if ( memory == null ) {
             // TODO if 'memory' not set, returns null, hande somehow?
             log.error "TraceRecord field 'memory' is not set!"
