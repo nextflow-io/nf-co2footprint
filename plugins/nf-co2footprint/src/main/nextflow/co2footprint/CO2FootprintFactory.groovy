@@ -198,9 +198,9 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * Remaining factors
          */
         // PUE: efficiency coefficient of the data centre
-        Double pue = config.getPUE()
+        Double pue = config.getPue()
         // CI: carbon intensity [gCO2e kWh−1]
-        def ci  = config.getCI()
+        def ci  = config.getCi()
 
         /**
          * Calculate energy consumption [kWh]
@@ -363,6 +363,11 @@ class CO2FootprintFactory implements TraceObserverFactory {
             co2eSummaryFile.println("Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation. Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707")
             co2eSummaryFile.println()
             co2eSummaryFile.println("nf-co2footprint plugin version: ${version}")
+            co2eSummaryFile.println()
+            co2eSummaryFile.println("nf-co2footprint options")
+            config.collectInputFileOptions().each { co2eSummaryFile.println("${it.key}: ${it.value}") }
+            config.collectOutputFileOptions().each { co2eSummaryFile.println("${it.key}: ${it.value}") }
+            config.collectCO2CalcOptions().each { co2eSummaryFile.println("${it.key}: ${it.value}") }
             co2eSummaryFile.flush()
             co2eSummaryFile.close()
 
@@ -738,6 +743,29 @@ class CO2FootprintFactory implements TraceObserverFactory {
         }
 
         /**
+         * @return The options json payload
+         */
+        protected String renderOptionsJson() {
+            final all_options = config.collectInputFileOptions() + config.collectOutputFileOptions() + config.collectCO2CalcOptions()
+            def result = new StringBuilder()
+            result << "["
+            def fields = all_options.keySet() as List
+            
+            // Render JSON
+            final QUOTE = '"'
+            for( int i=0; i<fields.size(); i++ ) {
+                if(i) result << ','
+                String name = fields[i]
+                String value = all_options[name].toString()
+                result << "{" << QUOTE << "option" << QUOTE << ":" << QUOTE << name << QUOTE << ","
+                result << QUOTE << "value" << QUOTE << ":" << QUOTE << value << QUOTE << "}"
+            }
+            result << "]"
+
+            return result.toString()
+        }
+
+        /**
          * Render the total co2 footprint values for html report
          *
          * @param data A collection of {@link TraceRecord}s representing the tasks executed
@@ -777,7 +805,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
                             readTemplate('nextflow/trace/assets/moment.min.js'),
                             readTemplate('nextflow/trace/assets/plotly.min.js'),
                             readTemplate('assets/CO2FootprintReportTemplate.js')
-                    ]
+                    ],
+                    options : renderOptionsJson()
             ]
             //log.info "${tpl_fields['payload']}"
             final tpl = readTemplate('CO2FootprintReportTemplate.html')
