@@ -6,9 +6,17 @@ public class HelperFunctions {
         if (value == 0) {
             return value.toString()
         } else if (value == null) {
-            return null
+            return value
         }
-        return String.format('%e', value)
+        String scientific
+        Integer intPart = (Integer) value
+        Integer exponential = 0
+        while (value < 1 && value - intPart != 0 ) {
+            value = value * 10
+            exponential++
+        }
+        scientific = (String) value.round(2) + "e-" + exponential
+        return scientific
     }
 
     static public String convertToReadableUnits(double value, int unitIndex=4) {

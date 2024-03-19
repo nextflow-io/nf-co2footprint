@@ -236,16 +236,16 @@ class CO2FootprintFactory implements TraceObserverFactory {
             car = gCO2 / 251 as Double
         }
         Double tree = gCO2 / 917 as Double
-        car = car.round(2)
-        tree = tree.round(2)
+        car = car
+        tree = tree
         Double plane_percent
         Double plane_flights
         if (gCO2 <= 50000) {
             plane_percent = gCO2 * 100 / 50000 as Double
-            plane_percent = plane_percent.round(2)
+            plane_percent = plane_percent
         } else {
             plane_flights = gCO2 / 50000 as Double
-            plane_flights = plane_flights.round(2)
+            plane_flights = plane_flights
         }
 
         return [car, tree, plane_percent, plane_flights]
@@ -748,10 +748,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
             List equivalences = computeCO2footprintEquivalences()
             [ co2:HelperFunctions.convertToReadableUnits(total_co2,3), 
               energy:HelperFunctions.convertToReadableUnits(total_energy,3),
-              car: equivalences[0]?HelperFunctions.convertToScientificNotation(equivalences[0]):null,
-              tree: equivalences[1]?HelperFunctions.convertToScientificNotation(equivalences[1]):null,
-              plane_percent: equivalences[2]?HelperFunctions.convertToScientificNotation(equivalences[2]):null,
-              plane_flights: equivalences[3]?HelperFunctions.convertToScientificNotation(equivalences[3]):null
+              car: equivalences[0]?HelperFunctions.convertToScientificNotation(equivalences[0]):equivalences[0],
+              tree: equivalences[1]?HelperFunctions.convertToScientificNotation(equivalences[1]):equivalences[1],
+              plane_percent: equivalences[2]?HelperFunctions.convertToScientificNotation(equivalences[2]):equivalences[2],
+              plane_flights: equivalences[3]?HelperFunctions.convertToScientificNotation(equivalences[3]):equivalences[3]
             ]
         }
 
