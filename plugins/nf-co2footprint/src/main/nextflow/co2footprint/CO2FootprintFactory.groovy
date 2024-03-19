@@ -759,7 +759,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 String value = all_options[name].toString()
                 result << "{" << QUOTE << "option" << QUOTE << ":" << QUOTE << name << QUOTE << ","
                 result << QUOTE << "value" << QUOTE << ":" << QUOTE << value << QUOTE << "}"
-                //result << QUOTE << name << QUOTE << ":" << QUOTE << value << QUOTE
             }
             result << "]"
 
