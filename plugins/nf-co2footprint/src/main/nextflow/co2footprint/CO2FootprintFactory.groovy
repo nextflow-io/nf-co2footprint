@@ -182,7 +182,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * Factors of memory power usage
          */
         // nm: size of memory available [GB] -> requested memory
-        Long memory = trace.get('memory') as Long
+        Double memory = trace.get('memory') as Double
         if ( memory == null ) {
             // TODO if 'memory' not set, returns null, hande somehow?
             log.error "TraceRecord field 'memory' is not set!"
@@ -200,7 +200,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // PUE: efficiency coefficient of the data centre
         Double pue = config.getPue()
         // CI: carbon intensity [gCO2e kWh−1]
-        def ci  = config.getCi()
+        Double ci  = config.getCi()
 
         /**
          * Calculate energy consumption [kWh]
@@ -372,7 +372,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             co2eSummaryFile.close()
 
             // write the remaining records
-            current.values().each { taskId, record -> co2eTraceFile.println("${taskId}\t-") }
+            current.values().each { co2eTraceFile.println("${it.taskId}\t-") }
             co2eTraceFile.flush()
             co2eTraceFile.close()
 
