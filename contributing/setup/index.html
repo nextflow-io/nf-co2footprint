@@ -670,25 +670,19 @@
 <p>To test with Nextflow for development purpose:</p>
 <ol>
 <li>Clone the Nextflow repo into a sibling directory</li>
-</ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>..<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/nextflow-io/nextflow
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>nextflow<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>./gradlew<span class="w"> </span>exportClasspath
 </code></pre></div>
-<ol>
 <li>Append the following line to the <code>settings.gradle</code> in this project:</li>
-</ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>includeBuild<span class="o">(</span><span class="s1">&#39;../nextflow&#39;</span><span class="o">)</span>
 </code></pre></div>
-<ol>
 <li>Compile the plugin code</li>
-</ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>./gradlew<span class="w"> </span>compileGroovy
 </code></pre></div>
-<ol>
 <li>Run nextflow with this command:</li>
-</ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>./launch.sh<span class="w"> </span>run<span class="w"> </span>-plugins<span class="w"> </span>nf-co2footprint<span class="w"> </span>&lt;script/pipeline<span class="w"> </span>name&gt;<span class="w"> </span><span class="o">[</span>pipeline<span class="w"> </span>params<span class="o">]</span>
 </code></pre></div>
+</ol>
 <h2 id="alternative-launch-without-a-local-nextflow-build">Alternative: Launch without a local Nextflow build</h2>
 <p>The plugin can be tested without using a local Nextflow build using the following steps:</p>
 <div class="admonition warning">
@@ -698,15 +692,13 @@ If the plugin version from the manifest file (<code>plugins/nf-co2footprint/src/
 </div>
 <ol>
 <li>Compile and install the plugin code</li>
-</ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>./gradlew<span class="w"> </span>compileGroovy
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>make<span class="w"> </span>install
 </code></pre></div>
-<ol>
 <li>Run nextflow with this command, specifying the plugin version:</li>
-</ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>nextflow<span class="w"> </span>run<span class="w"> </span>-plugins<span class="w"> </span>nf-co2footprint@1.0.0-beta<span class="w"> </span>&lt;script/pipeline<span class="w"> </span>name&gt;<span class="w"> </span><span class="o">[</span>pipeline<span class="w"> </span>params<span class="o">]</span>
 </code></pre></div>
+</ol>
 <h2 id="compiling-and-running-tests">Compiling and running tests</h2>
 <p>To compile and run the tests use the following command:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>./gradlew<span class="w"> </span>check
