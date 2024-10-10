@@ -12,6 +12,10 @@ NXF_HOME ?= $$HOME/.nextflow
 NXF_PLUGINS_DIR ?= $(NXF_HOME)/plugins
 
 clean:
+	rm -rf .nextflow*
+	rm -rf work
+	rm -rf build
+	rm -rf plugins/*/build
 	./gradlew clean
 
 compile:
@@ -47,6 +51,9 @@ ifndef class
 else
 	./gradlew ${mm}test --tests ${class}
 endif
+
+assemble:
+	./gradlew assemble
 
 install:
 	./gradlew copyPluginZip

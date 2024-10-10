@@ -200,7 +200,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // PUE: efficiency coefficient of the data centre
         Double pue = config.getPue()
         // CI: carbon intensity [gCO2e kWh−1]
-        def ci  = config.getCi()
+        Double ci  = config.getCi()
 
         /**
          * Calculate energy consumption [kWh]
@@ -216,7 +216,11 @@ class CO2FootprintFactory implements TraceObserverFactory {
         e = e * 1000000
         c = c * 1000
 
-        return [e, c, realtime, nc, pc, uc, memory]
+        // TODO: Only a workaround. Like this the memory is only full precision until 999TB of GB.
+        // The cast is still necessary, as the output expects a List<Double> which worked with Groovy3 but not Groovy4
+        Double mem_double = memory as Double
+
+        return [e, c, realtime, nc, pc, uc, mem_double]
     }
 
 
@@ -372,7 +376,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             co2eSummaryFile.close()
 
             // write the remaining records
-            current.values().each { taskId, record -> co2eTraceFile.println("${taskId}\t-") }
+            current.values().each { co2eTraceFile.println("${it.taskId}\t-") }
             co2eTraceFile.flush()
             co2eTraceFile.close()
 
