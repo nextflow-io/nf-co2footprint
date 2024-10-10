@@ -182,7 +182,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * Factors of memory power usage
          */
         // nm: size of memory available [GB] -> requested memory
-        Double memory = trace.get('memory') as Double
+        Long memory = trace.get('memory') as Long
         if ( memory == null ) {
             // TODO if 'memory' not set, returns null, hande somehow?
             log.error "TraceRecord field 'memory' is not set!"
@@ -216,7 +216,11 @@ class CO2FootprintFactory implements TraceObserverFactory {
         e = e * 1000000
         c = c * 1000
 
-        return [e, c, realtime, nc, pc, uc, memory]
+        // TODO: Only a workaround. Like this the memory is only full precision until 999TB of GB.
+        // The cast is still necessary, as the output expects a List<Double> which worked with Groovy3 but not Groovy4
+        Double mem_double = memory as Double
+
+        return [e, c, realtime, nc, pc, uc, mem_double]
     }
 
 
