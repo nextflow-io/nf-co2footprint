@@ -5,6 +5,8 @@ public class HelperFunctions {
     static public String convertToScientificNotation(double value) {
         if (value == 0) {
             return value.toString()
+        } else if (value <= 999 && value >= 0.001) {
+            return value.round(2).toString()
         } else if (value == null) {
             return value
         }
