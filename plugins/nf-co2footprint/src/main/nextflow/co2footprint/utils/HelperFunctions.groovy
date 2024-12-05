@@ -1,24 +1,20 @@
 package nextflow.co2footprint
 
+import java.text.DecimalFormat
+
 public class HelperFunctions {
 
     static public String convertToScientificNotation(double value) {
         if (value == 0) {
             return value.toString()
         } else if (value <= 999 && value >= 0.001) {
-            return value.round(2).toString()
+            return value.round(3).toString()
         } else if (value == null) {
             return value
+        } else {
+            def formatter = new DecimalFormat("0.00E0")
+            return formatter.format(value)
         }
-        String scientific
-        Integer intPart = (Integer) value
-        Integer exponential = 0
-        while (value < 1 && value - intPart != 0 ) {
-            value = value * 10
-            exponential++
-        }
-        scientific = (String) value.round(2) + "e-" + exponential
-        return scientific
     }
 
     static public String convertToReadableUnits(double value, int unitIndex=4) {
