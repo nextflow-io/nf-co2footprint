@@ -240,16 +240,12 @@ class CO2FootprintFactory implements TraceObserverFactory {
             car = gCO2 / 251 as Double
         }
         Double tree = gCO2 / 917 as Double
-        car = car
-        tree = tree
         Double plane_percent
         Double plane_flights
         if (gCO2 <= 50000) {
             plane_percent = gCO2 * 100 / 50000 as Double
-            plane_percent = plane_percent
         } else {
             plane_flights = gCO2 / 50000 as Double
-            plane_flights = plane_flights
         }
 
         return [car, tree, plane_percent, plane_flights]
