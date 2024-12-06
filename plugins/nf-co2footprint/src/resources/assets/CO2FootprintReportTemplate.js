@@ -154,29 +154,29 @@ $(function() {
   }  
 
   // Build the trace table
-  function make_co2e(ms, type){
+  function make_co2e(mg, type){
     if (type === 'sort') {
-      return parseInt(ms);
+      return parseFloat(mg);
     }
     if($('#nf-table-humanreadable').val() == 'false'){
-      return ms;
+      return mg;
     }
-    if (ms == '-' || ms == 0){
-      return ms;
+    if (mg == '-' || mg == 0){
+      return mg;
     }
-    return readable_units(ms, 3) + 'g';
+    return readable_units(mg, 3) + 'g';
   }
-  function make_energy(ms, type){
+  function make_energy(mWh, type){
     if (type === 'sort') {
-      return parseInt(ms);
+      return parseFloat(mWh);
     }
     if($('#nf-table-humanreadable').val() == 'false'){
-      return ms;
+      return mWh;
     }
-    if (ms == '-' || ms == 0){
-      return ms;
+    if (mWh == '-' || mWh == 0){
+      return mWh;
     }
-    return readable_units(ms, 3) + 'Wh';
+    return readable_units(mWh, 3) + 'Wh';
   }
   function make_time(ms, type){
     if (type === 'sort') {
@@ -190,18 +190,30 @@ $(function() {
     }
     return readable_units_time(ms);
   }
-  function make_memory(ms, type){
+  function make_memory(bytes, type){
     if (type === 'sort') {
-      return parseInt(ms);
+      return parseInt(bytes);
     }
     if($('#nf-table-humanreadable').val() == 'false'){
-      return ms;
+      return bytes;
     }
-    if (ms == '-' || ms == 0){
-      return ms;
+    if (bytes == '-' || bytes == 0){
+      return bytes;
     }
-    return readable_units_memory(ms);
+    return readable_units_memory(bytes);
   }
+  function make_core_usage_factor(uf, type){
+      if (type === 'sort') {
+        return parseFloat(uf);
+      }
+      if($('#nf-table-humanreadable').val() == 'false'){
+        return uf;
+      }
+      if (uf == '-' || uf == 0){
+        return uf;
+      }
+      return Math.round( uf * 1000 ) / 1000;
+    }
   function make_tasks_table(){
     // reset
       if ( $.fn.dataTable.isDataTable( '#tasks_table' ) ) {
@@ -247,13 +259,13 @@ $(function() {
               return '<code>'+script+'</code>';
             }
           },
-          { title: co2EmissionsTitle, data: 'co2e', render: make_co2e },
-          { title: energyConsumptionTitle, data: 'energy', render: make_energy },
-          { title: 'Time', data: 'time', render: make_time },
-          { title: 'Number of cores', data: 'cpus' },
-          { title: 'Power draw of a computing core', data: 'powerdrawCPU' },
-          { title: 'Core usage factor', data: 'cpuUsage' },
-          { title: 'Memory', data: 'memory', render: make_memory },
+          { title: co2EmissionsTitle, data: 'co2e', type: 'num', render: make_co2e },
+          { title: energyConsumptionTitle, data: 'energy', type: 'num', render: make_energy },
+          { title: 'Time', data: 'time', type: 'num', render: make_time },
+          { title: 'Number of cores', data: 'cpus', type: 'num' },
+          { title: 'Power draw of a computing core', data: 'powerdrawCPU', type: 'num'},
+          { title: 'Core usage factor', data: 'cpuUsage', type: 'num', render: make_core_usage_factor },
+          { title: 'Memory', data: 'memory', type: 'num', render: make_memory },
           { title: 'CPU model', data: 'cpu_model' },
         ],
         "deferRender": true,
