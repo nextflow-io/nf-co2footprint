@@ -1,6 +1,21 @@
 package nextflow.co2footprint
 
+import java.text.DecimalFormat
+
 public class HelperFunctions {
+
+    static public String convertToScientificNotation(double value) {
+        if (value == 0) {
+            return value.toString()
+        } else if (value <= 999 && value >= 0.001) {
+            return value.round(3).toString()
+        } else if (value == null) {
+            return value
+        } else {
+            def formatter = new DecimalFormat("0.00E0")
+            return formatter.format(value)
+        }
+    }
 
     static public String convertToReadableUnits(double value, int unitIndex=4) {
         def units = ['p', 'n', 'u', 'm', ' ', 'K', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa

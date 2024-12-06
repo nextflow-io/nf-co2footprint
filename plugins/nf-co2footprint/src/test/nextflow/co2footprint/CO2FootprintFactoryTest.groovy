@@ -218,10 +218,10 @@ class CO2FootprintFactoryTest extends Specification {
         expect:
         // Values compared to result from www.green-algorithms.org
         // Car Km
-        results[0] == 0.07
+        results[0].round(7) == 0.0662137
         // Tree months
-        results[1] == 0.01
+        results[1].round(7) == 0.0126362
         // Plane percent
-        results[2] == 0.02
+        results[2].round(7) == 0.0231748
     }
 }
