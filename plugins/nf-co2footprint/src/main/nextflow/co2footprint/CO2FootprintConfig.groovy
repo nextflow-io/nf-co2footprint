@@ -64,20 +64,26 @@ class CO2FootprintConfig {
     protected Double getRealTimeCI(String location, EMToken) {
         // TODO Use location in API curl
         // TODO How to resolve the location!
-        def API_response = ['bash','-c', "curl -H \"auth-token: $EMToken\" https://api.electricitymap.org/v3/carbon-intensity/latest?zone=DE"].execute()
-        API_response.waitFor()
-        Double realTimeCi
-        try {
-            // response will result in empty string if offline
-            def EM_json_result = (Map) new JsonSlurper().parseText(API_response.text)
-            realTimeCi = EM_json_result.carbonIntensity as Double
+        if (EMToken) {
+            def API_response = ['bash', '-c', "curl -H \"auth-token: $EMToken\" https://api.electricitymap.org/v3/carbon-intensity/latest?zone=DE"].execute()
+            API_response.waitFor()
+            Double realTimeCi
+            try {
+                // response will result in empty string if offline
+                def EM_json_result = (Map) new JsonSlurper().parseText(API_response.text)
+                realTimeCi = EM_json_result.carbonIntensity as Double
+            }
+            catch (Exception e) {
+                // If offline use tabular data
+                log.warn "Could not retrieve real time data from https://app.electricitymaps.com/map/24h, check if you have internet access. The nf-co2footprint report will include an average of your location."
+                realTimeCi = retrieveCi(location)
+            }
+            return realTimeCi
         }
-        catch(Exception e) {
-            // If offline use tabular data
-            log.warn "Could not retrieve real time data from https://app.electricitymaps.com/map/24h, check if you have internet access. The nf-co2footprint report will include an average of your location."
-            realTimeCi = retrieveCi(location)
+        else{
+            log.warn "Could not retrieve real time data from https://app.electricitymaps.com/map/24h, to access real time data please register and use the access token within the configuration of the plugin @EMToken. The nf-co2footprint report will include an average of your location."
+            return retrieveCi(location)
         }
-        return realTimeCi
     }
 
     // Load user provided file containing custom TDP values for different CPU models
