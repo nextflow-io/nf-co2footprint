@@ -359,6 +359,28 @@ class CO2FootprintFactory implements TraceObserverFactory {
             co2eSummaryFile.println("Total CO2e footprint measures of this workflow run")
             co2eSummaryFile.println("CO2e emissions: ${HelperFunctions.convertToReadableUnits(total_co2,3)}g")
             co2eSummaryFile.println("Energy consumption: ${HelperFunctions.convertToReadableUnits(total_energy,3)}Wh")
+
+            List equivalences = computeCO2footprintEquivalences()
+            List<GString> readableEquivalences = new ArrayList<GString>();
+            if (equivalences[0]){
+                readableEquivalences.add("- ${HelperFunctions.convertToScientificNotation(equivalences[0])} km travelled by car")
+            }
+            if (equivalences[1]){
+                readableEquivalences.add("- Monthly co2 absorption of ${HelperFunctions.convertToScientificNotation(equivalences[1])} trees")
+            }
+            if (equivalences[2]){
+                readableEquivalences.add("- ${HelperFunctions.convertToScientificNotation(equivalences[2])} flights from paris to london")
+            }
+            if (equivalences[3]){
+                readableEquivalences.add("- ${HelperFunctions.convertToScientificNotation(equivalences[3])}% of a flight from paris to london")
+            }
+            if (readableEquivalences.any()) {
+                co2eSummaryFile.println("\nWhich equals: ")
+                for (var readableEquivalence : readableEquivalences) {
+                   co2eSummaryFile.println(readableEquivalence)
+                }
+            }
+
             co2eSummaryFile.println("\nThe calculation of these values is based on the carbon footprint computation method developed in the Green Algorithms project.")
             co2eSummaryFile.println("Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation. Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707")
             co2eSummaryFile.println()
