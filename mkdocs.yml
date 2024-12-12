@@ -2,7 +2,7 @@ site_name: nf-co2footprint
 repo_name: nextflow-io/nf-co2footprint
 repo_url: https://github.com/nextflow-io/nf-co2footprint
 site_url: https://nextflow-io.github.io/nf-co2footprint/
-edit_uri: edit/dev/docs/ # TODO: change on release to edit/main/docs/
+edit_uri: edit/master/docs/
 
 nav:
   - Home: 

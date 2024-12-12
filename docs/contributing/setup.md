@@ -46,7 +46,6 @@ The plugin can be tested without using a local Nextflow build using the followin
    ./gradlew compileGroovy
    make install
    ```
-
 2. Run nextflow with this command, specifying the plugin version:
 
    ```bash
@@ -65,7 +64,7 @@ To compile and run the tests use the following command:
 
 ## Change and preview the docs
 
-The docs are generated using [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/). To change the docs, edit the files in the [docs/](docs/) folder and run the following command to generate the docs (after installing mkdocs via `pip install mkdocs-material`):
+The docs are generated using [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/). To change the docs, edit the files in the [docs/](https://github.com/nextflow-io/nf-co2footprint/tree/master/docs) folder and run the following command to generate the docs (after installing mkdocs via `pip install mkdocs-material`):
 
 ```bash
 mkdocs serve

@@ -37,7 +37,7 @@ Default: 475.
 - `location`: location code to automatically retrieve a location-specific CI value.
 For countries, these are [ISO alpha-2 codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). 
 For regions, it’s the ISO alpha-2 code for the country, followed by an identifier for the state, e.g. US-CA for “California, USA”.
-You can find the available data [here](../../plugins/nf-co2footprint/src/resources/CI_aggregated.v2.2.csv).
+You can find the available data [here](https://github.com/nextflow-io/nf-co2footprint/blob/master/plugins/nf-co2footprint/src/resources/CI_aggregated.v2.2.csv).
 Mutually exclusive with the `ci` parameter.
 Default: `null`.
 - `pue`: power usage effectiveness, efficiency coefficient of the data centre.
@@ -47,7 +47,7 @@ Default: 0.3725.
 - `customCpuTdpFile`: Input CSV file containing custom CPU TDP data.
 This should contain the following columns: `model`,`TDP`,`n_cores`,`TDP_per_core`.
 Note that this overwrites TDP values for already provided CPU models.
-You can find the by default used TDP data [here](../../plugins/nf-co2footprint/src/resources/TDP_cpu.v2.2.csv).
+You can find the by default used TDP data [here](https://github.com/nextflow-io/nf-co2footprint/blob/master/plugins/nf-co2footprint/src/resources/TDP_cpu.v2.2.csv).
 Default: `null`.
 - `ignoreCpuModel`: ignore the retrieved Nextflow trace `cpu_model` name and use the default CPU power draw value.
 This is useful, if the cpu model information provided by the linux kernel is not correct, for example, in the case of VMs emulating a different CPU architecture.
