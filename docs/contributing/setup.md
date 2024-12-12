@@ -15,19 +15,16 @@ To test with Nextflow for development purpose:
    cd .. && git clone https://github.com/nextflow-io/nextflow
    cd nextflow && ./gradlew exportClasspath
    ```
-
 2. Append the following line to the `settings.gradle` in this project:
 
    ```bash
    includeBuild('../nextflow')
    ```
-
 3. Compile the plugin code
 
    ```bash
    ./gradlew compileGroovy
    ```
-
 4. Run nextflow with this command:
 
    ```bash
