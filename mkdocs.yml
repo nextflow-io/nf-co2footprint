@@ -9,6 +9,7 @@ nav:
     - index.md
     - co2footprint.md
   - Usage:
+      - usage/configuration.md
       - usage/parameters.md
   - Contributing:
       - contributing/setup.md
