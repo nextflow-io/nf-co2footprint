@@ -36,7 +36,7 @@ In this case the plugin will create 3 outputfiles within the outdir, which is se
 
 If you are using a local cluster you can usually find out your specific PUE at the system administrators or system managers. Otherwise a [yearly worldwide average](https://www.statista.com/statistics/1229367/data-center-average-annual-pue-worldwide/) of 1.56 could be used, for initial runs.
 
-For the CI you can check available regions at the provided CI table [here](https://github.com/nextflow-io/nf-co2footprint/blob/master/plugins/nf-co2footprint/src/resources/CI_aggregated.v2.2.csv), otherwise you can use data from [ElecricityMaps](https://app.electricitymaps.com/map/24h), to find out your CI.
+For the CI you can check available regions at the provided CI table [here](https://github.com/nextflow-io/nf-co2footprint/blob/1.0.0-beta/plugins/nf-co2footprint/src/resources/CI_aggregated.v2.2.csv), otherwise you can use data from [ElecricityMaps](https://app.electricitymaps.com/map/24h), to find out your CI.
 
 ## Cloud computations
 
