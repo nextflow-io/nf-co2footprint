@@ -44,7 +44,7 @@ At the moment the nf-co2footprint can not natively support cloud computations.
 
 !!! warning
 
-    This is not untested and might not work as, but cloud native support will be implemented soon.
+    This is not tested and might not work as intended, but cloud native support will be implemented soon.
 
 If you are still keen to get insights into your CO<sub>2</sub> you could try to find out the following and append it to your config:
 
