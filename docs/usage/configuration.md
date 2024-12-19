@@ -32,11 +32,8 @@ Include the config file for your pipeline run using the `-c` Nextflow parameter,
 nextflow run nextflow-io/hello -c nextflow.config
 ```
 
-In this case the plugin will create 3 outputfiles within the outdir, which is set for the pipeline run. Also a custom carbon intensity (CI) is set and a Power Usage Efficiency (PUE) factor. To check all available parameters you can visit: [Parameters](https://nextflow-io.github.io/nf-co2footprint/usage/parameters/). The CI and PUE values will influence the CO<sub>2</sub> footprint the most and are dependent on where your pipeline is running. The CI reflects the used energy sources, while the PUE describes how efficiently the Power is used in regard to computing power.
-
-If you are using a local cluster you can usually find out your specific PUE at the system administrators or system managers. Otherwise a [yearly worldwide average](https://www.statista.com/statistics/1229367/data-center-average-annual-pue-worldwide/) of 1.56 could be used, for initial runs.
-
-For the CI you can check available regions at the provided CI table [here](https://github.com/nextflow-io/nf-co2footprint/blob/1.0.0-beta/plugins/nf-co2footprint/src/resources/CI_aggregated.v2.2.csv), otherwise you can use data from [ElecricityMaps](https://app.electricitymaps.com/map/24h), to find out your CI.
+In this case the plugin will create 3 outputfiles within the outdir, which is set for the pipeline run. Also a custom carbon intensity (CI) is set and a Power Usage Efficiency (PUE) factor. To check all available parameters you can visit: [Parameters](https://nextflow-io.github.io/nf-co2footprint/usage/parameters/).
+The CI and PUE values will influence the CO<sub>2</sub> footprint the most and are dependent on where your pipeline is running. The CI reflects the used energy sources, while the PUE describes how efficiently the Power is used in regard to computing power.
 
 ## Cloud computations
 

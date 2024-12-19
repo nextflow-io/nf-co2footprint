@@ -13,7 +13,8 @@ Default: `co2footprint_trace_<timestamp>.txt`.
 Default: `co2footprint_summary_<timestamp>.txt`.
 - `reportFile`: Name of the HTML report containing information about the entire carbon footprint, overview plots and more detailed task-specific metrics.
 Default: `co2footprint_report_<timestamp>.html`.
-- `ci`: carbon intensity of the respective energy production. Mutually exclusive with the `location` parameter.
+- `ci`: Carbon intensity of the respective energy production. Available regions can be found [here](https://github.com/nextflow-io/nf-co2footprint/blob/1.0.0-beta/plugins/nf-co2footprint/src/resources/CI_aggregated.v2.2.csv), otherwise you can use data from [ElecricityMaps](https://app.electricitymaps.com/map/24h), to find out locally more accurate CI.
+Mutually exclusive with the `location` parameter.
 Default: 475.
 - `location`: location code to automatically retrieve a location-specific CI value.
 For countries, these are [ISO alpha-2 codes](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). 
@@ -21,7 +22,7 @@ For regions, it’s the ISO alpha-2 code for the country, followed by an identif
 You can find the available data [here](https://github.com/nextflow-io/nf-co2footprint/blob/1.0.0-beta/plugins/nf-co2footprint/src/resources/CI_aggregated.v2.2.csv).
 Mutually exclusive with the `ci` parameter.
 Default: `null`.
-- `pue`: power usage effectiveness, efficiency coefficient of the data centre.
+- `pue`: Power usage effectiveness, efficiency coefficient of the data centre. For local cluster you can usually find out your specific PUE at the system administrators or system managers. Also the current [yearly worldwide average](https://www.statista.com/statistics/1229367/data-center-average-annual-pue-worldwide/) could be used.
 Default: 1.67.
 - `powerdrawMem`: power draw from memory.
 Default: 0.3725.
