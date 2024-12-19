@@ -8,7 +8,7 @@ description: Configuration of the nf-co2footprint plugin
 ## General usage
 To test if the plugin works on your system please follow the quick start guide ([Quick Start](https://nextflow-io.github.io/nf-co2footprint/#quick-start)) on a small pipeline like [nextflow-io/hello](https://github.com/nextflow-io/hello).
 
-If the plugin works and a html report is being produced you can start making the output meaningful for your specific run, by using a customized configuration file. The configuration file could look something like this:
+You can adjust the nf-co2footprint plugin parameters in your config file as follows:
 
 ```groovy title="nextflow.config"
 plugins {
