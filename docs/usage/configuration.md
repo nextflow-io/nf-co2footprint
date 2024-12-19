@@ -32,9 +32,6 @@ Include the config file for your pipeline run using the `-c` Nextflow parameter,
 nextflow run nextflow-io/hello -c nextflow.config
 ```
 
-In this case the plugin will create 3 outputfiles within the outdir, which is set for the pipeline run. Also a custom carbon intensity (CI) is set and a Power Usage Efficiency (PUE) factor. To check all available parameters you can visit: [Parameters](https://nextflow-io.github.io/nf-co2footprint/usage/parameters/).
-The CI and PUE values will influence the CO<sub>2</sub> footprint the most and are dependent on where your pipeline is running. The CI reflects the used energy sources, while the PUE describes how efficiently the Power is used in regard to computing power.
-
 ## Cloud computations
 
 At the moment the nf-co2footprint can not natively support cloud computations.
