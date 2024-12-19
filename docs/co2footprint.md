@@ -35,7 +35,7 @@ This includes failed tasks as well.
 
 ## Used data
 
-If the `location` parameter is specified, the plugin makes use of [location-specific CI data](../../plugins/nf-co2footprint/src/resources/CI_aggregated.v2.2.csv) that was copied from the Green Algorithms project [green-algorithms-tool/data](https://github.com/GreenAlgorithms/green-algorithms-tool/tree/master/data).
+If the `location` parameter is specified, the plugin makes use of [location-specific CI data](https://github.com/nextflow-io/nf-co2footprint/blob/1.0.0-beta/plugins/nf-co2footprint/src/resources/CI_aggregated.v2.2.csv) that was copied from the Green Algorithms project [green-algorithms-tool/data](https://github.com/GreenAlgorithms/green-algorithms-tool/tree/master/data).
 The CPU TDP data from the Green Algorithms project is used to retrieve model-specific CPU power draw values.
 
 
