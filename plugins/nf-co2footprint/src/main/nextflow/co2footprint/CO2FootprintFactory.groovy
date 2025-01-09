@@ -369,10 +369,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 readableEquivalences.add("- Monthly co2 absorption of ${HelperFunctions.convertToScientificNotation(equivalences[1])} trees")
             }
             if (equivalences[2]){
-                readableEquivalences.add("- ${HelperFunctions.convertToScientificNotation(equivalences[2])} flights from paris to london")
+                readableEquivalences.add("- ${HelperFunctions.convertToScientificNotation(equivalences[2])}% of a flight from paris to london")
             }
             if (equivalences[3]){
-                readableEquivalences.add("- ${HelperFunctions.convertToScientificNotation(equivalences[3])}% of a flight from paris to london")
+                readableEquivalences.add("- ${HelperFunctions.convertToScientificNotation(equivalences[3])} flights from paris to london")
             }
             if (readableEquivalences.any()) {
                 co2eSummaryFile.println("\nWhich equals: ")
