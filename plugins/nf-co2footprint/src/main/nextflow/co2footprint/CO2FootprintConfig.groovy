@@ -1,5 +1,6 @@
 package nextflow.co2footprint
 
+import groovy.json.JsonSlurper
 import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
 
@@ -37,6 +38,7 @@ class CO2FootprintConfig {
     private Boolean ignoreCpuModel = false
     private Double  powerdrawCpuDefault = 12.0
     private String  customCpuTdpFile = null
+    private String  EMToken = null
 
     // Retrieve CI value from file containing CI values for different locations
     protected Double retrieveCi(String location) {
@@ -57,6 +59,31 @@ class CO2FootprintConfig {
         }
 
         return localCi
+    }
+
+    protected Double getRealTimeCI(String location, EMToken) {
+        // TODO Use location in API curl
+        // TODO How to resolve the location!
+        if (EMToken) {
+            def API_response = ['bash', '-c', "curl -H \"auth-token: $EMToken\" https://api.electricitymap.org/v3/carbon-intensity/latest?zone=DE"].execute()
+            API_response.waitFor()
+            Double realTimeCi
+            try {
+                // response will result in empty string if offline
+                def EM_json_result = (Map) new JsonSlurper().parseText(API_response.text)
+                realTimeCi = EM_json_result.carbonIntensity as Double
+            }
+            catch (Exception e) {
+                // If offline use tabular data
+                log.warn "Could not retrieve real time data from https://app.electricitymaps.com/map/24h, check if you have internet access. The nf-co2footprint report will include an average of your location."
+                realTimeCi = retrieveCi(location)
+            }
+            return realTimeCi
+        }
+        else{
+            log.warn "Could not retrieve real time data from https://app.electricitymaps.com/map/24h, to access real time data please register and use the access token within the configuration of the plugin @EMToken. The nf-co2footprint report will include an average of your location."
+            return retrieveCi(location)
+        }
     }
 
     // Load user provided file containing custom TDP values for different CPU models
@@ -95,7 +122,7 @@ class CO2FootprintConfig {
             ci = config.ci
         }
         if (config.location) {
-            ci = retrieveCi(config.location)
+            ci = getRealTimeCI(config.location, config.EMToken)
             location = config.location
         }
         if (config.pue) {
@@ -125,6 +152,7 @@ class CO2FootprintConfig {
     Double getPowerdrawMem() { powerdrawMem }
     Double getPowerdrawCpuDefault() { powerdrawCpuDefault }
     String getCustomCpuTdpFile() { customCpuTdpFile }
+    String getEMToken() { EMToken }
 
     // Different functions to collect options for reporting, grouped by purpose
     SortedMap<String, Object> collectInputFileOptions() {
