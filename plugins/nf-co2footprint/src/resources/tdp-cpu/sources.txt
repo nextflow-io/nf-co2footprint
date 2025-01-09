@@ -1,9 +1,0 @@
-AMD:
-- https://www.amd.com/en/products/specifications/processors.html
-
-Ampere:
-- https://amperecomputing.com/briefs/ampere-altra-family-product-brief
-- https://amperecomputing.com/briefs/ampereone-family-product-brief
-
-Intel:
-- https://www.intel.com/content/www/us/en/products/details/processors.html
