@@ -1,0 +1,95 @@
+﻿Intel® Product Specification Comparison
+01/07/2025 03:15:50 PM
+ ,Intel® Xeon® w5-2465X Processor ,Intel® Xeon® w7-2495X Processor ,Intel® Xeon® w7-2475X Processor ,Intel® Xeon® w9-3475X Processor ,Intel® Xeon® w5-2455X Processor ,Intel® Xeon® w5-3435X Processor ,Intel® Xeon® w7-3445 Processor ,Intel® Xeon® w3-2435 Processor ,Intel® Xeon® w5-2445 Processor ,Intel® Xeon® w5-3425 Processor ,Intel® Xeon® w3-2423 Processor ,Intel® Xeon® w3-2425 Processor ,Intel® Xeon® w5-2545 Processor ,Intel® Xeon® w7-2595X Processor ,Intel® Xeon® w7-2575X Processor ,Intel® Xeon® w3-2525 Processor ,Intel® Xeon® w9-3595X Processor ,Intel® Xeon® w5-3535X Processor ,Intel® Xeon® w5-3525 Processor ,Intel® Xeon® w7-3545 Processor ,Intel® Xeon® w9-3575X Processor 
+Essentials
+Product Collection,Intel® Xeon® W Processor,Intel® Xeon® W Processor,Intel® Xeon® W Processor,Intel® Xeon® W Processor,Intel® Xeon® W Processor,Intel® Xeon® W Processor,Intel® Xeon® W Processor,Intel® Xeon® W Processor,Intel® Xeon® W Processor,Intel® Xeon® W Processor,Intel® Xeon® W Processor,Intel® Xeon® W Processor,Intel® Xeon® W Processor,Intel® Xeon® W Processor,Intel® Xeon® W Processor,Intel® Xeon® W Processor,Intel® Xeon® W Processor,Intel® Xeon® W Processor,Intel® Xeon® W Processor,Intel® Xeon® W Processor,Intel® Xeon® W Processor
+Vertical Segment,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation
+Processor Number,w5-2465X,w7-2495X,w7-2475X,w9-3475X,w5-2455X,w5-3435X,w7-3445,w3-2435,w5-2445,w5-3425,w3-2423,w3-2425,w5-2545,w7-2595X,w7-2575X,w3-2525,w9-3595X,w5-3535X,w5-3525,w7-3545,w9-3575X
+Lithography,Intel 7,Intel 7,Intel 7,Intel 7,Intel 7,Intel 7,Intel 7,Intel 7,Intel 7,Intel 7,Intel 7,Intel 7,Intel 7,Intel 7,Intel 7,Intel 7,Intel 7,Intel 7,Intel 7,Intel 7,Intel 7
+Recommended Customer Price,$1389.00-$1399.00,$2189.00-$2199.00,$1789.00-$1799.00,$3739.00-$3749.00,$1039.00-$1049.00,$1589.00-$1599.00,$1989.00,$669.00,$839.00,$1189.00,$359.00,$529.00,$889.00,$2039.00-$2049.00,$1689.00-$1699.00,$609.00,$5889.00,$1689.00-$1699.00,$1339.00,$2039.00,$3789.00-$3799.00
+
+CPU Specifications
+Total Cores,16,24,20,36,12,16,20,8,10,12,6,6,12,26,22,8,60,20,16,24,44
+# of Performance-cores,16,24,20,36,12,16,20,8,10,12,6,6,12,26,22,8,60,20,16,24,44
+# of Efficient-cores,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Total Threads,32,48,40,72,24,32,40,16,20,24,12,12,24,52,44,16,120,40,32,48,88
+Max Turbo Frequency,4.70 GHz,4.80 GHz,4.80 GHz,4.80 GHz,4.60 GHz,4.70 GHz,4.80 GHz,4.50 GHz,4.60 GHz,4.60 GHz,4.20 GHz,4.40 GHz,4.7 GHz,4.8 GHz,4.8 GHz,4.5 GHz,4.8 GHz,4.8 GHz,4.8 GHz,4.8 GHz,4.8 GHz
+Intel® Turbo Boost Max Technology 3.0 Frequency ‡,4.70 GHz,4.80 GHz,4.80 GHz,4.80 GHz,4.60 GHz,4.70 GHz,4.80 GHz,4.50 GHz,4.60 GHz,4.60 GHz,4.20 GHz,4.40 GHz,4.7 GHz,4.8 GHz,4.8 GHz,4.5 GHz,4.8 GHz,4.8 GHz,4.8 GHz,4.8 GHz,4.8 GHz
+Intel® Turbo Boost Technology 2.0 Frequency‡,4.50 GHz,4.60 GHz,4.60 GHz,4.60 GHz,4.40 GHz,4.50 GHz,4.60 GHz,4.30 GHz,4.40 GHz,4.40 GHz,4.00 GHz,4.00 GHz,4.5 GHz,4.6 GHz,4.6 GHz,4.3 GHz,4.6 GHz,4.6 GHz,4.6 GHz,4.6 GHz,4.6 GHz
+Processor Base Frequency,3.10 GHz,2.50 GHz,2.60 GHz,2.20 GHz,3.20 GHz,3.10 GHz,2.60 GHz,3.10 GHz,3.10 GHz,3.20 GHz,2.10 GHz,3.00 GHz,3.5 GHz,2.8 GHz,3 GHz,3.5 GHz,2 GHz,2.9 GHz,3.2 GHz,2.7 GHz,2.2 GHz
+Cache,33.75 MB Intel® Smart Cache,45 MB Intel® Smart Cache,37.5 MB Intel® Smart Cache,82.5 MB Intel® Smart Cache,30 MB Intel® Smart Cache,45 MB Intel® Smart Cache,52.5 MB Intel® Smart Cache,22.5 MB Intel® Smart Cache,26.25 MB Intel® Smart Cache,30 MB Intel® Smart Cache,15 MB Intel® Smart Cache,15 MB Intel® Smart Cache,30 MB Intel® Smart Cache,48.75 MB Intel® Smart Cache,45 MB Intel® Smart Cache,22.5 MB Intel® Smart Cache,112.5 MB Intel® Smart Cache,52.5 MB Intel® Smart Cache,45 MB Intel® Smart Cache,67.5 MB Intel® Smart Cache,97.5 MB Intel® Smart Cache
+Intel® UPI Speed,0 GT/s,0 GT/s,0 GT/s,0 GT/s,0 GT/s,0 GT/s,0 GT/s,0 GT/s,0 GT/s,0 GT/s,0 GT/s,0 GT/s,0 GT/s,0 GT/s,0 GT/s,0 GT/s,0 GT/s,0 GT/s,0 GT/s,0 GT/s,0 GT/s
+Max # of UPI Links,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Processor Base Power,200 W,225 W,225 W,300 W,200 W,270 W,270 W,165 W,175 W,270 W,120 W,130 W,210 W,250 W,250 W,175 W,385 W,300 W,290 W,310 W,340 W
+Maximum Turbo Power,240 W,270 W,270 W,360 W,240 W,324 W,324 W,198 W,210 W,324 W,144 W,156 W,252 W,300 W,300 W,210 W,462 W,360 W,348 W,372 W,408 W
+Intel® Deep Learning Boost (Intel® DL Boost) on CPU,,,,,,,,,,,,,Yes,Yes,Yes,Yes,,,,,
+
+Supplemental Information
+Marketing Status,Launched,Launched,Launched,Launched,Launched,Launched,Launched,Launched,Launched,Launched,Launched,Launched,Launched,Launched,Launched,Launched,Launched,Launched,Launched,Launched,Launched
+Launch Date,Q1'23,Q1'23,Q1'23,Q1'23,Q1'23,Q1'23,Q1'23,Q1'23,Q1'23,Q1'23,Q1'23,Q1'23,Q3'24,Q3'24,Q3'24,Q3'24,Q3'24,Q3'24,Q3'24,Q3'24,Q3'24
+Embedded Options Available,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No
+Use Conditions,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation,Workstation
+
+Memory Specifications
+Max Memory Size (dependent on memory type),2 TB,2 TB,2 TB,4 TB,2 TB,4 TB,4 TB,2 TB,2 TB,4 TB,2 TB,2 TB,2 TB,2 TB,2 TB,2 TB,4 TB,4 TB,4 TB,4 TB,4 TB
+Memory Types,DDR5-4800 (MT/s),DDR5-4800 (MT/s),DDR5-4800 (MT/s),DDR5-4800 (MT/s),DDR5-4800 (MT/s),DDR5-4800 (MT/s),DDR5-4800 (MT/s),DDR5-4400 (MT/s),DDR5-4800 (MT/s),DDR5-4800 (MT/s),DDR5-4400 (MT/s),DDR5-4400 (MT/s),DDR5-4800(MT/s),DDR5-4800(MT/s),DDR5-4800(MT/s),DDR5-4800(MT/s),DDR5-4800(MT/s),DDR5-4800(MT/s),DDR5-4800(MT/s),DDR5-4800(MT/s),DDR5-4800(MT/s)
+Maximum Memory Speed,4800 MHz,4800 MHz,4800 MHz,4800 MHz,4800 MHz,4800 MHz,4800 MHz,4400 MHz,4800 MHz,4800 MHz,4400 MHz,4400 MHz,4800 MHz,4800 MHz,4800 MHz,4800 MHz,4800 MHz,4800 MHz,4800 MHz,4800 MHz,4800 MHz
+Max # of Memory Channels,4,4,4,8,4,8,8,4,4,8,4,4,4,4,4,4,8,8,8,8,8
+Intel® Optane™ Persistent Memory Supported,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No
+ECC Memory Supported   ‡,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+
+Expansion Options
+Direct Media Interface (DMI) Revision,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0,4.0
+Scalability,1S Only,1S Only,1S Only,1S Only,1S Only,1S Only,1S Only,1S Only,1S Only,1S Only,1S Only,1S Only,1S Only,1S Only,1S Only,1S Only,1S Only,1S Only,1S Only,1S Only,1S Only
+PCI Express Revision,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0
+Max # of PCI Express Lanes,64,64,64,112,64,112,112,64,64,112,64,64,64,64,64,64,112,112,112,112,112
+
+Package Specifications
+Sockets Supported,FCLGA4677,FCLGA4677,FCLGA4677,FCLGA4677,FCLGA4677,FCLGA4677,FCLGA4677,FCLGA4677,FCLGA4677,FCLGA4677,FCLGA4677,FCLGA4677,FCLGA4677,FCLGA4677,FCLGA4677,FCLGA4677,FCLGA4677,FCLGA4677,FCLGA4677,FCLGA4677,FCLGA4677
+Package Carrier,E1B,E1B,E1B,E1A,E1B,E1A,E1A,E1B,E1B,E1A,E1B,E1B,E1B,E1B,E1B,E1B,E1A,E1A,E1A,E1A,E1A
+Max CPU Configuration,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
+DTS Max,95 °C,94 °C,94 °C,95 °C,100 °C,98 °C,94 °C,94 °C,94 °C,103 °C,74 °C,83 °C,100 °C,100 °C,100 °C,100 °C,100 °C,102 °C,102 °C,101 °C,100 °C
+TCASE,78,77,76,74,77,72,72,70,72,72,62,64,74 °C,82 °C,81 °C,72 °C,81 °C,76 °C,75 °C,76 °C,79 °C
+Package Size,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm
+
+Advanced Technologies
+Intel® QuickAssist Technology (QAT),0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices
+Intel® Dynamic Load Balancer (DLB),0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices
+Intel® Data Streaming Accelerator (DSA),1 default devices,1 default devices,1 default devices,1 default devices,1 default devices,1 default devices,1 default devices,1 default devices,1 default devices,1 default devices,1 default devices,1 default devices,1 default devices,1 default devices,1 default devices,1 default devices,1 default devices,1 default devices,1 default devices,1 default devices,1 default devices
+Intel® In-memory Analytics Accelerator (IAA),0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices,0 default devices
+Intel® Advanced Matrix Extensions (AMX),Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Deep Learning Boost (Intel® DL Boost) on CPU,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,,,,,Yes,Yes,Yes,Yes,Yes
+Intel® Resource Director Technology (Intel® RDT),No,No,No,No,No,No,No,No,No,No,No,No,,,,,,,,,
+Intel® Speed Shift Technology,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Turbo Boost Max Technology 3.0 ‡,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Turbo Boost Technology ‡,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0,2.0
+Intel® Hyper-Threading Technology ‡,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Transactional Synchronization Extensions,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® 64 ‡,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Instruction Set,64-bit,64-bit,64-bit,64-bit,64-bit,64-bit,64-bit,64-bit,64-bit,64-bit,64-bit,64-bit,64-bit,64-bit,64-bit,64-bit,64-bit,64-bit,64-bit,64-bit,64-bit
+Instruction Set Extensions,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512,Intel® SSE4.1 |  Intel® AMX |  Intel® SSE4.2 |  Intel® AVX2 |  Intel® AVX-512
+# of AVX-512 FMA Units,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2
+Enhanced Intel SpeedStep® Technology,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+
+Security & Reliability
+Intel vPro® Eligibility ‡,Intel vPro® Enterprise,Intel vPro® Enterprise,Intel vPro® Enterprise,Intel vPro® Enterprise,Intel vPro® Enterprise,Intel vPro® Enterprise,Intel vPro® Enterprise,Intel vPro® Enterprise,Intel vPro® Enterprise,Intel vPro® Enterprise,Intel vPro® Enterprise,Intel vPro® Enterprise,Intel vPro® Enterprise,Intel vPro® Enterprise,Intel vPro® Enterprise,Intel vPro® Enterprise,Intel vPro® Enterprise,Intel vPro® Enterprise,Intel vPro® Enterprise,Intel vPro® Enterprise,Intel vPro® Enterprise
+Intel® Software Guard Extensions (Intel® SGX),No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No
+Intel® Threat Detection Technology (TDT),No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No
+Intel® Active Management Technology (AMT) ‡,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Remote Platform Erase (RPE) ‡,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No
+Intel® One-Click Recovery ‡,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No
+Intel® QuickAssist Software Acceleration,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No
+Intel® Platform Firmware Resilience Support,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Control-Flow Enforcement Technology,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Total Memory Encryption - Multi Key,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No,No
+Intel® Total Memory Encryption,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® AES New Instructions,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® OS Guard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Trusted Execution Technology ‡,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Execute Disable Bit ‡,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Boot Guard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Mode-based Execute Control (MBEC),Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Virtualization Technology with Redirect Protection (VT-rp) ‡,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Virtualization Technology (VT-x) ‡,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Virtualization Technology for Directed I/O (VT-d) ‡,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® VT-x with Extended Page Tables (EPT) ‡,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes

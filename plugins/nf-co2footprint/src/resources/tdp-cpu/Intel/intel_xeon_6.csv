@@ -1,0 +1,88 @@
+﻿Intel® Product Specification Comparison
+01/07/2025 03:13:46 PM
+ ,Intel® Xeon® 6740E Processor ,Intel® Xeon® 6756E Processor ,Intel® Xeon® 6780E Processor ,Intel® Xeon® 6710E Processor ,Intel® Xeon® 6766E Processor ,Intel® Xeon® 6731E Processor ,Intel® Xeon® 6746E Processor ,Intel® Xeon® 6960P Processor ,Intel® Xeon® 6980P Processor ,Intel® Xeon® 6979P Processor ,Intel® Xeon® 6972P Processor ,Intel® Xeon® 6952P Processor 
+Essentials
+Product Collection,Intel® Xeon® 6,Intel® Xeon® 6,Intel® Xeon® 6,Intel® Xeon® 6,Intel® Xeon® 6,Intel® Xeon® 6,Intel® Xeon® 6,Intel® Xeon® 6,Intel® Xeon® 6,Intel® Xeon® 6,Intel® Xeon® 6,Intel® Xeon® 6
+Vertical Segment,Server,Server,Server,Server,Server,Server,Server,Server,Server,Server,Server,Server
+Processor Number,6740E,6756E,6780E,6710E,6766E,6731E,6746E,6960P,6980P,6979P,6972P,6952P
+Lithography,Intel 3,Intel 3,Intel 3,Intel 3,Intel 3,Intel 3,Intel 3,Intel 3,Intel 3,Intel 3,Intel 3,Intel 3
+Recommended Customer Price,$3949.00,$6320.00,$8513.00,$2199.00,$7692.00,$3297.00,$4447.00,$9625.00,$12460.00,$11025.00,$10220.00,$9115.00
+
+CPU Specifications
+Total Cores,96,128,144,64,144,96,112,72,128,120,96,96
+Total Threads,96,128,144,64,144,96,112,144,256,240,192,192
+Max Turbo Frequency,3.2 GHz,2.6 GHz,3 GHz,3.2 GHz,2.7 GHz,3.1 GHz,2.7 GHz,3.9 GHz,3.9 GHz,3.9 GHz,3.9 GHz,3.9 GHz
+Processor Base Frequency,2.4 GHz,1.8 GHz,2.2 GHz,2.4 GHz,1.9 GHz,2.2 GHz,2 GHz,2.7 GHz,2 GHz,2.1 GHz,2.4 GHz,2.1 GHz
+Cache,96 MB,96 MB,108 MB,96 MB,108 MB,96 MB,96 MB,432 MB,504 MB,504 MB,480 MB,480 MB
+Intel® UPI Speed,20 GT/s,24 GT/s,24 GT/s,16 GT/s,24 GT/s,0 GT/s,16 GT/s,24 GT/s,24 GT/s,24 GT/s,24 GT/s,24 GT/s
+Max # of UPI Links,4,4,4,4,4,0,4,6,6,6,6,6
+TDP,250 W,225 W,330 W,205 W,250 W,250 W,250 W,500 W,500 W,500 W,500 W,400 W
+
+Supplemental Information
+Marketing Status,Launched,Launched,Launched,Launched,Launched,Launched,Launched,Launched,Launched,Launched,Launched,Launched
+Launch Date,Q2'24,Q2'24,Q2'24,Q2'24,Q2'24,Q2'24,Q2'24,Q3'24,Q3'24,Q3'24,Q3'24,Q3'24
+Embedded Options Available,Yes,,Yes,Yes,,,,,,,,
+
+Memory Specifications
+Max Memory Size (dependent on memory type),4 TB,4 TB,4 TB,4 TB,4 TB,4 TB,4 TB,3 TB,3 TB,3 TB,3 TB,3 TB
+Memory Types,DDR5-6400,DDR5-6400,DDR5-6400,DDR5-6400,DDR5-6400,DDR5-6400,DDR5-6400,DDR5(6400MHz)MRDIMM(8800MHz),DDR5(6400MHz)MRDIMM(8800MHz),DDR5(6400MHz)MRDIMM(8800MHz),DDR5(6400MHz)MRDIMM(8800MHz),DDR5(6400MHz)MRDIMM(8800MHz)
+Maximum Memory Speed,6400 MHz,6400 MHz,6400 MHz,5600 MHz,6400 MHz,5600 MHz,5600 MHz,8800 MHz,8800 MHz,8800 MHz,8800 MHz,8800 MHz
+Max # of Memory Channels,8,8,8,8,8,8,8,12,12,12,12,12
+ECC Memory Supported   ‡,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+
+Expansion Options
+Scalability,2S,2S,2S,2S,2S,1S Only,2S,2S,2S,2S,2S,2S
+PCI Express Revision,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0
+Max # of PCI Express Lanes,88,88,88,88,88,88,88,96,96,96,96,96
+
+Package Specifications
+Sockets Supported,FCLGA4710,FCLGA4710,FCLGA4710,FCLGA4710,FCLGA4710,FCLGA4710,FCLGA4710,FCLGA7529,FCLGA7529,FCLGA7529,FCLGA7529,FCLGA7529
+Package Carrier,E2B,E2B,E2B,E2B,E2B,E2B,E2B,,,,,
+DTS Max,106 °C,96 °C,106 °C,106 °C,101 °C,106 °C,102 °C,102 °C,95 °C,95 °C,98 °C,86 °C
+TCASE,84,80,85,85,84,84,84,80,80,80,80,72
+Package Size,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,77.5mm x 56.5mm,,,,,
+
+Advanced Technologies
+Intel® QuickAssist Technology (QAT),4 default devices,2 default devices,2 default devices,4 default devices,2 default devices,2 default devices,2 default devices,4 default devices,4 default devices,4 default devices,4 default devices,4 default devices
+Intel® Dynamic Load Balancer (DLB),4 default devices,2 default devices,2 default devices,4 default devices,2 default devices,2 default devices,2 default devices,4 default devices,4 default devices,4 default devices,4 default devices,4 default devices
+Intel® Data Streaming Accelerator (DSA),2 default devices,2 default devices,2 default devices,2 default devices,2 default devices,2 default devices,2 default devices,4 default devices,4 default devices,4 default devices,4 default devices,4 default devices
+Intel® In-memory Analytics Accelerator (IAA),2 default devices,2 default devices,2 default devices,2 default devices,2 default devices,2 default devices,2 default devices,4 default devices,4 default devices,4 default devices,4 default devices,4 default devices
+Intel® Volume Management Device (VMD),Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Resource Director Technology (Intel® RDT),Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® 64 ‡,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Instruction Set Extensions,Intel® AVX2,Intel® AVX2,Intel® AVX2,Intel® AVX2,Intel® AVX2,Intel® AVX2,Intel® AVX2,Intel® AMX |  Intel® SSE4.2 |  Intel® AVX |  Intel® AVX2 |  Intel® AVX-512,Intel® AMX |  Intel® SSE4.2 |  Intel® AVX |  Intel® AVX2 |  Intel® AVX-512,Intel® AMX |  Intel® SSE4.2 |  Intel® AVX |  Intel® AVX2 |  Intel® AVX-512,Intel® AMX |  Intel® SSE4.2 |  Intel® AVX |  Intel® AVX2 |  Intel® AVX-512,Intel® AMX |  Intel® SSE4.2 |  Intel® AVX |  Intel® AVX2 |  Intel® AVX-512
+Intel® Virtual RAID on CPU (Intel® VROC) Available,,,,,,,,Yes,Yes,Yes,Yes,Yes
+Intel® Advanced Matrix Extensions (AMX),,,,,,,,Yes,Yes,Yes,Yes,Yes
+Intel® Speed Select Technology – Core Power,,,,,,,,Yes,Yes,Yes,Yes,Yes
+Intel® Speed Select Technology – Turbo Frequency,,,,,,,,Yes,Yes,Yes,Yes,Yes
+Intel® Deep Learning Boost (Intel® DL Boost),,,,,,,,Yes,Yes,Yes,Yes,Yes
+Intel® Speed Select Technology - Performance Profile,,,,,,,,Yes,,,Yes,Yes
+Intel® Speed Select Technology - Base Frequency,,,,,,,,Yes,Yes,Yes,Yes,Yes
+Intel® Turbo Boost Technology ‡,,,,,,,,2.0,2.0,2.0,2.0,2.0
+Intel® Hyper-Threading Technology ‡,,,,,,,,Yes,Yes,Yes,Yes,Yes
+Intel® TSX-NI,,,,,,,,Yes,Yes,Yes,Yes,Yes
+# of AVX-512 FMA Units,,,,,,,,2,2,2,2,2
+
+Security & Reliability
+Intel® Trust Domain Extensions (Intel® TDX),Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Default Maximum Enclave Page Cache (EPC) Size for Intel® SGX,512 GB,512 GB,512 GB,512 GB,512 GB,512 GB,512 GB,512 GB,512 GB,512 GB,512 GB,512 GB
+Intel® Crypto Acceleration,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® QuickAssist Software Acceleration,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Platform Firmware Resilience Support,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Control-Flow Enforcement Technology,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Total Memory Encryption - Multi Key,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Total Memory Encryption,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® AES New Instructions,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® OS Guard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Execute Disable Bit ‡,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Boot Guard,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Mode-based Execute Control (MBEC),Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Virtualization Technology (VT-x) ‡,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Virtualization Technology for Directed I/O (VT-d) ‡,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes
+Intel® Software Guard Extensions (Intel® SGX),,,,,,,,Yes with Intel® SPS,Yes with Intel® SPS,Yes with Intel® SPS,Yes,Yes with Intel® SPS
+Intel® Trusted Execution Technology ‡,,,,,,,,Yes,Yes,Yes,Yes,Yes
+Intel® Run Sure Technology,,,,,,,,Yes,Yes,Yes,Yes,Yes
+Intel® VT-x with Extended Page Tables (EPT) ‡,,,,,,,,Yes,Yes,Yes,Yes,Yes
+
+Intel® Speed Select Technology - Performance Profile (Intel® SST-PP)
+Intel® Speed Select Technology,,,,,,,,See the specifications,,,See the specifications,See the specifications
