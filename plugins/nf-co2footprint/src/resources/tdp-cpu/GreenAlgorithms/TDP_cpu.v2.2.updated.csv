@@ -2,7 +2,7 @@ model,TDP,n_cores,TDP_per_core,source,manufacturer,threads
 A8-7680,45.0,4.0,11.3,https://www.techpowerup.com/cpu-specs/,AMD,4
 A9-9425 SoC,15.0,2.0,7.5,https://www.techpowerup.com/cpu-specs/,AMD,2
 7552,200.0,48.0,4.2,https://www.amd.com/system/files/documents/AMD-EPYC-7002-Series-Datasheet.pdf,AMD,96
-EPYC 7251,120.0,8.0,15.0,https://www.amd.com/en/products/cpu/amd-epyc-7251,AMD,16
+AMD EPYC 7251,120.0,8.0,15.0,https://www.amd.com/en/products/cpu/amd-epyc-7251,AMD,16
 Athlon 3000G,35.0,2.0,17.5,https://www.techpowerup.com/cpu-specs/,AMD,4
 Core 2 Quad Q6600,95.0,4.0,23.8,https://www.techpowerup.com/cpu-specs/,Intel,4
 Core i3-10100,65.0,4.0,16.3,https://www.techpowerup.com/cpu-specs/,Intel,8

@@ -18,7 +18,7 @@ def read_and_process_amd(processors, file_path):
             # Process each row in the CSV
             for row in csv_reader:
                 try:
-                    processor_model = row["Name"].replace("AMD", "").replace("™","").strip()
+                    processor_model = row["Name"].replace("™","").strip()
                     
                     tdp = row["Default TDP"].strip().replace("W", "").replace("+", "")
                     n_cores = row["# of CPU Cores"].strip()
@@ -185,7 +185,7 @@ def read_and_process_intel(processors, root_dir):
 
             if tdp == "":
                 continue
-            processor_model = processor_name.replace("Intel", "").replace("®","").strip()
+            processor_model = processor_name.replace("®","").strip()
             tdp = float(tdp)
             n_cores = int(details["Total Cores"].strip())
             n_threads = int(details["Total Threads"].strip())  # Thread count equals core count

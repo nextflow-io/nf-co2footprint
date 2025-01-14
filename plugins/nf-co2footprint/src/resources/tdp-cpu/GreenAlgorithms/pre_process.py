@@ -13,7 +13,7 @@ amd_cpus_threads = {
     "A8-7680": 4,
     "A9-9425 SoC": 2,
     "7552": 96,
-    "EPYC 7251": 16,
+    "AMD EPYC 7251": 16,
     "Athlon 3000G": 4,
     "FX-6300": 6,
     "FX-8350": 8,
@@ -94,7 +94,6 @@ intel_cpus_threads = {
 }
 
 all_cpus_threads = amd_cpus_threads | intel_cpus_threads
-df['model'] = df['model'].apply(lambda x: x.replace("AMD","").strip())
 df['threads'] = df['model'].apply(lambda x: all_cpus_threads[x])
 
 # Save the updated dataset or print it

@@ -80,7 +80,7 @@ class CO2FootprintFactoryTest extends Specification {
         def traceRecord = new TraceRecord()
         traceRecord.realtime = (1 as Long) * (3600000 as Long)
         traceRecord.cpus = 1
-        traceRecord.cpu_model = "AMD EPYC 7251"
+        traceRecord.cpu_model = "EPYC 7251"
         traceRecord.'%cpu' = 100.0
         traceRecord.memory = (7 as Long) * (1000000000 as Long)
 
