@@ -1,360 +1,360 @@
 index,in Watt,,,
 model,TDP,n_cores,TDP_per_core,source
-Ryzen AI 9 HX PRO 375,28.0,12,2.3333333333333335,https://www.amd.com/en/products/specifications/processors.html
-Ryzen AI 9 HX PRO 370,28.0,12,2.3333333333333335,https://www.amd.com/en/products/specifications/processors.html
-Ryzen AI 7 PRO 360,28.0,8,3.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen AI 9 HX 375,28.0,12,2.3333333333333335,https://www.amd.com/en/products/specifications/processors.html
-Ryzen AI 9 HX 370,28.0,12,2.3333333333333335,https://www.amd.com/en/products/specifications/processors.html
-Ryzen AI 9 365,28.0,10,2.8,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 9950X,170.0,16,10.625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 9900X,120.0,12,10.0,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 9800X3D,120.0,8,15.0,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 9700X,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 9600X,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 PRO 8945HS,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 8840U,28.0,8,3.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 8845HS,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 8840HS,28.0,8,3.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 8700GE,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 8700G,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 8640U,28.0,6,4.666666666666667,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 8645HS,45.0,6,7.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 8640HS,28.0,6,4.666666666666667,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 8600GE,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 8600G,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 8540U,28.0,6,4.666666666666667,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 8500GE,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 8500G,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 8945HS,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 8300GE,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 8300G,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 8845HS,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 8840U,28.0,8,3.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 8840HS,28.0,8,3.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 8700G,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 8700F,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 8645HS,45.0,6,7.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 8640U,28.0,6,4.666666666666667,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 8640HS,28.0,6,4.666666666666667,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 8600G,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 8540U,28.0,6,4.666666666666667,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 8500GE,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 8500G,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 8440U,28.0,4,7.0,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 8300GE,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 8400F,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 8300G,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper PRO 7995WX,350.0,96,3.6458333333333335,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper PRO 7985WX,350.0,64,5.46875,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper PRO 7975WX,350.0,32,10.9375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper PRO 7965WX,350.0,24,14.583333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper PRO 7955WX,350.0,16,21.875,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper PRO 7945WX,350.0,12,29.166666666666668,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper 7980X,350.0,64,5.46875,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper 7970X,350.0,32,10.9375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper 7960X,350.0,24,14.583333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 PRO 7945,65.0,12,5.416666666666667,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 7745,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 7730U,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 7645,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 7530U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 7330U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 7950X3D,120.0,16,7.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 7950X,170.0,16,10.625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 7945HX3D,55.0,16,3.4375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 7945HX,55.0,16,3.4375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 7940HS,44.5,8,5.5625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 7940HX,55.0,16,3.4375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 7900X3D,120.0,12,10.0,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 7900X,170.0,12,14.166666666666666,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 7900,65.0,12,5.416666666666667,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 7845HX,55.0,12,4.583333333333333,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 7840U,28.0,8,3.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 7840HX,55.0,12,4.583333333333333,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 7840HS,44.5,8,5.5625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 7800X3D,120.0,8,15.0,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 7745HX,55.0,8,6.875,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 7735U,28.0,8,3.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 7735HS,44.5,8,5.5625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 7730U,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 7700X,105.0,8,13.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 7700,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 7645HX,55.0,6,9.166666666666666,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 7640U,28.0,6,4.666666666666667,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 7640HS,44.5,6,7.416666666666667,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 7600X3D,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 7600X,105.0,6,17.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 7600,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 7545U,28.0,6,4.666666666666667,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 7540U,28.0,6,4.666666666666667,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 7535U,28.0,6,4.666666666666667,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 7535HS,44.5,6,7.416666666666667,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 7530U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 7520U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 7520C,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 7500F,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 7440U,28.0,4,7.0,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 7435HS,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 7430U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 7335U,28.0,4,7.0,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 7330U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 7320U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 7320C,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 7235HS,45.0,4,11.25,https://www.amd.com/en/products/specifications/processors.html
-Athlon Gold 7220U,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
-Athlon Gold 7220C,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
-Athlon Silver 7120U,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
-Athlon Silver 7120C,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 PRO 6950HS,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 PRO 6950H,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 6860Z,28.0,8,3.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 6850HS,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 6850H,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 6650HS,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 6650H,45.0,6,7.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 6980HX,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 6980HS,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 6900HX,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 6900HS​,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 6800HS,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 6800H,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 6600HS​,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 6600H,45.0,6,7.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper PRO 5995WX,280.0,64,4.375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper PRO 5975WX,280.0,32,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper PRO 5965WX,280.0,24,11.666666666666666,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper PRO 5955WX,280.0,16,17.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper PRO 5945WX,280.0,12,23.333333333333332,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 PRO 5945,65.0,12,5.416666666666667,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 5875U,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 5850U,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 5845,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 5755GE,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 5755G,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 5750GE,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 5750G,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 5675U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 5655GE,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 5655G,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 5650U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 5650GE,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 5650G,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 5645,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 5475U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 5450U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 5355GE,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 5355G,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 5350GE,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 5350G,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 5980HX,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 5980HS,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 5950X,105.0,16,6.5625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 5900XT,105.0,16,6.5625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 5900X,105.0,12,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 5900HX,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 5900HS,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 5900 (OEM Only),65.0,12,5.416666666666667,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 5825U,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 5825C,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 5800X3D,105.0,8,13.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 5800XT,105.0,8,13.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 5800X,105.0,8,13.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 5800U,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 5800HS,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 5800H,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 5800 (OEM Only),65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 5700X3D,105.0,8,13.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 5700X,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 5700U,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 5700GE,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 5700G,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 5700,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 5625U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 5625C,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 5600X3D,105.0,6,17.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 5600X,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 5600U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 5600HS,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 5600H,45.0,6,7.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 5600XT,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 5600T,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 5600GT,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 5600GE,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 5600G,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 5600,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 5560U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 5500U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 5500H,45.0,4,11.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 5500GT,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 5500,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 5425U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 5425C,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 5400U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 5300U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 5300GE (OEM Only),35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 5300G (OEM Only),65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 5125C,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 4750U,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 4750GE,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 4750G,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 4655GE,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 4655G,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 4650U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 4650GE,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 4650G,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 4450U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 4355GE,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 4355G,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 4350GE,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 4350G,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 4900HS,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 4900H,44.5,8,5.5625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 4980U Microsoft Surface® Edition,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 4800U,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 4800HS,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 4800H,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 4700U,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 4700GE (OEM Only),35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 4700G (OEM Only),65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 4680U Microsoft Surface® Edition,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 4600U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 4600H,45.0,6,7.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 4600GE (OEM Only),35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 4600G,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 4500U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 4500,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 4300U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 4300GE (OEM Only),35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 4300G (OEM Only),65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 4100,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper PRO 3995WX,280.0,64,4.375,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper PRO 3975WX,280.0,32,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper PRO 3955WX,280.0,16,17.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper PRO 3945WX,280.0,12,23.333333333333332,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper 3990X,280.0,64,4.375,https://www.techpowerup.com/cpu-specs/
-Ryzen Threadripper 3970X,280.0,32,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper 3960X,280.0,24,11.666666666666666,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 PRO 3900,65.0,12,5.416666666666667,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 3700U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 3700,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 3600,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 3500U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 3400GE,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 3400G,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 3350GE,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 3350G,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 3300U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 3200GE,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 3200G,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 3950X,105.0,16,6.5625,https://www.techpowerup.com/cpu-specs/
-Ryzen 9 3900XT,105.0,12,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 9 3900X,125.0,12,10.416666666666666,https://www.techpowerup.com/cpu-specs/
-Ryzen 9 3900 Processor (OEM Only),65.0,12,5.416666666666667,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 3800XT,105.0,8,13.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 3800X,105.0,8,13.125,https://www.techpowerup.com/cpu-specs/
-Ryzen 7 3780U Microsoft Surface® Edition,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 3750H,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 3700X,65.0,8,8.125,https://www.techpowerup.com/cpu-specs/
-Ryzen 7 3700U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 3700C,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 3600XT,95.0,6,15.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 3600X,95.0,6,15.833333333333334,https://www.techpowerup.com/cpu-specs/
-Ryzen 5 3600,65.0,6,10.833333333333334,https://www.techpowerup.com/cpu-specs/
-Ryzen 5 3580U Microsoft Surface® Edition,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 3550H,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 3500U,15.0,4,3.75,https://www.techpowerup.com/cpu-specs/
-Ryzen 5 3500C,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 3500 Processor (OEM Only),65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 3450U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 3400GE (OEM Only),35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 3400G with Radeon RX Vega 11 Graphics,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 3350U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 3300X,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 3300U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 3250U,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 3250C,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 3200U,15.0,2,7.5,https://www.techpowerup.com/cpu-specs/
-Ryzen 3 3200GE (OEM Only),35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 3200G with Radeon Vega 8 Graphics,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 3100,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Athlon Gold PRO 3150GE,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Athlon Gold PRO 3150G,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Athlon PRO 3145B,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
-Athlon Silver PRO 3125GE,35.0,2,17.5,https://www.amd.com/en/products/specifications/processors.html
-Athlon PRO 3045B,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
-Athlon Gold 3150U,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
-Athlon Gold 3150GE (OEM Only),35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Athlon Gold 3150G (OEM Only),65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Athlon Gold 3150C,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
-Athlon Silver 3050U,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
-Athlon Silver 3050GE (OEM Only),35.0,2,17.5,https://www.amd.com/en/products/specifications/processors.html
-Athlon Silver 3050e,6.0,2,3.0,https://www.amd.com/en/products/specifications/processors.html
-Athlon  Silver 3050C,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
-Athlon 3000G,35.0,2,17.5,https://www.techpowerup.com/cpu-specs/
-Athlon PRO 300U Mobile Processor with Radeon Vega 3 Graphics,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
-Athlon PRO 300GE,35.0,2,17.5,https://www.amd.com/en/products/specifications/processors.html
-Athlon 320GE,35.0,2,17.5,https://www.amd.com/en/products/specifications/processors.html
-Athlon 300U,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
-Athlon 300GE,35.0,2,17.5,https://www.amd.com/en/products/specifications/processors.html
-Athlon PRO 200U Mobile Processor with Radeon Vega 3 Graphics,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
-Athlon PRO 200GE,35.0,2,17.5,https://www.amd.com/en/products/specifications/processors.html
-Athlon 240GE,35.0,2,17.5,https://www.amd.com/en/products/specifications/processors.html
-Athlon 220GE,35.0,2,17.5,https://www.amd.com/en/products/specifications/processors.html
-Athlon 200GE,35.0,2,17.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper 2990WX,250.0,32,7.8125,https://www.techpowerup.com/cpu-specs/
-Ryzen Threadripper 2970WX,250.0,24,10.416666666666666,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper 2950X,180.0,16,11.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper 2920X,180.0,12,15.0,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 2700X,95.0,8,11.875,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 2700U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 2700,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 2600,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 2500U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 2400GE with Radeon Vega 11 Graphics,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 2400G with Radeon Vega 11 Graphics,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 2300U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 2200GE with Radeon Vega 8 Graphics,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 2200G with Radeon Vega 8 Graphics,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 2800H,45.0,4,11.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 2700X,105.0,8,13.125,https://www.techpowerup.com/cpu-specs/
-Ryzen 7 2700U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 2700E Processor,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 2700,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 2600X,95.0,6,15.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 2600H,45.0,4,11.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 2600E,45.0,6,7.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 2600,65.0,6,10.833333333333334,https://www.techpowerup.com/cpu-specs/
-Ryzen 5 2500X,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 2500U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 2400GE with Radeon RX Vega 11 Graphics,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 2400G with Radeon RX Vega 11 Graphics,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 2300X,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 2300U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 2200U,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 2200GE with Radeon Vega 8 Graphics,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 2200G with Radeon Vega 8 Graphics,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper 1950X,180.0,16,11.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper 1920X,180.0,12,15.0,https://www.amd.com/en/products/specifications/processors.html
-Ryzen Threadripper 1900X,180.0,8,22.5,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 1700X Processor,95.0,8,11.875,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 PRO 1700,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 1600,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 PRO 1500,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 1300,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 PRO 1200,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 1800X,95.0,8,11.875,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 1700X,95.0,8,11.875,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 7 1700 Processor,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 1600X,95.0,6,15.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 1600 (AF),65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 1600,65.0,6,10.833333333333334,https://www.techpowerup.com/cpu-specs/
-Ryzen 5 1500X,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 5 1400,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 1300X,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Ryzen 3 1200,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-3020e,6.0,2,3.0,https://www.amd.com/en/products/specifications/processors.html
-3015e,6.0,2,3.0,https://www.amd.com/en/products/specifications/processors.html
-3015Ce,6.0,2,3.0,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen AI 9 HX PRO 375,28.0,12,2.3333333333333335,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen AI 9 HX PRO 370,28.0,12,2.3333333333333335,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen AI 7 PRO 360,28.0,8,3.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen AI 9 HX 375,28.0,12,2.3333333333333335,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen AI 9 HX 370,28.0,12,2.3333333333333335,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen AI 9 365,28.0,10,2.8,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 9950X,170.0,16,10.625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 9900X,120.0,12,10.0,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 9800X3D,120.0,8,15.0,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 9700X,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 9600X,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 PRO 8945HS,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 8840U,28.0,8,3.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 8845HS,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 8840HS,28.0,8,3.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 8700GE,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 8700G,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 8640U,28.0,6,4.666666666666667,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 8645HS,45.0,6,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 8640HS,28.0,6,4.666666666666667,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 8600GE,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 8600G,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 8540U,28.0,6,4.666666666666667,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 8500GE,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 8500G,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 8945HS,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 8300GE,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 8300G,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 8845HS,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 8840U,28.0,8,3.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 8840HS,28.0,8,3.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 8700G,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 8700F,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 8645HS,45.0,6,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 8640U,28.0,6,4.666666666666667,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 8640HS,28.0,6,4.666666666666667,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 8600G,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 8540U,28.0,6,4.666666666666667,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 8500GE,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 8500G,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 8440U,28.0,4,7.0,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 8300GE,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 8400F,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 8300G,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper PRO 7995WX,350.0,96,3.6458333333333335,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper PRO 7985WX,350.0,64,5.46875,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper PRO 7975WX,350.0,32,10.9375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper PRO 7965WX,350.0,24,14.583333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper PRO 7955WX,350.0,16,21.875,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper PRO 7945WX,350.0,12,29.166666666666668,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper 7980X,350.0,64,5.46875,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper 7970X,350.0,32,10.9375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper 7960X,350.0,24,14.583333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 PRO 7945,65.0,12,5.416666666666667,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 7745,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 7730U,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 7645,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 7530U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 7330U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 7950X3D,120.0,16,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 7950X,170.0,16,10.625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 7945HX3D,55.0,16,3.4375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 7945HX,55.0,16,3.4375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 7940HS,44.5,8,5.5625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 7940HX,55.0,16,3.4375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 7900X3D,120.0,12,10.0,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 7900X,170.0,12,14.166666666666666,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 7900,65.0,12,5.416666666666667,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 7845HX,55.0,12,4.583333333333333,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 7840U,28.0,8,3.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 7840HX,55.0,12,4.583333333333333,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 7840HS,44.5,8,5.5625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 7800X3D,120.0,8,15.0,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 7745HX,55.0,8,6.875,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 7735U,28.0,8,3.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 7735HS,44.5,8,5.5625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 7730U,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 7700X,105.0,8,13.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 7700,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 7645HX,55.0,6,9.166666666666666,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 7640U,28.0,6,4.666666666666667,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 7640HS,44.5,6,7.416666666666667,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 7600X3D,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 7600X,105.0,6,17.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 7600,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 7545U,28.0,6,4.666666666666667,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 7540U,28.0,6,4.666666666666667,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 7535U,28.0,6,4.666666666666667,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 7535HS,44.5,6,7.416666666666667,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 7530U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 7520U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 7520C,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 7500F,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 7440U,28.0,4,7.0,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 7435HS,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 7430U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 7335U,28.0,4,7.0,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 7330U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 7320U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 7320C,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 7235HS,45.0,4,11.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon Gold 7220U,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon Gold 7220C,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon Silver 7120U,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon Silver 7120C,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 PRO 6950HS,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 PRO 6950H,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 6860Z,28.0,8,3.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 6850HS,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 6850H,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 6650HS,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 6650H,45.0,6,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 6980HX,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 6980HS,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 6900HX,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 6900HS​,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 6800HS,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 6800H,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 6600HS​,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 6600H,45.0,6,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper PRO 5995WX,280.0,64,4.375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper PRO 5975WX,280.0,32,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper PRO 5965WX,280.0,24,11.666666666666666,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper PRO 5955WX,280.0,16,17.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper PRO 5945WX,280.0,12,23.333333333333332,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 PRO 5945,65.0,12,5.416666666666667,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 5875U,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 5850U,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 5845,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 5755GE,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 5755G,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 5750GE,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 5750G,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 5675U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 5655GE,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 5655G,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 5650U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 5650GE,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 5650G,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 5645,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 5475U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 5450U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 5355GE,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 5355G,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 5350GE,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 5350G,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 5980HX,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 5980HS,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 5950X,105.0,16,6.5625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 5900XT,105.0,16,6.5625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 5900X,105.0,12,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 5900HX,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 5900HS,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 5900 (OEM Only),65.0,12,5.416666666666667,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 5825U,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 5825C,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 5800X3D,105.0,8,13.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 5800XT,105.0,8,13.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 5800X,105.0,8,13.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 5800U,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 5800HS,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 5800H,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 5800 (OEM Only),65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 5700X3D,105.0,8,13.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 5700X,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 5700U,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 5700GE,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 5700G,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 5700,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 5625U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 5625C,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 5600X3D,105.0,6,17.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 5600X,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 5600U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 5600HS,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 5600H,45.0,6,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 5600XT,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 5600T,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 5600GT,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 5600GE,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 5600G,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 5600,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 5560U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 5500U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 5500H,45.0,4,11.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 5500GT,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 5500,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 5425U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 5425C,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 5400U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 5300U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 5300GE (OEM Only),35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 5300G (OEM Only),65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 5125C,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 4750U,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 4750GE,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 4750G,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 4655GE,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 4655G,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 4650U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 4650GE,35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 4650G,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 4450U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 4355GE,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 4355G,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 4350GE,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 4350G,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 4900HS,35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 4900H,44.5,8,5.5625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 4980U Microsoft Surface® Edition,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 4800U,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 4800HS,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 4800H,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 4700U,15.0,8,1.875,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 4700GE (OEM Only),35.0,8,4.375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 4700G (OEM Only),65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 4680U Microsoft Surface® Edition,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 4600U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 4600H,45.0,6,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 4600GE (OEM Only),35.0,6,5.833333333333333,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 4600G,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 4500U,15.0,6,2.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 4500,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 4300U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 4300GE (OEM Only),35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 4300G (OEM Only),65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 4100,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper PRO 3995WX,280.0,64,4.375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper PRO 3975WX,280.0,32,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper PRO 3955WX,280.0,16,17.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper PRO 3945WX,280.0,12,23.333333333333332,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper 3990X,280.0,64,4.375,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper 3970X,280.0,32,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper 3960X,280.0,24,11.666666666666666,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 PRO 3900,65.0,12,5.416666666666667,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 3700U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 3700,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 3600,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 3500U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 3400GE,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 3400G,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 3350GE,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 3350G,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 3300U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 3200GE,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 3200G,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 3950X,105.0,16,6.5625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 3900XT,105.0,12,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 3900X,105.0,12,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 9 3900 Processor (OEM Only),65.0,12,5.416666666666667,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 3800XT,105.0,8,13.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 3800X,105.0,8,13.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 3780U Microsoft Surface® Edition,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 3750H,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 3700X,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 3700U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 3700C,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 3600XT,95.0,6,15.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 3600X,95.0,6,15.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 3600,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 3580U Microsoft Surface® Edition,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 3550H,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 3500U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 3500C,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 3500 Processor (OEM Only),65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 3450U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 3400GE (OEM Only),35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 3400G with Radeon RX Vega 11 Graphics,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 3350U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 3300X,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 3300U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 3250U,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 3250C,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 3200U,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 3200GE (OEM Only),35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 3200G with Radeon Vega 8 Graphics,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 3100,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon Gold PRO 3150GE,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon Gold PRO 3150G,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon PRO 3145B,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon Silver PRO 3125GE,35.0,2,17.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon PRO 3045B,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon Gold 3150U,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon Gold 3150GE (OEM Only),35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon Gold 3150G (OEM Only),65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon Gold 3150C,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon Silver 3050U,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon Silver 3050GE (OEM Only),35.0,2,17.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon Silver 3050e,6.0,2,3.0,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon  Silver 3050C,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon 3000G,35.0,2,17.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon PRO 300U Mobile Processor with Radeon Vega 3 Graphics,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon PRO 300GE,35.0,2,17.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon 320GE,35.0,2,17.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon 300U,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon 300GE,35.0,2,17.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon PRO 200U Mobile Processor with Radeon Vega 3 Graphics,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon PRO 200GE,35.0,2,17.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon 240GE,35.0,2,17.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon 220GE,35.0,2,17.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon 200GE,35.0,2,17.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper 2990WX,250.0,32,7.8125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper 2970WX,250.0,24,10.416666666666666,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper 2950X,180.0,16,11.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper 2920X,180.0,12,15.0,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 2700X,95.0,8,11.875,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 2700U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 2700,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 2600,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 2500U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 2400GE with Radeon Vega 11 Graphics,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 2400G with Radeon Vega 11 Graphics,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 2300U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 2200GE with Radeon Vega 8 Graphics,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 2200G with Radeon Vega 8 Graphics,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 2800H,45.0,4,11.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 2700X,105.0,8,13.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 2700U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 2700E Processor,45.0,8,5.625,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 2700,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 2600X,95.0,6,15.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 2600H,45.0,4,11.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 2600E,45.0,6,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 2600,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 2500X,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 2500U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 2400GE with Radeon RX Vega 11 Graphics,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 2400G with Radeon RX Vega 11 Graphics,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 2300X,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 2300U,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 2200U,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 2200GE with Radeon Vega 8 Graphics,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 2200G with Radeon Vega 8 Graphics,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper 1950X,180.0,16,11.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper 1920X,180.0,12,15.0,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen Threadripper 1900X,180.0,8,22.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 1700X Processor,95.0,8,11.875,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 PRO 1700,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 1600,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 PRO 1500,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 1300,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 PRO 1200,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 1800X,95.0,8,11.875,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 1700X,95.0,8,11.875,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 7 1700 Processor,65.0,8,8.125,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 1600X,95.0,6,15.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 1600 (AF),65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 1600,65.0,6,10.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 1500X,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 5 1400,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 1300X,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Ryzen 3 1200,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD 3020e,6.0,2,3.0,https://www.amd.com/en/products/specifications/processors.html
+AMD 3015e,6.0,2,3.0,https://www.amd.com/en/products/specifications/processors.html
+AMD 3015Ce,6.0,2,3.0,https://www.amd.com/en/products/specifications/processors.html
 FX-9590,220.0,8,27.5,https://www.amd.com/en/products/specifications/processors.html
 FX-9370,220.0,8,27.5,https://www.amd.com/en/products/specifications/processors.html
 FX-8370E,95.0,8,11.875,https://www.amd.com/en/products/specifications/processors.html
@@ -382,7 +382,7 @@ FX-4100,95.0,4,23.75,https://www.amd.com/en/products/specifications/processors.h
 6th Gen FX-8800P APU,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
 FX-7600P with Radeon R7 Graphics,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
 FX-7500 with Radeon R7 Graphics,20.0,4,5.0,https://www.amd.com/en/products/specifications/processors.html
-6th Gen  PRO A12-8800B APU,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+6th Gen AMD PRO A12-8800B APU,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
 A10-7870K with Radeon R7 Series,95.0,4,23.75,https://www.amd.com/en/products/specifications/processors.html
 A10-7860K with Radeon R7 Series,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
 A10-7860K with Radeon R7 Graphics and Near Silent Thermal Solution,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
@@ -395,11 +395,11 @@ A10-6700 with Radeon HD 8670D,65.0,4,16.25,https://www.amd.com/en/products/speci
 A10-7400P with Radeon R6 Graphics,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
 A10-7300 with Radeon R6 Graphics,20.0,4,5.0,https://www.amd.com/en/products/specifications/processors.html
 A10 Micro-6700T with Radeon R6 Graphics,4.5,4,1.125,https://www.amd.com/en/products/specifications/processors.html
-6th Gen  PRO A10-8850B APU,95.0,4,23.75,https://www.amd.com/en/products/specifications/processors.html
-6th Gen  PRO A10-8750B APU,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+6th Gen AMD PRO A10-8850B APU,95.0,4,23.75,https://www.amd.com/en/products/specifications/processors.html
+6th Gen AMD PRO A10-8750B APU,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
 A10 PRO-7850B with Radeon R7 Graphics,95.0,4,23.75,https://www.amd.com/en/products/specifications/processors.html
 A10 PRO-7800B with Radeon R7 Graphics,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-6th Gen  PRO A10-8700B APU,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+6th Gen AMD PRO A10-8700B APU,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
 A10 PRO-7350B with Radeon R6 Graphics,19.0,4,4.75,https://www.amd.com/en/products/specifications/processors.html
 A10-6800B with Radeon HD 8670D,45.0,4,11.25,https://www.amd.com/en/products/specifications/processors.html
 A10-6790B with Radeon HD 8670D,45.0,4,11.25,https://www.amd.com/en/products/specifications/processors.html
@@ -415,9 +415,9 @@ A8-7410 with Radeon R5 Graphics,15.0,4,3.75,https://www.amd.com/en/products/spec
 A8-7200P with Radeon R5 Graphics,100.0,4,25.0,https://www.amd.com/en/products/specifications/processors.html
 A8-7100 with Radeon R5 Graphics,20.0,4,5.0,https://www.amd.com/en/products/specifications/processors.html
 A8-6410 with Radeon R5 Graphics,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-6th Gen  PRO A8-8650B APU,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+6th Gen AMD PRO A8-8650B APU,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
 A8 PRO-7600B with Radeon R7 Graphics,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-6th Gen  PRO A8-8600B APU,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
+6th Gen AMD PRO A8-8600B APU,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
 A8 PRO-7150B with Radeon R5 Graphics,100.0,4,25.0,https://www.amd.com/en/products/specifications/processors.html
 A8-6500B with Radeon HD 8570D,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
 A6-7400K with Radeon R5 Series,65.0,2,32.5,https://www.amd.com/en/products/specifications/processors.html
@@ -431,9 +431,9 @@ A6-5350M with Radeon HD 8450G,35.0,2,17.5,https://www.amd.com/en/products/specif
 A6-5200M with Radeon HD 8400,25.0,4,6.25,https://www.amd.com/en/products/specifications/processors.html
 A6-8500P with Radeon R5 Graphics,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
 A6-7310 with Radeon R4 Graphics,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-6th Gen  PRO A6-8550B APU,65.0,2,32.5,https://www.amd.com/en/products/specifications/processors.html
+6th Gen AMD PRO A6-8550B APU,65.0,2,32.5,https://www.amd.com/en/products/specifications/processors.html
 A6 PRO-7400B with Radeon R5 Graphics,65.0,2,32.5,https://www.amd.com/en/products/specifications/processors.html
-6th Gen  PRO A6-8500B APU,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
+6th Gen AMD PRO A6-8500B APU,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
 A6 PRO-7050B with Radeon R4 Graphics,100.0,2,50.0,https://www.amd.com/en/products/specifications/processors.html
 A6-6420B with Radeon HD 8470D,65.0,2,32.5,https://www.amd.com/en/products/specifications/processors.html
 A6-6400B with Radeon HD 8470D,65.0,2,32.5,https://www.amd.com/en/products/specifications/processors.html
@@ -446,7 +446,7 @@ A4 Micro-6400T with Radeon R3 Graphics,4.5,4,1.125,https://www.amd.com/en/produc
 A4-6210 with Radeon R3 Graphics,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
 A4-5100 with Radeon HD 8330,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
 A4-5000 with Radeon HD 8330,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
-6th Gen  PRO A4-8350B APU,65.0,2,32.5,https://www.amd.com/en/products/specifications/processors.html
+6th Gen AMD PRO A4-8350B APU,65.0,2,32.5,https://www.amd.com/en/products/specifications/processors.html
 A4 PRO-7350B with Radeon R5 Graphics,65.0,2,32.5,https://www.amd.com/en/products/specifications/processors.html
 A4 PRO-7300B with Radeon HD 8470D,65.0,2,32.5,https://www.amd.com/en/products/specifications/processors.html
 A4 PRO-3350B with Radeon R4 Graphics,15.0,4,3.75,https://www.amd.com/en/products/specifications/processors.html
@@ -466,31 +466,31 @@ E1-6010 with Radeon R2 Graphics,10.0,2,5.0,https://www.amd.com/en/products/speci
 E1-2500 with Radeon HD 8240,15.0,2,7.5,https://www.amd.com/en/products/specifications/processors.html
 E1-2200 with Radeon HD 8210,9.0,2,4.5,https://www.amd.com/en/products/specifications/processors.html
 E1-2100 with Radeon HD 8210,9.0,2,4.5,https://www.amd.com/en/products/specifications/processors.html
-7th Gen  Athlon X4 970,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+7th Gen AMD Athlon X4 970,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
 870K with Near Silent Thermal Solution,95.0,4,23.75,https://www.amd.com/en/products/specifications/processors.html
 860K with Near Silent Thermal Solution,95.0,4,23.75,https://www.amd.com/en/products/specifications/processors.html
-Athlon 860K,95.0,4,23.75,https://www.amd.com/en/products/specifications/processors.html
-Athlon 760K,100.0,4,25.0,https://www.amd.com/en/products/specifications/processors.html
-Athlon 750K,100.0,4,25.0,https://www.amd.com/en/products/specifications/processors.html
-Athlon 740,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Athlon 641,100.0,4,25.0,https://www.amd.com/en/products/specifications/processors.html
-Athlon 638,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Athlon 631 (65W),65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
-Athlon 631,100.0,4,25.0,https://www.amd.com/en/products/specifications/processors.html
-Athlon 620e,45.0,4,11.25,https://www.amd.com/en/products/specifications/processors.html
-Athlon 460,95.0,3,31.666666666666668,https://www.amd.com/en/products/specifications/processors.html
-Athlon 425e,45.0,3,15.0,https://www.amd.com/en/products/specifications/processors.html
-Athlon 255e,45.0,2,22.5,https://www.amd.com/en/products/specifications/processors.html
-Phenom II 1075T,95.0,6,15.833333333333334,https://www.amd.com/en/products/specifications/processors.html
-Phenom II 980,125.0,4,31.25,https://www.amd.com/en/products/specifications/processors.html
-Phenom II 975,125.0,4,31.25,https://www.amd.com/en/products/specifications/processors.html
-Phenom II 965,80.0,4,20.0,https://www.amd.com/en/products/specifications/processors.html
-Phenom II 960T,95.0,4,23.75,https://www.amd.com/en/products/specifications/processors.html
-Phenom II 850,95.0,4,23.75,https://www.amd.com/en/products/specifications/processors.html
-Phenom II 840,95.0,4,23.75,https://www.amd.com/en/products/specifications/processors.html
-Phenom II 570,80.0,2,40.0,https://www.amd.com/en/products/specifications/processors.html
-Phenom II 555,80.0,2,40.0,https://www.amd.com/en/products/specifications/processors.html
-Phenom II 565,80.0,2,40.0,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon 860K,95.0,4,23.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon 760K,100.0,4,25.0,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon 750K,100.0,4,25.0,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon 740,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon 641,100.0,4,25.0,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon 638,65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon 631 (65W),65.0,4,16.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon 631,100.0,4,25.0,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon 620e,45.0,4,11.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon 460,95.0,3,31.666666666666668,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon 425e,45.0,3,15.0,https://www.amd.com/en/products/specifications/processors.html
+AMD Athlon 255e,45.0,2,22.5,https://www.amd.com/en/products/specifications/processors.html
+AMD Phenom II 1075T,95.0,6,15.833333333333334,https://www.amd.com/en/products/specifications/processors.html
+AMD Phenom II 980,125.0,4,31.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Phenom II 975,125.0,4,31.25,https://www.amd.com/en/products/specifications/processors.html
+AMD Phenom II 965,80.0,4,20.0,https://www.amd.com/en/products/specifications/processors.html
+AMD Phenom II 960T,95.0,4,23.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Phenom II 850,95.0,4,23.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Phenom II 840,95.0,4,23.75,https://www.amd.com/en/products/specifications/processors.html
+AMD Phenom II 570,80.0,2,40.0,https://www.amd.com/en/products/specifications/processors.html
+AMD Phenom II 555,80.0,2,40.0,https://www.amd.com/en/products/specifications/processors.html
+AMD Phenom II 565,80.0,2,40.0,https://www.amd.com/en/products/specifications/processors.html
 X940,45.0,4,11.25,https://www.amd.com/en/products/specifications/processors.html
 N970,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
 N960,35.0,4,8.75,https://www.amd.com/en/products/specifications/processors.html
@@ -526,256 +526,257 @@ AmpereOne A144-26X,332.0,144,2.3055555555555554,https://amperecomputing.com/brie
 AmpereOne A144-24X,185.0,144,1.2847222222222223,https://amperecomputing.com/briefs/ampereone-family-product-brief
 AmpereOne A128-34X,280.0,128,2.1875,https://amperecomputing.com/briefs/ampereone-family-product-brief
 AmpereOne A96-37X,292.0,96,3.0416666666666665,https://amperecomputing.com/briefs/ampereone-family-product-brief
-Xeon Platinum 8470Q Processor,350.0,52,6.730769230769231,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8470 Processor,350.0,52,6.730769230769231,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6414U Processor,250.0,32,7.8125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6454S Processor,270.0,32,8.4375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8468 Processor,350.0,48,7.291666666666667,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8460Y+ Processor,300.0,40,7.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6430 Processor,270.0,32,8.4375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8454H Processor,270.0,32,8.4375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8468V Processor,330.0,48,6.875,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8461V Processor,300.0,48,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8458P Processor,350.0,44,7.954545454545454,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8460H Processor,330.0,40,8.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8471N Processor,300.0,52,5.769230769230769,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8480+ Processor,350.0,56,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8490H Processor,350.0,60,5.833333333333333,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8470N Processor,300.0,52,5.769230769230769,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8444H Processor,270.0,16,16.875,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8468H Processor,330.0,48,6.875,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8450H Processor,250.0,28,8.928571428571429,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8452Y Processor,300.0,36,8.333333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Bronze 3408U Processor,125.0,8,15.625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 5415+ Processor,150.0,8,18.75,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 5412U Processor,185.0,24,7.708333333333333,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6434 Processor,195.0,8,24.375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Silver 4410Y Processor,150.0,12,12.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6426Y Processor,185.0,16,11.5625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Silver 4416+ Processor,165.0,20,8.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 5418Y Processor,185.0,24,7.708333333333333,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6442Y Processor,225.0,24,9.375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 5420+ Processor,205.0,28,7.321428571428571,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6438Y+ Processor,205.0,32,6.40625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8462Y+ Processor,300.0,32,9.375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6448Y Processor,225.0,32,7.03125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6444Y Processor,270.0,16,16.875,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6458Q Processor,350.0,32,10.9375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6434H Processor,195.0,8,24.375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Silver 4410T Processor,150.0,10,15.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6416H Processor,165.0,18,9.166666666666666,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6418H Processor,185.0,24,7.708333333333333,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6448H Processor,250.0,32,7.8125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 5418N Processor,165.0,24,6.875,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 5411N Processor,165.0,24,6.875,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6428N Processor,185.0,32,5.78125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6421N Processor,185.0,32,5.78125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 5416S Processor,150.0,16,9.375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6438N Processor,205.0,32,6.40625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6438M Processor,205.0,32,6.40625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 5433N Processor,160.0,20,8.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 5423N Processor,145.0,20,7.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6433N Processor,205.0,32,6.40625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6433NE Processor,205.0,32,6.40625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6423N Processor,195.0,28,6.964285714285714,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6403N Processor,185.0,24,7.708333333333333,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6443N Processor,195.0,32,6.09375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Silver 4509Y Processor,125.0,8,15.625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Silver 4510 Processor,150.0,12,12.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Silver 4510T Processor,115.0,12,9.583333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Bronze 3508U Processor,125.0,8,15.625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8571N Processor,300.0,52,5.769230769230769,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8568Y+ Processor,350.0,48,7.291666666666667,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6530 Processor,270.0,32,8.4375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8580 Processor,350.0,60,5.833333333333333,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8593Q Processor,385.0,64,6.015625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8558 Processor,330.0,48,6.875,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8558P Processor,350.0,48,7.291666666666667,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8592+ Processor,350.0,64,5.46875,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6554S Processor,270.0,36,7.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8570 Processor,350.0,56,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8558U Processor,300.0,48,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8581V Processor,270.0,60,4.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8592V Processor,330.0,64,5.15625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6534 Processor,195.0,8,24.375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Silver 4516Y+ Processor,185.0,24,7.708333333333333,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Silver 4514Y Processor,150.0,16,9.375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Platinum 8562Y+ Processor,300.0,32,9.375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6542Y Processor,250.0,24,10.416666666666666,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6526Y Processor,195.0,16,12.1875,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 5520+ Processor,205.0,28,7.321428571428571,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 5515+ Processor,165.0,8,20.625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6538Y+ Processor,225.0,32,7.03125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6548Y+ Processor,250.0,32,7.8125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 5512U Processor,185.0,28,6.607142857142857,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6558Q Processor,350.0,32,10.9375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6548N Processor,250.0,32,7.8125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6538N Processor,205.0,32,6.40625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 6544Y Processor,270.0,16,16.875,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Gold 5403N Processor,115.0,12,9.583333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w5-2465X Processor,200.0,16,12.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w7-2495X Processor,225.0,24,9.375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w7-2475X Processor,225.0,20,11.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w9-3475X Processor,300.0,36,8.333333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w5-2455X Processor,200.0,12,16.666666666666668,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w5-3435X Processor,270.0,16,16.875,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w7-3445 Processor,270.0,20,13.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w3-2435 Processor,165.0,8,20.625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w5-2445 Processor,175.0,10,17.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w5-3425 Processor,270.0,12,22.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w3-2423 Processor,120.0,6,20.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w3-2425 Processor,130.0,6,21.666666666666668,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w5-2545 Processor,210.0,12,17.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w7-2595X Processor,250.0,26,9.615384615384615,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w7-2575X Processor,250.0,22,11.363636363636363,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w3-2525 Processor,175.0,8,21.875,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w9-3595X Processor,385.0,60,6.416666666666667,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w5-3535X Processor,300.0,20,15.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w5-3525 Processor,290.0,16,18.125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w7-3545 Processor,310.0,24,12.916666666666666,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon w9-3575X Processor,340.0,44,7.7272727272727275,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon 6740E Processor,250.0,96,2.6041666666666665,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon 6756E Processor,225.0,128,1.7578125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon 6780E Processor,330.0,144,2.2916666666666665,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon 6710E Processor,205.0,64,3.203125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon 6766E Processor,250.0,144,1.7361111111111112,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon 6731E Processor,250.0,96,2.6041666666666665,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon 6746E Processor,250.0,112,2.232142857142857,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon 6960P Processor,500.0,72,6.944444444444445,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon 6980P Processor,500.0,128,3.90625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon 6979P Processor,500.0,120,4.166666666666667,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon 6972P Processor,500.0,96,5.208333333333333,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon 6952P Processor,400.0,96,4.166666666666667,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1533N,45.0,6,7.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1513N,35.0,4,8.75,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1543N,45.0,8,5.625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1523N,45.0,4,11.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1553N,65.0,8,8.125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2123IT Processor,60.0,4,15.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2141I Processor,65.0,8,8.125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2143IT Processor,65.0,8,8.125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2142IT Processor,65.0,8,8.125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2145NT Processor,65.0,8,8.125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2146NT Processor,80.0,8,10.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2161I Processor,90.0,12,7.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2177NT Processor,105.0,14,7.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2163IT Processor,75.0,12,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2173IT Processor,70.0,14,5.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2166NT Processor,85.0,12,7.083333333333333,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2187NT Processor,110.0,16,6.875,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2183IT Processor,100.0,16,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1524N,45.0,4,11.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1653N Processor,65.0,8,8.125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1602 Processor,27.0,2,13.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1622 Processor,40.0,4,10.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1623N Processor,35.0,4,8.75,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1627 Processor,45.0,4,11.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1637 Processor,55.0,6,9.166666666666666,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1633N Processor,45.0,6,7.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1649N Processor,45.0,8,5.625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1736NT Processor,67.0,8,8.375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1733NT Processor,53.0,8,6.625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1746TER Processor,67.0,10,6.7,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1749NT Processor,90.0,10,9.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1713NT Processor,45.0,4,11.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1735TR Processor,59.0,8,7.375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1713NTE Processor,45.0,4,11.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1715TER Processor,50.0,4,12.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1732TE Processor,52.0,8,6.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1718T Processor,46.0,4,11.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1712TR Processor,40.0,4,10.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1714 Processor,38.0,4,9.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1739 Processor,83.0,8,10.375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1736 Processor,55.0,8,6.875,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1726 Processor,70.0,6,11.666666666666666,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1722NE Processor,36.0,6,6.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1734NT Processor,50.0,8,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1702 Processor,25.0,2,12.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1747NTE Processor,80.0,10,8.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1748TE Processor,65.0,10,6.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2712T Processor,65.0,4,16.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2733NT Processor,80.0,8,10.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2738 Processor,88.0,8,11.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2745NX Processor,96.0,10,9.6,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2753NT Processor,87.0,12,7.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2757NX Processor,107.0,12,8.916666666666666,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2776NT Processor,117.0,16,7.3125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2777NX Processor,116.0,16,7.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2766NT Processor,97.0,14,6.928571428571429,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2779 Processor,126.0,16,7.875,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2795NT Processor,110.0,20,5.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2799 Processor,129.0,20,6.45,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2798NX Processor,126.0,20,6.3,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2798NT Processor,125.0,20,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2752NTE Processor,84.0,12,7.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2752TER Processor,77.0,12,6.416666666666667,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2796NT Processor,120.0,20,6.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2775TE Processor,100.0,16,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2796TE Processor,118.0,20,5.9,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2786NTE Processor,118.0,18,6.555555555555555,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2739NT Processor,97.0,8,12.125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1731NTE Processor,45.0,8,5.625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1823NT Processor,55.0,6,9.166666666666666,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1834 Processor,42.0,8,5.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1846 Processor,55.0,10,5.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1813NT Processor,42.0,4,10.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1848TER Processor,57.0,10,5.7,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-1844NT Processor,55.0,10,5.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2832NT Processor,70.0,8,8.75,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2896NT Processor,117.0,20,5.85,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2899NT Processor,135.0,22,6.136363636363637,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2843NT Processor,80.0,10,8.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2896TER Processor,110.0,20,5.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon D-2876NT Processor,100.0,16,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1520,45.0,4,11.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1540,45.0,8,5.625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1529,20.0,4,5.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1527,35.0,4,8.75,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1537,35.0,8,4.375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1528,35.0,6,5.833333333333333,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1541,45.0,8,5.625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1539,35.0,8,4.375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1518,35.0,4,8.75,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1521,45.0,4,11.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1531,45.0,6,7.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1548,45.0,8,5.625,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1559,45.0,12,3.75,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1577,45.0,16,2.8125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1571,45.0,16,2.8125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1567,65.0,12,5.416666666666667,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon Processor D-1557,45.0,12,3.75,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2124G Processor,71.0,4,17.75,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2176G Processor,80.0,6,13.333333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2176M Processor,45.0,6,7.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2254ME Processor,45.0,4,11.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2276ME Processor,45.0,6,7.5,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2254ML Processor,25.0,4,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2276ML Processor,25.0,6,4.166666666666667,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2278GEL Processor,35.0,8,4.375,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2226GE Processor,80.0,6,13.333333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2278GE Processor,80.0,8,10.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2336 Processor,65.0,6,10.833333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2324G Processor,65.0,4,16.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2356G Processor,80.0,6,13.333333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2334 Processor,65.0,4,16.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2314 Processor,65.0,4,16.25,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2374G Processor,80.0,4,20.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2378 Processor,65.0,8,8.125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2378G Processor,80.0,8,10.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2388G Processor,95.0,8,11.875,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2386G Processor,95.0,6,15.833333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2488 Processor,95.0,8,11.875,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2478 Processor,80.0,8,10.0,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2468 Processor,65.0,8,8.125,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2486 Processor,95.0,6,15.833333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2456 Processor,80.0,6,13.333333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2436 Processor,65.0,6,10.833333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2434 Processor,55.0,4,13.75,https://www.intel.com/content/www/us/en/products/details/processors.html
-Xeon E-2414 Processor,55.0,4,13.75,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8470Q Processor,350.0,52,6.730769230769231,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8470 Processor,350.0,52,6.730769230769231,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6414U Processor,250.0,32,7.8125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6454S Processor,270.0,32,8.4375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8468 Processor,350.0,48,7.291666666666667,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8460Y+ Processor,300.0,40,7.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6430 Processor,270.0,32,8.4375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8454H Processor,270.0,32,8.4375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8468V Processor,330.0,48,6.875,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8461V Processor,300.0,48,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8458P Processor,350.0,44,7.954545454545454,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8460H Processor,330.0,40,8.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8471N Processor,300.0,52,5.769230769230769,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8480+ Processor,350.0,56,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8490H Processor,350.0,60,5.833333333333333,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8470N Processor,300.0,52,5.769230769230769,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8444H Processor,270.0,16,16.875,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8468H Processor,330.0,48,6.875,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8450H Processor,250.0,28,8.928571428571429,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8452Y Processor,300.0,36,8.333333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Bronze 3408U Processor,125.0,8,15.625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 5415+ Processor,150.0,8,18.75,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 5412U Processor,185.0,24,7.708333333333333,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6434 Processor,195.0,8,24.375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Silver 4410Y Processor,150.0,12,12.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6426Y Processor,185.0,16,11.5625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Silver 4416+ Processor,165.0,20,8.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 5418Y Processor,185.0,24,7.708333333333333,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6442Y Processor,225.0,24,9.375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 5420+ Processor,205.0,28,7.321428571428571,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6438Y+ Processor,205.0,32,6.40625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8462Y+ Processor,300.0,32,9.375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6448Y Processor,225.0,32,7.03125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6444Y Processor,270.0,16,16.875,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6458Q Processor,350.0,32,10.9375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6434H Processor,195.0,8,24.375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Silver 4410T Processor,150.0,10,15.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6416H Processor,165.0,18,9.166666666666666,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6418H Processor,185.0,24,7.708333333333333,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6448H Processor,250.0,32,7.8125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 5418N Processor,165.0,24,6.875,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 5411N Processor,165.0,24,6.875,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6428N Processor,185.0,32,5.78125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6421N Processor,185.0,32,5.78125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 5416S Processor,150.0,16,9.375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6438N Processor,205.0,32,6.40625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6438M Processor,205.0,32,6.40625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 5433N Processor,160.0,20,8.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 5423N Processor,145.0,20,7.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6433N Processor,205.0,32,6.40625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6433NE Processor,205.0,32,6.40625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6423N Processor,195.0,28,6.964285714285714,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6403N Processor,185.0,24,7.708333333333333,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6443N Processor,195.0,32,6.09375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Silver 4509Y Processor,125.0,8,15.625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Silver 4510 Processor,150.0,12,12.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Silver 4510T Processor,115.0,12,9.583333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Bronze 3508U Processor,125.0,8,15.625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8571N Processor,300.0,52,5.769230769230769,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8568Y+ Processor,350.0,48,7.291666666666667,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6530 Processor,270.0,32,8.4375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8580 Processor,350.0,60,5.833333333333333,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8593Q Processor,385.0,64,6.015625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8558 Processor,330.0,48,6.875,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8558P Processor,350.0,48,7.291666666666667,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8592+ Processor,350.0,64,5.46875,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6554S Processor,270.0,36,7.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8570 Processor,350.0,56,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8558U Processor,300.0,48,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8581V Processor,270.0,60,4.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8592V Processor,330.0,64,5.15625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6534 Processor,195.0,8,24.375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Silver 4516Y+ Processor,185.0,24,7.708333333333333,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Silver 4514Y Processor,150.0,16,9.375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Platinum 8562Y+ Processor,300.0,32,9.375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6542Y Processor,250.0,24,10.416666666666666,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6526Y Processor,195.0,16,12.1875,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 5520+ Processor,205.0,28,7.321428571428571,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 5515+ Processor,165.0,8,20.625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6538Y+ Processor,225.0,32,7.03125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6548Y+ Processor,250.0,32,7.8125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 5512U Processor,185.0,28,6.607142857142857,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6558Q Processor,350.0,32,10.9375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6548N Processor,250.0,32,7.8125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6538N Processor,205.0,32,6.40625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 6544Y Processor,270.0,16,16.875,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Gold 5403N Processor,115.0,12,9.583333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w5-2465X Processor,200.0,16,12.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w7-2495X Processor,225.0,24,9.375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w7-2475X Processor,225.0,20,11.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w9-3475X Processor,300.0,36,8.333333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w5-2455X Processor,200.0,12,16.666666666666668,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w5-3435X Processor,270.0,16,16.875,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w7-3445 Processor,270.0,20,13.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w3-2435 Processor,165.0,8,20.625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w5-2445 Processor,175.0,10,17.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w5-3425 Processor,270.0,12,22.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w3-2423 Processor,120.0,6,20.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w3-2425 Processor,130.0,6,21.666666666666668,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w5-2545 Processor,210.0,12,17.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w7-2595X Processor,250.0,26,9.615384615384615,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w7-2575X Processor,250.0,22,11.363636363636363,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w3-2525 Processor,175.0,8,21.875,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w9-3595X Processor,385.0,60,6.416666666666667,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w5-3535X Processor,300.0,20,15.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w5-3525 Processor,290.0,16,18.125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w7-3545 Processor,310.0,24,12.916666666666666,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon w9-3575X Processor,340.0,44,7.7272727272727275,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon 6740E Processor,250.0,96,2.6041666666666665,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon 6756E Processor,225.0,128,1.7578125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon 6780E Processor,330.0,144,2.2916666666666665,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon 6710E Processor,205.0,64,3.203125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon 6766E Processor,250.0,144,1.7361111111111112,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon 6731E Processor,250.0,96,2.6041666666666665,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon 6746E Processor,250.0,112,2.232142857142857,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon 6960P Processor,500.0,72,6.944444444444445,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon 6980P Processor,500.0,128,3.90625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon 6979P Processor,500.0,120,4.166666666666667,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon 6972P Processor,500.0,96,5.208333333333333,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon 6952P Processor,400.0,96,4.166666666666667,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1533N,45.0,6,7.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1513N,35.0,4,8.75,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1543N,45.0,8,5.625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1523N,45.0,4,11.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1553N,65.0,8,8.125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2123IT Processor,60.0,4,15.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2141I Processor,65.0,8,8.125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2143IT Processor,65.0,8,8.125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2142IT Processor,65.0,8,8.125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2145NT Processor,65.0,8,8.125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2146NT Processor,80.0,8,10.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2161I Processor,90.0,12,7.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2177NT Processor,105.0,14,7.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2163IT Processor,75.0,12,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2173IT Processor,70.0,14,5.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2166NT Processor,85.0,12,7.083333333333333,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2187NT Processor,110.0,16,6.875,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2183IT Processor,100.0,16,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1524N,45.0,4,11.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1653N Processor,65.0,8,8.125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1602 Processor,27.0,2,13.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1622 Processor,40.0,4,10.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1623N Processor,35.0,4,8.75,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1627 Processor,45.0,4,11.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1637 Processor,55.0,6,9.166666666666666,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1633N Processor,45.0,6,7.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1649N Processor,45.0,8,5.625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1736NT Processor,67.0,8,8.375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1733NT Processor,53.0,8,6.625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1746TER Processor,67.0,10,6.7,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1749NT Processor,90.0,10,9.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1713NT Processor,45.0,4,11.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1735TR Processor,59.0,8,7.375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1713NTE Processor,45.0,4,11.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1715TER Processor,50.0,4,12.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1732TE Processor,52.0,8,6.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1718T Processor,46.0,4,11.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1712TR Processor,40.0,4,10.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1714 Processor,38.0,4,9.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1739 Processor,83.0,8,10.375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1736 Processor,55.0,8,6.875,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1726 Processor,70.0,6,11.666666666666666,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1722NE Processor,36.0,6,6.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1734NT Processor,50.0,8,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1702 Processor,25.0,2,12.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1747NTE Processor,80.0,10,8.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1748TE Processor,65.0,10,6.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2712T Processor,65.0,4,16.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2733NT Processor,80.0,8,10.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2738 Processor,88.0,8,11.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2745NX Processor,96.0,10,9.6,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2753NT Processor,87.0,12,7.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2757NX Processor,107.0,12,8.916666666666666,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2776NT Processor,117.0,16,7.3125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2777NX Processor,116.0,16,7.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2766NT Processor,97.0,14,6.928571428571429,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2779 Processor,126.0,16,7.875,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2795NT Processor,110.0,20,5.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2799 Processor,129.0,20,6.45,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2798NX Processor,126.0,20,6.3,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2798NT Processor,125.0,20,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2752NTE Processor,84.0,12,7.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2752TER Processor,77.0,12,6.416666666666667,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2796NT Processor,120.0,20,6.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2775TE Processor,100.0,16,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2796TE Processor,118.0,20,5.9,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2786NTE Processor,118.0,18,6.555555555555555,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2739NT Processor,97.0,8,12.125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1731NTE Processor,45.0,8,5.625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1823NT Processor,55.0,6,9.166666666666666,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1834 Processor,42.0,8,5.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1846 Processor,55.0,10,5.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1813NT Processor,42.0,4,10.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1848TER Processor,57.0,10,5.7,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-1844NT Processor,55.0,10,5.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2832NT Processor,70.0,8,8.75,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2896NT Processor,117.0,20,5.85,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2899NT Processor,135.0,22,6.136363636363637,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2843NT Processor,80.0,10,8.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2896TER Processor,110.0,20,5.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon D-2876NT Processor,100.0,16,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1520,45.0,4,11.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1540,45.0,8,5.625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1529,20.0,4,5.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1527,35.0,4,8.75,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1537,35.0,8,4.375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1528,35.0,6,5.833333333333333,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1541,45.0,8,5.625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1539,35.0,8,4.375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1518,35.0,4,8.75,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1521,45.0,4,11.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1531,45.0,6,7.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1548,45.0,8,5.625,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1559,45.0,12,3.75,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1577,45.0,16,2.8125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1571,45.0,16,2.8125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1567,65.0,12,5.416666666666667,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon Processor D-1557,45.0,12,3.75,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2124G Processor,71.0,4,17.75,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2176G Processor,80.0,6,13.333333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2176M Processor,45.0,6,7.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2254ME Processor,45.0,4,11.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2276ME Processor,45.0,6,7.5,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2254ML Processor,25.0,4,6.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2276ML Processor,25.0,6,4.166666666666667,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2278GEL Processor,35.0,8,4.375,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2226GE Processor,80.0,6,13.333333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2278GE Processor,80.0,8,10.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2336 Processor,65.0,6,10.833333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2324G Processor,65.0,4,16.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2356G Processor,80.0,6,13.333333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2334 Processor,65.0,4,16.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2314 Processor,65.0,4,16.25,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2374G Processor,80.0,4,20.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2378 Processor,65.0,8,8.125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2378G Processor,80.0,8,10.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2388G Processor,95.0,8,11.875,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2386G Processor,95.0,6,15.833333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2488 Processor,95.0,8,11.875,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2478 Processor,80.0,8,10.0,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2468 Processor,65.0,8,8.125,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2486 Processor,95.0,6,15.833333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2456 Processor,80.0,6,13.333333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2436 Processor,65.0,6,10.833333333333334,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2434 Processor,55.0,4,13.75,https://www.intel.com/content/www/us/en/products/details/processors.html
+Intel Xeon E-2414 Processor,55.0,4,13.75,https://www.intel.com/content/www/us/en/products/details/processors.html
 A8-7680,45.0,4,11.25,https://www.techpowerup.com/cpu-specs/
 A9-9425 SoC,15.0,2,7.5,https://www.techpowerup.com/cpu-specs/
 7552,200.0,48,4.166666666666667,https://www.amd.com/system/files/documents/AMD-EPYC-7002-Series-Datasheet.pdf
-EPYC 7251,120.0,8,15.0,https://www.amd.com/en/products/cpu/amd-epyc-7251
+AMD EPYC 7251,120.0,8,15.0,https://www.amd.com/en/products/cpu/amd-epyc-7251
+Athlon 3000G,35.0,2,17.5,https://www.techpowerup.com/cpu-specs/
 Core 2 Quad Q6600,95.0,4,23.75,https://www.techpowerup.com/cpu-specs/
 Core i3-10100,65.0,4,16.25,https://www.techpowerup.com/cpu-specs/
 Core i3-10300,62.0,4,15.5,https://www.techpowerup.com/cpu-specs/
@@ -807,7 +808,20 @@ Core i9-10920XE,165.0,12,13.75,https://www.techpowerup.com/cpu-specs/
 Core i9-9900K,95.0,8,11.875,https://www.techpowerup.com/cpu-specs/
 Ryzen 3 2200G,65.0,4,16.25,https://www.techpowerup.com/cpu-specs/
 Ryzen 3 3200G,65.0,4,16.25,https://www.techpowerup.com/cpu-specs/
+Ryzen 3 3200U,15.0,2,7.5,https://www.techpowerup.com/cpu-specs/
+Ryzen 5 1600,65.0,6,10.833333333333334,https://www.techpowerup.com/cpu-specs/
+Ryzen 5 2600,65.0,6,10.833333333333334,https://www.techpowerup.com/cpu-specs/
 Ryzen 5 3400G,65.0,4,16.25,https://www.techpowerup.com/cpu-specs/
+Ryzen 5 3500U,15.0,4,3.75,https://www.techpowerup.com/cpu-specs/
+Ryzen 5 3600,65.0,6,10.833333333333334,https://www.techpowerup.com/cpu-specs/
+Ryzen 5 3600X,95.0,6,15.833333333333334,https://www.techpowerup.com/cpu-specs/
+Ryzen 7 2700X,105.0,8,13.125,https://www.techpowerup.com/cpu-specs/
+Ryzen 7 3700X,65.0,8,8.125,https://www.techpowerup.com/cpu-specs/
+Ryzen 7 3800X,105.0,8,13.125,https://www.techpowerup.com/cpu-specs/
+Ryzen 9 3900X,125.0,12,10.416666666666666,https://www.techpowerup.com/cpu-specs/
+Ryzen 9 3950X,105.0,16,6.5625,https://www.techpowerup.com/cpu-specs/
+Ryzen Threadripper 2990WX,250.0,32,7.8125,https://www.techpowerup.com/cpu-specs/
+Ryzen Threadripper 3990X,280.0,64,4.375,https://www.techpowerup.com/cpu-specs/
 Xeon E5-2660 v3,105.0,10,10.5,https://ark.intel.com/content/www/us/en/ark/products/81706/intel-xeon-processor-e5-2660-v3-25m-cache-2-60-ghz.html
 Xeon E5-2665,115.0,8,14.375,https://ark.intel.com/content/www/us/en/ark/products/64597/intel-xeon-processor-e5-2665-20m-cache-2-40-ghz-8-00-gt-s-intel-qpi.html
 Xeon E5-2670,115.0,8,14.375,https://ark.intel.com/content/www/us/en/ark/products/64595/intel-xeon-processor-e5-2670-20m-cache-2-60-ghz-8-00-gt-s-intel-qpi.html
