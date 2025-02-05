@@ -330,11 +330,9 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
             // create a new trace file
             co2eTraceFile = new PrintWriter(TraceHelper.newFileWriter(co2eTracePath, overwrite, 'co2footprint'))
-            co2eSummaryFile = new PrintWriter(TraceHelper.newFileWriter(co2eSummaryPath, overwrite, 'co2footprintsummary'))
 
             // launch the agent
             traceWriter = new Agent<PrintWriter>(co2eTraceFile)
-            summaryWriter = new Agent<PrintWriter>(co2eSummaryFile)
 
             String cpu_model_string = config.getIgnoreCpuModel()? "" : "cpu_model\t"
             traceWriter.send { co2eTraceFile.println(
@@ -362,6 +360,12 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
             // wait for termination and flush the agent content
             traceWriter.await()
+
+            // create a summary trace file
+            co2eSummaryFile = new PrintWriter(TraceHelper.newFileWriter(co2eSummaryPath, overwrite, 'co2footprintsummary'))
+
+            // launch the agent
+            summaryWriter = new Agent<PrintWriter>(co2eSummaryFile)
 
             co2eSummaryFile.println("Total CO2e footprint measures of this workflow run")
             co2eSummaryFile.println("CO2e emissions: ${HelperFunctions.convertToReadableUnits(total_co2,3)}g")
