@@ -1,0 +1,1492 @@
+index,in Watt,,,
+model,TDP,n_cores,TDP_per_core,source
+A8-7680,45,4,11.3,https://www.techpowerup.com/cpu-specs/
+A9-9425 SoC,15,2,7.5,https://www.techpowerup.com/cpu-specs/
+AMD 7552,200,48,4.2,https://www.amd.com/system/files/documents/AMD-EPYC-7002-Series-Datasheet.pdf
+AMD EPYC 7251,120,8,15.0,https://www.amd.com/en/products/cpu/amd-epyc-7251
+Any,,,12.0,
+Athlon 3000G,35,2,17.5,https://www.techpowerup.com/cpu-specs/
+Core 2 Quad Q6600,95,4,23.8,https://www.techpowerup.com/cpu-specs/
+Core i3-10100,65,4,16.3,https://www.techpowerup.com/cpu-specs/
+Core i3-10300,62,4,15.5,https://www.techpowerup.com/cpu-specs/
+Core i3-10320,91,4,22.8,https://www.techpowerup.com/cpu-specs/
+Core i3-10350K,91,4,22.8,https://www.techpowerup.com/cpu-specs/
+Core i3-9100,65,4,16.3,https://www.techpowerup.com/cpu-specs/
+Core i3-9100F,65,4,16.3,https://www.techpowerup.com/cpu-specs/
+Core i5-10400,65,6,10.8,https://www.techpowerup.com/cpu-specs/
+Core i5-10400F,65,6,10.8,https://www.techpowerup.com/cpu-specs/
+Core i5-10500,65,6,10.8,https://www.techpowerup.com/cpu-specs/
+Core i5-10600,65,6,10.8,https://www.techpowerup.com/cpu-specs/
+Core i5-10600K,95,6,15.8,https://www.techpowerup.com/cpu-specs/
+Core i5-3570K,77,4,19.3,https://www.techpowerup.com/cpu-specs/
+Core i5-4460,84,4,21.0,https://ark.intel.com/content/www/us/en/ark/products/80817/intel-core-i5-4460-processor-6m-cache-up-to-3-40-ghz.html
+Core i5-9400,65,6,10.8,https://www.techpowerup.com/cpu-specs/
+Core i5-9400F,65,6,10.8,https://www.techpowerup.com/cpu-specs/
+Core i5-9600KF,95,6,15.8,https://www.techpowerup.com/cpu-specs/
+Core i7-10700,65,8,8.1,https://www.techpowerup.com/cpu-specs/
+Core i7-10700K,125,8,15.6,https://www.techpowerup.com/cpu-specs/
+Core i7-4930K,130,6,21.7,https://www.techpowerup.com/cpu-specs/
+Core i7-6700K,95,4,23.8,https://www.techpowerup.com/cpu-specs/
+Core i7-8700K,95,6,15.8,https://www.techpowerup.com/cpu-specs/
+Core i7-9700F,65,8,8.1,https://www.techpowerup.com/cpu-specs/
+Core i7-9700K,95,8,11.9,https://www.techpowerup.com/cpu-specs/
+Core i9-10900K,125,10,12.5,https://www.techpowerup.com/cpu-specs/
+Core i9-10900KF,105,10,10.5,https://www.techpowerup.com/cpu-specs/
+Core i9-10900XE,165,10,16.5,https://www.techpowerup.com/cpu-specs/
+Core i9-10920XE,165,12,13.8,https://www.techpowerup.com/cpu-specs/
+Core i9-9900K,95,8,11.9,https://www.techpowerup.com/cpu-specs/
+FX-6300,95,6,15.8,https://www.techpowerup.com/cpu-specs/
+FX-8350,125,8,15.6,https://www.techpowerup.com/cpu-specs/
+Ryzen 3 2200G,65,4,16.3,https://www.techpowerup.com/cpu-specs/
+Ryzen 3 3200G,65,4,16.3,https://www.techpowerup.com/cpu-specs/
+Ryzen 3 3200U,15,2,7.5,https://www.techpowerup.com/cpu-specs/
+Ryzen 5 1600,65,6,10.8,https://www.techpowerup.com/cpu-specs/
+Ryzen 5 2600,65,6,10.8,https://www.techpowerup.com/cpu-specs/
+Ryzen 5 3400G,65,4,16.3,https://www.techpowerup.com/cpu-specs/
+Ryzen 5 3500U,15,4,3.8,https://www.techpowerup.com/cpu-specs/
+Ryzen 5 3600,65,6,10.8,https://www.techpowerup.com/cpu-specs/
+Ryzen 5 3600X,95,6,15.8,https://www.techpowerup.com/cpu-specs/
+Ryzen 7 2700X,105,8,13.1,https://www.techpowerup.com/cpu-specs/
+Ryzen 7 3700X,65,8,8.1,https://www.techpowerup.com/cpu-specs/
+Ryzen 7 3800X,105,8,13.1,https://www.techpowerup.com/cpu-specs/
+Ryzen 9 3900X,125,12,10.4,https://www.techpowerup.com/cpu-specs/
+Ryzen 9 3950X,105,16,6.6,https://www.techpowerup.com/cpu-specs/
+Ryzen Threadripper 2990WX,250,32,7.8,https://www.techpowerup.com/cpu-specs/
+Ryzen Threadripper 3990X,280,64,4.4,https://www.techpowerup.com/cpu-specs/
+Xeon E5540,80,4,20,https://www.intel.com/content/www/us/en/products/sku/37104/intel-xeon-processor-e5540-8m-cache-2-53-ghz-5-86-gts-intel-qpi.html
+Xeon E5-2630,95,6,15.8,https://www.intel.com/content/www/us/en/products/sku/64593/intel-xeon-processor-e52630-15m-cache-2-30-ghz-7-20-gts-intel-qpi.html
+Xeon E5-2640,95,6,15.8,https://www.intel.com/content/www/us/en/products/sku/64591/intel-xeon-processor-e52640-15m-cache-2-50-ghz-7-20-gts-intel-qpi.html
+Xeon E5-2660 v3,105,10,10.5,https://ark.intel.com/content/www/us/en/ark/products/81706/intel-xeon-processor-e5-2660-v3-25m-cache-2-60-ghz.html
+Xeon E5-2665,115,8,14.4,https://ark.intel.com/content/www/us/en/ark/products/64597/intel-xeon-processor-e5-2665-20m-cache-2-40-ghz-8-00-gt-s-intel-qpi.html
+Xeon E5-2670,115,8,14.4,https://ark.intel.com/content/www/us/en/ark/products/64595/intel-xeon-processor-e5-2670-20m-cache-2-60-ghz-8-00-gt-s-intel-qpi.html
+Xeon E5-2670 v2,115,10,11.5,https://ark.intel.com/content/www/us/en/ark/products/75275/intel-xeon-processor-e5-2670-v2-25m-cache-2-50-ghz.html
+Xeon E5-2670 v3,120,12,10.0,https://www.intel.com/content/www/us/en/products/sku/81709/intel-xeon-processor-e52670-v3-30m-cache-2-30-ghz/specifications.html
+Xeon E5-2680 v3,120,12,10.0,https://www.intel.co.uk/content/www/uk/en/products/processors/xeon/e5-processors/e5-2680-v3.html
+Xeon E5-2680 v4,120,14,8.6,https://www.intel.com/content/www/us/en/products/sku/91754/intel-xeon-processor-e52680-v4-35m-cache-2-40-ghz.html
+Xeon E5-2683 v4,120,16,7.5,https://www.intel.co.uk/content/www/uk/en/products/processors/xeon/e5-processors/e5-2683-v4.html
+Xeon E5-2690 v2,130,10,13.0,https://ark.intel.com/content/www/us/en/ark/products/75279/intel-xeon-processor-e5-2690-v2-25m-cache-3-00-ghz.html
+Xeon E5-2690 v3,135,12,11.3,https://ark.intel.com/content/www/us/en/ark/products/81713/intel-xeon-processor-e5-2690-v3-30m-cache-2-60-ghz.html
+Xeon E5-2695 v3,120,14,8.6,https://www.intel.com/content/www/us/en/products/sku/81057/intel-xeon-processor-e52695-v3-35m-cache-2-30-ghz.html
+Xeon E5-2695 v4,120,18,6.7,https://ark.intel.com/content/www/us/en/ark/products/91316/intel-xeon-processor-e5-2695-v4-45m-cache-2-10-ghz.html
+Xeon E5-2697 v4,145,18,8.1,https://ark.intel.com/content/www/us/en/ark/products/91755/intel-xeon-processor-e5-2697-v4-45m-cache-2-30-ghz.html
+Xeon E5-2699 v3,145,18,8.1,https://ark.intel.com/content/www/us/en/ark/products/81061/intel-xeon-processor-e5-2699-v3-45m-cache-2-30-ghz.html
+Xeon E5-2699 v4,145,22,6.6,https://ark.intel.com/content/www/us/en/ark/products/91317/intel-xeon-processor-e5-2699-v4-55m-cache-2-20-ghz.html
+Xeon E5-4610 v4,105,10,10.5,https://ark.intel.com/content/www/us/en/ark/products/93812/intel-xeon-processor-e5-4610-v4-25m-cache-1-80-ghz.html
+Xeon E5-4620,95,8,11.9,https://ark.intel.com/content/www/us/en/ark/products/64607/intel-xeon-processor-e5-4620-16m-cache-2-20-ghz-7-20-gt-s-intel-qpi.html
+Xeon E5-4650L,115,8,14.4,https://ark.intel.com/content/www/us/en/ark/products/64606/intel-xeon-processor-e5-4650l-20m-cache-2-60-ghz-8-00-gt-s-intel-qpi.html
+Xeon E7-4850,130,10,13,https://www.intel.com/content/www/us/en/products/sku/53574/intel-xeon-processor-e74850-24m-cache-2-00-ghz-6-40-gts-intel-qpi.html
+Xeon E7-8867 v3,165,16,10.3,https://ark.intel.com/content/www/us/en/ark/products/84681/intel-xeon-processor-e7-8867-v3-45m-cache-2-50-ghz.html
+Xeon E7-8880 v4,150,22,6.8,https://www.intel.co.uk/content/www/uk/en/products/processors/xeon/e7-processors/e7-8880-v4.html
+Xeon Gold 5220,125,18,6.9,https://www.intel.com/content/www/us/en/products/sku/193388/intel-xeon-gold-5220-processor-24-75m-cache-2-20-ghz.html
+Xeon Gold 5220R,150,24,6.3,https://www.intel.com/content/www/us/en/products/sku/199354/intel-xeon-gold-5220r-processor-35-75m-cache-2-20-ghz.html
+Xeon Gold 6338N,185,32,5.8,https://www.intel.com/content/www/us/en/products/sku/212633/intel-xeon-gold-6338n-processor-48m-cache-2-20-ghz.html
+Xeon Gold 6140,140,18,7.8,https://www.intel.com/content/www/us/en/products/sku/120485/intel-xeon-gold-6140-processor-24-75m-cache-2-30-ghz.html
+Xeon Gold 6142,150,16,9.4,https://ark.intel.com/content/www/us/en/ark/products/120487/intel-xeon-gold-6142-processor-22m-cache-2-60-ghz.html
+Xeon Gold 6148,150,20,7.5,https://ark.intel.com/content/www/us/en/ark/products/120489/intel-xeon-gold-6148-processor-27-5m-cache-2-40-ghz.html
+Xeon Gold 6248,150,20,7.5,https://ark.intel.com/content/www/us/en/ark/products/192446/intel-xeon-gold-6248-processor-27-5m-cache-2-50-ghz.html
+Xeon Gold 6252,150,24,6.3,https://ark.intel.com/content/www/us/en/ark/products/192447/intel-xeon-gold-6252-processor-35-75m-cache-2-10-ghz.html
+Xeon L5640 ,60,6,10.0,https://ark.intel.com/content/www/us/en/ark/products/47926/intel-xeon-processor-l5640-12m-cache-2-26-ghz-5-86-gt-s-intel-qpi.html
+Xeon Phi 5110P,225,60,3.8,https://ark.intel.com/content/www/us/en/ark/products/71992/intel-xeon-phi-coprocessor-5110p-8gb-1-053-ghz-60-core.html
+Xeon Platinum 9282,400,56,7.1,https://www.techpowerup.com/cpu-specs/
+Xeon Silver 4114,85,10,8.5,https://www.intel.com/content/www/us/en/products/sku/123550/intel-xeon-silver-4114-processor-13-75m-cache-2-20-ghz.html
+Xeon X3430,95,4,23.8,https://ark.intel.com/content/www/us/en/ark/products/42927/intel-xeon-processor-x3430-8m-cache-2-40-ghz.html
+Xeon X5660,95,6,15.8,https://ark.intel.com/content/www/us/en/ark/products/47921/intel-xeon-processor-x5660-12m-cache-2-80-ghz-6-40-gt-s-intel-qpi.html
+Xeon X5550,95,4,23.8,https://www.intel.com/content/www/us/en/products/sku/37106/intel-xeon-processor-x5550-8m-cache-2-66-ghz-6-40-gts-intel-qpi.html
+Phenom 9850,125,4,31.25,http://cpudb.stanford.edu
+Phenom 9950,140,4,35,http://cpudb.stanford.edu
+Phenom 9750,95,4,23.75,http://cpudb.stanford.edu
+Turion 64 X2 TL-60,31,2,15.5,http://cpudb.stanford.edu
+Turion 64 MT-40,25,1,25,http://cpudb.stanford.edu
+Athlon 64 X2 6400+,125,2,62.5,http://cpudb.stanford.edu
+Athlon 64 X2 6000+,125,2,62.5,http://cpudb.stanford.edu
+Phenom II 720,95,3,31.67,http://cpudb.stanford.edu
+Athlon X2 7750,95,2,47.5,http://cpudb.stanford.edu
+Athlon 64 X2 5000+,65,2,32.5,http://cpudb.stanford.edu
+Phenom II 710,95,3,31.67,http://cpudb.stanford.edu
+Phenom II 910,95,4,23.75,http://cpudb.stanford.edu
+Phenom 9350,65,4,16.25,http://cpudb.stanford.edu
+Athlon XP 2200+,62,1,62,http://cpudb.stanford.edu
+Athlon XP 3000+,74.3,1,74.3,http://cpudb.stanford.edu
+Phenom 8750,95,3,31.67,http://cpudb.stanford.edu
+FX FX-62,125,2,62.5,http://cpudb.stanford.edu
+Opteron 146,89,1,89,http://cpudb.stanford.edu
+Opteron 890,95,2,47.5,http://cpudb.stanford.edu
+Athlon 64 X2 QL-65,35,2,17.5,http://cpudb.stanford.edu
+Athlon 64 X2 TK-42,20,2,10,http://cpudb.stanford.edu
+Athlon II 635,95,4,23.75,http://cpudb.stanford.edu
+Athlon X2 7550,95,2,47.5,http://cpudb.stanford.edu
+Opteron 2220-SE,119,2,59.5,http://cpudb.stanford.edu
+Opteron 2210,95,2,47.5,http://cpudb.stanford.edu
+Opteron 8220,120,2,60,http://cpudb.stanford.edu
+Opteron 8350,75,4,18.75,http://cpudb.stanford.edu
+Opteron 2220,95,2,47.5,http://cpudb.stanford.edu
+Opteron 2218,95,2,47.5,http://cpudb.stanford.edu
+Opteron 2350,95,4,23.75,http://cpudb.stanford.edu
+Opteron 2356,95,4,23.75,http://cpudb.stanford.edu
+Opteron 2384,115,4,28.75,http://cpudb.stanford.edu
+Opteron 2389,115,4,28.75,http://cpudb.stanford.edu
+Opteron 1352,95,4,23.75,http://cpudb.stanford.edu
+Opteron 1354,95,4,23.75,http://cpudb.stanford.edu
+Opteron 2222,95,2,47.5,http://cpudb.stanford.edu
+Opteron 144,89,1,89,http://cpudb.stanford.edu
+Opteron 2216,95,2,47.5,http://cpudb.stanford.edu
+Opteron 2212,95,2,47.5,http://cpudb.stanford.edu
+Opteron 2214,95,2,47.5,http://cpudb.stanford.edu
+Opteron 1218,103,2,51.5,http://cpudb.stanford.edu
+Phenom II 940,125,4,31.25,http://cpudb.stanford.edu
+Phenom II 810,95,4,23.75,http://cpudb.stanford.edu
+Phenom II 805,95,4,23.75,http://cpudb.stanford.edu
+Phenom II 920,125,4,31.25,http://cpudb.stanford.edu
+Phenom II 925,95,4,23.75,http://cpudb.stanford.edu
+Phenom II 955,125,4,31.25,http://cpudb.stanford.edu
+Athlon 1400,56,1,56,http://cpudb.stanford.edu
+Athlon 64 3000+,89,1,89,http://cpudb.stanford.edu
+FX FX-60,110,2,55,http://cpudb.stanford.edu
+FX FX-55,89,1,89,http://cpudb.stanford.edu
+FX FX-57,104,1,104,http://cpudb.stanford.edu
+Opteron 2222-SE,119,2,59.5,http://cpudb.stanford.edu
+Opteron 1356,95,4,23.75,http://cpudb.stanford.edu
+Opteron 256,92.6,1,92.6,http://cpudb.stanford.edu
+Opteron 2439-SE,137,6,22.83,http://cpudb.stanford.edu
+Opteron 2360-SE,119,4,29.75,http://cpudb.stanford.edu
+80486 Am486,3,1,3,http://cpudb.stanford.edu
+Athlon 1000,49,1,49,http://cpudb.stanford.edu
+Opteron 254,92.6,1,92.6,http://cpudb.stanford.edu
+Opteron 8222,120,2,60,http://cpudb.stanford.edu
+Opteron 2435,115,6,19.17,http://cpudb.stanford.edu
+Cypress CY7C601,3,1,3,http://cpudb.stanford.edu
+PowerPC 7xx 750,8,1,8,http://cpudb.stanford.edu
+PowerPC 970 970FX,11,1,11,http://cpudb.stanford.edu
+PowerPC 7xx 740,8,1,8,http://cpudb.stanford.edu
+Xeon 3.60E,110,1,110,http://cpudb.stanford.edu
+Xeon 3.6,110,1,110,http://cpudb.stanford.edu
+Xeon 3.80E,110,1,110,http://cpudb.stanford.edu
+Xeon X5675,95,6,15.83,http://cpudb.stanford.edu
+Xeon X5687,130,4,32.5,http://cpudb.stanford.edu
+Xeon X5672,95,4,23.75,http://cpudb.stanford.edu
+Xeon X5647,130,4,32.5,http://cpudb.stanford.edu
+Xeon E5649,80,6,13.33,http://cpudb.stanford.edu
+Xeon E5607,80,4,20,http://cpudb.stanford.edu
+Xeon E5606,80,4,20,http://cpudb.stanford.edu
+Xeon E5603,80,4,20,http://cpudb.stanford.edu
+Xeon E5-4603 v2,95,4,23.75,http://cpudb.stanford.edu
+Xeon W3690,130,6,21.67,http://cpudb.stanford.edu
+Xeon E5-2403 v2,80,4,20,http://cpudb.stanford.edu
+Xeon E5-4607,95,6,15.83,http://cpudb.stanford.edu
+Xeon E3-1220L,20,2,10,http://cpudb.stanford.edu
+Xeon E3-1270v3,80,4,20,http://cpudb.stanford.edu
+Xeon E5-2640 v2,95,8,11.88,http://cpudb.stanford.edu
+Xeon 3050,65,2,32.5,http://cpudb.stanford.edu
+Xeon E6510,105,4,26.25,http://cpudb.stanford.edu
+Xeon E6540,105,6,17.5,http://cpudb.stanford.edu
+Xeon E7520,95,4,23.75,http://cpudb.stanford.edu
+Xeon E7530,105,6,17.5,http://cpudb.stanford.edu
+Xeon E7540,105,6,17.5,http://cpudb.stanford.edu
+Xeon L7545,95,6,15.83,http://cpudb.stanford.edu
+Xeon L7555,95,8,11.88,http://cpudb.stanford.edu
+Xeon X6550,130,8,16.25,http://cpudb.stanford.edu
+Xeon X7542,130,6,21.67,http://cpudb.stanford.edu
+Xeon X7550,130,8,16.25,http://cpudb.stanford.edu
+Xeon X7560,130,8,16.25,http://cpudb.stanford.edu
+Xeon 5150,65,2,32.5,http://cpudb.stanford.edu
+Xeon 5160,80,2,40,http://cpudb.stanford.edu
+Xeon 7020,165,2,82.5,http://cpudb.stanford.edu
+Xeon 7041,165,2,82.5,http://cpudb.stanford.edu
+Xeon 7120M,95,2,47.5,http://cpudb.stanford.edu
+Xeon 7130M,150,2,75,http://cpudb.stanford.edu
+Xeon 7140M,150,2,75,http://cpudb.stanford.edu
+Xeon E3110,65,2,32.5,http://cpudb.stanford.edu
+Xeon E3113,65,2,32.5,http://cpudb.stanford.edu
+Xeon E3120,65,2,32.5,http://cpudb.stanford.edu
+Xeon E5205,65,2,32.5,http://cpudb.stanford.edu
+Xeon E5310,80,4,20,http://cpudb.stanford.edu
+Xeon E7-2803,105,6,17.5,http://cpudb.stanford.edu
+Xeon E7-4807,95,6,15.83,http://cpudb.stanford.edu
+Xeon E7-2860,130,10,13,http://cpudb.stanford.edu
+Xeon E7-4860,130,10,13,http://cpudb.stanford.edu
+Xeon 5030,95,2,47.5,http://cpudb.stanford.edu
+Xeon 5040,95,2,47.5,http://cpudb.stanford.edu
+Xeon 5060,130,2,65,http://cpudb.stanford.edu
+Xeon 5070,130,2,65,http://cpudb.stanford.edu
+Xeon 7030,165,2,82.5,http://cpudb.stanford.edu
+Xeon 7040,165,2,82.5,http://cpudb.stanford.edu
+Xeon EC5549,85,4,21.25,http://cpudb.stanford.edu
+Xeon L3110,45,2,22.5,http://cpudb.stanford.edu
+Xeon L3426,45,4,11.25,http://cpudb.stanford.edu
+Xeon L5215,20,2,10,http://cpudb.stanford.edu
+Xeon 5063,95,2,47.5,http://cpudb.stanford.edu
+Xeon L5320,50,4,12.5,http://cpudb.stanford.edu
+Xeon L5408,40,4,10,http://cpudb.stanford.edu
+Xeon L5410,50,4,12.5,http://cpudb.stanford.edu
+Xeon E7-2850 v2,105,12,8.75,http://cpudb.stanford.edu
+Xeon 7110N,95,2,47.5,http://cpudb.stanford.edu
+Xeon 7120N,95,2,47.5,http://cpudb.stanford.edu
+Xeon 7130N,150,2,75,http://cpudb.stanford.edu
+Xeon 7140N,150,2,75,http://cpudb.stanford.edu
+Xeon E7-8880L v2,105,15,7,http://cpudb.stanford.edu
+Xeon E7-8880 v2,130,15,8.67,http://cpudb.stanford.edu
+Xeon E7-8890 v2,155,15,10.33,http://cpudb.stanford.edu
+Xeon E7-8891 v2,155,10,15.5,http://cpudb.stanford.edu
+Xeon E7-8893 v2,155,6,25.83,http://cpudb.stanford.edu
+Xeon E5-2440 v2,95,8,11.88,http://cpudb.stanford.edu
+Xeon E5-2450L v2,60,10,6,http://cpudb.stanford.edu
+Xeon E5-2470 v2,95,10,9.5,http://cpudb.stanford.edu
+Xeon E5-2643 v2,130,6,21.67,http://cpudb.stanford.edu
+Xeon E5-2650 v2,95,8,11.88,http://cpudb.stanford.edu
+Xeon E5-2650L v2,70,10,7,http://cpudb.stanford.edu
+Xeon E5-2660 v2,95,10,9.5,http://cpudb.stanford.edu
+Xeon E5-2667 v2,130,8,16.25,http://cpudb.stanford.edu
+Xeon E5-2695 v2,115,12,9.58,http://cpudb.stanford.edu
+Xeon E3-1220,80,4,20,http://cpudb.stanford.edu
+Xeon E3-1230,80,4,20,http://cpudb.stanford.edu
+Xeon E3-1235,95,4,23.75,http://cpudb.stanford.edu
+Xeon E3-1240,80,4,20,http://cpudb.stanford.edu
+Xeon E3-1245,95,4,23.75,http://cpudb.stanford.edu
+Xeon E3-1260L,45,4,11.25,http://cpudb.stanford.edu
+Xeon E3-1270,80,4,20,http://cpudb.stanford.edu
+Xeon E3-1280,95,4,23.75,http://cpudb.stanford.edu
+Xeon E5-2609,80,4,20,http://cpudb.stanford.edu
+Xeon X5690,130,6,21.67,http://cpudb.stanford.edu
+Xeon E5-2650,95,8,11.88,http://cpudb.stanford.edu
+Xeon E5-2603,80,4,20,http://cpudb.stanford.edu
+Xeon E5-2690,135,8,16.88,http://cpudb.stanford.edu
+Xeon L7345,50,4,12.5,http://cpudb.stanford.edu
+Xeon E5-1650,130,6,21.67,http://cpudb.stanford.edu
+Xeon E5-4610,95,6,15.83,http://cpudb.stanford.edu
+Xeon E5-4640,95,8,11.88,http://cpudb.stanford.edu
+Xeon X5667,95,4,23.75,http://cpudb.stanford.edu
+Xeon E5-2603 v2,80,4,20,http://cpudb.stanford.edu
+Xeon E5-2687W v2,150,8,18.75,http://cpudb.stanford.edu
+Xeon E5-2450L,70,8,8.75,http://cpudb.stanford.edu
+Xeon E5-2450,95,8,11.88,http://cpudb.stanford.edu
+Xeon E5-2440,95,6,15.83,http://cpudb.stanford.edu
+Xeon E5-2430L,60,6,10,http://cpudb.stanford.edu
+Xeon E5-2407,80,4,20,http://cpudb.stanford.edu
+Xeon E5-2403,80,4,20,http://cpudb.stanford.edu
+Xeon E5-2430,95,6,15.83,http://cpudb.stanford.edu
+Xeon E5-2420,95,6,15.83,http://cpudb.stanford.edu
+Xeon 3040,65,2,32.5,http://cpudb.stanford.edu
+Xeon E5-1620,130,4,32.5,http://cpudb.stanford.edu
+Xeon 3060,65,2,32.5,http://cpudb.stanford.edu
+Xeon 3065,65,2,32.5,http://cpudb.stanford.edu
+Xeon 3070,65,2,32.5,http://cpudb.stanford.edu
+Xeon 3075,65,2,32.5,http://cpudb.stanford.edu
+Xeon 3085,65,2,32.5,http://cpudb.stanford.edu
+Xeon 5050,95,2,47.5,http://cpudb.stanford.edu
+Xeon 5080,130,2,65,http://cpudb.stanford.edu
+Xeon 5110,65,2,32.5,http://cpudb.stanford.edu
+Xeon 5120,65,2,32.5,http://cpudb.stanford.edu
+Xeon 5130,65,2,32.5,http://cpudb.stanford.edu
+Xeon 5140,65,2,32.5,http://cpudb.stanford.edu
+Xeon E5-1603,130,4,32.5,http://cpudb.stanford.edu
+Xeon E5-1607,130,4,32.5,http://cpudb.stanford.edu
+Xeon E7-4880 v2,130,15,8.67,http://cpudb.stanford.edu
+Xeon E5-2667,130,6,21.67,http://cpudb.stanford.edu
+Xeon 7110M,95,2,47.5,http://cpudb.stanford.edu
+Xeon E3-1245 v3,84,4,21,http://cpudb.stanford.edu
+Xeon E3-1265L v3,45,4,11.25,http://cpudb.stanford.edu
+Xeon E3-1285 v3,84,4,21,http://cpudb.stanford.edu
+Xeon E3-1285L v3,65,4,16.25,http://cpudb.stanford.edu
+Xeon W3505,130,2,65,http://cpudb.stanford.edu
+Xeon W3520,130,4,32.5,http://cpudb.stanford.edu
+Xeon W3540,130,4,32.5,http://cpudb.stanford.edu
+Xeon W3550,130,4,32.5,http://cpudb.stanford.edu
+Xeon L3014,30,1,30,http://cpudb.stanford.edu
+Xeon X5492,150,4,37.5,http://cpudb.stanford.edu
+Xeon L7445,50,4,12.5,http://cpudb.stanford.edu
+Xeon E7-8860,130,10,13,http://cpudb.stanford.edu
+Xeon E7-2850,130,10,13,http://cpudb.stanford.edu
+Xeon E7-8850,130,10,13,http://cpudb.stanford.edu
+Xeon E7-8837,130,8,16.25,http://cpudb.stanford.edu
+Xeon E7-8867L,105,10,10.5,http://cpudb.stanford.edu
+Xeon E7-2870,130,10,13,http://cpudb.stanford.edu
+Xeon E7-4870,130,10,13,http://cpudb.stanford.edu
+Xeon E7-8870,130,10,13,http://cpudb.stanford.edu
+Xeon E7-2820,105,8,13.12,http://cpudb.stanford.edu
+Xeon E7-2830,105,8,13.12,http://cpudb.stanford.edu
+Xeon E7-4820,105,8,13.12,http://cpudb.stanford.edu
+Xeon E7-4830,105,8,13.12,http://cpudb.stanford.edu
+Xeon E7-8830,105,8,13.12,http://cpudb.stanford.edu
+Xeon E5620,80,4,20,http://cpudb.stanford.edu
+Xeon E5630,80,4,20,http://cpudb.stanford.edu
+Xeon E5640,80,4,20,http://cpudb.stanford.edu
+Xeon E7310,80,4,20,http://cpudb.stanford.edu
+Xeon E7320,80,4,20,http://cpudb.stanford.edu
+Xeon L3360,65,4,16.25,http://cpudb.stanford.edu
+Xeon L3406,30,2,15,http://cpudb.stanford.edu
+Xeon X7350,130,4,32.5,http://cpudb.stanford.edu
+Xeon E5-2650L,70,8,8.75,http://cpudb.stanford.edu
+Xeon E5-2630L,60,6,10,http://cpudb.stanford.edu
+Xeon L5240,40,2,20,http://cpudb.stanford.edu
+Xeon E5-4657L v2,115,12,9.58,http://cpudb.stanford.edu
+Xeon X5272,80,2,40,http://cpudb.stanford.edu
+Xeon E3-1290,95,4,23.75,http://cpudb.stanford.edu
+Xeon 7150N,150,2,75,http://cpudb.stanford.edu
+Xeon L5609,40,4,10,http://cpudb.stanford.edu
+Xeon L5630,40,4,10,http://cpudb.stanford.edu
+Xeon L5640,60,6,10,http://cpudb.stanford.edu
+Xeon E5-2430L v2,60,6,10,http://cpudb.stanford.edu
+Xeon E5-2620 v2,80,6,13.33,http://cpudb.stanford.edu
+Xeon E5-2630L v2,60,6,10,http://cpudb.stanford.edu
+Xeon E5-2637 v2,130,4,32.5,http://cpudb.stanford.edu
+Xeon X5650,95,6,15.83,http://cpudb.stanford.edu
+Xeon W3565,130,4,32.5,http://cpudb.stanford.edu
+Xeon W3570,130,4,32.5,http://cpudb.stanford.edu
+Xeon W3580,130,4,32.5,http://cpudb.stanford.edu
+Xeon W3670,130,6,21.67,http://cpudb.stanford.edu
+Xeon L5310,50,4,12.5,http://cpudb.stanford.edu
+Xeon W5580,130,4,32.5,http://cpudb.stanford.edu
+Xeon 5133,40,2,20,http://cpudb.stanford.edu
+Xeon X3210,105,4,26.25,http://cpudb.stanford.edu
+Xeon X3220,105,4,26.25,http://cpudb.stanford.edu
+Xeon X3230,95,4,23.75,http://cpudb.stanford.edu
+Xeon X3320,95,4,23.75,http://cpudb.stanford.edu
+Xeon 5113,40,2,20,http://cpudb.stanford.edu
+Xeon E7210,80,2,40,http://cpudb.stanford.edu
+Xeon E7220,80,2,40,http://cpudb.stanford.edu
+Xeon X3353,80,4,20,http://cpudb.stanford.edu
+Xeon X3360,95,4,23.75,http://cpudb.stanford.edu
+Xeon X3363,80,4,20,http://cpudb.stanford.edu
+Xeon X3370,95,4,23.75,http://cpudb.stanford.edu
+Xeon X3380,95,4,23.75,http://cpudb.stanford.edu
+Xeon L5335,50,4,12.5,http://cpudb.stanford.edu
+Xeon E5-2650 v3,105,10,10.5,http://cpudb.stanford.edu
+Xeon E7330,80,4,20,http://cpudb.stanford.edu
+Xeon E7340,80,4,20,http://cpudb.stanford.edu
+Xeon E5-4620 v2,95,8,11.88,http://cpudb.stanford.edu
+Xeon E3-1135C v2,55,4,13.75,http://cpudb.stanford.edu
+Xeon E5-4640 v2,95,10,9.5,http://cpudb.stanford.edu
+Xeon E5-2643,130,4,32.5,http://cpudb.stanford.edu
+Xeon X5260,80,2,40,http://cpudb.stanford.edu
+Xeon X5270,80,2,40,http://cpudb.stanford.edu
+Xeon E5-1620 v2,130,4,32.5,http://cpudb.stanford.edu
+Xeon E5-1650 v2,130,6,21.67,http://cpudb.stanford.edu
+Xeon E5-1660 v2,130,6,21.67,http://cpudb.stanford.edu
+Xeon E5-2407 v2,80,4,20,http://cpudb.stanford.edu
+Xeon E5-2420 v2,80,6,13.33,http://cpudb.stanford.edu
+Xeon E7-4830 v2,105,10,10.5,http://cpudb.stanford.edu
+Xeon E7-4850 v2,105,12,8.75,http://cpudb.stanford.edu
+Xeon E5-4607 v2,95,6,15.83,http://cpudb.stanford.edu
+Xeon E5-1680 v3,140,8,17.5,http://cpudb.stanford.edu
+Xeon X5670,95,6,15.83,http://cpudb.stanford.edu
+Xeon E5462,80,4,20,http://cpudb.stanford.edu
+Xeon L5430,50,4,12.5,http://cpudb.stanford.edu
+Xeon E5-4603,95,4,23.75,http://cpudb.stanford.edu
+Xeon E3-1275L v3,45,4,11.25,http://cpudb.stanford.edu
+Xeon E3-1230L v3,25,4,6.25,http://cpudb.stanford.edu
+Xeon E3-1230 v3,80,4,20,http://cpudb.stanford.edu
+Xeon E3-1240 v3,80,4,20,http://cpudb.stanford.edu
+Xeon E3-1280 v3,82,4,20.5,http://cpudb.stanford.edu
+Xeon E3-1270 v2,69,4,17.25,http://cpudb.stanford.edu
+Xeon E3-1265L v2,45,4,11.25,http://cpudb.stanford.edu
+Xeon E3-1245 v2,77,4,19.25,http://cpudb.stanford.edu
+Xeon E5-1660,130,6,21.67,http://cpudb.stanford.edu
+Xeon E3-1230 v2,69,4,17.25,http://cpudb.stanford.edu
+Xeon E5-4650,130,8,16.25,http://cpudb.stanford.edu
+Xeon E5-2470,95,8,11.88,http://cpudb.stanford.edu
+Xeon E5-1428L,60,6,10,http://cpudb.stanford.edu
+Xeon E7-2870 v2,130,15,8.67,http://cpudb.stanford.edu
+Xeon E7-2880 v2,130,15,8.67,http://cpudb.stanford.edu
+Xeon E5-2697 v2,130,12,10.83,http://cpudb.stanford.edu
+Xeon E5-4610 v2,95,8,11.88,http://cpudb.stanford.edu
+Xeon E5-2687W,150,8,18.75,http://cpudb.stanford.edu
+Xeon E5-2680,130,8,16.25,http://cpudb.stanford.edu
+Xeon E5-4627 v2,130,8,16.25,http://cpudb.stanford.edu
+Xeon E5-4650 v2,95,10,9.5,http://cpudb.stanford.edu
+Xeon X3470,95,4,23.75,http://cpudb.stanford.edu
+Xeon X3480,95,4,23.75,http://cpudb.stanford.edu
+Xeon X5355,120,4,30,http://cpudb.stanford.edu
+Xeon E3-1281 v3,82,4,20.5,http://cpudb.stanford.edu
+Xeon L5420,50,4,12.5,http://cpudb.stanford.edu
+Xeon E7450,90,6,15,http://cpudb.stanford.edu
+Xeon E7440,90,4,22.5,http://cpudb.stanford.edu
+Xeon X5472,120,4,30,http://cpudb.stanford.edu
+Xeon X5482,150,4,37.5,http://cpudb.stanford.edu
+Xeon X5560,95,4,23.75,http://cpudb.stanford.edu
+Xeon E5-2637,80,2,40,http://cpudb.stanford.edu
+Xeon L5506,60,4,15,http://cpudb.stanford.edu
+Xeon E5320,80,4,20,http://cpudb.stanford.edu
+Xeon E5335,80,4,20,http://cpudb.stanford.edu
+Xeon E5345,80,4,20,http://cpudb.stanford.edu
+Xeon L7455,65,6,10.83,http://cpudb.stanford.edu
+Xeon E7430,90,4,22.5,http://cpudb.stanford.edu
+Xeon E5530,80,4,20,http://cpudb.stanford.edu
+Xeon X5460,120,4,30,http://cpudb.stanford.edu
+Xeon E7420,90,4,22.5,http://cpudb.stanford.edu
+Xeon X7460,130,6,21.67,http://cpudb.stanford.edu
+Xeon E3-1280 v2,69,4,17.25,http://cpudb.stanford.edu
+Xeon E5-2683 v3,120,14,8.57,http://cpudb.stanford.edu
+Xeon L5530,60,4,15,http://cpudb.stanford.edu
+Xeon E3-1240 v2,69,4,17.25,http://cpudb.stanford.edu
+Xeon X3350,95,4,23.75,http://cpudb.stanford.edu
+Xeon E3-1220 v2,69,4,17.25,http://cpudb.stanford.edu
+Xeon E3-1220L v2,17,2,8.5,http://cpudb.stanford.edu
+Xeon X5450,120,4,30,http://cpudb.stanford.edu
+Xeon W3680,130,6,21.67,http://cpudb.stanford.edu
+Xeon X5470,120,4,30,http://cpudb.stanford.edu
+Xeon E3-1231 v3,80,4,20,http://cpudb.stanford.edu
+Xeon X3440,95,4,23.75,http://cpudb.stanford.edu
+Xeon X3450,95,4,23.75,http://cpudb.stanford.edu
+Xeon E5-2660,95,8,11.88,http://cpudb.stanford.edu
+Xeon X3460,95,4,23.75,http://cpudb.stanford.edu
+Xeon E5-2687W v3,160,10,16,http://cpudb.stanford.edu
+Xeon X5365,150,4,37.5,http://cpudb.stanford.edu
+Xeon E7-8870 v2,130,15,8.67,http://cpudb.stanford.edu
+Xeon W3530,130,4,32.5,http://cpudb.stanford.edu
+Xeon W5590,130,4,32.5,http://cpudb.stanford.edu
+Xeon E3-1240L v3,25,4,6.25,http://cpudb.stanford.edu
+Xeon E3-1286 v3,84,4,21,http://cpudb.stanford.edu
+Xeon W3503,130,2,65,http://cpudb.stanford.edu
+Xeon E3-1276 v3,84,4,21,http://cpudb.stanford.edu
+Xeon X5570,95,4,23.75,http://cpudb.stanford.edu
+Xeon E7-4870 v2,130,15,8.67,http://cpudb.stanford.edu
+Xeon E7-4890 v2,155,15,10.33,http://cpudb.stanford.edu
+Xeon E7-8850 v2,105,12,8.75,http://cpudb.stanford.edu
+Xeon E7-8857 v2,130,12,10.83,http://cpudb.stanford.edu
+Xeon E5520,80,4,20,http://cpudb.stanford.edu
+Xeon E5-2637 v3,135,4,33.75,http://cpudb.stanford.edu
+Xeon L5520,60,4,15,http://cpudb.stanford.edu
+Xeon E5-2630L v3,55,8,6.88,http://cpudb.stanford.edu
+Xeon X3330,95,4,23.75,http://cpudb.stanford.edu
+Xeon E5-2667 v3,135,8,16.88,http://cpudb.stanford.edu
+Xeon E5502,80,2,40,http://cpudb.stanford.edu
+Xeon E5503,80,2,40,http://cpudb.stanford.edu
+Xeon E5-2650L v3,65,12,5.42,http://cpudb.stanford.edu
+Xeon E5506,80,4,20,http://cpudb.stanford.edu
+Xeon E3-1271 v3,80,4,20,http://cpudb.stanford.edu
+Xeon E3-1241 v3,80,4,20,http://cpudb.stanford.edu
+Xeon E5405,80,4,20,http://cpudb.stanford.edu
+Xeon E3-1220 v3,80,4,20,http://cpudb.stanford.edu
+Xeon E5-1620 v3,140,4,35,http://cpudb.stanford.edu
+Xeon E5-2620,95,8,11.88,http://cpudb.stanford.edu
+Xeon E5450,80,4,20,http://cpudb.stanford.edu
+Xeon E7-2890 v2,155,15,10.33,http://cpudb.stanford.edu
+Xeon E5-2643 v3,135,6,22.5,http://cpudb.stanford.edu
+Xeon X5677,130,4,32.5,http://cpudb.stanford.edu
+Xeon E5-1660 v3,140,8,17.5,http://cpudb.stanford.edu
+Xeon E5410,80,4,20,http://cpudb.stanford.edu
+Xeon E5-2630 v3,85,8,10.62,http://cpudb.stanford.edu
+Xeon E5440,80,4,20,http://cpudb.stanford.edu
+Xeon E5-2623 v3,105,4,26.25,http://cpudb.stanford.edu
+Xeon E5472,80,4,20,http://cpudb.stanford.edu
+Xeon E3-1290 v2,87,4,21.75,http://cpudb.stanford.edu
+Xeon E3-1246 v3,84,4,21,http://cpudb.stanford.edu
+Xeon E5504,80,4,20,http://cpudb.stanford.edu
+Xeon E5-2697 v3,145,14,10.36,http://cpudb.stanford.edu
+Xeon E5-1410,80,4,20,http://cpudb.stanford.edu
+Xeon E5-1650 v3,140,6,23.33,http://cpudb.stanford.edu
+Xeon E5430,80,4,20,http://cpudb.stanford.edu
+Xeon E3-1220L v3,13,2,6.5,http://cpudb.stanford.edu
+Xeon E5-2603 v3,85,6,14.17,http://cpudb.stanford.edu
+Xeon E5420,80,4,20,http://cpudb.stanford.edu
+Xeon E7-4809 v2,105,6,17.5,http://cpudb.stanford.edu
+Xeon E5-1630 v3,140,4,35,http://cpudb.stanford.edu
+Xeon E7-4860 v2,130,12,10.83,http://cpudb.stanford.edu
+Xeon E5507,80,4,20,http://cpudb.stanford.edu
+Xeon E5-2698 v3,135,16,8.44,http://cpudb.stanford.edu
+Xeon E5-4617,130,6,21.67,http://cpudb.stanford.edu
+Xeon X5680,130,6,21.67,http://cpudb.stanford.edu
+Xeon E3-1286L v3,65,4,16.25,http://cpudb.stanford.edu
+Xeon X3323,80,4,20,http://cpudb.stanford.edu
+Xeon E3-1226 v3,84,4,21,http://cpudb.stanford.edu
+Xeon E7-4820 v2,105,8,13.12,http://cpudb.stanford.edu
+Celeron D 335J,84,1,84,http://cpudb.stanford.edu
+Celeron D 330J,84,1,84,http://cpudb.stanford.edu
+Celeron D 310,73,1,73,http://cpudb.stanford.edu
+Celeron D 325J,84,1,84,http://cpudb.stanford.edu
+Celeron D 340,73,1,73,http://cpudb.stanford.edu
+Celeron D 365,65,1,65,http://cpudb.stanford.edu
+Celeron D 351,84,1,84,http://cpudb.stanford.edu
+Celeron D 326,84,1,84,http://cpudb.stanford.edu
+Celeron D 315,73,1,73,http://cpudb.stanford.edu
+Celeron D 347,86,1,86,http://cpudb.stanford.edu
+Celeron D 320,73,1,73,http://cpudb.stanford.edu
+Celeron D 325,73,1,73,http://cpudb.stanford.edu
+Celeron D 360,65,1,65,http://cpudb.stanford.edu
+Celeron D 356,86,1,86,http://cpudb.stanford.edu
+Celeron D 345,73,1,73,http://cpudb.stanford.edu
+Celeron D 355,84,1,84,http://cpudb.stanford.edu
+Celeron D 336,84,1,84,http://cpudb.stanford.edu
+Celeron D 350J,73,1,73,http://cpudb.stanford.edu
+Celeron D 350,73,1,73,http://cpudb.stanford.edu
+Celeron D 315J,73,1,73,http://cpudb.stanford.edu
+Celeron D 340J,84,1,84,http://cpudb.stanford.edu
+Celeron D 331,84,1,84,http://cpudb.stanford.edu
+Celeron D 345J,84,1,84,http://cpudb.stanford.edu
+Celeron D 346,84,1,84,http://cpudb.stanford.edu
+Celeron D 330,73,1,73,http://cpudb.stanford.edu
+Celeron M 443,5.5,1,5.5,http://cpudb.stanford.edu
+Celeron M 350,21,1,21,http://cpudb.stanford.edu
+Celeron M 333,7,1,7,http://cpudb.stanford.edu
+Celeron M 420,27,1,27,http://cpudb.stanford.edu
+Celeron M 743,10,1,10,http://cpudb.stanford.edu
+Celeron M 450,27,1,27,http://cpudb.stanford.edu
+Celeron M 330,24.5,1,24.5,http://cpudb.stanford.edu
+Celeron M 410,27,1,27,http://cpudb.stanford.edu
+Celeron M 380,21,1,21,http://cpudb.stanford.edu
+Celeron M 383,5.5,1,5.5,http://cpudb.stanford.edu
+Celeron M 520,30,1,30,http://cpudb.stanford.edu
+Celeron M 430,27,1,27,http://cpudb.stanford.edu
+Celeron M 360,21,1,21,http://cpudb.stanford.edu
+Celeron M 523,5.5,1,5.5,http://cpudb.stanford.edu
+Celeron M 353,5,1,5,http://cpudb.stanford.edu
+Celeron M 390,21,1,21,http://cpudb.stanford.edu
+Celeron M 310,24.5,1,24.5,http://cpudb.stanford.edu
+Celeron M 340,24.5,1,24.5,http://cpudb.stanford.edu
+Celeron E1600,65,2,32.5,http://cpudb.stanford.edu
+Celeron J1750,10,2,5,http://cpudb.stanford.edu
+Celeron 340,73,1,73,http://cpudb.stanford.edu
+Celeron 867,17,2,8.5,http://cpudb.stanford.edu
+Celeron 797,17,1,17,http://cpudb.stanford.edu
+Celeron 763,10,1,10,http://cpudb.stanford.edu
+Celeron 346,84,1,84,http://cpudb.stanford.edu
+Celeron 320,84,1,84,http://cpudb.stanford.edu
+Celeron G1610T,35,2,17.5,http://cpudb.stanford.edu
+Celeron G1840T,35,2,17.5,http://cpudb.stanford.edu
+Celeron 340J,84,1,84,http://cpudb.stanford.edu
+Celeron 450,35,1,35,http://cpudb.stanford.edu
+Celeron 326,84,1,84,http://cpudb.stanford.edu
+Celeron 925,35,1,35,http://cpudb.stanford.edu
+Celeron 2955U,15,2,7.5,http://cpudb.stanford.edu
+Celeron J1850,10,4,2.5,http://cpudb.stanford.edu
+Celeron G1610,55,2,27.5,http://cpudb.stanford.edu
+Celeron 350,73,1,73,http://cpudb.stanford.edu
+Celeron 900,35,1,35,http://cpudb.stanford.edu
+Celeron 300A,17.8,1,17.8,http://cpudb.stanford.edu
+Celeron 807,17,1,17,http://cpudb.stanford.edu
+Celeron 787,17,1,17,http://cpudb.stanford.edu
+Celeron G1620T,35,2,17.5,http://cpudb.stanford.edu
+Celeron G1840,53,2,26.5,http://cpudb.stanford.edu
+Celeron B820,35,2,17.5,http://cpudb.stanford.edu
+Celeron E3500,65,2,32.5,http://cpudb.stanford.edu
+Celeron 330,73,1,73,http://cpudb.stanford.edu
+Celeron N2820,7.5,2,3.75,http://cpudb.stanford.edu
+Celeron G550T,35,2,17.5,http://cpudb.stanford.edu
+Celeron N2840,7.5,2,3.75,http://cpudb.stanford.edu
+Celeron 347,86,1,86,http://cpudb.stanford.edu
+Celeron G1630,55,2,27.5,http://cpudb.stanford.edu
+Celeron 877,17,2,8.5,http://cpudb.stanford.edu
+Celeron E1400,65,2,32.5,http://cpudb.stanford.edu
+Celeron 350J,73,1,73,http://cpudb.stanford.edu
+Celeron N2815,7.5,2,3.75,http://cpudb.stanford.edu
+Celeron B720,35,1,35,http://cpudb.stanford.edu
+Celeron 2981U,15,2,7.5,http://cpudb.stanford.edu
+Celeron B800,35,2,17.5,http://cpudb.stanford.edu
+Celeron 857,17,2,8.5,http://cpudb.stanford.edu
+Celeron 2950M,37,2,18.5,http://cpudb.stanford.edu
+Celeron 365,65,1,65,http://cpudb.stanford.edu
+Celeron T1600,35,2,17.5,http://cpudb.stanford.edu
+Celeron N2806,4.5,2,2.25,http://cpudb.stanford.edu
+Celeron 1019Y,10,2,5,http://cpudb.stanford.edu
+Celeron 325J,84,1,84,http://cpudb.stanford.edu
+Celeron B830,35,2,17.5,http://cpudb.stanford.edu
+Celeron N2830,7.5,2,3.75,http://cpudb.stanford.edu
+Celeron N2805,4.3,2,2.15,http://cpudb.stanford.edu
+Celeron T3500,35,2,17.5,http://cpudb.stanford.edu
+Celeron 336,84,1,84,http://cpudb.stanford.edu
+Celeron G1850,53,2,26.5,http://cpudb.stanford.edu
+Celeron 585,31,1,31,http://cpudb.stanford.edu
+Celeron 345J,84,1,84,http://cpudb.stanford.edu
+Celeron E3200,65,2,32.5,http://cpudb.stanford.edu
+Celeron 445,65,1,65,http://cpudb.stanford.edu
+Celeron P4600,35,2,17.5,http://cpudb.stanford.edu
+Celeron 2961Y,11.5,2,5.75,http://cpudb.stanford.edu
+Celeron N2808,4.5,2,2.25,http://cpudb.stanford.edu
+Celeron N2940,7.5,4,1.88,http://cpudb.stanford.edu
+Celeron G470,35,1,35,http://cpudb.stanford.edu
+Celeron G530,65,2,32.5,http://cpudb.stanford.edu
+Celeron B840,35,2,17.5,http://cpudb.stanford.edu
+Celeron 743,10,1,10,http://cpudb.stanford.edu
+Celeron 315J,73,1,73,http://cpudb.stanford.edu
+Celeron E3300,65,2,32.5,http://cpudb.stanford.edu
+Celeron 1005M,35,2,17.5,http://cpudb.stanford.edu
+Celeron T3300,35,2,17.5,http://cpudb.stanford.edu
+Celeron B710,35,1,35,http://cpudb.stanford.edu
+Celeron 2970M,37,2,18.5,http://cpudb.stanford.edu
+Celeron U3600,18,2,9,http://cpudb.stanford.edu
+Celeron G460,35,1,35,http://cpudb.stanford.edu
+Celeron G1830,53,2,26.5,http://cpudb.stanford.edu
+Celeron 1037U,17,2,8.5,http://cpudb.stanford.edu
+Celeron 1020M,35,2,17.5,http://cpudb.stanford.edu
+Celeron 220,19,1,19,http://cpudb.stanford.edu
+Celeron 330J,84,1,84,http://cpudb.stanford.edu
+Celeron E1200,65,2,32.5,http://cpudb.stanford.edu
+Celeron 331,84,1,84,http://cpudb.stanford.edu
+Celeron 335J,84,1,84,http://cpudb.stanford.edu
+Celeron T1700,35,2,17.5,http://cpudb.stanford.edu
+Celeron G530T,35,2,17.5,http://cpudb.stanford.edu
+Celeron 570,31,1,31,http://cpudb.stanford.edu
+Celeron 345,73,1,73,http://cpudb.stanford.edu
+Celeron 1017U,17,2,8.5,http://cpudb.stanford.edu
+Celeron 420,35,1,35,http://cpudb.stanford.edu
+Celeron 430,35,1,35,http://cpudb.stanford.edu
+Celeron 540,30,1,30,http://cpudb.stanford.edu
+Celeron 356,86,1,86,http://cpudb.stanford.edu
+Celeron 360,65,1,65,http://cpudb.stanford.edu
+Celeron 2957U,15,2,7.5,http://cpudb.stanford.edu
+Celeron 887,17,2,8.5,http://cpudb.stanford.edu
+Celeron G440,35,1,35,http://cpudb.stanford.edu
+Celeron T3000,35,2,17.5,http://cpudb.stanford.edu
+Celeron N2910,7.5,4,1.88,http://cpudb.stanford.edu
+Celeron 325,73,1,73,http://cpudb.stanford.edu
+Celeron G540T,35,2,17.5,http://cpudb.stanford.edu
+Celeron G1820T,35,2,17.5,http://cpudb.stanford.edu
+Celeron B815,35,2,17.5,http://cpudb.stanford.edu
+Celeron N2810,7.5,2,3.75,http://cpudb.stanford.edu
+Celeron G465,35,1,35,http://cpudb.stanford.edu
+Celeron G555,65,2,32.5,http://cpudb.stanford.edu
+Celeron 315,73,1,73,http://cpudb.stanford.edu
+Celeron SU2300,10,2,5,http://cpudb.stanford.edu
+Celeron 351,84,1,84,http://cpudb.stanford.edu
+Celeron 530,27,1,27,http://cpudb.stanford.edu
+Celeron 310,73,1,73,http://cpudb.stanford.edu
+Celeron 355,84,1,84,http://cpudb.stanford.edu
+Celeron J1800,10,2,5,http://cpudb.stanford.edu
+Celeron 847,17,2,8.5,http://cpudb.stanford.edu
+Celeron G550,65,2,32.5,http://cpudb.stanford.edu
+Celeron U3400,18,2,9,http://cpudb.stanford.edu
+Celeron 560,31,1,31,http://cpudb.stanford.edu
+Celeron 1000M,35,2,17.5,http://cpudb.stanford.edu
+Celeron 1007U,17,2,8.5,http://cpudb.stanford.edu
+Core Duo T2400,31,2,15.5,http://cpudb.stanford.edu
+Core Duo T2350,31,2,15.5,http://cpudb.stanford.edu
+Core Duo T2300,31,2,15.5,http://cpudb.stanford.edu
+Core Duo T2050,31,2,15.5,http://cpudb.stanford.edu
+Core Duo L2300,15,2,7.5,http://cpudb.stanford.edu
+Core Duo T2250,31,2,15.5,http://cpudb.stanford.edu
+Core Duo T2450,31,2,15.5,http://cpudb.stanford.edu
+Core Duo L2500,15,2,7.5,http://cpudb.stanford.edu
+Core Duo U2400,9,2,4.5,http://cpudb.stanford.edu
+Core Duo T2300E,31,2,15.5,http://cpudb.stanford.edu
+Core Duo T2700,31,2,15.5,http://cpudb.stanford.edu
+Core Duo T2600,31,2,15.5,http://cpudb.stanford.edu
+Core Solo U1300,6,1,6,http://cpudb.stanford.edu
+Core Solo T1300,27,1,27,http://cpudb.stanford.edu
+Core Solo U1500,5.5,1,5.5,http://cpudb.stanford.edu
+Core Solo T1400,27,1,27,http://cpudb.stanford.edu
+Core Solo U1400,6,1,6,http://cpudb.stanford.edu
+Core Solo T1350,31,1,31,http://cpudb.stanford.edu
+Core Solo T1250,31,1,31,http://cpudb.stanford.edu
+Core 2 Duo E7600,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo SL9600,17,2,8.5,http://cpudb.stanford.edu
+Core 2 Duo P7570,25,2,12.5,http://cpudb.stanford.edu
+Core 2 Duo E6540,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo E8200,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo T5470,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo T5300,34,2,17,http://cpudb.stanford.edu
+Core 2 Duo T5450,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo E8600,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo T9550,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo T9400,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo SP9400,25,2,12.5,http://cpudb.stanford.edu
+Core 2 Duo T7800,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo SP9600,25,2,12.5,http://cpudb.stanford.edu
+Core 2 Duo P7450,25,2,12.5,http://cpudb.stanford.edu
+Core 2 Duo E6550,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo U7700,10,2,5,http://cpudb.stanford.edu
+Core 2 Duo T9500,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo E6305,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo P7350,25,2,12.5,http://cpudb.stanford.edu
+Core 2 Duo T7250,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo E4600,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo SL9300,17,2,8.5,http://cpudb.stanford.edu
+Core 2 Duo E6300,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo T5200,34,2,17,http://cpudb.stanford.edu
+Core 2 Duo T5600,34,2,17,http://cpudb.stanford.edu
+Core 2 Duo T8100,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo T9900,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo L7700,17,2,8.5,http://cpudb.stanford.edu
+Core 2 Duo T6400,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo E8500,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo T5250,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo E8190,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo E4500,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo E4400,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo L7200,17,2,8.5,http://cpudb.stanford.edu
+Core 2 Duo U7600,10,2,5,http://cpudb.stanford.edu
+Core 2 Duo P9700,28,2,14,http://cpudb.stanford.edu
+Core 2 Duo E6850,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo T5670,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo P8700,25,2,12.5,http://cpudb.stanford.edu
+Core 2 Duo T5750,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo P7550,25,2,12.5,http://cpudb.stanford.edu
+Core 2 Duo E4300,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo T6600,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo T7700,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo T6670,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo E4700,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo E6420,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo E6600,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo P9600,25,2,12.5,http://cpudb.stanford.edu
+Core 2 Duo E8300,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo P8800,25,2,12.5,http://cpudb.stanford.edu
+Core 2 Duo T7100,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo T9300,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo SU9400,10,2,5,http://cpudb.stanford.edu
+Core 2 Duo T5800,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo E6320,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo E8400,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo T7600,34,2,17,http://cpudb.stanford.edu
+Core 2 Duo E7400,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo E7500,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo T7300,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo E6700,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo T9600,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo E6750,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo T6500,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo T5500,34,2,17,http://cpudb.stanford.edu
+Core 2 Duo T9800,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo E7200,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo P9500,25,2,12.5,http://cpudb.stanford.edu
+Core 2 Duo T8300,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo P7370,25,2,12.5,http://cpudb.stanford.edu
+Core 2 Duo E6405,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo P8400,25,2,12.5,http://cpudb.stanford.edu
+Core 2 Duo T7200,34,2,17,http://cpudb.stanford.edu
+Core 2 Duo E6400,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo E7300,65,2,32.5,http://cpudb.stanford.edu
+Core 2 Duo P8600,25,2,12.5,http://cpudb.stanford.edu
+Core 2 Duo SU9600,10,2,5,http://cpudb.stanford.edu
+Core 2 Duo T5870,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo L7300,17,2,8.5,http://cpudb.stanford.edu
+Core 2 Duo T5270,35,2,17.5,http://cpudb.stanford.edu
+Core 2 Duo T7400,34,2,17,http://cpudb.stanford.edu
+Core 2 Duo T5550,35,2,17.5,http://cpudb.stanford.edu
+Pentium 4-M 532,88,1,88,http://cpudb.stanford.edu
+Pentium 4-M 552,88,1,88,http://cpudb.stanford.edu
+Pentium 4-M 518,88,1,88,http://cpudb.stanford.edu
+Pentium 4-M 538,88,1,88,http://cpudb.stanford.edu
+Pentium 4-M 548,88,1,88,http://cpudb.stanford.edu
+Pentium 4 661,86,1,86,http://cpudb.stanford.edu
+Pentium 4 662,115,1,115,http://cpudb.stanford.edu
+Pentium 4 530,84,1,84,http://cpudb.stanford.edu
+Pentium 4 520,84,1,84,http://cpudb.stanford.edu
+Pentium 4 521,84,1,84,http://cpudb.stanford.edu
+Pentium 4 650,84,1,84,http://cpudb.stanford.edu
+Pentium 4 570,115,1,115,http://cpudb.stanford.edu
+Pentium 4 641,86,1,86,http://cpudb.stanford.edu
+Pentium 4 640,84,1,84,http://cpudb.stanford.edu
+Pentium 4 550J,84,1,84,http://cpudb.stanford.edu
+Pentium 4 561,115,1,115,http://cpudb.stanford.edu
+Pentium 4 670,115,1,115,http://cpudb.stanford.edu
+Pentium 4 560,115,1,115,http://cpudb.stanford.edu
+Pentium 4 672,115,1,115,http://cpudb.stanford.edu
+Pentium 4 540,84,1,84,http://cpudb.stanford.edu
+Pentium 4 550,115,1,115,http://cpudb.stanford.edu
+Pentium 4 630,84,1,84,http://cpudb.stanford.edu
+Pentium 4 620,84,1,84,http://cpudb.stanford.edu
+Pentium 4 571,115,1,115,http://cpudb.stanford.edu
+Pentium 4 541,84,1,84,http://cpudb.stanford.edu
+Pentium 4 660,115,1,115,http://cpudb.stanford.edu
+Pentium 4 631,86,1,86,http://cpudb.stanford.edu
+Pentium M 765,21,1,21,http://cpudb.stanford.edu
+Pentium M 740,27,1,27,http://cpudb.stanford.edu
+Pentium M 735,21,1,21,http://cpudb.stanford.edu
+Pentium M 758,7.5,1,7.5,http://cpudb.stanford.edu
+Pentium M 713,7,1,7,http://cpudb.stanford.edu
+Pentium M 755,21,1,21,http://cpudb.stanford.edu
+Pentium M 770,27,1,27,http://cpudb.stanford.edu
+Pentium M 725,21,1,21,http://cpudb.stanford.edu
+Pentium M 778,10,1,10,http://cpudb.stanford.edu
+Pentium M 753,5.5,1,5.5,http://cpudb.stanford.edu
+Pentium M 733,5,1,5,http://cpudb.stanford.edu
+Pentium M 745A,21,1,21,http://cpudb.stanford.edu
+Pentium M 730,27,1,27,http://cpudb.stanford.edu
+Pentium M 718,12,1,12,http://cpudb.stanford.edu
+Pentium M 705,24.5,1,24.5,http://cpudb.stanford.edu
+Pentium M 750,27,1,27,http://cpudb.stanford.edu
+Pentium M 723,5,1,5,http://cpudb.stanford.edu
+Pentium M 780,27,1,27,http://cpudb.stanford.edu
+Pentium M 715,21,1,21,http://cpudb.stanford.edu
+Pentium M 773,5.5,1,5.5,http://cpudb.stanford.edu
+Pentium G2020,55,2,27.5,http://cpudb.stanford.edu
+Pentium G2130,55,2,27.5,http://cpudb.stanford.edu
+Pentium G6960,73,2,36.5,http://cpudb.stanford.edu
+Pentium G860T,35,2,17.5,http://cpudb.stanford.edu
+Pentium J2850,10,4,2.5,http://cpudb.stanford.edu
+Pentium T4200,35,2,17.5,http://cpudb.stanford.edu
+Pentium 1405,40,2,20,http://cpudb.stanford.edu
+Pentium G645T,35,2,17.5,http://cpudb.stanford.edu
+Pentium E2200,65,2,32.5,http://cpudb.stanford.edu
+Pentium G620T,35,2,17.5,http://cpudb.stanford.edu
+Pentium N3530,7.5,4,1.88,http://cpudb.stanford.edu
+Pentium G6950,73,2,36.5,http://cpudb.stanford.edu
+Pentium P6300,35,2,17.5,http://cpudb.stanford.edu
+Pentium P6000,35,2,17.5,http://cpudb.stanford.edu
+Pentium G2010,55,2,27.5,http://cpudb.stanford.edu
+Pentium G3460,53,2,26.5,http://cpudb.stanford.edu
+Pentium 840,130,2,65,http://cpudb.stanford.edu
+Pentium G3450,53,2,26.5,http://cpudb.stanford.edu
+Pentium G2020T,35,2,17.5,http://cpudb.stanford.edu
+Pentium G3240T,35,2,17.5,http://cpudb.stanford.edu
+Pentium 977,17,2,8.5,http://cpudb.stanford.edu
+Pentium G3250,53,2,26.5,http://cpudb.stanford.edu
+Pentium G630T,35,2,17.5,http://cpudb.stanford.edu
+Pentium G630,65,2,32.5,http://cpudb.stanford.edu
+Pentium G632,65,2,32.5,http://cpudb.stanford.edu
+Pentium G640,65,2,32.5,http://cpudb.stanford.edu
+Pentium G860,65,2,32.5,http://cpudb.stanford.edu
+Pentium G870,65,2,32.5,http://cpudb.stanford.edu
+Pentium 967,17,2,8.5,http://cpudb.stanford.edu
+Pentium B960,35,2,17.5,http://cpudb.stanford.edu
+Pentium E2140,65,2,32.5,http://cpudb.stanford.edu
+Pentium G6951,73,2,36.5,http://cpudb.stanford.edu
+Pentium SU2700,10,1,10,http://cpudb.stanford.edu
+Pentium G3250T,35,2,17.5,http://cpudb.stanford.edu
+Pentium G3430,53,2,26.5,http://cpudb.stanford.edu
+Pentium P6200,35,2,17.5,http://cpudb.stanford.edu
+Pentium 3560M,37,2,18.5,http://cpudb.stanford.edu
+Pentium U5400,18,2,9,http://cpudb.stanford.edu
+Pentium T2390,35,2,17.5,http://cpudb.stanford.edu
+Pentium 965,130,2,65,http://cpudb.stanford.edu
+Pentium 1403,80,2,40,http://cpudb.stanford.edu
+Pentium T4300,35,2,17.5,http://cpudb.stanford.edu
+Pentium E2160,65,2,32.5,http://cpudb.stanford.edu
+Pentium E2220,65,2,32.5,http://cpudb.stanford.edu
+Pentium T2330,35,2,17.5,http://cpudb.stanford.edu
+Pentium E5300,65,2,32.5,http://cpudb.stanford.edu
+Pentium 2129Y,10,2,5,http://cpudb.stanford.edu
+Pentium 3561Y,11.5,2,5.75,http://cpudb.stanford.edu
+Pentium G2030,55,2,27.5,http://cpudb.stanford.edu
+Pentium G840,65,2,32.5,http://cpudb.stanford.edu
+Pentium 987,17,2,8.5,http://cpudb.stanford.edu
+Pentium 935,95,2,47.5,http://cpudb.stanford.edu
+Pentium 1407,80,2,40,http://cpudb.stanford.edu
+Pentium T2310,35,2,17.5,http://cpudb.stanford.edu
+Pentium G3220T,35,2,17.5,http://cpudb.stanford.edu
+Pentium T2370,35,2,17.5,http://cpudb.stanford.edu
+Pentium T3400,35,2,17.5,http://cpudb.stanford.edu
+Pentium G622,65,2,32.5,http://cpudb.stanford.edu
+Pentium P6100,35,2,17.5,http://cpudb.stanford.edu
+Pentium G2030T,35,2,17.5,http://cpudb.stanford.edu
+Pentium G2100T,35,2,17.5,http://cpudb.stanford.edu
+Pentium G640T,35,2,17.5,http://cpudb.stanford.edu
+Pentium 955,130,2,65,http://cpudb.stanford.edu
+Pentium T3200,35,2,17.5,http://cpudb.stanford.edu
+Pentium E5400,65,2,32.5,http://cpudb.stanford.edu
+Pentium 350,15,2,7.5,http://cpudb.stanford.edu
+Pentium 2127U,17,2,8.5,http://cpudb.stanford.edu
+Pentium G2120T,35,2,17.5,http://cpudb.stanford.edu
+Pentium T2060,31,2,15.5,http://cpudb.stanford.edu
+Pentium N3510,7.5,4,1.88,http://cpudb.stanford.edu
+Pentium T4400,35,2,17.5,http://cpudb.stanford.edu
+Pentium E6800,65,2,32.5,http://cpudb.stanford.edu
+Pentium 2117U,17,2,8.5,http://cpudb.stanford.edu
+Pentium 3550M,37,2,18.5,http://cpudb.stanford.edu
+Pentium G3258,53,2,26.5,http://cpudb.stanford.edu
+Pentium T2080,31,2,15.5,http://cpudb.stanford.edu
+Pentium 3556U,15,2,7.5,http://cpudb.stanford.edu
+Pentium 3560Y,11.5,2,5.75,http://cpudb.stanford.edu
+Pentium 957,17,2,8.5,http://cpudb.stanford.edu
+Pentium G3220,53,2,26.5,http://cpudb.stanford.edu
+Pentium G3440T,35,2,17.5,http://cpudb.stanford.edu
+Pentium E5200,65,2,32.5,http://cpudb.stanford.edu
+Pentium B970,35,2,17.5,http://cpudb.stanford.edu
+Pentium G3420T,35,2,17.5,http://cpudb.stanford.edu
+Pentium E6500K,65,2,32.5,http://cpudb.stanford.edu
+Pentium E6700,65,2,32.5,http://cpudb.stanford.edu
+Pentium 3558U,15,2,7.5,http://cpudb.stanford.edu
+Pentium N3520,7.5,4,1.88,http://cpudb.stanford.edu
+Pentium T2130,31,2,15.5,http://cpudb.stanford.edu
+Pentium SU4100,10,2,5,http://cpudb.stanford.edu
+Pentium G2140,55,2,27.5,http://cpudb.stanford.edu
+Pentium A1018,35,2,17.5,http://cpudb.stanford.edu
+Pentium E5500,65,2,32.5,http://cpudb.stanford.edu
+Pentium E5800,65,2,32.5,http://cpudb.stanford.edu
+Pentium G620,65,2,32.5,http://cpudb.stanford.edu
+Pentium 2020M,35,2,17.5,http://cpudb.stanford.edu
+Pentium E5700,65,2,32.5,http://cpudb.stanford.edu
+Pentium E6600,65,2,32.5,http://cpudb.stanford.edu
+Pentium G645,65,2,32.5,http://cpudb.stanford.edu
+Pentium N3540,7.5,4,1.88,http://cpudb.stanford.edu
+Pentium T4500,35,2,17.5,http://cpudb.stanford.edu
+Pentium B940,35,2,17.5,http://cpudb.stanford.edu
+Pentium G3450T,35,2,17.5,http://cpudb.stanford.edu
+Pentium B950,35,2,17.5,http://cpudb.stanford.edu
+Pentium G3440,53,2,26.5,http://cpudb.stanford.edu
+Pentium B980,35,2,17.5,http://cpudb.stanford.edu
+Pentium U5600,18,2,9,http://cpudb.stanford.edu
+Pentium G3240,53,2,26.5,http://cpudb.stanford.edu
+Pentium 997,17,2,8.5,http://cpudb.stanford.edu
+Pentium E6300,65,2,32.5,http://cpudb.stanford.edu
+Pentium 2030M,35,2,17.5,http://cpudb.stanford.edu
+Pentium E2180,65,2,32.5,http://cpudb.stanford.edu
+Pentium E2210,65,2,32.5,http://cpudb.stanford.edu
+Pentium J2900,10,4,2.5,http://cpudb.stanford.edu
+Itanium 2 9010,104,2,52,http://cpudb.stanford.edu
+Itanium 2 9150N,104,2,52,http://cpudb.stanford.edu
+Itanium 2 9140N,104,2,52,http://cpudb.stanford.edu
+Itanium 2 1000,130,1,130,http://cpudb.stanford.edu
+Itanium 2 9140M,104,2,52,http://cpudb.stanford.edu
+Itanium 2 9130M,104,2,52,http://cpudb.stanford.edu
+Itanium 2 1400,91,1,91,http://cpudb.stanford.edu
+Itanium 2 9152M,104,2,52,http://cpudb.stanford.edu
+Itanium 2 9015,104,2,52,http://cpudb.stanford.edu
+Itanium 2 9110N,75,1,75,http://cpudb.stanford.edu
+Itanium 2 9050,104,2,52,http://cpudb.stanford.edu
+Itanium 2 9020,104,2,52,http://cpudb.stanford.edu
+Itanium 2 9040,104,2,52,http://cpudb.stanford.edu
+Itanium 2 900,90,1,90,http://cpudb.stanford.edu
+Itanium 2 1500,107,1,107,http://cpudb.stanford.edu
+Itanium 2 1300,97,1,97,http://cpudb.stanford.edu
+Itanium 2 9150M,104,2,52,http://cpudb.stanford.edu
+Itanium 2 9030,104,2,52,http://cpudb.stanford.edu
+Itanium 2 9120N,104,2,52,http://cpudb.stanford.edu
+Itanium 2 1600,122,1,122,http://cpudb.stanford.edu
+Core 2 Extreme X9100,44,2,22,http://cpudb.stanford.edu
+Core 2 Extreme X9000,44,2,22,http://cpudb.stanford.edu
+Core 2 Extreme QX6700,130,4,32.5,http://cpudb.stanford.edu
+Core 2 Extreme QX9650,130,4,32.5,http://cpudb.stanford.edu
+Core 2 Extreme X6800,75,2,37.5,http://cpudb.stanford.edu
+Core 2 Extreme QX9770,136,4,34,http://cpudb.stanford.edu
+Core 2 Extreme X7900,44,2,22,http://cpudb.stanford.edu
+Core 2 Extreme X7800,44,2,22,http://cpudb.stanford.edu
+Core 2 Extreme QX6850,130,4,32.5,http://cpudb.stanford.edu
+Core 2 Extreme QX9300,45,4,11.25,http://cpudb.stanford.edu
+Core 2 Extreme QX9775,150,4,37.5,http://cpudb.stanford.edu
+Core 2 Extreme QX6800,130,4,32.5,http://cpudb.stanford.edu
+Core 2 Solo U2100,5.5,1,5.5,http://cpudb.stanford.edu
+Core 2 Solo SU3500,5.5,2,2.75,http://cpudb.stanford.edu
+Core 2 Solo U2200,5.5,1,5.5,http://cpudb.stanford.edu
+Core 2 Solo SU3300,5.5,1,5.5,http://cpudb.stanford.edu
+Atom E665C,7,1,7,http://cpudb.stanford.edu
+Atom S1240,6.1,2,3.05,http://cpudb.stanford.edu
+Atom E665,7,1,7,http://cpudb.stanford.edu
+Atom Z650,3,1,3,http://cpudb.stanford.edu
+Atom E665CT,7,1,7,http://cpudb.stanford.edu
+Atom Z540,2.4,1,2.4,http://cpudb.stanford.edu
+Atom E660,3.6,1,3.6,http://cpudb.stanford.edu
+Atom Z670,3,1,3,http://cpudb.stanford.edu
+Atom Z500,0.65,1,0.65,http://cpudb.stanford.edu
+Atom D2560,10,2,5,http://cpudb.stanford.edu
+Atom N470,6.5,1,6.5,http://cpudb.stanford.edu
+Atom D2700,10,2,5,http://cpudb.stanford.edu
+Atom S1279,13.1,2,6.55,http://cpudb.stanford.edu
+Atom C2550,14,4,3.5,http://cpudb.stanford.edu
+Atom E645CT,7,1,7,http://cpudb.stanford.edu
+Atom Z550,2.4,1,2.4,http://cpudb.stanford.edu
+Atom Z625,2.2,1,2.2,http://cpudb.stanford.edu
+Atom Z560,2.5,1,2.5,http://cpudb.stanford.edu
+Atom Z530,2,1,2,http://cpudb.stanford.edu
+Atom Z520,2,1,2,http://cpudb.stanford.edu
+Atom N450,2.5,1,2.5,http://cpudb.stanford.edu
+Atom N475,6.5,1,6.5,http://cpudb.stanford.edu
+Atom D510,13,2,6.5,http://cpudb.stanford.edu
+Atom Z515,1.4,1,1.4,http://cpudb.stanford.edu
+Atom C2730,12,8,1.5,http://cpudb.stanford.edu
+Atom S1289,14.1,2,7.05,http://cpudb.stanford.edu
+Atom C2350,6,2,3,http://cpudb.stanford.edu
+Atom N550,8.5,2,4.25,http://cpudb.stanford.edu
+Atom 230,4,1,4,http://cpudb.stanford.edu
+Atom Z615,2.2,1,2.2,http://cpudb.stanford.edu
+Atom N280,2.5,1,2.5,http://cpudb.stanford.edu
+Atom N570,8.5,2,4.25,http://cpudb.stanford.edu
+Atom D2500,10,2,5,http://cpudb.stanford.edu
+Atom S1220,8.1,2,4.05,http://cpudb.stanford.edu
+Atom D525,13,2,6.5,http://cpudb.stanford.edu
+Atom S1269,11.7,2,5.85,http://cpudb.stanford.edu
+Atom 330,8,2,4,http://cpudb.stanford.edu
+Atom E645C,7,1,7,http://cpudb.stanford.edu
+Atom C2530,9,4,2.25,http://cpudb.stanford.edu
+Atom C2750,20,8,2.5,http://cpudb.stanford.edu
+Atom Z600,1.3,1,1.3,http://cpudb.stanford.edu
+Atom S1260,8.5,2,4.25,http://cpudb.stanford.edu
+Core 2 Quad Q9000,45,4,11.25,http://cpudb.stanford.edu
+Core 2 Quad Q8300,95,4,23.75,http://cpudb.stanford.edu
+Core 2 Quad Q9450,95,4,23.75,http://cpudb.stanford.edu
+Core 2 Quad Q6700,105,4,26.25,http://cpudb.stanford.edu
+Core 2 Quad Q8200,95,4,23.75,http://cpudb.stanford.edu
+Core 2 Quad Q9650,95,4,23.75,http://cpudb.stanford.edu
+Core 2 Quad Q9400,95,4,23.75,http://cpudb.stanford.edu
+Core 2 Quad Q8400S,65,4,16.25,http://cpudb.stanford.edu
+Core 2 Quad Q8200S,65,4,16.25,http://cpudb.stanford.edu
+Core 2 Quad Q9100,45,4,11.25,http://cpudb.stanford.edu
+Core 2 Quad Q9500,95,4,23.75,http://cpudb.stanford.edu
+Core 2 Quad Q8400,95,4,23.75,http://cpudb.stanford.edu
+Core 2 Quad Q9505,95,4,23.75,http://cpudb.stanford.edu
+Core 2 Quad Q9550,95,4,23.75,http://cpudb.stanford.edu
+Core 2 Quad Q9550S,65,4,16.25,http://cpudb.stanford.edu
+Core 2 Quad Q9505S,65,4,16.25,http://cpudb.stanford.edu
+Core 2 Quad Q9300,95,4,23.75,http://cpudb.stanford.edu
+Core 2 Quad Q9400S,65,4,16.25,http://cpudb.stanford.edu
+Core i7 i7-5960X,140,8,17.5,http://cpudb.stanford.edu
+Core i7 i7-860S,82,4,20.5,http://cpudb.stanford.edu
+Core i7 i7-3630QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-4980HQ,47,4,11.75,http://cpudb.stanford.edu
+Core i7 i7-620LM,25,2,12.5,http://cpudb.stanford.edu
+Core i7 i7-5930K,140,6,23.33,http://cpudb.stanford.edu
+Core i7 610,35,2,17.5,http://cpudb.stanford.edu
+Core i7 i7-4960X,130,6,21.67,http://cpudb.stanford.edu
+Core i7 i7-640LM,25,2,12.5,http://cpudb.stanford.edu
+Core i7 i7-2600K,95,4,23.75,http://cpudb.stanford.edu
+Core i7 i7-970,130,6,21.67,http://cpudb.stanford.edu
+Core i7 i7-3540M,35,2,17.5,http://cpudb.stanford.edu
+Core i7 i7-4500U,15,2,7.5,http://cpudb.stanford.edu
+Core i7 i7-4712MQ,37,4,9.25,http://cpudb.stanford.edu
+Core i7 i7-2720QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-4771,84,4,21,http://cpudb.stanford.edu
+Core i7 i7-4850HQ,47,4,11.75,http://cpudb.stanford.edu
+Core i7 i7-620UM,18,2,9,http://cpudb.stanford.edu
+Core i7 965X,130,4,32.5,http://cpudb.stanford.edu
+Core i7 i7-4860HQ,47,4,11.75,http://cpudb.stanford.edu
+Core i7 i7-3612QM,35,4,8.75,http://cpudb.stanford.edu
+Core i7 i7-4770R,65,4,16.25,http://cpudb.stanford.edu
+Core i7 i7-4550U,15,2,7.5,http://cpudb.stanford.edu
+Core i7 i7-740QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-4760HQ,47,4,11.75,http://cpudb.stanford.edu
+Core i7 i7-4770HQ,47,4,11.75,http://cpudb.stanford.edu
+Core i7 i7-960,130,4,32.5,http://cpudb.stanford.edu
+Core i7 i7-4870HQ,47,4,11.75,http://cpudb.stanford.edu
+Core i7 i7-660UM,18,2,9,http://cpudb.stanford.edu
+Core i7 i7-4900MQ,47,4,11.75,http://cpudb.stanford.edu
+Core i7 i7-4750HQ,47,4,11.75,http://cpudb.stanford.edu
+Core i7 i7-4578U,28,2,14,http://cpudb.stanford.edu
+Core i7 i7-2600S,65,4,16.25,http://cpudb.stanford.edu
+Core i7 975,130,4,32.5,http://cpudb.stanford.edu
+Core i7 i7-2630QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-4910MQ,47,4,11.75,http://cpudb.stanford.edu
+Core i7 i7-640UM,18,2,9,http://cpudb.stanford.edu
+Core i7 i7-4820K,130,4,32.5,http://cpudb.stanford.edu
+Core i7 i7-870,95,4,23.75,http://cpudb.stanford.edu
+Core i7 i7-3517U,17,2,8.5,http://cpudb.stanford.edu
+Core i7 i7-3820QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-930,130,4,32.5,http://cpudb.stanford.edu
+Core i7 i7-4770K,84,4,21,http://cpudb.stanford.edu
+Core i7 i7-4950HQ,47,4,11.75,http://cpudb.stanford.edu
+Core i7 950,130,4,32.5,http://cpudb.stanford.edu
+Core i7 i7-3615QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-4960HQ,47,4,11.75,http://cpudb.stanford.edu
+Core i7 i7-2860QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-3610QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-4785T,35,4,8.75,http://cpudb.stanford.edu
+Core i7 i7-4700HQ,47,4,11.75,http://cpudb.stanford.edu
+Core i7 i7-3635QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-4558U,28,2,14,http://cpudb.stanford.edu
+Core i7 975X,130,4,32.5,http://cpudb.stanford.edu
+Core i7 i7-2629M,25,2,12.5,http://cpudb.stanford.edu
+Core i7 i7-3770K,77,4,19.25,http://cpudb.stanford.edu
+Core i7 i7-3720QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 2600,95,4,23.75,http://cpudb.stanford.edu
+Core i7 i7-3770T,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-3667U,17,2,8.5,http://cpudb.stanford.edu
+Core i7 i7-980,130,6,21.67,http://cpudb.stanford.edu
+Core i7 i7-840QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-3930K,130,6,21.67,http://cpudb.stanford.edu
+Core i7 i7-4860EQ,47,4,11.75,http://cpudb.stanford.edu
+Core i7 i7-3820,130,4,32.5,http://cpudb.stanford.edu
+Core i7 i7-940,130,4,32.5,http://cpudb.stanford.edu
+Core i7 i7-4770,84,4,21,http://cpudb.stanford.edu
+Core i7 i7-880,95,4,23.75,http://cpudb.stanford.edu
+Core i7 980X,130,6,21.67,http://cpudb.stanford.edu
+Core i7 i7-950,130,4,32.5,http://cpudb.stanford.edu
+Core i7 940,130,4,32.5,http://cpudb.stanford.edu
+Core i7 i7-4610M,37,2,18.5,http://cpudb.stanford.edu
+Core i7 965,130,4,32.5,http://cpudb.stanford.edu
+Core i7 i7-2637M,17,2,8.5,http://cpudb.stanford.edu
+Core i7 i7-2670QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-4810MQ,47,4,11.75,http://cpudb.stanford.edu
+Core i7 i7-2760QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-4850EQ,47,4,11.75,http://cpudb.stanford.edu
+Core i7 i7-5820K,140,6,23.33,http://cpudb.stanford.edu
+Core i7 i7-870S,82,4,20.5,http://cpudb.stanford.edu
+Core i7 i7-3632QM,35,4,8.75,http://cpudb.stanford.edu
+Core i7 i7-4790,84,4,21,http://cpudb.stanford.edu
+Core i7 720QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-4600M,37,2,18.5,http://cpudb.stanford.edu
+Core i7 i7-2640M,35,2,17.5,http://cpudb.stanford.edu
+Core i7 i7-2675QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-820QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-2635QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-2700K,95,4,23.75,http://cpudb.stanford.edu
+Core i7 i7-3970X,150,6,25,http://cpudb.stanford.edu
+Core i7 i7-4701EQ,47,4,11.75,http://cpudb.stanford.edu
+Core i7 i7-660LM,25,2,12.5,http://cpudb.stanford.edu
+Core i7 i7-4510U,15,2,7.5,http://cpudb.stanford.edu
+Core i7 i7-680UM,18,2,9,http://cpudb.stanford.edu
+Core i7 i7-875K,95,4,23.75,http://cpudb.stanford.edu
+Core i7 i7-3840QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-965,130,4,32.5,http://cpudb.stanford.edu
+Core i7 i7-3770S,65,4,16.25,http://cpudb.stanford.edu
+Core i7 870,95,4,23.75,http://cpudb.stanford.edu
+Core i7 i7-4800MQ,47,4,11.75,http://cpudb.stanford.edu
+Core i7 i7-4790K,88,4,22,http://cpudb.stanford.edu
+Core i7 i7-4710HQ,47,4,11.75,http://cpudb.stanford.edu
+Core i7 i7-4770T,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-4712HQ,37,4,9.25,http://cpudb.stanford.edu
+Core i7 i7-2677M,17,2,8.5,http://cpudb.stanford.edu
+Core i7 i7-4765T,35,4,8.75,http://cpudb.stanford.edu
+Core i7 i7-4702MQ,37,4,9.25,http://cpudb.stanford.edu
+Core i7 i7-2620M,35,2,17.5,http://cpudb.stanford.edu
+Core i7 i7-4600U,15,2,7.5,http://cpudb.stanford.edu
+Core i7 i7-4610Y,11.5,2,5.75,http://cpudb.stanford.edu
+Core i7 i7-4790T,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-3520M,35,2,17.5,http://cpudb.stanford.edu
+Core i7 i7-3687U,17,2,8.5,http://cpudb.stanford.edu
+Core i7 i7-2617M,17,2,8.5,http://cpudb.stanford.edu
+Core i7 i7-975,130,4,32.5,http://cpudb.stanford.edu
+Core i7 i7-640M,35,2,17.5,http://cpudb.stanford.edu
+Core i7 i7-4710MQ,47,4,11.75,http://cpudb.stanford.edu
+Core i7 i7-4702HQ,37,4,9.25,http://cpudb.stanford.edu
+Core i7 i7-3689Y,13,2,6.5,http://cpudb.stanford.edu
+Core i7 i7-4930K,130,6,21.67,http://cpudb.stanford.edu
+Core i7 i7-2820QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-2649M,25,2,12.5,http://cpudb.stanford.edu
+Core i7 i7-4700MQ,47,4,11.75,http://cpudb.stanford.edu
+Core i7 920,130,4,32.5,http://cpudb.stanford.edu
+Core i7 i7-720QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-2657M,17,2,8.5,http://cpudb.stanford.edu
+Core i7 i7-3740QM,45,4,11.25,http://cpudb.stanford.edu
+Core i7 i7-920,130,4,32.5,http://cpudb.stanford.edu
+Core i7 i7-3960X,130,6,21.67,http://cpudb.stanford.edu
+Core i7 860,95,4,23.75,http://cpudb.stanford.edu
+Core i7 i7-3537U,17,2,8.5,http://cpudb.stanford.edu
+Itanium 9340,185,4,46.25,http://cpudb.stanford.edu
+Itanium 9030,104,2,52,http://cpudb.stanford.edu
+Itanium 9320,155,4,38.75,http://cpudb.stanford.edu
+Itanium 9015,104,2,52,http://cpudb.stanford.edu
+Itanium 9540,170,8,21.25,http://cpudb.stanford.edu
+Itanium 9350,185,4,46.25,http://cpudb.stanford.edu
+Itanium 9140M,104,2,52,http://cpudb.stanford.edu
+Itanium 9010,104,2,52,http://cpudb.stanford.edu
+Itanium 9310,130,2,65,http://cpudb.stanford.edu
+Itanium 9040,104,2,52,http://cpudb.stanford.edu
+Itanium 9110N,75,1,75,http://cpudb.stanford.edu
+Itanium 9120N,104,2,52,http://cpudb.stanford.edu
+Itanium 9150N,104,2,52,http://cpudb.stanford.edu
+Itanium 9150M,104,2,52,http://cpudb.stanford.edu
+Itanium 9550,170,4,42.5,http://cpudb.stanford.edu
+Itanium 9520,130,4,32.5,http://cpudb.stanford.edu
+Itanium 9020,104,2,52,http://cpudb.stanford.edu
+Itanium 9130M,104,2,52,http://cpudb.stanford.edu
+Itanium 9330,155,4,38.75,http://cpudb.stanford.edu
+Itanium 9140N,104,2,52,http://cpudb.stanford.edu
+Itanium 9560,170,8,21.25,http://cpudb.stanford.edu
+Itanium 9050,104,2,52,http://cpudb.stanford.edu
+Itanium 9152M,104,2,52,http://cpudb.stanford.edu
+Core i5 i5-3330S,65,4,16.25,http://cpudb.stanford.edu
+Core i5 i5-661,87,2,43.5,http://cpudb.stanford.edu
+Core i5 i5-3450S,65,4,16.25,http://cpudb.stanford.edu
+Core i5 i5-4300Y,11.5,2,5.75,http://cpudb.stanford.edu
+Core i5 680,73,2,36.5,http://cpudb.stanford.edu
+Core i5 i5-670,73,2,36.5,http://cpudb.stanford.edu
+Core i5 i5-2500K,95,4,23.75,http://cpudb.stanford.edu
+Core i5 i5-3470S,65,4,16.25,http://cpudb.stanford.edu
+Core i5 i5-3475S,65,4,16.25,http://cpudb.stanford.edu
+Core i5 i5-3450,77,4,19.25,http://cpudb.stanford.edu
+Core i5 i5-4200U,15,2,7.5,http://cpudb.stanford.edu
+Core i5 i5-4210U,15,2,7.5,http://cpudb.stanford.edu
+Core i5 i5-650,73,2,36.5,http://cpudb.stanford.edu
+Core i5 i5-2300,95,4,23.75,http://cpudb.stanford.edu
+Core i5 i5-4288U,28,2,14,http://cpudb.stanford.edu
+Core i5 i5-4310M,37,2,18.5,http://cpudb.stanford.edu
+Core i5 i5-3470T,35,2,17.5,http://cpudb.stanford.edu
+Core i5 661,87,2,43.5,http://cpudb.stanford.edu
+Core i5 660,73,2,36.5,http://cpudb.stanford.edu
+Core i5 i5-450M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-3330,77,4,19.25,http://cpudb.stanford.edu
+Core i5 i5-4360U,15,2,7.5,http://cpudb.stanford.edu
+Core i5 670,73,2,36.5,http://cpudb.stanford.edu
+Core i5 i5-2400S,65,4,16.25,http://cpudb.stanford.edu
+Core i5 i5-2380P,95,4,23.75,http://cpudb.stanford.edu
+Core i5 i5-540M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-2500T,45,4,11.25,http://cpudb.stanford.edu
+Core i5 i5-2435M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-2540M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-3439Y,13,2,6.5,http://cpudb.stanford.edu
+Core i5 i5-3570,77,4,19.25,http://cpudb.stanford.edu
+Core i5 i5-3570S,65,4,16.25,http://cpudb.stanford.edu
+Core i5 i5-4260U,15,2,7.5,http://cpudb.stanford.edu
+Core i5 i5-655K,73,2,36.5,http://cpudb.stanford.edu
+Core i5 650,73,2,36.5,http://cpudb.stanford.edu
+Core i5 i5-4460,84,4,21,http://cpudb.stanford.edu
+Core i5 i5-4302Y,11.5,2,5.75,http://cpudb.stanford.edu
+Core i5 i5-760,95,4,23.75,http://cpudb.stanford.edu
+Core i5 i5-3550,77,4,19.25,http://cpudb.stanford.edu
+Core i5 i5-3210M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-2500S,65,4,16.25,http://cpudb.stanford.edu
+Core i5 i5-3570T,45,4,11.25,http://cpudb.stanford.edu
+Core i5 i5-4220Y,11.5,2,5.75,http://cpudb.stanford.edu
+Core i5 i5-3427U,17,2,8.5,http://cpudb.stanford.edu
+Core i5 i5-4210Y,11.5,2,5.75,http://cpudb.stanford.edu
+Core i5 i5-480M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-540UM,18,2,9,http://cpudb.stanford.edu
+Core i5 i5-4670,84,4,21,http://cpudb.stanford.edu
+Core i5 i5-3350P,69,4,17.25,http://cpudb.stanford.edu
+Core i5 i5-3317U,17,2,8.5,http://cpudb.stanford.edu
+Core i5 i5-460M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-4670S,65,4,16.25,http://cpudb.stanford.edu
+Core i5 i5-430UM,18,2,9,http://cpudb.stanford.edu
+Core i5 i5-430M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-4340M,37,2,18.5,http://cpudb.stanford.edu
+Core i5 i5-4570R,65,4,16.25,http://cpudb.stanford.edu
+Core i5 i5-680,73,2,36.5,http://cpudb.stanford.edu
+Core i5 i5-4200Y,11.5,2,5.75,http://cpudb.stanford.edu
+Core i5 i5-520UM,18,2,9,http://cpudb.stanford.edu
+Core i5 i5-4202Y,11.5,2,5.75,http://cpudb.stanford.edu
+Core i5 i5-2557M,17,2,8.5,http://cpudb.stanford.edu
+Core i5 i5-2410M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-4308U,28,2,14,http://cpudb.stanford.edu
+Core i5 i5-3470,77,4,19.25,http://cpudb.stanford.edu
+Core i5 i5-3230M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-2390T,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-3570K,77,4,19.25,http://cpudb.stanford.edu
+Core i5 520,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-4210H,47,2,23.5,http://cpudb.stanford.edu
+Core i5 i5-4430,84,4,21,http://cpudb.stanford.edu
+Core i5 i5-4330M,37,2,18.5,http://cpudb.stanford.edu
+Core i5 i5-4440S,65,4,16.25,http://cpudb.stanford.edu
+Core i5 i5-470UM,18,2,9,http://cpudb.stanford.edu
+Core i5 i5-4570,84,4,21,http://cpudb.stanford.edu
+Core i5 i5-4460S,65,4,16.25,http://cpudb.stanford.edu
+Core i5 560M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-2520M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-2405S,65,4,16.25,http://cpudb.stanford.edu
+Core i5 i5-750S,82,4,20.5,http://cpudb.stanford.edu
+Core i5 i5-4670T,45,4,11.25,http://cpudb.stanford.edu
+Core i5 i5-4310U,15,2,7.5,http://cpudb.stanford.edu
+Core i5 i5-4350U,15,2,7.5,http://cpudb.stanford.edu
+Core i5 i5-2430M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-2550K,95,4,23.75,http://cpudb.stanford.edu
+Core i5 i5-4440,84,4,21,http://cpudb.stanford.edu
+Core i5 i5-3339Y,13,2,6.5,http://cpudb.stanford.edu
+Core i5 i5-4690T,45,4,11.25,http://cpudb.stanford.edu
+Core i5 i5-4570T,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-2500,95,4,23.75,http://cpudb.stanford.edu
+Core i5 i5-3340,77,4,19.25,http://cpudb.stanford.edu
+Core i5 i5-4258U,28,2,14,http://cpudb.stanford.edu
+Core i5 i5-2450P,95,4,23.75,http://cpudb.stanford.edu
+Core i5 i5-2320,95,4,23.75,http://cpudb.stanford.edu
+Core i5 i5-2450M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-3380M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-3340M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-3437U,17,2,8.5,http://cpudb.stanford.edu
+Core i5 i5-4670R,65,4,16.25,http://cpudb.stanford.edu
+Core i5 i5-2537M,17,2,8.5,http://cpudb.stanford.edu
+Core i5 i5-3360M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 460M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-4590,84,4,21,http://cpudb.stanford.edu
+Core i5 750,95,4,23.75,http://cpudb.stanford.edu
+Core i5 i5-4670K,84,4,21,http://cpudb.stanford.edu
+Core i5 i5-560M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-2415M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-4200M,37,2,18.5,http://cpudb.stanford.edu
+Core i5 i5-4430S,65,4,16.25,http://cpudb.stanford.edu
+Core i5 i5-4690,84,4,21,http://cpudb.stanford.edu
+Core i5 i5-4250U,15,2,7.5,http://cpudb.stanford.edu
+Core i5 i5-2467M,17,2,8.5,http://cpudb.stanford.edu
+Core i5 i5-2310,95,4,23.75,http://cpudb.stanford.edu
+Core i5 i5-4278U,28,2,14,http://cpudb.stanford.edu
+Core i5 i5-4210M,37,2,18.5,http://cpudb.stanford.edu
+Core i5 i5-3337U,17,2,8.5,http://cpudb.stanford.edu
+Core i5 i5-4460T,35,4,8.75,http://cpudb.stanford.edu
+Core i5 i5-3320M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-580M,35,2,17.5,http://cpudb.stanford.edu
+Core i5 i5-4690S,65,4,16.25,http://cpudb.stanford.edu
+Core i5 i5-4690K,88,4,22,http://cpudb.stanford.edu
+Core i5 i5-3340S,65,4,16.25,http://cpudb.stanford.edu
+Core i5 i5-560UM,18,2,9,http://cpudb.stanford.edu
+Core i5 i5-4300M,37,2,18.5,http://cpudb.stanford.edu
+Core i5 i5-4200H,47,2,23.5,http://cpudb.stanford.edu
+Core i7 Extreme i7-3920XM,55,4,13.75,http://cpudb.stanford.edu
+Core i7 Extreme i7-980X,130,6,21.67,http://cpudb.stanford.edu
+Core i7 Extreme i7-2960XM,55,4,13.75,http://cpudb.stanford.edu
+Core i7 Extreme i7-3940XM,55,4,13.75,http://cpudb.stanford.edu
+Core i7 Extreme i7-965,130,4,32.5,http://cpudb.stanford.edu
+Core i7 Extreme i7-3960X,130,6,21.67,http://cpudb.stanford.edu
+Core i7 Extreme i7-975,130,4,32.5,http://cpudb.stanford.edu
+Core i7 Extreme i7-4940MX,57,4,14.25,http://cpudb.stanford.edu
+Core i7 Extreme i7-940XM,55,4,13.75,http://cpudb.stanford.edu
+Core i7 Extreme i7-2920XM,55,4,13.75,http://cpudb.stanford.edu
+Core i7 Extreme i7-920XM,55,4,13.75,http://cpudb.stanford.edu
+Core i7 Extreme i7-990X,130,6,21.67,http://cpudb.stanford.edu
+Core i7 Extreme i7-4930MX,57,4,14.25,http://cpudb.stanford.edu
+Core i3 i3-3220T,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-4130,54,2,27,http://cpudb.stanford.edu
+Core i3 i3-4350,54,2,27,http://cpudb.stanford.edu
+Core i3 i3-2312M,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-4340,54,2,27,http://cpudb.stanford.edu
+Core i3 i3-4330T,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-380M,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-2367M,17,2,8.5,http://cpudb.stanford.edu
+Core i3 i3-2130,65,2,32.5,http://cpudb.stanford.edu
+Core i3 i3-330M,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-4150T,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-2120T,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-3240,55,2,27.5,http://cpudb.stanford.edu
+Core i3 i3-2120,65,2,32.5,http://cpudb.stanford.edu
+Core i3 i3-4360T,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-4370,54,2,27,http://cpudb.stanford.edu
+Core i3 i3-3229Y,13,2,6.5,http://cpudb.stanford.edu
+Core i3 i3-390M,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-3245,55,2,27.5,http://cpudb.stanford.edu
+Core i3 i3-2357M,17,2,8.5,http://cpudb.stanford.edu
+Core i3 i3-3225,55,2,27.5,http://cpudb.stanford.edu
+Core i3 i3-4025U,15,2,7.5,http://cpudb.stanford.edu
+Core i3 i3-4130T,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-4030U,15,2,7.5,http://cpudb.stanford.edu
+Core i3 i3-4160T,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-4030Y,11.5,2,5.75,http://cpudb.stanford.edu
+Core i3 i3-4160,54,2,27,http://cpudb.stanford.edu
+Core i3 i3-3217U,17,2,8.5,http://cpudb.stanford.edu
+Core i3 i3-550,73,2,36.5,http://cpudb.stanford.edu
+Core i3 i3-4010Y,11.5,2,5.75,http://cpudb.stanford.edu
+Core i3 i3-3110M,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-370M,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-330UM,18,2,9,http://cpudb.stanford.edu
+Core i3 i3-4158U,28,2,14,http://cpudb.stanford.edu
+Core i3 i3-2105,65,2,32.5,http://cpudb.stanford.edu
+Core i3 i3-4120U,15,2,7.5,http://cpudb.stanford.edu
+Core i3 i3-3130M,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-2100,65,2,32.5,http://cpudb.stanford.edu
+Core i3 i3-3240T,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-4150,54,2,27,http://cpudb.stanford.edu
+Core i3 330M,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-4000M,37,2,18.5,http://cpudb.stanford.edu
+Core i3 i3-4005U,15,2,7.5,http://cpudb.stanford.edu
+Core i3 i3-4100U,15,2,7.5,http://cpudb.stanford.edu
+Core i3 i3-3250,55,2,27.5,http://cpudb.stanford.edu
+Core i3 i3-3250T,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-3120M,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-560,73,2,36.5,http://cpudb.stanford.edu
+Core i3 i3-2365M,17,2,8.5,http://cpudb.stanford.edu
+Core i3 i3-3227U,17,2,8.5,http://cpudb.stanford.edu
+Core i3 i3-2100T,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-2102,65,2,32.5,http://cpudb.stanford.edu
+Core i3 i3-2348M,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-4110M,37,2,18.5,http://cpudb.stanford.edu
+Core i3 380M,35,2,17.5,http://cpudb.stanford.edu
+Core i3 560,73,2,36.5,http://cpudb.stanford.edu
+Core i3 i3-4100M,37,2,18.5,http://cpudb.stanford.edu
+Core i3 i3-380UM,18,2,9,http://cpudb.stanford.edu
+Core i3 i3-2125,65,2,32.5,http://cpudb.stanford.edu
+Core i3 i3-2310M,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-3210,55,2,27.5,http://cpudb.stanford.edu
+Core i3 i3-530,73,2,36.5,http://cpudb.stanford.edu
+Core i3 i3-2330M,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-2370M,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-2350M,35,2,17.5,http://cpudb.stanford.edu
+Core i3 540,73,2,36.5,http://cpudb.stanford.edu
+Core i3 i3-2328M,35,2,17.5,http://cpudb.stanford.edu
+Core i3 i3-4020Y,11.5,2,5.75,http://cpudb.stanford.edu
+Core i3 i3-4012Y,11.5,2,5.75,http://cpudb.stanford.edu
+Core i3 i3-350M,35,2,17.5,http://cpudb.stanford.edu
+Core i3 550,73,2,36.5,http://cpudb.stanford.edu
+Core i3 530,73,2,36.5,http://cpudb.stanford.edu
+Core i3 i3-2377M,17,2,8.5,http://cpudb.stanford.edu
+Core i3 i3-2375M,17,2,8.5,http://cpudb.stanford.edu
+Core 2 Quad Extreme QX9300,45,4,11.25,http://cpudb.stanford.edu
+Core 2 Quad Extreme QX6850,130,4,32.5,http://cpudb.stanford.edu
+Pentium D 840,130,2,65,http://cpudb.stanford.edu
+Pentium D 935,95,2,47.5,http://cpudb.stanford.edu
+Pentium D 820,95,2,47.5,http://cpudb.stanford.edu
+Pentium D 950,130,2,65,http://cpudb.stanford.edu
+Pentium D 915,95,2,47.5,http://cpudb.stanford.edu
+Pentium D 925,95,2,47.5,http://cpudb.stanford.edu
+Pentium D 945,95,2,47.5,http://cpudb.stanford.edu
+Pentium D 920,95,2,47.5,http://cpudb.stanford.edu
+Pentium D 830,130,2,65,http://cpudb.stanford.edu
+Pentium D 940,130,2,65,http://cpudb.stanford.edu
+Pentium D 960,130,2,65,http://cpudb.stanford.edu
+Pentium D 930,95,2,47.5,http://cpudb.stanford.edu
+Pentium D 805,95,2,47.5,http://cpudb.stanford.edu
+Core T1350,31,1,31,http://cpudb.stanford.edu
+Core T1250,31,1,31,http://cpudb.stanford.edu
+Core T2700,31,2,15.5,http://cpudb.stanford.edu
+Core T2400,31,2,15.5,http://cpudb.stanford.edu
+Core U1500,5.5,1,5.5,http://cpudb.stanford.edu
+Core T1400,27,1,27,http://cpudb.stanford.edu
+Core U1300,6,1,6,http://cpudb.stanford.edu
+Core U2400,9,2,4.5,http://cpudb.stanford.edu
+Core L2300,15,2,7.5,http://cpudb.stanford.edu
+Core T2050,31,2,15.5,http://cpudb.stanford.edu
+Core T2350,31,2,15.5,http://cpudb.stanford.edu
+Core T2250,31,2,15.5,http://cpudb.stanford.edu
+Core T2300,31,2,15.5,http://cpudb.stanford.edu
+Core U1400,6,1,6,http://cpudb.stanford.edu
+Core T1300,27,1,27,http://cpudb.stanford.edu
+Core T2450,31,2,15.5,http://cpudb.stanford.edu
+Core L2500,15,2,7.5,http://cpudb.stanford.edu
+Core T2600,31,2,15.5,http://cpudb.stanford.edu
+Core2 QX6800,130,4,32.5,http://cpudb.stanford.edu
+Core2 X6800,75,2,37.5,http://cpudb.stanford.edu
+Core2 Q8300,95,4,23.75,http://cpudb.stanford.edu
+Core2 SP9600,25,2,12.5,http://cpudb.stanford.edu
+Core2 Q8400,95,4,23.75,http://cpudb.stanford.edu
+Core2 P7350,25,2,12.5,http://cpudb.stanford.edu
+Core2 T6670,35,2,17.5,http://cpudb.stanford.edu
+Core2 QX6700,130,4,32.5,http://cpudb.stanford.edu
+Core2 P7550,25,2,12.5,http://cpudb.stanford.edu
+Core2 T5270,35,2,17.5,http://cpudb.stanford.edu
+Core2 T5750,35,2,17.5,http://cpudb.stanford.edu
+Core2 T5300,34,2,17,http://cpudb.stanford.edu
+Core2 P7570,25,2,12.5,http://cpudb.stanford.edu
+Core2 SU7300,10,2,5,http://cpudb.stanford.edu
+Core2 E4500,65,2,32.5,http://cpudb.stanford.edu
+Core2 T5200,34,2,17,http://cpudb.stanford.edu
+Core2 E7600,65,2,32.5,http://cpudb.stanford.edu
+Core2 SL3400,17,1,17,http://cpudb.stanford.edu
+Core2 Q8200,95,4,23.75,http://cpudb.stanford.edu
+Core2 T5500,34,2,17,http://cpudb.stanford.edu
+Core2 T5600,34,2,17,http://cpudb.stanford.edu
+Core2 Q9100,45,4,11.25,http://cpudb.stanford.edu
+Core2 P7370,25,2,12.5,http://cpudb.stanford.edu
+Core2 Q8400S,65,4,16.25,http://cpudb.stanford.edu
+Core2 SU3500,5.5,1,5.5,http://cpudb.stanford.edu
+Core2 E4700,65,2,32.5,http://cpudb.stanford.edu
+Core2 E7200,65,2,32.5,http://cpudb.stanford.edu
+Core2 X7800,44,2,22,http://cpudb.stanford.edu
+Core2 Q9000,45,4,11.25,http://cpudb.stanford.edu
+Core2 T5450,35,2,17.5,http://cpudb.stanford.edu
+Core2 Q8200S,65,4,16.25,http://cpudb.stanford.edu
+Core2 E4600,65,2,32.5,http://cpudb.stanford.edu
+Core2 SP9400,25,2,12.5,http://cpudb.stanford.edu
+Core2 P7450,25,2,12.5,http://cpudb.stanford.edu
+Core2 E4400,65,2,32.5,http://cpudb.stanford.edu
+Core2 E7500,65,2,32.5,http://cpudb.stanford.edu
+Core2 T5550,35,2,17.5,http://cpudb.stanford.edu
+Core2 T6570,35,2,17.5,http://cpudb.stanford.edu
+Core2 T5250,35,2,17.5,http://cpudb.stanford.edu
+Core2 E7300,65,2,32.5,http://cpudb.stanford.edu
+Core2 QX6850,130,4,32.5,http://cpudb.stanford.edu
+Core2 T5470,35,2,17.5,http://cpudb.stanford.edu
+Xeon Phi Coprocessors 7120A,300,61,4.92,http://cpudb.stanford.edu
+Xeon Phi Coprocessors 5120D,245,60,4.08,http://cpudb.stanford.edu
+Xeon Phi Coprocessors 7120X,300,61,4.92,http://cpudb.stanford.edu
+Xeon Phi Coprocessors 7120D,270,61,4.43,http://cpudb.stanford.edu
+Xeon Phi Coprocessors 5110P,225,60,3.75,http://cpudb.stanford.edu
+Xeon Phi Coprocessors 3120P,300,57,5.26,http://cpudb.stanford.edu
+Xeon Phi Coprocessors 7120P,300,61,4.92,http://cpudb.stanford.edu
+Xeon Phi Coprocessors 3120A,300,57,5.26,http://cpudb.stanford.edu
+1403 v2,80,2,40,http://cpudb.stanford.edu
+E5-2685 v3,120,12,10,http://cpudb.stanford.edu
+E5-1680 v2,130,8,16.25,http://cpudb.stanford.edu
+31S1P,300,57,5.26,http://cpudb.stanford.edu
+E5-2673 v2,110,8,13.75,http://cpudb.stanford.edu
+E5-1603 v3,140,4,35,http://cpudb.stanford.edu
+E5-1607 v3,140,4,35,http://cpudb.stanford.edu
+E3-1284L v3,47,4,11.75,http://cpudb.stanford.edu
+E5-1607 v2,130,4,32.5,http://cpudb.stanford.edu
+E5-1410 v2,80,4,20,http://cpudb.stanford.edu
+E7-8895 v2,155,15,10.33,http://cpudb.stanford.edu
+Core M 5Y70,4.5,2,2.25,http://cpudb.stanford.edu
+Core M 5Y51,4.5,2,2.25,http://cpudb.stanford.edu
+Core M 5Y10,4.5,2,2.25,http://cpudb.stanford.edu
+Core M 5Y10a,4.5,2,2.25,http://cpudb.stanford.edu
+Core M 5Y31,4.5,2,2.25,http://cpudb.stanford.edu
+Core M 5Y71,4.5,2,2.25,http://cpudb.stanford.edu
+Core M 5Y10c,4.5,2,2.25,http://cpudb.stanford.edu
+Core 2 Quad Extreme QX6700,130,4,32.5,http://cpudb.stanford.edu
+Core 2 Quad Extreme QX9770,136,4,34,http://cpudb.stanford.edu
+Core 2 Quad Extreme QX9650,130,4,32.5,http://cpudb.stanford.edu
+Core 2 Quad Extreme QX6800,130,4,32.5,http://cpudb.stanford.edu
+Core T2300E,31,2,15.5,http://cpudb.stanford.edu
+PowerPC 7450,23,1,23,http://cpudb.stanford.edu
+PowerPC 7400,6,1,6,http://cpudb.stanford.edu
+R4400 R4400SC,15,1,15,http://cpudb.stanford.edu
+R4600 R4600PC,3,1,3,http://cpudb.stanford.edu
+R8000 R8000,13,1,13,http://cpudb.stanford.edu
+R8000 R8010,13,1,13,http://cpudb.stanford.edu
+WinChip 240,13.1,1,13.1,http://cpudb.stanford.edu
+WinChip 180,9.4,1,9.4,http://cpudb.stanford.edu
+WinChip 200,10.4,1,10.4,http://cpudb.stanford.edu
+WinChip 225,12.3,1,12.3,http://cpudb.stanford.edu
