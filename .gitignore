@@ -1,10 +1,11 @@
 # Docs / other
 .cache/
 .DS_Store
+.vscode
+.idea
 
 # Ignore Gradle project-specific cache directory
 .gradle
-.idea
 .nextflow*
 
 # Ignore Gradle build output directory
