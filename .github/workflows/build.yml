@@ -40,12 +40,12 @@ jobs:
       - name: Compile
         run: ./gradlew assemble
 
-      - name: Check
+      - name: Checks
         run: ./gradlew check
         env:
           GRADLE_OPTS: '-Dorg.gradle.daemon=false'
 
-      - name: Test
+      - name: Tests
         run: |
           ./gradlew test -i
 
