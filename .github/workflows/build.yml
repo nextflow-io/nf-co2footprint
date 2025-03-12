@@ -41,3 +41,7 @@ jobs:
 
       - name: Execute checks / tests
         run: ./gradlew check --no-daemon --info
+
+      - name: Summarize tests results
+        uses: jeantessier/test-summary-action@v1
+        if: ${{ always() && matrix.os == 'ubuntu-latest' }}
