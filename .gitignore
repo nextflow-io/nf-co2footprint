@@ -1,6 +1,8 @@
 # Docs / other
 .cache/
 .DS_Store
+.vscode
+.idea
 
 # Ignore IDE specific files / directories
 .idea

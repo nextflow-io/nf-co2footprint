@@ -20,10 +20,10 @@ jobs:
         java_version: [17, 23]
 
     steps:
-      - name: Environment
+      - name: Check environment variables
         run: env | sort
 
-      - name: Checkout
+      - name: Checkout PR branch
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
@@ -36,10 +36,12 @@ jobs:
           architecture: x64
           distribution: 'temurin'
 
-      - name: Compile
+      - name: Compile plugin
         run: ./gradlew assemble
 
-      - name: Tests
-        run: ./gradlew check
-        env:
-          GRADLE_OPTS: '-Dorg.gradle.daemon=false'
+      - name: Execute checks / tests
+        run: ./gradlew check --no-daemon --info
+
+      - name: Summarize tests results
+        uses: jeantessier/test-summary-action@v1
+        if: ${{ always() }}
