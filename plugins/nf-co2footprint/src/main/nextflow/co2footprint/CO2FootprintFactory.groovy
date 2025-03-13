@@ -114,7 +114,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
     
     Double getCpuCoreTdp(TraceRecord trace) {
-        def cpu_model = trace.get('cpu_model').toString()   // TODO toString() in TraceRecord get()?
+        def cpu_model = trace.get('cpu_model').toString()
         if ( cpu_model == null || cpu_model == "null" ) {
             warnings << "The CPU model could not be detected for at least one task. Using default CPU power draw value!"
             return cpuData['default']
