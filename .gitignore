@@ -4,6 +4,10 @@
 .vscode
 .idea
 
+# Ignore IDE specific files / directories
+.idea
+.vscode
+
 # Ignore Gradle project-specific cache directory
 .gradle
 .nextflow*
