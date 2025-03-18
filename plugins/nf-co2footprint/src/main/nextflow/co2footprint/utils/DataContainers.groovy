@@ -1,5 +1,7 @@
 package nextflow.co2footprint.utils
 
+import groovy.util.logging.Slf4j
+
 import java.nio.file.Path
 import java.nio.file.Files
 
@@ -150,7 +152,11 @@ class DataMatrix implements Matrix {
     private BiMap<Object, Integer> columnIndex = [:] as BiMap
     private BiMap<Object, Integer> rowIndex = [:] as BiMap
 
-    DataMatrix(List<List> data = [], LinkedHashSet<Object> columnIndex = [], LinkedHashSet<Object> rowIndex = []) {
+    DataMatrix(
+            List<List> data = [],
+            LinkedHashSet<Object> columnIndex = [],
+            LinkedHashSet<Object> rowIndex = []
+    ) throws IllegalStateException  {
         this.data = data
 
         // Default the Indices with a Integer Range
@@ -170,21 +176,37 @@ class DataMatrix implements Matrix {
     }
 
     // Integrity tests
-    void assertRowLengthEqual(){
-       data.eachWithIndex { col, i ->
-           assert this.data[i].size() == this.data[0].size()
+    void assertRowLengthEqual() throws IllegalStateException  {
+       data.eachWithIndex { row, i ->
+           if (row.size() != this.data[0].size()) {
+               throw new IllegalStateException(
+                       "Length of row ${i} (${row.size()}) does not match size preceding rows (${this.data[0].size()})."
+               )
+           }
        }
     }
 
-    private void assertRowIndexLengthMatches(){
-        assert this.data.size() == this.rowIndex.size()
+    private void assertRowIndexLengthMatches() throws IllegalStateException {
+        if (this.data.size() != this.rowIndex.size()) {
+            throw new IllegalStateException(
+                    "Data size ${this.data.size()} does not match rowIndex length ${this.rowIndex.size()}"
+            )
+        }
     }
 
-    void assertColumnIndexLengthMatches(){
-        assert this.data.size() == 0 && this.rowIndex.size() == 0 || this.data[0].size() == this.columnIndex.size()
+    void assertColumnIndexLengthMatches() throws IllegalStateException  {
+        if (this.data.size() == 0 && this.columnIndex.size() != 0) {
+            throw new IllegalStateException(
+                    'Passed column index without data.'
+            )
+        } else if (this.data.size() > 0 && this.data[0].size() != this.columnIndex.size()) {
+            throw new IllegalStateException(
+                    "Data length ${this.data[0].size()} does not match rowIndex length ${this.columnIndex.size()}"
+            )
+        }
     }
 
-    void assertIntegrity(){
+    void assertIntegrity() throws IllegalStateException  {
         assertRowLengthEqual()
 
         assertRowIndexLengthMatches()
@@ -200,13 +222,19 @@ class DataMatrix implements Matrix {
         return false
     }
 
+    boolean asBoolean(){
+        return this.data.size() != 0 && this.data[0].size() != 0
+    }
+
     /**
      * Collect indices via keys from a BiMap
      *
      * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     private static List<Integer> collectIndices(LinkedHashSet<Object> keys, BiMap<Object, Integer> bimap) {
-        return keys.collect( { key -> bimap.getValue(key) } )
+        List<Integer> indices = keys.collect( { key -> bimap.getValue(key) } )
+        indices.removeAll( {it == null })
+        return indices
     }
 
     /**
@@ -240,9 +268,11 @@ class DataMatrix implements Matrix {
      * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     DataMatrix select(
-            LinkedHashSet<Object> rows=this.rowIndex.keySet(),
-            LinkedHashSet<Object> columns=this.columnIndex.keySet()
+            LinkedHashSet<Object> rows=null,
+            LinkedHashSet<Object> columns=null
     ){
+        rows = rows ?: this.rowIndex.keySet()
+        columns = columns ?: this.columnIndex.keySet()
         return this.selectRows(rows).selectColumns(columns)
     }
 
@@ -271,6 +301,22 @@ class DataMatrix implements Matrix {
      */
     BiMap<Object, Integer> getColumnIndex() {
         return this.columnIndex
+    }
+
+    /**
+     * Return the Row Keys in data matrix order
+     * @return Row Keys in order
+     */
+    LinkedHashSet getOrderedRowKeys() {
+        return this.rowIndex.valueSet().sort().collect {i -> this.rowIndex.getKey(i)}
+    }
+
+    /**
+     * Return the Column Keys in data matrix order
+     * @return Column Keys in order
+     */
+    LinkedHashSet getOrderedColumnKeys() {
+        return this.columnIndex.valueSet().sort().collect {i -> this.columnIndex.getKey(i)}
     }
 
     /**
@@ -340,12 +386,21 @@ class DataMatrix implements Matrix {
      *
      * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
-    static DataMatrix loadCsv(Path path, String separator=',', Integer columnIndexPos=0, Integer rowIndexPos=null) {
+    static DataMatrix loadCsv(
+            Path path, String separator=',',
+            Integer columnIndexPos=0, Integer rowIndexPos=null,
+            Object rowIndexColumn=null
+    ) {
         List<String> lines = Files.readAllLines(path)
 
         LinkedHashSet<Object> columnIndex = columnIndexPos != null ? lines.remove(columnIndexPos).split(separator) : null
+
         if (rowIndexPos != null) {
-            columnIndex.remove(columnIndex[rowIndexPos])
+            rowIndexColumn = columnIndex[rowIndexPos]
+        }
+        if (rowIndexColumn != null) {
+            rowIndexPos = columnIndex.findIndexOf { it == rowIndexColumn } as Integer
+            columnIndex.remove(rowIndexColumn)
         }
         LinkedHashSet<Object> rowIndex = []
         List<List<Object>> data = []
@@ -384,12 +439,12 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Convert the class into a readable / printable string*
+     * Convert the class into a readable / printable String.
      *
      * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     String toString() {
-        List<Object> sortedColumnsIndex = this.columnIndex.valueSet().sort().collect {i -> this.columnIndex.getKey(i)}
+        List<Object> sortedColumnsIndex = getOrderedColumnKeys()
         String stringRepresentation = "\t\t${sortedColumnsIndex.toString()}"
         data.eachWithIndex {row, i  ->
             stringRepresentation += "\n${this.rowIndex.getKey(i)}\t${row.toString()}"
@@ -398,3 +453,201 @@ class DataMatrix implements Matrix {
     }
 }
 
+
+@Slf4j
+/**
+ * Structure for the thermal design power (TPD) values
+ *
+ * @author Josua Carl <josua.carl@uni-tuebingen.de>
+ */
+class TDPDataMatrix extends DataMatrix {
+
+    private final Object tdpID = "tdp (W)"
+    private final Object coresID = "cores"
+    private final Object threadsID = "threads"
+    Object fallbackModel = 'default'
+    Integer tdp = null
+    Integer cores = null
+    Integer threads = null
+
+    TDPDataMatrix(
+            List<List> data = [], LinkedHashSet<String> columnIndex = [], LinkedHashSet<String> rowIndex = [],
+            Object fallbackModel='default', Integer tdp=null, Integer cores=null, Integer threads=null
+    ) {
+        // Initialize DataMatrix without non-ASCII characters in indices
+        super(
+                data,
+                columnIndex.collect {toASCII(it)} as LinkedHashSet,
+                rowIndex.collect {toASCII(it)} as LinkedHashSet
+        )
+
+        // Initialize own values
+        this.fallbackModel = fallbackModel
+        this.tdp = tdp
+        this.cores = cores
+        this.threads = threads
+    }
+
+    /**
+     * Remove non-ASCII symbols (®, ™,...)  from String.
+     *
+     * @param str Input string
+     * @return Input string with non ASCII characters removed.
+     */
+    static String toASCII(String str) {
+        return  str.replaceAll('[^\\p{ASCII}]', '')
+    }
+
+    /**
+     * Match a CPU model to the given TDP matrix.
+     *
+     * @param model CPU model
+     * @return DataMatrix with one entry, representing the model
+     *
+     * @author Josua Carl <josua.carl@uni-tuebingen.de>
+     */
+    TDPDataMatrix matchModel(String model, String originalModel=model) {
+        // Remove obtrusive symbols
+        model = toASCII(model).replaceAll('\\(R\\)|\\(TM\\)|\\(C\\)', '').trim()
+
+        DataMatrix modelData
+        if (this.rowIndex.containsKey(model)) {
+            modelData = select([model] as LinkedHashSet)
+        }
+        else if ( model.contains('@') ) {
+            // Case info appended with @
+            return matchModel(
+                    String.join('@', model.split('@').dropRight(1)).trim(),
+                    originalModel
+            )
+        }
+        else {
+            modelData = select([this.fallbackModel] as LinkedHashSet)
+            log.warn(
+                    "Could not find CPU model \"${originalModel}\" in given TDP data table. " +
+                    "Using ${this.fallbackModel} CPU power draw value (${getTDP(modelData)} W)."
+            )
+        }
+
+        return new TDPDataMatrix(
+                modelData.data, modelData.getOrderedColumnKeys(), modelData.getOrderedRowKeys(),
+                this.fallbackModel, this.tdp, this.cores, this.threads
+        )
+    }
+
+    /**
+     * Return TDP value of DataMatrix row. If none is given, the first position is assumed.
+     *
+     * @param dm DataMatrix with TDP values
+     * @param rowID ID of the respective row, defaults to null
+     * @param rowIdx Index of the respective row, defaults to 0, neglected when rowID is given
+     * @return
+     *
+     * @author Josua Carl <josua.carl@uni-tuebingen.de>
+     */
+    Integer getTDP(DataMatrix dm=null, Object rowID=null, Integer rowIdx=0) {
+        dm = dm ?: this
+        if (this.tdp) {
+            return this.tdp
+        } else if (rowID) {
+            return dm.get(rowID, this.tdpID) as Integer
+        } else {
+            return dm.get(rowIdx, this.tdpID, true) as Integer
+        }
+    }
+
+    /**
+     * Return TDP value of DataMatrix row. If none is given, the first position is assumed.
+     *
+     * @param dm DataMatrix with TPD values
+     * @param rowID ID of the respective row, defaults to null
+     * @param rowIdx Index of the respective row, defaults to 0, neglected when rowID is given
+     * @return
+     *
+     * @author Josua Carl <josua.carl@uni-tuebingen.de>
+     */
+    Integer getCores(DataMatrix dm=null, Object rowID=null, Integer rowIdx=0) {
+        dm = dm ?: this
+        if (this.cores) {
+            return this.cores
+        } else if (rowID) {
+            return dm.get(rowID, this.coresID) as Integer
+        }
+        else {
+            return dm.get(rowIdx, this.coresID, true) as Integer
+        }
+    }
+
+    /**
+     * Return TDP value of DataMatrix row. If none is given, the first position is assumed.
+     *
+     * @param dm DataMatrix with TPD values
+     * @param rowID ID of the respective row, defaults to null
+     * @param rowIdx Index of the respective row, defaults to 0, neglected when rowID is given
+     * @return
+     *
+     * @author Josua Carl <josua.carl@uni-tuebingen.de>
+     */
+    Integer getThreads(DataMatrix dm=null, Object rowID=null, Integer rowIdx=0) {
+        dm = dm ?: this
+        if (this.threads) {
+            return this.threads
+        } else if (rowID) {
+            return dm.get(rowID, this.threadsID) as Integer
+        }
+        else {
+            return dm.get(rowIdx, this.threadsID, true) as Integer
+        }
+    }
+
+    /**
+     * Return TDP value of DataMatrix row. If none is given, the first position is assumed.
+     *
+     * @param dm DataMatrix with TPD values
+     * @param rowID ID of the respective row, defaults to null
+     * @param rowIdx Index of the respective row, defaults to 0, neglected when rowID is given
+     * @return
+     *
+     * @author Josua Carl <josua.carl@uni-tuebingen.de>
+     */
+    Double getCoreTDP(DataMatrix dm=null, Integer rowIdx=0, Object rowID=null) {
+        dm = dm ?: this
+        return  getTDP(dm, rowID, rowIdx) / getCores(dm, rowID, rowIdx)
+    }
+
+    /**
+     * Return TDP value of DataMatrix row. If none is given, the first position is assumed.
+     *
+     * @param dm DataMatrix with TPD values
+     * @param rowID ID of the respective row, defaults to null
+     * @param rowIdx Index of the respective row, defaults to 0, neglected when rowID is given
+     * @return
+     *
+     * @author Josua Carl <josua.carl@uni-tuebingen.de>
+     */
+    Double getThreadTDP(DataMatrix dm=null, Integer rowIdx=0, Object rowID=null) {
+        dm = dm ?: this
+        return  getTDP(dm, rowID, rowIdx) / getThreads(dm, rowID, rowIdx)
+    }
+
+    /**
+     * Return first name (row index) of the TPDDataMatrix.
+     *
+     * @param dm DataMatrix with TPD values
+     * @return first model name
+     *
+     * @author Josua Carl <josua.carl@uni-tuebingen.de>
+     */
+    String getFirstName(DataMatrix dm=null) {
+        dm = dm ?: this
+        return dm.rowIndex.getKey(0) as String
+    }
+
+}
+
+
+// TODO: CI Data Matrix
+class CIDataMatrix extends DataMatrix {
+
+
+}
