@@ -72,6 +72,15 @@ class BiMapTest extends  Specification {
         bm.sortByValues() == ['E2': 0, 'E1': 1] as BiMap
         bm.sortByKeys() == bm
     }
+
+    def 'Should filter the Map correctly' () {
+        setup:
+        BiMap<String, Integer> bm = new BiMap(['E1': 1, 'E2': 2, '3': -1, '4': 0])
+
+        expect:
+        bm.filterValues { it >= 1 } == [1, 2]
+        bm.filterKeys { str -> str.matches('\\d')} == ['3', '4']
+    }
 }
 
 

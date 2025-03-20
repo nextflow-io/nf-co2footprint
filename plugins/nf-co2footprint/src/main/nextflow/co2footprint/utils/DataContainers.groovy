@@ -66,6 +66,16 @@ class BiMap<K, V> {
         return valueToKeyMap.containsKey(value)
     }
 
+    // method to check if a key exists in the map
+    List filterKeys(Closure filterFunction) {
+        return keyToValueMap.keySet().stream().filter(filterFunction).toList()
+    }
+
+    // method to filter the Values for a function
+    List filterValues(Closure filterFunction) {
+        return valueToKeyMap.keySet().stream().filter(filterFunction).toList()
+    }
+
     // method to remove a key-value pair based on the key
     V removeByKey(K key) {
         V value = keyToValueMap.remove(key)
@@ -508,11 +518,13 @@ class TDPDataMatrix extends DataMatrix {
      */
     TDPDataMatrix matchModel(String model, String originalModel=model) {
         // Remove obtrusive symbols
-        model = toASCII(model).replaceAll('\\(R\\)|\\(TM\\)|\\(C\\)', '').trim()
+        String modelRegex = toASCII(model).replaceAll('\\(R\\)|\\(TM\\)|\\(C\\)', '\\s?').trim()
+        List matches = this.rowIndex.filterKeys { str -> str.matches(modelRegex) }
 
         DataMatrix modelData
-        if (this.rowIndex.containsKey(model)) {
-            modelData = select([model] as LinkedHashSet)
+        // Match only if exactly one match in index / model names
+        if (matches.size() == 1) {
+            modelData = select([matches[0]] as LinkedHashSet)
         }
         else if ( model.contains('@') ) {
             // Case info appended with @
