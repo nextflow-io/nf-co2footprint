@@ -188,7 +188,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             log.error "TraceRecord field 'memory' is not set!"
             System.exit(1)
         }
-        Double nm = memory/1000000000 as Double
+        Double nm = memory/(1024**3) as Double
         // TODO handle if more memory/cpus used than requested?
 
         // Pm: power draw of memory [W per GB]
