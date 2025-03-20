@@ -192,10 +192,11 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // nm: size of memory available [GB] -> requested memory
         Double memory = trace.get('memory') as Double
         if ( memory == null || trace.get('peak_rss') as Double > memory) {
+            warnings << "The required memory exceeds user requested memory, therefore setting to maximum available memory!"
             memory = max_memory
         }
 
-        Double nm = memory/(1024*1024*1024) as Double
+        Double nm = memory/1000000000 as Double
         // TODO handle if more memory/cpus used than requested?
 
         // Pm: power draw of memory [W per GB]
