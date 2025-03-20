@@ -40,6 +40,8 @@ import nextflow.processor.TaskId
 
 import java.nio.file.Paths
 import java.util.concurrent.ConcurrentHashMap
+import java.lang.management.ManagementFactory
+import com.sun.management.OperatingSystemMXBean
 
 /**
  * Implements the CO2Footprint observer factory
@@ -135,6 +137,12 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // PSF: pragmatic scaling factor -> not used here since we aim at the CO2e of one pipeline run
         // Factor 0.001 needed to convert Pc and Pm from W to kW
 
+
+        // Detect OS
+        OperatingSystemMXBean OS = { (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean() }()
+        // Total Memory
+        Double max_memory = OS.getTotalPhysicalMemorySize() as Double
+
         // t: runtime in hours
         Double realtime = trace.get('realtime') as Double
         Double t = realtime/3600000 as Double
@@ -159,7 +167,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         }
         // TODO how to handle double, Double datatypes for ceiling?
         if ( cpu_usage == 0.0 ) {
-            warnings << "The reported CPU usage is 0.0 for at last one task!"
+            warnings << "The reported CPU usage is 0.0 for at least one task!"
         }
         Double uc = cpu_usage / (100.0 * nc) as Double
 
@@ -167,12 +175,12 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * Factors of memory power usage
          */
         // nm: size of memory available [GB] -> requested memory
-        Long memory = trace.get('memory') as Long
-        if ( memory == null ) {
-            // TODO if 'memory' not set, returns null, hande somehow?
-            log.error "TraceRecord field 'memory' is not set!"
-            System.exit(1)
+        Double memory = trace.get('memory') as Double
+        if ( memory == null || trace.get('peak_rss') as Double > memory) {
+            warnings << "The required memory exceeds user requested memory, therefore setting to maximum available memory!"
+            memory = max_memory
         }
+
         Double nm = memory/1000000000 as Double
         // TODO handle if more memory/cpus used than requested?
 
