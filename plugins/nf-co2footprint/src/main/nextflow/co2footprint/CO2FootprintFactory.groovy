@@ -20,6 +20,8 @@ import groovy.text.GStringTemplateEngine
 import groovy.transform.PackageScope
 import groovy.transform.PackageScopeTarget
 import groovyx.gpars.agent.Agent
+import nextflow.co2footprint.utils.DataMatrix
+import nextflow.co2footprint.utils.TDPDataMatrix
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskProcessor
 import nextflow.script.WorkflowMetadata
@@ -36,6 +38,7 @@ import nextflow.trace.TraceObserver
 import nextflow.trace.TraceObserverFactory
 import nextflow.processor.TaskId
 
+import java.nio.file.Paths
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -75,25 +78,23 @@ class CO2FootprintFactory implements TraceObserverFactory {
     }
 
     // Load file containing TDP values for different CPU models
-    protected void loadCpuTdpData(Map<String, Double> data) {
-        def dataReader = new InputStreamReader(this.class.getResourceAsStream('/TDP_cpu.v2.2.csv'))
-
-        // Skip first line containing additional comments
-        String line = dataReader.readLine()
-        while ( line = dataReader.readLine() ) {
-            def h = line.split(",")
-            if ( h[0] != 'model' ) data[h[0]] = h[3].toDouble()
-        }
-        dataReader.close()
-        log.debug "$data"
+    protected TDPDataMatrix loadTDPData() {
+        DataMatrix dm = DataMatrix.loadCsv(
+                //TODO: Add valid CPU_TDP.csv file
+                Paths.get(this.class.getResource('/CPU_TDP.csv').toURI()),
+                ',', 0, null, 'name'
+        )
+        return new TDPDataMatrix(
+                dm.getData(), dm.getOrderedColumnKeys(), dm.getOrderedRowKeys(),
+                'default', null, null, null
+        )
     }
+    TDPDataMatrix tdpDataMatrix = loadTDPData()
 
     @Override
     Collection<TraceObserver> create(Session session) {
         getPluginVersion()
         log.info "nf-co2footprint plugin  ~  version ${this.version}"
-
-        loadCpuTdpData(this.cpuData)
 
         this.session = session
         this.config = new CO2FootprintConfig(session.config.navigate('co2footprint') as Map, this.cpuData)
@@ -113,33 +114,17 @@ class CO2FootprintFactory implements TraceObserverFactory {
     }
 
     
-    Double getCpuCoreTdp(TraceRecord trace) {
-        def cpu_model = trace.get('cpu_model').toString()
+    Double getCPUCoreTDP(TraceRecord trace, String cpu_model=null) {
+        cpu_model = cpu_model ?: trace.get('cpu_model').toString()
+
+        TDPDataMatrix modelDataMatrix
         if ( cpu_model == null || cpu_model == "null" ) {
             warnings << "The CPU model could not be detected for at least one task. Using default CPU power draw value!"
-            return cpuData['default']
+            modelDataMatrix = tdpDataMatrix.matchModel('default')
+        } else {
+            modelDataMatrix = tdpDataMatrix.matchModel(cpu_model)
         }
-
-        // Look up CPU model specific TDP value
-        def c = 0
-        while ( true ) {
-            if ( cpuData.containsKey(cpu_model) ){
-                return cpuData[cpu_model]
-            } else if ( c < 2) {
-                // Trim suffixes, e.g. " Processor" or " 16-Core Processor", and try again
-                // TODO what are valid cases here?
-                def i = cpu_model.lastIndexOf(' ')
-                if ( i == -1 )
-                    break
-                else
-                    cpu_model = cpu_model.substring(0, i)
-            } else {
-                break
-            }
-            c++
-        }
-        warnings << "Could not find CPU model ${cpu_model} in given TDP data. Using default CPU power draw value!".toString()
-        return cpuData['default']
+        return modelDataMatrix.getCoreTDP()
     }
 
 
@@ -161,7 +146,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         Double nc = trace.get('cpus') as Integer
 
         // Pc: power draw of a computing core  [W]
-        Double pc = config.getIgnoreCpuModel() ? cpuData['default'] : getCpuCoreTdp(trace)
+        Double pc = config.getIgnoreCpuModel() ? getCPUCoreTDP(null, 'default') : getCPUCoreTDP(trace)
 
         // uc: core usage factor (between 0 and 1)
         // TODO if requested more than used, this is not taken into account, right?
