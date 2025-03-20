@@ -1,11 +1,12 @@
 package nextflow.co2footprint.utils
 
-import ch.qos.logback.classic.spi.ILoggingEvent
 import spock.lang.Specification
+import spock.lang.Stepwise
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import ch.qos.logback.core.read.ListAppender
+import ch.qos.logback.classic.spi.ILoggingEvent
 
 import java.nio.file.Path
 import java.nio.file.Files
@@ -173,7 +174,7 @@ class DataMatrixTest extends  Specification {
     }
 }
 
-
+@Stepwise
 class TDPDataMatrixTest extends Specification {
     private final Path tempPath = Files.createTempDirectory('tmpdir')
     final Matrix df = new TDPDataMatrix(
@@ -185,7 +186,7 @@ class TDPDataMatrixTest extends Specification {
             ['tdp (W)', 'cores', 'threads'] as LinkedHashSet,
             ['Intel i3-Fantasy', 'AMD YPS-x42', 'default'] as LinkedHashSet,
     )
-    private Logger logger = (Logger) LoggerFactory.getLogger(TDPDataMatrix)
+    Logger logger = (Logger) LoggerFactory.getLogger(TDPDataMatrix)
     ListAppender<ILoggingEvent> listAppender = new ListAppender<>()
 
     def 'Should get a valid DataMatrix Extension' () {
@@ -228,13 +229,21 @@ class TDPDataMatrixTest extends Specification {
         )
 
         expect:
-        df.getTDP() == 13
+        df.getTDP() == 13.0
         df.getCores() == 1
         df.getThreads() == 1
         df.getTDP(null, 'default') == 100
-        df2.getTDP() == 20
+        df2.getTDP() == 20.0
         df2.getCores() == 2
         df2.getThreads() == 4
+    }
+
+    def 'Should return first name of cpu model' () {
+        when:
+        Object firstName = df.getFirstName()
+
+        then:
+        firstName == 'Intel i3-Fantasy'
     }
 
     def 'Should return correct TPD per Core/Thread' () {
@@ -258,20 +267,14 @@ class TDPDataMatrixTest extends Specification {
         dfTDPPerThread == 12.5
         df2TDPPerThread == 5.0
         listAppender.list[0].toString() ==  '[WARN] Could not find CPU model "Non-existent" in given TDP data table. ' +
-                                            'Using default CPU power draw value (100 W).'
+                                            'Using default CPU power draw value (100.0 W).'
         listAppender.list[1].toString() ==  '[WARN] Could not find CPU model "Non-existent" in given TDP data table. ' +
-                                            'Using default CPU power draw value (100 W).'
+                                            'Using default CPU power draw value (100.0 W).'
 
         cleanup:
+        listAppender.list.clear()
+        logger.detachAndStopAllAppenders()
         listAppender.stop()
-    }
-
-    def 'Should return first name of cpu model' () {
-        when:
-        Object firstName = df.getFirstName()
-
-        then:
-        firstName == 'Intel i3-Fantasy'
     }
 
     def 'Should match the model names correctly' () {
@@ -282,7 +285,7 @@ class TDPDataMatrixTest extends Specification {
         expect:
         // Standard calls
         df.matchModel('Intel i3-Fantasy').getData() == [[13, 1, 1]]
-        df.matchModel('AMD YPS-x42').getData() == [[42, 10**3, 2*10**3]]
+        df.matchModel('AMD YPS-x42').getData() == [[42, 10**3, 2 * 10**3]]
         df.matchModel('default').getData() == [[100, 4, 8]]
 
         // Handling different string possibilities
@@ -294,13 +297,15 @@ class TDPDataMatrixTest extends Specification {
 
         // Getting default when non-existent
         df.matchModel('Non-existent2').getData() == [[100, 4, 8]]
-        listAppender.list[0].toString() ==  '[WARN] Could not find CPU model "Non-existent2" in given TDP data table. ' +
-                'Using default CPU power draw value (100 W).'
+        listAppender.list[0].toString() == '[WARN] Could not find CPU model "Non-existent2" in given TDP data table. ' +
+                'Using default CPU power draw value (100.0 W).'
         df.matchModel('Intel® i3-Fantasy(TM) 10Trillion GW, 0.00001MHz').getData() == [[100, 4, 8]]
-        listAppender.list[1].toString() ==  '[WARN] Could not find CPU model "Intel® i3-Fantasy(TM) 10Trillion GW, 0.00001MHz" in given TDP data table. ' +
-                'Using default CPU power draw value (100 W).'
+        listAppender.list[1].toString() == '[WARN] Could not find CPU model "Intel® i3-Fantasy(TM) 10Trillion GW, 0.00001MHz" in given TDP data table. ' +
+                'Using default CPU power draw value (100.0 W).'
 
         cleanup:
+        listAppender.list.clear()
+        logger.detachAndStopAllAppenders()
         listAppender.stop()
     }
 }

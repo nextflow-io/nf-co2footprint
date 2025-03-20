@@ -161,10 +161,10 @@ class DataMatrix implements Matrix {
 
         // Default the Indices with a Integer Range
         if (!rowIndex && data.size() > 0) {
-            rowIndex = new IntRange(0, data.size())
+            rowIndex = new IntRange(0, data.size() - 1)
         }
         if (!columnIndex && data.size() > 0 && data[0].size() > 0) {
-            columnIndex =  new IntRange(0, data[0].size())
+            columnIndex =  new IntRange(0, data[0].size() - 1)
         }
 
         // Add index into Map
@@ -545,7 +545,7 @@ class TDPDataMatrix extends DataMatrix {
      *
      * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
-    Integer getTDP(DataMatrix dm=null, Object rowID=null, Integer rowIdx=0) {
+    Double getTDP(DataMatrix dm=null, Object rowID=null, Integer rowIdx=0) {
         dm = dm ?: this
         if (this.tdp) {
             return this.tdp
