@@ -4,6 +4,8 @@ import nextflow.co2footprint.utils.DataMatrix
 
 import groovy.util.logging.Slf4j
 
+import java.util.regex.Pattern
+
 
 @Slf4j
 /**
@@ -45,8 +47,8 @@ class TDPDataMatrix extends DataMatrix {
      * @param str Input string
      * @return Input string with non ASCII characters removed.
      */
-    static String toASCII(String str) {
-        return  str.replaceAll('[^\\p{ASCII}]', '\\s')
+    static String toASCII(String str, String replacement='') {
+        return  str.replaceAll('[^\\p{ASCII}]', replacement)
     }
 
     /**
@@ -59,18 +61,19 @@ class TDPDataMatrix extends DataMatrix {
      */
     TDPDataMatrix matchModel(String model, String originalModel=model) {
         // Construct regular expression to address potential differences in exact name matching
-        String modelRegex = toASCII(model)      // Convert to ASCII
-                .toLowerCase()                  // Convert to lower case
-                .replaceAll('\\(r\\)|\\(tm\\)|\\(c\\)', '\\s?')    // Replace ASCII surrogates
-                .replaceAll('processors?', '(processor)?s?')       // make 'processor(s)' optional
-                .replaceAll('\\s', '\\s?')                         // make whitespaces optional
+        String modelRegex = toASCII(model, '\s?')                          // Convert to ASCII
+                .toLowerCase()                                                        // Convert to lower case
+                .replaceAll('\\(r\\)|\\(tm\\)|\\(c\\)', '\s?')      // Replace ASCII surrogates
+                .replaceAll(' ?processors? ?', '')                  // make 'processor(s)' optional
+                .replaceAll('\\s(?!\\?)','\s*')                     // make whitespaces optional
 
         // Find matches against index
-        List matches = this.rowIndex.filterKeys {
-            str -> str
-                    .toLowerCase()      // Convert to lower case
-                    .matches(modelRegex)
+        List matches = this.rowIndex.filterKeys { String str ->
+                str = str.toLowerCase()      // Convert to lower case
+                    .replaceAll(' ?processors? ?', '')        // make 'processor(s)' optional
+                str.matches(modelRegex)
         }
+
 
         DataMatrix modelData
         // Match only if exactly one match in index / model names
