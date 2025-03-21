@@ -21,7 +21,7 @@ import groovy.transform.PackageScope
 import groovy.transform.PackageScopeTarget
 import groovyx.gpars.agent.Agent
 import nextflow.co2footprint.utils.DataMatrix
-import nextflow.co2footprint.utils.TDPDataMatrix
+
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskProcessor
 import nextflow.script.WorkflowMetadata
