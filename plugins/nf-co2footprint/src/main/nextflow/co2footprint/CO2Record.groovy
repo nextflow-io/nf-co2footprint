@@ -1,12 +1,12 @@
 package nextflow.co2footprint
 
+import nextflow.co2footprint.utils.HelperFunctions
+
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import nextflow.trace.TraceRecord
 import groovy.json.StringEscapeUtils
 
-
-import nextflow.co2footprint.HelperFunctions
 
 /**
  *
@@ -82,7 +82,7 @@ class CO2Record extends TraceRecord {
         final QUOTE = '"'
         final NA = '-'
         if( result == null ) result = new StringBuilder()
-        result.deleteCharAt(result.length() - 1); // remove the last character "}"
+        result.deleteCharAt(result.length() - 1) // remove the last character "}"
         result << ','
         for( int i=0; i<fields.size(); i++ ) {
             String name = fields[i]

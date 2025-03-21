@@ -16,6 +16,8 @@
 
 package nextflow.co2footprint
 
+import nextflow.co2footprint.utils.HelperFunctions
+
 import groovy.text.GStringTemplateEngine
 import groovy.transform.PackageScope
 import groovy.transform.PackageScopeTarget
@@ -36,6 +38,7 @@ import nextflow.trace.TraceObserver
 import nextflow.trace.TraceObserverFactory
 import nextflow.processor.TaskId
 
+import java.nio.file.Paths
 import java.util.concurrent.ConcurrentHashMap
 import java.lang.management.ManagementFactory
 import com.sun.management.OperatingSystemMXBean
@@ -79,6 +82,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
     // Load file containing TDP values for different CPU models
     protected void loadCpuTdpData(Map<String, Double> data) {
         def dataReader = new InputStreamReader(this.class.getResourceAsStream('/TDP_cpu.v2.2.csv'))
+        Path path = Paths.get(this.class.getResource('/TDP_cpu.v2.2.csv').toURI())
 
         // Skip first line containing additional comments
         String line = dataReader.readLine()
@@ -88,6 +92,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         }
         dataReader.close()
         log.debug "$data"
+        data
     }
 
     @Override
@@ -156,7 +161,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // Detect OS
         OperatingSystemMXBean OS = { (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean() }()
         // Total Memory
-        Double max_memory = OS.getTotalPhysicalMemorySize() as Double
+        Double max_memory = OS.getTotalMemorySize() as Double
 
         // t: runtime in hours
         Double realtime = trace.get('realtime') as Double
@@ -248,8 +253,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
             car = gCO2 / 251 as Double
         }
         Double tree = gCO2 / 917 as Double
-        Double plane_percent
-        Double plane_flights
+        Double plane_percent = null
+        Double plane_flights = null
         if (gCO2 <= 50000) {
             plane_percent = gCO2 * 100 / 50000 as Double
         } else {
@@ -373,7 +378,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             co2eSummaryFile.println("Energy consumption: ${HelperFunctions.convertToReadableUnits(total_energy,3)}Wh")
 
             List equivalences = computeCO2footprintEquivalences()
-            List<GString> readableEquivalences = new ArrayList<GString>();
+            List<GString> readableEquivalences = new ArrayList<GString>()
             if (equivalences[0]){
                 readableEquivalences.add("- ${HelperFunctions.convertToScientificNotation(equivalences[0])} km travelled by car")
             }
@@ -496,7 +501,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                         + cpu_model_string
                         + "${cpu_usage}\t"
                         + "${HelperFunctions.convertBytesToReadableUnits(memory)}"
-                );
+                )
                 it.flush()
             }
         }
@@ -549,7 +554,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                         + cpu_model_string
                         + "${cpu_usage}\t"
                         + "${HelperFunctions.convertBytesToReadableUnits(memory)}"
-                );
+                )
                 it.flush()
             }
         }
@@ -866,10 +871,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * @return The rendered json payload
          */
         protected String renderJsonData(Collection<TraceRecord> data, Map<TaskId,CO2Record> dataCO2) {
-            def List<String> formats = null
-            def List<String> fields = null
-            def List<String> co2Formats = null
-            def List<String> co2Fields = null
+            List<String> formats = null
+            List<String> fields = null
+            List<String> co2Formats = null
+            List<String> co2Fields = null
             def result = new StringBuilder()
             result << '[\n'
             for (int i = 0; i < data.size(); i++) {
@@ -892,13 +897,13 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * @return The loaded template as a string
          */
         private String readTemplate( String path ) {
-            StringWriter writer = new StringWriter();
+            StringWriter writer = new StringWriter()
             def res =  this.class.getClassLoader().getResourceAsStream( path )
             int ch
             while( (ch=res.read()) != -1 ) {
-                writer.append(ch as char);
+                writer.append(ch as char)
             }
-            writer.toString();
+            writer.toString()
         }
 
     }
