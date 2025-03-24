@@ -1,10 +1,10 @@
-package nextflow.co2footprint
+package nextflow.co2footprint.utils
 
 import java.text.DecimalFormat
 
-public class HelperFunctions {
+class HelperFunctions {
 
-    static public String convertToScientificNotation(double value) {
+    static String convertToScientificNotation(Double value) {
         if (value == 0) {
             return value.toString()
         } else if (value <= 999 && value >= 0.001) {
@@ -17,7 +17,7 @@ public class HelperFunctions {
         }
     }
 
-    static public String convertToReadableUnits(double value, int unitIndex=4) {
+    static String convertToReadableUnits(double value, int unitIndex=4) {
         def units = ['p', 'n', 'u', 'm', ' ', 'K', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
         
         while (value >= 1000 && unitIndex < units.size() - 1) {
@@ -32,7 +32,7 @@ public class HelperFunctions {
         return "${value} ${units[unitIndex]}"
     }
 
-    static public String convertBytesToReadableUnits(double value) {
+    static String convertBytesToReadableUnits(double value) {
         def units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']  // Units: Byte, Kilobyte, Megabyte, Gigabyte, Terabyte, Petabyte, Exabyte
         int unitIndex=0
 
@@ -44,13 +44,13 @@ public class HelperFunctions {
         return "${value} ${units[unitIndex]}"
     }
 
-    static public String convertMillisecondsToReadableUnits(double value) {
+    static String convertMillisecondsToReadableUnits(double value) {
         if ( value < 1000 ) {
             return "${value}ms"
         } else {
-            int h = Math.floor(value/3600000)
-            int m = Math.floor((value % 3600000)/60000)
-            int s = Math.floor((value % 60000)/1000)
+            int h = Math.floor(value/3600000) as Integer
+            int m = Math.floor((value % 3600000)/60000) as Integer
+            int s = Math.floor((value % 60000)/1000) as Integer
 
             if ( value < 60000 )
                 return "${s}s"

@@ -4,8 +4,6 @@ import groovy.json.JsonOutput
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import nextflow.Session
-import nextflow.trace.ReportSummary
-import nextflow.trace.TraceRecord
 
 import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService

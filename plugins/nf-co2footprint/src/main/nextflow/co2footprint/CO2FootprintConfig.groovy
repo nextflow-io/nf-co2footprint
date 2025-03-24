@@ -17,7 +17,7 @@ import groovy.util.logging.Slf4j
  * }
  *
  *
- * We anotate this class as @PackageScope to restrict the access of their methods only to class in the
+ * We annotate this class as @PackageScope to restrict the access of their methods only to class in the
  * same package
  *
  * @author Júlia Mir Pedrol <mirp.julia@gmail.com>, Sabrina Krakau <sabrinakrakau@gmail.com>
@@ -92,26 +92,26 @@ class CO2FootprintConfig {
             throw new IllegalArgumentException("Invalid combination of 'ci' and 'location' parameters specified for the CO2Footprint plugin. Please specify either 'ci' or 'location'!")
         }
         if (config.ci) {
-            ci = config.ci
+            ci = config.ci as Double
         }
         if (config.location) {
-            ci = retrieveCi(config.location)
+            ci = retrieveCi(config.location as String)
             location = config.location
         }
         if (config.pue) {
-            pue = config.pue
+            pue = config.pue as Double
         }
         if (config.powerdrawMem) {
-            powerdrawMem = config.powerdrawMem
+            powerdrawMem = config.powerdrawMem as Double
         }
         if (config.powerdrawCpuDefault) {
-            powerdrawCpuDefault = config.powerdrawCpuDefault
+            powerdrawCpuDefault = config.powerdrawCpuDefault as Double
         }
         cpuData['default'] = powerdrawCpuDefault
 
         if (config.customCpuTdpFile) {
             customCpuTdpFile = config.customCpuTdpFile
-            loadCustomCpuTdpData(cpuData, config.customCpuTdpFile)
+            loadCustomCpuTdpData(cpuData, config.customCpuTdpFile as String)
         }
     }
 
@@ -130,14 +130,14 @@ class CO2FootprintConfig {
     SortedMap<String, Object> collectInputFileOptions() {
         Map<String, Object> newMap = [:]
         newMap["customCpuTdpFile"] = customCpuTdpFile
-        return newMap.sort()
+        return newMap.sort() as SortedMap
     }
     SortedMap<String, Object> collectOutputFileOptions() {
         Map<String, Object> newMap = [:]
         newMap["traceFile"] = traceFile
         newMap["summaryFile"] = summaryFile
         newMap["reportFile"] = reportFile
-        return newMap.sort()
+        return newMap.sort() as SortedMap
     }
     SortedMap<String, Object> collectCO2CalcOptions() {
         Map<String, Object> newMap = [:]
@@ -147,6 +147,6 @@ class CO2FootprintConfig {
         newMap["powerdrawMem"] = powerdrawMem
         newMap["powerdrawCpuDefault"] = powerdrawCpuDefault
         newMap["ignoreCpuModel"] = ignoreCpuModel
-        return newMap.sort()
+        return newMap.sort() as SortedMap
     }
 }
