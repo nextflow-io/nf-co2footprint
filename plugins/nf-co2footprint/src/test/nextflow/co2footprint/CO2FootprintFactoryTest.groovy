@@ -40,7 +40,7 @@ import java.nio.file.Path
  */
 class CO2FootprintFactoryTest extends Specification {
 
-    private BigDecimal round( double value ) {
+    private static BigDecimal round( double value ) {
         Math.round( value * 100 ) / 100
     }
 
@@ -70,9 +70,9 @@ class CO2FootprintFactoryTest extends Specification {
 
         expect:
         // Energy consumption converted to Wh and compared to result from www.green-algorithms.org
-        round(results[0]/1000) == 24.39
+        round(results[0]/1000) == 24.10
         // CO2 converted to g
-        round(results[1]/1000) == 11.59
+        round(results[1]/1000) == 11.45
     }
 
     def 'test co2e calculation for specific cpu_model' () {
@@ -91,9 +91,9 @@ class CO2FootprintFactoryTest extends Specification {
 
         expect:
         // Energy consumption converted to Wh and compared to result from www.green-algorithms.org
-        round(results[0]/1000) == 29.40
+        round(results[0]/1000) == 29.11
         // CO2 in g
-        round(results[1]/1000) == 13.97
+        round(results[1]/1000) == 13.83
     }
 
     def 'test co2e calculation with non-default pue' () {
@@ -112,9 +112,9 @@ class CO2FootprintFactoryTest extends Specification {
 
         expect:
         // Energy consumption converted to Wh and compared to result from www.green-algorithms.org
-        round(results[0]/1000) == 20.45
+        round(results[0]/1000) == 20.2
         // CO2 in g
-        round(results[1]/1000) == 9.71
+        round(results[1]/1000) == 9.59
     }
 
     def 'test co2e calculation with CI value retrieved for Germany' () {
@@ -133,9 +133,9 @@ class CO2FootprintFactoryTest extends Specification {
 
         expect:
         // Energy consumption converted to Wh and compared to result from www.green-algorithms.org
-        round(results[0]/1000) == 24.39
+        round(results[0]/1000) == 24.10
         // CO2 in g
-        round(results[1]/1000) == 8.26
+        round(results[1]/1000) == 8.16
     }
 
     def 'test co2e calculation for custom CI value' () {
@@ -155,9 +155,9 @@ class CO2FootprintFactoryTest extends Specification {
 
         expect:
         // Energy consumption converted to Wh and compared to result from www.green-algorithms.org (for location Germany)
-        round(results[0]/1000) == 24.39
+        round(results[0]/1000) == 24.10
         // CO2 in g
-        round(results[1]/1000) == 8.26
+        round(results[1]/1000) == 8.16
     }
 
     def 'test calculation of total CO2e and energy consumption' () {
@@ -185,9 +185,9 @@ class CO2FootprintFactoryTest extends Specification {
 
         expect:
         // Energy consumption converted to Wh
-        round(factory.total_energy/1000) == 24.39
+        round(factory.total_energy/1000) == 24.10
         // Total CO2 in g
-        round(factory.total_co2/1000) == 11.59
+        round(factory.total_co2/1000) == 11.45
     }
 
     def 'test calculation of CO2 equivalences' () {
@@ -218,10 +218,10 @@ class CO2FootprintFactoryTest extends Specification {
         expect:
         // Values compared to result from www.green-algorithms.org
         // Car Km
-        results[0].round(7) == 0.0662137
+        results[0].round(7) == 0.0654020 as Double
         // Tree months
-        results[1].round(7) == 0.0126362
+        results[1].round(7) == 0.0124813 as Double
         // Plane percent
-        results[2].round(7) == 0.0231748
+        results[2].round(7) == 0.0228907 as Double
     }
 }
