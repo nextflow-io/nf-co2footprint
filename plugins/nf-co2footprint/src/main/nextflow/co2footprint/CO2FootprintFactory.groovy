@@ -82,7 +82,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
     // Load file containing TDP values for different CPU models
     protected TDPDataMatrix loadTDPData() {
         DataMatrix dm = DataMatrix.loadCsv(
-                //TODO: Add valid CPU_TDP.csv file
                 Paths.get(this.class.getResource('/CPU_TDP.csv').toURI()),
                 ',', 0, null, 'name'
         )
