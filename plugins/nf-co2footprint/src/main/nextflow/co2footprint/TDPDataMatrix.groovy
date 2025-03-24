@@ -56,8 +56,6 @@ class TDPDataMatrix extends DataMatrix {
      *
      * @param model CPU model
      * @return DataMatrix with one entry, representing the model
-     *
-     * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     TDPDataMatrix matchModel(String model, String originalModel=model) {
         // Construct regular expression to address potential differences in exact name matching
@@ -70,7 +68,7 @@ class TDPDataMatrix extends DataMatrix {
         // Find matches against index
         List matches = this.rowIndex.filterKeys { String str ->
                 str = str.toLowerCase()      // Convert to lower case
-                    .replaceAll(' ?processors? ?', '')        // make 'processor(s)' optional
+                    .replaceAll(' ?processors? ?', '')              // make 'processor(s)' optional
                 str.matches(modelRegex)
         }
 
@@ -108,8 +106,6 @@ class TDPDataMatrix extends DataMatrix {
      * @param rowID ID of the respective row, defaults to null
      * @param rowIdx Index of the respective row, defaults to 0, neglected when rowID is given
      * @return
-     *
-     * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     Double getTDP(DataMatrix dm=null, Object rowID=null, Integer rowIdx=0) {
         dm = dm ?: this
@@ -129,8 +125,6 @@ class TDPDataMatrix extends DataMatrix {
      * @param rowID ID of the respective row, defaults to null
      * @param rowIdx Index of the respective row, defaults to 0, neglected when rowID is given
      * @return
-     *
-     * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     Integer getCores(DataMatrix dm=null, Object rowID=null, Integer rowIdx=0) {
         dm = dm ?: this
@@ -151,8 +145,6 @@ class TDPDataMatrix extends DataMatrix {
      * @param rowID ID of the respective row, defaults to null
      * @param rowIdx Index of the respective row, defaults to 0, neglected when rowID is given
      * @return
-     *
-     * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     Integer getThreads(DataMatrix dm=null, Object rowID=null, Integer rowIdx=0) {
         dm = dm ?: this
@@ -173,8 +165,6 @@ class TDPDataMatrix extends DataMatrix {
      * @param rowID ID of the respective row, defaults to null
      * @param rowIdx Index of the respective row, defaults to 0, neglected when rowID is given
      * @return
-     *
-     * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     Double getCoreTDP(DataMatrix dm=null, Integer rowIdx=0, Object rowID=null) {
         dm = dm ?: this
@@ -188,8 +178,6 @@ class TDPDataMatrix extends DataMatrix {
      * @param rowID ID of the respective row, defaults to null
      * @param rowIdx Index of the respective row, defaults to 0, neglected when rowID is given
      * @return
-     *
-     * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     Double getThreadTDP(DataMatrix dm=null, Integer rowIdx=0, Object rowID=null) {
         dm = dm ?: this
@@ -201,8 +189,6 @@ class TDPDataMatrix extends DataMatrix {
      *
      * @param dm DataMatrix with TPD values
      * @return first model name
-     *
-     * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     String getFirstName(DataMatrix dm=null) {
         dm = dm ?: this
