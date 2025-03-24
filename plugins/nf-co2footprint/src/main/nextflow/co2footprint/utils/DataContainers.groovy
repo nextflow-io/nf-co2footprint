@@ -6,7 +6,9 @@ import java.nio.file.Files
 /**
  * Bidirectional Map with maintained K-V pairs in both directions
  * @param <K>
- * @param <V>
+ * @param
+ *
+ * @author Josua Carl <josua.carl@uni-tuebingen.de>
  */
 class BiMap<K, V> {
 
@@ -236,8 +238,6 @@ class DataMatrix implements Matrix {
 
     /**
      * Collect indices via keys from a BiMap
-     *
-     * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     private static List<Integer> collectIndices(LinkedHashSet<Object> keys, BiMap<Object, Integer> bimap) {
         List<Integer> indices = keys.collect( { key -> bimap.getValue(key) } )
@@ -247,8 +247,6 @@ class DataMatrix implements Matrix {
 
     /**
      * Select rows of the DataMatrix
-     *
-     * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     private DataMatrix selectRows(LinkedHashSet<Object> rows){
         List<Integer> iList = collectIndices(rows, this.rowIndex)
@@ -259,8 +257,6 @@ class DataMatrix implements Matrix {
 
     /**
      * Select columns of the DataMatrix.
-     *
-     * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     private DataMatrix selectColumns(LinkedHashSet<Object> columns){
         // Collect indices
@@ -272,8 +268,6 @@ class DataMatrix implements Matrix {
 
     /**
      * Select a part of the DataMatrix. If no value is given for an entry, everything is selected.
-     *
-     * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     DataMatrix select(
             LinkedHashSet<Object> rows=null,
@@ -286,8 +280,6 @@ class DataMatrix implements Matrix {
 
     /**
      * Get data entries as Lists.
-     *
-     * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     List<List> getData() {
         return this.data
@@ -295,8 +287,6 @@ class DataMatrix implements Matrix {
 
     /**
      * Get data entries as Lists.
-     *
-     * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     BiMap<Object, Integer> getRowIndex() {
         return this.rowIndex
@@ -304,8 +294,6 @@ class DataMatrix implements Matrix {
 
     /**
      * Get data entries as Lists.
-     *
-     * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     BiMap<Object, Integer> getColumnIndex() {
         return this.columnIndex
@@ -330,8 +318,6 @@ class DataMatrix implements Matrix {
     /**
      * Get data entries by specifying row and column that you want to access, as well as whether they are Integer
      * indices.
-     *
-     * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     Object get(Object row, Object column, boolean rowRawIndex=false, boolean columnRawIndex=false) {
         row = rowRawIndex ? row as Integer : this.rowIndex.getValue(row)
@@ -342,8 +328,6 @@ class DataMatrix implements Matrix {
 
     /**
      * Set an entry to the specified value.
-     *
-     * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     void set(Object value, Object row, Object column, boolean rowRawIndex=false, boolean columnRawIndex=false) {
         row = rowRawIndex ? row as Integer : this.rowIndex.getValue(row)
@@ -354,8 +338,6 @@ class DataMatrix implements Matrix {
 
     /**
      * Save data with simple CSV format.
-     *
-     * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     void saveCsv(Path path, String separator=',') {
         String csvString = ''
@@ -380,8 +362,6 @@ class DataMatrix implements Matrix {
 
     /**
      * Infer simple numeric data types from String.
-     *
-     * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     private static def inferTypeOfString(String str) {
         try { return Integer.parseInt(str) } catch(NumberFormatException e){ }
@@ -391,8 +371,6 @@ class DataMatrix implements Matrix {
 
     /**
      * Load data from simple CSV format.
-     *
-     * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     static DataMatrix loadCsv(
             Path path, String separator=',',
@@ -448,8 +426,6 @@ class DataMatrix implements Matrix {
 
     /**
      * Convert the class into a readable / printable String.
-     *
-     * @author Josua Carl <josua.carl@uni-tuebingen.de>
      */
     String toString() {
         List<Object> sortedColumnsIndex = getOrderedColumnKeys()
