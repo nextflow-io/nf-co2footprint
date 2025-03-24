@@ -55,15 +55,20 @@ import com.sun.management.OperatingSystemMXBean
 @PackageScope(PackageScopeTarget.FIELDS)
 class CO2FootprintFactory implements TraceObserverFactory {
 
+    // Track used version
     private String version
-    // Handle logging messages
-    private List<String> warnings = []
 
+    // Current Nextflow session
+    private Session session
+
+    // Used plugin configuration from Nextflow configuration
+    private CO2FootprintConfig config
+
+    // Handle warnings
+    private List<String> warnings = []
     boolean hasWarnings() { warnings.size() > 0 }
     List<String> getWarnings() { warnings }
 
-    private CO2FootprintConfig config
-    private Session session
     final private Map<TaskId,CO2Record> co2eRecords = new ConcurrentHashMap<>()
     // TODO make sure for key value can be set only once?
 
