@@ -175,7 +175,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             memory = max_memory
         }
 
-        Double nm = memory/1000000000 as Double
+        Double nm = memory/(1024**3) as Double
         // TODO handle if more memory/cpus used than requested?
 
         // Pm: power draw of memory [W per GB]
