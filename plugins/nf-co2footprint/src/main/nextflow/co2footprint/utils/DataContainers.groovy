@@ -250,7 +250,7 @@ class DataMatrix implements Matrix {
      */
     private DataMatrix selectRows(LinkedHashSet<Object> rows){
         List<Integer> iList = collectIndices(rows, this.rowIndex)
-        List<List> data = this.data[iList]
+        List<List<Object>> data = this.data[iList]
 
         return new DataMatrix(data, this.columnIndex.keySet() as LinkedHashSet, rows)
     }
@@ -364,8 +364,8 @@ class DataMatrix implements Matrix {
      * Infer simple numeric data types from String.
      */
     private static def inferTypeOfString(String str) {
-        try { return Integer.parseInt(str) } catch(NumberFormatException e){ }
-        try { return Double.parseDouble(str) } catch(NumberFormatException e){ }
+        try { return Integer.parseInt(str) } catch(NumberFormatException ignore){ }
+        try { return Double.parseDouble(str) } catch(NumberFormatException ignore){ }
         return str
     }
 
