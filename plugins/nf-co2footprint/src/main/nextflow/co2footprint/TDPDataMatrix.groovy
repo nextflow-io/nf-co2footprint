@@ -57,7 +57,7 @@ class TDPDataMatrix extends DataMatrix {
      * @param model CPU model
      * @return DataMatrix with one entry, representing the model
      */
-    TDPDataMatrix matchModel(String model, String originalModel=model) {
+    TDPDataMatrix matchModel(String model, Boolean fallbackToDefault=true, String originalModel=model) {
         // Construct regular expression to address potential differences in exact name matching
         String modelRegex = toASCII(model, '\s?')                          // Convert to ASCII
                 .toLowerCase()                                                        // Convert to lower case
@@ -82,15 +82,20 @@ class TDPDataMatrix extends DataMatrix {
             // Case info appended with @
             return matchModel(
                     String.join('@', model.split('@').dropRight(1)).trim(),
+                    fallbackToDefault,
                     originalModel
             )
         }
-        else {
+        else if (fallbackToDefault) {
             modelData = select([this.fallbackModel] as LinkedHashSet)
             log.warn(
                     "Could not find CPU model \"${originalModel}\" in given TDP data table. " +
-                            "Using ${this.fallbackModel} CPU power draw value (${getTDP(modelData)} W)."
+                    "Using ${this.fallbackModel} CPU power draw value (${getTDP(modelData)} W)."
             )
+        }
+        else {
+            log.warn("No exact match found for '${model}'.")
+            return null
         }
 
         return new TDPDataMatrix(
