@@ -67,7 +67,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
     final private Map<TaskId,CO2Record> co2eRecords = new ConcurrentHashMap<>()
     // TODO make sure for key value can be set only once?
 
-    private Map<String, Double> cpuData = [:]
     Double total_energy = 0
     Double total_co2 = 0
 
@@ -81,18 +80,9 @@ class CO2FootprintFactory implements TraceObserverFactory {
         reader.close()
     }
 
-    // Load file containing TDP values for different CPU models
-    protected TDPDataMatrix loadTDPData() {
-        DataMatrix dm = DataMatrix.loadCsv(
-                Paths.get(this.class.getResource('/CPU_TDP.csv').toURI()),
-                ',', 0, null, 'name'
-        )
-        return new TDPDataMatrix(
-                dm.getData(), dm.getOrderedColumnKeys(), dm.getOrderedRowKeys(),
-                'default', null, null, null
-        )
-    }
-    TDPDataMatrix tdpDataMatrix = loadTDPData()
+    private TDPDataMatrix tdpDataMatrix = TDPDataMatrix.loadCsv(
+            Paths.get(this.class.getResource('/CPU_TDP.csv').toURI())
+    )
 
     @Override
     Collection<TraceObserver> create(Session session) {
@@ -100,7 +90,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
         log.info "nf-co2footprint plugin  ~  version ${this.version}"
 
         this.session = session
-        this.config = new CO2FootprintConfig(session.config.navigate('co2footprint') as Map, this.cpuData)
+        this.config = new CO2FootprintConfig(
+                session.config.navigate('co2footprint') as Map,
+                this.tdpDataMatrix
+        )
 
         final result = new ArrayList(2)
         // Generate CO2 footprint text output files
