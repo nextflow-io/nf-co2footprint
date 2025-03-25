@@ -40,7 +40,12 @@ class CO2FootprintConfig {
     private Double  powerdrawCpuDefault = 12.0
     private String  customCpuTdpFile = null
 
-    // Retrieve CI value from file containing CI values for different locations
+    /**
+     * Retrieve carbon intensity (CI) value from file containing CI values for different locations
+     *
+     * @param location Location as a country-code String
+     * @return CI at location
+     */
     protected Double retrieveCi(String location) {
         def dataReader = new InputStreamReader(this.class.getResourceAsStream('/CI_aggregated.v2.2.csv'))
 
@@ -61,45 +66,45 @@ class CO2FootprintConfig {
         return localCi
     }
 
-    CO2FootprintConfig(Map map, TDPDataMatrix cpuData){
-        def config = map ?: Collections.emptyMap()
-        if (config.traceFile) {
-            traceFile = config.traceFile
-        }
-        if (config.summaryFile) {
-            summaryFile = config.summaryFile
-        }
-        if (config.reportFile) {
-            reportFile = config.reportFile
-        }
-        if (config.ignoreCpuModel) {
-            ignoreCpuModel = config.ignoreCpuModel
-        }
-        if (config.ci && config.location) {
+    /**
+     * Sanity checks for configuration map
+     * @param config configuration map
+     */
+    private static checkConfig(Map configMap) {
+        if (configMap.ci && configMap.location) {
             throw new IllegalArgumentException("Invalid combination of 'ci' and 'location' parameters specified for the CO2Footprint plugin. Please specify either 'ci' or 'location'!")
         }
-        if (config.ci) {
-            ci = config.ci as Double
+    }
+
+    CO2FootprintConfig(Map<String, Object> configMap, TDPDataMatrix cpuData){
+        configMap = configMap ?: [:]
+
+        // Sanity checking
+        checkConfig(configMap)
+
+        // Assign values from map to config
+        configMap.keySet().each {name  ->
+            this.setProperty(name, configMap.remove(name))
         }
-        if (config.location) {
-            ci = retrieveCi(config.location as String)
-            location = config.location
-        }
-        if (config.pue) {
-            pue = config.pue as Double
-        }
-        if (config.powerdrawMem) {
-            powerdrawMem = config.powerdrawMem as Double
-        }
-        if (config.powerdrawCpuDefault) {
-            powerdrawCpuDefault = config.powerdrawCpuDefault as Double
-        }
+
+        // Reassign CI from location
+        ci = location ? retrieveCi(location) : ci
+
+        // Reassign default CPU from config
         cpuData.set(powerdrawCpuDefault, 'default', 'tdp (W)')
 
-        if (config.customCpuTdpFile) {
-            customCpuTdpFile = config.customCpuTdpFile
+        // Use custom TDP file
+        if (customCpuTdpFile) {
             cpuData.update(
-                    TDPDataMatrix.loadCsv(Paths.get(config.customCpuTdpFile as String))
+                    TDPDataMatrix.loadCsv(Paths.get(customCpuTdpFile as String))
+            )
+        }
+
+        // Check whether all entries in the map could be assigned to a class property
+        if (!configMap.isEmpty()) {
+            log.warn(
+                    'Configuration map is not empty after retrieving all possible properties.'
+                    + "The keys '${configMap.keySet()}' remain unused."
             )
         }
     }
@@ -117,25 +122,25 @@ class CO2FootprintConfig {
 
     // Different functions to collect options for reporting, grouped by purpose
     SortedMap<String, Object> collectInputFileOptions() {
-        Map<String, Object> newMap = [:]
-        newMap["customCpuTdpFile"] = customCpuTdpFile
-        return newMap.sort() as SortedMap
+        return [
+                "customCpuTdpFile": customCpuTdpFile
+        ] as SortedMap
     }
     SortedMap<String, Object> collectOutputFileOptions() {
-        Map<String, Object> newMap = [:]
-        newMap["traceFile"] = traceFile
-        newMap["summaryFile"] = summaryFile
-        newMap["reportFile"] = reportFile
-        return newMap.sort() as SortedMap
+        return [
+                "traceFile": traceFile,
+                "summaryFile": summaryFile,
+                "reportFile": reportFile
+        ] as SortedMap
     }
     SortedMap<String, Object> collectCO2CalcOptions() {
-        Map<String, Object> newMap = [:]
-        newMap["location"] = location
-        newMap["ci"] = ci   // Might be indirectly determined for location parameter
-        newMap["pue"] = pue
-        newMap["powerdrawMem"] = powerdrawMem
-        newMap["powerdrawCpuDefault"] = powerdrawCpuDefault
-        newMap["ignoreCpuModel"] = ignoreCpuModel
-        return newMap.sort() as SortedMap
+        return [
+                "location": location,
+                "ci": ci,
+                "pue": pue,
+                "powerdrawMem": powerdrawMem,
+                "powerdrawCpuDefault": powerdrawCpuDefault,
+                "ignoreCpuModel": ignoreCpuModel,
+        ] as SortedMap
     }
 }
