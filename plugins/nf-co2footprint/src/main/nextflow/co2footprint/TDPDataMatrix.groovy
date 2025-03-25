@@ -89,7 +89,7 @@ class TDPDataMatrix extends DataMatrix {
             modelData = select([this.fallbackModel] as LinkedHashSet)
             log.warn(
                     "Could not find CPU model \"${originalModel}\" in given TDP data table. " +
-                            "Using ${this.fallbackModel} CPU power draw value (${getTDP(modelData)} W)."
+                    "Using ${this.fallbackModel} CPU power draw value (${getTDP(modelData)} W)."
             )
         }
 
