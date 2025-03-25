@@ -56,26 +56,6 @@ import com.sun.management.OperatingSystemMXBean
 class CO2FootprintFactory implements TraceObserverFactory {
 
     // Track used version
-    private String version
-
-    // Current Nextflow session
-    private Session session
-
-    // Used plugin configuration from Nextflow configuration
-    private CO2FootprintConfig config
-
-    // Handle warnings
-    private List<String> warnings = []
-    boolean hasWarnings() { warnings.size() > 0 }
-    List<String> getWarnings() { warnings }
-
-    final private Map<TaskId,CO2Record> co2eRecords = new ConcurrentHashMap<>()
-    // TODO make sure for key value can be set only once?
-
-    private Map<String, Double> cpuData = [:]
-    Double total_energy = 0
-    Double total_co2 = 0
-
     protected void getPluginVersion() {
         def reader = new InputStreamReader(this.class.getResourceAsStream('/META-INF/MANIFEST.MF'))
         String line
@@ -85,6 +65,26 @@ class CO2FootprintFactory implements TraceObserverFactory {
         }
         reader.close()
     }
+    // TODO: Assign version only once (here) as a final and not for every Trace
+    private String version
+
+    // Current Nextflow session
+    private Session session
+
+    // Used plugin configuration from Nextflow configuration
+    private CO2FootprintConfig config
+
+    // Handle warnings
+    // TODO: Handle warnings differently (log.warn ?) & Use it in TDPDataMatrix
+    private List<String> warnings = []
+    boolean hasWarnings() { warnings.size() > 0 }
+    List<String> getWarnings() { warnings }
+
+    // Track energy usage / CO2 emissions
+    final private Map<TaskId,CO2Record> co2eRecords = new ConcurrentHashMap<>()
+    // TODO make sure for key value can be set only once?
+    Double total_energy = 0
+    Double total_co2 = 0
 
     // Load file containing TDP values for different CPU models
     protected TDPDataMatrix loadTDPData() {
@@ -97,8 +97,16 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 'default', null, null, null
         )
     }
-    TDPDataMatrix tdpDataMatrix = loadTDPData()
+    final TDPDataMatrix tdpDataMatrix = loadTDPData()
+    // TODO: Remove Map because it is replaced by tdpDataMatrix
+    private Map<String, Double> cpuData = [:]
 
+    /**
+     * Initialize the trace observers of the session
+     *
+     * @param session: Nextflow session
+     * @return Collection of list observers
+     */
     @Override
     Collection<TraceObserver> create(Session session) {
         getPluginVersion()
@@ -108,25 +116,34 @@ class CO2FootprintFactory implements TraceObserverFactory {
         this.config = new CO2FootprintConfig(session.config.navigate('co2footprint') as Map, this.cpuData)
 
         final result = new ArrayList(2)
-        // Generate CO2 footprint text output files
-        def co2eTraceFile = (this.config.getTraceFile() as Path).complete()
-        def co2eSummaryFile = (this.config.getSummaryFile() as Path).complete()
 
+        /**
+         * Paths to out files
+         */
+        // Generate CO2 footprint text output files
+        Path co2eTraceFile = (this.config.getTraceFile() as Path).complete()
+        Path co2eSummaryFile = (this.config.getSummaryFile() as Path).complete()
         result.add( new CO2FootprintTextFileObserver(co2eTraceFile, co2eSummaryFile) )
 
         // Generate CO2 footprint report with box-plot
-        def co2eReport = (this.config.getReportFile() as Path).complete()
+        Path co2eReport = (this.config.getReportFile() as Path).complete()
         result.add( new CO2FootprintReportObserver(co2eReport) )
 
         return result
     }
 
-    
+    /**
+     * Obtain the TDP per Core from a CPU model in the trace
+     *
+     * @param trace TraceRecord
+     * @param cpu_model String of CPU model name
+     * @return the TDP / Core of the model or default
+     */
     Double getCPUCoreTDP(TraceRecord trace, String cpu_model=null) {
         cpu_model = cpu_model ?: trace.get('cpu_model').toString()
 
         TDPDataMatrix modelDataMatrix
-        if ( cpu_model == null || cpu_model == "null" ) {
+        if ( cpu_model == null || cpu_model == "null" ) { // TODO: Simplify when warning handling is made differently
             warnings << "The CPU model could not be detected for at least one task. Using default CPU power draw value!"
             modelDataMatrix = tdpDataMatrix.matchModel('default')
         } else {
@@ -136,22 +153,28 @@ class CO2FootprintFactory implements TraceObserverFactory {
     }
 
 
-    // Core function to compute CO2 emissions for each task
+    /**
+     * Core function to compute the CO2 footprint of a task / trace
+     *
+     * @param trace TraceRecord of a file
+     * @return List with expended energy, co2-emissions, duration, number-of-cores, power-draw-per-core, usage-of-cores, memory
+     */
     List<Double> computeTaskCO2footprint(TraceRecord trace) {
         // C = t * (nc * Pc * uc + nm * Pm) * PUE * CI * 0.001
         // as in https://doi.org/10.1002/advs.202100707
         // PSF: pragmatic scaling factor -> not used here since we aim at the CO2e of one pipeline run
         // Factor 0.001 needed to convert Pc and Pm from W to kW
 
-
         // Detect OS
         OperatingSystemMXBean OS = { (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean() }()
+
         // Total Memory
         Double max_memory = OS.getTotalMemorySize() as Double
+        OS.getAvailableProcessors()
 
         // t: runtime in hours
         Double realtime = trace.get('realtime') as Double
-        Double t = realtime/3600000 as Double
+        Double t = realtime/(1000*60*60) as Double
 
         /**
          * Factors of core power usage
@@ -188,7 +211,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         }
 
         Double nm = memory/1000000000 as Double
-        // TODO handle if more memory/cpus used than requested?
+        // TODO handle if more cpus used than requested?
 
         // Pm: power draw of memory [W per GB]
         Double pm  = config.getPowerdrawMem()
@@ -634,7 +657,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * @param value The number of max task record allowed to be included in the HTML report
          * @return The {@link CO2FootprintReportObserver} itself
          */
-        CO2FootprintReportObserver setMaxTasks(int value ) {
+        CO2FootprintReportObserver setMaxTasks(int value) {
             this.maxTasks = value
             return this
         }
