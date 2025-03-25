@@ -4,7 +4,8 @@ import nextflow.co2footprint.utils.DataMatrix
 
 import groovy.util.logging.Slf4j
 
-import java.util.regex.Pattern
+import java.nio.file.Path
+import java.util.regex.Matcher
 
 
 @Slf4j
@@ -59,11 +60,11 @@ class TDPDataMatrix extends DataMatrix {
      */
     TDPDataMatrix matchModel(String model, Boolean fallbackToDefault=true, String originalModel=model) {
         // Construct regular expression to address potential differences in exact name matching
-        String modelRegex = toASCII(model, '\s?')                          // Convert to ASCII
+        String modelRegex = toASCII(model, Matcher.quoteReplacement('\\s?'))                          // Convert to ASCII
                 .toLowerCase()                                                        // Convert to lower case
-                .replaceAll('\\(r\\)|\\(tm\\)|\\(c\\)', '\s?')      // Replace ASCII surrogates
+                .replaceAll('\\(r\\)|\\(tm\\)|\\(c\\)', Matcher.quoteReplacement('\\s?'))      // Replace ASCII surrogates
                 .replaceAll(' ?processors? ?', '')                  // make 'processor(s)' optional
-                .replaceAll('\\s(?!\\?)','\s*')                     // make whitespaces optional
+                .replaceAll('\\s(?!\\?)', Matcher.quoteReplacement('\\s*'))                     // make whitespaces optional
 
         // Find matches against index
         List matches = this.rowIndex.filterKeys { String str ->
@@ -200,4 +201,54 @@ class TDPDataMatrix extends DataMatrix {
         return dm.rowIndex.getKey(0) as String
     }
 
+    /**
+     * Replaces this instance with a new TDPDataMatrix
+     *
+     * @param newTDPDataMatrix
+     */
+    void update(TDPDataMatrix newTDPDataMatrix) {
+        this.fallbackModel = newTDPDataMatrix.fallbackModel
+        this.tdp = newTDPDataMatrix.tdp
+        this.cores = newTDPDataMatrix.cores
+        this.threads = newTDPDataMatrix.threads
+
+        this.data = newTDPDataMatrix.data
+        this.rowIndex = newTDPDataMatrix.rowIndex
+        this.columnIndex = newTDPDataMatrix.columnIndex
+    }
+
+    /**
+     * Load TDP data from Csv Matrix
+     * @param path Path to the file
+     * @param oldData Old data to compare new loaded file to
+     * @return new DataMatrix
+     */
+    static TDPDataMatrix loadCsv(Path path, TDPDataMatrix oldData=null) {
+        DataMatrix dm = loadCsv(
+                path, ',', 0, null, 'name'
+        )
+
+        TDPDataMatrix newData = new TDPDataMatrix(
+                dm.getData(), dm.getOrderedColumnKeys(), dm.getOrderedRowKeys(),
+                'default', null, null, null
+        )
+
+        // Compare entries to warn about changing
+        if (oldData) {
+            for (String model : oldData.getRowIndex().keySet()) {
+                TDPDataMatrix oldEntry = oldData.matchModel(model, false)
+                TDPDataMatrix newEntry = newData.matchModel(model, false)
+                if (oldEntry && oldEntry.getData() != newEntry.getData()) {
+                    log.info(
+                            "Already existing TDP value (${oldEntry.getTDP()} W) of '${model}' " +
+                            "is overwritten with custom value: ${newEntry.getTDP()} W"
+                    )
+                }
+            }
+        }
+
+        return newData
+    }
+
 }
+

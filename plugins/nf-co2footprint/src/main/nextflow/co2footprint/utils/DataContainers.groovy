@@ -159,8 +159,8 @@ interface Matrix {
  */
 class DataMatrix implements Matrix {
     List<List<Object>> data = []
-    private BiMap<Object, Integer> columnIndex = [:] as BiMap
-    private BiMap<Object, Integer> rowIndex = [:] as BiMap
+    protected BiMap<Object, Integer> columnIndex = [:] as BiMap
+    protected BiMap<Object, Integer> rowIndex = [:] as BiMap
 
     DataMatrix(
             List<List> data = [],
@@ -286,14 +286,14 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Get data entries as Lists.
+     * Get row index.
      */
     BiMap<Object, Integer> getRowIndex() {
         return this.rowIndex
     }
 
     /**
-     * Get data entries as Lists.
+     * Get column index.
      */
     BiMap<Object, Integer> getColumnIndex() {
         return this.columnIndex
