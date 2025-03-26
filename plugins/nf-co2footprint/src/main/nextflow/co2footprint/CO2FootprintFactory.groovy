@@ -79,7 +79,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         reader.close()
     }
 
-    private TDPDataMatrix tdpDataMatrix = TDPDataMatrix.loadCsv(
+    private final TDPDataMatrix tdpDataMatrix = TDPDataMatrix.loadCsv(
             Paths.get(this.class.getResource('/CPU_TDP.csv').toURI())
     )
 
