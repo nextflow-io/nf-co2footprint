@@ -65,7 +65,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
     private CO2FootprintConfig config
     private Session session
     final private Map<TaskId,CO2Record> co2eRecords = new ConcurrentHashMap<>()
-    // TODO make sure for key value can be set only once?
 
     Double total_energy = 0
     Double total_co2 = 0
