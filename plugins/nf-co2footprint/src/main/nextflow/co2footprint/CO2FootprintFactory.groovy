@@ -150,7 +150,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
         Double pc = config.getIgnoreCpuModel() ? getCPUCoreTDP(null, 'default') : getCPUCoreTDP(trace)
 
         // uc: core usage factor (between 0 and 1)
-        // TODO if requested more than used, this is not taken into account, right?
         Double cpu_usage = trace.get('%cpu') as Double
         if ( cpu_usage == null ) {
             warnings << "The reported CPU usage is null for at least one task. Assuming 100% usage for each requested CPU!"
@@ -158,7 +157,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             // Assuming requested cpus were used with 100%
             cpu_usage = nc * 100
         }
-        // TODO how to handle double, Double datatypes for ceiling?
+
         if ( cpu_usage == 0.0 ) {
             warnings << "The reported CPU usage is 0.0 for at least one task!"
         }
