@@ -83,7 +83,7 @@ class CO2FootprintConfig {
         checkConfig(configMap)
 
         // Assign values from map to config
-        configMap.keySet().each {name  ->
+        configMap.keySet().each { name  ->
             this.setProperty(name, configMap.remove(name))
         }
 
@@ -91,7 +91,9 @@ class CO2FootprintConfig {
         ci = location ? retrieveCi(location) : ci
 
         // Reassign default CPU from config
-        cpuData.set(powerdrawCpuDefault, 'default', 'tdp (W)')
+        if (powerdrawCpuDefault) {
+            cpuData.set(powerdrawCpuDefault, 'default', 'tdp (W)')
+        }
 
         // Use custom TDP file
         if (customCpuTdpFile) {
