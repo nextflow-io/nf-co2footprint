@@ -134,7 +134,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // Detect OS
         OperatingSystemMXBean OS = { (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean() }()
         // Total Memory
-        Double max_memory = OS.getTotalMemorySize() as Double
+        Long max_memory = OS.getTotalMemorySize() as Long
 
         // t: runtime in hours
         Double realtime = trace.get('realtime') as Double
@@ -167,7 +167,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * Factors of memory power usage
          */
         // nm: size of memory available [GB] -> requested memory
-        Double memory = trace.get('memory') as Double
+        Long memory = trace.get('memory') as Long
         if ( memory == null || trace.get('peak_rss') as Double > memory) {
             warnings << "The required memory exceeds user requested memory, therefore setting to maximum available memory!"
             memory = max_memory
@@ -284,10 +284,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
             this.co2eTracePath = co2eTraceFile
             this.co2eSummaryPath = co2eSummaryFile
         }
-
-        /** ONLY FOR TESTING PURPOSE */
-        protected CO2FootprintTextFileObserver() {}
-
 
         /**
          * Create the trace file, in file already existing with the same name it is
@@ -422,7 +418,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * This method is invoked when a process run completes
          * @param handler
          */
-        // TODO write footprint for each process?
         @Override
         void onProcessComplete(TaskHandler handler, TraceRecord trace) {
             final taskId = handler.task.id
@@ -481,7 +476,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
         @Override
         void onProcessCached(TaskHandler handler, TraceRecord trace) {
-            def taskId = handler.task.id    // TODO "final" or "def"?
+            def taskId = handler.task.id
             // event was triggered by a stored task, ignore it
             if (trace == null) {
                 return
