@@ -242,10 +242,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
      */
     class CO2FootprintTextFileObserver implements TraceObserver {
 
-        // TODO which files should we generate here?
-        public static final String DEF_TRACE_FILE_NAME = "co2footprint_trace_${TraceHelper.launchTimestampFmt()}.txt"
-        public static final String DEF_SUMMARY_FILE_NAME = "co2footprint_summary_${TraceHelper.launchTimestampFmt()}.txt"
-
         /**
          * Overwrite existing trace file (required in some cases, as rolling filename has been deprecated)
          */
@@ -532,8 +528,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
      * Class to generate HTML report with box-plots
      */
     class CO2FootprintReportObserver implements TraceObserver {
-
-        static final public String DEF_REPORT_FILE_NAME = "co2footprint_report_${TraceHelper.launchTimestampFmt()}.html"
 
         static final public int DEF_MAX_TASKS = 10_000
 
