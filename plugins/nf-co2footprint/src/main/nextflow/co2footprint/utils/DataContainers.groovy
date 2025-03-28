@@ -159,8 +159,8 @@ interface Matrix {
  */
 class DataMatrix implements Matrix {
     List<List<Object>> data = []
-    private BiMap<Object, Integer> columnIndex = [:] as BiMap
-    private BiMap<Object, Integer> rowIndex = [:] as BiMap
+    protected BiMap<Object, Integer> columnIndex = [:] as BiMap
+    protected BiMap<Object, Integer> rowIndex = [:] as BiMap
 
     DataMatrix(
             List<List> data = [],
@@ -250,7 +250,7 @@ class DataMatrix implements Matrix {
      */
     private DataMatrix selectRows(LinkedHashSet<Object> rows){
         List<Integer> iList = collectIndices(rows, this.rowIndex)
-        List<List> data = this.data[iList]
+        List<List<Object>> data = this.data[iList]
 
         return new DataMatrix(data, this.columnIndex.keySet() as LinkedHashSet, rows)
     }
@@ -286,14 +286,14 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Get data entries as Lists.
+     * Get row index.
      */
     BiMap<Object, Integer> getRowIndex() {
         return this.rowIndex
     }
 
     /**
-     * Get data entries as Lists.
+     * Get column index.
      */
     BiMap<Object, Integer> getColumnIndex() {
         return this.columnIndex
@@ -364,8 +364,8 @@ class DataMatrix implements Matrix {
      * Infer simple numeric data types from String.
      */
     private static def inferTypeOfString(String str) {
-        try { return Integer.parseInt(str) } catch(NumberFormatException e){ }
-        try { return Double.parseDouble(str) } catch(NumberFormatException e){ }
+        try { return Integer.parseInt(str) } catch(NumberFormatException ignore){ }
+        try { return Double.parseDouble(str) } catch(NumberFormatException ignore){ }
         return str
     }
 
