@@ -65,7 +65,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
     private CO2FootprintConfig config
     private Session session
     final private Map<TaskId,CO2Record> co2eRecords = new ConcurrentHashMap<>()
-    // TODO make sure for key value can be set only once?
 
     Double total_energy = 0
     Double total_co2 = 0
@@ -80,7 +79,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         reader.close()
     }
 
-    private TDPDataMatrix tdpDataMatrix = TDPDataMatrix.loadCsv(
+    private final TDPDataMatrix tdpDataMatrix = TDPDataMatrix.loadCsv(
             Paths.get(this.class.getResource('/CPU_TDP.csv').toURI())
     )
 
@@ -135,7 +134,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // Detect OS
         OperatingSystemMXBean OS = { (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean() }()
         // Total Memory
-        Double max_memory = OS.getTotalMemorySize() as Double
+        Long max_memory = OS.getTotalMemorySize() as Long
 
         // t: runtime in hours
         Double realtime = trace.get('realtime') as Double
@@ -151,7 +150,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
         Double pc = config.getIgnoreCpuModel() ? getCPUCoreTDP(null, 'default') : getCPUCoreTDP(trace)
 
         // uc: core usage factor (between 0 and 1)
-        // TODO if requested more than used, this is not taken into account, right?
         Double cpu_usage = trace.get('%cpu') as Double
         if ( cpu_usage == null ) {
             warnings << "The reported CPU usage is null for at least one task. Assuming 100% usage for each requested CPU!"
@@ -159,7 +157,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             // Assuming requested cpus were used with 100%
             cpu_usage = nc * 100
         }
-        // TODO how to handle double, Double datatypes for ceiling?
+
         if ( cpu_usage == 0.0 ) {
             warnings << "The reported CPU usage is 0.0 for at least one task!"
         }
@@ -169,7 +167,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * Factors of memory power usage
          */
         // nm: size of memory available [GB] -> requested memory
-        Double memory = trace.get('memory') as Double
+        Long memory = trace.get('memory') as Long
         if ( memory == null || trace.get('peak_rss') as Double > memory) {
             warnings << "The required memory exceeds user requested memory, therefore setting to maximum available memory!"
             memory = max_memory
@@ -286,10 +284,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
             this.co2eTracePath = co2eTraceFile
             this.co2eSummaryPath = co2eSummaryFile
         }
-
-        /** ONLY FOR TESTING PURPOSE */
-        protected CO2FootprintTextFileObserver() {}
-
 
         /**
          * Create the trace file, in file already existing with the same name it is
@@ -424,7 +418,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * This method is invoked when a process run completes
          * @param handler
          */
-        // TODO write footprint for each process?
         @Override
         void onProcessComplete(TaskHandler handler, TraceRecord trace) {
             final taskId = handler.task.id
@@ -483,7 +476,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
         @Override
         void onProcessCached(TaskHandler handler, TraceRecord trace) {
-            def taskId = handler.task.id    // TODO "final" or "def"?
+            def taskId = handler.task.id
             // event was triggered by a stored task, ignore it
             if (trace == null) {
                 return
