@@ -6,7 +6,6 @@
     <import class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"/>
     <import class="ch.qos.logback.core.ConsoleAppender"/>
     <import class="ch.qos.logback.core.read.ListAppender"/>
-    <import class="ch.qos.logback.classic.AsyncAppender"/>
 
     <!-- Filters (What not to put in the logs) -->
     <turboFilter class="ch.qos.logback.classic.turbo.DuplicateMessageFilter">
@@ -15,8 +14,7 @@
 
     <!-- Appenders (Where to put the logs) -->
     <!-- Standard out appender -->
-    <appender name="STDOUT" class="AsyncAppender">
-        <withJansi>true</withJansi>
+    <appender name="STDOUT" class="ConsoleAppender">
         <encoder class="PatternLayoutEncoder">
             <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %magenta(%logger{36}) -%kvp- %msg%n</pattern>
         </encoder>

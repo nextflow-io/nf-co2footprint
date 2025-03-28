@@ -29,7 +29,7 @@ class TDPDataMatrixTest extends Specification {
             ['tdp (W)', 'cores', 'threads'] as LinkedHashSet,
             ['Intel® i3-Fantasy', 'Ampere ultraEfficient Processor', 'AMD YPS-x42', 'default'] as LinkedHashSet,
     )
-    Logger logger = (Logger) LoggerFactory.getLogger(TDPDataMatrix)
+    Logger logger = (Logger) LoggerFactory.getLogger('nextflow.co2footprint')
     ListAppender<ILoggingEvent> listAppender = new ListAppender<>()
 
     def 'Should get a valid DataMatrix Extension' () {

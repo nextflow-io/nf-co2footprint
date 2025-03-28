@@ -2,6 +2,8 @@ package nextflow.co2footprint
 
 import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
+import org.slf4j.LoggerFactory
+import org.slf4j.Logger
 
 /**
  * This class allows model an specific configuration, extracting values from a map and converting
@@ -37,6 +39,7 @@ class CO2FootprintConfig {
     private Boolean ignoreCpuModel = false
     private Double  powerdrawCpuDefault = 12.0
     private String  customCpuTdpFile = null
+    private Logger  LOGGER = LoggerFactory.getLogger('nextflow.co2footprint')
 
     // Retrieve CI value from file containing CI values for different locations
     protected Double retrieveCi(String location) {
@@ -66,15 +69,16 @@ class CO2FootprintConfig {
             while( line = reader.readLine() ) {
                 def h = line.split(",")
                 if ( h[0] != 'model' ) {
-                    if ( data.containsKey(h[0]) ) log.warn "Already existing CPU model specific TDP value for ${h[0]} is overwritten with provided custom value: ${h[3]}"
+                    if ( data.containsKey(h[0]) ) LOGGER.warn "Already existing CPU model specific TDP value for ${h[0]} is overwritten with provided custom value: ${h[3]}"
                     data[h[0]] = h[3].toDouble()
                 }
             }
         }
-        log.debug "$data"
+        LOGGER.debug "$data"
     }
 
-    CO2FootprintConfig(Map map, Map<String, Double> cpuData){
+    CO2FootprintConfig(Map map, Map<String, Double> cpuData, Logger LOGGER=null){
+        this.LOGGER = LOGGER ?: this.LOGGER
         def config = map ?: Collections.emptyMap()
         if (config.traceFile) {
             traceFile = config.traceFile

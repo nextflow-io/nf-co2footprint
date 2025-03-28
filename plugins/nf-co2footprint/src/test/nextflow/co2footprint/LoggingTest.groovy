@@ -12,7 +12,6 @@ import groovy.util.logging.Slf4j
 
 import spock.lang.Specification
 import spock.lang.Stepwise
-import spock.lang.Shared
 
 @Slf4j
 class LoggerTestClass {

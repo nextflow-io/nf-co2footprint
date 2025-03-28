@@ -34,11 +34,14 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
 import nextflow.Session
 import nextflow.trace.TraceObserver
 import nextflow.trace.TraceObserverFactory
 import nextflow.processor.TaskId
+
+import groovy.util.logging.Slf4j
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import java.nio.file.Paths
 import java.util.concurrent.ConcurrentHashMap
@@ -56,6 +59,9 @@ import com.sun.management.OperatingSystemMXBean
 class CO2FootprintFactory implements TraceObserverFactory {
 
     private String version
+
+    // Logging
+    Logger LOGGER = LoggerFactory.getLogger('nextflow.co2footprint')
 
     private CO2FootprintConfig config
     private Session session
@@ -92,7 +98,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
     @Override
     Collection<TraceObserver> create(Session session) {
         getPluginVersion()
-        log.info("nf-co2footprint plugin  ~  version ${this.version}")
+        LOGGER.info("nf-co2footprint plugin  ~  version ${this.version}")
 
         this.session = session
         this.config = new CO2FootprintConfig(session.config.navigate('co2footprint') as Map, this.cpuData)
@@ -156,14 +162,14 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // TODO if requested more than used, this is not taken into account, right?
         Double cpu_usage = trace.get('%cpu') as Double
         if ( cpu_usage == null ) {
-            log.warn("The reported CPU usage is null for at least one task. Assuming 100% usage for each requested CPU!")
+            LOGGER.warn("The reported CPU usage is null for at least one task. Assuming 100% usage for each requested CPU!")
             // TODO why is value null, because task was finished so fast that it was not captured? Or are there other reasons?
             // Assuming requested cpus were used with 100%
             cpu_usage = nc * 100
         }
         // TODO how to handle double, Double datatypes for ceiling?
         if ( cpu_usage == 0.0 ) {
-            log.warn("The reported CPU usage is 0.0 for at least one task!")
+            LOGGER.warn("The reported CPU usage is 0.0 for at least one task!")
         }
         Double uc = cpu_usage / (100.0 * nc) as Double
 
@@ -173,7 +179,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // nm: size of memory available [GB] -> requested memory
         Double memory = trace.get('memory') as Double
         if ( memory == null || trace.get('peak_rss') as Double > memory) {
-            log.warn("The required memory exceeds user requested memory, therefore setting to maximum available memory!")
+            LOGGER.warn("The required memory exceeds user requested memory, therefore setting to maximum available memory!")
             memory = max_memory
         }
 
@@ -299,7 +305,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
          */
         @Override
         void onFlowCreate(Session session) {
-            log.debug "Workflow started -- co2e traceFile: ${co2eTracePath.toUriString()}"
+            LOGGER.debug "Workflow started -- co2e traceFile: ${co2eTracePath.toUriString()}"
 
             // make sure parent path exists
             def parent = co2eTracePath.getParent()
@@ -338,7 +344,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
          */
         @Override
         void onFlowComplete() {
-            log.debug "Workflow completed -- saving trace and summary file"
+            LOGGER.debug "Workflow completed -- saving trace and summary file"
 
             // wait for termination and flush the agent content
             traceWriter.await()
@@ -424,7 +430,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         void onProcessComplete(TaskHandler handler, TraceRecord trace) {
             final taskId = handler.task.id
             if (!trace) {
-                log.debug "[WARN] Unable to find record for task run with id: ${taskId}"
+                LOGGER.debug "[WARN] Unable to find record for task run with id: ${taskId}"
                 return
             }
 
@@ -637,12 +643,12 @@ class CO2FootprintFactory implements TraceObserverFactory {
          */
         @Override
         void onFlowComplete() {
-            log.debug "Workflow completed -- rendering CO2e footprint report"
+            LOGGER.debug "Workflow completed -- rendering CO2e footprint report"
             try {
                 renderHtml()
             }
             catch (Exception e) {
-                log.warn "Failed to render CO2e footprint report -- see the log file for details", e
+                LOGGER.warn "Failed to render CO2e footprint report -- see the log file for details", e
             }
         }
 
@@ -662,7 +668,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
          */
         @Override
         void onProcessSubmit(TaskHandler handler, TraceRecord trace) {
-            log.trace "Trace report - submit process > $handler"
+            LOGGER.trace "Trace report - submit process > $handler"
             synchronized (records) {
                 records[ trace.taskId ] = trace
             }
@@ -675,7 +681,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
          */
         @Override
         void onProcessStart(TaskHandler handler, TraceRecord trace) {
-            log.trace "Trace report - start process > $handler"
+            LOGGER.trace "Trace report - start process > $handler"
             synchronized (records) {
                 records[ trace.taskId ] = trace
             }
@@ -688,9 +694,9 @@ class CO2FootprintFactory implements TraceObserverFactory {
          */
         @Override
         void onProcessComplete(TaskHandler handler, TraceRecord trace) {
-            log.trace "Trace report - complete process > $handler"
+            LOGGER.trace "Trace report - complete process > $handler"
             if( !trace ) {
-                log.debug "WARN: Unable to find trace record for task id=${handler.task?.id}"
+                LOGGER.debug "WARN: Unable to find trace record for task id=${handler.task?.id}"
                 return
             }
 
@@ -707,7 +713,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
          */
         @Override
         void onProcessCached(TaskHandler handler, TraceRecord trace) {
-            log.trace "Trace report - cached process > $handler"
+            LOGGER.trace "Trace report - cached process > $handler"
 
             // event was triggered by a stored task, ignore it
             if( trace == null ) {
@@ -742,7 +748,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
         protected String renderSummaryJson() {
             final result = aggregator.renderSummaryJson()
-            log.debug "Execution report summary data:\n  ${result}"
+            LOGGER.debug "Execution report summary data:\n  ${result}"
             return result
         }
 
@@ -816,7 +822,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
                     ],
                     options : renderOptionsJson()
             ]
-            //log.info "${tpl_fields['payload']}"
             final tpl = readTemplate('CO2FootprintReportTemplate.html')
             def engine = new GStringTemplateEngine()
             def html_template = engine.createTemplate(tpl)
