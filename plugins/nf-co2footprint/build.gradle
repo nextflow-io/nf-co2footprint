@@ -49,10 +49,10 @@ configurations {
 sourceSets {
     main.java.srcDirs = []
     main.groovy.srcDirs = ['src/main']
-    main.resources.srcDirs = ['src/resources']
+    main.resources.srcDirs = ['src/resources', 'src/resources/logging']
     test.groovy.srcDirs = ['src/test']
     test.java.srcDirs = []
-    test.resources.srcDirs = ['src/testResources']
+    test.resources.srcDirs = ['src/testResources', 'src/resources/logging']
 }
 
 ext{
@@ -80,10 +80,6 @@ dependencies {
     testImplementation(testFixtures("io.nextflow:nextflow:$nextflowVersion"))
     testImplementation(testFixtures("io.nextflow:nf-commons:$nextflowVersion"))
 
-    // see https://docs.gradle.org/4.1/userguide/dependency_management.html#sec:module_replacement
-    modules {
-        module("commons-logging:commons-logging") { replacedBy("org.slf4j:jcl-over-slf4j") }
-    }
 }
 
 // use JUnit 5 platform

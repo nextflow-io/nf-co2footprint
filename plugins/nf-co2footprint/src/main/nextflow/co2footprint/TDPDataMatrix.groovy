@@ -3,6 +3,8 @@ package nextflow.co2footprint
 import nextflow.co2footprint.utils.DataMatrix
 
 import groovy.util.logging.Slf4j
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import java.nio.file.Path
 import java.util.regex.Matcher
@@ -24,9 +26,12 @@ class TDPDataMatrix extends DataMatrix {
     Integer cores = null
     Integer threads = null
 
+    Logger LOGGER = LoggerFactory.getLogger('nextflow.co2footprint')
+
     TDPDataMatrix(
             List<List> data = [], LinkedHashSet<String> columnIndex = [], LinkedHashSet<String> rowIndex = [],
-            Object fallbackModel='default', Integer tdp=null, Integer cores=null, Integer threads=null
+            Object fallbackModel='default', Integer tdp=null, Integer cores=null, Integer threads=null,
+            Logger LOGGER = null
     ) {
         // Initialize DataMatrix without non-ASCII characters in indices
         super(
@@ -89,7 +94,7 @@ class TDPDataMatrix extends DataMatrix {
         }
         else if (fallbackToDefault) {
             modelData = select([this.fallbackModel] as LinkedHashSet)
-            log.warn(
+            LOGGER.warn(
                     "Could not find CPU model \"${originalModel}\" in given TDP data table. " +
                     "Using ${this.fallbackModel} CPU power draw value (${getTDP(modelData)} W)."
             )

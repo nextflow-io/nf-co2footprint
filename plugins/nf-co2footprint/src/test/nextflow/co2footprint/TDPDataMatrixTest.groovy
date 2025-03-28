@@ -29,7 +29,7 @@ class TDPDataMatrixTest extends Specification {
             ['tdp (W)', 'cores', 'threads'] as LinkedHashSet,
             ['Intel® i3-Fantasy', 'Ampere ultraEfficient Processor', 'AMD YPS-x42', 'default'] as LinkedHashSet,
     )
-    Logger logger = (Logger) LoggerFactory.getLogger(TDPDataMatrix)
+    Logger logger = (Logger) LoggerFactory.getLogger('nextflow.co2footprint')
     ListAppender<ILoggingEvent> listAppender = new ListAppender<>()
 
     def 'Should get a valid DataMatrix Extension' () {
@@ -112,8 +112,8 @@ class TDPDataMatrixTest extends Specification {
         df2TDPPerThread == 5.0
         listAppender.list[0].toString() ==  '[WARN] Could not find CPU model "Non-existent" in given TDP data table. ' +
                 'Using default CPU power draw value (100.0 W).'
-        listAppender.list[1].toString() ==  '[WARN] Could not find CPU model "Non-existent" in given TDP data table. ' +
-                'Using default CPU power draw value (100.0 W).'
+        // Remove duplicates
+        listAppender.list.size() == 1
 
         cleanup:
         listAppender.list.clear()

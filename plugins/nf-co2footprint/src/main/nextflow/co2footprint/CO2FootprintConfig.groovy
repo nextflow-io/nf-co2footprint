@@ -2,6 +2,8 @@ package nextflow.co2footprint
 
 import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
+import org.slf4j.LoggerFactory
+import org.slf4j.Logger
 
 import java.nio.file.Paths
 
@@ -39,6 +41,7 @@ class CO2FootprintConfig {
     private Boolean ignoreCpuModel = false
     private Double  powerdrawCpuDefault = 12.0
     private String  customCpuTdpFile = null
+    private Logger  LOGGER = LoggerFactory.getLogger('nextflow.co2footprint')
 
     /**
      * Retrieve carbon intensity (CI) value from file containing CI values for different locations
@@ -104,7 +107,7 @@ class CO2FootprintConfig {
 
         // Check whether all entries in the map could be assigned to a class property
         if (!configMap.isEmpty()) {
-            log.warn(
+            LOGGER.warn(
                     'Configuration map is not empty after retrieving all possible properties.'
                     + "The keys '${configMap.keySet()}' remain unused."
             )
