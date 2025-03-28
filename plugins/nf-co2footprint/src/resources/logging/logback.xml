@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration>
+
+<configuration>
+    <!-- Imports for shortcuts -->
+    <import class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"/>
+    <import class="ch.qos.logback.core.ConsoleAppender"/>
+    <import class="ch.qos.logback.core.read.ListAppender"/>
+    <import class="ch.qos.logback.classic.AsyncAppender"/>
+
+    <!-- Filters (What not to put in the logs) -->
+    <turboFilter class="ch.qos.logback.classic.turbo.DuplicateMessageFilter">
+            <allowedRepetitions>0</allowedRepetitions>
+    </turboFilter>
+
+    <!-- Appenders (Where to put the logs) -->
+    <!-- Standard out appender -->
+    <appender name="STDOUT" class="AsyncAppender">
+        <withJansi>true</withJansi>
+        <encoder class="PatternLayoutEncoder">
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %magenta(%logger{36}) -%kvp- %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- List appender -->
+    <appender name="LIST"  class="ListAppender"/>
+
+
+
+
+    <!-- Loggers (Which loggers should be used for which package) Appenders are additive.  -->
+    <!-- Appenders are additive.  -->
+    <!-- Level is overwritten by definition down the hierarchy.  -->
+
+    <!-- Standard class level logger -->
+    <logger name="nextflow.co2footprint" level="INFO">
+        <appender-ref ref="LIST"/>
+    </logger>
+
+    <root level="debug">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

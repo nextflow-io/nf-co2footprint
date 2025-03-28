@@ -56,11 +56,6 @@ import com.sun.management.OperatingSystemMXBean
 class CO2FootprintFactory implements TraceObserverFactory {
 
     private String version
-    // Handle logging messages
-    private List<String> warnings = []
-
-    boolean hasWarnings() { warnings.size() > 0 }
-    List<String> getWarnings() { warnings }
 
     private CO2FootprintConfig config
     private Session session
@@ -97,7 +92,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
     @Override
     Collection<TraceObserver> create(Session session) {
         getPluginVersion()
-        log.info "nf-co2footprint plugin  ~  version ${this.version}"
+        log.info("nf-co2footprint plugin  ~  version ${this.version}")
 
         this.session = session
         this.config = new CO2FootprintConfig(session.config.navigate('co2footprint') as Map, this.cpuData)
@@ -122,7 +117,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
         TDPDataMatrix modelDataMatrix
         if ( cpu_model == null || cpu_model == "null" ) {
-            warnings << "The CPU model could not be detected for at least one task. Using default CPU power draw value!"
+            "The CPU model could not be detected for at least one task. Using default CPU power draw value!"
             modelDataMatrix = tdpDataMatrix.matchModel('default')
         } else {
             modelDataMatrix = tdpDataMatrix.matchModel(cpu_model)
@@ -161,14 +156,14 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // TODO if requested more than used, this is not taken into account, right?
         Double cpu_usage = trace.get('%cpu') as Double
         if ( cpu_usage == null ) {
-            warnings << "The reported CPU usage is null for at least one task. Assuming 100% usage for each requested CPU!"
+            log.warn("The reported CPU usage is null for at least one task. Assuming 100% usage for each requested CPU!")
             // TODO why is value null, because task was finished so fast that it was not captured? Or are there other reasons?
             // Assuming requested cpus were used with 100%
             cpu_usage = nc * 100
         }
         // TODO how to handle double, Double datatypes for ceiling?
         if ( cpu_usage == 0.0 ) {
-            warnings << "The reported CPU usage is 0.0 for at least one task!"
+            log.warn("The reported CPU usage is 0.0 for at least one task!")
         }
         Double uc = cpu_usage / (100.0 * nc) as Double
 
@@ -178,7 +173,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // nm: size of memory available [GB] -> requested memory
         Double memory = trace.get('memory') as Double
         if ( memory == null || trace.get('peak_rss') as Double > memory) {
-            warnings << "The required memory exceeds user requested memory, therefore setting to maximum available memory!"
+            log.warn("The required memory exceeds user requested memory, therefore setting to maximum available memory!")
             memory = max_memory
         }
 
@@ -395,13 +390,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
             current.values().each { co2eTraceFile.println("${it.taskId}\t-") }
             co2eTraceFile.flush()
             co2eTraceFile.close()
-
-            // Log warnings
-            if( hasWarnings() ) {
-                def filteredWarnings = getWarnings().unique( false )
-                def msg = "\033[0;33mThe nf-co2footprint plugin generated the following warnings during the execution of the workflow:\n\t- " + filteredWarnings.join('\n\t- ').trim() + "\n\033[0m"
-                log.warn(msg)
-            }
         }
 
         @Override
