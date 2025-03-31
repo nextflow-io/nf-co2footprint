@@ -90,7 +90,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
         this.session = session
         this.config = new CO2FootprintConfig(
-                session.config.navigate('co2footprint') as Map,
+                session.config.navigate('co2footprint') as ConcurrentHashMap,
                 this.tdpDataMatrix
         )
 
