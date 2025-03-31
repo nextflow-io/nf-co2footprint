@@ -4,6 +4,7 @@ import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
 import org.slf4j.LoggerFactory
 import org.slf4j.Logger
+import nextflow.trace.TraceHelper
 
 import java.nio.file.Paths
 
@@ -31,13 +32,14 @@ import java.nio.file.Paths
 @PackageScope
 class CO2FootprintConfig {
 
-    private String  traceFile = CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_TRACE_FILE_NAME
-    private String  summaryFile = CO2FootprintFactory.CO2FootprintTextFileObserver.DEF_SUMMARY_FILE_NAME
-    private String  reportFile = CO2FootprintFactory.CO2FootprintReportObserver.DEF_REPORT_FILE_NAME
+    private String  timestamp = TraceHelper.launchTimestampFmt()
+    private String  traceFile = "co2footprint_trace_${timestamp}.txt"
+    private String  summaryFile = "co2footprint_summary_${timestamp}.txt"
+    private String  reportFile = "co2footprint_report_${timestamp}.html"
     private String  location = null
-    private Double  ci = 475   // CI: carbon intensity
-    private Double  pue = 1.67  // PUE: power usage effectiveness efficiency, coefficient of the data centre
-    private Double  powerdrawMem = 0.3725 // Power draw of memory [W per GB]
+    private Double  ci = 475                // CI: carbon intensity
+    private Double  pue = 1.67              // PUE: power usage effectiveness efficiency, coefficient of the data centre
+    private Double  powerdrawMem = 0.3725   // Power draw of memory [W per GB]
     private Boolean ignoreCpuModel = false
     private Double  powerdrawCpuDefault = 12.0
     private String  customCpuTdpFile = null
