@@ -79,8 +79,8 @@ class CO2FootprintConfig {
         }
     }
 
-    CO2FootprintConfig(ConcurrentHashMap<String, Object> configMap, TDPDataMatrix cpuData){
-        configMap = configMap ? configMap.deepClone() : [:] as ConcurrentHashMap<String, Object>
+    CO2FootprintConfig(Map<String, Object> configMap, TDPDataMatrix cpuData){
+        configMap = configMap as ConcurrentHashMap<String, Object> ?: [:]
 
         // Sanity checking
         checkConfig(configMap)
