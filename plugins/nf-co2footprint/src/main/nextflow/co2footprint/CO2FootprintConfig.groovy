@@ -36,11 +36,12 @@ class CO2FootprintConfig {
     private String  summaryFile = "co2footprint_summary_${timestamp}.txt"
     private String  reportFile = "co2footprint_report_${timestamp}.html"
     private String  location = null
-    private Double  ci = 475                // CI: carbon intensity
+    private Double  ci = null                // CI: carbon intensity
+    private final Double  default_ci = 475
     private Double  pue = 1.67              // PUE: power usage effectiveness efficiency, coefficient of the data centre
     private Double  powerdrawMem = 0.3725   // Power draw of memory [W per GB]
     private Boolean ignoreCpuModel = false
-    private Double  powerdrawCpuDefault = 12.0
+    private Double  powerdrawCpuDefault = null
     private String  customCpuTdpFile = null
 
     /**
@@ -69,21 +70,8 @@ class CO2FootprintConfig {
         return localCi
     }
 
-    /**
-     * Sanity checks for configuration map
-     * @param config configuration map
-     */
-    private static checkConfig(Map configMap) {
-        if (configMap.ci && configMap.location) {
-            throw new IllegalArgumentException("Invalid combination of 'ci' and 'location' parameters specified for the CO2Footprint plugin. Please specify either 'ci' or 'location'!")
-        }
-    }
-
     CO2FootprintConfig(ConcurrentHashMap<String, Object> configMap, TDPDataMatrix cpuData){
         configMap = configMap ? configMap.deepClone() : [:] as ConcurrentHashMap<String, Object>
-
-        // Sanity checking
-        checkConfig(configMap)
 
         // Assign values from map to config
         configMap.keySet().each { name  ->
@@ -91,19 +79,19 @@ class CO2FootprintConfig {
         }
 
         // Reassign CI from location
-        ci = location ? retrieveCi(location) : ci
-
-        // Reassign default CPU from config
-        if (powerdrawCpuDefault) {
-            cpuData.set(powerdrawCpuDefault, 'default', 'tdp (W)')
-        }
-
-        // Use custom TDP file
-        if (customCpuTdpFile) {
-            cpuData.update(
-                    TDPDataMatrix.loadCsv(Paths.get(customCpuTdpFile as String))
+        if (ci && location) {
+            log.warn(
+                    'Both \'ci\' and \'location\' were specified in configuration.' +
+                    'The \'ci\' value will take precedence, ignoring the \'location\'.'
             )
         }
+        ci ?= location ? retrieveCi(location) : default_ci
+
+        // Reassign default CPU from config
+        if (powerdrawCpuDefault) { cpuData.set(powerdrawCpuDefault, 'default', 'tdp (W)') }
+
+        // Use custom TDP file
+        if (customCpuTdpFile) { cpuData.update( TDPDataMatrix.loadCsv(Paths.get(customCpuTdpFile as String)) ) }
 
         // Check whether all entries in the map could be assigned to a class property
         if (!configMap.isEmpty()) {

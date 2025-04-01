@@ -15,7 +15,6 @@ class CO2FootprintConfigTest extends Specification {
 
         where:
         input                                                   || expectedException        || message
-        ['ci': 100.0, 'location': 'DE']  as ConcurrentHashMap   || IllegalArgumentException || 'Invalid combination of \'ci\' and \'location\''
         ['location': 'Tuebingen']  as ConcurrentHashMap         || IllegalArgumentException || 'Invalid \'location\' parameter: Tuebingen.'
     }
 
