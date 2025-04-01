@@ -70,8 +70,8 @@ class CO2FootprintConfig {
         return localCi
     }
 
-    CO2FootprintConfig(ConcurrentHashMap<String, Object> configMap, TDPDataMatrix cpuData){
-        configMap = configMap ? configMap.deepClone() : [:] as ConcurrentHashMap<String, Object>
+    CO2FootprintConfig(Map<String, Object> configMap, TDPDataMatrix cpuData){
+        configMap = configMap as ConcurrentHashMap<String, Object> ?: [:]
 
         // Assign values from map to config
         configMap.keySet().each { name  ->
