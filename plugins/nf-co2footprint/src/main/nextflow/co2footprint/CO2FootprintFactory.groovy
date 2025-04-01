@@ -103,6 +103,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         )
 
         final result = new ArrayList(2)
+
         // Generate CO2 footprint text output files
         def co2eTraceFile = (this.config.getTraceFile() as Path).complete()
         def co2eSummaryFile = (this.config.getSummaryFile() as Path).complete()
@@ -118,15 +119,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
     
     Double getCPUCoreTDP(TraceRecord trace, String cpu_model=null) {
-        cpu_model = cpu_model ?: trace.get('cpu_model').toString()
-
-        TDPDataMatrix modelDataMatrix
-        if ( cpu_model == null || cpu_model == 'null' ) {
-            log.warn('The CPU model could not be detected for at least one task. Using default CPU power draw value!')
-            modelDataMatrix = tdpDataMatrix.matchModel('default')
-        } else {
-            modelDataMatrix = tdpDataMatrix.matchModel(cpu_model)
-        }
+        cpu_model = cpu_model ?: trace.get('cpu_model') as String
+        TDPDataMatrix modelDataMatrix = tdpDataMatrix.matchModel(cpu_model)
         return modelDataMatrix.getCoreTDP()
     }
 

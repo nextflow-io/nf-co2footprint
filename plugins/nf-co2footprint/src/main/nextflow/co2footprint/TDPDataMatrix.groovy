@@ -59,12 +59,13 @@ class TDPDataMatrix extends DataMatrix {
      * @return DataMatrix with one entry, representing the model
      */
     TDPDataMatrix matchModel(String model, Boolean fallbackToDefault=true, String originalModel=model) {
+        model = model ?: ''
         // Construct regular expression to address potential differences in exact name matching
-        String modelRegex = toASCII(model, Matcher.quoteReplacement('\\s?'))                          // Convert to ASCII
-                .toLowerCase()                                                        // Convert to lower case
-                .replaceAll('\\(r\\)|\\(tm\\)|\\(c\\)', Matcher.quoteReplacement('\\s?'))      // Replace ASCII surrogates
-                .replaceAll(' ?processors? ?', '')                  // make 'processor(s)' optional
-                .replaceAll('\\s(?!\\?)', Matcher.quoteReplacement('\\s*'))                     // make whitespaces optional
+        String modelRegex = toASCII(model, Matcher.quoteReplacement('\\s?'))                        // Convert to ASCII
+                .toLowerCase()                                                                         // Convert to lower case
+                .replaceAll('\\(r\\)|\\(tm\\)|\\(c\\)', Matcher.quoteReplacement('\\s?'))    // Replace ASCII surrogates
+                .replaceAll(' ?processors? ?', '')                                   // make 'processor(s)' optional
+                .replaceAll('\\s(?!\\?)', Matcher.quoteReplacement('\\s*'))                  // make whitespaces optional
 
         // Find matches against index
         List matches = this.rowIndex.filterKeys { String str ->
