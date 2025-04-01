@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration>
+
+<configuration>
+    <!-- Imports for shortcuts -->
+    <import class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"/>
+    <import class="ch.qos.logback.core.ConsoleAppender"/>
+    <import class="ch.qos.logback.core.read.ListAppender"/>
+    <import class="ch.qos.logback.classic.AsyncAppender"/>
+
+    <!-- Filters (What not to put in the logs) -->
+    <turboFilter class="ch.qos.logback.classic.turbo.DuplicateMessageFilter">
+        <allowedRepetitions>0</allowedRepetitions>
+    </turboFilter>
+
+    <!-- Appenders (Where to put the logs) -->
+    <!-- Standard out appender -->
+    <appender name="STDOUT" class="ConsoleAppender">
+        <encoder class="PatternLayoutEncoder">
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %magenta(%logger{36}) -%kvp- %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="ASYNC_STDOUT" class="AsyncAppender">
+        <appender-ref ref="STDOUT" />
+    </appender>
+
+    <!-- List appender -->
+    <appender name="LIST"  class="ListAppender"/>
+    <appender name="ASYNC_LIST" class="AsyncAppender">
+        <appender-ref ref="LIST" />
+    </appender>
+
+
+    <!-- Loggers (Which loggers should be used for which package) Appenders are additive.  -->
+    <!-- Appenders are additive.  -->
+    <!-- Level is overwritten by definition down the hierarchy.  -->
+
+    <!-- Standard class level logger -->
+    <logger name="nextflow.co2footprint" level="INFO">
+    </logger>
+
+    <root level="debug">
+        <appender-ref ref="ASYNC_STDOUT"/>
+        <appender-ref ref="ASYNC_LIST"/>
+    </root>
+</configuration>

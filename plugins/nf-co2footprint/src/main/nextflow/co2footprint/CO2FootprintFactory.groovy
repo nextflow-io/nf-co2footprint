@@ -22,7 +22,6 @@ import groovy.text.GStringTemplateEngine
 import groovy.transform.PackageScope
 import groovy.transform.PackageScopeTarget
 import groovyx.gpars.agent.Agent
-import nextflow.co2footprint.utils.DataMatrix
 
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskProcessor
@@ -34,11 +33,16 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
 import nextflow.Session
 import nextflow.trace.TraceObserver
 import nextflow.trace.TraceObserverFactory
 import nextflow.processor.TaskId
+
+import groovy.util.logging.Slf4j
+import org.slf4j.LoggerFactory
+import ch.qos.logback.classic.LoggerContext
+import ch.qos.logback.classic.turbo.DuplicateMessageFilter
+import ch.qos.logback.classic.turbo.TurboFilter
 
 import java.nio.file.Paths
 import java.util.concurrent.ConcurrentHashMap
@@ -56,11 +60,15 @@ import com.sun.management.OperatingSystemMXBean
 class CO2FootprintFactory implements TraceObserverFactory {
 
     private String version
-    // Handle logging messages
-    private List<String> warnings = []
 
-    boolean hasWarnings() { warnings.size() > 0 }
-    List<String> getWarnings() { warnings }
+    // Logging
+    static {
+        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory()    // Get Logging Context
+        TurboFilter dmf = new DuplicateMessageFilter()                          // Define DuplicateMessageFilter
+        dmf.setAllowedRepetitions(0)
+        dmf.start()
+        lc.addTurboFilter(dmf)                                                  // Add filter to context
+    }
 
     private CO2FootprintConfig config
     private Session session
@@ -95,6 +103,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         )
 
         final result = new ArrayList(2)
+
         // Generate CO2 footprint text output files
         def co2eTraceFile = (this.config.getTraceFile() as Path).complete()
         def co2eSummaryFile = (this.config.getSummaryFile() as Path).complete()
@@ -110,15 +119,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
     
     Double getCPUCoreTDP(TraceRecord trace, String cpu_model=null) {
-        cpu_model = cpu_model ?: trace.get('cpu_model').toString()
-
-        TDPDataMatrix modelDataMatrix
-        if ( cpu_model == null || cpu_model == "null" ) {
-            warnings << "The CPU model could not be detected for at least one task. Using default CPU power draw value!"
-            modelDataMatrix = tdpDataMatrix.matchModel('default')
-        } else {
-            modelDataMatrix = tdpDataMatrix.matchModel(cpu_model)
-        }
+        cpu_model = cpu_model ?: trace.get('cpu_model') as String
+        TDPDataMatrix modelDataMatrix = tdpDataMatrix.matchModel(cpu_model)
         return modelDataMatrix.getCoreTDP()
     }
 
@@ -152,14 +154,14 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // uc: core usage factor (between 0 and 1)
         Double cpu_usage = trace.get('%cpu') as Double
         if ( cpu_usage == null ) {
-            warnings << "The reported CPU usage is null for at least one task. Assuming 100% usage for each requested CPU!"
+            log.warn('The reported CPU usage is null for at least one task. Assuming 100% usage for each requested CPU!')
             // TODO why is value null, because task was finished so fast that it was not captured? Or are there other reasons?
             // Assuming requested cpus were used with 100%
             cpu_usage = nc * 100
         }
 
         if ( cpu_usage == 0.0 ) {
-            warnings << "The reported CPU usage is 0.0 for at least one task!"
+            log.warn('The reported CPU usage is 0.0 for at least one task!')
         }
         Double uc = cpu_usage / (100.0 * nc) as Double
 
@@ -169,7 +171,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // nm: size of memory available [GB] -> requested memory
         Long memory = trace.get('memory') as Long
         if ( memory == null || trace.get('peak_rss') as Double > memory) {
-            warnings << "The required memory exceeds user requested memory, therefore setting to maximum available memory!"
+            log.warn('The required memory exceeds user requested memory, therefore setting to maximum available memory!')
             memory = max_memory
         }
 
@@ -378,13 +380,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
             current.values().each { co2eTraceFile.println("${it.taskId}\t-") }
             co2eTraceFile.flush()
             co2eTraceFile.close()
-
-            // Log warnings
-            if( hasWarnings() ) {
-                def filteredWarnings = getWarnings().unique( false )
-                def msg = "\033[0;33mThe nf-co2footprint plugin generated the following warnings during the execution of the workflow:\n\t- " + filteredWarnings.join('\n\t- ').trim() + "\n\033[0m"
-                log.warn(msg)
-            }
         }
 
         @Override

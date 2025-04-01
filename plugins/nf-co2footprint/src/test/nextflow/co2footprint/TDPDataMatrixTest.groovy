@@ -15,7 +15,6 @@ import spock.lang.Stepwise
 import java.nio.file.Files
 import java.nio.file.Path
 
-
 @Stepwise
 class TDPDataMatrixTest extends Specification {
     private final Path tempPath = Files.createTempDirectory('tmpdir')
@@ -31,6 +30,18 @@ class TDPDataMatrixTest extends Specification {
     )
     Logger logger = (Logger) LoggerFactory.getLogger(TDPDataMatrix)
     ListAppender<ILoggingEvent> listAppender = new ListAppender<>()
+
+
+    def setup() {
+        listAppender.start()
+        logger.addAppender(listAppender)
+    }
+
+    def cleanup() {
+        listAppender.list.clear()
+        logger.detachAndStopAllAppenders()
+        listAppender.stop()
+    }
 
     def 'Should get a valid DataMatrix Extension' () {
         setup:
@@ -96,8 +107,6 @@ class TDPDataMatrixTest extends Specification {
                 df.data, df.getOrderedColumnKeys(), df.getOrderedRowKeys(),
                 'default', 20, 2, 4
         )
-        listAppender.start()
-        logger.addAppender(listAppender)
 
         when:
         Double dfTDPPerCore = df.matchModel('Non-existent').getCoreTDP()
@@ -110,22 +119,14 @@ class TDPDataMatrixTest extends Specification {
         df2TDPPerCore == 10.0
         dfTDPPerThread == 12.5
         df2TDPPerThread == 5.0
-        listAppender.list[0].toString() ==  '[WARN] Could not find CPU model "Non-existent" in given TDP data table. ' +
+        listAppender.list[0] as String ==  '[WARN] Could not find CPU model "Non-existent" in given TDP data table. ' +
                 'Using default CPU power draw value (100.0 W).'
-        listAppender.list[1].toString() ==  '[WARN] Could not find CPU model "Non-existent" in given TDP data table. ' +
-                'Using default CPU power draw value (100.0 W).'
+        // Second warning should be truncated due to DuplicateMessageFilter
+        listAppender.list.size() == 1
 
-        cleanup:
-        listAppender.list.clear()
-        logger.detachAndStopAllAppenders()
-        listAppender.stop()
     }
 
     def 'Should match the model names correctly' () {
-        setup:
-        listAppender.start()
-        logger.addAppender(listAppender)
-
         expect:
         // match default
         df.matchModel('default').getData() == [[100, 4, 8]]
@@ -135,10 +136,6 @@ class TDPDataMatrixTest extends Specification {
     }
 
     def 'Should match the model names correctly' () {
-        setup:
-        listAppender.start()
-        logger.addAppender(listAppender)
-
         expect:
         // match against model with ASCII characters
         df.matchModel('Intel® i3-Fantasy™').getData() == [[13, 1, 1]]
@@ -154,10 +151,6 @@ class TDPDataMatrixTest extends Specification {
     }
 
     def 'Should match the model names correctly' () {
-        setup:
-        listAppender.start()
-        logger.addAppender(listAppender)
-
         expect:
         // match against @ statement
         df.matchModel('Intel® i3-Fantasy(TM) @ 10Trillion GW').getData() == [[13, 1, 1]]
@@ -167,13 +160,10 @@ class TDPDataMatrixTest extends Specification {
     }
 
     def 'Should match the model names correctly' () {
-        setup:
-        listAppender.start()
-        logger.addAppender(listAppender)
+        expect:
         // match against extra 'Processor'
         df.matchModel('Intel® Processor i3-Fantasy(TM)').getData() == [[13, 1, 1]]
 
-        expect:
         // match against extra 'Processor & 'Processors'
         df.matchModel('Intel® Processor i3-Fantasy(TM) Processors').getData() == [[13, 1, 1]]
 
@@ -182,10 +172,6 @@ class TDPDataMatrixTest extends Specification {
     }
 
     def 'Should match the model names correctly' () {
-        setup:
-        listAppender.start()
-        logger.addAppender(listAppender)
-
         expect:
         // match against lower case
         df.matchModel('ampere ultraefficient').getData() == [[13, 2, 2]]
@@ -198,23 +184,15 @@ class TDPDataMatrixTest extends Specification {
     }
 
     def 'Should match the model names correctly' () {
-        setup:
-        listAppender.start()
-        logger.addAppender(listAppender)
-
+        expect:
         // match against non existent model
         df.matchModel('Non-existent2').getData() == [[100, 4, 8]]
-        listAppender.list[0].toString() == '[WARN] Could not find CPU model "Non-existent2" in given TDP data table. ' +
+        listAppender.list[0] as String == '[WARN] Could not find CPU model "Non-existent2" in given TDP data table. ' +
                 'Using default CPU power draw value (100.0 W).'
 
         // match against unaccounted variance of model
         df.matchModel('Intel® i3-Fantasy(TM) 10Trillion GW').getData() == [[100, 4, 8]]
-        listAppender.list[1].toString() == '[WARN] Could not find CPU model "Intel® i3-Fantasy(TM) 10Trillion GW, 0.00001MHz" in given TDP data table. ' +
+        listAppender.list[1] as String == '[WARN] Could not find CPU model "Intel® i3-Fantasy(TM) 10Trillion GW" in given TDP data table. ' +
                 'Using default CPU power draw value (100.0 W).'
-
-        cleanup:
-        listAppender.list.clear()
-        logger.detachAndStopAllAppenders()
-        listAppender.stop()
     }
 }
