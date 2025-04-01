@@ -63,13 +63,13 @@ class TDPDataMatrix extends DataMatrix {
         String modelRegex = toASCII(model, Matcher.quoteReplacement('\\s?'))                          // Convert to ASCII
                 .toLowerCase()                                                        // Convert to lower case
                 .replaceAll('\\(r\\)|\\(tm\\)|\\(c\\)', Matcher.quoteReplacement('\\s?'))      // Replace ASCII surrogates
-                .replaceAll(' ?processors? ?', '')                  // make 'processor(s)' optional
+                .replaceAll(' ?(processor|cpu)s? ?', '')                  // make 'processor/cpu(s)' optional
                 .replaceAll('\\s(?!\\?)', Matcher.quoteReplacement('\\s*'))                     // make whitespaces optional
 
         // Find matches against index
         List matches = this.rowIndex.filterKeys { String str ->
-                str = str.toLowerCase()      // Convert to lower case
-                    .replaceAll(' ?processors? ?', '')              // make 'processor(s)' optional
+                str = str.toLowerCase()                                               // Convert to lower case
+                    .replaceAll(' ?(processor|cpu)s? ?', '')        // make 'processor(s)/cpu' optional
                 str.matches(modelRegex)
         }
 
