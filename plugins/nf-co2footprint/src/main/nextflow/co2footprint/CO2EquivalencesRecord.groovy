@@ -29,8 +29,9 @@ class CO2EquivalencesRecord {
         List<String> readableEquivalences = new ArrayList<String>()
 
         String outStr = ''
-        this.getProperties().each {key, value ->
-            switch (key as String) {
+        ['carKilometers', 'treeMonths', 'planePercent'].each{ property ->
+            def value = this.getProperty(property)
+            switch (property as String) {
                 case 'carKilometers' ->
                     outStr = "- ${this.getCarKilometersReadable()} km travelled by car"
                 case 'treeMonths' ->
