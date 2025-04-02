@@ -160,7 +160,7 @@ class CO2Record extends TraceRecord {
         try {
             return formatter.call(val,sFormat)
         }
-        catch( Throwable e ) {
+        catch( Throwable ignore ) {
             log.debug "Not a valid trace value -- field: '$name'; value: '$val'; format: '$sFormat'"
             return null
         }
