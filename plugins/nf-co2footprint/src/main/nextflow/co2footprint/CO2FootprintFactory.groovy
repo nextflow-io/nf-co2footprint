@@ -22,8 +22,6 @@ import groovy.text.GStringTemplateEngine
 import groovy.transform.PackageScope
 import groovy.transform.PackageScopeTarget
 import groovyx.gpars.agent.Agent
-import nextflow.co2footprint.utils.DataMatrix
-
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskProcessor
 import nextflow.script.WorkflowMetadata
@@ -86,7 +84,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
     private final CIDataMatrix ciDataMatrix = null
 
-    private CO2FootprintComputation co2FootprintComputation
+    private CO2FootprintComputer co2FootprintComputer
+    CO2FootprintComputer getCO2FootprintComputer() { co2FootprintComputer }
 
     @Override
     Collection<TraceObserver> create(Session session) {
@@ -99,7 +98,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 this.tdpDataMatrix
         )
 
-        co2FootprintComputation = new CO2FootprintComputation(tdpDataMatrix, ciDataMatrix, config)
+        co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, ciDataMatrix, config)
 
         final result = new ArrayList(2)
         // Generate CO2 footprint text output files
@@ -213,7 +212,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             co2eSummaryFile.println("CO2e emissions: ${HelperFunctions.convertToReadableUnits(total_co2,3, 'g')}")
             co2eSummaryFile.println("Energy consumption: ${HelperFunctions.convertToReadableUnits(total_energy,3, 'Wh')}")
 
-            CO2EquivalencesRecord equivalences = co2FootprintComputation.computeCO2footprintEquivalences(total_co2)
+            CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(total_co2)
             List<String> readableEquivalences = equivalences.getReadableEquivalences()
             if (readableEquivalences.any()) {
                 co2eSummaryFile.println("\nWhich equals: ")
@@ -286,7 +285,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             current.remove(taskId)
 
             // Extract records
-            CO2Record co2Record = co2FootprintComputation.computeTaskCO2footprint(taskId, trace)
+            CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace)
             total_energy += co2Record.getEnergyConsumption()
             total_co2 += co2Record.getCO2e()
             co2eRecords[taskId] = co2Record
@@ -307,7 +306,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             if (trace == null) { return }
 
             // Extract records
-            CO2Record co2Record = co2FootprintComputation.computeTaskCO2footprint(taskId, trace)
+            CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace)
             total_energy += co2Record.getEnergyConsumption()
             total_co2 += co2Record.getCO2e()
             co2eRecords[taskId] = co2Record
@@ -572,7 +571,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * @return The rendered json
          */
         protected Map renderCO2TotalsJson() {
-            CO2EquivalencesRecord equivalences = co2FootprintComputation.computeCO2footprintEquivalences(total_co2)
+            CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(total_co2)
             [ co2:HelperFunctions.convertToReadableUnits(total_co2,3),
               energy:HelperFunctions.convertToReadableUnits(total_energy,3),
               car: equivalences.getCarKilometersReadable(),

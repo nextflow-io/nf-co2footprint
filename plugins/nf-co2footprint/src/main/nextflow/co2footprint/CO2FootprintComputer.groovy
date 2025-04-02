@@ -49,7 +49,7 @@ class CO2FootprintComputer {
         /**
          * CPU model information
          */
-        String cpuModel = config.getIgnoreCpuModel() ? trace.get('cpu_model') as String : 'default'
+        String cpuModel = config.getIgnoreCpuModel() ? 'default' : trace.get('cpu_model') as String
         TDPDataMatrix modelDataMatrix = tdpDataMatrix.matchModel(cpuModel)
 
         /**
