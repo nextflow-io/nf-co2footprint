@@ -11,7 +11,7 @@ import java.lang.management.ManagementFactory
 /**
  * Class for computation of energy usage, CO2 emission and equivalences
  */
-class CO2FootprintComputation {
+class CO2FootprintComputer {
 
     private final TDPDataMatrix tdpDataMatrix
     private final CIDataMatrix ciDataMatrix
@@ -22,7 +22,7 @@ class CO2FootprintComputation {
      * @param tdpDataMatrix Thermal design power Data Matrix
      * @param ciDataMatrix  Carbon intensity Data Matrix
      */
-    CO2FootprintComputation (TDPDataMatrix tdpDataMatrix, CIDataMatrix ciDataMatrix, CO2FootprintConfig config) {
+    CO2FootprintComputer(TDPDataMatrix tdpDataMatrix, CIDataMatrix ciDataMatrix, CO2FootprintConfig config) {
         this.tdpDataMatrix = tdpDataMatrix
         this.ciDataMatrix = ciDataMatrix
         this.config = config
