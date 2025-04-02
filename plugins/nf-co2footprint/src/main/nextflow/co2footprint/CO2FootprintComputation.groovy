@@ -13,17 +13,19 @@ import java.lang.management.ManagementFactory
  */
 class CO2FootprintComputation {
 
-    TDPDataMatrix tdpDataMatrix
-    CIDataMatrix ciDataMatrix
+    private final TDPDataMatrix tdpDataMatrix
+    private final CIDataMatrix ciDataMatrix
+    private final CO2FootprintConfig config
 
     /**
      * Instance for computation of energy usage, CO2 emission and equivalences
      * @param tdpDataMatrix Thermal design power Data Matrix
      * @param ciDataMatrix  Carbon intensity Data Matrix
      */
-    CO2FootprintComputation (TDPDataMatrix tdpDataMatrix, CIDataMatrix ciDataMatrix) {
+    CO2FootprintComputation (TDPDataMatrix tdpDataMatrix, CIDataMatrix ciDataMatrix, CO2FootprintConfig config) {
         this.tdpDataMatrix = tdpDataMatrix
         this.ciDataMatrix = ciDataMatrix
+        this.config = config
     }
 
     /**
@@ -37,7 +39,7 @@ class CO2FootprintComputation {
      * @param config
      * @return
      */
-    CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace, CO2FootprintConfig config) {
+    CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace) {
 
         /**
          * Detect operating system
@@ -129,7 +131,7 @@ class CO2FootprintComputation {
                 cpuUsage,
                 memory as Long,
                 trace.get('name') as String,
-                config.getIgnoreCpuModel() ? '' : cpuModel
+                config.getIgnoreCpuModel() ? 'Custom value' : cpuModel
         )
     }
 
@@ -140,7 +142,7 @@ class CO2FootprintComputation {
      * The estimated sequestered CO2 of a mature tree is ~1 Kg per month (917 g)
      * A reference flight Paris to London spends 50000 gCO2
      */
-    static CO2EquivalencesRecord computeCO2footprintEquivalences(Double totalCO2, CO2FootprintConfig config) {
+    CO2EquivalencesRecord computeCO2footprintEquivalences(Double totalCO2) {
         BigDecimal gCO2 = totalCO2 as BigDecimal / 1000 as BigDecimal       // Conversion to [g] CO2
         String location = config.getLocation()
 
