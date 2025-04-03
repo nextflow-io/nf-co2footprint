@@ -1,6 +1,8 @@
 ---
 name: New feature
 about: Propose a new feature or enhancement
+labels: enhancement
+type: Feature
 ---
 
 ## New feature

@@ -1,6 +1,7 @@
 ---
 name: General question 
 about: Ask for help with Nextflow language and usage
+labels: question
 ---
 
 Hi! Thanks for using Nextflow. 
