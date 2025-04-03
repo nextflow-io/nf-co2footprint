@@ -45,19 +45,25 @@ class LoggerTestClass {
     }
 }
 
+
+/**
+ * Test the Logging  (especially the definition of a Duplication TurboFilter in logback-test.xml)
+ */
 @Stepwise
 class LoggingTest extends Specification {
 
-    LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory()
+    LoggerContext loggerContext = LoggerFactory.getILoggerFactory() as LoggerContext
 
     Logger logger = LoggerFactory.getLogger(LoggerTestClass)
     ListAppender<ILoggingEvent> listAppender = new ListAppender<>()
 
+    // Setup method that executes once before each test
     def setup() {
         listAppender.start()
         logger.addAppender(listAppender)
     }
 
+    // Repeated cleanup method that executes once after each test
     def cleanup() {
         listAppender.list.clear()
         logger.detachAndStopAllAppenders()
@@ -71,6 +77,7 @@ class LoggingTest extends Specification {
         LoggerTestClass.warn()
 
         then:
+        // Additional warnings are blocked
         listAppender.list.size() == 1
     }
 
@@ -79,6 +86,7 @@ class LoggingTest extends Specification {
         LoggerTestClass.warn()
 
         then:
+        // Warnings are still blocked
         listAppender.list.size() == 0
 
     }
@@ -88,6 +96,7 @@ class LoggingTest extends Specification {
         LoggerTestClass.main()
 
         then:
+        // Warnings are still blocked & Messages with level below Info (Debug & Trace) are ignored
         listAppender.list.size() == 2
         listAppender.list.collect({it as String}) as Set ==
                 ['[INFO] Info', '[ERROR] Error'].collect({"${it} message" as String}) as Set

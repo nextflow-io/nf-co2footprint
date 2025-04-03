@@ -63,7 +63,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
     // Logging
     static {
-        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory()    // Get Logging Context
+        LoggerContext lc = LoggerFactory.getILoggerFactory() as LoggerContext   // Get Logging Context
         TurboFilter dmf = new DuplicateMessageFilter()                          // Define DuplicateMessageFilter
         dmf.setAllowedRepetitions(0)
         dmf.start()
