@@ -28,6 +28,7 @@ import nextflow.trace.TraceRecord
 import nextflow.util.CacheHelper
 import spock.lang.Specification
 
+import java.nio.file.Files
 import java.nio.file.Path
 
 /**
@@ -175,6 +176,8 @@ class CO2FootprintFactoryTest extends Specification {
 
     def 'test calculation of total CO2e and energy consumption' () {
         given:
+        Path tempPath = Files.createTempDirectory('tmpdir')
+        Path tracePath = tempPath.resolve('trace_test.txt')
         def traceRecord = new TraceRecord()
         traceRecord.task_id = 111
         traceRecord.realtime = (1 as Long) * (3600000 as Long)
@@ -183,7 +186,7 @@ class CO2FootprintFactoryTest extends Specification {
         traceRecord.'%cpu' = 100.0
         traceRecord.memory = (7 as Long) * (1000000000 as Long)
 
-        def session = Mock(Session) { getConfig() >> [:] }
+        def session = Mock(Session) { getConfig() >> [co2footprint: ['traceFile': tracePath]]}
         // Create a handler
         def task = new TaskRun(id: TaskId.of(111))
         task.processor = Mock(TaskProcessor)
@@ -205,6 +208,8 @@ class CO2FootprintFactoryTest extends Specification {
 
     def 'test calculation of CO2 equivalences' () {
         given:
+        Path tempPath = Files.createTempDirectory('tmpdir')
+        Path tracePath = tempPath.resolve('trace_test.txt')
         def traceRecord = new TraceRecord()
         traceRecord.task_id = 111
         traceRecord.realtime = (1 as Long) * (3600000 as Long)
@@ -213,7 +218,7 @@ class CO2FootprintFactoryTest extends Specification {
         traceRecord.'%cpu' = 100.0
         traceRecord.memory = (7 as Long) * (1000000000 as Long)
 
-        def session = Mock(Session) { getConfig() >> [:] }
+        def session = Mock(Session) { getConfig() >> [co2footprint: ['traceFile': tracePath]] }
         // Create a handler
         def task = new TaskRun(id: TaskId.of(111))
         task.processor = Mock(TaskProcessor)
