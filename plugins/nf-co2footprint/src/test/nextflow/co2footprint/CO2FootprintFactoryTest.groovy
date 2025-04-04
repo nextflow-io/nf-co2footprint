@@ -17,18 +17,12 @@
 package nextflow.co2footprint
 
 import nextflow.Session
-import nextflow.executor.Executor
-import nextflow.executor.NopeTaskHandler
-import nextflow.processor.TaskConfig
-import nextflow.processor.TaskHandler
+import nextflow.executor.NopeExecutor
 import nextflow.processor.TaskId
 import nextflow.processor.TaskProcessor
 import nextflow.processor.TaskRun
 import nextflow.trace.TraceRecord
-import nextflow.util.CacheHelper
 import spock.lang.Specification
-
-import java.nio.file.Path
 
 /**
  * This class implements various tests.
@@ -174,7 +168,7 @@ class CO2FootprintFactoryTest extends Specification {
         // Create a handler
         def task = new TaskRun(id: TaskId.of(111))
         task.processor = Mock(TaskProcessor)
-        def handler = new NopeTaskHandler(task)
+        def handler = new NopeExecutor().createTaskHandler(task)
 
         def factory = new CO2FootprintFactory()
         def textFileObserver = factory.create(session)[0]
@@ -204,7 +198,7 @@ class CO2FootprintFactoryTest extends Specification {
         // Create a handler
         def task = new TaskRun(id: TaskId.of(111))
         task.processor = Mock(TaskProcessor)
-        def handler = new NopeTaskHandler(task)
+        def handler = new NopeExecutor().createTaskHandler(task)
 
         def factory = new CO2FootprintFactory()
         def textFileObserver = factory.create(session)[0]
