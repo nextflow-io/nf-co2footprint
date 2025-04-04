@@ -167,6 +167,9 @@ class TDPDataMatrixTest extends Specification {
         // match against extra 'Processor & 'Processors'
         df.matchModel('Intel® Processor i3-Fantasy(TM) Processors').getData() == [[13, 1, 1]]
 
+        // match against extra 'CPUs'
+        df.matchModel('Intel® CPUs i3-Fantasy(TM)').getData() == [[13, 1, 1]]
+
         // match against missing 'processor'
         df.matchModel('ampere ultraefficient').getData() == [[13, 2, 2]]
     }

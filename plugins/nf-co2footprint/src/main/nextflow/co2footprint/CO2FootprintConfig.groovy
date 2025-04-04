@@ -5,6 +5,7 @@ import groovy.util.logging.Slf4j
 import nextflow.trace.TraceHelper
 
 import java.nio.file.Paths
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * This class allows model an specific configuration, extracting values from a map and converting
@@ -79,7 +80,7 @@ class CO2FootprintConfig {
     }
 
     CO2FootprintConfig(Map<String, Object> configMap, TDPDataMatrix cpuData){
-        configMap = configMap ?: [:]
+        configMap = configMap as ConcurrentHashMap<String, Object> ?: [:]
 
         // Sanity checking
         checkConfig(configMap)
@@ -128,14 +129,14 @@ class CO2FootprintConfig {
     SortedMap<String, Object> collectInputFileOptions() {
         return [
                 "customCpuTdpFile": customCpuTdpFile
-        ] as SortedMap
+        ].sort() as SortedMap
     }
     SortedMap<String, Object> collectOutputFileOptions() {
         return [
                 "traceFile": traceFile,
                 "summaryFile": summaryFile,
                 "reportFile": reportFile
-        ] as SortedMap
+        ].sort() as SortedMap
     }
     SortedMap<String, Object> collectCO2CalcOptions() {
         return [
@@ -145,6 +146,6 @@ class CO2FootprintConfig {
                 "powerdrawMem": powerdrawMem,
                 "powerdrawCpuDefault": powerdrawCpuDefault,
                 "ignoreCpuModel": ignoreCpuModel,
-        ] as SortedMap
+        ].sort() as SortedMap
     }
 }
