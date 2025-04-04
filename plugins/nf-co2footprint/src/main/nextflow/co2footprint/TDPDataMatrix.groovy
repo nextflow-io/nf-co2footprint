@@ -1,6 +1,7 @@
 package nextflow.co2footprint
 
 import nextflow.co2footprint.utils.DataMatrix
+import nextflow.co2footprint.utils.Markers
 
 import groovy.util.logging.Slf4j
 
@@ -90,6 +91,7 @@ class TDPDataMatrix extends DataMatrix {
         else if (fallbackToDefault) {
             modelData = select([this.fallbackModel] as LinkedHashSet)
             log.warn(
+                    Markers.unique,
                     "Could not find CPU model \"${originalModel}\" in given TDP data table. " +
                     "Using ${this.fallbackModel} CPU power draw value (${getTDP(modelData)} W)."
             )
