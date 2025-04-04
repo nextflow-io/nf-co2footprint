@@ -16,6 +16,8 @@
 
 package nextflow.co2footprint
 
+import nextflow.co2footprint.utils.DeduplicateMarkerFilter
+import nextflow.co2footprint.utils.Markers
 import nextflow.co2footprint.utils.HelperFunctions
 
 import groovy.text.GStringTemplateEngine
@@ -41,7 +43,6 @@ import nextflow.processor.TaskId
 import groovy.util.logging.Slf4j
 import org.slf4j.LoggerFactory
 import ch.qos.logback.classic.LoggerContext
-import ch.qos.logback.classic.turbo.DuplicateMessageFilter
 import ch.qos.logback.classic.turbo.TurboFilter
 
 import java.nio.file.Paths
@@ -61,11 +62,14 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
     private String version
 
-    // Logging
+    /**
+     * Logging:
+     * Removes duplicates in some warnings, to avoid cluttering the output with repeated information.
+     * Example: If the CPU model is not found it should only be warned once, that a fallback value is used.
+     */
     static {
         LoggerContext lc = LoggerFactory.getILoggerFactory() as LoggerContext   // Get Logging Context
-        TurboFilter dmf = new DuplicateMessageFilter()                          // Define DuplicateMessageFilter
-        dmf.setAllowedRepetitions(0)
+        TurboFilter dmf = new DeduplicateMarkerFilter([Markers.unique])         // Define DeduplicateMarkerFilter
         dmf.start()
         lc.addTurboFilter(dmf)                                                  // Add filter to context
     }

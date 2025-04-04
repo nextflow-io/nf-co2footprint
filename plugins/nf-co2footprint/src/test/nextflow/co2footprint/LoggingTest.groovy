@@ -1,15 +1,17 @@
 package nextflow.co2footprint
 
+import ch.qos.logback.classic.turbo.TurboFilter
+import nextflow.co2footprint.utils.DeduplicateMarkerFilter
+import nextflow.co2footprint.utils.Markers
+
+import ch.qos.logback.classic.LoggerContext
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.read.ListAppender
 
+import groovy.util.logging.Slf4j
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-
-import ch.qos.logback.classic.LoggerContext
-
-import groovy.util.logging.Slf4j
-
+import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
 
@@ -29,7 +31,7 @@ class LoggerTestClass {
     }
 
     static warn() {
-        log.warn('Warn message')
+        log.warn( Markers.unique, 'Warn message')
     }
 
     static error() {
@@ -52,10 +54,19 @@ class LoggerTestClass {
 @Stepwise
 class LoggingTest extends Specification {
 
-    LoggerContext loggerContext = LoggerFactory.getILoggerFactory() as LoggerContext
+    static LoggerContext lc = LoggerFactory.getILoggerFactory() as LoggerContext
 
-    Logger logger = LoggerFactory.getLogger(LoggerTestClass)
+    @Shared
+    Logger logger
     ListAppender<ILoggingEvent> listAppender = new ListAppender<>()
+
+    // Setup method for the class
+    def setupSpec() {
+        TurboFilter dmf = new DeduplicateMarkerFilter([Markers.unique])
+        dmf.start()
+        lc.addTurboFilter(dmf)
+        logger = lc.getLogger(LoggerTestClass)
+    }
 
     // Setup method that executes once before each test
     def setup() {
@@ -97,9 +108,9 @@ class LoggingTest extends Specification {
 
         then:
         // Warnings are still blocked & Messages with level below Info (Debug & Trace) are ignored
-        listAppender.list.size() == 2
+        listAppender.list.size() == 3
         listAppender.list.collect({it as String}) as Set ==
-                ['[INFO] Info', '[ERROR] Error'].collect({"${it} message" as String}) as Set
+                ['[DEBUG] Debug', '[INFO] Info', '[ERROR] Error'].collect({"${it} message" as String}) as Set
 
     }
 }
