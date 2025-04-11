@@ -21,6 +21,7 @@ class CO2FootprintComputer {
      * Instance for computation of energy usage, CO2 emission and equivalences
      * @param tdpDataMatrix Thermal design power Data Matrix
      * @param ciDataMatrix  Carbon intensity Data Matrix
+     * @param config Co2FootprintConfig configuration of the plugin
      */
     CO2FootprintComputer(TDPDataMatrix tdpDataMatrix, CIDataMatrix ciDataMatrix, CO2FootprintConfig config) {
         this.tdpDataMatrix = tdpDataMatrix
@@ -34,10 +35,9 @@ class CO2FootprintComputer {
      * as in https://doi.org/10.1002/advs.202100707
      * PSF: pragmatic scaling factor -> not used here since we aim at the CO2e of one pipeline run
      * Factor 0.001 needed to convert Pc and Pm from W to kW
-     * @param taskID
-     * @param trace
-     * @param config
-     * @return
+     * @param taskID Identification of the task
+     * @param trace TraceRecord from Nextflow
+     * @return CO2Record of the resulting energy consumption and CO2 equivalents
      */
     CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace) {
 
@@ -55,17 +55,17 @@ class CO2FootprintComputer {
         /**
          * Realtime of computation
          */
-        BigDecimal runtime_ms = trace.get('realtime') as Double         // [ms]
+        BigDecimal runtime_ms = trace.get('realtime') as BigDecimal     // [ms]
         BigDecimal runtime_h = runtime_ms/(1000*60*60)                  // [h]
 
         /**
          * Factors of core power usage
          */
-        BigDecimal numberOfCores = trace.get('cpus') as Integer         // [#]
+        BigDecimal numberOfCores = trace.get('cpus') as BigDecimal      // [#]
         BigDecimal powerdrawPerCore = modelDataMatrix.getCoreTDP()      // [W/core]
 
         // uc: core usage factor (between 0 and 1)
-        BigDecimal cpuUsage = trace.get('%cpu') as Double
+        BigDecimal cpuUsage = trace.get('%cpu') as BigDecimal
         if ( cpuUsage == null ) {  // TODO: why is value null, because task was finished so fast that it was not captured? Or are there other reasons?
             log.warn(
                     'The reported CPU usage is null for at least one task.' +
@@ -82,9 +82,9 @@ class CO2FootprintComputer {
         /**
          * Factors of memory power usage
          */
-        BigDecimal availableMemory = OS.getTotalMemorySize() as Long    // [bytes]
-        BigDecimal requestedMemory = trace.get('memory') as Long        // [bytes]
-        BigDecimal requiredMemory = trace.get('peak_rss') as Long       // [bytes]
+        BigDecimal availableMemory = OS.getTotalMemorySize() as BigDecimal    // [bytes]
+        BigDecimal requestedMemory = trace.get('memory') as BigDecimal        // [bytes]
+        BigDecimal requiredMemory = trace.get('peak_rss') as BigDecimal       // [bytes]
         if ( requestedMemory == null || requiredMemory > requestedMemory) {
             log.warn(
                     "The required memory (${requiredMemory/(1024**3)} GB) for the task" +
@@ -141,6 +141,8 @@ class CO2FootprintComputer {
      * The estimated emission of flying on a jet aircraft in economy class is between 139 and 244 gCO2e/Km
      * The estimated sequestered CO2 of a mature tree is ~1 Kg per month (917 g)
      * A reference flight Paris to London spends 50000 gCO2
+     * @param totalCO2 Total CO2 equivalents that were emitted
+     * @return CO2EquivalencesRecord with estimations for sensible comparisons
      */
     CO2EquivalencesRecord computeCO2footprintEquivalences(Double totalCO2) {
         BigDecimal gCO2 = totalCO2 as BigDecimal / 1000 as BigDecimal       // Conversion to [g] CO2
