@@ -17,7 +17,7 @@ class HelperFunctions {
         }
     }
 
-    static String convertToReadableUnits(double value, int unitIndex=4) {
+    static String convertToReadableUnits(double value, int unitIndex=4, String unit='') {
         def units = ['p', 'n', 'u', 'm', ' ', 'K', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
         
         while (value >= 1000 && unitIndex < units.size() - 1) {
@@ -29,7 +29,7 @@ class HelperFunctions {
             unitIndex--
         }
         value = Math.round( value * 100 ) / 100
-        return "${value} ${units[unitIndex]}"
+        return "${value} ${units[unitIndex]}${unit}"
     }
 
     static String convertBytesToReadableUnits(double value) {
