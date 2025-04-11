@@ -1,12 +1,35 @@
-package nextflow.co2footprint.utils
+
+/**
+ * This script defines utility classes and interfaces for working with bidirectional maps and matrix-like data structures.
+ *
+ * Classes and Interfaces:
+ * 1. **BiMap<K, V>**:
+ *    - A bidirectional map that maintains a one-to-one relationship between keys and values.
+ *    - Allows efficient lookups in both directions (key-to-value and value-to-key).
+ *    - Includes methods for adding, removing, and querying key-value pairs, as well as sorting and filtering.
+ *
+ * 2. **Matrix (Interface)**:
+ *    - Defines the structure for a matrix-like data structure.
+ *    - Includes methods for getting, setting, and selecting data entries.
+ *
+ * 3. **DataMatrix**:
+ *    - A concrete implementation of the `Matrix` interface.
+ *    - Represents a table-like data structure with rows and columns.
+ *    - Supports operations such as selecting subsets of rows/columns, saving/loading data to/from CSV files, and validating data integrity.
+ *
+ * @author Josua Carl <josua.carl@uni-tuebingen.de>
+ */
+ package nextflow.co2footprint.utils
 
 import java.nio.file.Path
 import java.nio.file.Files
 
+
+
 /**
- * Bidirectional Map with maintained K-V pairs in both directions
- * @param <K>
- * @param
+ * A Bidirectional Map (BiMap) that maintains a one-to-one relationship between keys and values.
+ * @param <K> The type of keys maintained by this map.
+ * @param <V> The type of values maintained by this map.
  *
  * @author Josua Carl <josua.carl@uni-tuebingen.de>
  */
@@ -26,6 +49,13 @@ class BiMap<K, V> {
         }
     }
 
+    /**
+    * Checks if this BiMap is equal to another object.
+    *
+    * @param other The object to compare with this BiMap.
+    * @return true if the other object is a BiMap and both the key-to-value map
+    *         and value-to-key map are equal; false otherwise.
+    */
     @Override
     boolean equals(Object other) {
         if ( other == null ) { return false }
@@ -142,7 +172,7 @@ interface Matrix {
     BiMap<Object, Integer> columnIndex = [:] as BiMap
     BiMap<Object, Integer> rowIndex = [:] as BiMap
 
-    // Select method
+    // Get method
     Object get(Object row, Object column, boolean rowRawIndex, boolean columnRawIndex)
 
     // Select method
@@ -162,6 +192,7 @@ class DataMatrix implements Matrix {
     protected BiMap<Object, Integer> columnIndex = [:] as BiMap
     protected BiMap<Object, Integer> rowIndex = [:] as BiMap
 
+    // Constructor
     DataMatrix(
             List<List> data = [],
             LinkedHashSet<Object> columnIndex = [],
@@ -186,6 +217,12 @@ class DataMatrix implements Matrix {
     }
 
     // Integrity tests
+
+    /**
+    * Ensures that all rows in the data matrix have the same length.
+    *
+    * @throws IllegalStateException if any row has a different length than the first row.
+    */
     void assertRowLengthEqual() throws IllegalStateException  {
        data.eachWithIndex { row, i ->
            if (row.size() != this.data[0].size()) {
@@ -196,6 +233,11 @@ class DataMatrix implements Matrix {
        }
     }
 
+    /**
+    * Ensures that the number of rows in the data matches the size of the row index.
+    *
+    * @throws IllegalStateException if the number of rows in the data does not match the size of the row index.
+    */
     private void assertRowIndexLengthMatches() throws IllegalStateException {
         if (this.data.size() != this.rowIndex.size()) {
             throw new IllegalStateException(
@@ -204,6 +246,11 @@ class DataMatrix implements Matrix {
         }
     }
 
+    /**
+    * Ensures that the number of columns in the data matches the size of the column index.
+    *
+    * @throws IllegalStateException if the number of columns in the data does not match the size of the column index.
+    */
     void assertColumnIndexLengthMatches() throws IllegalStateException  {
         if (this.data.size() == 0 && this.columnIndex.size() != 0) {
             throw new IllegalStateException(
@@ -215,7 +262,12 @@ class DataMatrix implements Matrix {
             )
         }
     }
-
+    
+    /**
+    * Validates the integrity of the data matrix by checking row lengths, row index size, and column index size.
+    *
+    * @throws IllegalStateException if any integrity check fails.
+    */
     void assertIntegrity() throws IllegalStateException  {
         assertRowLengthEqual()
 
@@ -223,6 +275,12 @@ class DataMatrix implements Matrix {
         assertColumnIndexLengthMatches()
     }
 
+    /**
+    * Checks if this DataMatrix is equal to another object.
+    *
+    * @param other The object to compare with this DataMatrix.
+    * @return true if the other object is a DataMatrix and has the same data, row index, and column index; false otherwise.
+    */
     @Override
     boolean equals(Object other) {
         if ( other == null ) { return false }
@@ -232,13 +290,22 @@ class DataMatrix implements Matrix {
         return false
     }
 
+    /**
+    * Checks if the DataMatrix contains data.
+    *
+    * @return true if the matrix has at least one row and one column; false otherwise.
+    */
     boolean asBoolean(){
         return this.data.size() != 0 && this.data[0].size() != 0
     }
 
     /**
-     * Collect indices via keys from a BiMap
-     */
+    * Collects indices from a BiMap based on the provided keys.
+    *
+    * @param keys The keys to collect indices for.
+    * @param bimap The BiMap to retrieve indices from.
+    * @return A list of indices corresponding to the provided keys.
+    */
     private static List<Integer> collectIndices(LinkedHashSet<Object> keys, BiMap<Object, Integer> bimap) {
         List<Integer> indices = keys.collect( { key -> bimap.getValue(key) } )
         indices.removeAll( {it == null })
@@ -246,8 +313,11 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Select rows of the DataMatrix
-     */
+    * Selects specific rows from the DataMatrix.
+    *
+    * @param rows The set of row keys to select.
+    * @return A new DataMatrix containing only the selected rows.
+    */
     private DataMatrix selectRows(LinkedHashSet<Object> rows){
         List<Integer> iList = collectIndices(rows, this.rowIndex)
         List<List<Object>> data = this.data[iList]
@@ -256,8 +326,11 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Select columns of the DataMatrix.
-     */
+    * Selects specific columns from the DataMatrix.
+    *
+    * @param columns The set of column keys to select.
+    * @return A new DataMatrix containing only the selected columns.
+    */
     private DataMatrix selectColumns(LinkedHashSet<Object> columns){
         // Collect indices
         List<Integer> iList = collectIndices(columns, this.columnIndex)
@@ -267,8 +340,12 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Select a part of the DataMatrix. If no value is given for an entry, everything is selected.
-     */
+    * Selects a subset of the DataMatrix based on specified rows and columns.
+    *
+    * @param rows The set of row keys to select (optional, defaults to all rows).
+    * @param columns The set of column keys to select (optional, defaults to all columns).
+    * @return A new DataMatrix containing the selected rows and columns.
+    */
     DataMatrix select(
             LinkedHashSet<Object> rows=null,
             LinkedHashSet<Object> columns=null
@@ -279,46 +356,59 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Get data entries as Lists.
-     */
+    * Retrieves the data of the DataMatrix as a list of lists.
+    *
+    * @return The data of the matrix.
+    */
     List<List> getData() {
         return this.data
     }
 
     /**
-     * Get row index.
-     */
+    * Retrieves the row index of the DataMatrix.
+    *
+    * @return The BiMap representing the row index.
+    */
     BiMap<Object, Integer> getRowIndex() {
         return this.rowIndex
     }
 
     /**
-     * Get column index.
-     */
+    * Retrieves the column index of the DataMatrix.
+    *
+    * @return The BiMap representing the column index.
+    */
     BiMap<Object, Integer> getColumnIndex() {
         return this.columnIndex
     }
 
     /**
-     * Return the Row Keys in data matrix order
-     * @return Row Keys in order
-     */
+    * Retrieves the row keys in the order they appear in the DataMatrix.
+    *
+    * @return A LinkedHashSet of row keys in order.
+    */
     LinkedHashSet getOrderedRowKeys() {
         return this.rowIndex.valueSet().sort().collect {i -> this.rowIndex.getKey(i)}
     }
 
     /**
-     * Return the Column Keys in data matrix order
-     * @return Column Keys in order
-     */
+    * Retrieves the column keys in the order they appear in the DataMatrix.
+    *
+    * @return A LinkedHashSet of column keys in order.
+    */
     LinkedHashSet getOrderedColumnKeys() {
         return this.columnIndex.valueSet().sort().collect {i -> this.columnIndex.getKey(i)}
     }
 
     /**
-     * Get data entries by specifying row and column that you want to access, as well as whether they are Integer
-     * indices.
-     */
+    * Retrieves a specific data entry from the DataMatrix.
+    *
+    * @param row The row key or index.
+    * @param column The column key or index.
+    * @param rowRawIndex Whether the row is specified as a raw index (default: false).
+    * @param columnRawIndex Whether the column is specified as a raw index (default: false).
+    * @return The data entry at the specified row and column.
+    */
     Object get(Object row, Object column, boolean rowRawIndex=false, boolean columnRawIndex=false) {
         row = rowRawIndex ? row as Integer : this.rowIndex.getValue(row)
         column = columnRawIndex ? column as Integer : this.columnIndex.getValue(column)
@@ -327,8 +417,14 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Set an entry to the specified value.
-     */
+    * Sets a specific data entry in the DataMatrix.
+    *
+    * @param value The value to set.
+    * @param row The row key or index.
+    * @param column The column key or index.
+    * @param rowRawIndex Whether the row is specified as a raw index (default: false).
+    * @param columnRawIndex Whether the column is specified as a raw index (default: false).
+    */
     void set(Object value, Object row, Object column, boolean rowRawIndex=false, boolean columnRawIndex=false) {
         row = rowRawIndex ? row as Integer : this.rowIndex.getValue(row)
         column = columnRawIndex ? column as Integer : this.columnIndex.getValue(column)
@@ -337,8 +433,11 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Save data with simple CSV format.
-     */
+    * Saves the DataMatrix to a CSV file.
+    *
+    * @param path The file path to save the CSV to.
+    * @param separator The separator to use in the CSV (default: ',').
+    */
     void saveCsv(Path path, String separator=',') {
         String csvString = ''
         BiMap<Object, Integer> sortedCols = this.columnIndex.sortByValues()
@@ -361,8 +460,11 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Infer simple numeric data types from String.
-     */
+    * Infers the type of a string (Integer, Double, or String).
+    *
+    * @param str The string to infer the type of.
+    * @return The inferred type (Integer, Double, or String).
+    */
     private static def inferTypeOfString(String str) {
         try { return Integer.parseInt(str) } catch(NumberFormatException ignore){ }
         try { return Double.parseDouble(str) } catch(NumberFormatException ignore){ }
@@ -370,8 +472,15 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Load data from simple CSV format.
-     */
+    * Loads a DataMatrix from a CSV file.
+    *
+    * @param path The file path to load the CSV from.
+    * @param separator The separator used in the CSV (default: ',').
+    * @param columnIndexPos The position of the column index row (default: 0).
+    * @param rowIndexPos The position of the row index column (optional).
+    * @param rowIndexColumn The name of the row index column (optional).
+    * @return A new DataMatrix loaded from the CSV file.
+    */
     static DataMatrix loadCsv(
             Path path, String separator=',',
             Integer columnIndexPos=0, Integer rowIndexPos=null,
@@ -425,8 +534,10 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Convert the class into a readable / printable String.
-     */
+    * Converts the DataMatrix into a readable string representation.
+    *
+    * @return A string representation of the DataMatrix.
+    */
     String toString() {
         List<Object> sortedColumnsIndex = getOrderedColumnKeys()
         String stringRepresentation = "\t\t${sortedColumnsIndex.toString()}"
