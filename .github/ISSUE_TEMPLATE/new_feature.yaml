@@ -1,0 +1,42 @@
+name: Feature request
+description: Give us a suggestion on what to implement in future releases.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Pleased to hear your suggestions :)
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the feature
+      description:
+        A short description on what the feature is.
+      placeholder: |
+        I would like to get more :banana:.
+    validations:
+      required: true
+
+  - type: textarea
+    id: use
+    attributes:
+      label: "Use case(s):"
+      description:
+        When would your feature be useful?
+      placeholder: |
+        When I am hungry?
+    validations:
+      required: false
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: "Suggested implementation:"
+      description:
+        How should we implement this?
+      placeholder: |
+        Just grow more :banana: on trees and give them to me.
+    validations:
+      required: false

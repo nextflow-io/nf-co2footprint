@@ -1,0 +1,155 @@
+name: Bug Report
+description: File a report about something that went wrong.
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping us improve. Please be direct, but polite :)
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description:
+        A short description on what the bug is.
+      placeholder: |
+        My effort to fetch some bananas did give me fruits that I could not eat.
+    validations:
+      required: true
+
+  - type: textarea
+    id: happening
+    attributes:
+      label: What happened?
+      description:
+        Describe what happened. You may include error messages here.
+      placeholder: |
+        When I tried to run `fetch banana --amount 3`, I noticed that the **bananas** I got were still very much green (see *image_1.png*), indicating that they should not be eaten.
+    validations:
+      required: false
+
+  - type: textarea
+    id: expectation
+    attributes:
+      label: What should have happened?
+      description:
+        What did you expect to happen?
+      placeholder: |
+        I just wanted some ripe bananas.
+    validations:
+      required: false
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction of the problem
+      description:
+        What are steps for us to see what problem you are facing? In an ideal world you would provide a minimal example. You may also attach example data if necessary.
+      placeholder: |
+        1. Install `banana-tree` via `planting`
+        2. Run `fetch banana --amount 1` (produces same result)
+        3. Inspect the color (my banana was close to \#51a03d)
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: In what computing environment did the problem occur?
+      description: |
+        <details>
+          <summary>Need help with that ?</summary>
+          <details>
+          <summary>How to get the <code>nf-co2footprint</code> plugin version:</summary>
+          <ul>
+            <li>Option 1: 
+              <ul>
+                <li>Report the version behind the `@` in following command:<br>
+                <code>nextflow config | grep nf-co2footprint</code>
+                </li>
+              </ul>
+            </li>
+            <li>Option 2:
+              <ul>
+                <li>Run a small pipeline to get the version that is downloaded with no further specification.<br>
+                <code>nextflow run nextflow-io/hello -plugins nf-co2footprint | grep nf-co2footprint</code>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          </details>
+          <details>
+          <summary>How to get the Nextflow version:</summary>
+          <ul>
+            <li>Option 1: 
+              <ul>
+                <li>Run the following script:<br>
+                <code>nextflow -version</code>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          </details>
+          <details>
+          <summary>How to get the Java version:</summary>
+          <ul>
+            <li>Option 1: 
+              <ul>
+                <li>Run the following script:<br>
+                <code>java --version</code>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          </details>
+          <details>
+          <summary>How to get the Groovy version:</summary>
+          <ul>
+            <li>Option 1: 
+              <ul>
+                <li>Run the following script:<br>
+                <code>groovy --version</code>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          </details>
+          <details>
+          <summary>How to get the Shell version:</summary>
+          <ul>
+            <li>Option 1: 
+              <ul>
+                <li>Run the following script:<br>
+                <code>$SHELL --version</code>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          </details>
+          <details>
+          <summary>How to get the OS version:</summary>
+          <ul>
+            <li>OS-specific. But chances are, that you at least know whether you sit in front of a Mac, Windows or Linux.
+                But if you want you may give us your <code>screenfetch</code> as a screenshot, if you make sure to omit personal info.
+            </li>
+          </ul>
+          </details>
+        </details>
+      placeholder: |
+        - Plugin version: 1.0.0-beta
+        - Nextflow version: 25.8.0-edge
+        - Java version: openjdk 17.0.14
+        - Groovy version: 4.0.25 JVM: 17.0.11
+        - Shell version: zsh 5.9
+        - Operating system (OS) version: 64bit macOS, Kernel: x86_64 Darwin 24.4.0
+      value: |
+        - Plugin version:
+        - Nextflow version:
+        - Java version:
+        - Groovy version:
+        - Shell version:
+        - Operating system (OS) version:
+    validations:
+      required: false
