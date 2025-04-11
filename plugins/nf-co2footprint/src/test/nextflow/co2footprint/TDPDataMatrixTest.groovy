@@ -47,7 +47,6 @@ class TDPDataMatrixTest extends Specification {
         logger = lc.getLogger(TDPDataMatrix)
     }
 
-
     def setup() {
         listAppender.start()
         logger.addAppender(listAppender)

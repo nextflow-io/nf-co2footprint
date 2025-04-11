@@ -47,7 +47,6 @@ class LoggerTestClass {
     }
 }
 
-
 /**
  * Test the Logging  (especially the definition of a Duplication TurboFilter in logback-test.xml)
  */
@@ -111,7 +110,6 @@ class LoggingTest extends Specification {
         listAppender.list.size() == 3
         listAppender.list.collect({it as String}) as Set ==
                 ['[DEBUG] Debug', '[INFO] Info', '[ERROR] Error'].collect({"${it} message" as String}) as Set
-
     }
 }
 

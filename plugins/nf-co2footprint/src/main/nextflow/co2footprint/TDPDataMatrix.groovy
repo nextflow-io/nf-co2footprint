@@ -60,6 +60,7 @@ class TDPDataMatrix extends DataMatrix {
      * @return DataMatrix with one entry, representing the model
      */
     TDPDataMatrix matchModel(String model, Boolean fallbackToDefault=true, String originalModel=model) {
+        model = model ?: ''
         // Construct regular expression to address potential differences in exact name matching
         String modelRegex = toASCII(model, Matcher.quoteReplacement('\\s?'))                          // Convert to ASCII
                 .toLowerCase()                                                        // Convert to lower case
