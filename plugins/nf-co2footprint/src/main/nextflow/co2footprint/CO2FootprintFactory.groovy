@@ -16,12 +16,15 @@
 
 package nextflow.co2footprint
 
+import nextflow.co2footprint.utils.DeduplicateMarkerFilter
+import nextflow.co2footprint.utils.Markers
 import nextflow.co2footprint.utils.HelperFunctions
 
 import groovy.text.GStringTemplateEngine
 import groovy.transform.PackageScope
 import groovy.transform.PackageScopeTarget
 import groovyx.gpars.agent.Agent
+
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskProcessor
 import nextflow.script.WorkflowMetadata
@@ -32,11 +35,15 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
 import nextflow.Session
 import nextflow.trace.TraceObserver
 import nextflow.trace.TraceObserverFactory
 import nextflow.processor.TaskId
+
+import groovy.util.logging.Slf4j
+import org.slf4j.LoggerFactory
+import ch.qos.logback.classic.LoggerContext
+import ch.qos.logback.classic.turbo.TurboFilter
 
 import java.nio.file.Paths
 import java.util.concurrent.ConcurrentHashMap
@@ -52,11 +59,18 @@ import java.util.concurrent.ConcurrentHashMap
 class CO2FootprintFactory implements TraceObserverFactory {
 
     private String version
-    // Handle logging messages
-    private List<String> warnings = []
 
-    boolean hasWarnings() { warnings.size() > 0 }
-    List<String> getWarnings() { warnings }
+    /**
+     * Logging:
+     * Removes duplicates in some warnings, to avoid cluttering the output with repeated information.
+     * Example: If the CPU model is not found it should only be warned once, that a fallback value is used.
+     */
+    static {
+        LoggerContext lc = LoggerFactory.getILoggerFactory() as LoggerContext   // Get Logging Context
+        TurboFilter dmf = new DeduplicateMarkerFilter([Markers.unique])         // Define DeduplicateMarkerFilter
+        dmf.start()
+        lc.addTurboFilter(dmf)                                                  // Add filter to context
+    }
 
     private CO2FootprintConfig config
     private Session session
@@ -101,6 +115,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, ciDataMatrix, config)
 
         final result = new ArrayList(2)
+
         // Generate CO2 footprint text output files
         def co2eTraceFile = (this.config.getTraceFile() as Path).complete()
         def co2eSummaryFile = (this.config.getSummaryFile() as Path).complete()
@@ -113,7 +128,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
         return result
     }
-
 
     /**
      * Class to generate text output
@@ -237,13 +251,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
             current.values().each { co2eTraceFile.println("${it.taskId}\t-") }
             co2eTraceFile.flush()
             co2eTraceFile.close()
-
-            // Log warnings
-            if( hasWarnings() ) {
-                def filteredWarnings = getWarnings().unique( false )
-                def msg = "\033[0;33mThe nf-co2footprint plugin generated the following warnings during the execution of the workflow:\n\t- " + filteredWarnings.join('\n\t- ').trim() + "\n\033[0m"
-                log.warn(msg)
-            }
         }
 
         @Override
