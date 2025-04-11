@@ -16,6 +16,8 @@
 
 package nextflow.co2footprint
 
+import nextflow.co2footprint.utils.DeduplicateMarkerFilter
+import nextflow.co2footprint.utils.Markers
 import nextflow.co2footprint.utils.HelperFunctions
 
 import groovy.text.GStringTemplateEngine
@@ -41,7 +43,6 @@ import nextflow.processor.TaskId
 import groovy.util.logging.Slf4j
 import org.slf4j.LoggerFactory
 import ch.qos.logback.classic.LoggerContext
-import ch.qos.logback.classic.turbo.DuplicateMessageFilter
 import ch.qos.logback.classic.turbo.TurboFilter
 
 import java.nio.file.Paths
@@ -61,11 +62,14 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
     private String version
 
-    // Logging
+    /**
+     * Logging:
+     * Removes duplicates in some warnings, to avoid cluttering the output with repeated information.
+     * Example: If the CPU model is not found it should only be warned once, that a fallback value is used.
+     */
     static {
-        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory()    // Get Logging Context
-        TurboFilter dmf = new DuplicateMessageFilter()                          // Define DuplicateMessageFilter
-        dmf.setAllowedRepetitions(0)
+        LoggerContext lc = LoggerFactory.getILoggerFactory() as LoggerContext   // Get Logging Context
+        TurboFilter dmf = new DeduplicateMarkerFilter([Markers.unique])         // Define DeduplicateMarkerFilter
         dmf.start()
         lc.addTurboFilter(dmf)                                                  // Add filter to context
     }
@@ -132,12 +136,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // PSF: pragmatic scaling factor -> not used here since we aim at the CO2e of one pipeline run
         // Factor 0.001 needed to convert Pc and Pm from W to kW
 
-
-        // Detect OS
-        OperatingSystemMXBean OS = { (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean() }()
-        // Total Memory
-        Long max_memory = OS.getTotalMemorySize() as Long
-
         // t: runtime in hours
         Double realtime = trace.get('realtime') as Double
         Double t = realtime/3600000 as Double
@@ -168,14 +166,23 @@ class CO2FootprintFactory implements TraceObserverFactory {
         /**
          * Factors of memory power usage
          */
-        // nm: size of memory available [GB] -> requested memory
-        Long memory = trace.get('memory') as Long
-        if ( memory == null || trace.get('peak_rss') as Double > memory) {
-            log.warn('The required memory exceeds user requested memory, therefore setting to maximum available memory!')
-            memory = max_memory
+        // Detect OS
+        OperatingSystemMXBean OS = { (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean() }()
+        // Total Memory
+        Long availableMemory = OS.getTotalMemorySize() as Long
+        Long requestedMemory = trace.get('memory') as Long
+        Long requiredMemory = trace.get('peak_rss') as Long
+        if ( requestedMemory == null || requiredMemory > requestedMemory) {
+            log.warn(
+                    "The required memory (${requiredMemory/(1024**3)} GB) for the task" +
+                    " exceeds the requested memory (${requestedMemory/(1024**3)} GB)." +
+                    "Setting requested to maximum available memory (${availableMemory/(1024**3)} GB)."
+            )
+            requestedMemory = availableMemory
         }
 
-        Double nm = memory/(1024**3) as Double
+        // nm: size of memory available [GB] -> requested memory
+        Double nm = requestedMemory/(1024**3) as Double
         // TODO handle if more memory/cpus used than requested?
 
         // Pm: power draw of memory [W per GB]
@@ -205,7 +212,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
         // TODO: Only a workaround. Like this the memory is only full precision until 999TB of GB.
         // The cast is still necessary, as the output expects a List<Double> which worked with Groovy3 but not Groovy4
-        Double mem_double = memory as Double
+        Double mem_double = requestedMemory as Double
 
         return [e, c, realtime, nc, pc, uc, mem_double]
     }

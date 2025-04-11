@@ -1,6 +1,7 @@
 package nextflow.co2footprint
 
 import nextflow.co2footprint.utils.DataMatrix
+import nextflow.co2footprint.utils.Markers
 
 import groovy.util.logging.Slf4j
 
@@ -61,16 +62,16 @@ class TDPDataMatrix extends DataMatrix {
     TDPDataMatrix matchModel(String model, Boolean fallbackToDefault=true, String originalModel=model) {
         model = model ?: ''
         // Construct regular expression to address potential differences in exact name matching
-        String modelRegex = toASCII(model, Matcher.quoteReplacement('\\s?'))                        // Convert to ASCII
-                .toLowerCase()                                                                         // Convert to lower case
-                .replaceAll('\\(r\\)|\\(tm\\)|\\(c\\)', Matcher.quoteReplacement('\\s?'))    // Replace ASCII surrogates
-                .replaceAll(' ?processors? ?', '')                                   // make 'processor(s)' optional
-                .replaceAll('\\s(?!\\?)', Matcher.quoteReplacement('\\s*'))                  // make whitespaces optional
+        String modelRegex = toASCII(model, Matcher.quoteReplacement('\\s?'))                          // Convert to ASCII
+                .toLowerCase()                                                        // Convert to lower case
+                .replaceAll('\\(r\\)|\\(tm\\)|\\(c\\)', Matcher.quoteReplacement('\\s?'))      // Replace ASCII surrogates
+                .replaceAll(' ?(processor|cpu)s? ?', '')                  // make 'processor/cpu(s)' optional
+                .replaceAll('\\s(?!\\?)', Matcher.quoteReplacement('\\s*'))                     // make whitespaces optional
 
         // Find matches against index
         List matches = this.rowIndex.filterKeys { String str ->
-                str = str.toLowerCase()      // Convert to lower case
-                    .replaceAll(' ?processors? ?', '')              // make 'processor(s)' optional
+                str = str.toLowerCase()                                               // Convert to lower case
+                    .replaceAll(' ?(processor|cpu)s? ?', '')        // make 'processor(s)/cpu' optional
                 str.matches(modelRegex)
         }
 
@@ -91,6 +92,7 @@ class TDPDataMatrix extends DataMatrix {
         else if (fallbackToDefault) {
             modelData = select([this.fallbackModel] as LinkedHashSet)
             log.warn(
+                    Markers.unique,
                     "Could not find CPU model \"${originalModel}\" in given TDP data table. " +
                     "Using ${this.fallbackModel} CPU power draw value (${getTDP(modelData)} W)."
             )
