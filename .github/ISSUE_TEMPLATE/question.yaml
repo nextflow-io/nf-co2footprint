@@ -1,7 +1,7 @@
 name: Question
 description: Ask a question that needs answering.
 title: "[Q/A]: "
-labels: ["question"]
+labels: ["❔ question"]
 body:
   - type: markdown
     attributes:

@@ -1,7 +1,7 @@
 name: Feature request
 description: Give us a suggestion on what to implement in future releases.
 title: "[Feature]: "
-labels: ["enhancement"]
+labels: ["💎 enhancement"]
 body:
   - type: markdown
     attributes:
