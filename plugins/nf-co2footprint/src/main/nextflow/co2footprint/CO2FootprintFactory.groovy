@@ -75,7 +75,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
             Paths.get(this.class.getResource('/CPU_TDP.csv').toURI())
     )
 
-    private final CIDataMatrix ciDataMatrix = null
+
+    private final CIDataMatrix ciDataMatrix = CIDataMatrix.loadCsv(
+            Paths.get(this.class.getResource('/fallbackCIDataTable.csv').toURI())
+    )
 
     @Override
     Collection<TraceObserver> create(Session session) {
@@ -85,6 +88,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         CO2FootprintConfig config = new CO2FootprintConfig(
                 session.config.navigate('co2footprint') as Map,
                 this.tdpDataMatrix,
+                this.ciDataMatrix,
                 session.config.navigate('process') as Map
         )
 
