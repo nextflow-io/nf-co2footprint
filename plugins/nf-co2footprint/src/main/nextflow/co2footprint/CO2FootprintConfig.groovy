@@ -36,62 +36,35 @@ class CO2FootprintConfig {
     private String  summaryFile = "co2footprint_summary_${timestamp}.txt"
     private String  reportFile = "co2footprint_report_${timestamp}.html"
     private String  location = null
-    private Double  ci = 475                // CI: carbon intensity
+    private Closure<Double> ci = null       // CI: carbon intensity
+    private String  apiKey = null           // API key for electricityMaps 
     private Double  pue = 1.67              // PUE: power usage effectiveness efficiency, coefficient of the data centre
     private Double  powerdrawMem = 0.3725   // Power draw of memory [W per GB]
     private Boolean ignoreCpuModel = false
     private Double  powerdrawCpuDefault = 12.0
     private String  customCpuTdpFile = null
 
-    /**
-     * Retrieve carbon intensity (CI) value from file containing CI values for different locations
-     *
-     * @param location Location as a country-code String
-     * @return CI at location
-     */
-    protected Double retrieveCi(String location) {
-        def dataReader = new InputStreamReader(this.class.getResourceAsStream('/CI_aggregated.v2.2.csv'))
 
-        Double localCi = 0.0
-        String line
-        while ( line = dataReader.readLine() ) {
-            def row = line.split(",")
-            if (row[0] == location) {
-                localCi = row[4].toDouble()
-                break
-            }
-        }
-        dataReader.close()
-        if (localCi == 0.0) {
-            throw new IllegalArgumentException("Invalid 'location' parameter: $location. Could not be found in 'CI_aggregated.v2.2.csv'.")
-        }
-
-        return localCi
-    }
-
-    /**
-     * Sanity checks for configuration map
-     * @param config configuration map
-     */
-    private static checkConfig(Map configMap) {
-        if (configMap.ci && configMap.location) {
-            throw new IllegalArgumentException("Invalid combination of 'ci' and 'location' parameters specified for the CO2Footprint plugin. Please specify either 'ci' or 'location'!")
-        }
-    }
-
-    CO2FootprintConfig(Map<String, Object> configMap, TDPDataMatrix cpuData){
+    CO2FootprintConfig(Map<String, Object> configMap, TDPDataMatrix cpuData, CIDataMatrix ciData) {
         configMap = configMap as ConcurrentHashMap<String, Object> ?: [:]
-
-        // Sanity checking
-        checkConfig(configMap)
 
         // Assign values from map to config
         configMap.keySet().each { name  ->
             this.setProperty(name, configMap.remove(name))
         }
 
-        // Reassign CI from location
-        ci = location ? retrieveCi(location) : ci
+        // Determine the carbon intensity (CI) value
+        if (ci != null && ci instanceof Number) {
+            // Use the provided CI value if it's not null and is a number
+            log.info("Using provided carbon intensity (CI) value: ${ci}")
+            this.ci = { -> ci }
+        } else {
+            // Create an instance of GetCIvalue and determine carbon intensity
+            def ciValueComputer = new CIValueComputer(apiKey, location, ciData)
+            this.ci = ciValueComputer.getCI()
+        }
+
+
 
         // Reassign default CPU from config
         if (powerdrawCpuDefault) {
@@ -119,7 +92,7 @@ class CO2FootprintConfig {
     String getReportFile() { reportFile }
     Boolean getIgnoreCpuModel() { ignoreCpuModel }
     String getLocation() { location }
-    Double getCi() { ci }
+    Double getCi() { this.ci() }
     Double getPue() { pue }
     Double getPowerdrawMem() { powerdrawMem }
     Double getPowerdrawCpuDefault() { powerdrawCpuDefault }
