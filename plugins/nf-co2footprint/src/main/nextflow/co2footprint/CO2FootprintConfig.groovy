@@ -5,10 +5,9 @@ import groovy.util.logging.Slf4j
 import nextflow.trace.TraceHelper
 
 import java.nio.file.Paths
-import java.util.concurrent.ConcurrentHashMap
 
 /**
- * This class allows to model an specific configuration, extracting values from a map and converting 
+ * This class allows to model a specific configuration, extracting values from a map and converting
  *
  * In this plugin, the user can configure the output file names of the CO2 footprint calculations
  *
@@ -37,7 +36,7 @@ class CO2FootprintConfig {
     private String  reportFile = "co2footprint_report_${timestamp}.html"
     private String  location = null
     private def     ci = null               // CI: carbon intensity
-    private String  apiKey = null           // API key for electricityMaps 
+    private String  apiKey = null           // API key for electricityMaps
     private Double  pue = null              // PUE: power usage effectiveness efficiency, coefficient of the data centre
     private Double  powerdrawMem = 0.3725   // Power draw of memory [W per GB]
     private Boolean ignoreCpuModel = false
@@ -56,7 +55,7 @@ class CO2FootprintConfig {
     String getLocation() { location }
     Double getCi() {
         (ci instanceof Closure) ? ci() : ci
-    }  
+    }
     Double getPue() { pue }
     Boolean getIgnoreCpuModel() { ignoreCpuModel }
     Double getPowerdrawCpuDefault() { powerdrawCpuDefault }
@@ -68,17 +67,17 @@ class CO2FootprintConfig {
     CO2FootprintConfig(Map<String, Object> configMap, TDPDataMatrix cpuData, CIDataMatrix ciData, Map<String, Object> processMap) {
         // Ensure configMap is not null
         configMap ?= [:]
-        
+
         // Assign values from map to config
         configMap.each { name, value ->
             if (this.hasProperty(name)) {
-                this.setProperty(name, value) 
+                this.setProperty(name, value)
             } else {
                 // Log warning and skip the key
                 log.warn("Skipping unknown configuration key: '${name}'")
             }
         }
-        
+
         // Determine the carbon intensity (CI) value
         if (ci == null) {
 
