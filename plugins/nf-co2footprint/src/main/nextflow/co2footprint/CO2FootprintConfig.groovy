@@ -31,18 +31,23 @@ import java.util.concurrent.ConcurrentHashMap
 @PackageScope
 class CO2FootprintConfig {
 
+    // .config parameters
     private String  timestamp = TraceHelper.launchTimestampFmt()
     private String  traceFile = "co2footprint_trace_${timestamp}.txt"
     private String  summaryFile = "co2footprint_summary_${timestamp}.txt"
     private String  reportFile = "co2footprint_report_${timestamp}.html"
     private String  location = null
-    private Double  ci = null                // CI: carbon intensity
-    private final Double  default_ci = 475
-    private Double  pue = 1.67              // PUE: power usage effectiveness efficiency, coefficient of the data centre
+    private Double  ci = null               // CI: carbon intensity
+    private Double  pue = null              // PUE: power usage effectiveness efficiency, coefficient of the data centre
     private Double  powerdrawMem = 0.3725   // Power draw of memory [W per GB]
     private Boolean ignoreCpuModel = false
     private Double  powerdrawCpuDefault = null
     private String  customCpuTdpFile = null
+    private String  machineType = null      // Type of computer on which the workflow is run ['server', 'local', '']
+
+    // Constants
+    private final Double  default_ci = 475
+    private final List<String> supportedMachineTypes = ['server', 'local']
 
     /**
      * Retrieve carbon intensity (CI) value from file containing CI values for different locations
@@ -85,10 +90,34 @@ class CO2FootprintConfig {
                     'The \'ci\' value will take precedence, ignoring the \'location\'.'
             )
         }
+
+        // Keeps ci if already defined, if not uses location if given, fallback to default_ci
         ci ?= location ? retrieveCi(location) : default_ci
 
-        // Reassign default CPU from config
-        if (powerdrawCpuDefault) { cpuData.set(powerdrawCpuDefault, 'default', 'tdp (W)') }
+        // Assign PUE if not already given
+        pue ?= switch (machineType) {
+            case 'local' ->  1.0
+            case 'server' -> 1.67
+            default -> 1.67
+        }
+
+        // Reassign values based on machineType
+        if (machineType) {
+            if (supportedMachineTypes.contains(machineType)) {
+                cpuData.fallbackModel = "default $machineType"
+            }
+            else {
+                log.warn(
+                        "machineType '${machineType}' is not supported. Please chose one of ${supportedMachineTypes}." +
+                        "Using fallbacks: pue=${pue} & fallbackModel=${cpuData.fallbackModel}."
+                )
+            }
+        }
+
+        // Set default value if given
+        if (powerdrawCpuDefault) {
+            cpuData.set(powerdrawCpuDefault, cpuData.fallbackModel, 'tdp (W)')
+        }
 
         // Use custom TDP file
         if (customCpuTdpFile) { cpuData.update( TDPDataMatrix.loadCsv(Paths.get(customCpuTdpFile as String)) ) }
