@@ -38,7 +38,7 @@ class CO2FootprintSummary extends CO2FootprintFile {
      * @param config CO2FootprintConfiguration
      * @return
      */
-    void close(Double total_energy, Double total_co2, CO2EquivalencesRecord equivalences, CO2FootprintConfig config) {
+    void close(Double total_energy, Double total_co2, CO2EquivalencesRecord equivalences, CO2FootprintConfig config, String version) {
         // launch the agent
         summaryWriter = new Agent<PrintWriter>(co2eSummaryFile)
 
@@ -56,7 +56,7 @@ class CO2FootprintSummary extends CO2FootprintFile {
         }
 
         outText += """\
-
+        \n
         The calculation of these values is based on the carbon footprint computation method developed in the Green Algorithms project.
         Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation. Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707
 
@@ -64,9 +64,9 @@ class CO2FootprintSummary extends CO2FootprintFile {
 
         nf-co2footprint options:
         """.stripIndent()
-        config.collectInputFileOptions().each { outText += "${it.key}: ${it.value}" }
-        config.collectOutputFileOptions().each { outText += "${it.key}: ${it.value}" }
-        config.collectCO2CalcOptions().each { outText += "${it.key}: ${it.value}" }
+        config.collectInputFileOptions().each { key, value -> outText += "${key}: ${value}\n" }
+        config.collectOutputFileOptions().each {key, value ->  outText += "${key}: ${value}\n" }
+        config.collectCO2CalcOptions().each { key, value -> outText += "${key}: ${value}\n" }
 
         co2eSummaryFile.print(outText)
 

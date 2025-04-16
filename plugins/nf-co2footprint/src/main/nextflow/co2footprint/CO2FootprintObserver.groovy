@@ -38,7 +38,7 @@ class CO2FootprintObserver implements TraceObserver {
     /**
      * The path where the files are created. It is set by the object constructor
      */
-    private Map<String, Path> paths
+    private Map<String, Path> paths = [:]
 
     /**
      * The actual file object
@@ -69,9 +69,11 @@ class CO2FootprintObserver implements TraceObserver {
     private CO2FootprintResourcesAggregator aggregator
 
     /**
-     * Compute the CO2 emissions
+     * Computer for the CO2 emissions
      */
     private CO2FootprintComputer co2FootprintComputer
+
+    CO2FootprintComputer getCO2FootprintComputer() { co2FootprintComputer }
 
     /**
      * Holds the the start time for tasks started/submitted but not yet completed
@@ -83,6 +85,8 @@ class CO2FootprintObserver implements TraceObserver {
      * CO2 emission Records with task IDs
      */
     final private Map<TaskId,CO2Record> co2eRecords = new ConcurrentHashMap<>()
+
+    Map<TaskId,CO2Record> getCO2eRecords() { co2eRecords }
 
 
     /**
@@ -107,6 +111,7 @@ class CO2FootprintObserver implements TraceObserver {
     ) {
         this.session = session
         this.version = version
+        this.config = config
 
         // Generate CO2 footprint output files (trace, text, HTML report)
         this.paths['co2eTrace'] = (config.getTraceFile() as Path).complete()
@@ -188,7 +193,7 @@ class CO2FootprintObserver implements TraceObserver {
         CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(total_co2)
 
         co2eTraceFile.close(current)
-        co2eTextFile.close(total_energy, total_co2, equivalences, config)
+        co2eTextFile.close(total_energy, total_co2, equivalences, config, version)
         co2eReportFile.close(total_energy, total_co2, equivalences, aggregator, config, version, session, traceRecords, co2eRecords)
     }
 
@@ -258,16 +263,17 @@ class CO2FootprintObserver implements TraceObserver {
         // remove the record from the current records
         current.remove(taskId)
 
-        synchronized (traceRecords) {
-            traceRecords[ trace.taskId ] = trace
-            aggregator.aggregate(co2eRecords[ trace.taskId ], trace.getSimpleName())
-        }
-
         // Extract CO2e records
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace)
 
         // Collect results
         co2eRecords[taskId] = co2Record
+
+        // Aggregate results
+        synchronized (traceRecords) {
+            traceRecords[ trace.taskId ] = trace
+            aggregator.aggregate(co2Record, trace.getSimpleName())
+        }
 
         // save to files
         co2eTraceFile.write(taskId, trace, co2Record)
@@ -287,16 +293,18 @@ class CO2FootprintObserver implements TraceObserver {
         // event was triggered by a stored task, ignore it
         if (trace == null) { return }
 
-        synchronized (traceRecords) {
-            traceRecords[ trace.taskId ] = trace
-            aggregator.aggregate(co2eRecords[ trace.taskId ], trace.getSimpleName())
-        }
-
         // Extract records
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace)
 
         // Collect results
         co2eRecords[taskId] = co2Record
+
+        // Aggregate results
+        synchronized (traceRecords) {
+            traceRecords[ trace.taskId ] = trace
+            aggregator.aggregate(co2Record, trace.getSimpleName())
+        }
+
 
         // save to the files
         co2eTraceFile.write(taskId, trace, co2Record)

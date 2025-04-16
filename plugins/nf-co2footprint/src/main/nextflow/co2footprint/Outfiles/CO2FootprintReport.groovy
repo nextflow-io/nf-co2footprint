@@ -16,6 +16,7 @@ import nextflow.trace.TraceHelper
 import nextflow.trace.TraceRecord
 
 import java.nio.file.Path
+import java.nio.file.Paths
 
 
 @Slf4j
@@ -80,7 +81,7 @@ class CO2FootprintReport extends CO2FootprintFile{
         this.co2eRecords = co2eRecords
 
         try {
-            renderHtml()
+            String html_output = renderHtml()
 
             BufferedWriter writer = TraceHelper.newFileWriter(path, overwrite, 'Report')
             writer.withWriter { w -> w << html_output }
@@ -127,10 +128,10 @@ class CO2FootprintReport extends CO2FootprintFile{
                 ],
                 options : renderOptionsJson()
         ]
-        String tpl = readTemplate('CO2FootprintReportTemplate.html')
+        final String tpl = readTemplate('CO2FootprintReportTemplate.html')
         GStringTemplateEngine engine = new GStringTemplateEngine()
         Template html_template = engine.createTemplate(tpl)
-        String html_output = html_template.make(tpl_fields).toString()
+        String html_output = html_template.make(tpl_fields) as String
 
         return html_output
     }
