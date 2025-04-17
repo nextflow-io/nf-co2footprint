@@ -43,6 +43,20 @@ class TDPDataMatrix extends DataMatrix {
         this.threads = threads
     }
 
+
+    static TDPDataMatrix fromCsv(
+            Path path, String separator = ',', Integer columnIndexPos = 0, Integer rowIndexPos = null,
+            Object rowIndexColumn = 'name'
+    ) throws IOException {
+        Map<String, Object> parsedCsv = DataMatrix.readCsv(path, separator, columnIndexPos, rowIndexPos, rowIndexColumn)
+        return new TDPDataMatrix(
+                parsedCsv.data,
+                parsedCsv.columnIndex.collect {toASCII(it)} as LinkedHashSet,
+                parsedCsv.rowIndex.collect {toASCII(it)} as LinkedHashSet
+        )
+    }
+
+
     /**
     * Create a TDPDataMatrix from a CSV file.
     *

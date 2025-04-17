@@ -6,7 +6,6 @@ import java.nio.file.Path
 import groovy.util.logging.Slf4j
 import nextflow.co2footprint.utils.Markers
 import groovy.json.JsonSlurper
-import org.slf4j.MarkerFactory
 
 /**
  * Structure for the carbon intensity (CI) values.
@@ -56,7 +55,7 @@ class CIDataMatrix extends DataMatrix {
     }
 
 
-    
+
     /**
      * Retrieves the carbon intensity value for a given zone from the matrix.
      *
@@ -117,7 +116,7 @@ class CIValueComputer {
     protected Double getRealtimeCI() {
         // Build the API URL
         URL url = new URL("https://api.electricitymap.org/v3/carbon-intensity/latest?zone=${this.location}")
-        
+
         // Open the connection
         HttpURLConnection connection = (HttpURLConnection) url.openConnection()
         connection.setRequestProperty("auth-token", this.apiKey)
@@ -131,7 +130,7 @@ class CIValueComputer {
             // Parse the successful API response
             json = new JsonSlurper().parse(connection.inputStream)
             ci = json['carbonIntensity'] as Double
-            
+
             log.info(Markers.unique,"API call successful. Response code: ${connection.responseCode} (${connection.responseMessage})")
         } else {
             // Handle API error response
@@ -139,7 +138,7 @@ class CIValueComputer {
             String errorMessage = new JsonSlurper().parseText(errorResponse).message
 
             log.warn(Markers.unique, "API call failed. Response code: ${connection.responseCode} (${errorMessage})")
-            
+
             // Fallback to the location in the CSV
             ci = this.ciData.findCiInMatrix(this.location)
             // Fallback to the global default value if no value is found for the location
@@ -189,4 +188,3 @@ class CIValueComputer {
         return ci
     }
 }
-
