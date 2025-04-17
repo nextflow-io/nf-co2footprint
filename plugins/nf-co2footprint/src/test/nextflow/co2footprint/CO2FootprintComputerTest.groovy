@@ -28,103 +28,30 @@ class CO2FootprintComputerTest extends Specification{
 
     // ------ CO2 Calculation ------
 
-    def 'test co2e calculation' () {
+    def "CO2e calculation for various configurations"() {
         given:
         def traceRecord = new TraceRecord()
         traceRecord.realtime = (1 as Long) * (3600000 as Long)
         traceRecord.cpus = 1
-        traceRecord.cpu_model = "Unknown model"
+        traceRecord.cpu_model = cpuModel
         traceRecord.'%cpu' = 100.0
         traceRecord.memory = (7 as Long) * (1024**3 as Long)
 
-        CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, [:])
+        CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdpDataMatrix, [:])
         CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord)
 
         expect:
-        // Energy consumption converted to Wh and compared to result from www.green-algorithms.org
-        round(co2Record.getEnergyConsumption()/1000) == 14.61
-        // CO2 converted to g
-        round(co2Record.getCO2e()/1000) == 6.94
-    }
+        round(co2Record.getEnergyConsumption()/1000) == expectedEnergy
+        round(co2Record.getCO2e()/1000) == expectedCO2
 
-    def 'test co2e calculation for specific cpu_model' () {
-        given:
-        def traceRecord = new TraceRecord()
-        traceRecord.realtime = (1 as Long) * (3600000 as Long)
-        traceRecord.cpus = 1
-        traceRecord.cpu_model = "AMD EPYC 7251"
-        traceRecord.'%cpu' = 100.0
-        traceRecord.memory = (7 as Long) * (1024**3 as Long)
-
-        CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, [:])
-        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
-        CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord)
-
-        expect:
-        // Energy consumption converted to Wh and compared to result from www.green-algorithms.org
-        round(co2Record.getEnergyConsumption()/1000) == 17.61
-        // CO2 in g
-        round(co2Record.getCO2e()/1000) == 8.36
-    }
-
-    def 'test co2e calculation with non-default pue' () {
-        given:
-        def traceRecord = new TraceRecord()
-        traceRecord.realtime = (1 as Long) * (3600000 as Long)
-        traceRecord.cpus = 1
-        traceRecord.cpu_model = "Unknown model"
-        traceRecord.'%cpu' = 100.0
-        traceRecord.memory = (7 as Long) * (1024**3 as Long)
-
-        CO2FootprintConfig config = new CO2FootprintConfig([pue: 1.4], tdpDataMatrix, [:])
-        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
-        CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord)
-
-        expect:
-        // Energy consumption converted to Wh and compared to result from www.green-algorithms.org
-        round(co2Record.getEnergyConsumption()/1000) == 20.45
-        // CO2 in g
-        round(co2Record.getCO2e()/1000) == 9.71
-    }
-
-    def 'test co2e calculation with CI value retrieved for Germany' () {
-        given:
-        def traceRecord = new TraceRecord()
-        traceRecord.realtime = (1 as Long) * (3600000 as Long)
-        traceRecord.cpus = 1
-        traceRecord.cpu_model = "Unknown model"
-        traceRecord.'%cpu' = 100.0
-        traceRecord.memory = (7 as Long) * (1024**3 as Long)
-
-        CO2FootprintConfig config = new CO2FootprintConfig([location: 'DE'], tdpDataMatrix, [:])
-        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
-        CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord)
-
-        expect:
-        round(co2Record.getEnergyConsumption()/1000) == 14.61
-        // CO2 in g
-        round(co2Record.getCO2e()/1000) == 4.95
-    }
-
-    def 'test co2e calculation for custom CI value' () {
-        given:
-        def traceRecord = new TraceRecord()
-        traceRecord.realtime = (1 as Long) * (3600000 as Long)
-        traceRecord.cpus = 1
-        traceRecord.cpu_model = "Unknown model"
-        traceRecord.'%cpu' = 100.0
-        traceRecord.memory = (7 as Long) * (1024**3 as Long)
-
-        CO2FootprintConfig config = new CO2FootprintConfig([ci: 338.66], tdpDataMatrix, [:])
-        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
-        CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord)
-
-        expect:
-        // Energy consumption converted to Wh and compared to result from www.green-algorithms.org
-        round(co2Record.getEnergyConsumption()/1000) == 14.61
-        // CO2 in g
-        round(co2Record.getCO2e()/1000) == 4.95
+        where:
+        cpuModel           | configMap                        || expectedEnergy | expectedCO2
+        "Unknown model"    | [:]                              || 14.61         | 6.94
+        "AMD EPYC 7251"    | [:]                              || 17.61         | 8.36
+        "Unknown model"    | [pue: 1.4]                       || 20.45         | 9.71
+        "Unknown model"    | [location: 'DE']                 || 14.61         | 4.95
+        "Unknown model"    | [ci: 338.66]                     || 14.61         | 4.95
     }
 
     // ------ Equivalences Calculation ------

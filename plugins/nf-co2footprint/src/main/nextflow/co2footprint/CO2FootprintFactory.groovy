@@ -75,10 +75,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
             Paths.get(this.class.getResource('/CPU_TDP.csv').toURI())
     )
 
-
-    private final CIDataMatrix ciDataMatrix = CIDataMatrix.loadCsv(
+    private final CIDataMatrix ciDataMatrix = CIDataMatrix.fromCsv(
             Paths.get(this.class.getResource('/fallbackCIDataTable.csv').toURI())
     )
+    
 
     @Override
     Collection<TraceObserver> create(Session session) {

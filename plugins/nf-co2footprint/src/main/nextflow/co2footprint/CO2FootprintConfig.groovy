@@ -71,12 +71,9 @@ class CO2FootprintConfig {
             this.setProperty(name, configMap.remove(name))
         }
 
+
         // Determine the carbon intensity (CI) value
-        if (ci != null && ci instanceof Number) {
-            // Use the provided CI value if it's not null and is a number
-            log.info("Using provided carbon intensity (CI) value: ${ci}")
-            this.ci = { -> ci }
-        } else {
+        if (this.ci == null) {
             // Create an instance of GetCIvalue and determine carbon intensity
             def ciValueComputer = new CIValueComputer(apiKey, location, ciData)
             this.ci = ciValueComputer.getCI()
@@ -110,7 +107,11 @@ class CO2FootprintConfig {
         }
 
         // Use custom TDP file
-        if (customCpuTdpFile) { cpuData.update( TDPDataMatrix.loadCsv(Paths.get(customCpuTdpFile as String)) ) }
+        if (customCpuTdpFile) {
+            cpuData.update(
+                    TDPDataMatrix.fromCsv(Paths.get(customCpuTdpFile as String))
+            )
+        }
 
         // Check whether all entries in the map could be assigned to a class property
         if (!configMap.isEmpty()) {
