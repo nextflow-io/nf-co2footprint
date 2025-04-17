@@ -31,17 +31,23 @@ import java.util.concurrent.ConcurrentHashMap
 @PackageScope
 class CO2FootprintConfig {
 
+    // .config parameters
     private String  timestamp = TraceHelper.launchTimestampFmt()
     private String  traceFile = "co2footprint_trace_${timestamp}.txt"
     private String  summaryFile = "co2footprint_summary_${timestamp}.txt"
     private String  reportFile = "co2footprint_report_${timestamp}.html"
     private String  location = null
-    private Double  ci = 475                // CI: carbon intensity
-    private Double  pue = 1.67              // PUE: power usage effectiveness efficiency, coefficient of the data centre
+    private Double  ci = null               // CI: carbon intensity
+    private Double  pue = null              // PUE: power usage effectiveness efficiency, coefficient of the data centre
     private Double  powerdrawMem = 0.3725   // Power draw of memory [W per GB]
     private Boolean ignoreCpuModel = false
-    private Double  powerdrawCpuDefault = 12.0
+    private Double  powerdrawCpuDefault = null
     private String  customCpuTdpFile = null
+    private String  machineType = null      // Type of computer on which the workflow is run ['server', 'local', '']
+
+    // Constants
+    private final Double  default_ci = 475
+    private final List<String> supportedMachineTypes = ['server', 'local']
 
     /**
      * Retrieve carbon intensity (CI) value from file containing CI values for different locations
@@ -69,21 +75,8 @@ class CO2FootprintConfig {
         return localCi
     }
 
-    /**
-     * Sanity checks for configuration map
-     * @param config configuration map
-     */
-    private static checkConfig(Map configMap) {
-        if (configMap.ci && configMap.location) {
-            throw new IllegalArgumentException("Invalid combination of 'ci' and 'location' parameters specified for the CO2Footprint plugin. Please specify either 'ci' or 'location'!")
-        }
-    }
-
     CO2FootprintConfig(Map<String, Object> configMap, TDPDataMatrix cpuData){
         configMap = configMap as ConcurrentHashMap<String, Object> ?: [:]
-
-        // Sanity checking
-        checkConfig(configMap)
 
         // Assign values from map to config
         configMap.keySet().each { name  ->
@@ -91,19 +84,43 @@ class CO2FootprintConfig {
         }
 
         // Reassign CI from location
-        ci = location ? retrieveCi(location) : ci
+        if (ci && location) {
+            log.warn(
+                    'Both \'ci\' and \'location\' were specified in configuration.' +
+                    'The \'ci\' value will take precedence, ignoring the \'location\'.'
+            )
+        }
 
-        // Reassign default CPU from config
+        // Keeps ci if already defined, if not uses location if given, fallback to default_ci
+        ci ?= location ? retrieveCi(location) : default_ci
+
+        // Assign PUE if not already given
+        pue ?= switch (machineType) {
+            case 'local' ->  1.0
+            case 'server' -> 1.67
+            default -> 1.67
+        }
+
+        // Reassign values based on machineType
+        if (machineType) {
+            if (supportedMachineTypes.contains(machineType)) {
+                cpuData.fallbackModel = "default $machineType"
+            }
+            else {
+                log.warn(
+                        "machineType '${machineType}' is not supported. Please chose one of ${supportedMachineTypes}." +
+                        "Using fallbacks: pue=${pue} & fallbackModel=${cpuData.fallbackModel}."
+                )
+            }
+        }
+
+        // Set default value if given
         if (powerdrawCpuDefault) {
-            cpuData.set(powerdrawCpuDefault, 'default', 'tdp (W)')
+            cpuData.set(powerdrawCpuDefault, cpuData.fallbackModel, 'tdp (W)')
         }
 
         // Use custom TDP file
-        if (customCpuTdpFile) {
-            cpuData.update(
-                    TDPDataMatrix.loadCsv(Paths.get(customCpuTdpFile as String))
-            )
-        }
+        if (customCpuTdpFile) { cpuData.update( TDPDataMatrix.loadCsv(Paths.get(customCpuTdpFile as String)) ) }
 
         // Check whether all entries in the map could be assigned to a class property
         if (!configMap.isEmpty()) {
