@@ -46,25 +46,31 @@ class CO2FootprintConfig {
 
 
     CO2FootprintConfig(Map<String, Object> configMap, TDPDataMatrix cpuData, CIDataMatrix ciData) {
-        configMap = configMap as ConcurrentHashMap<String, Object> ?: [:]
+        log.info("Config map: ${configMap}")
 
         // Assign values from map to config
-        configMap.keySet().each { name  ->
-            this.setProperty(name, configMap.remove(name))
+        configMap.keySet().each { name ->
+            if (name == 'ci') {
+                // Handle 'ci' specifically
+                def value = configMap.remove(name)
+                if (value instanceof Number) {
+                    this.ci = { -> value as Double } // Wrap Number in a Closure
+                    log.info("Using provided carbon intensity value: ${this.ci} gCO₂eq/kWh")
+                } else {
+                    throw new IllegalArgumentException("Invalid type for 'ci': ${value.getClass().getName()}. Expected Number or Closure.")
+                }
+            } else {
+                // Assign other properties dynamically
+                this.setProperty(name, configMap.remove(name))
+            }
         }
 
         // Determine the carbon intensity (CI) value
-        if (ci != null && ci instanceof Number) {
-            // Use the provided CI value if it's not null and is a number
-            log.info("Using provided carbon intensity (CI) value: ${ci}")
-            this.ci = { -> ci }
-        } else {
+        if (this.ci == null) {
             // Create an instance of GetCIvalue and determine carbon intensity
             def ciValueComputer = new CIValueComputer(apiKey, location, ciData)
             this.ci = ciValueComputer.getCI()
         }
-
-
 
         // Reassign default CPU from config
         if (powerdrawCpuDefault) {
@@ -74,7 +80,7 @@ class CO2FootprintConfig {
         // Use custom TDP file
         if (customCpuTdpFile) {
             cpuData.update(
-                    TDPDataMatrix.loadCsv(Paths.get(customCpuTdpFile as String))
+                    TDPDataMatrix.fromCsv(Paths.get(customCpuTdpFile as String))
             )
         }
 
@@ -92,7 +98,7 @@ class CO2FootprintConfig {
     String getReportFile() { reportFile }
     Boolean getIgnoreCpuModel() { ignoreCpuModel }
     String getLocation() { location }
-    Double getCi() { this.ci() }
+    Closure<Double> getCi() { this.ci }
     Double getPue() { pue }
     Double getPowerdrawMem() { powerdrawMem }
     Double getPowerdrawCpuDefault() { powerdrawCpuDefault }

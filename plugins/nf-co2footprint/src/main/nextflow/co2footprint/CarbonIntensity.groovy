@@ -2,6 +2,7 @@ package nextflow.co2footprint
 
 import nextflow.co2footprint.utils.DataMatrix
 import nextflow.co2footprint.utils.HelperFunctions
+import java.nio.file.Path
 
 import groovy.util.logging.Slf4j
 import groovy.json.JsonSlurper
@@ -19,19 +20,34 @@ class CIDataMatrix extends DataMatrix {
 
     private final String ciID = "Carbon intensity gCO₂eq/kWh (Life cycle)"
     private final String zoneID = "Zone id"
-    String fallbackModel = 'global'
-    Double ci = null
-    String zone = null
+    private final String fallbackModel = 'global'
 
+    /**
+     * Constructor to initialize CIDataMatrix with data, columnIndex, and rowIndex.
+     * Calls the parent constructor.
+     */
     CIDataMatrix(
-            List<List> data = [], LinkedHashSet<String> columnIndex = [], LinkedHashSet<String> rowIndex = [],
-            Object fallbackModel = 'global', Double ci = null, String zone = null
+            List<List> data = [],
+            LinkedHashSet<Object> columnIndex = [],
+            LinkedHashSet<Object> rowIndex = []
     ) {
-        super(data, columnIndex, rowIndex) // Initialize DataMatrix
-        this.fallbackModel = fallbackModel
-        this.ci = ci
-        this.zone = zone
+        super(data, columnIndex, rowIndex)
     }
+
+
+    static CIDataMatrix fromCsv(
+            Path path, String separator = ',', Integer columnIndexPos = 0, Integer rowIndexPos = null,
+            Object rowIndexColumn = null
+    ) throws IOException {
+        Map<String, Object> parsedCsv = DataMatrix.readCsv(path, separator, columnIndexPos, rowIndexPos, rowIndexColumn)
+        return new CIDataMatrix(
+                parsedCsv.data,
+                parsedCsv.columnIndex,
+                parsedCsv.rowIndex
+        )
+    }
+
+
 
     /**
      * Finds the carbon intensity value for a given zone in the CSV data.
@@ -73,7 +89,7 @@ class CIValueComputer {
 
     CIValueComputer(String apiKey, String location, CIDataMatrix ciData) {
         this.apiKey = apiKey
-        this.location = location.toUpperCase() // Ensure location is always uppercase
+        this.location = location
         this.ciData = ciData
     }
 
@@ -117,6 +133,7 @@ class CIValueComputer {
             def ci
 
             if (this.location) {
+                this.location = this.location.toUpperCase() // Ensure location is always uppercase
 
                 // Check if the API key is set and is a valid string
                 if (this.apiKey && this.apiKey instanceof String) {
@@ -138,17 +155,17 @@ class CIValueComputer {
                 ci = this.ciData.findCiInMatrix(this.location)
                 log.info(ci != null
                     ? "Using carbon intensity for ${HelperFunctions.bold(this.location)} from fallback table: ${HelperFunctions.bold(ci.toString())} gCO₂eq/kWh"
-                    : "No carbon intensity value found for ${HelperFunctions.bold(this.location)}. Falling back to ${HelperFunctions.bold(this.defaultModel)}.")
+                    : "No carbon intensity value found for ${HelperFunctions.bold(this.location)}. Falling back to ${HelperFunctions.bold('global')}.")
             } else {
-                log.warn("No location provided. Falling back to ${HelperFunctions.bold(this.defaultModel)}.")
+                log.warn("No location provided. Falling back to ${HelperFunctions.bold('global')}.")
             }
 
             // Fallback to the default model if no value is found for the location
             if (ci == null) {
-                ci = this.ciData.findCiInMatrix(this.defaultModel)
+                ci = this.ciData.findCiInMatrix('global')
                 log.info(ci != null
-                    ? "Using ${HelperFunctions.bold(this.defaultModel)} carbon intensity: ${HelperFunctions.bold(ci.toString())} gCO₂eq/kWh"
-                    : "No ${HelperFunctions.bold(this.defaultModel)} carbon intensity found in fallback table.")
+                    ? "Using ${HelperFunctions.bold('global')} carbon intensity: ${HelperFunctions.bold(ci.toString())} gCO₂eq/kWh"
+                    : "No ${HelperFunctions.bold('global')} carbon intensity found in fallback table.")
             }
 
             return ci     
