@@ -89,4 +89,8 @@ dependencies {
 // use JUnit 5 platform
 test {
     useJUnitPlatform()
+    testLogging {
+        showStandardStreams = true
+    }
 }
+

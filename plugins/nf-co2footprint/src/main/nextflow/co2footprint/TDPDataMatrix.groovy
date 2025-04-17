@@ -43,6 +43,20 @@ class TDPDataMatrix extends DataMatrix {
         this.threads = threads
     }
 
+
+    static TDPDataMatrix fromCsv(
+            Path path, String separator = ',', Integer columnIndexPos = 0, Integer rowIndexPos = null,
+            Object rowIndexColumn = 'name'
+    ) throws IOException {
+        Map<String, Object> parsedCsv = DataMatrix.readCsv(path, separator, columnIndexPos, rowIndexPos, rowIndexColumn)
+        return new TDPDataMatrix(
+                parsedCsv.data,
+                parsedCsv.columnIndex.collect {toASCII(it)} as LinkedHashSet,
+                parsedCsv.rowIndex.collect {toASCII(it)} as LinkedHashSet
+        )
+    }
+
+
     /**
      * Remove non-ASCII symbols (®, ™,...)  from String.
      *
@@ -220,22 +234,8 @@ class TDPDataMatrix extends DataMatrix {
         this.columnIndex = newTDPDataMatrix.columnIndex
     }
 
-    /**
-     * Load TDP data from Csv Matrix
-     * @param path Path to the file
-     * @param oldData Old data to compare new loaded file to
-     * @return new DataMatrix
-     */
-    static TDPDataMatrix loadCsv(Path path, TDPDataMatrix oldData=null) {
-        DataMatrix dm = loadCsv(
-                path, ',', 0, null, 'name'
-        )
 
-        TDPDataMatrix newData = new TDPDataMatrix(
-                dm.getData(), dm.getOrderedColumnKeys(), dm.getOrderedRowKeys(),
-                'default', null, null, null
-        )
-
+    static compareToOldData(TDPDataMatrix oldData, TDPDataMatrix newData) {
         // Compare entries to warn about changing
         if (oldData) {
             for (String model : oldData.getRowIndex().keySet()) {
@@ -249,9 +249,8 @@ class TDPDataMatrix extends DataMatrix {
                 }
             }
         }
-
-        return newData
     }
+
 
 }
 

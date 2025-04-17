@@ -91,11 +91,11 @@ class CO2FootprintFactory implements TraceObserverFactory {
         reader.close()
     }
 
-    private final TDPDataMatrix tdpDataMatrix = TDPDataMatrix.loadCsv(
+    private final TDPDataMatrix tdpDataMatrix = TDPDataMatrix.fromCsv(
             Paths.get(this.class.getResource('/CPU_TDP.csv').toURI())
     )
 
-    private final CIDataMatrix ciDataMatrix = CIDataMatrix.loadCsv(
+    private final CIDataMatrix ciDataMatrix = CIDataMatrix.fromCsv(
             Paths.get(this.class.getResource('/fallbackCIDataTable.csv').toURI())
     )
 
@@ -110,6 +110,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 this.tdpDataMatrix,
                 this.ciDataMatrix
         )
+        log.info "nf-co2footprint config: ${session.config.navigate('co2footprint') as Map}"
 
         final result = new ArrayList(2)
 
@@ -199,7 +200,9 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // PUE: efficiency coefficient of the data centre
         Double pue = config.getPue()
         // CI: carbon intensity [gCO2e kWh−1]
-        Double ci  = config.getCi()
+        Closure<Double> ciClosure  = config.getCi()
+        // Invoke the closure to get the Double value
+        Double ci = ciClosure()
 
         /**
          * Calculate energy consumption [kWh]

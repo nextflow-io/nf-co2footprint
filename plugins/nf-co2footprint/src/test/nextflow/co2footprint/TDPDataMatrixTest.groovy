@@ -64,7 +64,7 @@ class TDPDataMatrixTest extends Specification {
         df.saveCsv(filePath)
 
         when:
-        Matrix tdpDM = TDPDataMatrix.loadCsv(filePath, ',', 0, 0)
+        Matrix tdpDM = TDPDataMatrix.fromCsv(filePath, ',', 0, 0)
 
         then:
         tdpDM == df
