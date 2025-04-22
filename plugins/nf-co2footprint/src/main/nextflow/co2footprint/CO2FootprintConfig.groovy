@@ -46,13 +46,14 @@ class CO2FootprintConfig {
 
 
     CO2FootprintConfig(Map<String, Object> configMap, TDPDataMatrix cpuData, CIDataMatrix ciData) {
-        log.info("Config map: ${configMap}")
+        // Ensure configMap is not null
+        configMap = configMap ?: [:]
 
         // Assign values from map to config
         configMap.keySet().each { name ->
             if (name == 'ci') {
                 // Handle 'ci' specifically
-                def value = configMap.remove(name)
+                def value = configMap[name] // Use get() instead of remove()
                 if (value instanceof Number) {
                     this.ci = { -> value as Double } // Wrap Number in a Closure
                     log.info("Using provided carbon intensity value: ${this.ci} gCO₂eq/kWh")
@@ -60,8 +61,14 @@ class CO2FootprintConfig {
                     throw new IllegalArgumentException("Invalid type for 'ci': ${value.getClass().getName()}. Expected Number or Closure.")
                 }
             } else {
-                // Assign other properties dynamically
-                this.setProperty(name, configMap.remove(name))
+                // Check if the property exists in the class
+                if (this.hasProperty(name)) {
+                    // Assign the property dynamically
+                    this.setProperty(name, configMap[name]) // Use get() instead of remove()
+                } else {
+                    // Log a warning and skip the key
+                    log.warn("Skipping unknown configuration key: '${name}'")
+                }
             }
         }
 
@@ -84,13 +91,6 @@ class CO2FootprintConfig {
             )
         }
 
-        // Check whether all entries in the map could be assigned to a class property
-        if (!configMap.isEmpty()) {
-            log.warn(
-                    'Configuration map is not empty after retrieving all possible properties.'
-                    + "The keys '${configMap.keySet()}' remain unused."
-            )
-        }
     }
 
     String getTraceFile() { traceFile }

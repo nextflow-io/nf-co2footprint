@@ -5,6 +5,7 @@ import nextflow.co2footprint.utils.HelperFunctions
 import java.nio.file.Path
 
 import groovy.util.logging.Slf4j
+import nextflow.co2footprint.utils.Markers
 import groovy.json.JsonSlurper
 
 /**
@@ -46,7 +47,6 @@ class CIDataMatrix extends DataMatrix {
                 parsedCsv.rowIndex
         )
     }
-
 
 
     /**
@@ -108,17 +108,20 @@ class CIValueComputer {
             def updatedAt = HelperFunctions.transformTimestamp(json['updatedAt'] as String)
 
             if (realTimeCI != null) {
-                log.info("${HelperFunctions.bold('───────── Using Real Time Carbon Intensity ─────────')}")
-                log.info("📍 Location: ${HelperFunctions.bold(this.location)}")
-                log.info("⚡ Real-time Carbon Intensity: ${HelperFunctions.bold(realTimeCI.toString())} gCO₂eq/kWh")
-                log.info("🕒 Last updated: ${HelperFunctions.bold(updatedAt)}")
-                log.info("${HelperFunctions.bold('────────────────────────────────────────────────────')}")
+                log.info(Markers.unique,
+                """
+                ${HelperFunctions.bold('───────── Using Real Time Carbon Intensity ─────────')}
+                Location: ${HelperFunctions.bold(this.location)}
+                ⚡ Real-time Carbon Intensity: ${HelperFunctions.bold(realTimeCI.toString())} gCO₂eq/kWh
+                Last updated: ${HelperFunctions.bold(updatedAt)}
+                ${HelperFunctions.bold('────────────────────────────────────────────────────')}
+                """)
                 return realTimeCI
             } else {
-                log.warn("Could not retrieve real-time carbon intensity for ${HelperFunctions.bold(this.location)}.")
+                log.warn(Markers.unique, "Could not retrieve real-time carbon intensity for ${HelperFunctions.bold(this.location)}.")
             }
         } catch (Exception e) {
-            log.error("Error retrieving real-time carbon intensity for ${HelperFunctions.bold(this.location)}: ${e.message}")
+            log.error(Markers.unique, "Error retrieving real-time carbon intensity for ${HelperFunctions.bold(this.location)}: ${e.message}")
         }
         return null
     }
@@ -137,33 +140,33 @@ class CIValueComputer {
 
                 // Check if the API key is set and is a valid string
                 if (this.apiKey && this.apiKey instanceof String) {
-                    log.info("API key is set. Attempting to retrieve real-time carbon intensity.")
+                    log.info(Markers.unique, "API key is set. Attempting to retrieve real-time carbon intensity.")
 
                     // Attempt to retrieve real-time carbon intensity
                     ci = getRealtimeCI()
                     if (ci != null) {
-                        log.info("Using real-time carbon intensity for ${HelperFunctions.bold(this.location)}: ${HelperFunctions.bold(ci.toString())} gCO₂eq/kWh")
+                        log.info(Markers.unique, "Using real-time carbon intensity for ${HelperFunctions.bold(this.location)}: ${HelperFunctions.bold(ci.toString())} gCO₂eq/kWh.")
                         return ci
                     } else {
                         log.warn("Could not retrieve real-time carbon intensity for ${HelperFunctions.bold(this.location)}.")
                     }
                 } else {
-                    log.warn("API key is not set or invalid. Skipping real-time carbon intensity retrieval.")
+                    log.warn(Markers.unique, "API key is not set or invalid. Skipping real-time carbon intensity retrieval.")
                 }
 
                 // Fallback to the location in the CSV
                 ci = this.ciData.findCiInMatrix(this.location)
-                log.info(ci != null
-                    ? "Using carbon intensity for ${HelperFunctions.bold(this.location)} from fallback table: ${HelperFunctions.bold(ci.toString())} gCO₂eq/kWh"
+                log.info(Markers.unique, 
+                ci != null ? "Using carbon intensity for ${HelperFunctions.bold(this.location)} from fallback table: ${HelperFunctions.bold(ci.toString())} gCO₂eq/kWh"
                     : "No carbon intensity value found for ${HelperFunctions.bold(this.location)}. Falling back to ${HelperFunctions.bold('global')}.")
             } else {
-                log.warn("No location provided. Falling back to ${HelperFunctions.bold('global')}.")
+                log.warn(Markers.unique, "No location provided. Falling back to ${HelperFunctions.bold('global')}.")
             }
 
             // Fallback to the default model if no value is found for the location
             if (ci == null) {
                 ci = this.ciData.findCiInMatrix('global')
-                log.info(ci != null
+                log.info(Markers.unique, ci != null
                     ? "Using ${HelperFunctions.bold('global')} carbon intensity: ${HelperFunctions.bold(ci.toString())} gCO₂eq/kWh"
                     : "No ${HelperFunctions.bold('global')} carbon intensity found in fallback table.")
             }

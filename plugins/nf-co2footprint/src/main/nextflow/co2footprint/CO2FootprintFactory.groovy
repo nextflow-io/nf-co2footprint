@@ -110,7 +110,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 this.tdpDataMatrix,
                 this.ciDataMatrix
         )
-        log.info "nf-co2footprint config: ${session.config.navigate('co2footprint') as Map}"
 
         final result = new ArrayList(2)
 
@@ -222,7 +221,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // The cast is still necessary, as the output expects a List<Double> which worked with Groovy3 but not Groovy4
         Double mem_double = requestedMemory as Double
 
-        return [e, c, realtime, nc, pc, uc, mem_double]
+        return [e, c, realtime, ci, nc, pc, uc, mem_double]
     }
 
 
@@ -299,7 +298,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         }
 
         /**
-         * Create the trace file, in file already existing with the same name it is
+         * Create the trace file, if file already existing with the same name it is
          * "rolled" to a new file
          */
         @Override
@@ -329,6 +328,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                     + "energy_consumption\t"
                     + "CO2e\t"
                     + "time\t"
+                    + "carbon_intensity\t"
                     + "cpus\t"
                     + "powerdraw_cpu\t"
                     + cpu_model_string
@@ -421,9 +421,9 @@ class CO2FootprintFactory implements TraceObserverFactory {
         }
 
         /**
-         * This method is invoked when a process run completes
-         * @param handler
-         */
+        * This method is invoked when a process run completes
+        * @param handler
+        */
         @Override
         void onProcessComplete(TaskHandler handler, TraceRecord trace) {
             final taskId = handler.task.id
@@ -432,76 +432,51 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 return
             }
 
-            // remove the record from the current records
+            // Remove the record from the current records
             current.remove(taskId)
 
-            // compute the CO2 footprint
-            def computation_results = computeTaskCO2footprint(trace)
-            def eConsumption = computation_results[0]
-            def co2 = computation_results[1]
-            def time = computation_results[2]
-            def cpus = computation_results[3] as Integer
-            def powerdrawCPU = computation_results[4]
-            def cpu_usage = computation_results[5]
-            def memory = computation_results[6]
-
-            co2eRecords[taskId] = new CO2Record(
-                    (Double) eConsumption,
-                    (Double) co2,
-                    (Double) time,
-                    cpus,
-                    (Double) powerdrawCPU,
-                    (Double) cpu_usage,
-                    (Long) memory,
-                    trace.get('name').toString(),
-                    config.getIgnoreCpuModel() ? "" : trace.get('cpu_model').toString()
-            )
-            total_energy += eConsumption
-            total_co2 += co2
-
-            // save to the file
-            String cpu_model_string = config.getIgnoreCpuModel()? "" : "${trace.get('cpu_model').toString()}\t"
-            traceWriter.send {
-                PrintWriter it -> it.println(
-                        "${taskId}\t"
-                        + "${trace.get('name').toString()}\t"
-                        + "${trace.get('status').toString()}\t"
-                        + "${HelperFunctions.convertToReadableUnits(eConsumption,3)}Wh\t"
-                        + "${HelperFunctions.convertToReadableUnits(co2,3)}g\t"
-                        + "${HelperFunctions.convertMillisecondsToReadableUnits(time)}\t"
-                        + "${cpus}\t"
-                        + "${powerdrawCPU}\t"
-                        + cpu_model_string
-                        + "${cpu_usage}\t"
-                        + "${HelperFunctions.convertBytesToReadableUnits(memory)}"
-                )
-                it.flush()
-            }
+            // Process the trace record
+            processTraceRecord(taskId, trace)
         }
 
-
+        /**
+        * This method is invoked when a process run is cached
+        * @param handler
+        */
         @Override
         void onProcessCached(TaskHandler handler, TraceRecord trace) {
-            def taskId = handler.task.id
-            // event was triggered by a stored task, ignore it
-            if (trace == null) {
-                return
+            final taskId = handler.task.id
+            if (!trace) {
+                return // Ignore null trace
             }
 
-            // compute the CO2 footprint
+            // Process the trace record
+            processTraceRecord(taskId, trace)
+        }
+
+        /**
+        * Helper method to process a trace record and compute CO2 footprint
+        * @param taskId The task ID
+        * @param trace The trace record
+        */
+        private void processTraceRecord(TaskId taskId, TraceRecord trace) {
+            // Compute the CO2 footprint
             def computation_results = computeTaskCO2footprint(trace)
             def eConsumption = computation_results[0]
             def co2 = computation_results[1]
             def time = computation_results[2]
-            def cpus = computation_results[3] as Integer
-            def powerdrawCPU = computation_results[4]
-            def cpu_usage = computation_results[5]
-            def memory = computation_results[6]
+            def ci = computation_results[3]
+            def cpus = computation_results[4] as Integer
+            def powerdrawCPU = computation_results[5]
+            def cpu_usage = computation_results[6]
+            def memory = computation_results[7]
 
+            // Store the CO2 record
             co2eRecords[taskId] = new CO2Record(
                     (Double) eConsumption,
                     (Double) co2,
                     (Double) time,
+                    (Double) ci,
                     cpus,
                     (Double) powerdrawCPU,
                     (Double) cpu_usage,
@@ -512,16 +487,17 @@ class CO2FootprintFactory implements TraceObserverFactory {
             total_energy += eConsumption
             total_co2 += co2
 
-            // save to the file
-            String cpu_model_string = config.getIgnoreCpuModel()? "" : "${trace.get('cpu_model').toString()}\t"
+            // Save to the file
+            String cpu_model_string = config.getIgnoreCpuModel() ? "" : "${trace.get('cpu_model').toString()}\t"
             traceWriter.send {
                 PrintWriter it -> it.println(
                         "${taskId}\t"
                         + "${trace.get('name').toString()}\t"
                         + "${trace.get('status').toString()}\t"
-                        + "${HelperFunctions.convertToReadableUnits(eConsumption,3)}Wh\t"
-                        + "${HelperFunctions.convertToReadableUnits(co2,3)}g\t"
+                        + "${HelperFunctions.convertToReadableUnits(eConsumption, 3)}Wh\t"
+                        + "${HelperFunctions.convertToReadableUnits(co2, 3)}g\t"
                         + "${HelperFunctions.convertMillisecondsToReadableUnits(time)}\t"
+                        + "${ci} gCO₂eq/kWh\t"
                         + "${cpus}\t"
                         + "${powerdrawCPU}\t"
                         + cpu_model_string
