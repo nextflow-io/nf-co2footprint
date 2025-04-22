@@ -1,0 +1,17 @@
+name: 'Stale issue/PR handling'
+on:
+  schedule:
+    - cron: '0 0 * * 1'   # Run every monday at midnight
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          days-before-stale: 150
+          days-before-close: -1
+          stale-issue-label: '❄️ stale'
+          stale-issue-message: 'This issue had no contributions for some time. It will be marked as stale and may be closed upon further inspection.'
+          stale-pr-label: '❄️ stale'
+          stale-pr-message: 'This pull-request had no contributions for some time. It will be marked as stale and may be closed upon further inspection.'
