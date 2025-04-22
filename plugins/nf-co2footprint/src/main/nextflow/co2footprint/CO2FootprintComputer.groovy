@@ -135,6 +135,7 @@ class CO2FootprintComputer {
                 energy,
                 co2e,
                 runtime_h,
+                ci,
                 numberOfCores as Integer,
                 powerdrawPerCore,
                 cpuUsage,

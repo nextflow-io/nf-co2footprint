@@ -16,20 +16,23 @@ import groovy.json.StringEscapeUtils
 @CompileStatic
 class CO2Record extends TraceRecord {
 
-    private final Double energy
-    private final Double co2e
-    private final Double time
-    private final Integer cpus
-    private final Double powerdrawCPU
-    private final Double cpuUsage
-    private final Long memory
-    private final String name
-    private final String cpu_model
+    private Double energy
+    private Double co2e
+    private Double time
+    private Double ci
+    private Integer cpus
+    private Double powerdrawCPU
+    private Double cpuUsage
+    private Long memory
+    private String name
+    private String cpu_model
+    // final? or something? to make sure for key value can be set only once?
 
-    CO2Record(Double energy, Double co2e, Double time, Integer cpus, Double powerdrawCPU, Double cpuUsage, Long memory, String name, String cpu_model) {
+    CO2Record(Double energy, Double co2e, Double time, Double ci, Integer cpus, Double powerdrawCPU, Double cpuUsage, Long memory, String name, String cpu_model) {
         this.energy = energy
         this.co2e = co2e
         this.time = time
+        this.ci = ci
         this.cpus = cpus
         this.powerdrawCPU = powerdrawCPU
         this.cpuUsage = cpuUsage
@@ -40,6 +43,7 @@ class CO2Record extends TraceRecord {
                 'energy':           energy,
                 'co2e':             co2e,
                 'time':             time,
+                'carbon intensity': ci,
                 'cpus':             cpus,
                 'powerdrawCPU':     powerdrawCPU,
                 'cpuUsage':         cpuUsage,
@@ -53,6 +57,7 @@ class CO2Record extends TraceRecord {
         energy:         'num',
         co2e:           'num',
         time:           'num',
+        ci:             'num',
         cpus:           'num',
         powerdrawCPU:   'num',
         cpuUsage:       'num',
@@ -69,6 +74,8 @@ class CO2Record extends TraceRecord {
 
     Double getTime() { time }
     String getTimeReadable() { Converter.toReadableTimeUnits(time, 'ms', 'ms', 'days', 0.0d) }
+
+    String getCIReadable() { Converter.toReadableUnits(ci, ' ',  gCO₂eq/kWh) }
 
     Integer getCPUs() { cpus }
     String getCPUsReadable() { cpus as String }
@@ -91,7 +98,7 @@ class CO2Record extends TraceRecord {
     List<String> getReadableEntries() {
         return [
                 this.getNameReadable(), this.getEnergyConsumptionReadable(), this.getCO2eReadable(),
-                this.getTimeReadable(), this.getCPUsReadable(), this.getPowerdrawCPUReadable(),
+                this.getTimeReadable(), this.getCIReadable(), this.getCPUsReadable(), this.getPowerdrawCPUReadable(),
                 this.getCPUModelReadable(), this.getCPUUsageReadable(), this.getMemoryReadable()
         ]
     }
