@@ -36,10 +36,10 @@ class CO2FootprintConfig {
     private String  summaryFile = "co2footprint_summary_${timestamp}.txt"
     private String  reportFile = "co2footprint_report_${timestamp}.html"
     private String  location = null
-    private Double  ci = null                // CI: carbon intensity
-    private final Double  default_ci = 475
-    private Double  pue = 1.67              // PUE: power usage effectiveness efficiency, coefficient of the data centre
-    private Double  powerdrawMem = 0.3725   // Power draw of memory [W per GB]
+    private Double  ci = null                   // CI: carbon intensity
+    private final Double  default_ci = 475      // TODO: Can be replaced by default in CI fallback table upon addition
+    private Double  pue = 1.67                  // PUE: power usage effectiveness efficiency, coefficient of the data centre
+    private Double  powerdrawMem = 0.3725       // Power draw of memory [W per GB]
     private Boolean ignoreCpuModel = false
     private Double  powerdrawCpuDefault = null
     private String  customCpuTdpFile = null
