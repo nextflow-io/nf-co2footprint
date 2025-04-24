@@ -112,7 +112,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 this.tdpDataMatrix
         )
 
-        co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, ciDataMatrix, config)
+        co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
 
         final result = new ArrayList(2)
 
@@ -291,17 +291,17 @@ class CO2FootprintFactory implements TraceObserverFactory {
             // remove the record from the current records
             current.remove(taskId)
 
-            // Extract records
+            // Extract record
             CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace)
             total_energy += co2Record.getEnergyConsumption()
             total_co2 += co2Record.getCO2e()
             co2eRecords[taskId] = co2Record
 
             // save to the file
-            List<String> records = co2Record.getRecords()
-            records = [taskId as String, trace.get('status') as String] + records
+            List<String> co2RecordEntries = co2Record.getReadableEntries()
+            co2RecordEntries = [taskId as String, trace.get('status') as String] + co2RecordEntries
             traceWriter.send { PrintWriter writer ->
-                writer.println( String.join('\t', records) )
+                writer.println( String.join('\t', co2RecordEntries) )
                 writer.flush()
             }
         }
@@ -312,17 +312,17 @@ class CO2FootprintFactory implements TraceObserverFactory {
             // event was triggered by a stored task, ignore it
             if (trace == null) { return }
 
-            // Extract records
+            // Extract record
             CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace)
             total_energy += co2Record.getEnergyConsumption()
             total_co2 += co2Record.getCO2e()
             co2eRecords[taskId] = co2Record
 
             // save to the file
-            List<String> records = co2Record.getRecords()
-            records = [taskId as String, trace.get('status') as String] + records
+            List<String> co2RecordEntries = co2Record.getReadableEntries()
+            co2RecordEntries = [taskId as String, trace.get('status') as String] + co2RecordEntries
             traceWriter.send { PrintWriter writer ->
-                writer.println( String.join('\t', records) )
+                writer.println( String.join('\t', co2RecordEntries) )
                 writer.flush()
             }
         }
