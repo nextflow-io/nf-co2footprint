@@ -47,8 +47,6 @@ import ch.qos.logback.classic.turbo.TurboFilter
 
 import java.nio.file.Paths
 import java.util.concurrent.ConcurrentHashMap
-import java.lang.management.ManagementFactory
-import com.sun.management.OperatingSystemMXBean
 
 /**
  * Implements the CO2Footprint observer factory
@@ -91,9 +89,17 @@ class CO2FootprintFactory implements TraceObserverFactory {
         reader.close()
     }
 
+    /**
+     * External Data integration of TDP (Thermal design power) and CI (Carbon intensity) values
+     */
     private final TDPDataMatrix tdpDataMatrix = TDPDataMatrix.loadCsv(
             Paths.get(this.class.getResource('/CPU_TDP.csv').toURI())
     )
+
+    private final CIDataMatrix ciDataMatrix = null
+
+    private CO2FootprintComputer co2FootprintComputer
+    CO2FootprintComputer getCO2FootprintComputer() { co2FootprintComputer }
 
     @Override
     Collection<TraceObserver> create(Session session) {
@@ -105,6 +111,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 session.config.navigate('co2footprint') as Map,
                 this.tdpDataMatrix
         )
+
+        co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
 
         final result = new ArrayList(2)
 
@@ -120,131 +128,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
         return result
     }
-
-    
-    Double getCPUCoreTDP(TraceRecord trace, String cpu_model=null) {
-        cpu_model = cpu_model ?: trace.get('cpu_model') as String
-        TDPDataMatrix modelDataMatrix = tdpDataMatrix.matchModel(cpu_model)
-        return modelDataMatrix.getCoreTDP()
-    }
-
-
-    // Core function to compute CO2 emissions for each task
-    List<Double> computeTaskCO2footprint(TraceRecord trace) {
-        // C = t * (nc * Pc * uc + nm * Pm) * PUE * CI * 0.001
-        // as in https://doi.org/10.1002/advs.202100707
-        // PSF: pragmatic scaling factor -> not used here since we aim at the CO2e of one pipeline run
-        // Factor 0.001 needed to convert Pc and Pm from W to kW
-
-        // t: runtime in hours
-        Double realtime = trace.get('realtime') as Double
-        Double t = realtime/3600000 as Double
-
-        /**
-         * Factors of core power usage
-         */
-        // nc: number of cores
-        Double nc = trace.get('cpus') as Integer
-
-        // Pc: power draw of a computing core  [W]
-        Double pc = config.getIgnoreCpuModel() ? getCPUCoreTDP(null, 'default') : getCPUCoreTDP(trace)
-
-        // uc: core usage factor (between 0 and 1)
-        Double cpu_usage = trace.get('%cpu') as Double
-        if ( cpu_usage == null ) {
-            log.warn('The reported CPU usage is null for at least one task. Assuming 100% usage for each requested CPU!')
-            // TODO why is value null, because task was finished so fast that it was not captured? Or are there other reasons?
-            // Assuming requested cpus were used with 100%
-            cpu_usage = nc * 100
-        }
-
-        if ( cpu_usage == 0.0 ) {
-            log.warn('The reported CPU usage is 0.0 for at least one task!')
-        }
-        Double uc = cpu_usage / (100.0 * nc) as Double
-
-        /**
-         * Factors of memory power usage
-         */
-        // Detect OS
-        OperatingSystemMXBean OS = { (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean() }()
-        // Total Memory
-        Long availableMemory = OS.getTotalMemorySize() as Long
-        Long requestedMemory = trace.get('memory') as Long
-        Long requiredMemory = trace.get('peak_rss') as Long
-        if ( requestedMemory == null || requiredMemory > requestedMemory) {
-            log.warn(
-                    "The required memory (${requiredMemory/(1024**3)} GB) for the task" +
-                    " exceeds the requested memory (${requestedMemory/(1024**3)} GB)." +
-                    "Setting requested to maximum available memory (${availableMemory/(1024**3)} GB)."
-            )
-            requestedMemory = availableMemory
-        }
-
-        // nm: size of memory available [GB] -> requested memory
-        Double nm = requestedMemory/(1024**3) as Double
-        // TODO handle if more memory/cpus used than requested?
-
-        // Pm: power draw of memory [W per GB]
-        Double pm  = config.getPowerdrawMem()
-
-        /**
-         * Remaining factors
-         */
-        // PUE: efficiency coefficient of the data centre
-        Double pue = config.getPue()
-        // CI: carbon intensity [gCO2e kWh−1]
-        Double ci  = config.getCi()
-
-        /**
-         * Calculate energy consumption [kWh]
-         */
-        Double e = (t * (nc * pc * uc + nm * pm) * pue * 0.001) as Double
-
-        /*
-         * Resulting CO2 emission [gCO2e]
-         */
-        Double c = (e * ci)
-
-        // Return values in mWh and mg
-        e = e * 1000000
-        c = c * 1000
-
-        // TODO: Only a workaround. Like this the memory is only full precision until 999TB of GB.
-        // The cast is still necessary, as the output expects a List<Double> which worked with Groovy3 but not Groovy4
-        Double mem_double = requestedMemory as Double
-
-        return [e, c, realtime, nc, pc, uc, mem_double]
-    }
-
-
-    // Compute CO2 footprint equivalences
-    List<Double> computeCO2footprintEquivalences() {
-        /*
-         * The following values were taken from the Green Algorithms publication (https://doi.org/10.1002/advs.202100707):
-         * The estimated emission of the average passenger car is 175 gCO2e/Km in Europe and 251 gCO2/Km in the US
-         * The estimated emission of flying on a jet aircraft in economy class is between 139 and 244 gCO2e/Km
-         * The estimated sequestered CO2 of a mature tree is ~1 Kg per month (917 g)
-         * A reference flight Paris to London spends 50000 gCO2
-         */
-        def gCO2 = total_co2 / 1000 as Double
-        String location = config.getLocation()
-        Double car = gCO2 / 175 as Double
-        if (location && (location != 'US' || !location.startsWith('US-'))) {
-            car = gCO2 / 251 as Double
-        }
-        Double tree = gCO2 / 917 as Double
-        Double plane_percent = null
-        Double plane_flights = null
-        if (gCO2 <= 50000) {
-            plane_percent = gCO2 * 100 / 50000 as Double
-        } else {
-            plane_flights = gCO2 / 50000 as Double
-        }
-
-        return [car, tree, plane_percent, plane_flights]
-    }
-
 
     /**
      * Class to generate text output
@@ -299,11 +182,11 @@ class CO2FootprintFactory implements TraceObserverFactory {
             log.debug "Workflow started -- co2e traceFile: ${co2eTracePath.toUriString()}"
 
             // make sure parent path exists
-            def parent = co2eTracePath.getParent()
+            def parent = co2eTracePath.normalize().getParent()
             if (parent)
                 Files.createDirectories(parent)
 
-            def summaryParent = co2eSummaryPath.getParent()
+            def summaryParent = co2eSummaryPath.normalize().getParent()
             if (summaryParent)
                 Files.createDirectories(summaryParent)
 
@@ -313,20 +196,13 @@ class CO2FootprintFactory implements TraceObserverFactory {
             // launch the agent
             traceWriter = new Agent<PrintWriter>(co2eTraceFile)
 
-            String cpu_model_string = config.getIgnoreCpuModel()? "" : "cpu_model\t"
-            traceWriter.send { co2eTraceFile.println(
-                    "task_id\t"
-                    + "name\t"
-                    + "status\t"
-                    + "energy_consumption\t"
-                    + "CO2e\t"
-                    + "time\t"
-                    + "cpus\t"
-                    + "powerdraw_cpu\t"
-                    + cpu_model_string
-                    + "cpu_usage\t"
-                    + "requested_memory"
-                ); co2eTraceFile.flush()
+            List<String> headers = [
+                    'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'time', 'cpus', 'powerdraw_cpu',
+                    'cpu_model', 'cpu_usage', 'requested_memory'
+            ]
+            traceWriter.send {
+                co2eTraceFile.println( String.join('\t', headers) )
+                co2eTraceFile.flush()
             }
         }
 
@@ -347,23 +223,11 @@ class CO2FootprintFactory implements TraceObserverFactory {
             summaryWriter = new Agent<PrintWriter>(co2eSummaryFile)
 
             co2eSummaryFile.println("Total CO2e footprint measures of this workflow run")
-            co2eSummaryFile.println("CO2e emissions: ${HelperFunctions.convertToReadableUnits(total_co2,3)}g")
-            co2eSummaryFile.println("Energy consumption: ${HelperFunctions.convertToReadableUnits(total_energy,3)}Wh")
+            co2eSummaryFile.println("CO2e emissions: ${HelperFunctions.convertToReadableUnits(total_co2,3, 'g')}")
+            co2eSummaryFile.println("Energy consumption: ${HelperFunctions.convertToReadableUnits(total_energy,3, 'Wh')}")
 
-            List equivalences = computeCO2footprintEquivalences()
-            List<GString> readableEquivalences = new ArrayList<GString>()
-            if (equivalences[0]){
-                readableEquivalences.add("- ${HelperFunctions.convertToScientificNotation(equivalences[0])} km travelled by car")
-            }
-            if (equivalences[1]){
-                readableEquivalences.add("- Monthly co2 absorption of ${HelperFunctions.convertToScientificNotation(equivalences[1])} trees")
-            }
-            if (equivalences[2]){
-                readableEquivalences.add("- ${HelperFunctions.convertToScientificNotation(equivalences[2])}% of a flight from paris to london")
-            }
-            if (equivalences[3]){
-                readableEquivalences.add("- ${HelperFunctions.convertToScientificNotation(equivalences[3])} flights from paris to london")
-            }
+            CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(total_co2)
+            List<String> readableEquivalences = equivalences.getReadableEquivalences()
             if (readableEquivalences.any()) {
                 co2eSummaryFile.println("\nWhich equals: ")
                 for (var readableEquivalence : readableEquivalences) {
@@ -427,100 +291,39 @@ class CO2FootprintFactory implements TraceObserverFactory {
             // remove the record from the current records
             current.remove(taskId)
 
-            // compute the CO2 footprint
-            def computation_results = computeTaskCO2footprint(trace)
-            def eConsumption = computation_results[0]
-            def co2 = computation_results[1]
-            def time = computation_results[2]
-            def cpus = computation_results[3] as Integer
-            def powerdrawCPU = computation_results[4]
-            def cpu_usage = computation_results[5]
-            def memory = computation_results[6]
-
-            co2eRecords[taskId] = new CO2Record(
-                    (Double) eConsumption,
-                    (Double) co2,
-                    (Double) time,
-                    cpus,
-                    (Double) powerdrawCPU,
-                    (Double) cpu_usage,
-                    (Long) memory,
-                    trace.get('name').toString(),
-                    config.getIgnoreCpuModel() ? "" : trace.get('cpu_model').toString()
-            )
-            total_energy += eConsumption
-            total_co2 += co2
+            // Extract record
+            CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace)
+            total_energy += co2Record.getEnergyConsumption()
+            total_co2 += co2Record.getCO2e()
+            co2eRecords[taskId] = co2Record
 
             // save to the file
-            String cpu_model_string = config.getIgnoreCpuModel()? "" : "${trace.get('cpu_model').toString()}\t"
-            traceWriter.send {
-                PrintWriter it -> it.println(
-                        "${taskId}\t"
-                        + "${trace.get('name').toString()}\t"
-                        + "${trace.get('status').toString()}\t"
-                        + "${HelperFunctions.convertToReadableUnits(eConsumption,3)}Wh\t"
-                        + "${HelperFunctions.convertToReadableUnits(co2,3)}g\t"
-                        + "${HelperFunctions.convertMillisecondsToReadableUnits(time)}\t"
-                        + "${cpus}\t"
-                        + "${powerdrawCPU}\t"
-                        + cpu_model_string
-                        + "${cpu_usage}\t"
-                        + "${HelperFunctions.convertBytesToReadableUnits(memory)}"
-                )
-                it.flush()
+            List<String> co2RecordEntries = co2Record.getReadableEntries()
+            co2RecordEntries = [taskId as String, trace.get('status') as String] + co2RecordEntries
+            traceWriter.send { PrintWriter writer ->
+                writer.println( String.join('\t', co2RecordEntries) )
+                writer.flush()
             }
         }
-
 
         @Override
         void onProcessCached(TaskHandler handler, TraceRecord trace) {
             def taskId = handler.task.id
             // event was triggered by a stored task, ignore it
-            if (trace == null) {
-                return
-            }
+            if (trace == null) { return }
 
-            // compute the CO2 footprint
-            def computation_results = computeTaskCO2footprint(trace)
-            def eConsumption = computation_results[0]
-            def co2 = computation_results[1]
-            def time = computation_results[2]
-            def cpus = computation_results[3] as Integer
-            def powerdrawCPU = computation_results[4]
-            def cpu_usage = computation_results[5]
-            def memory = computation_results[6]
-
-            co2eRecords[taskId] = new CO2Record(
-                    (Double) eConsumption,
-                    (Double) co2,
-                    (Double) time,
-                    cpus,
-                    (Double) powerdrawCPU,
-                    (Double) cpu_usage,
-                    (Long) memory,
-                    trace.get('name').toString(),
-                    config.getIgnoreCpuModel() ? "" : trace.get('cpu_model').toString()
-            )
-            total_energy += eConsumption
-            total_co2 += co2
+            // Extract record
+            CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace)
+            total_energy += co2Record.getEnergyConsumption()
+            total_co2 += co2Record.getCO2e()
+            co2eRecords[taskId] = co2Record
 
             // save to the file
-            String cpu_model_string = config.getIgnoreCpuModel()? "" : "${trace.get('cpu_model').toString()}\t"
-            traceWriter.send {
-                PrintWriter it -> it.println(
-                        "${taskId}\t"
-                        + "${trace.get('name').toString()}\t"
-                        + "${trace.get('status').toString()}\t"
-                        + "${HelperFunctions.convertToReadableUnits(eConsumption,3)}Wh\t"
-                        + "${HelperFunctions.convertToReadableUnits(co2,3)}g\t"
-                        + "${HelperFunctions.convertMillisecondsToReadableUnits(time)}\t"
-                        + "${cpus}\t"
-                        + "${powerdrawCPU}\t"
-                        + cpu_model_string
-                        + "${cpu_usage}\t"
-                        + "${HelperFunctions.convertBytesToReadableUnits(memory)}"
-                )
-                it.flush()
+            List<String> co2RecordEntries = co2Record.getReadableEntries()
+            co2RecordEntries = [taskId as String, trace.get('status') as String] + co2RecordEntries
+            traceWriter.send { PrintWriter writer ->
+                writer.println( String.join('\t', co2RecordEntries) )
+                writer.flush()
             }
         }
     }
@@ -775,13 +578,13 @@ class CO2FootprintFactory implements TraceObserverFactory {
          * @return The rendered json
          */
         protected Map renderCO2TotalsJson() {
-            List equivalences = computeCO2footprintEquivalences()
-            [ co2:HelperFunctions.convertToReadableUnits(total_co2,3), 
+            CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(total_co2)
+            [ co2:HelperFunctions.convertToReadableUnits(total_co2,3),
               energy:HelperFunctions.convertToReadableUnits(total_energy,3),
-              car: equivalences[0]?HelperFunctions.convertToScientificNotation(equivalences[0]):equivalences[0],
-              tree: equivalences[1]?HelperFunctions.convertToScientificNotation(equivalences[1]):equivalences[1],
-              plane_percent: equivalences[2]?HelperFunctions.convertToScientificNotation(equivalences[2]):equivalences[2],
-              plane_flights: equivalences[3]?HelperFunctions.convertToScientificNotation(equivalences[3]):equivalences[3]
+              car: equivalences.getCarKilometersReadable(),
+              tree: equivalences.getTreeMonthsReadable(),
+              plane_percent: equivalences.getPlanePercentReadable(),
+              plane_flights: equivalences.getPlaneFlightsReadable()
             ]
         }
 
