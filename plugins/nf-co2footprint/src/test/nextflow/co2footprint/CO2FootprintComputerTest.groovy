@@ -38,7 +38,7 @@ class CO2FootprintComputerTest extends Specification{
         traceRecord.memory = (7 as Long) * (1000000000 as Long)
 
         CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix)
-        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, ciDataMatrix, config)
+        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord)
 
         expect:
@@ -140,7 +140,7 @@ class CO2FootprintComputerTest extends Specification{
         traceRecord.memory = (7 as Long) * (1000000000 as Long)
 
         CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix)
-        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, ciDataMatrix, config)
+        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
         CO2EquivalencesRecord co2EquivalencesRecord = co2FootprintComputer.computeCO2footprintEquivalences(
                 10**8 + 500000.0
         )

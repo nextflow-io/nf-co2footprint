@@ -17,7 +17,9 @@ class CO2EquivalencesRecord {
     String getCarKilometersReadable() { HelperFunctions.convertToScientificNotation(carKilometers) }
 
     Double getTreeMonths() { treeMonths }
-    String getTreeMonthsReadable() { HelperFunctions.convertToScientificNotation(treeMonths) }
+    String getTreeMonthsReadable() {
+        HelperFunctions.convertTimeToReadableUnits(treeMonths, 'months', 's', 'years', 1, 3)
+    }
 
     Double getPlanePercent() { planePercent }
     String getPlanePercentReadable() { HelperFunctions.convertToScientificNotation(planePercent) }
@@ -35,13 +37,13 @@ class CO2EquivalencesRecord {
                 case 'carKilometers' ->
                     outStr = "- ${this.getCarKilometersReadable()} km travelled by car"
                 case 'treeMonths' ->
-                    outStr = "- Monthly co2 absorption of ${this.getTreeMonthsReadable()} trees"
+                    outStr = "- It takes one tree ${this.getTreeMonthsReadable()} to sequester the equivalent amount of CO2 from the atmosphere"
                 case 'planePercent' ->
                     if (value < 100) {
-                        outStr = "- ${this.getPlanePercentReadable()}% of a flight from paris to london"
+                        outStr = "- ${this.getPlanePercentReadable()}% of a flight from Paris to London"
                     }
                     else {
-                        outStr = "- ${this.getPlaneFlightsReadable()} flights from paris to london"
+                        outStr = "- ${this.getPlaneFlightsReadable()} flights from Paris to London"
                     }
             }
             readableEquivalences.add(outStr)

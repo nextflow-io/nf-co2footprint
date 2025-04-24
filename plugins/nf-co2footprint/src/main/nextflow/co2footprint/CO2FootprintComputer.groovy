@@ -14,7 +14,6 @@ import java.lang.management.ManagementFactory
 class CO2FootprintComputer {
 
     private final TDPDataMatrix tdpDataMatrix
-    private final CIDataMatrix ciDataMatrix
     private final CO2FootprintConfig config
 
     /**
@@ -23,15 +22,23 @@ class CO2FootprintComputer {
      * @param ciDataMatrix  Carbon intensity Data Matrix
      * @param config Co2FootprintConfig configuration of the plugin
      */
-    CO2FootprintComputer(TDPDataMatrix tdpDataMatrix, CIDataMatrix ciDataMatrix, CO2FootprintConfig config) {
+    CO2FootprintComputer(TDPDataMatrix tdpDataMatrix, CO2FootprintConfig config) {
         this.tdpDataMatrix = tdpDataMatrix
-        this.ciDataMatrix = ciDataMatrix
         this.config = config
     }
 
     /**
      * Core function to compute CO2 emissions for each task:
-     * $C = t * (nc * Pc * uc + nm * Pm) * PUE * CI * 0.001$
+     * $C = t * (n_c * P_c * u_c + n_m * P_m) * PUE * CI * 0.001$
+     * $C$ = co2e
+     * $t$ = runtime_h
+     * $n_c$ = numberOfCores
+     * $P_c$ = powerdrawPerCore
+     * $u_c$ = coreUsage
+     * $n_m$ = memory
+     * $P_m$ = powerdrawMem
+     * $PUE$ = pue
+     * $CI$ = ci
      * as in https://doi.org/10.1002/advs.202100707
      * PSF: pragmatic scaling factor -> not used here since we aim at the CO2e of one pipeline run
      * Factor 0.001 needed to convert Pc and Pm from W to kW
@@ -50,19 +57,17 @@ class CO2FootprintComputer {
          * CPU model information
          */
         String cpuModel = config.getIgnoreCpuModel() ? 'default' : trace.get('cpu_model') as String
-        TDPDataMatrix modelDataMatrix = tdpDataMatrix.matchModel(cpuModel)
 
         /**
          * Realtime of computation
          */
-        BigDecimal runtime_ms = trace.get('realtime') as BigDecimal     // [ms]
-        BigDecimal runtime_h = runtime_ms/(1000*60*60)                  // [h]
+        BigDecimal runtime_h = trace.get('realtime') as BigDecimal / (1000*60*60)                  // [h]
 
         /**
          * Factors of core power usage
          */
-        BigDecimal numberOfCores = trace.get('cpus') as BigDecimal      // [#]
-        BigDecimal powerdrawPerCore = modelDataMatrix.getCoreTDP()      // [W/core]
+        Integer numberOfCores = trace.get('cpus') as Integer      // [#]
+        BigDecimal powerdrawPerCore = tdpDataMatrix.matchModel(cpuModel).getCoreTDP()      // [W/core]
 
         // uc: core usage factor (between 0 and 1)
         BigDecimal cpuUsage = trace.get('%cpu') as BigDecimal
@@ -82,9 +87,9 @@ class CO2FootprintComputer {
         /**
          * Factors of memory power usage
          */
-        BigDecimal availableMemory = OS.getTotalMemorySize() as BigDecimal    // [bytes]
-        BigDecimal requestedMemory = trace.get('memory') as BigDecimal        // [bytes]
-        BigDecimal requiredMemory = trace.get('peak_rss') as BigDecimal       // [bytes]
+        Long availableMemory = OS.getTotalMemorySize() as Long    // [bytes]
+        Long requestedMemory = trace.get('memory') as Long        // [bytes]
+        Long requiredMemory = trace.get('peak_rss') as Long       // [bytes]
         if ( requestedMemory == null || requiredMemory > requestedMemory) {
             log.warn(
                     "The required memory (${requiredMemory/(1024**3)} GB) for the task" +

@@ -68,7 +68,7 @@ class CO2Record extends TraceRecord {
     String getCO2eReadable() { HelperFunctions.convertToReadableUnits(co2e,3, 'g') }
 
     Double getTime() { time }
-    String getTimeReadable() { HelperFunctions.convertMillisecondsToReadableUnits(time) }
+    String getTimeReadable() { HelperFunctions.convertTimeToReadableUnits(time, 'ms', 'ms', 'days', 0.0d) }
 
     Integer getCPUs() { cpus }
     String getCPUsReadable() { cpus as String }
@@ -88,7 +88,7 @@ class CO2Record extends TraceRecord {
     String getCPUModel() { cpu_model }
     String getCPUModelReadable() { cpu_model }
 
-    List<String> getRecords() {
+    List<String> getReadableEntries() {
         return [
                 this.getNameReadable(), this.getEnergyConsumptionReadable(), this.getCO2eReadable(),
                 this.getTimeReadable(), this.getCPUsReadable(), this.getPowerdrawCPUReadable(),
