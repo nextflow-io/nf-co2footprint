@@ -44,74 +44,83 @@ class HelperFunctions {
         return "${value} ${units[unitIndex]}"
     }
 
+
+    /**
+     * Converts the given time to another unit of time
+     *
+     * @param value The time as a number in original given unit
+     * @param unit Given unit of time
+     * @param targetUnit Unit of time to be converted to
+     * @return Number of converted time
+     */
+    static BigDecimal convertTime(def value, String unit='ms', String targetUnit='s') {
+        value = value as BigDecimal
+        List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']   // Units of time
+        List<Double> steps = [1000.0, 1000.0, 1000.0, 60.0, 60.0, 24.0, 7.0, 4.35, 12.0]                // (Average) magnitude change between units
+
+        int givenUnitPos = units.indexOf(unit)
+        int targetUnitPos = units.indexOf(targetUnit)
+
+        // Obtain conversion rates in the given range
+        if (targetUnitPos > givenUnitPos) {
+            steps.subList(givenUnitPos, targetUnitPos).each { step -> value /= step }
+        }
+        else if (targetUnitPos < givenUnitPos) {
+            steps.subList(targetUnitPos, givenUnitPos).each { step -> value *= step }
+        }
+
+        return value
+    }
+
     /**
      * Converts the given unit to a readable time string with options to limit what is shown.
      *
-     * @param value Time as double
-     * @param unit Unit of time
+     * @param value The time as a number in original given unit
+     * @param unit Given unit of time
      * @param smallestUnit Smallest desired unit to be reported
      * @param largestUnit Largest desired unit to be reported
-     * @param smallestValue Smallest value to be reported
+     * @param threshold Smallest value to be reported (remainders are passed on to smaller units)
      * @param maximumSteps Maximum number of valid time steps to be reported
      * @return String of the readable time
      */
     static String convertTimeToReadableUnits(
             def value, String unit='ms',
             String smallestUnit='s', String largestUnit='years',
-            Double includeOnlyBigger=null, Integer maximumSteps=null
+            Double threshold=null, Integer numSteps=null,
+            String readableString=''
     ) {
-        value = value as BigDecimal
         List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']   // Units of time
-        List<Double> steps = [1000.0, 1000.0, 1000.0, 60.0, 60.0, 24.0, 7.0, 4.35, 12.0]                // (Average) magnitude change between units
 
-        int givenUnitPos = units.indexOf(unit)
-        int numSteps = 0
-        String readableString = ''
+        // Determine number of remaining steps
+        numSteps = numSteps == null ? units.indexOf(largestUnit) - units.indexOf(smallestUnit) : numSteps - 1
 
-        // Iterate over all units between largest and smallest desired output
-        for (
-                int currentUnitPos = units.indexOf(largestUnit);
-                currentUnitPos >= units.indexOf(smallestUnit);
-                currentUnitPos--
-        ) {
-            String currentUnit = units[currentUnitPos]
+        // Calculate the time in the target unit
+        String targetUnit = largestUnit
+        BigDecimal targetValue = convertTime(value as BigDecimal, unit, targetUnit)
+        int targetValueRound = Math.floor(targetValue) as Integer
 
-            // Obtain conversion rates in the given range
-            BigDecimal conversionRate = 1.0
-            if (currentUnitPos > givenUnitPos) {
-                steps.subList(givenUnitPos, currentUnitPos).each { step -> conversionRate *= step }
-            }
-            else if (currentUnitPos < givenUnitPos) {
-                steps.subList(currentUnitPos, givenUnitPos).each { step -> conversionRate /= step }
-            }
-
-            // Calculate the Value of the current unit with the remaining value
-            BigDecimal currentExactUnitValue = value / conversionRate
-            int currentUnitValue = Math.floor(currentExactUnitValue) as Integer
-
-            // Remove 's' from larger units if value is exactly 1
-            if (currentUnitValue == 1 && currentUnitPos > 5) {
-                currentUnit = currentUnit.dropRight(1)
-            }
-
-            // When smallest unit or maximum steps are reached, return remaining
-            if (currentUnit == smallestUnit || (maximumSteps != null && numSteps > maximumSteps)) {
-                if (
-                        (includeOnlyBigger == null || currentExactUnitValue > includeOnlyBigger) &&
-                        (maximumSteps == null || numSteps < maximumSteps)
-                ) {
-                    readableString = "${readableString} ${currentExactUnitValue}${currentUnit}"
-                }
-                break
-            }
-            // Report value only if larger or equal to 1
-            else if (includeOnlyBigger == null || currentUnitValue > includeOnlyBigger) {
-                numSteps += 1
-                value = value - currentUnitValue * conversionRate
-                readableString = "${readableString} ${currentUnitValue}${currentUnit}"
-            }
+        // Remove 's' from larger units if value is exactly 1
+        if (targetValueRound == 1 && ['days', 'weeks', 'months', 'years'].contains(targetUnit)) {
+            targetUnit = targetUnit.dropRight(1)
         }
 
-        return readableString.trim()
+        // Extend String & adjust value to avoid inaccuracies by ensuring conversion between closest units
+        if (threshold == null || targetValueRound > threshold) {
+            value = targetValue - targetValueRound
+            unit = largestUnit
+            readableString +=  numSteps == 0 ? " ${targetValue}${targetUnit}" : " ${targetValueRound}${targetUnit}"
+        }
+
+        // When smallest unit or maximum steps are reached, return remaining
+        if (numSteps == 0) {
+            return readableString.trim()
+        }
+        else {
+            return convertTimeToReadableUnits(
+                    value, unit,
+                    smallestUnit, units[units.indexOf(largestUnit) - 1],
+                    threshold, numSteps, readableString
+            )
+        }
     }
 }
