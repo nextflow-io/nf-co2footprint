@@ -58,7 +58,7 @@ class CO2FootprintComputerTest extends Specification{
         traceRecord.memory = (7 as Long) * (1000000000 as Long)
 
         CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix)
-        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, ciDataMatrix, config)
+        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord)
 
         expect:
@@ -78,7 +78,7 @@ class CO2FootprintComputerTest extends Specification{
         traceRecord.memory = (7 as Long) * (1000000000 as Long)
 
         CO2FootprintConfig config = new CO2FootprintConfig([pue: 1.4], tdpDataMatrix)
-        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, ciDataMatrix, config)
+        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord)
 
         expect:
@@ -98,7 +98,7 @@ class CO2FootprintComputerTest extends Specification{
         traceRecord.memory = (7 as Long) * (1000000000 as Long)
 
         CO2FootprintConfig config = new CO2FootprintConfig([location: 'DE'], tdpDataMatrix)
-        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, ciDataMatrix, config)
+        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord)
 
         expect:
@@ -118,7 +118,7 @@ class CO2FootprintComputerTest extends Specification{
         traceRecord.memory = (7 as Long) * (1000000000 as Long)
 
         CO2FootprintConfig config = new CO2FootprintConfig([ci: 338.66], tdpDataMatrix)
-        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, ciDataMatrix, config)
+        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord)
 
         expect:

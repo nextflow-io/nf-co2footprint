@@ -48,7 +48,7 @@ class CO2FootprintTrace extends CO2FootprintFile {
     }
 
     void write(TaskId taskId, TraceRecord trace, CO2Record co2Record){
-        List<String> records = co2Record.getRecords()
+        List<String> records = co2Record.getReadableEntries()
 
         records = [taskId as String, trace.get('status') as String] + records
 

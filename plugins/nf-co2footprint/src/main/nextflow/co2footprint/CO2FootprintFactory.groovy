@@ -94,7 +94,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                     session,
                     version,
                     config,
-                    new CO2FootprintComputer(tdpDataMatrix, ciDataMatrix, config)
+                    new CO2FootprintComputer(tdpDataMatrix, config)
             )
         )
 
