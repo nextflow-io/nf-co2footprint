@@ -97,18 +97,22 @@ class HelperFunctions {
         // Calculate the time in the target unit
         String targetUnit = largestUnit
         BigDecimal targetValue = convertTime(value as BigDecimal, unit, targetUnit)
-        int targetValueRound = Math.floor(targetValue) as Integer
+        def targetValueFormatted = Math.floor(targetValue) as Integer
 
         // Remove 's' from larger units if value is exactly 1
-        if (targetValueRound == 1 && ['days', 'weeks', 'months', 'years'].contains(targetUnit)) {
+        if (targetValueFormatted == 1 && ['days', 'weeks', 'months', 'years'].contains(targetUnit)) {
             targetUnit = targetUnit.dropRight(1)
         }
 
+        if (numSteps == 0) {
+            targetValueFormatted = targetValue
+        }
+
         // Extend String & adjust value to avoid inaccuracies by ensuring conversion between closest units
-        if (threshold == null || targetValueRound > threshold) {
-            value = targetValue - targetValueRound
+        if (threshold == null || targetValueFormatted > threshold) {
+            value = targetValue - targetValueFormatted
             unit = largestUnit
-            readableString +=  numSteps == 0 ? " ${targetValue}${targetUnit}" : " ${targetValueRound}${targetUnit}"
+            readableString +=  " ${targetValueFormatted}${targetUnit}"
         }
 
         // When smallest unit or maximum steps are reached, return remaining
