@@ -24,6 +24,8 @@ import nextflow.processor.TaskRun
 import nextflow.trace.TraceRecord
 import spock.lang.Specification
 
+import java.nio.file.Files
+import java.nio.file.Path
 /**
  * This class implements various tests.
  *
@@ -60,13 +62,15 @@ class CO2FootprintFactoryTest extends Specification {
         def session = Mock(Session) { getConfig() >> [:] }
         def factory = new CO2FootprintFactory()
         factory.create(session)
-        def results = factory.computeTaskCO2footprint(traceRecord)
+        CO2Record co2Record = factory
+                .getCO2FootprintComputer()
+                .computeTaskCO2footprint(new TaskId(0), traceRecord)
 
         expect:
         // Energy consumption converted to Wh and compared to result from www.green-algorithms.org
-        round(results[0]/1000) == 24.10
+        round(co2Record.getEnergyConsumption()/1000) == 24.10
         // CO2 converted to g
-        round(results[1]/1000) == 11.45
+        round(co2Record.getCO2e()/1000) == 11.45
     }
 
     def 'test co2e calculation for specific cpu_model' () {
@@ -81,13 +85,16 @@ class CO2FootprintFactoryTest extends Specification {
         def session = Mock(Session) { getConfig() >> [:] }
         def factory = new CO2FootprintFactory()
         factory.create(session)
-        def results = factory.computeTaskCO2footprint(traceRecord)
+
+        CO2Record co2Record = factory
+                .getCO2FootprintComputer()
+                .computeTaskCO2footprint(new TaskId(0), traceRecord)
 
         expect:
         // Energy consumption converted to Wh and compared to result from www.green-algorithms.org
-        round(results[0]/1000) == 29.11
+        round(co2Record.getEnergyConsumption()/1000) == 29.11
         // CO2 in g
-        round(results[1]/1000) == 13.83
+        round(co2Record.getCO2e()/1000) == 13.83
     }
 
     def 'test co2e calculation with non-default pue' () {
@@ -102,13 +109,15 @@ class CO2FootprintFactoryTest extends Specification {
         def session = Mock(Session) { getConfig() >> [co2footprint: [pue: 1.4]] }
         def factory = new CO2FootprintFactory()
         factory.create(session)
-        def results = factory.computeTaskCO2footprint(traceRecord)
+        CO2Record co2Record = factory
+                .getCO2FootprintComputer()
+                .computeTaskCO2footprint(new TaskId(0), traceRecord)
 
         expect:
         // Energy consumption converted to Wh and compared to result from www.green-algorithms.org
-        round(results[0]/1000) == 20.2
+        round(co2Record.getEnergyConsumption()/1000) == 20.2
         // CO2 in g
-        round(results[1]/1000) == 9.59
+        round(co2Record.getCO2e()/1000) == 9.59
     }
 
     def 'test co2e calculation with CI value retrieved for Germany' () {
@@ -123,13 +132,16 @@ class CO2FootprintFactoryTest extends Specification {
         def session = Mock(Session) { getConfig() >> [co2footprint: [location: 'DE']] }
         def factory = new CO2FootprintFactory()
         factory.create(session)
-        def results = factory.computeTaskCO2footprint(traceRecord)
+
+        CO2Record co2Record = factory
+                .getCO2FootprintComputer()
+                .computeTaskCO2footprint(new TaskId(0), traceRecord)
 
         expect:
         // Energy consumption converted to Wh and compared to result from www.green-algorithms.org
-        round(results[0]/1000) == 24.10
+        round(co2Record.getEnergyConsumption()/1000) == 24.10
         // CO2 in g
-        round(results[1]/1000) == 8.16
+        round(co2Record.getCO2e()/1000) == 8.16
     }
 
     def 'test co2e calculation for custom CI value' () {
@@ -145,17 +157,22 @@ class CO2FootprintFactoryTest extends Specification {
         def session = Mock(Session) { getConfig() >> [co2footprint: [ci: 338.66]] }
         def factory = new CO2FootprintFactory()
         factory.create(session)
-        def results = factory.computeTaskCO2footprint(traceRecord)
+
+        CO2Record co2Record = factory
+                .getCO2FootprintComputer()
+                .computeTaskCO2footprint(new TaskId(0), traceRecord)
 
         expect:
-        // Energy consumption converted to Wh and compared to result from www.green-algorithms.org (for location Germany)
-        round(results[0]/1000) == 24.10
+        // Energy consumption converted to Wh and compared to result from www.green-algorithms.org
+        round(co2Record.getEnergyConsumption()/1000) == 24.10
         // CO2 in g
-        round(results[1]/1000) == 8.16
+        round(co2Record.getCO2e()/1000) == 8.16
     }
 
     def 'test calculation of total CO2e and energy consumption' () {
         given:
+        Path tempPath = Files.createTempDirectory('tmpdir')
+        Path tracePath = tempPath.resolve('trace_test.txt')
         def traceRecord = new TraceRecord()
         traceRecord.task_id = 111
         traceRecord.realtime = (1 as Long) * (3600000 as Long)
@@ -164,7 +181,7 @@ class CO2FootprintFactoryTest extends Specification {
         traceRecord.'%cpu' = 100.0
         traceRecord.memory = (7 as Long) * (1000000000 as Long)
 
-        def session = Mock(Session) { getConfig() >> [:] }
+        def session = Mock(Session) { getConfig() >> [co2footprint: ['traceFile': tracePath]]}
         // Create a handler
         def task = new TaskRun(id: TaskId.of(111))
         task.processor = Mock(TaskProcessor)
@@ -186,6 +203,8 @@ class CO2FootprintFactoryTest extends Specification {
 
     def 'test calculation of CO2 equivalences' () {
         given:
+        Path tempPath = Files.createTempDirectory('tmpdir')
+        Path tracePath = tempPath.resolve('trace_test.txt')
         def traceRecord = new TraceRecord()
         traceRecord.task_id = 111
         traceRecord.realtime = (1 as Long) * (3600000 as Long)
@@ -194,7 +213,7 @@ class CO2FootprintFactoryTest extends Specification {
         traceRecord.'%cpu' = 100.0
         traceRecord.memory = (7 as Long) * (1000000000 as Long)
 
-        def session = Mock(Session) { getConfig() >> [:] }
+        def session = Mock(Session) { getConfig() >> [co2footprint: ['traceFile': tracePath]] }
         // Create a handler
         def task = new TaskRun(id: TaskId.of(111))
         task.processor = Mock(TaskProcessor)
@@ -207,15 +226,15 @@ class CO2FootprintFactoryTest extends Specification {
         textFileObserver.onProcessStart(handler, traceRecord)
         textFileObserver.onProcessComplete(handler, traceRecord)
 
-        def results = factory.computeCO2footprintEquivalences()
+
+        CO2EquivalencesRecord co2EquivalencesRecord = factory
+                .getCO2FootprintComputer()
+                .computeCO2footprintEquivalences(factory.total_co2)
 
         expect:
         // Values compared to result from www.green-algorithms.org
-        // Car Km
-        results[0].round(7) == 0.0654020 as Double
-        // Tree months
-        results[1].round(7) == 0.0124813 as Double
-        // Plane percent
-        results[2].round(7) == 0.0228907 as Double
+        co2EquivalencesRecord.getCarKilometers().round(7) == 0.0654020 as Double
+        co2EquivalencesRecord.getTreeMonths().round(7) == 0.0124813 as Double
+        co2EquivalencesRecord.getPlanePercent().round(7) == 0.0228907 as Double
     }
 }

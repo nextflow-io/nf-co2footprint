@@ -16,16 +16,15 @@ import groovy.json.StringEscapeUtils
 @CompileStatic
 class CO2Record extends TraceRecord {
 
-    private Double energy
-    private Double co2e
-    private Double time
-    private Integer cpus
-    private Double powerdrawCPU
-    private Double cpuUsage
-    private Long memory
-    private String name
-    private String cpu_model
-    // final? or something? to make sure for key value can be set only once?
+    private final Double energy
+    private final Double co2e
+    private final Double time
+    private final Integer cpus
+    private final Double powerdrawCPU
+    private final Double cpuUsage
+    private final Long memory
+    private final String name
+    private final String cpu_model
 
     CO2Record(Double energy, Double co2e, Double time, Integer cpus, Double powerdrawCPU, Double cpuUsage, Long memory, String name, String cpu_model) {
         this.energy = energy
@@ -62,12 +61,40 @@ class CO2Record extends TraceRecord {
         cpu_model:      'str'
     ]
 
-    // TODO implement accordingly to TraceRecord
     Double getEnergyConsumption() { energy }
-    String getEnergyConsumptionReadable() { HelperFunctions.convertToReadableUnits(energy,3) }
-    String getCO2eReadable() { HelperFunctions.convertToReadableUnits(co2e,3) }
+    String getEnergyConsumptionReadable() { HelperFunctions.convertToReadableUnits(energy,3, 'Wh') }
+
     Double getCO2e() { co2e }
+    String getCO2eReadable() { HelperFunctions.convertToReadableUnits(co2e,3, 'g') }
+
+    Double getTime() { time }
+    String getTimeReadable() { HelperFunctions.convertTimeToReadableUnits(time, 'ms', 'ms', 'days', 0.0d) }
+
+    Integer getCPUs() { cpus }
+    String getCPUsReadable() { cpus as String }
+
+    Double getPowerdrawCPU() { powerdrawCPU }
+    String getPowerdrawCPUReadable() { powerdrawCPU as String  }
+
+    Double getCPUUsage() { cpuUsage }
+    String getCPUUsageReadable() { cpuUsage as String  }
+
+    Long getMemory() { memory }
+    String getMemoryReadable() { HelperFunctions.convertBytesToReadableUnits(memory) }
+
     String getName() { name }
+    String getNameReadable() { name }
+
+    String getCPUModel() { cpu_model }
+    String getCPUModelReadable() { cpu_model }
+
+    List<String> getReadableEntries() {
+        return [
+                this.getNameReadable(), this.getEnergyConsumptionReadable(), this.getCO2eReadable(),
+                this.getTimeReadable(), this.getCPUsReadable(), this.getPowerdrawCPUReadable(),
+                this.getCPUModelReadable(), this.getCPUUsageReadable(), this.getMemoryReadable()
+        ]
+    }
 
     //@PackageScope
     Map<String,Object> store
@@ -133,7 +160,7 @@ class CO2Record extends TraceRecord {
         try {
             return formatter.call(val,sFormat)
         }
-        catch( Throwable e ) {
+        catch( Throwable ignore ) {
             log.debug "Not a valid trace value -- field: '$name'; value: '$val'; format: '$sFormat'"
             return null
         }
