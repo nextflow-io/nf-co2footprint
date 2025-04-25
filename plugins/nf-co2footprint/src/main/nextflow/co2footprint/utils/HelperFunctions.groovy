@@ -4,6 +4,12 @@ import java.text.DecimalFormat
 
 class HelperFunctions {
 
+    /**
+     * Changes a number into scientific notation ($x.x \times 10^y$)
+     *
+     * @param value
+     * @return
+     */
     static String convertToScientificNotation(Double value) {
         if (value == 0) {
             return value.toString()
@@ -17,6 +23,13 @@ class HelperFunctions {
         }
     }
 
+    /**
+     * Convert any unit to readable by taking $10^3$ steps
+     * @param value Value that should be converted
+     * @param unitIndex Current position in the unit scales
+     * @param unit Name / symbol for the unit
+     * @return Converted String with appropriate scale
+     */
     static String convertToReadableUnits(double value, int unitIndex=4, String unit='') {
         def units = ['p', 'n', 'u', 'm', ' ', 'K', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
         
@@ -32,6 +45,12 @@ class HelperFunctions {
         return "${value} ${units[unitIndex]}${unit}"
     }
 
+    /**
+     * Adds prefixes such as Mega (MB) to Bytes and calculates correct number.
+     *
+     * @param value Amount of bytes
+     * @return String of the value together with the appropriate unit
+     */
     static String convertBytesToReadableUnits(double value) {
         def units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']  // Units: Byte, Kilobyte, Megabyte, Gigabyte, Terabyte, Petabyte, Exabyte
         int unitIndex=0
