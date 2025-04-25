@@ -2,10 +2,10 @@ package nextflow.co2footprint.utils
 
 import spock.lang.Specification
 
-class HelperFunctionsTest extends Specification  {
+class ConverterTest extends Specification  {
     def 'Should convert correct between times'() {
         when:
-        BigDecimal out = HelperFunctions.convertTime(value, unit, targetUnit)
+        BigDecimal out = Converter.convertTime(value, unit, targetUnit)
 
         then:
         out == expected
@@ -21,7 +21,7 @@ class HelperFunctionsTest extends Specification  {
 
     def 'Should convert time to readable Strings'() {
         when:
-        String out = HelperFunctions.convertTimeToReadableUnits(
+        String out = Converter.convertTimeToReadableUnits(
                 value, unit,
                 smallestUnit, largestUnit,
                 smallestValue, maximumSteps

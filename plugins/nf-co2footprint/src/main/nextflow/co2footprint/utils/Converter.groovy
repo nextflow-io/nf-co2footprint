@@ -2,7 +2,10 @@ package nextflow.co2footprint.utils
 
 import java.text.DecimalFormat
 
-class HelperFunctions {
+/**
+ * Functions to convert values
+ */
+class Converter {
 
     /**
      * Changes a number into scientific notation ($x.x \times 10^y$)
@@ -10,7 +13,7 @@ class HelperFunctions {
      * @param value
      * @return
      */
-    static String convertToScientificNotation(Double value) {
+    static String toScientificNotation(Double value) {
         if (value == 0) {
             return value.toString()
         } else if (value <= 999 && value >= 0.001) {
@@ -25,12 +28,13 @@ class HelperFunctions {
 
     /**
      * Convert any unit to readable by taking $10^3$ steps
+     *
      * @param value Value that should be converted
      * @param unitIndex Current position in the unit scales
      * @param unit Name / symbol for the unit
      * @return Converted String with appropriate scale
      */
-    static String convertToReadableUnits(double value, int unitIndex=4, String unit='') {
+    static String toReadableUnits(double value, int unitIndex=4, String unit='') {
         def units = ['p', 'n', 'u', 'm', ' ', 'K', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
         
         while (value >= 1000 && unitIndex < units.size() - 1) {
@@ -51,7 +55,7 @@ class HelperFunctions {
      * @param value Amount of bytes
      * @return String of the value together with the appropriate unit
      */
-    static String convertBytesToReadableUnits(double value) {
+    static String toReadableByteUnits(double value) {
         def units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']  // Units: Byte, Kilobyte, Megabyte, Gigabyte, Terabyte, Petabyte, Exabyte
         int unitIndex=0
 
@@ -102,7 +106,7 @@ class HelperFunctions {
      * @param maximumSteps Maximum number of valid time steps to be reported
      * @return String of the readable time
      */
-    static String convertTimeToReadableUnits(
+    static String toReadableTimeUnits(
             def value, String unit='ms',
             String smallestUnit='s', String largestUnit='years',
             Double threshold=null, Integer numSteps=null,
@@ -139,7 +143,7 @@ class HelperFunctions {
             return readableString.trim()
         }
         else {
-            return convertTimeToReadableUnits(
+            return toReadableTimeUnits(
                     value, unit,
                     smallestUnit, units[units.indexOf(largestUnit) - 1],
                     threshold, numSteps, readableString
