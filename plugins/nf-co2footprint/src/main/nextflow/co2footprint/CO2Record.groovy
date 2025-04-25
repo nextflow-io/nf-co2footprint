@@ -62,10 +62,10 @@ class CO2Record extends TraceRecord {
     ]
 
     Double getEnergyConsumption() { energy }
-    String getEnergyConsumptionReadable() { Converter.toReadableUnits(energy,3, 'Wh') }
+    String getEnergyConsumptionReadable() { Converter.toReadableUnits(energy,'m', 'Wh') }
 
     Double getCO2e() { co2e }
-    String getCO2eReadable() { Converter.toReadableUnits(co2e,3, 'g') }
+    String getCO2eReadable() { Converter.toReadableUnits(co2e,'m', 'g') }
 
     Double getTime() { time }
     String getTimeReadable() { Converter.toReadableTimeUnits(time, 'ms', 'ms', 'days', 0.0d) }

@@ -21,7 +21,7 @@ class ConverterTest extends Specification  {
 
     def 'Should convert time to readable Strings'() {
         when:
-        String out = Converter.convertTimeToReadableUnits(
+        String out = Converter.toReadableTimeUnits(
                 value, unit,
                 smallestUnit, largestUnit,
                 smallestValue, maximumSteps

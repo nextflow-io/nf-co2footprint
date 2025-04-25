@@ -223,8 +223,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
             summaryWriter = new Agent<PrintWriter>(co2eSummaryFile)
 
             co2eSummaryFile.println("Total CO2e footprint measures of this workflow run")
-            co2eSummaryFile.println("CO2e emissions: ${Converter.toReadableUnits(total_co2,3, 'g')}")
-            co2eSummaryFile.println("Energy consumption: ${Converter.toReadableUnits(total_energy,3, 'Wh')}")
+            co2eSummaryFile.println("CO2e emissions: ${Converter.toReadableUnits(total_co2,'m', 'g')}")
+            co2eSummaryFile.println("Energy consumption: ${Converter.toReadableUnits(total_energy,'m', 'Wh')}")
 
             CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(total_co2)
             List<String> readableEquivalences = equivalences.getReadableEquivalences()
@@ -579,8 +579,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
          */
         protected Map renderCO2TotalsJson() {
             CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(total_co2)
-            [ co2:Converter.toReadableUnits(total_co2,3),
-              energy:Converter.toReadableUnits(total_energy,3),
+            [ co2:Converter.toReadableUnits(total_co2,'m'),
+              energy:Converter.toReadableUnits(total_energy,'m'),
               car: equivalences.getCarKilometersReadable(),
               tree: equivalences.getTreeMonthsReadable(),
               plane_percent: equivalences.getPlanePercentReadable(),

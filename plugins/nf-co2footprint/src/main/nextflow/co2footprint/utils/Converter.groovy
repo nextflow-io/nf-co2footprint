@@ -30,23 +30,24 @@ class Converter {
      * Convert any unit to readable by taking $10^3$ steps
      *
      * @param value Value that should be converted
-     * @param unitIndex Current position in the unit scales
+     * @param scope Symbol for scope of the unit (e.g. kilo = k)
      * @param unit Name / symbol for the unit
      * @return Converted String with appropriate scale
      */
-    static String toReadableUnits(double value, int unitIndex=4, String unit='') {
-        def units = ['p', 'n', 'u', 'm', ' ', 'K', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
-        
-        while (value >= 1000 && unitIndex < units.size() - 1) {
+    static String toReadableUnits(double value, String scope=' ', String unit='') {
+        def scopes = ['p', 'n', 'u', 'm', ' ', 'K', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
+        int scopeIndex = scopes.indexOf(scope)
+
+        while (value >= 1000 && scopeIndex < scopes.size() - 1) {
             value /= 1000
-            unitIndex++
+            scopeIndex++
         }
-        while (value <= 1 && unitIndex > 0) {
+        while (value <= 1 && scopeIndex > 0) {
             value *= 1000
-            unitIndex--
+            scopeIndex--
         }
         value = Math.round( value * 100 ) / 100
-        return "${value} ${units[unitIndex]}${unit}"
+        return "${value} ${scopes[scopeIndex]}${unit}"
     }
 
     /**
