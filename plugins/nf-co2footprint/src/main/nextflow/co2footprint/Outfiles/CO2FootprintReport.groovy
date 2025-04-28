@@ -4,7 +4,7 @@ import nextflow.co2footprint.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.CO2FootprintResourcesAggregator
 import nextflow.co2footprint.CO2Record
-import nextflow.co2footprint.utils.HelperFunctions
+import nextflow.co2footprint.utils.Converter
 
 import groovy.text.GStringTemplateEngine
 import groovy.text.Template
@@ -16,7 +16,6 @@ import nextflow.trace.TraceHelper
 import nextflow.trace.TraceRecord
 
 import java.nio.file.Path
-import java.nio.file.Paths
 
 
 @Slf4j
@@ -169,8 +168,8 @@ class CO2FootprintReport extends CO2FootprintFile{
      * @return The rendered json
      */
     protected Map renderCO2TotalsJson() {
-        [ co2: HelperFunctions.convertToReadableUnits(total_co2,3),
-          energy:HelperFunctions.convertToReadableUnits(total_energy,3),
+        [ co2: Converter.toReadableUnits(total_co2,'m', ''),        // TODO: unit (g) could be given here and removed from HTML template
+          energy:Converter.toReadableUnits(total_energy,'m',''),    // TODO: unit (Wh) could be given here and removed from HTML template
           car: equivalences.getCarKilometersReadable(),
           tree: equivalences.getTreeMonthsReadable(),
           plane_percent: equivalences.getPlanePercentReadable(),

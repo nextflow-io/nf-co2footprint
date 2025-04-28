@@ -220,8 +220,7 @@ class CO2FootprintObserverTest extends Specification{
         List<String> reportLines = Files.readAllLines(reportPath)
         reportLines.size() == 1007
         reportLines[0] == '<!DOCTYPE html>'
-        String timeLine = reportLines[194]
-        timeLine == "          " +
+        reportLines[194] == "          " +
                 "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                 " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
         reportLines[213] == "          <span class=\"metric\">11.45  g</span>"

@@ -4,7 +4,7 @@ import groovy.util.logging.Slf4j
 import groovyx.gpars.agent.Agent
 import nextflow.co2footprint.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
-import nextflow.co2footprint.utils.HelperFunctions
+import nextflow.co2footprint.utils.Converter
 import nextflow.trace.TraceHelper
 
 import java.nio.file.Path
@@ -44,8 +44,8 @@ class CO2FootprintSummary extends CO2FootprintFile {
 
         String outText = """\
         Total CO2e footprint measures of this workflow run
-        CO2e emissions: ${HelperFunctions.convertToReadableUnits(total_co2,3, 'g')}
-        Energy consumption: ${HelperFunctions.convertToReadableUnits(total_energy,3, 'Wh')}
+        CO2e emissions: ${Converter.toReadableUnits(total_co2,'m', 'g')}
+        Energy consumption: ${Converter.toReadableUnits(total_energy,'m', 'Wh')}
 
         """.stripIndent()
 
