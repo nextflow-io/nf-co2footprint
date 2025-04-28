@@ -1,6 +1,6 @@
 package nextflow.co2footprint
 
-import nextflow.co2footprint.utils.HelperFunctions
+import nextflow.co2footprint.utils.Converter
 
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
@@ -62,13 +62,13 @@ class CO2Record extends TraceRecord {
     ]
 
     Double getEnergyConsumption() { energy }
-    String getEnergyConsumptionReadable() { HelperFunctions.convertToReadableUnits(energy,3, 'Wh') }
+    String getEnergyConsumptionReadable() { Converter.toReadableUnits(energy,'m', 'Wh') }
 
     Double getCO2e() { co2e }
-    String getCO2eReadable() { HelperFunctions.convertToReadableUnits(co2e,3, 'g') }
+    String getCO2eReadable() { Converter.toReadableUnits(co2e,'m', 'g') }
 
     Double getTime() { time }
-    String getTimeReadable() { HelperFunctions.convertTimeToReadableUnits(time, 'ms', 'ms', 'days', 0.0d) }
+    String getTimeReadable() { Converter.toReadableTimeUnits(time, 'ms', 'ms', 'days', 0.0d) }
 
     Integer getCPUs() { cpus }
     String getCPUsReadable() { cpus as String }
@@ -80,7 +80,7 @@ class CO2Record extends TraceRecord {
     String getCPUUsageReadable() { cpuUsage as String  }
 
     Long getMemory() { memory }
-    String getMemoryReadable() { HelperFunctions.convertBytesToReadableUnits(memory) }
+    String getMemoryReadable() { Converter.toReadableByteUnits(memory) }
 
     String getName() { name }
     String getNameReadable() { name }
