@@ -176,12 +176,8 @@ class DataMatrixTest extends  Specification {
 
         when:
         df.saveCsv(filePath, ',')
-        Map<String, Object> parsedCsv = DataMatrix.readCsv(filePath, ',', 0, 0)
-        DataMatrix df2 =  new DataMatrix(
-                parsedCsv.data,
-                parsedCsv.columnIndex,
-                parsedCsv.rowIndex
-        )
+
+        DataMatrix df2 = DataMatrix.fromCsv(filePath, ',', 0, 0)
 
         then:
         Files.isRegularFile(filePath)

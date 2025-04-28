@@ -198,11 +198,12 @@ class CO2FootprintFactory implements TraceObserverFactory {
          */
         // PUE: efficiency coefficient of the data centre
         Double pue = config.getPue()
-        // CI: carbon intensity [gCO2e kWh−1]
-        Closure<Double> ciClosure  = config.getCi()
-        // Invoke the closure to get the Double value
-        Double ci = ciClosure()
+        
+        String fullName = trace.get('name')  // e.g., "NFCORE_DEMO:DEMO:SEQTK_TRIM (SAMPLE2_PE)"
+        String processName = fullName ? fullName.replaceFirst(/\s*\(.*\)$/, '') : null // Removes any trailing space and parentheses with their content at the end of the string
 
+        // CI: carbon intensity [gCO2e kWh−1]
+        Double ci = config.getCi(processName)
         /**
          * Calculate energy consumption [kWh]
          */
@@ -399,7 +400,14 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
         @Override
         void onProcessCreate(TaskProcessor process) {
+            // Obtain the SLF4J LoggerContext, which manages logging configuration and filters
+            LoggerContext lc = LoggerFactory.getILoggerFactory() as LoggerContext
 
+            // Find the DeduplicateMarkerFilter instance in the list of turbo filters
+            DeduplicateMarkerFilter dmf = lc.getTurboFilterList().find { filter -> filter instanceof DeduplicateMarkerFilter } as DeduplicateMarkerFilter
+
+            // Add the current process name to the filter's list to suppress duplicate log messages for this process
+            dmf.addFilteredMarker(process.getName() as String)
         }
 
         /**
