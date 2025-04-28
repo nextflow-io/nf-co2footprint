@@ -108,10 +108,11 @@ class CO2FootprintComputer {
          */
         BigDecimal pue = config.getPue()    // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
 
+        String fullName = trace.get('name')  // e.g., "NFCORE_DEMO:DEMO:SEQTK_TRIM (SAMPLE2_PE)"
+        String processName = fullName ? fullName.replaceFirst(/\s*\(.*\)$/, '') : null // Removes any trailing space and parentheses with their content at the end of the string
+
         // CI: carbon intensity [gCO2e kWh−1]
-        Closure<Double> ciClosure  = config.getCi()
-        // Invoke the closure to get the Double value
-        Double ci = ciClosure()
+        Double ci = config.getCi(processName)
 
         /**
          * Calculate energy consumption [kWh]

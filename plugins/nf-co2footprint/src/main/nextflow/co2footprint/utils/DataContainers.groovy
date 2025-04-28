@@ -2,6 +2,8 @@ package nextflow.co2footprint.utils
 
 import java.nio.file.Path
 import java.nio.file.Files
+import groovy.util.logging.Slf4j
+
 
 /**
  * Bidirectional Map with maintained K-V pairs in both directions
@@ -157,6 +159,7 @@ interface Matrix {
  *
  * @author Josua Carl <josua.carl@uni-tuebingen.de>
  */
+@Slf4j
 class DataMatrix implements Matrix {
     List<List<Object>> data = []
     protected BiMap<Object, Integer> columnIndex = [:] as BiMap
@@ -193,15 +196,16 @@ class DataMatrix implements Matrix {
 
 
     /**
-     * Reads and parses a CSV file.
-     * @param path The path to the CSV file.
-     * @param separator The separator used in the CSV file.
-     * @param columnIndexPos The position of the column index row.
-     * @param rowIndexPos The position of the row index column.
-     * @param rowIndexColumn The name of the row index column.
-     * @return A map containing parsed data, columnIndex, and rowIndex.
+     * Read CSV file and return a DataMatrix object.
+     *
+     * @param path Path to the CSV file.
+     * @param separator Separator used in the CSV file (default is ',').
+     * @param columnIndexPos Position of the column index in the CSV file (default is 0).
+     * @param rowIndexPos Position of the row index in the CSV file (default is null).
+     * @param rowIndexColumn Column name for the row index (default is null).
+     * @return A DataMatrix object containing the data from the CSV file.
      */
-    private static Map<String, Object> readCsv(
+    static DataMatrix fromCsv(
             Path path, String separator = ',', Integer columnIndexPos = 0, Integer rowIndexPos = null,
             Object rowIndexColumn = null
     ) throws IOException {
@@ -252,11 +256,8 @@ class DataMatrix implements Matrix {
             data.add(row)
         }
 
-        return [
-            data: data,
-            columnIndex: columnIndex,
-            rowIndex: rowIndex
-        ]
+        return new DataMatrix(data, columnIndex, rowIndex)
+
     }
 
     // Integrity tests
@@ -393,10 +394,20 @@ class DataMatrix implements Matrix {
      * Get data entries by specifying row and column that you want to access, as well as whether they are Integer
      * indices.
      */
-    Object get(Object row, Object column, boolean rowRawIndex=false, boolean columnRawIndex=false) {
+    Object get(Object row, Object column, boolean rowRawIndex=false, boolean columnRawIndex=false) {        
+        // Resolve row index
         row = rowRawIndex ? row as Integer : this.rowIndex.getValue(row)
-        column = columnRawIndex ? column as Integer : this.columnIndex.getValue(column)
+        if (row == null) {
+            throw new IllegalArgumentException("Row '${rowRawIndex ? row : row as String}' not found in the row index.")
+        }
 
+        // Resolve column index
+        column = columnRawIndex ? column as Integer : this.columnIndex.getValue(column)
+        if (column == null) {
+            throw new IllegalArgumentException("Column '${columnRawIndex ? column : column as String}' not found in the column index.")
+        }
+
+        // Return the data at the resolved row and column
         return this.data[row][column]
     }
 

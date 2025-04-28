@@ -27,9 +27,9 @@ class CO2FootprintConfigTest extends Specification {
                 ['default'] as LinkedHashSet
         )
         CIDataMatrix ci = new CIDataMatrix(
-                [['DE', 300]],
-                ['Zone id', 'Carbon intensity gCO₂eq/kWh (Life cycle)'] as LinkedHashSet,
-                [1] as LinkedHashSet
+                [[300]],
+                ['Carbon intensity gCO₂eq/kWh (Life cycle)'] as LinkedHashSet,
+                ['DE'] as LinkedHashSet
         )
 
         when:
@@ -74,7 +74,7 @@ class CO2FootprintConfigTest extends Specification {
         ['machineType': 'local', 'pue': 2.0]    || [:]                      || ['machineType', 'pue']   || 2.0
         ['pue': 2.0]                            || ['executor': 'awsbatch'] || ['machineType', 'pue']   || 2.0
     }
-
+ 
     def 'test dynamic ci computation with GLOBAL fallback'() {
         setup:
         // Create a TDPDataMatrix
@@ -86,9 +86,9 @@ class CO2FootprintConfigTest extends Specification {
 
         // Create a CIDataMatrix with multiple zones, including GLOBAL
         CIDataMatrix ci = new CIDataMatrix(
-                [['DE', 300], ['US', 400], ['FR', 250], ['GLOBAL', 400]],
-                ['Zone id', 'Carbon intensity gCO₂eq/kWh (Life cycle)'] as LinkedHashSet,
-                [1, 2, 3, 4] as LinkedHashSet
+                [[300], [400], [250], [400]],
+                ['Carbon intensity gCO₂eq/kWh (Life cycle)'] as LinkedHashSet,
+                ['DE', 'US', 'FR', 'GLOBAL'] as LinkedHashSet
         )
 
         when:
@@ -102,18 +102,18 @@ class CO2FootprintConfigTest extends Specification {
 
         then:
         // Ensure 'ci' is dynamically computed for valid locations
-        assert configDE.ci instanceof Closure
-        assert configDE.ci() == 300.0 // Matches the value in the CIDataMatrix for 'DE'
+        assert configDE.getCi() instanceof Double
+        assert configDE.getCi() == 300.0 // Matches the value in the CIDataMatrix for 'DE'
 
-        assert configUS.ci instanceof Closure
-        assert configUS.ci() == 400.0 // Matches the value in the CIDataMatrix for 'US'
+        assert configUS.getCi() instanceof Double
+        assert configUS.getCi() == 400.0 // Matches the value in the CIDataMatrix for 'US'
 
-        assert configFR.ci instanceof Closure
-        assert configFR.ci() == 250.0 // Matches the value in the CIDataMatrix for 'FR'
+        assert configFR.getCi() instanceof Double
+        assert configFR.getCi() == 250.0 // Matches the value in the CIDataMatrix for 'FR'
 
         // Ensure 'ci' falls back to GLOBAL for invalid locations
-        assert configInvalid.ci instanceof Closure
-        assert configInvalid.ci() == 400.0 // Falls back to the GLOBAL value
+        assert configInvalid.getCi() instanceof Double
+        assert configInvalid.getCi() == 400.0 // Falls back to the GLOBAL value
 
         // Verify other properties are not affected
         assert configDE.location == 'DE'

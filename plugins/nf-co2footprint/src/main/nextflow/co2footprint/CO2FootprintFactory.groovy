@@ -105,4 +105,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
         return result
     }
+
+    
+
 }

@@ -8,7 +8,7 @@ import java.nio.file.Paths
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * This class allows model an specific configuration, extracting values from a map and converting
+ * This class allows to model an specific configuration, extracting values from a map and converting 
  *
  * In this plugin, the user can configure the output file names of the CO2 footprint calculations
  *
@@ -25,6 +25,8 @@ import java.util.concurrent.ConcurrentHashMap
  * same package
  *
  * @author Júlia Mir Pedrol <mirp.julia@gmail.com>, Sabrina Krakau <sabrinakrakau@gmail.com>
+
+ // TODO : Check if ail early paradigm 
  *
  */
 @Slf4j
@@ -36,7 +38,7 @@ class CO2FootprintConfig {
     private String  summaryFile = "co2footprint_summary_${timestamp}.txt"
     private String  reportFile = "co2footprint_report_${timestamp}.html"
     private String  location = null
-    private Closure<Double> ci = null       // CI: carbon intensity
+    private def     ci = null               // CI: carbon intensity
     private String  apiKey = null           // API key for electricityMaps 
     private Double  pue = null              // PUE: power usage effectiveness efficiency, coefficient of the data centre
     private Double  powerdrawMem = 0.3725   // Power draw of memory [W per GB]
@@ -54,7 +56,9 @@ class CO2FootprintConfig {
     String getSummaryFile() { summaryFile }
     String getReportFile() { reportFile }
     String getLocation() { location }
-    Closure<Double> getCi() { this.ci }
+    Double getCi(String processName = null) {
+        (ci instanceof Closure) ? ci(processName) : ci
+    }  
     Double getPue() { pue }
     Boolean getIgnoreCpuModel() { ignoreCpuModel }
     Double getPowerdrawCpuDefault() { powerdrawCpuDefault }
@@ -63,39 +67,25 @@ class CO2FootprintConfig {
     String getMachineType()  { machineType }
 
 
-    CO2FootprintConfig(Map<String, Object> configMap, TDPDataMatrix cpuData, CIDataMatrix ciData) {
+    CO2FootprintConfig(Map<String, Object> configMap, TDPDataMatrix cpuData, CIDataMatrix ciData, Map<String, Object> processMap) {
         // Ensure configMap is not null
         configMap = configMap ?: [:]
 
         // Assign values from map to config
-        configMap.keySet().each { name ->
-            if (name == 'ci') {
-                // Handle 'ci' specifically
-                def value = configMap[name] // Use get() instead of remove()
-                if (value instanceof Number) {
-                    this.ci = { -> value as Double } // Wrap Number in a Closure
-                    log.info("Using provided carbon intensity value: ${this.ci} gCO₂eq/kWh")
-                } else {
-                    throw new IllegalArgumentException("Invalid type for 'ci': ${value.getClass().getName()}. Expected Number or Closure.")
-                }
+        configMap.each { name, value ->
+            if (this.hasProperty(name)) {
+                this.setProperty(name, value) 
             } else {
-                // Check if the property exists in the class
-                if (this.hasProperty(name)) {
-                    // Assign the property dynamically
-                    this.setProperty(name, configMap[name]) // Use get() instead of remove()
-                } else {
-                    // Log a warning and skip the key
-                    log.warn("Skipping unknown configuration key: '${name}'")
-                }
+                // TODO: Should info even be logged here?
+                // Log info and skip the key
+                log.info("Skipping unknown configuration key: '${name}'")
             }
         }
-
-
+        
         // Determine the carbon intensity (CI) value
-        if (this.ci == null) {
-            // Create an instance of GetCIvalue and determine carbon intensity
+        if (ci == null) {
             def ciValueComputer = new CIValueComputer(apiKey, location, ciData)
-            this.ci = ciValueComputer.getCI()
+            ci = ciValueComputer.computeCI()
         }
 
         // Assign machine Type if not already given
