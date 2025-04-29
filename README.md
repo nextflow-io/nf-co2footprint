@@ -36,7 +36,9 @@ This is all that is needed. Run your pipeline with the usual command.
 You can find more information on plugins in the [Nextflow documentation](https://www.nextflow.io/docs/latest/plugins.html#plugins).
 
 ## Contributing
-Before contributing, please read the [contribution guidelines](CONTRIBUTING.md) carefully.
+Before contributing, please read the [contribution guidelines](docs/contributing/guidelines.md) carefully. You may also find the recommended [testing setup](docs/contributing/setup.md) helpful.
+
+After your changes are accepted. maintainers may then [publish](docs/contributing/publishing.md) a new version along with your contribution.
 
 ## Credits
 

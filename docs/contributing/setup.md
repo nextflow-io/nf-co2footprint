@@ -3,9 +3,9 @@ title: Contribution instructions
 description: How to contribute to nf-co2footprint
 ---
 
-# Getting started with plugin development
+# Testing and debugging
 
-## Launch it with Nextflow
+## Option 1: 🛠️ Launch with local Nextflow build
 
 To test with Nextflow for development purpose:
 
@@ -31,7 +31,7 @@ To test with Nextflow for development purpose:
    ./launch.sh run -plugins nf-co2footprint <script/pipeline name> [pipeline params]
    ```
 
-## Alternative: Launch without a local Nextflow build
+## Option 2: 🚀 Launch via regularly installed Nextflow
 
 The plugin can be tested without using a local Nextflow build using the following steps:
 
@@ -53,7 +53,7 @@ The plugin can be tested without using a local Nextflow build using the followin
    ```
 
 
-## Compiling and running tests
+## 🧪 Compiling and running tests
 
 To compile and run the tests use the following command:
 
@@ -62,7 +62,7 @@ To compile and run the tests use the following command:
 ```
 
 
-## Change and preview the docs
+## 📄 Change and preview the docs
 
 The docs are generated using [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/). To change the docs, edit the files in the [docs/](https://github.com/nextflow-io/nf-co2footprint/tree/master/docs) folder and run the following command to generate the docs (after installing mkdocs via `pip install mkdocs-material`):
 
