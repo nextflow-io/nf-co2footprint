@@ -11,7 +11,7 @@ import java.nio.file.Path
 
 @Slf4j
 /**
- * Class to generate the Text file
+ * Class to generate the summary text file
  */
 class CO2FootprintSummary extends CO2FootprintFile {
 
@@ -20,7 +20,7 @@ class CO2FootprintSummary extends CO2FootprintFile {
     Agent<PrintWriter> summaryWriter
 
     /**
-     * Constructor for Text File
+     * Constructor for summary file
      * @param path
      * @param overwrite
      */
@@ -38,7 +38,7 @@ class CO2FootprintSummary extends CO2FootprintFile {
      * @param config CO2FootprintConfiguration
      * @return
      */
-    void close(Double total_energy, Double total_co2, CO2EquivalencesRecord equivalences, CO2FootprintConfig config, String version) {
+    void write(Double total_energy, Double total_co2, CO2EquivalencesRecord equivalences, CO2FootprintConfig config, String version) {
         // launch the agent
         summaryWriter = new Agent<PrintWriter>(co2eSummaryFile)
 
@@ -71,6 +71,9 @@ class CO2FootprintSummary extends CO2FootprintFile {
         co2eSummaryFile.print(outText)
 
         co2eSummaryFile.flush()
+    }
+
+    void close() {
         co2eSummaryFile.close()
     }
 }

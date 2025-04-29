@@ -20,7 +20,7 @@ import java.nio.file.Path
 
 @Slf4j
 /**
- * Class to generate the Text file
+ * Class to generate the HTML report file
  */
 class CO2FootprintReport extends CO2FootprintFile{
 
@@ -40,6 +40,9 @@ class CO2FootprintReport extends CO2FootprintFile{
     private Map<TaskId, TraceRecord> traceRecords
     private Map<TaskId, CO2Record> co2eRecords
 
+    // Writer
+    private BufferedWriter writer = TraceHelper.newFileWriter(path, overwrite, 'Report')
+
     CO2FootprintReport(Path path, boolean overwrite, int maxTasks) {
         super(path, overwrite)
         this.maxTasks = maxTasks
@@ -58,7 +61,7 @@ class CO2FootprintReport extends CO2FootprintFile{
      * @param traceRecords
      * @param co2eRecords
      */
-    void close(
+    void write(
             Double total_energy,
             Double total_co2,
             CO2EquivalencesRecord equivalences,
@@ -81,14 +84,15 @@ class CO2FootprintReport extends CO2FootprintFile{
 
         try {
             String html_output = renderHtml()
-
-            BufferedWriter writer = TraceHelper.newFileWriter(path, overwrite, 'Report')
             writer.withWriter { w -> w << html_output }
-            writer.close()
         }
         catch (Exception e) {
             log.warn("Failed to render CO2e footprint report -- see the log file for details", e)
         }
+    }
+
+    void close() {
+        writer.close()
     }
 
 

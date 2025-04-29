@@ -44,7 +44,7 @@ class CO2FootprintObserver implements TraceObserver {
      * The actual file object
      */
     private CO2FootprintTrace co2eTraceFile
-    private CO2FootprintSummary co2eTextFile
+    private CO2FootprintSummary co2eSummaryFile
     private CO2FootprintReport co2eReportFile
 
     /**
@@ -90,16 +90,19 @@ class CO2FootprintObserver implements TraceObserver {
 
 
     /**
-     * Holds the the start time for tasks started/submitted but not yet completed
+     * Holds tasks with their trace records
      */
     final private Map<TaskId, TraceRecord> traceRecords = new LinkedHashMap<>()
 
     /**
      * Creates a report observer
      *
+     * @param session The current session within which the Observer is called
+     * @param version The current version of the plugin
      * @param config The configuration of the Plugin
-     * @param maxTasks The maximum number of tasks until the table in the report is omitted
+     * @param co2FootprintComputer The computation instance
      * @param overwrite Whether to overwrite existing documents
+     * @param maxTasks The maximum number of tasks until the table in the report is dropped
      */
     CO2FootprintObserver(
             Session session,
@@ -113,9 +116,9 @@ class CO2FootprintObserver implements TraceObserver {
         this.version = version
         this.config = config
 
-        // Generate CO2 footprint output files (trace, text, HTML report)
+        // Generate CO2 footprint output files (trace, summary, HTML report)
         this.paths['co2eTrace'] = (config.getTraceFile() as Path).complete()
-        this.paths['co2eText'] = (config.getSummaryFile() as Path).complete()
+        this.paths['co2eSummary'] = (config.getSummaryFile() as Path).complete()
         this.paths['co2eReport'] = (config.getReportFile() as Path).complete()
 
         this.co2FootprintComputer = co2FootprintComputer
@@ -164,14 +167,16 @@ class CO2FootprintObserver implements TraceObserver {
         // make sure parent paths exists
         paths.each {key, path ->
             Path parent = path.normalize().getParent()
-            if (parent) { Files.createDirectories(parent) }
-            null
+            if (parent) {
+                Files.createDirectories(parent)
+                return
+            }
         }
 
         co2eTraceFile = new CO2FootprintTrace(paths['co2eTrace'], overwrite)
         co2eTraceFile.create()
 
-        co2eTextFile = new CO2FootprintSummary(paths['co2eText'], overwrite)
+        co2eSummaryFile = new CO2FootprintSummary(paths['co2eSummary'], overwrite)
 
         co2eReportFile = new CO2FootprintReport(paths['co2eReport'], overwrite, maxTasks)
     }
@@ -192,9 +197,14 @@ class CO2FootprintObserver implements TraceObserver {
 
         CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(total_co2)
 
+        // Write report and summary
+        co2eSummaryFile.write(total_energy, total_co2, equivalences, config, version)
+        co2eReportFile.write(total_energy, total_co2, equivalences, aggregator, config, version, session, traceRecords, co2eRecords)
+
+        // Close all files (writes remaining tasks in the trace file)
         co2eTraceFile.close(current)
-        co2eTextFile.close(total_energy, total_co2, equivalences, config, version)
-        co2eReportFile.close(total_energy, total_co2, equivalences, aggregator, config, version, session, traceRecords, co2eRecords)
+        co2eSummaryFile.close()
+        co2eReportFile.close()
     }
 
 
