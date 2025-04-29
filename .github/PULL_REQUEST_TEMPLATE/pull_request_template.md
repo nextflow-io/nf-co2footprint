@@ -18,7 +18,7 @@ If you still need time to complete all the required steps, please set the pull-r
 - Renaming to improve verbosity of code
 
 ## Important details
-- Renamed `SomeClass` to `ExampleClass` and adjusted methods withing to follow new naming
+- Renamed `SomeClass` to `ExampleClass` and adjusted methods within to follow new naming
 
 ## Checklist
 - [ ] New functionalities are covered by tests
