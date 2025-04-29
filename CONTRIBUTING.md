@@ -4,6 +4,14 @@ Hi! Thanks for contributing to the nf-co2footprint plugin for Nextflow 😊
 
 Please read the following to help us maintain and ensure high-quality code.
 
+## 💅 Follow commit style
+Commits should be structured like this: `<Type>: <Message>`, with the following types:
+- `Feature` representing an enhancement or new functionality
+- `Fix` when addressing a bug
+- `Documentation` when mainly improving comments, documentation files or docstrings
+- `Refactor` when moving stuff or changing naming, but essentially making no functional changes
+- `CI` when changing the continuous integration (guidelines, templates,...)
+
 ## 🖋️ Signing commits
 When submitting a pull-request (PR), please sign-off the [DCO](https://developercertificate.org/) to certify that you are the author of the contribution and you adhere to [Nextflow's open source license](https://github.com/nextflow-io/nextflow/blob/master/COPYING) by adding a `Signed-off-by` line to the contribution commit message. See [here](https://github.com/apps/dco) for more details.
 
