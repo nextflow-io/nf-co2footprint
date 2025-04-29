@@ -98,7 +98,7 @@ class CO2FootprintConfig {
         pue ?= switch (machineType) {
             case 'local' ->  1.0
             case 'server' -> 1.67
-            default -> 1.67
+            default -> 1.0
         }
 
         // Reassign values based on machineType
