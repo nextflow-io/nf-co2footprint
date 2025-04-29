@@ -1,6 +1,6 @@
 package nextflow.co2footprint
 
-import nextflow.co2footprint.utils.HelperFunctions
+import nextflow.co2footprint.utils.Converter
 
 class CO2EquivalencesRecord {
     private final Double carKilometers
@@ -14,18 +14,18 @@ class CO2EquivalencesRecord {
     }
 
     Double getCarKilometers() { carKilometers }
-    String getCarKilometersReadable() { HelperFunctions.convertToScientificNotation(carKilometers) }
+    String getCarKilometersReadable() { Converter.toScientificNotation(carKilometers) }
 
     Double getTreeMonths() { treeMonths }
     String getTreeMonthsReadable() {
-        HelperFunctions.convertTimeToReadableUnits(treeMonths, 'months', 's', 'years', 1, 3)
+        Converter.toReadableTimeUnits(treeMonths, 'months', 's', 'years', 1, 3)
     }
 
     Double getPlanePercent() { planePercent }
-    String getPlanePercentReadable() { HelperFunctions.convertToScientificNotation(planePercent) }
+    String getPlanePercentReadable() { Converter.toScientificNotation(planePercent) }
 
     Integer getPlaneFlights() { planePercent / 100 as Integer }
-    String getPlaneFlightsReadable() { HelperFunctions.convertToScientificNotation(this.getPlaneFlights()) }
+    String getPlaneFlightsReadable() { Converter.toScientificNotation(this.getPlaneFlights()) }
 
     List<String> getReadableEquivalences() {
         List<String> readableEquivalences = new ArrayList<String>()

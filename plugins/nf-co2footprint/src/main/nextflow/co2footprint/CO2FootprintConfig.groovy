@@ -28,7 +28,6 @@ import java.util.concurrent.ConcurrentHashMap
  *
  */
 @Slf4j
-@PackageScope
 class CO2FootprintConfig {
 
     // .config parameters
@@ -59,8 +58,7 @@ class CO2FootprintConfig {
         def dataReader = new InputStreamReader(this.class.getResourceAsStream('/CI_aggregated.v2.2.csv'))
 
         Double localCi = 0.0
-        String line
-        while ( line = dataReader.readLine() ) {
+        for ( String line : dataReader.readLines() ) {
             def row = line.split(",")
             if (row[0] == location) {
                 localCi = row[4].toDouble()
