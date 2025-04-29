@@ -1,4 +1,11 @@
-# 📡 Package, upload, and publish
+---
+title: Publishing
+description: How to publish the nf-co2footprint
+---
+
+# Publishing
+
+## 📡 Package, upload, and publish
 
 The project should be hosted in a GitHub repository whose name matches the name of the plugin, that is the name of the directory in the `plugins` folder (e.g. `nf-hello`).
 

@@ -1,6 +1,6 @@
 ---
-title: Contribution instructions
-description: How to contribute to nf-co2footprint
+title: Setup
+description: How to setup your environment to test the nf-co2footprint plugin locally
 ---
 
 # Testing and debugging
