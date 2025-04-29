@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap
  *
  * @author Júlia Mir Pedrol <mirp.julia@gmail.com>, Sabrina Krakau <sabrinakrakau@gmail.com>
 
- // TODO : Check if ail early paradigm 
+ // TODO : Check if fail early paradigm is met
  *
  */
 @Slf4j
