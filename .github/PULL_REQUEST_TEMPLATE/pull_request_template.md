@@ -10,17 +10,17 @@ If you still need time to complete all the required steps, please set the pull-r
 - Depends on / Builds upon #L337
 - Corrects error, introduced in #F41L
 
-## Motivation
+## 🎯 Motivation
 - Correct the behaviour of...
 - Align to template...
 
-## Summary of changes
+## 📋 Summary of changes
 - Renaming to improve verbosity of code
 
-## Important details
+## 📌 Important details
 - Renamed `SomeClass` to `ExampleClass` and adjusted methods within to follow new naming
 
-## Checklist
+## ✅ Checklist
 - [ ] New functionalities are covered by tests
 - [ ] Class structure in `test` reflects class structure in `main`
 - [ ] Documentation reflects changed behaviour
