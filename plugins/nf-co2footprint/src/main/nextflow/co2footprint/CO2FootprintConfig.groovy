@@ -28,7 +28,6 @@ import java.util.concurrent.ConcurrentHashMap
  *
  */
 @Slf4j
-@PackageScope
 class CO2FootprintConfig {
 
     private String  timestamp = TraceHelper.launchTimestampFmt()
