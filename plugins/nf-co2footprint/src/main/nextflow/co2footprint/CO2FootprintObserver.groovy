@@ -4,9 +4,9 @@ import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
 
 import nextflow.Session
-import nextflow.co2footprint.Outfiles.CO2FootprintReport
-import nextflow.co2footprint.Outfiles.CO2FootprintSummary
-import nextflow.co2footprint.Outfiles.CO2FootprintTrace
+import nextflow.co2footprint.FileCreators.CO2FootprintReport
+import nextflow.co2footprint.FileCreators.CO2FootprintSummary
+import nextflow.co2footprint.FileCreators.CO2FootprintTrace
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskId
 import nextflow.processor.TaskProcessor

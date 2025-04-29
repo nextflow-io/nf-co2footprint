@@ -1,4 +1,4 @@
-package nextflow.co2footprint.Outfiles
+package nextflow.co2footprint.FileCreators
 
 import java.nio.file.Path
 

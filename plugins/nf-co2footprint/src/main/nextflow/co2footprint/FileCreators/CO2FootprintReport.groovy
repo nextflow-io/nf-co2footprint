@@ -1,4 +1,4 @@
-package nextflow.co2footprint.Outfiles
+package nextflow.co2footprint.FileCreators
 
 import nextflow.co2footprint.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
