@@ -37,7 +37,7 @@ class CO2FootprintComputerTest extends Specification{
         traceRecord.'%cpu' = 100.0
         traceRecord.memory = (7 as Long) * (1024**3 as Long)
 
-        CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix)
+        CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, [:])
         CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord)
 
@@ -57,7 +57,7 @@ class CO2FootprintComputerTest extends Specification{
         traceRecord.'%cpu' = 100.0
         traceRecord.memory = (7 as Long) * (1024**3 as Long)
 
-        CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix)
+        CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, [:])
         CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord)
 
@@ -77,7 +77,7 @@ class CO2FootprintComputerTest extends Specification{
         traceRecord.'%cpu' = 100.0
         traceRecord.memory = (7 as Long) * (1024**3 as Long)
 
-        CO2FootprintConfig config = new CO2FootprintConfig([pue: 1.4], tdpDataMatrix)
+        CO2FootprintConfig config = new CO2FootprintConfig([pue: 1.4], tdpDataMatrix, [:])
         CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord)
 
@@ -97,7 +97,7 @@ class CO2FootprintComputerTest extends Specification{
         traceRecord.'%cpu' = 100.0
         traceRecord.memory = (7 as Long) * (1024**3 as Long)
 
-        CO2FootprintConfig config = new CO2FootprintConfig([location: 'DE'], tdpDataMatrix)
+        CO2FootprintConfig config = new CO2FootprintConfig([location: 'DE'], tdpDataMatrix, [:])
         CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord)
 
@@ -116,7 +116,7 @@ class CO2FootprintComputerTest extends Specification{
         traceRecord.'%cpu' = 100.0
         traceRecord.memory = (7 as Long) * (1024**3 as Long)
 
-        CO2FootprintConfig config = new CO2FootprintConfig([ci: 338.66], tdpDataMatrix)
+        CO2FootprintConfig config = new CO2FootprintConfig([ci: 338.66], tdpDataMatrix, [:])
         CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord)
 
@@ -131,7 +131,7 @@ class CO2FootprintComputerTest extends Specification{
 
     def 'test co2e equivalences calculation' () {
         given:
-        CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix)
+        CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, [:])
         CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
         CO2EquivalencesRecord co2EquivalencesRecord = co2FootprintComputer.computeCO2footprintEquivalences(co2e)
 
