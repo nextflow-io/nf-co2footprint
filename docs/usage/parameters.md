@@ -23,7 +23,7 @@ You can find the available data [here](https://github.com/nextflow-io/nf-co2foot
 Mutually exclusive with the `ci` parameter.
 Default: `null`.
 - `pue`: Power usage effectiveness, efficiency coefficient of the data centre. For local cluster you can usually find out your specific PUE at the system administrators or system managers. Also the current [yearly worldwide average](https://www.statista.com/statistics/1229367/data-center-average-annual-pue-worldwide/) could be used.
-Default: 1.67.
+Default: 1.00.
 - `powerdrawMem`: power draw from memory.
 Default: 0.3725.
 - `customCpuTdpFile`: Input CSV file containing custom CPU TDP data.
