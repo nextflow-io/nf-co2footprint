@@ -122,9 +122,8 @@ class CO2FootprintConfig {
                 cpuData.fallbackModel = "default $machineType"
             }
             else {
-                String message =
-                        "machineType '${machineType}' is not supported. Please chose one of ${supportedMachineTypes}." +
-                        "Using fallbacks: pue=${pue} & fallbackModel=${cpuData.fallbackModel}."
+                String message = "machineType '${machineType}' is not supported." +
+                        "Please chose one of ${supportedMachineTypes}."
                 log.error(message, new IllegalArgumentException(message))
             }
         }
