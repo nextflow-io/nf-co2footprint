@@ -3,8 +3,6 @@ title: Parameters
 description: Customising parameters for the CO2e calculation.
 ---
 
-## Customising parameters
-
 The following parameters are currently available:
 
 - `traceFile`: Name of the TXT carbon footprint report containing the energy consumption, the estimated CO<sub>2</sub> emission and other relevant metrics for each task.

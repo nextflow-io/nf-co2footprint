@@ -3,8 +3,6 @@ title: Output
 description: Output of the nf-co2footprint plugin.
 ---
 
-## Output
-
 The nf-co2footprint plugin creates three output files:
 
 - `traceFile`: The trace file includes calculations for each task, similar to the Nextflow trace file. Within this file you can find resource usage details of specific tasks and also the hardware information of your CPU.
