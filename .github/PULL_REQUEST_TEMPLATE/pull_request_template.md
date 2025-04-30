@@ -18,6 +18,7 @@ If you still need time to complete all the required steps, please set the pull-r
 - Renaming to improve verbosity of code
 
 ## 📌 Important details
+General comments can be put here. If you want to address something specific go to your *pull-request* then `Files changed` and comment directly on site.
 - Renamed `SomeClass` to `ExampleClass` and adjusted methods within to follow new naming
 
 ## ✅ Checklist
