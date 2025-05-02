@@ -34,7 +34,7 @@ class CO2FootprintObserverTest extends Specification{
                  'cpus': 1,
                  'cpu_model': "Unknown model",
                  '%cpu': 100.0,
-                 'memory': (7 as Long) * (1000000000 as Long)
+                 'memory': (7 as Long) * (1024**3 as Long)
             ]
         )
     }
@@ -89,16 +89,16 @@ class CO2FootprintObserverTest extends Specification{
         observer.onProcessComplete(handler, traceRecord)
 
         expect:
-        int total_co2 = 0d
-        int total_energy = 0d
+        Double total_co2 = 0d
+        Double total_energy = 0d
         observer.getCO2eRecords().values().each {co2Record ->
             total_energy += co2Record.getEnergyConsumption()
             total_co2 += co2Record.getCO2e()
         }
         // Energy consumption converted to Wh
-        round(total_energy/1000) == 24.10
+        round(total_energy/1000) == 14.61
         // Total CO2 in g
-        round(total_co2/1000) == 11.45
+        round(total_co2/1000) == 6.94
     }
 
     def 'test full run with co2e equivalences calculation' () {
@@ -144,9 +144,9 @@ class CO2FootprintObserverTest extends Specification{
 
         expect:
         // Values compared to result from www.green-algorithms.org
-        co2EquivalencesRecord.getCarKilometers().round(7) == 0.0654000 as Double
-        co2EquivalencesRecord.getTreeMonths().round(7) == 0.0124809 as Double
-        co2EquivalencesRecord.getPlanePercent().round(7) == 0.0228900 as Double
+        co2EquivalencesRecord.getCarKilometers().round(7) == 0.0396457 as Double
+        co2EquivalencesRecord.getTreeMonths().round(7) == 0.007566 as Double
+        co2EquivalencesRecord.getPlanePercent().round(7) == 0.013876 as Double
     }
 
 
@@ -203,17 +203,17 @@ class CO2FootprintObserverTest extends Specification{
                 'cpu_model', 'cpu_usage', 'requested_memory'
         ]
         traceLines[1].split('\t') as List<String> == [
-                '111', 'null', 'null', '24.1  Wh', '11.45  g', '1.0ms', '1', '12.0', 'Unknown model', '100.0', '6.0 B'
+                '111', 'null', 'null', '14.61  Wh', '6.94  g', '1.0ms', '1', '12.0', 'Unknown model', '100.0', '7.0 B'
         ]
 
         // Check Summary File
         Files.isRegularFile(summaryPath)
         List<String> summaryLines = Files.readAllLines(summaryPath)
         summaryLines.size() == 25
-        summaryLines[2] == 'Energy consumption: 24.1  Wh'
-        summaryLines[5] == '- 0.065 km travelled by car'
+        summaryLines[2] == 'Energy consumption: 14.61  Wh'
+        summaryLines[5] == '- 0.04 km travelled by car'
         summaryLines[17] == "summaryFile: ${summaryPath}"
-        summaryLines[24] == 'pue: 1.67'
+        summaryLines[24] == 'pue: 1.0'
 
         // Check Report File
         Files.isRegularFile(reportPath)
@@ -223,6 +223,6 @@ class CO2FootprintObserverTest extends Specification{
         reportLines[194] == "          " +
                 "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                 " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
-        reportLines[213] == "          <span class=\"metric\">11.45  g</span>"
+        reportLines[213] == "          <span class=\"metric\">6.94  g</span>"
     }
 }

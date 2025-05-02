@@ -84,7 +84,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
         CO2FootprintConfig config = new CO2FootprintConfig(
                 session.config.navigate('co2footprint') as Map,
-                this.tdpDataMatrix
+                this.tdpDataMatrix,
+                session.config.navigate('process') as Map
         )
 
         final result = new ArrayList(1)
