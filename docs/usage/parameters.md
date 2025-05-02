@@ -38,5 +38,5 @@ Default: `false`.
 This is only applied if the parameter `ignoreCpuModel` is set or if the retrieved `cpu_model` could not be found in the given CPU TDP data.
 Default: 12.0.
 - `machineType`: the type of machine the computation is executed upon. Has to be in ['compute cluster', 'local', ''].
-  `process.executor` is used to infer the `machineType` when no value is set.
+  The Nextflow config option `process.executor` is used to infer the `machineType` when no value is set.
   Default: 'local' / PUE of 1.0
