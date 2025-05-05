@@ -27,7 +27,7 @@ The following parameters are currently available:
 
 - **`pue`** 
   Power usage effectivenes efficiency coefficient of the data centre. For local cluster you can usually find out your specific PUE at the system administrators or system managers. Also the current [yearly worldwide average](https://www.statista.com/statistics/1229367/data-center-average-annual-pue-worldwide/) could be used.
-  **Default**: 1.67
+  **Default**: 1.00
 
 - **`powerdrawMem`**  
   power draw from memory.  
@@ -53,3 +53,8 @@ The following parameters are currently available:
   The default value used as the power draw from a computing core.
   This is only applied if the parameter `ignoreCpuModel` is set or if the retrieved `cpu_model` could not be found in the given CPU TDP data.  
   **Default**: 12.0.
+  
+- **`machineType`**  
+  The type of machine the computation is executed upon. Has to be in ['compute cluster', 'local', ''].
+  The Nextflow config option `process.executor` is used to infer the `machineType` when it is not included in the config. The `machineType` determines the default power usage effectiveness (PUE) if not explicitly specified.
+  Default: 'local' (sets `pue` to 1.0)
