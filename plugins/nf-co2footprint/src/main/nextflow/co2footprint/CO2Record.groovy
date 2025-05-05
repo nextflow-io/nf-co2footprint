@@ -43,7 +43,7 @@ class CO2Record extends TraceRecord {
                 'energy':           energy,
                 'co2e':             co2e,
                 'time':             time,
-                'carbon intensity': ci,
+                'ci':               ci,
                 'cpus':             cpus,
                 'powerdrawCPU':     powerdrawCPU,
                 'cpuUsage':         cpuUsage,

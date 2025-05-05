@@ -76,7 +76,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
     )
 
     private final CIDataMatrix ciDataMatrix = CIDataMatrix.fromCsv(
-            Paths.get(this.class.getResource('/fallbackCIDataTable.csv').toURI())
+            Paths.get(this.class.getResource('/ci_yearly_2024_by_location.csv').toURI())
     )
     
 

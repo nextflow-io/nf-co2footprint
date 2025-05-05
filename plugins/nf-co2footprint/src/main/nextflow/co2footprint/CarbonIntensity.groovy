@@ -177,9 +177,11 @@ class CIValueComputer {
 
             // Fallback to the location in the CSV
             ci = this.ciData.findCiInMatrix(this.location)
-            log.info(Markers.unique, 
-            ci != null ? "Using carbon intensity for ${HelperFunctions.bold(this.location)} from fallback table: ${HelperFunctions.bold(ci.toString())} gCO₂eq/kWh"
-                : "Could not retrieve carbon intensity value for ${HelperFunctions.bold(this.location)} from fallback table. Attempting to retrieve ${HelperFunctions.bold('GLOBAL')} carbon intensity value.")
+            if (ci != null) {
+                log.info(Markers.unique, "Using carbon intensity for ${HelperFunctions.bold(this.location)} from fallback table: ${HelperFunctions.bold(ci.toString())} gCO₂eq/kWh")
+            } else {
+                log.warn(Markers.unique, "Could not retrieve carbon intensity value for ${HelperFunctions.bold(this.location)} from fallback table. Attempting to retrieve ${HelperFunctions.bold('GLOBAL')} carbon intensity value.")
+            }
         } else {
             log.warn(Markers.unique, "No location provided. Attempting to retrieve ${HelperFunctions.bold('GLOBAL')} carbon intensity value.")
         }

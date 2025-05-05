@@ -25,8 +25,6 @@ import java.util.concurrent.ConcurrentHashMap
  * same package
  *
  * @author Júlia Mir Pedrol <mirp.julia@gmail.com>, Sabrina Krakau <sabrinakrakau@gmail.com>
-
- // TODO : Check if fail early paradigm is met
  *
  */
 @Slf4j
@@ -76,15 +74,17 @@ class CO2FootprintConfig {
             if (this.hasProperty(name)) {
                 this.setProperty(name, value) 
             } else {
-                // TODO: Should info even be logged here?
-                // Log info and skip the key
-                log.info("Skipping unknown configuration key: '${name}'")
+                // Log warning and skip the key
+                log.warn("Skipping unknown configuration key: '${name}'")
             }
         }
         
         // Determine the carbon intensity (CI) value
         if (ci == null) {
+
             def ciValueComputer = new CIValueComputer(apiKey, location, ciData)
+            // ci is either set to a Closure (in case the electricity maps API is used) or to a Double (in the other cases)
+            // The closure is invoked each time the CO2 emissions are calculated (for each task) to make a new API call to update the real time ci value.
             ci = ciValueComputer.computeCI()
         }
 
