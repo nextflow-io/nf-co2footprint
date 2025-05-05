@@ -27,6 +27,7 @@ co2footprint {
   ci = <your_ci>                    // replace with carbon intensity (gCO2eq/kWh)
   apiKey = secrets.<YOUR_API_KEY>   // replace with your electricity maps API key secret 
   pue = <your_pue>                  // replace with PUE of your data center
+  machineType = ''                  // set to 'compute cluster', 'local', or leave empty
 }
 ```
 You can find your `zone code` on the [zones overview](https://portal.electricitymaps.com/docs/getting-started#zonesoverview) section on the Electricity Maps website. It has to match one of those defined there to be used within the plugin. To obtain the `apikey` you have to register in the [developer portal](https://portal.electricitymaps.com). 
@@ -36,6 +37,8 @@ Include the config file for your pipeline run using the `-c` Nextflow parameter,
 ```bash
 nextflow run nextflow-io/hello -c nextflow.config
 ```
+
+For a complete list and detailed descriptions of all available configuration parameters, please refer to the [Parameters](./parameters.md) section.
 
 ## How the plugin determines the carbon intensity (ci) value
 

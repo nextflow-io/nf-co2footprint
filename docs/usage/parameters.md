@@ -25,6 +25,11 @@ The following parameters are currently available:
   Set this parameter only if you know the carbon intensity (ci) value for your location and prefer not to use the Electricity Maps API. However, using the API is recommended to retrieve real-time data for more accurate calculations.  
   **Default**:  `null`
 
+- **`apiKey`**  
+  Your Electricity Maps API token.  
+  First, create a Nextflow secret for your API key using:  
+  `nextflow secrets set YOUR_API_KEY "paste_api_key_here"`. Then, set the config parameter to `secrets.YOUR_API_KEY`.
+
 - **`pue`** 
   Power usage effectivenes efficiency coefficient of the data centre. For local cluster you can usually find out your specific PUE at the system administrators or system managers. Also the current [yearly worldwide average](https://www.statista.com/statistics/1229367/data-center-average-annual-pue-worldwide/) could be used.
   **Default**: 1.00
