@@ -42,7 +42,7 @@ nextflow run nextflow-io/hello -c nextflow.config
 The plugin uses the `ci`, `location`, and `apiKey` parameters to determine the carbon intensity (in gCO₂eq/kWh) that is used in the energy impact calculations. The logic is as follows:
 
 1. **If `ci` is explicitly set**, this value is used directly as the carbon intensity, and no API call is made.
-2. **If `ci` is not set**, but both `location` and `apiKey` are provided, the plugin will query the [Electricity Maps API](https://www.electricitymaps.com/) for a real-time carbon intensity value for the specified zone. The API call is made once per Nextflow task to retrieve the most up-to-date carbon intensity at the time the task starts.
+2. **If `ci` is not set**, but both `location` and `apiKey` are provided, the plugin will query the [Electricity Maps API](https://www.electricitymaps.com/) for a real-time carbon intensity value for the specified zone. The API call is made once per Nextflow task to retrieve the most up-to-date carbon intensity.
 3. **If only `location` is set**, the plugin will fallback to a default value for the specified zone. 
 3. **If neither `ci` nor valid `location` and `apiKey` are provided**, the plugin will  fallback to a global default value.
 
