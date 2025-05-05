@@ -1,25 +1,22 @@
 # nf-co2footprint plugin [WIP]
 
-A Nextflow plugin to estimate the CO<sub>2</sub> footprint of pipeline runs.
+A Nextflow plugin to estimate the CO₂ footprint of pipeline runs.
 
 ## 📚 Docs 👉🏻 <https://nextflow-io.github.io/nf-co2footprint>
 
 ## Introduction
 
 The nf-co2footprint plugin estimates the energy consumption for each pipeline task based on the Nextflow resource usage metrics and information about the power consumption of the underlying compute system.
-The carbon intensity of the energy production is then used to estimate the respective CO<sub>2</sub> emission.
+The carbon intensity of the energy production is then used to estimate the respective CO₂ emission.
 
-The calculation is based on the carbon footprint computation method
-developed in the Green Algorithms project: www.green-algorithms.org
+The calculation is based on the carbon footprint computation method developed in the [Green Algorithms Project](www.green-algorithms.org).
 
-> **Green Algorithms: Quantifying the Carbon Footprint of Computation.**
-> 
-> Lannelongue, L., Grealey, J., Inouye, M.,
-> 
-> Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707
+> **Green Algorithms: Quantifying the Carbon Footprint of Computation**  
+> Lannelongue, L., Grealey, J., Inouye, M.,  
+> Adv. Sci. 2021, 2100707. [https://doi.org/10.1002/advs.202100707](https://doi.org/10.1002/advs.202100707)
 
-The nf-co2footprint plugin generates a detailed TXT carbon footprint report containing the energy consumption, the estimated CO<sub>2</sub> emission and other relevant metrics for each task.
-Additionally, an HTML report is generated with information about the carbon footprint of the whole pipeline run and containing plots showing, for instance, an overview of the CO<sub>2</sub> emissions for the different processes.
+The nf-co2footprint plugin generates a detailed TXT carbon footprint report containing the energy consumption, the estimated CO₂ emission and other relevant metrics for each task.
+Additionally, an HTML report is generated with information about the carbon footprint of the whole pipeline run and containing plots showing, for instance, an overview of the CO₂ emissions for the different processes.
 
 ## Quick Start
 
@@ -31,12 +28,15 @@ plugins {
 }
 ```
 
-This is all that is needed. Run your pipeline with the usual command.
+This is all that is needed. Run your pipeline with the usual command:
+```bash
+nextflow run <pipeline_name>.nf 
+```
 
-You can find more information on plugins in the [Nextflow documentation](https://www.nextflow.io/docs/latest/plugins.html#plugins).
+More details are available in the Nextflow [plugin documentation](https://www.nextflow.io/docs/latest/plugins.html#plugins) and the [configuration guide](https://www.nextflow.io/docs/latest/config.html). 
 
-> [!NOTE]
-> To test the plugin prior to its first release, refer to the [contributing documentation](contributing/setup.md).
+> **⚠️ Note**  
+> The usage of GPUs is not yet supported.
 
 ## Credits
 
@@ -46,3 +46,20 @@ We thank the following people for their extensive assistance in the development 
 
 - [Phil Ewels](https://github.com/ewels)
 - [Paolo Di Tommaso](https://github.com/pditommaso)
+
+--- 
+
+## Data Attribution
+
+This project uses data from [Electricity Maps](https://www.electricitymaps.com/) under the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1-0/). 
+
+### License Terms
+- **Share**: You are free to copy, distribute, and use the data.
+- **Adapt**: You can modify, transform, and build upon the data.
+- **Create**: You can produce works from the data.
+
+### Conditions
+- **Attribute**: You must clearly credit the source of the data and include the license for any public use or redistribution.
+- **Share-Alike**: Any adapted versions of the data must be offered under the same ODbL license.
+- **Keep Open**: If you use technological restrictions (e.g., DRM), you must also provide an unrestricted version.
+
