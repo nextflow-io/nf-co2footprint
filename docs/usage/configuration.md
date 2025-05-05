@@ -56,7 +56,7 @@ At the moment the nf-co2footprint can not natively support cloud computations.
 
     This is not tested and might not work as intended, but cloud native support will be implemented soon.
 
-If you are still keen to get insights into your CO<sub>2</sub> you could try to find out the following and append it to your config:
+If you are still keen to get insights into your CO₂ you could try to find out the following and append it to your config:
 
 - The location and hereby CI of your instance.
 - The PUE of the data center, where the instance is located.
