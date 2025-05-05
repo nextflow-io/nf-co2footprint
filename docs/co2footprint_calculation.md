@@ -39,11 +39,10 @@ This includes failed tasks as well.
 
     The usage of GPUs is not yet supported.
 
+--- 
 
 ## References
 
-> **Green Algorithms: Quantifying the Carbon Footprint of Computation.**
-> 
-> Lannelongue, L., Grealey, J., Inouye, M.,
-> 
-> Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707
+> **Green Algorithms: Quantifying the Carbon Footprint of Computation**  
+> Lannelongue, L., Grealey, J., Inouye, M.,  
+> Adv. Sci. 2021, 2100707. [https://doi.org/10.1002/advs.202100707](https://doi.org/10.1002/advs.202100707)

@@ -46,6 +46,8 @@ The plugin uses the `ci`, `location`, and `apiKey` parameters to determine the c
 3. **If only `location` is set**, the plugin will fallback to a default value for the specified zone. 
 3. **If neither `ci` nor valid `location` and `apiKey` are provided**, the plugin will  fallback to a global default value.
 
+> Carbon intensity data is retrieved from [Electricity Maps](https://www.electricitymaps.com/) and used under the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1-0/). See the full attribution and license terms [here](https://nextflow-io.github.io/nf-co2footprint/).
+
 ## Cloud computations
 
 At the moment the nf-co2footprint can not natively support cloud computations.

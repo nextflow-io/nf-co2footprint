@@ -1,3 +1,4 @@
 - describe EM and how ci value is determined: ci -> api -> fallback table: zone code -> fallback table: global
 - describe handling of API key via nextflow secrets 
 - include information / describe how CPU TDP data is used 
+- EM attricbution 
