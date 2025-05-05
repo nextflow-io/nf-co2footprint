@@ -25,7 +25,7 @@ co2footprint {
   reportFile = "${params.outdir}/pipeline_info/co2footprint_report_${co2_timestamp}.html"
   location = '<your_zone_code>'     // replace with your zone code
   ci = <your_ci>                    // replace with carbon intensity (gCO2eq/kWh)
-  apiKey = secrets.<YOUR_API_KEY>   // replace with your electricity maps API key secret 
+  apiKey = secrets.EM_API_KEY       // set your API key as Nextflow secret with the name 'EM_API_KEY'
   pue = <your_pue>                  // replace with PUE of your data center
   machineType = ''                  // set to 'compute cluster', 'local', or leave empty
 }
