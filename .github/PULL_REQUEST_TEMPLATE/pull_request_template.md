@@ -25,4 +25,6 @@ General comments can be put here. If you want to address something specific go t
 - [ ] New functionalities are covered by tests
 - [ ] Class structure in `test` reflects class structure in `main`
 - [ ] Documentation reflects changed behaviour
-- [ ] README.md contains information on or reference to new features
+- [ ] `README.md` contains information on or reference to new features
+- [ ] `CHANGELOG.md` is updated with a note on your changes
+- [ ] Ensure all tests pass (`.\gradlew check`)
