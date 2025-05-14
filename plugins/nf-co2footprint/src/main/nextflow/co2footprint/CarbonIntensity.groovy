@@ -65,13 +65,22 @@ class CIDataMatrix extends DataMatrix {
      */
     protected Double findCiInMatrix(String targetZone) {
         def ci
+
         try {
             ci = this.get(targetZone, this.ciColumn)
+            log.info(Markers.unique, "Using carbon intensity for ${HelperFunctions.bold(targetZone)} from fallback table: ${HelperFunctions.bold(ci.toString())} gCO₂eq/kWh")
         } catch (IllegalArgumentException e) {
-            log.warn("Could not find carbon intensity for zone '${targetZone}': ${e.message}")
+            if (targetZone == 'GLOBAL') {
+                Exception err = new IllegalStateException("Could not retrieve ${HelperFunctions.bold('GLOBAL')} carbon intensity value from fallback table.")
+                log.error(err.getMessage(), err)
+                throw err  // <-- will stop execution
+            }
+            else {
+                log.warn(Markers.unique, "Could not find carbon intensity for zone ${HelperFunctions.bold(targetZone)}: ${e.message}")
+            }
             return null
         }
-        return ci.toDouble()
+        return ci as Double
     }
 }
 
@@ -95,65 +104,63 @@ class CIValueComputer {
     }
 
     /**
-     * Retrieves the real-time carbon intensity from the electricityMaps API.
+     * Retrieves the real-time carbon intensity (CI) for the configured location using the electricityMaps API.
      *
-     * @param processName The name of the process (optional).
-     * @return The real-time carbon intensity value as a Double, or null if not found.
+     * If the API call is successful, logs and returns the real-time CI value.
+     * If the API call fails, logs a warning and falls back to the CI value from the local matrix for the location.
+     * If no value is found for the location, falls back to the 'GLOBAL' CI value.
+     * If 'GLOBAL' is also not found, an exception will be thrown by findCiInMatrix.
+     *
+     * @param processName (Optional) The process name for logging/marker purposes.
+     * @return The carbon intensity value as a Double, or null if not found.
      */
-    protected Double getRealtimeCI(String processName = null) {
-
-        def url = new URL("https://api.electricitymap.org/v3/carbon-intensity/latest?zone=${this.location}")
-
-        def connection = url.openConnection()
+    protected Double getRealtimeCI() {
+        // Build the API URL
+        URL url = new URL("https://api.electricitymap.org/v3/carbon-intensity/latest?zone=${this.location}")
+        
+        // Open the connection
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection()
         connection.setRequestProperty("auth-token", this.apiKey)
-        def json = null
-        Double realTimeCI = null
+
+        Map json = null
+        Double ci = null
         String updatedAt = null
-        def marker = processName ? MarkerFactory.getMarker(processName): null
 
-    
+
         if (connection.responseCode == 200) {
+            // Parse the successful API response
             json = new JsonSlurper().parse(connection.inputStream)
-            realTimeCI = json['carbonIntensity'] as Double
-            updatedAt = HelperFunctions.transformTimestamp(json['updatedAt'] as String)
+            ci = json['carbonIntensity'] as Double
+            
+            log.info(Markers.unique,"API call successful. Response code: ${connection.responseCode} (${connection.responseMessage})")
         } else {
-            def errorResponse = connection.errorStream.text
-            def errorMessage = new JsonSlurper().parseText(errorResponse).message
+            // Handle API error response
+            String errorResponse = connection.errorStream.text
+            String errorMessage = new JsonSlurper().parseText(errorResponse).message
 
-            if (marker != null) {
-                log.warn(marker, "Error: ${connection.responseCode} - ${errorMessage}")
-            } else {
-                log.warn("Error: ${connection.responseCode} - ${errorMessage}")
+            log.warn(Markers.unique, "API call failed. Response code: ${connection.responseCode} (${errorMessage})")
+            
+            // Fallback to the location in the CSV
+            ci = this.ciData.findCiInMatrix(this.location)
+            // Fallback to the global default value if no value is found for the location
+            if (ci == null) {
+                ci = this.ciData.findCiInMatrix('GLOBAL')
             }
         }
-
-        // TODO: Are these logging statements needed?
-        /*
-        if (realTimeCI != null) {
-            log.info(marker,
-            """
-            Process: ${processName}
-            ${HelperFunctions.bold('───────── Using Real Time Carbon Intensity ─────────')}
-            Location: ${HelperFunctions.bold(this.location)}
-            ⚡ Real-time Carbon Intensity: ${HelperFunctions.bold(realTimeCI.toString())} gCO₂eq/kWh
-            Last updated: ${HelperFunctions.bold(updatedAt)}
-            ${HelperFunctions.bold('────────────────────────────────────────────────────')}
-            """)
-        } else {
-            log.warn(marker, "Could not retrieve real-time carbon intensity for process '${processName}' and location ${HelperFunctions.bold(this.location)}.")
-        }*/
-
-        return realTimeCI
-
+        return ci
     }
 
     /**
-     * Computes the carbon intensity value.
+     * Computes the carbon intensity (CI) value to use for calculations.
      *
-     * This method checks if the API key is set and retrieves the real-time carbon intensity.
-     * If the API key is not set, it falls back to the location in the CSV.
+     * This method checks if a location is provided and ensures it is uppercase.
+     * If an API key is set, it returns a closure that retrieves the real-time CI value using the API.
+     * If the API key is not set, or if real-time CI retrieval is not possible, it falls back to the
+     * location-specific CI value from the local matrix.
+     * If no location-specific value is found, it falls back to the 'GLOBAL' CI value.
      *
-     * @return The carbon intensity value as a Double, or null if not found.
+     * @return A closure for real-time CI retrieval if the API key is set, or a Double value from the matrix.
+     *         Returns null if no value is found.
      */
     private def computeCI() {
         def ci
@@ -165,40 +172,21 @@ class CIValueComputer {
             if (this.apiKey && this.apiKey instanceof String) {
 
                 log.info(Markers.unique, "API key is set. Attempting to retrieve real-time carbon intensity.")
-                
+                return { getRealtimeCI() }
 
-                ci = { String processName = null -> getRealtimeCI(processName) }
-                if (ci() != null) {
-                    return ci
-                }
             } else {
                 log.warn(Markers.unique, "API key is not set. Skipping real-time carbon intensity retrieval.")
             }
-
             // Fallback to the location in the CSV
             ci = this.ciData.findCiInMatrix(this.location)
-            if (ci != null) {
-                log.info(Markers.unique, "Using carbon intensity for ${HelperFunctions.bold(this.location)} from fallback table: ${HelperFunctions.bold(ci.toString())} gCO₂eq/kWh")
-            } else {
-                log.warn(Markers.unique, "Could not retrieve carbon intensity value for ${HelperFunctions.bold(this.location)} from fallback table. Attempting to retrieve ${HelperFunctions.bold('GLOBAL')} carbon intensity value.")
-            }
         } else {
             log.warn(Markers.unique, "No location provided. Attempting to retrieve ${HelperFunctions.bold('GLOBAL')} carbon intensity value.")
         }
-
         // Fallback to the global default value if no value is found for the location
         if (ci == null) {
             ci = this.ciData.findCiInMatrix('GLOBAL')
-
-            if (ci == null) {
-                Exception err = new IllegalStateException("Could not retrieve ${HelperFunctions.bold('GLOBAL')} carbon intensity value from fallback table.")
-                log.error(err.getMessage(), err)
-            } else {
-                log.info(Markers.unique, "Using ${HelperFunctions.bold('GLOBAL')} carbon intensity from fallback table: ${HelperFunctions.bold(ci.toString())} gCO₂eq/kWh.")
-            }
         }
         return ci
     }
-
 }
 

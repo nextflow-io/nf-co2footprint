@@ -86,7 +86,7 @@ class CIValueComputerTest extends Specification {
         def ciData = Mock(CIDataMatrix)
         def computer = Spy(CIValueComputer, constructorArgs: [apiKey, location, ciData])
 
-        computer.getRealtimeCI(_) >> 123.45
+        computer.getRealtimeCI() >> 123.45
 
         when:
         def ciClosure = computer.computeCI()

@@ -58,40 +58,20 @@ class CO2FootprintConfigTest extends Specification {
         ['machineType': 'local', 'pue': 2.0]    || [:]                      || ['machineType', 'pue']   || 2.0
         ['pue': 2.0]                            || ['executor': 'awsbatch'] || ['machineType', 'pue']   || 2.0
     }
- 
     def 'test dynamic ci computation with GLOBAL fallback'() {
-        when:
-        // Create a config with valid locations
-        CO2FootprintConfig configDE = new CO2FootprintConfig(['location': 'DE'], tdp, ci, [:])
-        CO2FootprintConfig configUS = new CO2FootprintConfig(['location': 'US'], tdp, ci, [:])
-        CO2FootprintConfig configFR = new CO2FootprintConfig(['location': 'FR'], tdp, ci, [:])
+        expect:
+        CO2FootprintConfig config = new CO2FootprintConfig(['location': location], tdp, ci, [:])
+        assert config.getCi() instanceof Double
+        assert config.getCi() == expectedCi
+        assert config.location == location
+        validateDefaultProperties(config)
 
-        // Create a config with an invalid location
-        CO2FootprintConfig configInvalid = new CO2FootprintConfig(['location': 'INVALID'], tdp, ci, [:])
-
-        then:
-        // Ensure 'ci' is dynamically computed for valid locations
-        assert configDE.getCi() instanceof Double
-        assert configDE.getCi() == 300.0 // Matches the value in the CIDataMatrix for 'DE'
-
-        assert configUS.getCi() instanceof Double
-        assert configUS.getCi() == 400.0 // Matches the value in the CIDataMatrix for 'US'
-
-        assert configFR.getCi() instanceof Double
-        assert configFR.getCi() == 250.0 // Matches the value in the CIDataMatrix for 'FR'
-
-        // Ensure 'ci' falls back to GLOBAL for invalid locations
-        assert configInvalid.getCi() instanceof Double
-        assert configInvalid.getCi() == 400.0 // Falls back to the GLOBAL value
-
-        // Verify other properties are not affected
-        assert configDE.location == 'DE'
-        assert configUS.location == 'US'
-        assert configFR.location == 'FR'
-        assert configInvalid.location == 'INVALID'
-
-        // Ensure default values for other properties
-        validateDefaultProperties(configDE)
+        where:
+        location    || expectedCi
+        'DE'        || 300.0
+        'US'        || 400.0
+        'FR'        || 250.0
+        'INVALID'   || 400.0 // Falls back to GLOBAL
     }
 
     // Helper method to validate default properties

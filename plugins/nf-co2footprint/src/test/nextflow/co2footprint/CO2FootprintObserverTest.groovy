@@ -130,7 +130,7 @@ class CO2FootprintObserverTest extends Specification{
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
 
-        // Use helper to mock session with CI value 480.0
+        // Use helper to mock session with CI value 475.0
         Session session = mockSessionWithCI(tracePath, summaryPath, reportPath, 475.0)
 
         // Create task and handler
@@ -213,15 +213,13 @@ class CO2FootprintObserverTest extends Specification{
         List<String> traceLines = Files.readAllLines(tracePath)
         traceLines.size() == 2
 
-        List<String> stringList = traceLines[1].split('\t') as List<String>
-        log.info('stringList: ' + stringList)
-        log.info('stringList: ' + ['111', 'null', 'null', '14.61  Wh', '7.01  g', '1.0ms', '480.0 gCO₂eq/kWh', '1', '12.0', 'Unknown model', '100.0', '7.0 B'])
         traceLines[0].split('\t') as List<String> == [
                 'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'time', 'carbon_intensity', 'cpus', 'powerdraw_cpu', 'cpu_model', 'cpu_usage', 'requested_memory'
         ]
+
         traceLines[1].split('\t') as List<String> == [
             '111', 'null', 'null', '14.61 Wh', '7.01 g', '1.0ms', '480.0 gCO₂eq/kWh', '1', '12.0', 'Unknown model', '100.0', '7.0 B'
-        ]
+        ] // GA: CO2e is 6.94g with CI of 475 gCO2eq/kWh
 
         // Check Summary File
         Files.isRegularFile(summaryPath)

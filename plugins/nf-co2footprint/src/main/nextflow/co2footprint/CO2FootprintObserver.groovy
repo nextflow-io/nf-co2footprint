@@ -221,14 +221,6 @@ class CO2FootprintObserver implements TraceObserver {
      */
     @Override
     void onProcessCreate(TaskProcessor process) { 
-        // Obtain the SLF4J LoggerContext, which manages logging configuration and filters
-        LoggerContext lc = LoggerFactory.getILoggerFactory() as LoggerContext
-
-        // Find the DeduplicateMarkerFilter instance in the list of turbo filters
-        DeduplicateMarkerFilter dmf = lc.getTurboFilterList().find { filter -> filter instanceof DeduplicateMarkerFilter } as DeduplicateMarkerFilter
-
-        // Add the current process name to the filter's list to suppress duplicate log messages for this process
-        dmf.addFilteredMarker(process.getName() as String)
     }
 
 

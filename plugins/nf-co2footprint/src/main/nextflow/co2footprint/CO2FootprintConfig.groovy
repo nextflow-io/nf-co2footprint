@@ -54,8 +54,8 @@ class CO2FootprintConfig {
     String getSummaryFile() { summaryFile }
     String getReportFile() { reportFile }
     String getLocation() { location }
-    Double getCi(String processName = null) {
-        (ci instanceof Closure) ? ci(processName) : ci
+    Double getCi() {
+        (ci instanceof Closure) ? ci() : ci
     }  
     Double getPue() { pue }
     Boolean getIgnoreCpuModel() { ignoreCpuModel }
@@ -67,8 +67,8 @@ class CO2FootprintConfig {
 
     CO2FootprintConfig(Map<String, Object> configMap, TDPDataMatrix cpuData, CIDataMatrix ciData, Map<String, Object> processMap) {
         // Ensure configMap is not null
-        configMap = configMap ?: [:]
-
+        configMap ?= [:]
+        
         // Assign values from map to config
         configMap.each { name, value ->
             if (this.hasProperty(name)) {
@@ -82,7 +82,7 @@ class CO2FootprintConfig {
         // Determine the carbon intensity (CI) value
         if (ci == null) {
 
-            def ciValueComputer = new CIValueComputer(apiKey, location, ciData)
+            CIValueComputer ciValueComputer = new CIValueComputer(apiKey, location, ciData)
             // ci is either set to a Closure (in case the electricity maps API is used) or to a Double (in the other cases)
             // The closure is invoked each time the CO2 emissions are calculated (for each task) to make a new API call to update the real time ci value.
             ci = ciValueComputer.computeCI()
