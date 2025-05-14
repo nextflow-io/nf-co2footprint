@@ -40,9 +40,9 @@ More details are available in the Nextflow [plugin documentation](https://www.ne
 
 ## Credits
 
-The nf-co2footprint plugin is mainly developed and maintained by [Sabrina Krakau](https://github.com/skrakau) and [Júlia Mir-Pedrol](https://github.com/mirpedrol) at [QBiC](https://www.qbic.uni-tuebingen.de/).
+The nf-co2footprint plugin is mainly developed and maintained by [Sabrina Krakau](https://github.com/skrakau), [Júlia Mir-Pedrol](https://github.com/mirpedrol), [Josua Carl](https://github.com/josuacarl), and [Nadja Volkmann](https://github.com/nadnein) at [QBiC](https://www.qbic.uni-tuebingen.de/).
 
-We thank the following people for their extensive assistance in the development of this pipeline:
+We thank the following people for their extensive assistance in the development of this plugin:
 
 - [Phil Ewels](https://github.com/ewels)
 - [Paolo Di Tommaso](https://github.com/pditommaso)
@@ -51,15 +51,5 @@ We thank the following people for their extensive assistance in the development 
 
 ## Data Attribution
 
-This project uses data from [Electricity Maps](https://www.electricitymaps.com/) under the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1-0/). 
-
-### License Terms
-- **Share**: You are free to copy, distribute, and use the data.
-- **Adapt**: You can modify, transform, and build upon the data.
-- **Create**: You can produce works from the data.
-
-### Conditions
-- **Attribute**: You must clearly credit the source of the data and include the license for any public use or redistribution.
-- **Share-Alike**: Any adapted versions of the data must be offered under the same ODbL license.
-- **Keep Open**: If you use technological restrictions (e.g., DRM), you must also provide an unrestricted version.
-
+This project uses data from [Electricity Maps](https://www.electricitymaps.com/) under the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1-0/).  
+See the license link for full terms and conditions.

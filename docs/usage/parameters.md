@@ -28,10 +28,11 @@ The following parameters are currently available:
 - **`apiKey`**  
   Your Electricity Maps API token.  
   First, create a Nextflow secret with the name `EM_API_KEY` for your API key using:  
-  `nextflow secrets set EM_API_KEY "paste_api_key_here"`. Then, set the config parameter to `secrets.EM_API_KEY`.
+  `nextflow secrets set EM_API_KEY "paste_api_key_here"`. Then, set the config parameter to `secrets.EM_API_KEY`.  
+  **Default**: `null`
 
 - **`pue`** 
-  Power usage effectivenes efficiency coefficient of the data centre. For local cluster you can usually find out your specific PUE at the system administrators or system managers. Also the current [yearly worldwide average](https://www.statista.com/statistics/1229367/data-center-average-annual-pue-worldwide/) could be used.
+  Power usage effectivenes efficiency coefficient of the data centre. For local cluster you can usually find out your specific PUE at the system administrators or system managers. Also the current [yearly worldwide average](https://www.statista.com/statistics/1229367/data-center-average-annual-pue-worldwide/) could be used.  
   **Default**: 1.00
 
 - **`powerdrawMem`**  
@@ -60,6 +61,11 @@ The following parameters are currently available:
   **Default**: 12.0.
   
 - **`machineType`**  
-  The type of machine the computation is executed upon. Has to be in ['compute cluster', 'local', ''].
-  The Nextflow config option `process.executor` is used to infer the `machineType` when it is not included in the config. The `machineType` determines the default power usage effectiveness (PUE) if not explicitly specified.
-  Default: 'local' (sets `pue` to 1.0)
+  The type of machine the computation is executed upon. It determines the `pue` if the parameter is not explicitly specified in the config file. Must be one of: `'compute cluster'`, `'local'`, or `''`.  
+  If not specified (`null`), the plugin infers `machineType` from the Nextflow `process.executor` setting, mapping it to either `'compute cluster'` or `'local'`.  
+  `''` can be used if you want to bypass this behavior.  
+  **Default**: `null` 
+    - `'local'`: sets `pue` to 1.0  
+    - `'compute cluster'`: sets `pue` to 1.67
+    - `''`:  sets `pue` to 1.0  
+  
