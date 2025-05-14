@@ -13,6 +13,10 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 
+import groovy.util.logging.Slf4j
+
+
+@Slf4j
 class CO2FootprintComputerTest extends Specification{
 
     private static BigDecimal round( double value ) {
@@ -20,11 +24,13 @@ class CO2FootprintComputerTest extends Specification{
     }
 
     @Shared
-    TDPDataMatrix tdpDataMatrix = TDPDataMatrix.loadCsv(
+    TDPDataMatrix tdpDataMatrix = TDPDataMatrix.fromCsv(
             Paths.get(this.class.getResource('/CPU_TDP.csv').toURI())
     )
     @Shared
-    CIDataMatrix ciDataMatrix = null
+    CIDataMatrix ciDataMatrix = CIDataMatrix.fromCsv(
+            Paths.get(this.class.getResource('/ci_yearly_2024_by_location.csv').toURI())
+    )
 
     // ------ CO2 Calculation ------
 
@@ -37,7 +43,7 @@ class CO2FootprintComputerTest extends Specification{
         traceRecord.'%cpu' = 100.0
         traceRecord.memory = (7 as Long) * (1024**3 as Long)
 
-        CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdpDataMatrix, [:])
+        CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdpDataMatrix, ciDataMatrix, [:])
         CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord)
 
@@ -47,18 +53,18 @@ class CO2FootprintComputerTest extends Specification{
 
         where:
         cpuModel           | configMap                        || expectedEnergy | expectedCO2
-        "Unknown model"    | [:]                              || 14.61         | 6.94
-        "AMD EPYC 7251"    | [:]                              || 17.61         | 8.36
-        "Unknown model"    | [pue: 1.4]                       || 20.45         | 9.71
-        "Unknown model"    | [location: 'DE']                 || 14.61         | 4.95
-        "Unknown model"    | [ci: 338.66]                     || 14.61         | 4.95
+        "Unknown model"    | [:]                              || 14.61          | 7.01
+        "AMD EPYC 7251"    | [:]                              || 17.61          | 8.45
+        "Unknown model"    | [pue: 1.4]                       || 20.45          | 9.82
+        "Unknown model"    | [location: 'DE']                 || 14.61          | 4.88
+        "Unknown model"    | [ci: 338.66]                     || 14.61          | 4.95
     }
 
     // ------ Equivalences Calculation ------
 
     def 'test co2e equivalences calculation' () {
         given:
-        CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, [:])
+        CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, ciDataMatrix, [:])
         CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
         CO2EquivalencesRecord co2EquivalencesRecord = co2FootprintComputer.computeCO2footprintEquivalences(co2e)
 

@@ -6,34 +6,25 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Slf4j
 class CO2FootprintConfigTest extends Specification {
-    def 'config should be rejected for several cases' () {
-        when:
-        new CO2FootprintConfig(input, new TDPDataMatrix(), [:])
+    TDPDataMatrix tdp
+    CIDataMatrix ci
 
-        then:
-        Exception e = thrown(expectedException)
-        e.getMessage().contains(message)
-
-        where:
-        input                                                   || expectedException        || message
-        ['location': 'Tuebingen']  as ConcurrentHashMap         || IllegalArgumentException || 'Invalid \'location\' parameter: Tuebingen.'
-    }
-
-    def 'test configuration builder' () {
-        setup:
-        TDPDataMatrix tdp = new TDPDataMatrix(
-                [[1]],
-                ['tdp (W)'] as LinkedHashSet,
-                ['default'] as LinkedHashSet
+    def setup() {
+        tdp = new TDPDataMatrix(
+            [[1]],
+            ['tdp (W)'] as LinkedHashSet,
+            ['default'] as LinkedHashSet
         )
-        CIDataMatrix ci = new CIDataMatrix(
-                [[300]],
+        ci = new CIDataMatrix(
+                [[300], [400], [250], [400]],
                 ['Carbon intensity gCO₂eq/kWh (Life cycle)'] as LinkedHashSet,
-                ['DE'] as LinkedHashSet
+                ['DE', 'US', 'FR', 'GLOBAL'] as LinkedHashSet
         )
-
+    }
+    
+    def 'test configuration builder' () {
         when:
-        CO2FootprintConfig config = new CO2FootprintConfig(input, tdp, ci)
+        CO2FootprintConfig config = new CO2FootprintConfig(input, tdp, ci, [:])
 
         then:
         keys.each({property ->
@@ -48,15 +39,8 @@ class CO2FootprintConfigTest extends Specification {
     }
 
     def 'fallback value should change after configuring valid machine type' () {
-        setup:
-        TDPDataMatrix tdp = new TDPDataMatrix(
-                [[1]],
-                ['tdp (W)'] as LinkedHashSet,
-                ['default'] as LinkedHashSet
-        )
-
         when:
-        CO2FootprintConfig config = new CO2FootprintConfig(pluginConfig, tdp, processConfig)
+        CO2FootprintConfig config = new CO2FootprintConfig(pluginConfig, tdp, ci, processConfig)
 
         then:
         keys.each({property ->
@@ -76,29 +60,14 @@ class CO2FootprintConfigTest extends Specification {
     }
  
     def 'test dynamic ci computation with GLOBAL fallback'() {
-        setup:
-        // Create a TDPDataMatrix
-        TDPDataMatrix tdp = new TDPDataMatrix(
-                [[1]],
-                ['tdp (W)'] as LinkedHashSet,
-                ['default'] as LinkedHashSet
-        )
-
-        // Create a CIDataMatrix with multiple zones, including GLOBAL
-        CIDataMatrix ci = new CIDataMatrix(
-                [[300], [400], [250], [400]],
-                ['Carbon intensity gCO₂eq/kWh (Life cycle)'] as LinkedHashSet,
-                ['DE', 'US', 'FR', 'GLOBAL'] as LinkedHashSet
-        )
-
         when:
         // Create a config with valid locations
-        CO2FootprintConfig configDE = new CO2FootprintConfig(['location': 'DE'], tdp, ci)
-        CO2FootprintConfig configUS = new CO2FootprintConfig(['location': 'US'], tdp, ci)
-        CO2FootprintConfig configFR = new CO2FootprintConfig(['location': 'FR'], tdp, ci)
+        CO2FootprintConfig configDE = new CO2FootprintConfig(['location': 'DE'], tdp, ci, [:])
+        CO2FootprintConfig configUS = new CO2FootprintConfig(['location': 'US'], tdp, ci, [:])
+        CO2FootprintConfig configFR = new CO2FootprintConfig(['location': 'FR'], tdp, ci, [:])
 
         // Create a config with an invalid location
-        CO2FootprintConfig configInvalid = new CO2FootprintConfig(['location': 'INVALID'], tdp, ci)
+        CO2FootprintConfig configInvalid = new CO2FootprintConfig(['location': 'INVALID'], tdp, ci, [:])
 
         then:
         // Ensure 'ci' is dynamically computed for valid locations
@@ -128,6 +97,6 @@ class CO2FootprintConfigTest extends Specification {
     // Helper method to validate default properties
     private void validateDefaultProperties(CO2FootprintConfig config) {
         assert config.powerdrawMem == 0.3725
-        assert config.pue == 1.67
+        assert config.pue == 1.0
     }
 }

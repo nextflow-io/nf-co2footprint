@@ -75,7 +75,7 @@ class CO2Record extends TraceRecord {
     Double getTime() { time }
     String getTimeReadable() { Converter.toReadableTimeUnits(time, 'ms', 'ms', 'days', 0.0d) }
 
-    String getCIReadable() { Converter.toReadableUnits(ci, ' ',  gCO₂eq/kWh) }
+    String getCIReadable() { Converter.toReadableUnits(ci, '', 'gCO₂eq/kWh') }
 
     Integer getCPUs() { cpus }
     String getCPUsReadable() { cpus as String }

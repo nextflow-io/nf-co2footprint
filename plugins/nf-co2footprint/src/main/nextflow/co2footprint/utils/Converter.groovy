@@ -37,8 +37,8 @@ class Converter {
      * @param unit Name / symbol for the unit
      * @return Converted String with appropriate scale
      */
-    static String toReadableUnits(double value, String scope=' ', String unit='') {
-        def scopes = ['p', 'n', 'u', 'm', ' ', 'K', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
+    static String toReadableUnits(double value, String scope='', String unit='') {
+        def scopes = ['p', 'n', 'u', 'm', '', 'K', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
         int scopeIndex = scopes.indexOf(scope)
 
         while (value >= 1000 && scopeIndex < scopes.size() - 1) {
