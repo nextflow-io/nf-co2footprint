@@ -203,7 +203,7 @@ class CO2FootprintObserverTest extends Specification{
                 'cpu_model', 'cpu_usage', 'requested_memory'
         ]
         traceLines[1].split('\t') as List<String> == [
-                '111', 'null', 'null', '14.61  Wh', '6.94  g', '1.0ms', '1', '12.0', 'Unknown model', '100.0', '7.0 B'
+                '111', 'null', 'null', '14.61  Wh', '6.94  g', '1ms', '1', '12.0', 'Unknown model', '100.0', '7.0 B'
         ]
 
         // Check Summary File

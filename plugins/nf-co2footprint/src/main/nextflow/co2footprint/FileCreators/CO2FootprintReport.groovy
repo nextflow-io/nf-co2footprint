@@ -157,8 +157,13 @@ class CO2FootprintReport extends CO2FootprintFile{
         Map all_options = config.collectInputFileOptions() + config.collectOutputFileOptions() + config.collectCO2CalcOptions()
 
         // Render JSON
-        List<String> options = all_options.collect {name, value ->
-            "{ \"option\":\"${name}\", \"value\":\"${value as String}\" }" as String
+        List<String> options = all_options.collect { name, value ->
+            def valueStr = value as String
+            // If value is a Closure (e.g. in case API calls are being made for each task), replace with 'dynamic'
+            if (value instanceof Closure) {
+                valueStr = 'dynamic'
+            }
+            "{ \"option\":\"${name}\", \"value\":\"${valueStr}\" }"
         }
 
         return "[${String.join(',', options)}]"
