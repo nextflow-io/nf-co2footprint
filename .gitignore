@@ -17,3 +17,8 @@ out
 co2footprint_*.txt
 co2footprint_*.html
 site
+
+# Ignore Python virtual environment
+venv/
+
+Todo.txt
