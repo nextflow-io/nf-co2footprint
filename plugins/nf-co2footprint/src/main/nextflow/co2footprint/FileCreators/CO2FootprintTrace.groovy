@@ -37,7 +37,7 @@ class CO2FootprintTrace extends CO2FootprintFile {
         traceWriter = new Agent<PrintWriter>(file)
 
         List<String> headers = [
-                'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'time', 'cpus', 'powerdraw_cpu',
+                'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'time', 'carbon_intensity', 'cpus', 'powerdraw_cpu',
                 'cpu_model', 'cpu_usage', 'requested_memory'
         ]
 

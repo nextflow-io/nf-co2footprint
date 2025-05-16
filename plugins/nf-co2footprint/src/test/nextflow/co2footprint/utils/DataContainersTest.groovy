@@ -3,6 +3,7 @@ package nextflow.co2footprint.utils
 import spock.lang.Specification
 import spock.lang.Stepwise
 
+
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import ch.qos.logback.core.read.ListAppender
@@ -175,7 +176,8 @@ class DataMatrixTest extends  Specification {
 
         when:
         df.saveCsv(filePath, ',')
-        Matrix df2 = DataMatrix.loadCsv(filePath, ',', 0, 0)
+
+        DataMatrix df2 = DataMatrix.fromCsv(filePath, ',', 0, 0)
 
         then:
         Files.isRegularFile(filePath)
