@@ -17,9 +17,7 @@ class CO2EquivalencesRecord {
     String getCarKilometersReadable() { Converter.toScientificNotation(carKilometers) }
 
     Double getTreeMonths() { treeMonths }
-    String getTreeMonthsReadable() {
-        Converter.toReadableTimeUnits(treeMonths, 'months', 's', 'years', 1, 3)
-    }
+    String getTreeMonthsReadable() { Converter.toScientificNotation(treeMonths) }
 
     Double getPlanePercent() { planePercent }
     String getPlanePercentReadable() { Converter.toScientificNotation(planePercent) }
