@@ -94,7 +94,7 @@ class CO2FootprintObserverTest extends Specification{
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
 
-        // Use helper to mock session with CI value 480.0
+        // Use helper to mock session with CI value 475.0
         Session session = mockSessionWithCI(tracePath, summaryPath, reportPath, 475.0)
 
         // Create task and handler
