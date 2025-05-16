@@ -38,6 +38,11 @@ More details are available in the Nextflow [plugin documentation](https://www.ne
 !!! note
   The usage of GPUs is not yet supported.
 
+## Contributing
+Before contributing, please read the [contribution guidelines](contributing/guidelines.md) carefully. You may also find the recommended [testing setup](contributing/setup.md) helpful.
+
+After your changes are accepted. maintainers may then [publish](contributing/publishing.md) a new version along with your contribution.
+
 ## Credits
 
 The nf-co2footprint plugin is mainly developed and maintained by [Sabrina Krakau](https://github.com/skrakau), [Júlia Mir-Pedrol](https://github.com/mirpedrol), [Josua Carl](https://github.com/josuacarl), and [Nadja Volkmann](https://github.com/nadnein) at [QBiC](https://www.qbic.uni-tuebingen.de/).
