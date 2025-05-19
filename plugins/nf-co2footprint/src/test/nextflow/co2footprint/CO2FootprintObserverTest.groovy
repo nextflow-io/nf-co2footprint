@@ -230,6 +230,7 @@ class CO2FootprintObserverTest extends Specification{
         summaryLines[16] == "reportFile: ${reportPath}"
         summaryLines[17] == "summaryFile: ${summaryPath}"
         summaryLines[18] == "traceFile: ${tracePath}"
+        // 12 is the plugin version (changes on Github CI to current version)
         checksumChecker.checkSums(summaryPath, [12, 16, 17, 18], 'fdd67a48dbad3c0a28151d0dd4bd6207')
 
         // Check Report File
@@ -250,6 +251,7 @@ class CO2FootprintObserverTest extends Specification{
                 "{ \"option\":\"reportFile\", \"value\":\"${reportPath}\" }," +
                 "{ \"option\":\"summaryFile\", \"value\":\"${summaryPath}\" }," +
                 "{ \"option\":\"traceFile\", \"value\":\"${tracePath}\" }];"
+        // 207 is the plugin version, 642 is a Javascript (nothing written by hand)
         checksumChecker.checkSums(reportPath, [194, 207, 642, 1015], '0ca416a7b22f7a2726dac50b9afb45b4')
     }
 }
