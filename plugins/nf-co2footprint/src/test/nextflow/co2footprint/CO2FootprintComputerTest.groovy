@@ -25,11 +25,11 @@ class CO2FootprintComputerTest extends Specification{
 
     @Shared
     TDPDataMatrix tdpDataMatrix = TDPDataMatrix.fromCsv(
-            Paths.get(this.class.getResource('/CPU_TDP.csv').toURI())
+            Paths.get(this.class.getResource('/cpu_tdp_data/CPU_TDP.csv').toURI())
     )
     @Shared
     CIDataMatrix ciDataMatrix = CIDataMatrix.fromCsv(
-            Paths.get(this.class.getResource('/ci_yearly_2024_by_location.csv').toURI())
+            Paths.get(this.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
     )
 
     // ------ CO2 Calculation ------

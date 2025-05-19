@@ -72,11 +72,11 @@ class CO2FootprintFactory implements TraceObserverFactory {
      * External Data integration of TDP (Thermal design power) and CI (Carbon intensity) values
      */
     private final TDPDataMatrix tdpDataMatrix = TDPDataMatrix.fromCsv(
-            Paths.get(this.class.getResource('/CPU_TDP.csv').toURI())
+            Paths.get(this.class.getResource('/cpu_tdp_data/CPU_TDP.csv').toURI())
     )
 
     private final CIDataMatrix ciDataMatrix = CIDataMatrix.fromCsv(
-            Paths.get(this.class.getResource('/ci_yearly_2024_by_location.csv').toURI())
+            Paths.get(this.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
     )
     
 
