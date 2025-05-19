@@ -230,8 +230,7 @@ class CO2FootprintObserverTest extends Specification{
         summaryLines[16] == "reportFile: ${reportPath}"
         summaryLines[17] == "summaryFile: ${summaryPath}"
         summaryLines[18] == "traceFile: ${tracePath}"
-        log.warn("${summaryLines}")
-        checksumChecker.checkSums(summaryPath, [16, 17, 18], '404ce5b7c1a87131edacf9d7185489e2')
+        checksumChecker.checkSums(summaryPath, [12, 16, 17, 18], 'fdd67a48dbad3c0a28151d0dd4bd6207')
 
         // Check Report File
         Files.isRegularFile(reportPath)
@@ -251,6 +250,6 @@ class CO2FootprintObserverTest extends Specification{
                 "{ \"option\":\"reportFile\", \"value\":\"${reportPath}\" }," +
                 "{ \"option\":\"summaryFile\", \"value\":\"${summaryPath}\" }," +
                 "{ \"option\":\"traceFile\", \"value\":\"${tracePath}\" }];"
-        checksumChecker.checkSums(reportPath, [194, 1015], '9e42b2880435f8fbdb7f3d96bbdcb8a3')
+        checksumChecker.checkSums(reportPath, [194, 208, 1015], '3b27b2a1a99fc642cac9dbc1a940fe5e')
     }
 }
