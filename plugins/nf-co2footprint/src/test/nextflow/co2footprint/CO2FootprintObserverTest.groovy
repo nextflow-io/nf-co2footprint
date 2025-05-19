@@ -212,7 +212,6 @@ class CO2FootprintObserverTest extends Specification{
         then:
         // Check Trace File
         Files.isRegularFile(tracePath)
-        checksumChecker.checkSums(tracePath, [], '676ad72fb2d92a61948916a5ef680260')
         List<String> traceLines = tracePath.readLines()
         traceLines.size() == 2
 
@@ -223,18 +222,19 @@ class CO2FootprintObserverTest extends Specification{
         traceLines[1].split('\t') as List<String> == [
             '111', 'null', 'null', '14.61 Wh', '7.01 g', '1.0ms', '480.0 gCO₂eq/kWh', '1', '12.0', 'Unknown model', '100.0', '7.0 B'
         ] // GA: CO2e is 6.94g with CI of 475 gCO2eq/kWh
+        checksumChecker.checkSums(tracePath, [], '676ad72fb2d92a61948916a5ef680260')
 
         // Check Summary File
         Files.isRegularFile(summaryPath)
-        checksumChecker.checkSums(summaryPath, [16, 17, 18], '404ce5b7c1a87131edacf9d7185489e2')
         List<String> summaryLines = summaryPath.readLines()
         summaryLines[16] == "reportFile: ${reportPath}"
         summaryLines[17] == "summaryFile: ${summaryPath}"
         summaryLines[18] == "traceFile: ${tracePath}"
+        log.warn("${summaryLines}")
+        checksumChecker.checkSums(summaryPath, [16, 17, 18], '404ce5b7c1a87131edacf9d7185489e2')
 
         // Check Report File
         Files.isRegularFile(reportPath)
-        checksumChecker.checkSums(reportPath, [194, 1015], '9e42b2880435f8fbdb7f3d96bbdcb8a3')
         List<String> reportLines = reportPath.readLines()
         reportLines.size() == 1046
         reportLines[194] == "          " +
@@ -251,5 +251,6 @@ class CO2FootprintObserverTest extends Specification{
                 "{ \"option\":\"reportFile\", \"value\":\"${reportPath}\" }," +
                 "{ \"option\":\"summaryFile\", \"value\":\"${summaryPath}\" }," +
                 "{ \"option\":\"traceFile\", \"value\":\"${tracePath}\" }];"
+        checksumChecker.checkSums(reportPath, [194, 1015], '9e42b2880435f8fbdb7f3d96bbdcb8a3')
     }
 }
