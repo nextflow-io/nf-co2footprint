@@ -7,7 +7,7 @@ description: Nextflow plugin for CO2 footprint estimations
 
 {==
 
-**A Nextflow plugin to estimate the CO<sub>2</sub> footprint of pipeline runs.**
+**A Nextflow plugin to estimate the CO₂ footprint of pipeline runs.**
 
 ==}
 
