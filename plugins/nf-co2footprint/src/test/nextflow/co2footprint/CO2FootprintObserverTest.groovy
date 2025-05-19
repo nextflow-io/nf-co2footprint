@@ -250,6 +250,6 @@ class CO2FootprintObserverTest extends Specification{
                 "{ \"option\":\"reportFile\", \"value\":\"${reportPath}\" }," +
                 "{ \"option\":\"summaryFile\", \"value\":\"${summaryPath}\" }," +
                 "{ \"option\":\"traceFile\", \"value\":\"${tracePath}\" }];"
-        checksumChecker.checkSums(reportPath, [194, 208, 1015], '3b27b2a1a99fc642cac9dbc1a940fe5e')
+        checksumChecker.checkSums(reportPath, [194, 207, 642, 1015], '0ca416a7b22f7a2726dac50b9afb45b4')
     }
 }
