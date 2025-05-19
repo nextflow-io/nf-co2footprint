@@ -8,7 +8,7 @@ edit_uri: edit/master/docs/
 nav:
   - Home:
       - index.md
-      - co2footprint.md
+      - co2footprint_calculation.md
   - Usage:
       - usage/configuration.md
       - usage/parameters.md
