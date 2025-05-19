@@ -158,12 +158,8 @@ class CO2FootprintReport extends CO2FootprintFile{
 
         // Render JSON
         List<String> options = all_options.collect { name, value ->
-            def valueStr = value as String
-            // If value is a Closure (e.g. in case API calls are being made for each task), replace with 'dynamic'
-            if (value instanceof Closure) {
-                valueStr = 'dynamic'
-            }
-            "{ \"option\":\"${name}\", \"value\":\"${valueStr}\" }"
+            def valueStr = (value instanceof Closure) ? 'dynamic' : value as String
+            """{ "option":"${name}", "value":"${valueStr}" }"""
         }
 
         return "[${String.join(',', options)}]"

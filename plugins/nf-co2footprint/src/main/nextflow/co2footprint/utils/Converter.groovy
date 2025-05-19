@@ -96,6 +96,18 @@ class Converter {
         return value
     }
 
+    /**
+     * Converts a time value to a human-readable string
+     *
+     * @param value The time as a number in original given unit
+     * @param unit Given unit of time
+     * @param smallestUnit The smallest unit to convert to
+     * @param largestUnit The largest unit to convert to
+     * @param threshold The minimum value for the conversion to be included in the output
+     * @param numSteps The maximum number of conversion steps to perform
+     * @param readableString The string to append the result to
+     * @return A human-readable string representation of the time value
+     */
     static String toReadableTimeUnits(
         def value,
         String unit = 'ms',
@@ -116,23 +128,25 @@ class Converter {
         // Convert value to the current target unit
         String targetUnit = largestUnit
         BigDecimal targetValue = convertTime(value as BigDecimal, unit, targetUnit)
-        int targetValueInt = Math.floor(targetValue) as Integer
+        def targetValueFormatted = Math.floor(targetValue)
 
         // Singularize unit if value is exactly 1 and unit is plural
-        if (targetValueInt == 1 && ['days', 'weeks', 'months', 'years'].contains(targetUnit)) {
-            targetUnit = targetUnit.dropRight(1)
+        if (targetValueFormatted == 1 && ['days', 'weeks', 'months', 'years'].contains(targetUnit)) {
+            targetUnit = targetUnit.dropRight(1) // e.g. "days" -> "day"
         }
 
         // If this is the last step, use the remaining value as is
         if (numSteps == 0) {
-            targetValueInt = targetValue
+            targetValueFormatted = targetValue
         }
 
         // Only add to output if above threshold or no threshold set
-        if (threshold == null || targetValueInt > threshold) {
-            value = targetValue - targetValueInt
+        if (threshold == null || targetValueFormatted > threshold) {
+            value = targetValue - targetValueFormatted
             unit = largestUnit
-            readableString += " ${targetValueInt}${targetUnit}"
+            // Format to 2 decimals, remove trailing zeros
+            String formattedValue = new BigDecimal(targetValueFormatted.toString()).setScale(2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().toPlainString()
+            readableString += readableString ? " ${formattedValue}${targetUnit}" : "${formattedValue}${targetUnit}"
         }
 
         // If we've reached the smallest unit or max steps, return the result
