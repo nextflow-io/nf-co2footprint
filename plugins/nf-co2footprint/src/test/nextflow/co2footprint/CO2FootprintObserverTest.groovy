@@ -26,6 +26,8 @@ import groovy.util.logging.Slf4j
 class CO2FootprintObserverTest extends Specification{
 
     // ------ TEST UTILITY METHODS ------
+    @Shared
+    ChecksumChecker checksumChecker = new ChecksumChecker()
 
     @Shared
     def traceRecord = new TraceRecord()
@@ -210,7 +212,8 @@ class CO2FootprintObserverTest extends Specification{
         then:
         // Check Trace File
         Files.isRegularFile(tracePath)
-        List<String> traceLines = Files.readAllLines(tracePath)
+        checksumChecker.checkSums(tracePath, [], '676ad72fb2d92a61948916a5ef680260')
+        List<String> traceLines = tracePath.readLines()
         traceLines.size() == 2
 
         traceLines[0].split('\t') as List<String> == [
@@ -218,26 +221,35 @@ class CO2FootprintObserverTest extends Specification{
         ]
 
         traceLines[1].split('\t') as List<String> == [
-            '111', 'null', 'null', '14.61 Wh', '7.01 g', '1ms', '480.0 gCO₂eq/kWh', '1', '12.0', 'Unknown model', '100.0', '7.0 B'
+            '111', 'null', 'null', '14.61 Wh', '7.01 g', '1.0ms', '480.0 gCO₂eq/kWh', '1', '12.0', 'Unknown model', '100.0', '7.0 B'
         ] // GA: CO2e is 6.94g with CI of 475 gCO2eq/kWh
 
         // Check Summary File
         Files.isRegularFile(summaryPath)
-        List<String> summaryLines = Files.readAllLines(summaryPath)
-        summaryLines.size() == 25
-        summaryLines[2] == 'Energy consumption: 14.61 Wh'
-        summaryLines[5] == '- 0.04 km travelled by car'
+        checksumChecker.checkSums(summaryPath, [16, 17, 18], '404ce5b7c1a87131edacf9d7185489e2')
+        List<String> summaryLines = summaryPath.readLines()
+        summaryLines[16] == "reportFile: ${reportPath}"
         summaryLines[17] == "summaryFile: ${summaryPath}"
-        summaryLines[24] == 'pue: 1.0'
+        summaryLines[18] == "traceFile: ${tracePath}"
 
         // Check Report File
         Files.isRegularFile(reportPath)
-        List<String> reportLines = Files.readAllLines(reportPath)
+        checksumChecker.checkSums(reportPath, [194, 1015], '9e42b2880435f8fbdb7f3d96bbdcb8a3')
+        List<String> reportLines = reportPath.readLines()
         reportLines.size() == 1046
-        reportLines[0] == '<!DOCTYPE html>'
         reportLines[194] == "          " +
                 "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                 " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
-        reportLines[213] == "          <span class=\"metric\">7.01 g</span>"
+        reportLines[1015] == "  window.options = [" +
+                "{ \"option\":\"ci\", \"value\":\"480.0\" }," +
+                "{ \"option\":\"customCpuTdpFile\", \"value\":\"null\" }," +
+                "{ \"option\":\"ignoreCpuModel\", \"value\":\"false\" }," +
+                "{ \"option\":\"location\", \"value\":\"null\" }," +
+                "{ \"option\":\"powerdrawCpuDefault\", \"value\":\"null\" }," +
+                "{ \"option\":\"powerdrawMem\", \"value\":\"0.3725\" }," +
+                "{ \"option\":\"pue\", \"value\":\"1.0\" }," +
+                "{ \"option\":\"reportFile\", \"value\":\"${reportPath}\" }," +
+                "{ \"option\":\"summaryFile\", \"value\":\"${summaryPath}\" }," +
+                "{ \"option\":\"traceFile\", \"value\":\"${tracePath}\" }];"
     }
 }
