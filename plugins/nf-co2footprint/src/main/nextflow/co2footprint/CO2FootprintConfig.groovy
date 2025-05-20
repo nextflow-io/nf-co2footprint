@@ -107,7 +107,7 @@ class CO2FootprintConfig {
         ci ?= location ? retrieveCi(location) : default_ci
 
         // Assign machine Type if not already given
-        machineType ?= matchProcessExecutor(processMap?.get('executor') as String)
+        machineType = machineType == null ? matchProcessExecutor(processMap?.get('executor') as String) : machineType
 
         // Assign PUE if not already given
         pue ?= switch (machineType) {
