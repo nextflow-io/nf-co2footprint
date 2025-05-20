@@ -43,7 +43,7 @@ class CO2FootprintReport extends CO2FootprintFile{
     // Writer
     private BufferedWriter writer = TraceHelper.newFileWriter(path, overwrite, 'Report')
 
-    CO2FootprintReport(Path path, boolean overwrite, int maxTasks) {
+    CO2FootprintReport(Path path, boolean overwrite=false, int maxTasks=10_000) {
         super(path, overwrite)
         this.maxTasks = maxTasks
     }
@@ -171,9 +171,9 @@ class CO2FootprintReport extends CO2FootprintFile{
      * @param dataCO2 A collection of {@link nextflow.co2footprint.CO2Record}s representing the tasks executed
      * @return The rendered json
      */
-    protected Map renderCO2TotalsJson() {
-        [ co2: Converter.toReadableUnits(total_co2,'m', ''),        // TODO: unit (g) could be given here and removed from HTML template
-          energy:Converter.toReadableUnits(total_energy,'m',''),    // TODO: unit (Wh) could be given here and removed from HTML template
+    protected Map<String, String> renderCO2TotalsJson() {
+        [ co2: Converter.toReadableUnits(total_co2,'m', 'g'),
+          energy:Converter.toReadableUnits(total_energy,'m','Wh'),
           car: equivalences.getCarKilometersReadable(),
           tree: equivalences.getTreeMonthsReadable(),
           plane_percent: equivalences.getPlanePercent() < 100.0 ? equivalences.getPlanePercentReadable() : null,
