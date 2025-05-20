@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+# Version 1.0.0
+
+## Bug Fixes:
+- Check row replacement upon supplying a customTDPDataTable
+
 # Version 1.0.0-beta1
 ## Features:
 - Plot co2e and energy in one plot with two axis.
