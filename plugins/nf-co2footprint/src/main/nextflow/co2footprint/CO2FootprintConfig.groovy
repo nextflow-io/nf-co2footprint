@@ -134,7 +134,7 @@ class CO2FootprintConfig {
         }
 
         // Use custom TDP file
-        if (customCpuTdpFile) { cpuData.update( TDPDataMatrix.loadCsv(Paths.get(customCpuTdpFile as String)) ) }
+        if (customCpuTdpFile) { cpuData.update( TDPDataMatrix.loadCsv(Paths.get(customCpuTdpFile as String), cpuData) ) }
 
         // Check whether all entries in the map could be assigned to a class property
         if (!configMap.isEmpty()) {
