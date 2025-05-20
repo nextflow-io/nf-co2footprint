@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+# Version 1.0.0
+
+## Misc
+- Moved call to OS when memory is exceeded into this case to avoid unnecessary calls
+
 # Version 1.0.0-beta1
 ## Features:
 - Plot co2e and energy in one plot with two axis.
