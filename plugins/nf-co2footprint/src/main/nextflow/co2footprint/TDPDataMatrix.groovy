@@ -44,29 +44,6 @@ class TDPDataMatrix extends DataMatrix {
     }
 
     /**
-    * Create a TDPDataMatrix from a CSV file.
-    *
-    * @param path Path to the CSV file
-    * @param separator Separator used in the CSV file (default is ',')
-    * @param columnIndexPos Position of the column index (default is 0)
-    * @param rowIndexPos Position of the row index (default is null)
-    * @param rowIndexColumn Name of the column used for the row index (default is 'name')
-    * @return A TDPDataMatrix object
-    */
-    static TDPDataMatrix fromCsv(
-            Path path, String separator = ',', Integer columnIndexPos = 0, Integer rowIndexPos = null,
-            Object rowIndexColumn = 'name'
-    ) {
-        DataMatrix dm = DataMatrix.fromCsv(path, separator, columnIndexPos, rowIndexPos, rowIndexColumn)
-        TDPDataMatrix tdpMatrix = new TDPDataMatrix(
-                dm.getData(), dm.getOrderedColumnKeys(), dm.getOrderedRowKeys(),
-                'default', null, null, null
-        )
-        return tdpMatrix
-    }
-
-
-    /**
      * Remove non-ASCII symbols (®, ™,...)  from String.
      *
      * @param str Input string
@@ -243,6 +220,32 @@ class TDPDataMatrix extends DataMatrix {
         this.columnIndex = newTDPDataMatrix.columnIndex
     }
 
+    /**
+     * Create a TDPDataMatrix from a CSV file.
+     *
+     * @param path Path to the CSV file
+     * @param separator Separator used in the CSV file (default is ',')
+     * @param columnIndexPos Position of the column index (default is 0)
+     * @param rowIndexPos Position of the row index (default is null)
+     * @param rowIndexColumn Name of the column used for the row index (default is 'name')
+     * @return A TDPDataMatrix object
+     */
+    static TDPDataMatrix fromCsv(
+            Path path, TDPDataMatrix oldData=null,
+            String separator = ',', Integer columnIndexPos = 0,
+            Integer rowIndexPos = null, Object rowIndexColumn = 'name'
+    ) {
+        DataMatrix dm = DataMatrix.fromCsv(path, separator, columnIndexPos, rowIndexPos, rowIndexColumn)
+
+        dm.columnIndex.keySet().containsAll(['name', 'tdp (W)', 'cores', 'threads'])
+
+        TDPDataMatrix newData = new TDPDataMatrix(
+                dm.getData(), dm.getOrderedColumnKeys(), dm.getOrderedRowKeys(),
+                'default', null, null, null
+        )
+
+        return newData
+    }
 
     static compareToOldData(TDPDataMatrix oldData, TDPDataMatrix newData) {
         // Compare entries to warn about changing
@@ -255,13 +258,11 @@ class TDPDataMatrix extends DataMatrix {
                 if (oldEntry && oldEntry.getData() != newEntry.getData()) {
                     log.info(
                             "Already existing TDP value (${oldEntry.getTDP()} W) of '${model}' " +
-                            "is overwritten with custom value: ${newEntry.getTDP()} W"
+                                    "is overwritten with custom value: ${newEntry.getTDP()} W"
                     )
                 }
             }
         }
     }
-
-
 }
 
