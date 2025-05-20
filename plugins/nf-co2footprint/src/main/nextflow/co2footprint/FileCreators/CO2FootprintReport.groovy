@@ -176,10 +176,9 @@ class CO2FootprintReport extends CO2FootprintFile{
           energy:Converter.toReadableUnits(total_energy,'m',''),    // TODO: unit (Wh) could be given here and removed from HTML template
           car: equivalences.getCarKilometersReadable(),
           tree: equivalences.getTreeMonthsReadable(),
-          plane_percent: equivalences.getPlanePercentReadable(),
-          plane_flights: equivalences.getPlaneFlightsReadable()
-        ]
-    }
+          plane_percent: equivalences.getPlanePercent() < 100.0 ? equivalences.getPlanePercentReadable() : null,
+          plane_flights: equivalences.getPlaneFlights() >= 1 ? equivalences.getPlaneFlightsReadable() : null
+        ] }
 
     // TODO: Simplification through TraceRecord.renderJSON() without arguments ? (also relevant for CO2Record)
     /**

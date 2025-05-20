@@ -208,7 +208,7 @@
           <span class="metric-title">km by car</span>
         </div></div>
         <div class="col-12 col-md-6 col-xl"><div class="metric-card card my-3">
-          <% if (co2_totals.plane_percent < 100.0) { %>
+          <% if (co2_totals.plane_percent) { %>
           <span class="metric">${co2_totals.plane_percent}%</span>
           <% } else if ( co2_totals.plane_flights ) { %>
           <span class="metric">${co2_totals.plane_flights}x</span>
