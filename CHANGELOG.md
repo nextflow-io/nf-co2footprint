@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+# Version 1.0.0
+
+## Bug Fixes:
+- Adjusted rendering of flights to deliver percentage < 1.0 flights and number of flights afterwards
+
 # Version 1.0.0-beta1
 ## Features:
 - Plot co2e and energy in one plot with two axis.
