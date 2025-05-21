@@ -69,7 +69,7 @@ class DeduplicateMarkerFilter extends TurboFilter {
             if (filteredMarkers.contains(marker)) {
 
                 // Counts the occurrences for the markers
-                Integer count = msgCache.putIfAbsent(format, 0) ?: 0
+                final Integer count = msgCache.putIfAbsent(format, 0) ?: 0
 
                 // Increments the occurrences by 1
                 msgCache[format] = count + 1
