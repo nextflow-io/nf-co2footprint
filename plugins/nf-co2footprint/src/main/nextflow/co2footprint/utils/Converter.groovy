@@ -1,5 +1,6 @@
 package nextflow.co2footprint.utils
 
+import java.math.RoundingMode
 import java.text.DecimalFormat
 
 /**
@@ -145,7 +146,7 @@ class Converter {
             value = targetValue - targetValueFormatted
             unit = largestUnit
             // Format to 2 decimals, remove trailing zeros
-            final String formattedValue = (targetValueFormatted as BigDecimal).setScale(2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().toPlainString()
+            final String formattedValue = (targetValueFormatted as BigDecimal).setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()
             readableString += readableString ? " ${formattedValue}${targetUnit}" : "${formattedValue}${targetUnit}"
         }
 
