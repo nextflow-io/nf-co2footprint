@@ -1,5 +1,7 @@
 package nextflow.co2footprint.utils
 
+import groovy.util.logging.Slf4j
+
 import java.nio.file.Path
 import java.nio.file.Files
 
@@ -78,14 +80,14 @@ class BiMap<K, V> {
 
     // method to remove a key-value pair based on the key
     V removeByKey(K key) {
-        V value = keyToValueMap.remove(key)
+        final V value = keyToValueMap.remove(key)
         valueToKeyMap.remove(value)
         return value
     }
 
     // method to remove a key-value pair based on the key
     K removeByValue(V value) {
-        K key = valueToKeyMap.remove(value)
+        final K key = valueToKeyMap.remove(value)
         keyToValueMap.remove(key)
         return key
     }
@@ -112,15 +114,15 @@ class BiMap<K, V> {
     }
 
     BiMap<K,V> sortByValues() {
-        List<V> values = valueToKeyMap.keySet().sort()
-        List<K> keys = values.collect { value -> valueToKeyMap[value]}
+        final List<V> values = valueToKeyMap.keySet().sort()
+        final List<K> keys = values.collect { value -> valueToKeyMap[value]}
 
         return new BiMap(null, keys, values)
     }
 
     BiMap<K,V> sortByKeys() {
-        List<K> keys = keyToValueMap.keySet().sort()
-        List<V> values = keys.collect { key -> keyToValueMap[key]}
+        final List<K> keys = keyToValueMap.keySet().sort()
+        final List<V> values = keys.collect { key -> keyToValueMap[key]}
 
         return new BiMap(null, keys, values)
     }
@@ -157,8 +159,9 @@ interface Matrix {
  *
  * @author Josua Carl <josua.carl@uni-tuebingen.de>
  */
+@Slf4j
 class DataMatrix implements Matrix {
-    List<List<Object>> data = []
+    protected List<List<Object>> data = []
     protected BiMap<Object, Integer> columnIndex = [:] as BiMap
     protected BiMap<Object, Integer> rowIndex = [:] as BiMap
 
@@ -189,30 +192,30 @@ class DataMatrix implements Matrix {
     void assertRowLengthEqual() throws IllegalStateException  {
        data.eachWithIndex { row, i ->
            if (row.size() != this.data[0].size()) {
-               throw new IllegalStateException(
-                       "Length of row ${i} (${row.size()}) does not match size preceding rows (${this.data[0].size()})."
-               )
+               final String message = "Length of row ${i} (${row.size()}) does not match size preceding rows (${this.data[0].size()})."
+               log.error(message)
+               throw new IllegalStateException(message)
            }
        }
     }
 
     private void assertRowIndexLengthMatches() throws IllegalStateException {
         if (this.data.size() != this.rowIndex.size()) {
-            throw new IllegalStateException(
-                    "Data size ${this.data.size()} does not match rowIndex length ${this.rowIndex.size()}"
-            )
+            final String message = "Data size ${this.data.size()} does not match rowIndex length ${this.rowIndex.size()}"
+            log.error(message)
+            throw new IllegalStateException(message)
         }
     }
 
     void assertColumnIndexLengthMatches() throws IllegalStateException  {
         if (this.data.size() == 0 && this.columnIndex.size() != 0) {
-            throw new IllegalStateException(
-                    'Passed column index without data.'
-            )
+            final String message = 'Passed column index without data.'
+            log.error(message)
+            throw new IllegalStateException(message)
         } else if (this.data.size() > 0 && this.data[0].size() != this.columnIndex.size()) {
-            throw new IllegalStateException(
-                    "Data length ${this.data[0].size()} does not match rowIndex length ${this.columnIndex.size()}"
-            )
+            final String message = "Data length ${this.data[0].size()} does not match rowIndex length ${this.columnIndex.size()}"
+            log.error(message)
+            throw new IllegalStateException(message)
         }
     }
 
@@ -249,7 +252,7 @@ class DataMatrix implements Matrix {
      * Select rows of the DataMatrix
      */
     private DataMatrix selectRows(LinkedHashSet<Object> rows){
-        List<Integer> iList = collectIndices(rows, this.rowIndex)
+        final List<Integer> iList = collectIndices(rows, this.rowIndex)
         List<List<Object>> data = this.data[iList]
 
         return new DataMatrix(data, this.columnIndex.keySet() as LinkedHashSet, rows)
@@ -260,7 +263,7 @@ class DataMatrix implements Matrix {
      */
     private DataMatrix selectColumns(LinkedHashSet<Object> columns){
         // Collect indices
-        List<Integer> iList = collectIndices(columns, this.columnIndex)
+        final List<Integer> iList = collectIndices(columns, this.columnIndex)
         List<List<Object>> data = this.data.collect { row -> row[iList] }
 
         return new DataMatrix(data, columns, this.rowIndex.keySet() as LinkedHashSet)
@@ -355,7 +358,7 @@ class DataMatrix implements Matrix {
             }
             csvString = csvString + '\n'
         }
-        byte[] byteString = csvString.getBytes()
+        final byte[] byteString = csvString.getBytes()
 
         Files.write(path, byteString)
     }
@@ -428,7 +431,7 @@ class DataMatrix implements Matrix {
      * Convert the class into a readable / printable String.
      */
     String toString() {
-        List<Object> sortedColumnsIndex = getOrderedColumnKeys()
+        final List<Object> sortedColumnsIndex = getOrderedColumnKeys()
         String stringRepresentation = "\t\t${sortedColumnsIndex.toString()}"
         data.eachWithIndex {row, i  ->
             stringRepresentation += "\n${this.rowIndex.getKey(i)}\t${row.toString()}"

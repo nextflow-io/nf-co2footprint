@@ -41,7 +41,7 @@ class CO2FootprintResourcesAggregator {
     void aggregate(CO2Record co2record, String process) {
         // aggregate on the process simple name
         // therefore all nested process are kept together
-        def summary = summaries.get(process)
+        CO2FootprintReportSummary summary = summaries.get(process)
         if( !summary ) {
             summaries.put(process, summary=new CO2FootprintReportSummary())
         }
@@ -53,14 +53,14 @@ class CO2FootprintResourcesAggregator {
      *
      * @return A {@link Map} holding the summary stats for each process
      */
-    protected Map<String,Map> computeSummaryMap() {
-        final result = new LinkedHashMap<String,Map>(summaries.size())
+    protected Map<String, Map> computeSummaryMap() {
+        final Map<String, Map> result = new LinkedHashMap<String,Map>(summaries.size())
 
         // summary stats can be expensive on big workflow
         // speed-up the computation using a parallel
         List<Callable<List>> tasks = []
         summaries.keySet().each  { String process ->
-            final summary = summaries[process]
+            final CO2FootprintReportSummary summary = summaries[process]
             summary.names.each { String series ->
                 // the task execution turn a triple
                 tasks << { return [ process, series, summary.compute(series)] } as Callable<List>
@@ -70,11 +70,11 @@ class CO2FootprintResourcesAggregator {
         }
 
         // submit the parallel execution
-        final allResults = executor.invokeAll(tasks)
+        final List<Future<List>> allResults = executor.invokeAll(tasks)
 
         // compose the final result
         for( Future<List> future : allResults ) {
-            final triple = future.get()
+            final List triple = future.get()
             final name = triple[0]      // the process name
             final series = triple[1]    // the series name eg. `cpu`, `time`, etc
             final summary = triple[2]   // the computed summary
@@ -85,10 +85,10 @@ class CO2FootprintResourcesAggregator {
     }
 
     List<Map> computeSummaryList() {
-        def map = computeSummaryMap()
-        def result = new ArrayList(map.size())
+        final Map<String, Map> map = computeSummaryMap()
+        final List result = new ArrayList(map.size())
         for( Map.Entry<String,Map> entry : map.entrySet() ) {
-            def record = entry.value
+            final Map record = entry.value
             record.process = entry.key
             result.add( record )
         }
@@ -100,7 +100,7 @@ class CO2FootprintResourcesAggregator {
      * @return The execution summary json
      */
     String renderSummaryJson() {
-        final summary = computeSummaryList()
+        final List<Map> summary = computeSummaryList()
         return JsonOutput.toJson(summary)
     }
 }

@@ -7,6 +7,7 @@
 
 ## Misc
 - Moved call to OS when memory is exceeded into this case to avoid unnecessary calls
+- Deescalated access rights of variables for tighter scope
 
 # Version 1.0.0-beta1
 ## Features:
