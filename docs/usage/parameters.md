@@ -67,5 +67,9 @@ The following parameters are currently available:
   **Default**: `null` 
     - `'local'`: sets `pue` to 1.0  
     - `'compute cluster'`: sets `pue` to 1.67
-    - `''`:  sets `pue` to 1.0  
+    - `''`:  sets `pue` to 1.0 
+- **`fallbackToDefault`**
+  When a parameter can not be matched, the plugin does normally fallback to a default value. When this option is set to `false`, an error is raised and the program terminated instead.
+  This behaviour affects the chip (CPU/GPU) matching and the carbon intensity (CI) location matching.
+  **Default**: `true`
   
