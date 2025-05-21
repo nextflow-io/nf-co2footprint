@@ -131,7 +131,7 @@ class CO2FootprintReport extends CO2FootprintFile{
                 ],
                 options : renderOptionsJson()
         ]
-        final String tpl = readTemplate('CO2FootprintReportTemplate.html')
+        final String tpl = readTemplate('assets/CO2FootprintReportTemplate.html')
         GStringTemplateEngine engine = new GStringTemplateEngine()
         Template html_template = engine.createTemplate(tpl)
         String html_output = html_template.make(tpl_fields) as String
