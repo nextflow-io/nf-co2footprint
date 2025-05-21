@@ -15,6 +15,7 @@ import spock.lang.Unroll
 
 import java.nio.file.Files
 import java.nio.file.Path
+import java.security.InvalidKeyException
 
 @Stepwise
 class TDPDataMatrixTest extends Specification {
@@ -274,5 +275,15 @@ class TDPDataMatrixTest extends Specification {
                 ['tdp (W)', 'cores', 'threads'] as LinkedHashSet,
                 ['Indel® i3-Fantasy', 'Ambere ultraEfficient Processor', 'AMT YPS-x42', 'default', 'Indel i5-Fantasy'] as LinkedHashSet,
         )
+    }
+
+    def 'Should not fallback to default' () {
+        when:
+        // match against non existent model without fallback
+        df.matchModel('Non-existent', false)
+
+        then:
+        Exception e = thrown(InvalidKeyException)
+        e.message == "No match found for 'Non-existent'. Fallback to default set to `false`."
     }
 }
