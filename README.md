@@ -35,9 +35,6 @@ nextflow run <pipeline_name>.nf
 
 More details are available in the Nextflow [plugin documentation](https://www.nextflow.io/docs/latest/plugins.html#plugins) and the [configuration guide](https://www.nextflow.io/docs/latest/config.html). 
 
-!!! note
-  The usage of GPUs is not yet supported.
-
 ## Contributing
 Before contributing, please read the [contribution guidelines](contributing/guidelines.md) carefully. You may also find the recommended [testing setup](contributing/setup.md) helpful.
 
