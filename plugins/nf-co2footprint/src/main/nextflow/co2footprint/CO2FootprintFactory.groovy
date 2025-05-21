@@ -59,7 +59,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
     }
 
     protected void getPluginVersion() {
-        def reader = new InputStreamReader(this.class.getResourceAsStream('/META-INF/MANIFEST.MF'))
+        InputStreamReader reader = new InputStreamReader(this.class.getResourceAsStream('/META-INF/MANIFEST.MF'))
         String line
         while ( (line = reader.readLine()) && !version ) {
             def h = line.split(": ")
@@ -91,7 +91,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 session.config.navigate('process') as Map
         )
 
-        final result = new ArrayList(1)
+        ArrayList<TraceObserver> result = new ArrayList(1)
 
         result.add(
                 new CO2FootprintObserver(
