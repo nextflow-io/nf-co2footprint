@@ -52,14 +52,14 @@ class CO2FootprintFactory implements TraceObserverFactory {
      * Example: If the CPU model is not found it should only be warned once, that a fallback value is used.
      */
     static {
-        LoggerContext lc = LoggerFactory.getILoggerFactory() as LoggerContext   // Get Logging Context
-        TurboFilter dmf = new DeduplicateMarkerFilter([Markers.unique])         // Define DeduplicateMarkerFilter
+        final LoggerContext lc = LoggerFactory.getILoggerFactory() as LoggerContext   // Get Logging Context
+        final TurboFilter dmf = new DeduplicateMarkerFilter([Markers.unique])         // Define DeduplicateMarkerFilter
         dmf.start()
         lc.addTurboFilter(dmf)                                                  // Add filter to context
     }
 
     protected void getPluginVersion() {
-        InputStreamReader reader = new InputStreamReader(this.class.getResourceAsStream('/META-INF/MANIFEST.MF'))
+        final InputStreamReader reader = new InputStreamReader(this.class.getResourceAsStream('/META-INF/MANIFEST.MF'))
         String line
         while ( (line = reader.readLine()) && !version ) {
             def h = line.split(": ")
