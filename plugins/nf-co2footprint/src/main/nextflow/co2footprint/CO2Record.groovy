@@ -16,17 +16,16 @@ import groovy.json.StringEscapeUtils
 @CompileStatic
 class CO2Record extends TraceRecord {
 
-    private Double energy
-    private Double co2e
-    private Double time
-    private Double ci
-    private Integer cpus
-    private Double powerdrawCPU
-    private Double cpuUsage
-    private Long memory
-    private String name
-    private String cpu_model
-    // final? or something? to make sure for key value can be set only once?
+    private final Double energy
+    private final Double co2e
+    private final Double time
+    private final Double ci
+    private final Integer cpus
+    private final Double powerdrawCPU
+    private final Double cpuUsage
+    private final Long memory
+    private final String name
+    private final String cpu_model
 
     CO2Record(Double energy, Double co2e, Double time, Double ci, Integer cpus, Double powerdrawCPU, Double cpuUsage, Long memory, String name, String cpu_model) {
         this.energy = energy
@@ -113,17 +112,17 @@ class CO2Record extends TraceRecord {
 
     @Override
     CharSequence renderJson(StringBuilder result, List<String> fields, List<String> formats) {
-        final QUOTE = '"'
-        final NA = '-'
+        final String QUOTE = '"'
+        final String NA = '-'
         if( result == null ) result = new StringBuilder()
         result.deleteCharAt(result.length() - 1) // remove the last character "}"
         result << ','
         for( int i=0; i<fields.size(); i++ ) {
-            String name = fields[i]
+            final String name = fields[i]
             if ( name == 'name' ) continue // skip the name field (it's already in the key)
             if ( i ) result << ','
-            String format = i<formats?.size() ? formats[i] : null
-            String value = StringEscapeUtils.escapeJavaScript(getFmtStr(name, format) ?: NA)
+            final String format = i<formats?.size() ? formats[i] : null
+            final String value = StringEscapeUtils.escapeJavaScript(getFmtStr(name, format) ?: NA)
             result << QUOTE << name << QUOTE << ":" << QUOTE << value << QUOTE
         }
         result << "}"
@@ -140,7 +139,7 @@ class CO2Record extends TraceRecord {
     @Override
     String getFmtStr( String name, String converter = null ) {
         assert name
-        def val = store.get(name)
+        final val = store.get(name)
 
         String sType=null
         String sFormat=null
@@ -155,20 +154,20 @@ class CO2Record extends TraceRecord {
             }
         }
 
-        String type = sType ?: FIELDS.get(name)
+        final String type = sType ?: FIELDS.get(name)
         if( !type )
             throw new IllegalArgumentException("Not a valid trace field name: '$name'")
 
 
-        Closure<String> formatter = FORMATTER.get(type)
+        final Closure<String> formatter = FORMATTER.get(type)
         if( !formatter )
             throw new IllegalArgumentException("Not a valid trace formatter for field: '$name' with type: '$type'")
 
         try {
-            return formatter.call(val,sFormat)
+            return formatter.call(val, sFormat)
         }
         catch( Throwable ignore ) {
-            log.debug "Not a valid trace value -- field: '$name'; value: '$val'; format: '$sFormat'"
+            log.debug("Not a valid trace value -- field: '$name'; value: '$val'; format: '$sFormat'")
             return null
         }
     }
