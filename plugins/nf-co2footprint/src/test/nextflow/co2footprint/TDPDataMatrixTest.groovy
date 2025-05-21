@@ -18,6 +18,7 @@ import spock.lang.Stepwise
 
 import java.nio.file.Files
 import java.nio.file.Path
+import java.security.InvalidKeyException
 
 @Stepwise
 class TDPDataMatrixTest extends Specification {
@@ -212,5 +213,15 @@ class TDPDataMatrixTest extends Specification {
         df.matchModel('Intel® i3-Fantasy(TM) 10Trillion GW').getData() == [[100, 4, 8]]
         listAppender.list[1] as String == '[WARN] Could not find CPU model "Intel® i3-Fantasy(TM) 10Trillion GW" in given TDP data table. ' +
                 'Using default CPU power draw value (100.0 W).'
+    }
+
+    def 'Should not fallback to default' () {
+        when:
+        // match against non existent model without fallback
+        df.matchModel('Non-existent', false)
+
+        then:
+        Exception e = thrown(InvalidKeyException)
+        e.message == "No match found for 'Non-existent'. Fallback to default set to `false`."
     }
 }
