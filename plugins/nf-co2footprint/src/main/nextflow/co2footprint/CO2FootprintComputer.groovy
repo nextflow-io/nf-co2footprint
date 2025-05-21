@@ -156,10 +156,7 @@ class CO2FootprintComputer {
         BigDecimal gCO2 = totalCO2 as BigDecimal / 1000 as BigDecimal       // Conversion to [g] CO2
         String location = config.getLocation()
 
-        BigDecimal carKilometers = gCO2 / 175
-        if (location && (location != 'US' || !location.startsWith('US-'))) {
-            carKilometers = gCO2 / 251
-        }
+        final BigDecimal carKilometers = gCO2 / 175
         BigDecimal treeMonths = gCO2 / 917
         BigDecimal planePercent = gCO2 * 100 / 50000
 
