@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+# Version 1.0.0
+
+## Misc:
+- Added requests to report warnings as Github issues
+- Added template to report missing chips
+
 # Version 1.0.0-beta1
 ## Features:
 - Plot co2e and energy in one plot with two axis.
