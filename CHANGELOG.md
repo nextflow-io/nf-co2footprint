@@ -7,6 +7,8 @@
 
 ## Misc
 - Moved call to OS when memory is exceeded into this case to avoid unnecessary calls
+- Added requests to report warnings as Github issues
+- Added template to report missing chips
 
 # Version 1.0.0-beta1
 ## Features:
