@@ -69,7 +69,7 @@ class TDPDataMatrix extends DataMatrix {
                 .replaceAll('\\s(?!\\?)', Matcher.quoteReplacement('\\s*'))                     // make whitespaces optional
 
         // Find matches against index
-        List matches = this.rowIndex.filterKeys { String str ->
+        final List matches = this.rowIndex.filterKeys { String str ->
                 str = str.toLowerCase()                                               // Convert to lower case
                     .replaceAll(' ?(processor|cpu)s? ?', '')        // make 'processor(s)/cpu' optional
                 str.matches(modelRegex)
@@ -177,7 +177,7 @@ class TDPDataMatrix extends DataMatrix {
      */
     Double getCoreTDP(DataMatrix dm=null, Integer rowIdx=0, Object rowID=null) {
         dm = dm ?: this
-        return  getTDP(dm, rowID, rowIdx) / getCores(dm, rowID, rowIdx)
+        return getTDP(dm, rowID, rowIdx) / getCores(dm, rowID, rowIdx)
     }
 
     /**
@@ -190,7 +190,7 @@ class TDPDataMatrix extends DataMatrix {
      */
     Double getThreadTDP(DataMatrix dm=null, Integer rowIdx=0, Object rowID=null) {
         dm = dm ?: this
-        return  getTDP(dm, rowID, rowIdx) / getThreads(dm, rowID, rowIdx)
+        return getTDP(dm, rowID, rowIdx) / getThreads(dm, rowID, rowIdx)
     }
 
     /**
@@ -227,20 +227,22 @@ class TDPDataMatrix extends DataMatrix {
      * @return new DataMatrix
      */
     static TDPDataMatrix loadCsv(Path path, TDPDataMatrix oldData=null) {
-        DataMatrix dm = loadCsv(
+        final DataMatrix dm = loadCsv(
                 path, ',', 0, null, 'name'
         )
 
-        TDPDataMatrix newData = new TDPDataMatrix(
+        final TDPDataMatrix newData = new TDPDataMatrix(
                 dm.getData(), dm.getOrderedColumnKeys(), dm.getOrderedRowKeys(),
                 'default', null, null, null
         )
 
         // Compare entries to warn about changing
         if (oldData) {
+            TDPDataMatrix oldEntry
+            TDPDataMatrix newEntry
             for (String model : oldData.getRowIndex().keySet()) {
-                TDPDataMatrix oldEntry = oldData.matchModel(model, false)
-                TDPDataMatrix newEntry = newData.matchModel(model, false)
+                oldEntry = oldData.matchModel(model, false)
+                newEntry = newData.matchModel(model, false)
                 if (oldEntry && oldEntry.getData() != newEntry.getData()) {
                     log.info(
                             "Already existing TDP value (${oldEntry.getTDP()} W) of '${model}' " +
