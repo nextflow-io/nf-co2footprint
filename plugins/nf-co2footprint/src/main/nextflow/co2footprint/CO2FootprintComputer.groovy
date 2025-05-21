@@ -73,8 +73,11 @@ class CO2FootprintComputer {
         BigDecimal cpuUsage = trace.get('%cpu') as BigDecimal
         if ( cpuUsage == null ) {  // TODO: why is value null, because task was finished so fast that it was not captured? Or are there other reasons?
             log.warn(
-                    'The reported CPU usage is null for at least one task.' +
-                    'Assuming 100% usage for each requested CPU!'
+                    'The reported CPU usage is null for at least one task. ' +
+                    'Assuming 100% usage for each requested CPU!\n' +
+                    'This problem is currently being debugged, but hardly reproducible. '+
+                    'Please help us by posting your `nextflow.log` file to ' +
+                    'https://github.com/nextflow-io/nf-co2footprint/issues/136. Thanks.'
             )
             cpuUsage = numberOfCores * 100  // Assuming requested cpus were used with 100%
         }
