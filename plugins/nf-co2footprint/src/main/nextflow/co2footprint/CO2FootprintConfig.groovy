@@ -88,11 +88,17 @@ class CO2FootprintConfig {
     }
 
     CO2FootprintConfig(Map<String, Object> configMap, TDPDataMatrix cpuData, Map<String, Object> processMap){
-        configMap = configMap as ConcurrentHashMap<String, Object> ?: [:]
-
+        // Ensure configMap is not null
+        configMap ?= [:]
+        
         // Assign values from map to config
-        configMap.keySet().each { name  ->
-            this.setProperty(name, configMap.remove(name))
+        configMap.each { name, value ->
+            if (this.hasProperty(name)) {
+                this.setProperty(name, value) 
+            } else {
+                // Log warning and skip the key
+                log.warn("Skipping unknown configuration key: '${name}'")
+            }
         }
 
         // Reassign CI from location
@@ -136,13 +142,6 @@ class CO2FootprintConfig {
         // Use custom TDP file
         if (customCpuTdpFile) { cpuData.update( TDPDataMatrix.loadCsv(Paths.get(customCpuTdpFile as String)) ) }
 
-        // Check whether all entries in the map could be assigned to a class property
-        if (!configMap.isEmpty()) {
-            log.warn(
-                    'Configuration map is not empty after retrieving all possible properties.'
-                    + "The keys '${configMap.keySet()}' remain unused."
-            )
-        }
     }
 
 
