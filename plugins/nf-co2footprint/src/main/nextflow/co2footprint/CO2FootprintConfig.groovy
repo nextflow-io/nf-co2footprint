@@ -1,5 +1,6 @@
 package nextflow.co2footprint
 
+import dev.failsafe.Fallback
 import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
 import nextflow.trace.TraceHelper
@@ -43,6 +44,7 @@ class CO2FootprintConfig {
     private Double  powerdrawCpuDefault = null
     private String  customCpuTdpFile = null
     private String  machineType = null      // Type of computer on which the workflow is run ['local', 'compute cluster', '']
+    private Boolean fallbackToDefault = true
 
     // Constants
     private final Double  default_ci = 475
@@ -61,6 +63,7 @@ class CO2FootprintConfig {
     Double getPowerdrawMem() { powerdrawMem }
     String getCustomCpuTdpFile() { customCpuTdpFile }
     String getMachineType()  { machineType }
+    Boolean getFallbackToDefault() { fallbackToDefault }
 
     /**
      * Retrieve carbon intensity (CI) value from file containing CI values for different locations
@@ -130,7 +133,8 @@ class CO2FootprintConfig {
             else {
                 String message = "machineType '${machineType}' is not supported." +
                         "Please chose one of ${supportedMachineTypes}."
-                log.error(message, new IllegalArgumentException(message))
+                log.error(message)
+                throw new IllegalArgumentException(message)
             }
         }
 
