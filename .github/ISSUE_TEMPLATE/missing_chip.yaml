@@ -1,0 +1,49 @@
+name: 'Missing chip'
+description: Report your missing chips.
+title: "Missing chip: <YOUR CHIP>"
+labels: ["💎 enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting :)
+
+  - type: textarea
+    id: warning
+    attributes:
+      label: 'Warning message'
+      description:
+        '>YOUR_WARNING'
+      placeholder: |
+        '>YOUR_WARNING'
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: "Logs:"
+      description:
+        .nextflow.log
+      placeholder: |
+        ```log
+        YOUR_NEXTFLOW_LOG
+        ```
+    validations:
+      required: false
+
+  - type: textarea
+    id: other
+    attributes:
+      label: "Other:"
+      description:
+        Other information.
+      placeholder: |
+        -
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        Parent issue: #190
