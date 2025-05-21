@@ -106,17 +106,17 @@ class CO2Record extends TraceRecord {
 
     @Override
     CharSequence renderJson(StringBuilder result, List<String> fields, List<String> formats) {
-        final QUOTE = '"'
-        final NA = '-'
+        final String QUOTE = '"'
+        final String NA = '-'
         if( result == null ) result = new StringBuilder()
         result.deleteCharAt(result.length() - 1) // remove the last character "}"
         result << ','
         for( int i=0; i<fields.size(); i++ ) {
-            String name = fields[i]
+            final String name = fields[i]
             if ( name == 'name' ) continue // skip the name field (it's already in the key)
             if ( i ) result << ','
-            String format = i<formats?.size() ? formats[i] : null
-            String value = StringEscapeUtils.escapeJavaScript(getFmtStr(name, format) ?: NA)
+            final String format = i<formats?.size() ? formats[i] : null
+            final String value = StringEscapeUtils.escapeJavaScript(getFmtStr(name, format) ?: NA)
             result << QUOTE << name << QUOTE << ":" << QUOTE << value << QUOTE
         }
         result << "}"
@@ -133,7 +133,7 @@ class CO2Record extends TraceRecord {
     @Override
     String getFmtStr( String name, String converter = null ) {
         assert name
-        def val = store.get(name)
+        final val = store.get(name)
 
         String sType=null
         String sFormat=null
@@ -148,20 +148,20 @@ class CO2Record extends TraceRecord {
             }
         }
 
-        def type = sType ?: FIELDS.get(name)
+        final String type = sType ?: FIELDS.get(name)
         if( !type )
             throw new IllegalArgumentException("Not a valid trace field name: '$name'")
 
 
-        def formatter = FORMATTER.get(type)
+        final Closure<String> formatter = FORMATTER.get(type)
         if( !formatter )
             throw new IllegalArgumentException("Not a valid trace formatter for field: '$name' with type: '$type'")
 
         try {
-            return formatter.call(val,sFormat)
+            return formatter.call(val, sFormat)
         }
         catch( Throwable ignore ) {
-            log.debug "Not a valid trace value -- field: '$name'; value: '$val'; format: '$sFormat'"
+            log.debug("Not a valid trace value -- field: '$name'; value: '$val'; format: '$sFormat'")
             return null
         }
     }
