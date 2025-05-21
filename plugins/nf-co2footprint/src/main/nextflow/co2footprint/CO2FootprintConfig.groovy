@@ -44,6 +44,7 @@ class CO2FootprintConfig {
     private Double  powerdrawCpuDefault = null
     private String  customCpuTdpFile = null
     private String  machineType = null      // Type of computer on which the workflow is run ['local', 'compute cluster', '']
+    private Boolean fallbackToDefault = true
 
     // Supported machine types
     private final List<String> supportedMachineTypes = ['local', 'compute cluster', 'cloud']
@@ -68,6 +69,7 @@ class CO2FootprintConfig {
     Double getPowerdrawMem() { powerdrawMem }
     String getCustomCpuTdpFile() { customCpuTdpFile }
     String getMachineType()  { machineType }
+    Boolean getFallbackToDefault() { fallbackToDefault }
 
     /**
      * Loads configuration from a map and sets up defaults and fallbacks.

@@ -73,7 +73,7 @@ class CO2FootprintComputer {
          * Factors of core power usage
          */
         final Integer numberOfCores = HelperFunctions.getTraceOrDefault(trace, taskID, 'cpus', 1) as Integer           // [#]
-        final BigDecimal powerdrawPerCore = tdpDataMatrix.matchModel(cpuModel).getCoreTDP()            // [W/core]
+        final BigDecimal powerdrawPerCore = tdpDataMatrix.matchModel(cpuModel, config.getFallbackToDefault()).getCoreTDP()            // [W/core]
 
         // uc: core usage factor (between 0 and 1)
         BigDecimal cpuUsage = HelperFunctions.getTraceOrDefault(trace, taskID, '%cpu', numberOfCores * 100) as BigDecimal
