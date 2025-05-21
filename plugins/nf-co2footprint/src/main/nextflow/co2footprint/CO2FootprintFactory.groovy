@@ -91,7 +91,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 session.config.navigate('process') as Map
         )
 
-        ArrayList<TraceObserver> result = new ArrayList(1)
+        final ArrayList<TraceObserver> result = new ArrayList(1)
 
         result.add(
                 new CO2FootprintObserver(
