@@ -145,7 +145,7 @@ class Converter {
             value = targetValue - targetValueFormatted
             unit = largestUnit
             // Format to 2 decimals, remove trailing zeros
-            String formattedValue = new BigDecimal(targetValueFormatted.toString()).setScale(2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().toPlainString()
+            String formattedValue = (targetValueFormatted as BigDecimal).setScale(2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().toPlainString()
             readableString += readableString ? " ${formattedValue}${targetUnit}" : "${formattedValue}${targetUnit}"
         }
 
