@@ -19,7 +19,7 @@ class CO2FootprintComputer {
 
     /**
      * Constructor for CO2FootprintComputer.
-     * 
+     *
      * @param tdpDataMatrix  Data matrix with CPU TDP (Thermal Design Power) values.
      * @param config         Configuration object with plugin and calculation settings.
      */
@@ -78,7 +78,7 @@ class CO2FootprintComputer {
         if ( cpuUsage == 0.0 ) {
             log.warn("The reported CPU usage is 0.0 for task ${taskID}.")
         }
-        
+
         final BigDecimal coreUsage = cpuUsage / (100.0 * numberOfCores)
 
         /**
