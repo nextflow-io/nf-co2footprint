@@ -51,23 +51,23 @@ class CO2FootprintComputer {
         /**
          * Detect operating system
          */
-        OperatingSystemMXBean OS = { (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean() }()
+        final OperatingSystemMXBean OS = { (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean() }()
 
         /**
          * CPU model information
          */
-        String cpuModel = config.getIgnoreCpuModel() ? 'default' : trace.get('cpu_model') as String
+        final String cpuModel = config.getIgnoreCpuModel() ? 'default' : trace.get('cpu_model') as String
 
         /**
          * Realtime of computation
          */
-        BigDecimal runtime_h = trace.get('realtime') as BigDecimal / (1000*60*60)                  // [h]
+        final BigDecimal runtime_h = trace.get('realtime') as BigDecimal / (1000*60*60)                  // [h]
 
         /**
          * Factors of core power usage
          */
-        Integer numberOfCores = trace.get('cpus') as Integer      // [#]
-        BigDecimal powerdrawPerCore = tdpDataMatrix.matchModel(cpuModel).getCoreTDP()      // [W/core]
+        final Integer numberOfCores = trace.get('cpus') as Integer      // [#]
+        final BigDecimal powerdrawPerCore = tdpDataMatrix.matchModel(cpuModel).getCoreTDP()      // [W/core]
 
         // uc: core usage factor (between 0 and 1)
         BigDecimal cpuUsage = trace.get('%cpu') as BigDecimal
@@ -82,14 +82,14 @@ class CO2FootprintComputer {
         if ( cpuUsage == 0.0 ) {
             log.warn("The reported CPU usage is 0.0 for task ${taskID}.")
         }
-        BigDecimal coreUsage = cpuUsage / (100.0 * numberOfCores)
+        final BigDecimal coreUsage = cpuUsage / (100.0 * numberOfCores)
 
         /**
          * Factors of memory power usage
          */
-        Long availableMemory = OS.getTotalMemorySize() as Long    // [bytes]
+        final Long availableMemory = OS.getTotalMemorySize() as Long    // [bytes]
         Long requestedMemory = trace.get('memory') as Long        // [bytes]
-        Long requiredMemory = trace.get('peak_rss') as Long       // [bytes]
+        final Long requiredMemory = trace.get('peak_rss') as Long       // [bytes]
         if ( requestedMemory == null || requiredMemory > requestedMemory) {
             log.warn(
                     "The required memory (${requiredMemory/(1024**3)} GB) for the task" +
@@ -99,15 +99,15 @@ class CO2FootprintComputer {
             requestedMemory = availableMemory
         }
 
-        BigDecimal memory = requestedMemory / 1024**3       // conversion to [GB]
+        final BigDecimal memory = requestedMemory / 1024**3       // conversion to [GB]
 
-        BigDecimal powerdrawMem  = config.getPowerdrawMem() // [W per GB]
+        final BigDecimal powerdrawMem  = config.getPowerdrawMem() // [W per GB]
 
         /**
          * Energy-related factors
          */
-        BigDecimal pue = config.getPue()    // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
-        BigDecimal ci  = config.getCi()     // CI: carbon intensity [gCO2e kWh−1]
+        final BigDecimal pue = config.getPue()    // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
+        final BigDecimal ci  = config.getCi()     // CI: carbon intensity [gCO2e kWh−1]
 
         /**
          * Calculate energy consumption [kWh]
@@ -150,15 +150,15 @@ class CO2FootprintComputer {
      * @return CO2EquivalencesRecord with estimations for sensible comparisons
      */
     CO2EquivalencesRecord computeCO2footprintEquivalences(Double totalCO2) {
-        BigDecimal gCO2 = totalCO2 as BigDecimal / 1000 as BigDecimal       // Conversion to [g] CO2
-        String location = config.getLocation()
+        final BigDecimal gCO2 = totalCO2 as BigDecimal / 1000 as BigDecimal       // Conversion to [g] CO2
+        final String location = config.getLocation()
 
         BigDecimal carKilometers = gCO2 / 175
         if (location && (location != 'US' || !location.startsWith('US-'))) {
             carKilometers = gCO2 / 251
         }
-        BigDecimal treeMonths = gCO2 / 917
-        BigDecimal planePercent = gCO2 * 100 / 50000
+        final BigDecimal treeMonths = gCO2 / 917
+        final BigDecimal planePercent = gCO2 * 100 / 50000
 
         return new CO2EquivalencesRecord(
                 carKilometers,
