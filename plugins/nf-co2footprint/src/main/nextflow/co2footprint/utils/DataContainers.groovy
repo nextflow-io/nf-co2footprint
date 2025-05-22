@@ -1,5 +1,6 @@
 package nextflow.co2footprint.utils
 
+import javax.xml.crypto.Data
 import java.nio.file.Path
 import java.nio.file.Files
 
@@ -183,6 +184,12 @@ class DataMatrix implements Matrix {
 
         // Check integrity
         assertIntegrity()
+    }
+
+    DataMatrix(DataMatrix dataMatrix) {
+        this.data = dataMatrix.getData()
+        this.rowIndex = dataMatrix.getRowIndex()
+        this.columnIndex = dataMatrix.getColumnIndex()
     }
 
     // Integrity tests
