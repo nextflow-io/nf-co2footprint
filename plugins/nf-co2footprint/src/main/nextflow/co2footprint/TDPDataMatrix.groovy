@@ -232,7 +232,7 @@ class TDPDataMatrix extends DataMatrix {
         )
 
         // Check whether all mandatory columns were given
-        dm.columnIndex.keySet().containsAll(['name', 'tdp (W)', 'cores', 'threads'])
+        dm.columnIndex.keySet().containsAll(['name', 'tdp (W)', 'cores'])
 
         TDPDataMatrix newData = new TDPDataMatrix(
                 dm.getData(), dm.getOrderedColumnKeys(), dm.getOrderedRowKeys(),
