@@ -28,8 +28,6 @@ class CO2Record extends TraceRecord {
     private final String name
     private final String cpu_model
 
-    // Stored entries
-    Map<String,Object> store
 
     // Properties of entries
     final public static Map<String,String> FIELDS = [
@@ -125,5 +123,24 @@ class CO2Record extends TraceRecord {
                 this.getTimeReadable(), this.getCIReadable(), this.getCPUsReadable(), this.getPowerdrawCPUReadable(),
                 this.getCPUModelReadable(), this.getCPUUsageReadable(), this.getMemoryReadable()
         ]
+    }
+
+    @Override
+    CharSequence renderJson(StringBuilder result, List<String> fields, List<String> formats) {
+        final QUOTE = '"'
+        final NA = '-'
+        if( result == null ) result = new StringBuilder()
+        result.deleteCharAt(result.length() - 1) // remove the last character "}"
+        result << ','
+        for( int i=0; i<fields.size(); i++ ) {
+            String name = fields[i]
+            if ( name == 'name' ) continue // skip the name field (it's already in the key)
+            if ( i ) result << ','
+            String format = i<formats?.size() ? formats[i] : null
+            String value = StringEscapeUtils.escapeJavaScript(getFmtStr(name, format) ?: NA)
+            result << QUOTE << name << QUOTE << ":" << QUOTE << value << QUOTE
+        }
+        result << "}"
+        return result
     }
 }
