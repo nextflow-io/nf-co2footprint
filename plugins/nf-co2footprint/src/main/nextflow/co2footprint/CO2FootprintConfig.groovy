@@ -140,7 +140,7 @@ class CO2FootprintConfig {
         }
 
         // Use custom TDP file
-        if (customCpuTdpFile) { cpuData.update( TDPDataMatrix.loadCsv(Paths.get(customCpuTdpFile as String)) ) }
+        if (customCpuTdpFile) { cpuData.update( TDPDataMatrix.loadCsv(Paths.get(customCpuTdpFile as String))) }
 
     }
 
