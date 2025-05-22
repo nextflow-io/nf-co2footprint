@@ -194,6 +194,11 @@ class DataMatrix implements Matrix {
         assertIntegrity()
     }
 
+    DataMatrix(DataMatrix dataMatrix) {
+        this.data = dataMatrix.getData()
+        this.rowIndex = dataMatrix.getRowIndex()
+        this.columnIndex = dataMatrix.getColumnIndex()
+    }
 
     /**
      * Read CSV file and return a DataMatrix object.
