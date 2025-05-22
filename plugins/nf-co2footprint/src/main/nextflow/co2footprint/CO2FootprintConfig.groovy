@@ -54,9 +54,7 @@ class CO2FootprintConfig {
     String getSummaryFile() { summaryFile }
     String getReportFile() { reportFile }
     String getLocation() { location }
-    Double getCi() {
-        (ci instanceof Closure) ? ci() : ci
-    }  
+    Double getCi() { ci }  
     Double getPue() { pue }
     Boolean getIgnoreCpuModel() { ignoreCpuModel }
     Double getPowerdrawCpuDefault() { powerdrawCpuDefault }

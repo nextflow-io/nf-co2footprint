@@ -233,7 +233,7 @@ class CO2FootprintObserverTest extends Specification{
         // Check Report File
         Files.isRegularFile(reportPath)
         List<String> reportLines = Files.readAllLines(reportPath)
-        reportLines.size() == 1041
+        reportLines.size() == 1046
         reportLines[0] == '<!DOCTYPE html>'
         reportLines[194] == "          " +
                 "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +

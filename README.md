@@ -54,10 +54,13 @@ We thank the following people for their extensive assistance in the development 
 
 --- 
 
-## Licenses and Attribution
+## Data Attribution
 
-- **Source Code**: Licensed under the [Apache License 2.0](./LICENSE)
-- **CI Dataset (`plugins/nf-co2footprint/src/resources/ci_data`)**: The carbon intensity (CI) values used in this project originate from [Electricity Maps](https://www.electricitymaps.com/) and are provided under the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1-0/).
+This project uses carbon intensity (CI) data from [Electricity Maps](https://www.electricitymaps.com/) under the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1-0/).  
+Depending on the configuration, either historical yearly data from 2024 is used or real-time CI values are accessed via the Electricity Maps API.
 
-For more details and attribution requirements, see the [NOTICE](./NOTICE) file.
+> **Electricity Maps: Carbon Intensity Data**  
+> Electricity Maps (2025). 2024 Yearly Carbon Intensity Data (Version January 27, 2025).  
+> Electricity Maps. [https://www.electricitymaps.com](https://www.electricitymaps.com)
 
+You are free to use, share, and adapt the data under the terms of the ODbL. For more details and attribution requirements, see the [NOTICE](./NOTICE) file.
