@@ -237,7 +237,8 @@ class TDPDataMatrix extends DataMatrix {
     ) {
         DataMatrix dm = DataMatrix.fromCsv(path, separator, columnIndexPos, rowIndexPos, rowIndexColumn)
 
-        dm.columnIndex.keySet().containsAll(['name', 'tdp (W)', 'cores', 'threads'])
+        // Check whether all mandatory columns were given
+        dm.columnIndex.keySet().containsAll(['name', 'tdp (W)', 'cores'])
 
         TDPDataMatrix newData = new TDPDataMatrix(
                 dm.getData(), dm.getOrderedColumnKeys(), dm.getOrderedRowKeys(),
@@ -258,11 +259,13 @@ class TDPDataMatrix extends DataMatrix {
                 if (oldEntry && oldEntry.getData() != newEntry.getData()) {
                     log.info(
                             "Already existing TDP value (${oldEntry.getTDP()} W) of '${model}' " +
-                                    "is overwritten with custom value: ${newEntry.getTDP()} W"
+                            "is overwritten with custom value: ${newEntry.getTDP()} W"
                     )
                 }
             }
         }
-    }
-}
 
+        return newData
+    }
+
+}
