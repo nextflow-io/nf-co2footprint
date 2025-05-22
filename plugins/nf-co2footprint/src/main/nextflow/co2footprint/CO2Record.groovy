@@ -16,6 +16,7 @@ import groovy.json.StringEscapeUtils
 @CompileStatic
 class CO2Record extends TraceRecord {
 
+    // Entries
     private final Double energy
     private final Double co2e
     private final Double time
@@ -27,7 +28,40 @@ class CO2Record extends TraceRecord {
     private final String name
     private final String cpu_model
 
-    CO2Record(Double energy, Double co2e, Double time, Double ci, Integer cpus, Double powerdrawCPU, Double cpuUsage, Long memory, String name, String cpu_model) {
+    // Stored entries
+    Map<String,Object> store
+
+    // Properties of entries
+    final public static Map<String,String> FIELDS = [
+            energy:         'num',
+            co2e:           'num',
+            time:           'num',
+            ci:             'num',
+            cpus:           'num',
+            powerdrawCPU:   'num',
+            cpuUsage:       'num',
+            memory:         'num',
+            name:           'str',
+            cpu_model:      'str'
+    ]
+
+    /**
+     * Constructs a CO2Record
+     *
+     * @param energy Energy used
+     * @param co2e CO2 equivalent emissions
+     * @param time Time spent on task
+     * @param cpus Number of CPU cores used
+     * @param powerdrawCPU TDP of CPU
+     * @param cpuUsage Usage of CPU
+     * @param memory Memory used
+     * @param name Name of Task
+     * @param cpu_model  CPU model name
+     */
+    CO2Record(
+            Double energy=0d, Double co2e=0d, Double time=0d, Double ci, Integer cpus=0, Double powerdrawCPU=0d,
+            Double cpuUsage=0d, Long memory=0d, String name=0d, String cpu_model=0d
+    ) {
         this.energy = energy
         this.co2e = co2e
         this.time = time
@@ -51,19 +85,6 @@ class CO2Record extends TraceRecord {
                 'cpu_model':        cpu_model
         ])
     }
-
-    final public static Map<String,String> FIELDS = [
-        energy:         'num',
-        co2e:           'num',
-        time:           'num',
-        ci:             'num',
-        cpus:           'num',
-        powerdrawCPU:   'num',
-        cpuUsage:       'num',
-        memory:         'num',
-        name:           'str',
-        cpu_model:      'str'
-    ]
 
     Double getEnergyConsumption() { energy }
     String getEnergyConsumptionReadable() { Converter.toReadableUnits(energy,'m', 'Wh') }
@@ -94,20 +115,16 @@ class CO2Record extends TraceRecord {
     String getCPUModel() { cpu_model }
     String getCPUModelReadable() { cpu_model }
 
+    /**
+     * Get the Entries in a readable format for the summary
+     * @return List of readable Entries
+     */
     List<String> getReadableEntries() {
         return [
                 this.getNameReadable(), this.getEnergyConsumptionReadable(), this.getCO2eReadable(),
                 this.getTimeReadable(), this.getCIReadable(), this.getCPUsReadable(), this.getPowerdrawCPUReadable(),
                 this.getCPUModelReadable(), this.getCPUUsageReadable(), this.getMemoryReadable()
         ]
-    }
-
-    //@PackageScope
-    Map<String,Object> store
-
-    @Override
-    String toString() {
-        "${this.class.simpleName} ${store}"
     }
 
     @Override
@@ -127,48 +144,5 @@ class CO2Record extends TraceRecord {
         }
         result << "}"
         return result
-    }
-
-    /**
-     * Get a trace field value and apply a conversion rule to it
-     *
-     * @param name The field name e.g. task_id, status, etc.
-     * @param converter A converter string
-     * @return A string value formatted according the specified converter
-     */
-    @Override
-    String getFmtStr( String name, String converter = null ) {
-        assert name
-        final val = store.get(name)
-
-        String sType=null
-        String sFormat=null
-        if( converter ) {
-            int p = converter.indexOf(':')
-            if( p == -1 ) {
-                sType = converter
-            }
-            else {
-                sType = converter.substring(0,p)
-                sFormat = converter.substring(p+1)
-            }
-        }
-
-        final String type = sType ?: FIELDS.get(name)
-        if( !type )
-            throw new IllegalArgumentException("Not a valid trace field name: '$name'")
-
-
-        final Closure<String> formatter = FORMATTER.get(type)
-        if( !formatter )
-            throw new IllegalArgumentException("Not a valid trace formatter for field: '$name' with type: '$type'")
-
-        try {
-            return formatter.call(val, sFormat)
-        }
-        catch( Throwable ignore ) {
-            log.debug("Not a valid trace value -- field: '$name'; value: '$val'; format: '$sFormat'")
-            return null
-        }
     }
 }
