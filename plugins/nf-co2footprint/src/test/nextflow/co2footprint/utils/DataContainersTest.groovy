@@ -1,13 +1,6 @@
 package nextflow.co2footprint.utils
 
 import spock.lang.Specification
-import spock.lang.Stepwise
-
-
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-import ch.qos.logback.core.read.ListAppender
-import ch.qos.logback.classic.spi.ILoggingEvent
 
 import java.nio.file.Path
 import java.nio.file.Files

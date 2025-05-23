@@ -78,7 +78,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
     private final CIDataMatrix ciDataMatrix = CIDataMatrix.fromCsv(
             Paths.get(this.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
     )
-    
 
     @Override
     Collection<TraceObserver> create(Session session) {
@@ -106,6 +105,5 @@ class CO2FootprintFactory implements TraceObserverFactory {
         return result
     }
 
-    
 
 }

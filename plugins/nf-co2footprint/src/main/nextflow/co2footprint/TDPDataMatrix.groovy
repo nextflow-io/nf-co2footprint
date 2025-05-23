@@ -11,7 +11,7 @@ import java.util.regex.Matcher
 
 @Slf4j
 /**
- * Structure for the thermal design power (TPD) values
+ * Structure for the thermal design power (TDP) values
  *
  * @author Josua Carl <josua.carl@uni-tuebingen.de>
  */

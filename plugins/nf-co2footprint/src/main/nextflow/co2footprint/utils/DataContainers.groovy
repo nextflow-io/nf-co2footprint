@@ -394,7 +394,7 @@ class DataMatrix implements Matrix {
      * Get data entries by specifying row and column that you want to access, as well as whether they are Integer
      * indices.
      */
-    Object get(Object row, Object column, boolean rowRawIndex=false, boolean columnRawIndex=false) {        
+    Object get(Object row, Object column, boolean rowRawIndex=false, boolean columnRawIndex=false) {
         // Resolve row index
         row = rowRawIndex ? row as Integer : this.rowIndex.getValue(row)
         if (row == null) {
