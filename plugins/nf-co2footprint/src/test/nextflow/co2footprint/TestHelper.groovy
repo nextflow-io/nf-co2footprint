@@ -19,11 +19,9 @@ package nextflow.co2footprint
 
 import com.google.common.jimfs.Configuration
 import com.google.common.jimfs.Jimfs
-import groovy.transform.Memoized
 
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.zip.GZIPInputStream
 
 import groovy.json.JsonSlurper
 import java.security.MessageDigest
@@ -34,10 +32,10 @@ import java.security.MessageDigest
  */
 class TestHelper {
 
-    static private fs = Jimfs.newFileSystem(Configuration.unix());
+    static private fs = Jimfs.newFileSystem(Configuration.unix())
 
     static Path createInMemTempFile(String name='temp.file', String content=null) {
-        Path tmp = fs.getPath("/tmp");
+        Path tmp = fs.getPath("/tmp")
         tmp.mkdir()
         def result = Files.createTempDirectory(tmp, 'test').resolve(name)
         if( content )
@@ -98,13 +96,14 @@ class ChecksumChecker {
     }
 
     /**
-     * Compare the recorded checksum to the new checksum.
+     * Compare the recorded checksum to the new checksum of a file.
      *
-     * @param path
-     * @param checksums
-     * @return
+     * @param path Path to the file for the checksum calculation
+     * @param excludedLines Lines to be excluded in the checksum calculation
+     * @param recordedChecksum  The expected checksum to verify against. If null, the method will
+     *                          attempt to retrieve it from the class checksum map.
      */
-    void checkSums(Path path, List<Integer> excludedLines=[], String recordedChecksum=null) {
+    void compareChecksums(Path path, List<Integer> excludedLines=[], String recordedChecksum=null) {
         String newChecksum = calculateMD5(path.toFile(), excludedLines)
         recordedChecksum ?= this.checksums[path.getFileName() as String]
         assert recordedChecksum == newChecksum
