@@ -100,58 +100,70 @@ class Converter {
     }
 
     /**
-     * Converts the given unit to a readable time string with options to limit what is shown.
+     * Converts a time value to a human-readable string
      *
      * @param value The time as a number in original given unit
      * @param unit Given unit of time
-     * @param smallestUnit Smallest desired unit to be reported
-     * @param largestUnit Largest desired unit to be reported
-     * @param threshold Smallest value to be reported (remainders are passed on to smaller units)
-     * @param maximumSteps Maximum number of valid time steps to be reported
-     * @return String of the readable time
+     * @param smallestUnit The smallest unit to convert to
+     * @param largestUnit The largest unit to convert to
+     * @param threshold The minimum value for the conversion to be included in the output
+     * @param numSteps The maximum number of conversion steps to perform
+     * @param readableString The string to append the result to
+     * @return A human-readable string representation of the time value
      */
     static String toReadableTimeUnits(
-            def value, String unit='ms',
-            String smallestUnit='s', String largestUnit='years',
-            Double threshold=null, Integer numSteps=null,
-            String readableString=''
+        def value,
+        String unit = 'ms',
+        String smallestUnit = 's',
+        String largestUnit = 'years',
+        Double threshold = null,
+        Integer numSteps = null,
+        String readableString = ''
     ) {
-        List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']   // Units of time
+        // Ordered list of supported time units
+        List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']
 
-        // Determine number of remaining steps
-        numSteps = numSteps == null ? units.indexOf(largestUnit) - units.indexOf(smallestUnit) : numSteps - 1
+        // Calculate the number of conversion steps left
+        int smallestIdx = units.indexOf(smallestUnit)
+        int largestIdx = units.indexOf(largestUnit)
+        numSteps = (numSteps == null) ? (largestIdx - smallestIdx) : (numSteps - 1)
 
-        // Calculate the time in the target unit
+        // Convert value to the current target unit
         String targetUnit = largestUnit
         BigDecimal targetValue = convertTime(value as BigDecimal, unit, targetUnit)
-        def targetValueFormatted = Math.floor(targetValue) as Integer
+        def targetValueFormatted = Math.floor(targetValue)
 
-        // Remove 's' from larger units if value is exactly 1
+        // Singularize unit if value is exactly 1 and unit is plural
         if (targetValueFormatted == 1 && ['days', 'weeks', 'months', 'years'].contains(targetUnit)) {
-            targetUnit = targetUnit.dropRight(1)
+            targetUnit = targetUnit.dropRight(1) // e.g. "days" -> "day"
         }
 
+        // If this is the last step, use the remaining value as is
         if (numSteps == 0) {
             targetValueFormatted = targetValue
         }
 
-        // Extend String & adjust value to avoid inaccuracies by ensuring conversion between closest units
+        // Only add to output if above threshold or no threshold set
         if (threshold == null || targetValueFormatted > threshold) {
             value = targetValue - targetValueFormatted
             unit = largestUnit
-            readableString +=  " ${targetValueFormatted}${targetUnit}"
+            // Format to 2 decimals, remove trailing zeros
+            String formattedValue = (targetValueFormatted as BigDecimal).setScale(2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().toPlainString()
+            readableString += readableString ? " ${formattedValue}${targetUnit}" : "${formattedValue}${targetUnit}"
         }
 
-        // When smallest unit or maximum steps are reached, return remaining
+        // If we've reached the smallest unit or max steps, return the result
         if (numSteps == 0) {
-            return readableString.trim()
+            String result = readableString.trim()
+            return result ? result : "0${smallestUnit}"
         }
-        else {
-            return toReadableTimeUnits(
-                    value, unit,
-                    smallestUnit, units[units.indexOf(largestUnit) - 1],
-                    threshold, numSteps, readableString
-            )
-        }
+
+        // Otherwise, continue with the next smaller unit
+        String nextLargestUnit = units[largestIdx - 1]
+        return toReadableTimeUnits(
+                value, unit,
+                smallestUnit, nextLargestUnit,
+                threshold, numSteps, readableString
+        )
     }
 }
