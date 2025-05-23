@@ -71,11 +71,14 @@ class CO2FootprintFactory implements TraceObserverFactory {
     /**
      * External Data integration of TDP (Thermal design power) and CI (Carbon intensity) values
      */
-    private final TDPDataMatrix tdpDataMatrix = TDPDataMatrix.loadCsv(
-            Paths.get(this.class.getResource('/CPU_TDP.csv').toURI())
+    private final TDPDataMatrix tdpDataMatrix = TDPDataMatrix.fromCsv(
+            Paths.get(this.class.getResource('/cpu_tdp_data/CPU_TDP.csv').toURI())
     )
 
-    private final CIDataMatrix ciDataMatrix = null
+    private final CIDataMatrix ciDataMatrix = CIDataMatrix.fromCsv(
+            Paths.get(this.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
+    )
+    
 
     @Override
     Collection<TraceObserver> create(Session session) {
@@ -85,6 +88,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         CO2FootprintConfig config = new CO2FootprintConfig(
                 session.config.navigate('co2footprint') as Map,
                 this.tdpDataMatrix,
+                this.ciDataMatrix,
                 session.config.navigate('process') as Map
         )
 
@@ -101,4 +105,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
         return result
     }
+
+    
+
 }

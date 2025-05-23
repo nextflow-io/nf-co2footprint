@@ -44,6 +44,29 @@ class TDPDataMatrix extends DataMatrix {
     }
 
     /**
+    * Create a TDPDataMatrix from a CSV file.
+    *
+    * @param path Path to the CSV file
+    * @param separator Separator used in the CSV file (default is ',')
+    * @param columnIndexPos Position of the column index (default is 0)
+    * @param rowIndexPos Position of the row index (default is null)
+    * @param rowIndexColumn Name of the column used for the row index (default is 'name')
+    * @return A TDPDataMatrix object
+    */
+    static TDPDataMatrix fromCsv(
+            Path path, String separator = ',', Integer columnIndexPos = 0, Integer rowIndexPos = null,
+            Object rowIndexColumn = 'name'
+    ) {
+        DataMatrix dm = DataMatrix.fromCsv(path, separator, columnIndexPos, rowIndexPos, rowIndexColumn)
+        TDPDataMatrix tdpMatrix = new TDPDataMatrix(
+                dm.getData(), dm.getOrderedColumnKeys(), dm.getOrderedRowKeys(),
+                'default', null, null, null
+        )
+        return tdpMatrix
+    }
+
+
+    /**
      * Remove non-ASCII symbols (®, ™,...)  from String.
      *
      * @param str Input string
@@ -220,22 +243,8 @@ class TDPDataMatrix extends DataMatrix {
         this.columnIndex = newTDPDataMatrix.columnIndex
     }
 
-    /**
-     * Load TDP data from Csv Matrix
-     * @param path Path to the file
-     * @param oldData Old data to compare new loaded file to
-     * @return new DataMatrix
-     */
-    static TDPDataMatrix loadCsv(Path path, TDPDataMatrix oldData=null) {
-        DataMatrix dm = loadCsv(
-                path, ',', 0, null, 'name'
-        )
 
-        TDPDataMatrix newData = new TDPDataMatrix(
-                dm.getData(), dm.getOrderedColumnKeys(), dm.getOrderedRowKeys(),
-                'default', null, null, null
-        )
-
+    static compareToOldData(TDPDataMatrix oldData, TDPDataMatrix newData) {
         // Compare entries to warn about changing
         if (oldData) {
             for (String model : oldData.getRowIndex().keySet()) {
@@ -249,9 +258,8 @@ class TDPDataMatrix extends DataMatrix {
                 }
             }
         }
-
-        return newData
     }
+
 
 }
 

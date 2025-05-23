@@ -8,7 +8,7 @@ import java.nio.file.Paths
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * This class allows model an specific configuration, extracting values from a map and converting
+ * This class allows to model an specific configuration, extracting values from a map and converting 
  *
  * In this plugin, the user can configure the output file names of the CO2 footprint calculations
  *
@@ -36,7 +36,8 @@ class CO2FootprintConfig {
     private String  summaryFile = "co2footprint_summary_${timestamp}.txt"
     private String  reportFile = "co2footprint_report_${timestamp}.html"
     private String  location = null
-    private Double  ci = null               // CI: carbon intensity
+    private def     ci = null               // CI: carbon intensity
+    private String  apiKey = null           // API key for electricityMaps 
     private Double  pue = null              // PUE: power usage effectiveness efficiency, coefficient of the data centre
     private Double  powerdrawMem = 0.3725   // Power draw of memory [W per GB]
     private Boolean ignoreCpuModel = false
@@ -45,7 +46,6 @@ class CO2FootprintConfig {
     private String  machineType = null      // Type of computer on which the workflow is run ['local', 'compute cluster', '']
 
     // Constants
-    private final Double  default_ci = 475
     private final List<String> supportedMachineTypes = ['local', 'compute cluster', '']
 
     // Getter methods for private values
@@ -54,7 +54,9 @@ class CO2FootprintConfig {
     String getSummaryFile() { summaryFile }
     String getReportFile() { reportFile }
     String getLocation() { location }
-    Double getCi() { ci }
+    Double getCi() {
+        (ci instanceof Closure) ? ci() : ci
+    }  
     Double getPue() { pue }
     Boolean getIgnoreCpuModel() { ignoreCpuModel }
     Double getPowerdrawCpuDefault() { powerdrawCpuDefault }
@@ -62,32 +64,8 @@ class CO2FootprintConfig {
     String getCustomCpuTdpFile() { customCpuTdpFile }
     String getMachineType()  { machineType }
 
-    /**
-     * Retrieve carbon intensity (CI) value from file containing CI values for different locations
-     *
-     * @param location Location as a country-code String
-     * @return CI at location
-     */
-    protected Double retrieveCi(String location) {
-        def dataReader = new InputStreamReader(this.class.getResourceAsStream('/CI_aggregated.v2.2.csv'))
 
-        Double localCi = 0.0
-        for ( String line : dataReader.readLines() ) {
-            def row = line.split(",")
-            if (row[0] == location) {
-                localCi = row[4].toDouble()
-                break
-            }
-        }
-        dataReader.close()
-        if (localCi == 0.0) {
-            throw new IllegalArgumentException("Invalid 'location' parameter: $location. Could not be found in 'CI_aggregated.v2.2.csv'.")
-        }
-
-        return localCi
-    }
-
-    CO2FootprintConfig(Map<String, Object> configMap, TDPDataMatrix cpuData, Map<String, Object> processMap){
+    CO2FootprintConfig(Map<String, Object> configMap, TDPDataMatrix cpuData, CIDataMatrix ciData, Map<String, Object> processMap) {
         // Ensure configMap is not null
         configMap ?= [:]
         
@@ -100,17 +78,15 @@ class CO2FootprintConfig {
                 log.warn("Skipping unknown configuration key: '${name}'")
             }
         }
+        
+        // Determine the carbon intensity (CI) value
+        if (ci == null) {
 
-        // Reassign CI from location
-        if (ci && location) {
-            log.warn(
-                    'Both \'ci\' and \'location\' were specified in configuration.' +
-                    'The \'ci\' value will take precedence, ignoring the \'location\'.'
-            )
+            CIValueComputer ciValueComputer = new CIValueComputer(apiKey, location, ciData)
+            // ci is either set to a Closure (in case the electricity maps API is used) or to a Double (in the other cases)
+            // The closure is invoked each time the CO2 emissions are calculated (for each task) to make a new API call to update the real time ci value.
+            ci = ciValueComputer.computeCI()
         }
-
-        // Keeps ci if already defined, if not uses location if given, fallback to default_ci
-        ci ?= location ? retrieveCi(location) : default_ci
 
         // Assign machine Type if not already given
         machineType = machineType == null ? matchProcessExecutor(processMap?.get('executor') as String) : machineType
@@ -140,8 +116,11 @@ class CO2FootprintConfig {
         }
 
         // Use custom TDP file
-        if (customCpuTdpFile) { cpuData.update( TDPDataMatrix.loadCsv(Paths.get(customCpuTdpFile as String)) ) }
-
+        if (customCpuTdpFile) {
+            cpuData.update(
+                    TDPDataMatrix.fromCsv(Paths.get(customCpuTdpFile as String))
+            )
+        }
     }
 
 

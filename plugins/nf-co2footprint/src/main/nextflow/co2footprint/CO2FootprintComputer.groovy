@@ -49,11 +49,6 @@ class CO2FootprintComputer {
     CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace) {
 
         /**
-         * Detect operating system
-         */
-        OperatingSystemMXBean OS = { (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean() }()
-
-        /**
          * CPU model information
          */
         String cpuModel = config.getIgnoreCpuModel() ? 'default' : trace.get('cpu_model') as String
@@ -87,10 +82,15 @@ class CO2FootprintComputer {
         /**
          * Factors of memory power usage
          */
-        Long availableMemory = OS.getTotalMemorySize() as Long    // [bytes]
         Long requestedMemory = trace.get('memory') as Long        // [bytes]
         Long requiredMemory = trace.get('peak_rss') as Long       // [bytes]
         if ( requestedMemory == null || requiredMemory > requestedMemory) {
+            /**
+             * Detect operating system
+             */
+            OperatingSystemMXBean OS = { (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean() }()
+
+            Long availableMemory = OS.getTotalMemorySize() as Long    // [bytes]
             log.warn(
                     "The required memory (${requiredMemory/(1024**3)} GB) for the task" +
                     " exceeds the requested memory (${requestedMemory/(1024**3)} GB)." +
@@ -107,7 +107,9 @@ class CO2FootprintComputer {
          * Energy-related factors
          */
         BigDecimal pue = config.getPue()    // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
-        BigDecimal ci  = config.getCi()     // CI: carbon intensity [gCO2e kWh−1]
+
+        // CI: carbon intensity [gCO2e kWh−1]
+        BigDecimal ci = config.getCi()
 
         /**
          * Calculate energy consumption [kWh]
@@ -131,6 +133,7 @@ class CO2FootprintComputer {
                 energy,
                 co2e,
                 runtime_h,
+                ci,
                 numberOfCores as Integer,
                 powerdrawPerCore,
                 cpuUsage,

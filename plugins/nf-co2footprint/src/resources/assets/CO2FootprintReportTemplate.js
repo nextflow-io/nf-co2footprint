@@ -103,39 +103,40 @@ $(function() {
   };
   
   Plotly.newPlot('co2eplot', data, layout);
-
-  // Convert to readable units
-  function readable_units(value, unit_index) {
-    units = ['p', 'n', 'u', 'm', ' ', 'K', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, mili, 0, Kilo, Mega, Giga, Tera, Peta, Exa
-    
-    while (value >= 1000 && unit_index < units.length - 1) {
-        value /= 1000;
-        unit_index++;
-    }
-    while (value <= 1 && unit_index > 0) {
-        value *= 1000;
-        unit_index--;
-    }
-    
-    value = Math.round( value * 100 ) / 100;
-    return value + ' ' + units[unit_index];
-  }
   
+  // Convert to readable units, optionally with a starting scope and a unit label
+  function readable_units(value, scope = '', unit = '') {
+    var units = ['p', 'n', 'u', 'm', '', 'K', 'M', 'G', 'T', 'P', 'E']; // pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
+    var scopeIndex = units.indexOf(scope);
+    if (scopeIndex === -1) scopeIndex = 4; // Default to '' (no prefix) if not found
+
+    while (value >= 1000 && scopeIndex < units.length - 1) {
+      value /= 1000;
+      scopeIndex++;
+    }
+    while (value <= 1 && scopeIndex > 0) {
+      value *= 1000;
+      scopeIndex--;
+    }
+    value = Math.round(value * 100) / 100;
+    return value + ' ' + units[scopeIndex] + unit;
+  }
+
   // Convert miliseconds to readable units
   function readable_units_time(duration){
     if (duration < 1000) {
-      return duration + "ms"
+      return duration + " ms"
     } else {
       hours = Math.floor(duration / 3600000);
       minutes = Math.floor((duration % 3600000) / 60000);
       seconds = Math.floor(duration % 60000) / 1000;
 
       if (duration < 60000) {
-        return seconds + "s";
+        return seconds + " s";
       } else if (duration < 3600000) {
-        return minutes + "m " + seconds + "s";
+        return minutes + " m " + seconds + " s";
       } else {
-        return hours + "h " + minutes + "m " + seconds + "s";
+        return hours + " h " + minutes + " m " + seconds + " s";
       }
     }
   }
@@ -164,7 +165,7 @@ $(function() {
     if (mg == '-' || mg == 0){
       return mg;
     }
-    return readable_units(mg, 3) + 'g';
+    return readable_units(mg, 'm', 'g');
   }
   function make_energy(mWh, type){
     if (type === 'sort') {
@@ -176,7 +177,7 @@ $(function() {
     if (mWh == '-' || mWh == 0){
       return mWh;
     }
-    return readable_units(mWh, 3) + 'Wh';
+    return readable_units(mWh, 'm', 'Wh');
   }
   function make_time(ms, type){
     if (type === 'sort') {
@@ -189,6 +190,18 @@ $(function() {
       return ms;
     }
     return readable_units_time(ms);
+  }
+  function make_carbon_intensity(ci, type) {
+    if (type === 'sort') {
+      return parseFloat(ci);
+    }
+    if ($('#nf-table-humanreadable').val() == 'false') {
+      return ci;
+    }
+    if (ci == '-' || ci == 0) {
+      return ci;
+    }
+    return readable_units(ci, 'm', 'gCO<sub>2</sub>eq/kWh');
   }
   function make_memory(bytes, type){
     if (type === 'sort') {
@@ -262,6 +275,7 @@ $(function() {
           { title: co2EmissionsTitle, data: 'co2e', type: 'num', render: make_co2e },
           { title: energyConsumptionTitle, data: 'energy', type: 'num', render: make_energy },
           { title: 'Time', data: 'time', type: 'num', render: make_time },
+          { title: 'Carbon Intensity', data: 'ci', type: 'num', render: make_carbon_intensity },
           { title: 'Number of cores', data: 'cpus', type: 'num' },
           { title: 'Power draw of a computing core', data: 'powerdrawCPU', type: 'num'},
           { title: 'Core usage factor', data: 'cpuUsage', type: 'num', render: make_core_usage_factor },

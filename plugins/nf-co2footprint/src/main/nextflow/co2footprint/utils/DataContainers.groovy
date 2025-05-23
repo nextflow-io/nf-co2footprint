@@ -2,6 +2,8 @@ package nextflow.co2footprint.utils
 
 import java.nio.file.Path
 import java.nio.file.Files
+import groovy.util.logging.Slf4j
+
 
 /**
  * Bidirectional Map with maintained K-V pairs in both directions
@@ -157,11 +159,18 @@ interface Matrix {
  *
  * @author Josua Carl <josua.carl@uni-tuebingen.de>
  */
+@Slf4j
 class DataMatrix implements Matrix {
     List<List<Object>> data = []
     protected BiMap<Object, Integer> columnIndex = [:] as BiMap
     protected BiMap<Object, Integer> rowIndex = [:] as BiMap
 
+    /**
+     * Constructor to initialize DataMatrix with data, columnIndex, and rowIndex.
+     * @param data The data as a list of lists.
+     * @param columnIndex The column index as a LinkedHashSet.
+     * @param rowIndex The row index as a LinkedHashSet.
+     */
     DataMatrix(
             List<List> data = [],
             LinkedHashSet<Object> columnIndex = [],
@@ -183,6 +192,72 @@ class DataMatrix implements Matrix {
 
         // Check integrity
         assertIntegrity()
+    }
+
+
+    /**
+     * Read CSV file and return a DataMatrix object.
+     *
+     * @param path Path to the CSV file.
+     * @param separator Separator used in the CSV file (default is ',').
+     * @param columnIndexPos Position of the column index in the CSV file (default is 0).
+     * @param rowIndexPos Position of the row index in the CSV file (default is null).
+     * @param rowIndexColumn Column name for the row index (default is null).
+     * @return A DataMatrix object containing the data from the CSV file.
+     */
+    static DataMatrix fromCsv(
+            Path path, String separator = ',', Integer columnIndexPos = 0, Integer rowIndexPos = null,
+            Object rowIndexColumn = null
+    ) throws IOException {
+        List<String> lines = Files.readAllLines(path)
+
+        // Extract column index
+        LinkedHashSet<Object> columnIndex = columnIndexPos != null ? lines.remove(columnIndexPos).split(separator) : null
+
+        // Handle row index column
+        if (rowIndexPos != null) {
+            rowIndexColumn = columnIndex[rowIndexPos]
+        }
+        if (rowIndexColumn != null) {
+            rowIndexPos = columnIndex.findIndexOf { it == rowIndexColumn } as Integer
+            columnIndex.remove(rowIndexColumn)
+        }
+
+        // Initialize row index and data
+        LinkedHashSet<Object> rowIndex = []
+        List<List<Object>> data = []
+        boolean escaped = false
+        int start = 0
+        int end = 0
+
+        // Parse each line of the CSV
+        lines.each { line ->
+            List<Object> row = []
+            line.eachWithIndex { character, i ->
+                end = i
+                if (character == separator && !escaped) {
+                    row.add(inferTypeOfString(line.substring(start, end)))
+                    start = i + 1
+                } else if (character == '"') {
+                    escaped = !escaped
+                }
+            }
+            row.add(inferTypeOfString(line.substring(start, end + 1)))
+            start = 0
+
+            // Extract row index
+            if (rowIndexPos != null) {
+                Object rowIdx = row[rowIndexPos]
+                row.remove(rowIdx)
+                rowIndex.add(rowIdx)
+            }
+
+            // Add row to data
+            data.add(row)
+        }
+
+        return new DataMatrix(data, columnIndex, rowIndex)
+
     }
 
     // Integrity tests
@@ -319,10 +394,20 @@ class DataMatrix implements Matrix {
      * Get data entries by specifying row and column that you want to access, as well as whether they are Integer
      * indices.
      */
-    Object get(Object row, Object column, boolean rowRawIndex=false, boolean columnRawIndex=false) {
+    Object get(Object row, Object column, boolean rowRawIndex=false, boolean columnRawIndex=false) {        
+        // Resolve row index
         row = rowRawIndex ? row as Integer : this.rowIndex.getValue(row)
-        column = columnRawIndex ? column as Integer : this.columnIndex.getValue(column)
+        if (row == null) {
+            throw new IllegalArgumentException("Row '${rowRawIndex ? row : row as String}' not found in the row index.")
+        }
 
+        // Resolve column index
+        column = columnRawIndex ? column as Integer : this.columnIndex.getValue(column)
+        if (column == null) {
+            throw new IllegalArgumentException("Column '${columnRawIndex ? column : column as String}' not found in the column index.")
+        }
+
+        // Return the data at the resolved row and column
         return this.data[row][column]
     }
 
@@ -370,65 +455,10 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Load data from simple CSV format.
-     */
-    static DataMatrix loadCsv(
-            Path path, String separator=',',
-            Integer columnIndexPos=0, Integer rowIndexPos=null,
-            Object rowIndexColumn=null
-    ) {
-        List<String> lines = Files.readAllLines(path)
-
-        LinkedHashSet<Object> columnIndex = columnIndexPos != null ? lines.remove(columnIndexPos).split(separator) : null
-
-        if (rowIndexPos != null) {
-            rowIndexColumn = columnIndex[rowIndexPos]
-        }
-        if (rowIndexColumn != null) {
-            rowIndexPos = columnIndex.findIndexOf { it == rowIndexColumn } as Integer
-            columnIndex.remove(rowIndexColumn)
-        }
-        LinkedHashSet<Object> rowIndex = []
-        List<List<Object>> data = []
-        boolean  escaped = false
-        int start = 0
-        int end = 0
-        lines.each {line ->
-
-            // get elements of row from string
-            List<Object> row  = []
-            line.eachWithIndex{ character, i ->
-                end = i
-                if (character == separator && !escaped) {
-                    row.add( inferTypeOfString(line.substring(start, end)) )
-                    start = i+1
-                }
-                else if (character == '"') {
-                    escaped = !escaped
-                }
-            }
-            row.add( inferTypeOfString(line.substring(start, end+1)) )
-            start = 0
-
-            // extract row Index
-            if (rowIndexPos != null) {
-                Object rowIdx = row[rowIndexPos]
-                row.remove(rowIdx)
-                rowIndex.add(rowIdx)
-            }
-
-            // add row to data
-            data.add( row )
-        }
-
-        return new DataMatrix(data, columnIndex, rowIndex)
-    }
-
-    /**
      * Convert the class into a readable / printable String.
      */
     String toString() {
-        List<Object> sortedColumnsIndex = getOrderedColumnKeys()
+        LinkedHashSet<Object> sortedColumnsIndex = getOrderedColumnKeys()
         String stringRepresentation = "\t\t${sortedColumnsIndex.toString()}"
         data.eachWithIndex {row, i  ->
             stringRepresentation += "\n${this.rowIndex.getKey(i)}\t${row.toString()}"
