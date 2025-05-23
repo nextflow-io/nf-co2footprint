@@ -79,11 +79,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
             Paths.get(this.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
     )
 
-
     @Override
     Collection<TraceObserver> create(Session session) {
         getPluginVersion()
-        log.info "nf-co2footprint plugin  ~  version ${this.version}"
+        log.info("nf-co2footprint plugin  ~  version ${version}")
 
         CO2FootprintConfig config = new CO2FootprintConfig(
                 session.config.navigate('co2footprint') as Map,
@@ -105,7 +104,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
         return result
     }
-
 
 
 }
