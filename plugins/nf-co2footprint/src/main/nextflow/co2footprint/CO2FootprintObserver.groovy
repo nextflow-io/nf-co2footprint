@@ -70,7 +70,7 @@ class CO2FootprintObserver implements TraceObserver {
     /**
      * Compute resources usage stats
      */
-    private CO2FootprintResourcesAggregator aggregator
+    private CO2RecordAggregator aggregator
 
     /**
      * Computer for the CO2 emissions
@@ -166,7 +166,7 @@ class CO2FootprintObserver implements TraceObserver {
 
         // Construct session and aggregator
         this.session = session
-        this.aggregator = new CO2FootprintResourcesAggregator(session)
+        this.aggregator = new CO2RecordAggregator()
 
         // make sure parent paths exists
         paths.each {key, path ->
@@ -289,7 +289,7 @@ class CO2FootprintObserver implements TraceObserver {
         // Aggregate results
         synchronized (traceRecords) {
             traceRecords[ trace.taskId ] = trace
-            aggregator.aggregate(co2Record, trace.getSimpleName())
+            aggregator.add(co2Record, trace.getSimpleName())
         }
 
         // save to files
@@ -319,7 +319,7 @@ class CO2FootprintObserver implements TraceObserver {
         // Aggregate results
         synchronized (traceRecords) {
             traceRecords[ trace.taskId ] = trace
-            aggregator.aggregate(co2Record, trace.getSimpleName())
+            aggregator.add(co2Record, trace.getSimpleName())
         }
 
 
