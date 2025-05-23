@@ -69,6 +69,7 @@ class ChecksumChecker {
      * Calculates the MD5 checksum for a file
      *
      * @param file File to be calculated the checksum to
+     * @param excludedLines Lines to be excluded in the checksum calculation
      * @return The checksum of the file as a String
      */
     static String calculateMD5(File file, List<Integer> excludedLines=[]) {
