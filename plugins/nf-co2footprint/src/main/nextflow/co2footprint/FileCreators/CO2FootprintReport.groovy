@@ -198,13 +198,11 @@ class CO2FootprintReport extends CO2FootprintFile{
         List<String> fields = TraceRecord.FIELDS.keySet() as List
         List<String> co2Formats = CO2Record.FIELDS.values().collect { it!='str' ? 'num' : 'str' }
         List<String> co2Fields = CO2Record.FIELDS.keySet() as List
-        co2Fields.remove('name')    // already present from `fields`
 
         StringBuilder result = new StringBuilder()
         result << '[\n'
         data.each { TraceRecord traceRecord ->
             traceRecord.renderJson(result,fields,formats)
-            result << ','
             dataCO2[traceRecord.getTaskId()].renderJson(result,co2Fields,co2Formats)
             result << ','
         }
