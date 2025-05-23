@@ -1,5 +1,6 @@
 package nextflow.co2footprint.FileCreators
 
+import groovy.json.JsonOutput
 import nextflow.co2footprint.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.CO2RecordAggregator
@@ -85,7 +86,7 @@ class CO2FootprintReport extends CO2FootprintFile{
 
     void write() {
         try {
-            String html_output = renderHtml()
+            final String html_output = renderHtml()
             writer.withWriter { w -> w << html_output }
         }
         catch (Exception e) {
@@ -135,38 +136,36 @@ class CO2FootprintReport extends CO2FootprintFile{
                 options : renderOptionsJson(),
                 used_EM_api: co2Options.ci instanceof Closure // true if the CI value is calculated using the electricityMaps API
         ]
-        final String tpl = readTemplate('assets/CO2FootprintReportTemplate.html')
-        GStringTemplateEngine engine = new GStringTemplateEngine()
-        Template html_template = engine.createTemplate(tpl)
-        String html_output = html_template.make(tpl_fields) as String
+        final String template = readTemplate('assets/CO2FootprintReportTemplate.html')
+        final GStringTemplateEngine engine = new GStringTemplateEngine()
+        final Template htmlTemplate = engine.createTemplate(template)
 
-        return html_output
+        return htmlTemplate.make(tpl_fields) as String
     }
 
     /**
      * @return The tasks json payload
      */
     protected String renderTasksJson() {
-        co2eRecords.size()<= maxTasks ? renderJsonData(traceRecords.values(), co2eRecords) : 'null'
+        return co2eRecords.size()<= maxTasks ? renderJsonData(traceRecords.values(), co2eRecords) : 'null'
     }
 
     protected String renderPayloadJson() {
-        "{ \"trace\":${renderTasksJson()}, \"summary\":${aggregator.renderSummaryJson()} }"
+        return JsonOutput.toJson([trace: renderTasksJson(), summary: aggregator.renderSummaryJson()])
     }
 
     /**
      * @return The options json payload
      */
     protected String renderOptionsJson() {
-        Map all_options = config.collectInputFileOptions() + config.collectOutputFileOptions() + config.collectCO2CalcOptions()
+        Map<String,?> all_options = config.collectInputFileOptions() + config.collectOutputFileOptions() + config.collectCO2CalcOptions()
 
         // Render JSON
-        List<String> options = all_options.collect { name, value ->
-            String valueStr = (value instanceof Closure) ? 'dynamic' : value as String
-            """{ "option":"${name}", "value":"${valueStr}" }"""
+        List<Map<String, String>> options = all_options.collect { String name, value ->
+            [option: name, value: (value instanceof Closure) ? 'dynamic' : value as String]
         }
 
-        return "[${String.join(',', options)}]"
+        return JsonOutput.toJson(options)
     }
 
     /**
@@ -177,15 +176,16 @@ class CO2FootprintReport extends CO2FootprintFile{
      * @return The rendered json
      */
     protected Map<String, String> renderCO2TotalsJson() {
-        [ co2: Converter.toReadableUnits(total_co2,'m', 'g'),
-          energy:Converter.toReadableUnits(total_energy,'m','Wh'),
-          car: equivalences.getCarKilometersReadable(),
-          tree: equivalences.getTreeMonthsReadable(),
-          plane_percent: equivalences.getPlanePercent() < 100.0 ? equivalences.getPlanePercentReadable() : null,
-          plane_flights: equivalences.getPlaneFlights() >= 1 ? equivalences.getPlaneFlightsReadable() : null
-        ] }
+        return [
+            co2: Converter.toReadableUnits(total_co2,'m', 'g'),
+            energy:Converter.toReadableUnits(total_energy,'m','Wh'),
+            car: equivalences.getCarKilometersReadable(),
+            tree: equivalences.getTreeMonthsReadable(),
+            plane_percent: equivalences.getPlanePercent() < 100.0 ? equivalences.getPlanePercentReadable() : null,
+            plane_flights: equivalences.getPlaneFlights() >= 1 ? equivalences.getPlaneFlightsReadable() : null
+        ]
+    }
 
-    // TODO: Simplification through TraceRecord.renderJSON() without arguments ? (also relevant for CO2Record)
     /**
      * Render the executed tasks json payload
      *
@@ -194,24 +194,22 @@ class CO2FootprintReport extends CO2FootprintFile{
      * @return The rendered json payload
      */
     protected static String renderJsonData(Collection<TraceRecord> data, Map<TaskId, CO2Record> dataCO2) {
-        List<String> formats = null
-        List<String> fields = null
-        List<String> co2Formats = null
-        List<String> co2Fields = null
+        List<String> formats = TraceRecord.FIELDS.values().collect { it!='str' ? 'num' : 'str' }
+        List<String> fields = TraceRecord.FIELDS.keySet() as List
+        List<String> co2Formats = CO2Record.FIELDS.values().collect { it!='str' ? 'num' : 'str' }
+        List<String> co2Fields = CO2Record.FIELDS.keySet() as List
+
         StringBuilder result = new StringBuilder()
         result << '[\n'
-        for (int i = 0; i < data.size(); i++) {
-            if( i ) result << ','
-            if( !formats ) formats = TraceRecord.FIELDS.values().collect { it!='str' ? 'num' : 'str' }
-            if( !fields ) fields = TraceRecord.FIELDS.keySet() as List
-            data[i].renderJson(result,fields,formats)
-            if( !co2Formats ) co2Formats = CO2Record.FIELDS.values().collect { it!='str' ? 'num' : 'str' }
-            if( !co2Fields ) co2Fields = CO2Record.FIELDS.keySet() as List
-            dataCO2[data[i].getTaskId()].renderJson(result,co2Fields,co2Formats)
+        data.each { TraceRecord traceRecord ->
+            traceRecord.renderJson(result,fields,formats)
+            dataCO2[traceRecord.getTaskId()].renderJson(result,co2Fields,co2Formats)
+            result << ','
         }
+        result.dropRight(1)
         result << ']'
 
-        return result as String
+        return result.toString()
     }
 
     /**
