@@ -2,6 +2,10 @@ package nextflow.co2footprint
 
 import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
+import org.slf4j.LoggerFactory
+import ch.qos.logback.classic.LoggerContext
+import nextflow.co2footprint.utils.DeduplicateMarkerFilter
+
 
 import nextflow.Session
 import nextflow.co2footprint.FileCreators.CO2FootprintReport
@@ -216,7 +220,8 @@ class CO2FootprintObserver implements TraceObserver {
      * @param process A {@link nextflow.processor.TaskProcessor} object representing the process created
      */
     @Override
-    void onProcessCreate(TaskProcessor process) { }
+    void onProcessCreate(TaskProcessor process) { 
+    }
 
 
     /**

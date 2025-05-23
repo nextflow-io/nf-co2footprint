@@ -219,31 +219,18 @@
           <span class="metric-title">Flight Paris - London</span>
         </div></div>
       </div>
-
-      <a href="https://www.green-algorithms.org/" class="btn btn-outline-secondary pull-right ml-2 my-1">
-        green-algorithms.org
-        <svg class="ml-1 -mt-1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6v2H5v12h12v-6h2zM13 3v2h4.586l-7.793 7.793l1.414 1.414L19 6.414V11h2V3h-8z"/></svg>
-      </a>
-      <p class="mb-1">The calculation of these values is based on the carbon footprint computation method
-        developed in the Green Algorithms project.</p>
-      <p class="small">Lannelongue, L., Grealey, J., Inouye, M.,
-        Green Algorithms: Quantifying the Carbon Footprint of Computation.
-        Adv. Sci. 2021, 2100707. <a href="https://doi.org/10.1002/advs.202100707">https://doi.org/10.1002/advs.202100707</a></p>
     </div>
   </div>
 
   <div class="container">
-    <h2 id="resources" style="padding-top: 80px;">CO<sub>2</sub>e Footprint Measures</h2>
+    <h2 id="resources" style="padding-top: 40px;">CO<sub>2</sub>e Footprint Measures</h2>
 
     <div id="co2eplot"></div>
-    <p>The plot shows the distribution of CO<sub>2</sub>e emissions and corresponding energy consumptions for each workflow process. The values that are displayed when hovering over the plot refer to the CO<sub>2</sub>e emissions.</p>
+    <p class="mt-3">The plot shows the distribution of CO<sub>2</sub>e emissions and corresponding energy consumptions for each workflow process. The values that are displayed when hovering over the plot refer to the CO<sub>2</sub>e emissions.</p>
 
   <div class="container">
-    <div id="table-container">
-      <h2 id="tasks" style="padding-top: 80px;">Tasks</h2>
-      <p>This table shows information about each task in the workflow. Use the search box on the right
-        to filter rows for specific values. Clicking headers will sort the table by that value and
-        scrolling side to side will reveal more columns.</p>
+    <h2 id="tasks" style="padding-top: 40px;">Tasks</h2>
+    <div id="table-container" class="mb-3">
       <form class="form-inline" id="nf-form-humanreadable">
         <label class="mr-sm-2" for="nf-table-humanreadable">Values shown as:</label>
         <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="nf-table-humanreadable">
@@ -255,16 +242,66 @@
     <div class="container-fluid">
       <table class="table small table-striped" id="tasks_table"></table>
     </div>
-
     <div id="no-table-container">
       (tasks table omitted because the dataset is too big)
+    </div>
+    <p class="mt-3">This table shows information about each task in the workflow. Use the search box on the right
+      to filter rows for specific values. Clicking headers will sort the table by that value and
+      scrolling side to side will reveal more columns.</p>
+  </div>
+
+  <div class="container my-5">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 id="attribution-and-references" class="h4 mb-4">Data Attribution &amp; References</h2>
+        <ul class="pl-3 mb-0">
+          <li class="mb-2">
+            The calculation of these values is based on the carbon footprint computation method
+            developed in the
+            <a href="https://www.green-algorithms.org/" target="_blank" rel="noopener" style="color: #28a745">Green Algorithms</a> project.<br>
+            <span class="font-italic small">
+              Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation.
+              Adv. Sci. 2021, 2100707.
+              <a href="https://doi.org/10.1002/advs.202100707" target="_blank" rel="noopener">
+                https://doi.org/10.1002/advs.202100707
+              </a>
+            </span>
+          </li>
+          <li>
+            <% if (used_EM_api) { %>
+              The carbon intensity (CI) values used in the calculation are based on real-time data from
+              <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener" style="color: #17a2b8">Electricity Maps</a>
+              accessed via their API, under the
+              <a href="https://opendatacommons.org/licenses/odbl/1-0/" target="_blank" rel="noopener">Open Database License (ODbL)</a>.
+              In the event that real-time data was unavailable, fallback values from the 2024 yearly historical data were used.<br>
+              <span class="font-italic small">
+                Electricity Maps (2025). Real-time Carbon Intensity Data accessed via API (last accessed: ${'PLACEHOLDER'}).
+                <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">
+                  https://www.electricitymaps.com
+                </a>
+              </span>
+            <% } else { %>
+              The carbon intensity (CI) values used in the calculation originate from
+              <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">Electricity Maps</a>
+              under the
+              <a href="https://opendatacommons.org/licenses/odbl/1-0/" target="_blank" rel="noopener">Open Database License (ODbL)</a>.<br>
+              <span class="font-italic small">
+                Electricity Maps (2025). 2024 Yearly Carbon Intensity Data (Version January 27, 2025).
+                <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">
+                  https://www.electricitymaps.com
+                </a>
+              </span>
+            <% } %>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 
   <div class="container">
     <div id="table-container">
-      <h2 id="options" style="padding-top: 80px;">Options</h2>
-      <p>This table shows the nf-co2footprint plugin options that were used to calculate the CO<sub>2</sub>e footprint measures.</p>
+      <h2 id="options" style="padding-top: 40px;">Options</h2>
+      <p class="mt-3 mb-3">This table shows the nf-co2footprint plugin options that were used to calculate the CO<sub>2</sub>e footprint measures.</p>
     </div>
     <div class="container-fluid">
       <table class="table small table-striped" id="options_table"></table>

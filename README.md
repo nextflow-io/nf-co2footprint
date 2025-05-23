@@ -53,5 +53,11 @@ We thank the following people for their extensive assistance in the development 
 
 ## Data Attribution
 
-This project uses data from [Electricity Maps](https://www.electricitymaps.com/) under the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1-0/).  
-See the license link for full terms and conditions.
+This project uses carbon intensity (CI) data from [Electricity Maps](https://www.electricitymaps.com/) under the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1-0/).  
+Depending on the configuration, either historical yearly data from 2024 is used or real-time CI values are accessed via the Electricity Maps API.
+
+> **Electricity Maps: Carbon Intensity Data**  
+> Electricity Maps (2025). 2024 Yearly Carbon Intensity Data (Version January 27, 2025).  
+> Electricity Maps. [https://www.electricitymaps.com](https://www.electricitymaps.com)
+
+You are free to use, share, and adapt the data under the terms of the ODbL. For more details and attribution requirements, see the [NOTICE](./NOTICE) file.

@@ -110,6 +110,7 @@ class CO2FootprintReport extends CO2FootprintFile{
      * @return Rendered HTML String
      */
     protected String renderHtml() {
+        Map co2Options = config.collectCO2CalcOptions()
         // render HTML report template
         final tpl_fields = [
                 workflow : session.getWorkflowMetadata(),
@@ -129,7 +130,8 @@ class CO2FootprintReport extends CO2FootprintFile{
                         readTemplate('nextflow/trace/assets/plotly.min.js'),
                         readTemplate('assets/CO2FootprintReportTemplate.js')
                 ],
-                options : renderOptionsJson()
+                options : renderOptionsJson(),
+                used_EM_api: co2Options.ci instanceof Closure // true if the CI value is calculated using the electricityMaps API
         ]
         final String tpl = readTemplate('assets/CO2FootprintReportTemplate.html')
         GStringTemplateEngine engine = new GStringTemplateEngine()

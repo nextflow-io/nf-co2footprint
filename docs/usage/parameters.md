@@ -40,7 +40,7 @@ The following parameters are currently available:
   **Default**: 0.3725.
   
 - **`customCpuTdpFile`**  
-  Input CSV file containing custom CPU TDP data. This should contain the following columns: `name`, `tdp (W)`, `cores`. Note that this overwrites TDP values for already provided CPU models. You can find the by default used TDP data [here](https://nextflow-io.github.io/nf-co2footprint/plugins/nf-co2footprint/src/resources/CPU_TDP.csv).  
+  Input CSV file containing custom CPU TDP data. This should contain the following columns: `name`, `tdp (W)`, `cores`. Note that this overwrites TDP values for already provided CPU models. You can find the by default used TDP data [here](https://nextflow-io.github.io/nf-co2footprint/plugins/nf-co2footprint/src/resources/cpu_tdp_data/CPU_TDP.csv).  
   **Default**: `null`.
 
     Example custom CPU TDP file:

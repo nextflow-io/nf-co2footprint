@@ -107,7 +107,9 @@ class CO2FootprintComputer {
          * Energy-related factors
          */
         BigDecimal pue = config.getPue()    // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
-        BigDecimal ci  = config.getCi()     // CI: carbon intensity [gCO2e kWh−1]
+
+        // CI: carbon intensity [gCO2e kWh−1]
+        BigDecimal ci = config.getCi()
 
         /**
          * Calculate energy consumption [kWh]
@@ -131,6 +133,7 @@ class CO2FootprintComputer {
                 energy,
                 co2e,
                 runtime_h,
+                ci,
                 numberOfCores as Integer,
                 powerdrawPerCore,
                 cpuUsage,

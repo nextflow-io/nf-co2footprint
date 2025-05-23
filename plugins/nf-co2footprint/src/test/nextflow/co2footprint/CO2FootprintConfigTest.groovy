@@ -1,33 +1,30 @@
 package nextflow.co2footprint
 
 import spock.lang.Specification
-
+import groovy.util.logging.Slf4j
 import java.util.concurrent.ConcurrentHashMap
 
+@Slf4j
 class CO2FootprintConfigTest extends Specification {
-    def 'config should be rejected for several cases' () {
-        when:
-        new CO2FootprintConfig(input, new TDPDataMatrix(), [:])
+    TDPDataMatrix tdp
+    CIDataMatrix ci
 
-        then:
-        Exception e = thrown(expectedException)
-        e.getMessage().contains(message)
-
-        where:
-        input                                                   || expectedException        || message
-        ['location': 'Tuebingen']  as ConcurrentHashMap         || IllegalArgumentException || 'Invalid \'location\' parameter: Tuebingen.'
-    }
-
-    def 'test configuration builder' () {
-        setup:
-        TDPDataMatrix tdp = new TDPDataMatrix(
-                [[1]],
-                ['tdp (W)'] as LinkedHashSet,
-                ['default'] as LinkedHashSet
+    def setup() {
+        tdp = new TDPDataMatrix(
+            [[1]],
+            ['tdp (W)'] as LinkedHashSet,
+            ['default'] as LinkedHashSet
         )
-
+        ci = new CIDataMatrix(
+                [[300], [400], [250], [400]],
+                ['Carbon intensity gCO₂eq/kWh (Life cycle)'] as LinkedHashSet,
+                ['DE', 'US', 'FR', 'GLOBAL'] as LinkedHashSet
+        )
+    }
+    
+    def 'test configuration builder' () {
         when:
-        CO2FootprintConfig config = new CO2FootprintConfig(input, tdp, [:])
+        CO2FootprintConfig config = new CO2FootprintConfig(input, tdp, ci, [:])
 
         then:
         keys.each({property ->
@@ -42,15 +39,8 @@ class CO2FootprintConfigTest extends Specification {
     }
 
     def 'fallback value should change after configuring valid machine type' () {
-        setup:
-        TDPDataMatrix tdp = new TDPDataMatrix(
-                [[1]],
-                ['tdp (W)'] as LinkedHashSet,
-                ['default'] as LinkedHashSet
-        )
-
         when:
-        CO2FootprintConfig config = new CO2FootprintConfig(pluginConfig, tdp, processConfig)
+        CO2FootprintConfig config = new CO2FootprintConfig(pluginConfig, tdp, ci, processConfig)
 
         then:
         keys.each({property ->
@@ -67,5 +57,26 @@ class CO2FootprintConfigTest extends Specification {
         [:]                                     || ['executor': 'awsbatch'] || ['machineType']          || 1.67
         ['machineType': 'local', 'pue': 2.0]    || [:]                      || ['machineType', 'pue']   || 2.0
         ['pue': 2.0]                            || ['executor': 'awsbatch'] || ['machineType', 'pue']   || 2.0
+    }
+    def 'test dynamic ci computation with GLOBAL fallback'() {
+        expect:
+        CO2FootprintConfig config = new CO2FootprintConfig(['location': location], tdp, ci, [:])
+        assert config.getCi() instanceof Double
+        assert config.getCi() == expectedCi
+        assert config.location == location
+        validateDefaultProperties(config)
+
+        where:
+        location    || expectedCi
+        'DE'        || 300.0
+        'US'        || 400.0
+        'FR'        || 250.0
+        'INVALID'   || 400.0 // Falls back to GLOBAL
+    }
+
+    // Helper method to validate default properties
+    private void validateDefaultProperties(CO2FootprintConfig config) {
+        assert config.powerdrawMem == 0.3725
+        assert config.pue == 1.0
     }
 }
