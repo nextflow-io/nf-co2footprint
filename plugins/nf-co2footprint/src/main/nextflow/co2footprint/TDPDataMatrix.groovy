@@ -11,7 +11,7 @@ import java.util.regex.Matcher
 
 @Slf4j
 /**
- * Structure for the thermal design power (TPD) values
+ * Structure for the thermal design power (TDP) values
  *
  * @author Josua Carl <josua.carl@uni-tuebingen.de>
  */
@@ -42,29 +42,6 @@ class TDPDataMatrix extends DataMatrix {
         this.cores = cores
         this.threads = threads
     }
-
-    /**
-    * Create a TDPDataMatrix from a CSV file.
-    *
-    * @param path Path to the CSV file
-    * @param separator Separator used in the CSV file (default is ',')
-    * @param columnIndexPos Position of the column index (default is 0)
-    * @param rowIndexPos Position of the row index (default is null)
-    * @param rowIndexColumn Name of the column used for the row index (default is 'name')
-    * @return A TDPDataMatrix object
-    */
-    static TDPDataMatrix fromCsv(
-            Path path, String separator = ',', Integer columnIndexPos = 0, Integer rowIndexPos = null,
-            Object rowIndexColumn = 'name'
-    ) {
-        DataMatrix dm = DataMatrix.fromCsv(path, separator, columnIndexPos, rowIndexPos, rowIndexColumn)
-        TDPDataMatrix tdpMatrix = new TDPDataMatrix(
-                dm.getData(), dm.getOrderedColumnKeys(), dm.getOrderedRowKeys(),
-                'default', null, null, null
-        )
-        return tdpMatrix
-    }
-
 
     /**
     * Create a TDPDataMatrix from a CSV file.

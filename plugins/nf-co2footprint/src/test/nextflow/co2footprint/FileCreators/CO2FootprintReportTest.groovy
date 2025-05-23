@@ -144,12 +144,12 @@ class CO2FootprintReportTest extends Specification{
         then:
         totalsJson ==
             [
-                "co2": "100.0 m",
-                "energy":  "10.0 m",
+                "co2": "100.0 mg",
+                "energy":  "10.0 mWh",
                 "car": "10.0",
                 "tree": "10months",
                 "plane_percent": "10.0",
-                "plane_flights": "0.0"
+                "plane_flights": null
             ]
     }
 
