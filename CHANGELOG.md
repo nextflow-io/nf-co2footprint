@@ -7,6 +7,7 @@
 
 ## Misc
 - Moved call to OS when memory is exceeded into this case to avoid unnecessary calls
+- Extended documentation for CO2e equivalents
 
 # Version 1.0.0-beta1
 ## Features:
