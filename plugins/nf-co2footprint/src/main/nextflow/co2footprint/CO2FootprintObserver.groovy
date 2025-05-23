@@ -203,7 +203,9 @@ class CO2FootprintObserver implements TraceObserver {
 
         // Write report and summary
         co2eSummaryFile.write(total_energy, total_co2, equivalences, config, version)
-        co2eReportFile.write(total_energy, total_co2, equivalences, aggregator, config, version, session, traceRecords, co2eRecords)
+
+        co2eReportFile.addEntries(total_energy, total_co2, equivalences, aggregator, config, version, session, traceRecords, co2eRecords)
+        co2eReportFile.write()
 
         // Close all files (writes remaining tasks in the trace file)
         co2eTraceFile.close(current)
