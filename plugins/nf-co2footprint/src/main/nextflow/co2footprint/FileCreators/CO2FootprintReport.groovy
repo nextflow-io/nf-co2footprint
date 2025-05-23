@@ -2,7 +2,7 @@ package nextflow.co2footprint.FileCreators
 
 import nextflow.co2footprint.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
-import nextflow.co2footprint.CO2FootprintResourcesAggregator
+import nextflow.co2footprint.CO2RecordAggregator
 import nextflow.co2footprint.CO2Record
 import nextflow.co2footprint.utils.Converter
 
@@ -33,7 +33,7 @@ class CO2FootprintReport extends CO2FootprintFile{
     private Double total_energy
     private Double total_co2
     private CO2EquivalencesRecord equivalences
-    private CO2FootprintResourcesAggregator aggregator
+    private CO2RecordAggregator aggregator
     private CO2FootprintConfig config
     private String version
     private Session session
@@ -65,7 +65,7 @@ class CO2FootprintReport extends CO2FootprintFile{
             Double total_energy,
             Double total_co2,
             CO2EquivalencesRecord equivalences,
-            CO2FootprintResourcesAggregator aggregator,
+            CO2RecordAggregator aggregator,
             CO2FootprintConfig config,
             String version,
             Session session,
