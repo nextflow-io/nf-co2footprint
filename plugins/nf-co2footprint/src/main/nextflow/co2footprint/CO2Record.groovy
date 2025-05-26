@@ -155,12 +155,12 @@ class CO2Record extends TraceRecord {
             }
         }
 
-        def type = sType ?: FIELDS.get(name)
+        String type = sType ?: FIELDS.get(name)
         if( !type )
             throw new IllegalArgumentException("Not a valid trace field name: '$name'")
 
 
-        def formatter = FORMATTER.get(type)
+        Closure<String> formatter = FORMATTER.get(type)
         if( !formatter )
             throw new IllegalArgumentException("Not a valid trace formatter for field: '$name' with type: '$type'")
 

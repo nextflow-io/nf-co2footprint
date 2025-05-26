@@ -21,7 +21,7 @@ class CO2FootprintConfigTest extends Specification {
                 ['DE', 'US', 'FR', 'GLOBAL'] as LinkedHashSet
         )
     }
-    
+
     def 'test configuration builder' () {
         when:
         CO2FootprintConfig config = new CO2FootprintConfig(input, tdp, ci, [:])

@@ -26,6 +26,8 @@ import groovy.util.logging.Slf4j
 class CO2FootprintObserverTest extends Specification{
 
     // ------ TEST UTILITY METHODS ------
+    @Shared
+    ChecksumChecker checksumChecker = new ChecksumChecker()
 
     @Shared
     def traceRecord = new TraceRecord()
@@ -210,7 +212,7 @@ class CO2FootprintObserverTest extends Specification{
         then:
         // Check Trace File
         Files.isRegularFile(tracePath)
-        List<String> traceLines = Files.readAllLines(tracePath)
+        List<String> traceLines = tracePath.readLines()
         traceLines.size() == 2
 
         traceLines[0].split('\t') as List<String> == [
@@ -220,24 +222,38 @@ class CO2FootprintObserverTest extends Specification{
         traceLines[1].split('\t') as List<String> == [
             '111', 'null', 'null', '14.61 Wh', '7.01 g', '1ms', '480.0 gCO₂eq/kWh', '1', '12.0', 'Unknown model', '100.0', '7.0 B'
         ] // GA: CO2e is 6.94g with CI of 475 gCO2eq/kWh
+        checksumChecker.compareChecksums(tracePath, [], 'b99e9632b39da7a99ce53dffc4a7656f')
 
         // Check Summary File
         Files.isRegularFile(summaryPath)
-        List<String> summaryLines = Files.readAllLines(summaryPath)
-        summaryLines.size() == 25
-        summaryLines[2] == 'Energy consumption: 14.61 Wh'
-        summaryLines[5] == '- 0.04 km travelled by car'
+        List<String> summaryLines = summaryPath.readLines()
+        summaryLines[16] == "reportFile: ${reportPath}"
         summaryLines[17] == "summaryFile: ${summaryPath}"
-        summaryLines[24] == 'pue: 1.0'
+        summaryLines[18] == "traceFile: ${tracePath}"
+        // 12 is the plugin version (changes on Github CI to current version)
+        checksumChecker.compareChecksums(summaryPath, [12, 16, 17, 18], '0059c55719eeb11ddfe80b8edc0258ea')
 
         // Check Report File
         Files.isRegularFile(reportPath)
-        List<String> reportLines = Files.readAllLines(reportPath)
+        List<String> reportLines = reportPath.readLines()
         reportLines.size() == 1046
-        reportLines[0] == '<!DOCTYPE html>'
-        reportLines[194] == "          " +
+        String timeLine = reportLines[194]
+        timeLine == "          " +
                 "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                 " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
-        reportLines[213] == "          <span class=\"metric\">7.01 g</span>"
+        String optionsLine = reportLines[1040]
+        optionsLine == "  window.options = [" +
+                "{ \"option\":\"ci\", \"value\":\"480.0\" }," +
+                "{ \"option\":\"customCpuTdpFile\", \"value\":\"null\" }," +
+                "{ \"option\":\"ignoreCpuModel\", \"value\":\"false\" }," +
+                "{ \"option\":\"location\", \"value\":\"null\" }," +
+                "{ \"option\":\"powerdrawCpuDefault\", \"value\":\"null\" }," +
+                "{ \"option\":\"powerdrawMem\", \"value\":\"0.3725\" }," +
+                "{ \"option\":\"pue\", \"value\":\"1.0\" }," +
+                "{ \"option\":\"reportFile\", \"value\":\"${reportPath}\" }," +
+                "{ \"option\":\"summaryFile\", \"value\":\"${summaryPath}\" }," +
+                "{ \"option\":\"traceFile\", \"value\":\"${tracePath}\" }];"
+        // 207 is the plugin version, 642 is a Javascript (nothing written by hand)
+        checksumChecker.compareChecksums(reportPath, [194, 207, 642, 1040], '2fbcc9d795a19d39fb90c3527c7514dc')
     }
 }

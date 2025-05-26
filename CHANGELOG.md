@@ -7,6 +7,7 @@
 
 ## Misc
 - Moved call to OS when memory is exceeded into this case to avoid unnecessary calls
+- Testing with MD5 sums for file creation
 
 # Version 1.0.0-beta1
 ## Features:

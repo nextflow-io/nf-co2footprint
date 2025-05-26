@@ -61,7 +61,7 @@ class CO2FootprintReport extends CO2FootprintFile{
      * @param traceRecords
      * @param co2eRecords
      */
-    void write(
+    void addEntries(
             Double total_energy,
             Double total_co2,
             CO2EquivalencesRecord equivalences,
@@ -81,7 +81,9 @@ class CO2FootprintReport extends CO2FootprintFile{
         this.session = session
         this.traceRecords = traceRecords
         this.co2eRecords = co2eRecords
+    }
 
+    void write() {
         try {
             String html_output = renderHtml()
             writer.withWriter { w -> w << html_output }
