@@ -1,9 +1,7 @@
 package nextflow.co2footprint.utils
 
+import java.math.RoundingMode
 import java.text.DecimalFormat
-import java.time.ZonedDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 /**
  * Functions to convert values
@@ -38,7 +36,7 @@ class Converter {
      * @return Converted String with appropriate scale
      */
     static String toReadableUnits(double value, String scope='', String unit='') {
-        def scopes = ['p', 'n', 'u', 'm', '', 'K', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
+        final List<String> scopes = ['p', 'n', 'u', 'm', '', 'K', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
         int scopeIndex = scopes.indexOf(scope)
 
         while (value >= 1000 && scopeIndex < scopes.size() - 1) {
@@ -60,7 +58,7 @@ class Converter {
      * @return String of the value together with the appropriate unit
      */
     static String toReadableByteUnits(double value) {
-        def units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']  // Units: Byte, Kilobyte, Megabyte, Gigabyte, Terabyte, Petabyte, Exabyte
+        final List<String> units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']  // Units: Byte, Kilobyte, Megabyte, Gigabyte, Terabyte, Petabyte, Exabyte
         int unitIndex=0
 
         while (value >= 1024 && unitIndex < units.size() - 1) {
@@ -82,8 +80,8 @@ class Converter {
      */
     static BigDecimal convertTime(def value, String unit='ms', String targetUnit='s') {
         value = value as BigDecimal
-        List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']   // Units of time
-        List<Double> steps = [1000.0, 1000.0, 1000.0, 60.0, 60.0, 24.0, 7.0, 4.35, 12.0]                // (Average) magnitude change between units
+        final List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']   // Units of time
+        final List<Double> steps = [1000.0, 1000.0, 1000.0, 60.0, 60.0, 24.0, 7.0, 4.35, 12.0]                // (Average) magnitude change between units
 
         int givenUnitPos = units.indexOf(unit)
         int targetUnitPos = units.indexOf(targetUnit)
@@ -121,16 +119,16 @@ class Converter {
         String readableString = ''
     ) {
         // Ordered list of supported time units
-        List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']
+        final List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']
 
         // Calculate the number of conversion steps left
-        int smallestIdx = units.indexOf(smallestUnit)
-        int largestIdx = units.indexOf(largestUnit)
+        final int smallestIdx = units.indexOf(smallestUnit)
+        final int largestIdx = units.indexOf(largestUnit)
         numSteps = (numSteps == null) ? (largestIdx - smallestIdx) : (numSteps - 1)
 
         // Convert value to the current target unit
         String targetUnit = largestUnit
-        BigDecimal targetValue = convertTime(value as BigDecimal, unit, targetUnit)
+        final BigDecimal targetValue = convertTime(value as BigDecimal, unit, targetUnit)
         def targetValueFormatted = Math.floor(targetValue)
 
         // Singularize unit if value is exactly 1 and unit is plural
@@ -148,18 +146,18 @@ class Converter {
             value = targetValue - targetValueFormatted
             unit = largestUnit
             // Format to 2 decimals, remove trailing zeros
-            String formattedValue = (targetValueFormatted as BigDecimal).setScale(2, BigDecimal.ROUND_HALF_UP).stripTrailingZeros().toPlainString()
+            final String formattedValue = (targetValueFormatted as BigDecimal).setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()
             readableString += readableString ? " ${formattedValue}${targetUnit}" : "${formattedValue}${targetUnit}"
         }
 
         // If we've reached the smallest unit or max steps, return the result
         if (numSteps == 0) {
-            String result = readableString.trim()
+            final String result = readableString.trim()
             return result ? result : "0${smallestUnit}"
         }
 
         // Otherwise, continue with the next smaller unit
-        String nextLargestUnit = units[largestIdx - 1]
+        final String nextLargestUnit = units[largestIdx - 1]
         return toReadableTimeUnits(
                 value, unit,
                 smallestUnit, nextLargestUnit,
