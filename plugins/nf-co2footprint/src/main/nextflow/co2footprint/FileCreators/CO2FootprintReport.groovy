@@ -1,8 +1,9 @@
 package nextflow.co2footprint.FileCreators
 
+import groovy.json.JsonOutput
 import nextflow.co2footprint.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
-import nextflow.co2footprint.CO2FootprintResourcesAggregator
+import nextflow.co2footprint.CO2RecordAggregator
 import nextflow.co2footprint.CO2Record
 import nextflow.co2footprint.utils.Converter
 
@@ -33,7 +34,7 @@ class CO2FootprintReport extends CO2FootprintFile{
     private Double total_energy
     private Double total_co2
     private CO2EquivalencesRecord equivalences
-    private CO2FootprintResourcesAggregator aggregator
+    private CO2RecordAggregator aggregator
     private CO2FootprintConfig config
     private String version
     private Session session
@@ -65,7 +66,7 @@ class CO2FootprintReport extends CO2FootprintFile{
             Double total_energy,
             Double total_co2,
             CO2EquivalencesRecord equivalences,
-            CO2FootprintResourcesAggregator aggregator,
+            CO2RecordAggregator aggregator,
             CO2FootprintConfig config,
             String version,
             Session session,
@@ -85,7 +86,7 @@ class CO2FootprintReport extends CO2FootprintFile{
 
     void write() {
         try {
-            String html_output = renderHtml()
+            final String html_output = renderHtml()
             writer.withWriter { w -> w << html_output }
         }
         catch (Exception e) {
@@ -135,83 +136,84 @@ class CO2FootprintReport extends CO2FootprintFile{
                 options : renderOptionsJson(),
                 used_EM_api: co2Options.ci instanceof Closure // true if the CI value is calculated using the electricityMaps API
         ]
-        final String tpl = readTemplate('assets/CO2FootprintReportTemplate.html')
-        GStringTemplateEngine engine = new GStringTemplateEngine()
-        Template html_template = engine.createTemplate(tpl)
-        String html_output = html_template.make(tpl_fields) as String
+        final String template = readTemplate('assets/CO2FootprintReportTemplate.html')
+        final GStringTemplateEngine engine = new GStringTemplateEngine()
+        final Template htmlTemplate = engine.createTemplate(template)
 
-        return html_output
+        return htmlTemplate.make(tpl_fields) as String
     }
 
     /**
-     * @return The tasks json payload
+     * Render the Payload Json
+     *
+     * @return Rendered JSON as a String
      */
-    protected String renderTasksJson() {
-        co2eRecords.size()<= maxTasks ? renderJsonData(traceRecords.values(), co2eRecords) : 'null'
-    }
-
     protected String renderPayloadJson() {
-        "{ \"trace\":${renderTasksJson()}, \"summary\":${aggregator.renderSummaryJson()} }"
+        return "{" +
+            "\"trace\":${renderTasksJson(traceRecords, co2eRecords)}," +
+            "\"summary\":${JsonOutput.toJson(aggregator.computeProcessStats())}" +
+        "}"
     }
 
     /**
+     * Render the entered options / config as a JSON String
+     *
      * @return The options json payload
      */
     protected String renderOptionsJson() {
-        Map all_options = config.collectInputFileOptions() + config.collectOutputFileOptions() + config.collectCO2CalcOptions()
+        Map<String,?> all_options = config.collectInputFileOptions() + config.collectOutputFileOptions() + config.collectCO2CalcOptions()
 
         // Render JSON
-        List<String> options = all_options.collect { name, value ->
-            String valueStr = (value instanceof Closure) ? 'dynamic' : value as String
-            """{ "option":"${name}", "value":"${valueStr}" }"""
+        List<Map<String, String>> options = all_options.collect { String name, value ->
+            [option: name, value: (value instanceof Closure) ? '"dynamic"' : value as String]
         }
 
-        return "[${String.join(',', options)}]"
+        return JsonOutput.toJson(options)
     }
 
     /**
      * Render the total co2 footprint values for html report
      *
-     * @param data A collection of {@link nextflow.trace.TraceRecord}s representing the tasks executed
-     * @param dataCO2 A collection of {@link nextflow.co2footprint.CO2Record}s representing the tasks executed
      * @return The rendered json
      */
     protected Map<String, String> renderCO2TotalsJson() {
-        [ co2: Converter.toReadableUnits(total_co2,'m', 'g'),
-          energy:Converter.toReadableUnits(total_energy,'m','Wh'),
-          car: equivalences.getCarKilometersReadable(),
-          tree: equivalences.getTreeMonthsReadable(),
-          plane_percent: equivalences.getPlanePercent() < 100.0 ? equivalences.getPlanePercentReadable() : null,
-          plane_flights: equivalences.getPlaneFlights() >= 1 ? equivalences.getPlaneFlightsReadable() : null
-        ] }
+        return [
+            co2: Converter.toReadableUnits(total_co2,'m', 'g'),
+            energy:Converter.toReadableUnits(total_energy,'m','Wh'),
+            car: equivalences.getCarKilometersReadable(),
+            tree: equivalences.getTreeMonthsReadable(),
+            plane_percent: equivalences.getPlanePercent() < 100.0 ? equivalences.getPlanePercentReadable() : null,
+            plane_flights: equivalences.getPlaneFlights() >= 1 ? equivalences.getPlaneFlightsReadable() : null
+        ]
+    }
 
-    // TODO: Simplification through TraceRecord.renderJSON() without arguments ? (also relevant for CO2Record)
     /**
-     * Render the executed tasks json payload
+     * Render the executed tasks JSON
      *
-     * @param data A collection of {@link nextflow.trace.TraceRecord}s representing the tasks executed
-     * @param dataCO2 A collection of {@link nextflow.co2footprint.CO2Record}s representing the tasks executed
-     * @return The rendered json payload
+     * @param data A Map of {@link nextflow.processor.TaskId}s and {@link nextflow.trace.TraceRecord}s representing the tasks executed
+     * @param dataCO2 A Map of {@link nextflow.processor.TaskId}s and {@link nextflow.co2footprint.CO2Record}s representing the co2Record traces
+     * @return The collected List of JSON entries
      */
-    protected static String renderJsonData(Collection<TraceRecord> data, Map<TaskId, CO2Record> dataCO2) {
-        List<String> formats = null
-        List<String> fields = null
-        List<String> co2Formats = null
-        List<String> co2Fields = null
-        StringBuilder result = new StringBuilder()
-        result << '[\n'
-        for (int i = 0; i < data.size(); i++) {
-            if( i ) result << ','
-            if( !formats ) formats = TraceRecord.FIELDS.values().collect { it!='str' ? 'num' : 'str' }
-            if( !fields ) fields = TraceRecord.FIELDS.keySet() as List
-            data[i].renderJson(result,fields,formats)
-            if( !co2Formats ) co2Formats = CO2Record.FIELDS.values().collect { it!='str' ? 'num' : 'str' }
-            if( !co2Fields ) co2Fields = CO2Record.FIELDS.keySet() as List
-            dataCO2[data[i].getTaskId()].renderJson(result,co2Fields,co2Formats)
-        }
-        result << ']'
+    protected List<String> renderTasksJson(
+            Map<TaskId, TraceRecord> traceRecords, Map<TaskId, CO2Record> co2Records
+    ){
+        // Select maximum number of Records (limits also co2Records by only using the limited TaskIds)
+        traceRecords = traceRecords.take(maxTasks)
 
-        return result as String
+        final List<String> results = []
+        traceRecords.each { TaskId taskId ,TraceRecord traceRecord ->
+
+            CharSequence traceRecordJson = traceRecord.renderJson()
+            traceRecordJson = traceRecordJson.dropRight(1)
+            traceRecordJson = traceRecordJson + ','
+
+            CharSequence co2RecordJson = co2Records[taskId].renderJson()
+            co2RecordJson = co2RecordJson.drop(1)
+
+            results.add( (traceRecordJson + co2RecordJson).toString() )
+        }
+
+        return results
     }
 
     /**
