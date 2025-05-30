@@ -275,7 +275,13 @@
               <a href="https://opendatacommons.org/licenses/odbl/1-0/" target="_blank" rel="noopener">Open Database License (ODbL)</a>.
               In the event that real-time data was unavailable, fallback values from the 2024 yearly historical data were used.<br>
               <span class="font-italic small">
-                Electricity Maps (2025). Real-time Carbon Intensity Data accessed via API (last accessed: ${'PLACEHOLDER'}).
+                Electricity Maps (2025). Real-time Carbon Intensity Data accessed via API
+                (<% if (workflow.start.format('MMM dd, yyyy') != workflow.complete.format('MMM dd, yyyy')) { %>
+                  for the period ${workflow.start.format('MMM dd, yyyy')} to ${workflow.complete.format('MMM dd, yyyy')}
+                <% } else { %>
+                  retrieved: ${workflow.start.format('MMM dd, yyyy')}
+                <% } %>).
+                Electricity Maps.
                 <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">
                   https://www.electricitymaps.com
                 </a>
@@ -286,7 +292,7 @@
               under the
               <a href="https://opendatacommons.org/licenses/odbl/1-0/" target="_blank" rel="noopener">Open Database License (ODbL)</a>.<br>
               <span class="font-italic small">
-                Electricity Maps (2025). 2024 Yearly Carbon Intensity Data (Version January 27, 2025).
+                Electricity Maps (2025). 2024 Yearly Carbon Intensity Data (Version January 27, 2025). Electricity Maps.
                 <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">
                   https://www.electricitymaps.com
                 </a>
