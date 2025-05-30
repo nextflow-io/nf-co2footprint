@@ -152,14 +152,10 @@ class CO2FootprintComputer {
      * @param totalCO2 Total CO2 equivalents that were emitted
      * @return CO2EquivalencesRecord with estimations for sensible comparisons
      */
-    CO2EquivalencesRecord computeCO2footprintEquivalences(Double totalCO2) {
+    static CO2EquivalencesRecord computeCO2footprintEquivalences(Double totalCO2) {
         final BigDecimal gCO2 = totalCO2 as BigDecimal / 1000 as BigDecimal       // Conversion to [g] CO2
-        final String location = config.getLocation()
 
-        BigDecimal carKilometers = gCO2 / 175
-        if (location && (location != 'US' || !location.startsWith('US-'))) {
-            carKilometers = gCO2 / 251
-        }
+        final BigDecimal carKilometers = gCO2 / 175
         final BigDecimal treeMonths = gCO2 / 917
         final BigDecimal planePercent = gCO2 * 100 / 50000
 

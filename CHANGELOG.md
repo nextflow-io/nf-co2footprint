@@ -12,6 +12,7 @@
 - Moved call to OS when memory is exceeded into this case to avoid unnecessary calls
 - Testing with MD5 sums for file creation
 - Deescalated access rights of variables for tighter scope
+- Extended documentation for CO2e equivalents
 
 # Version 1.0.0-beta1
 ## Features:

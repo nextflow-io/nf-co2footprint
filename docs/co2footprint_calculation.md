@@ -41,6 +41,27 @@ This includes failed tasks as well.
 
 --- 
 
+## Additional equivalences
+### Tree sequestration time
+This equates to the time a tree needs to bind the same amount of carbon from the atmosphere.
+It is estimated to be on average $10-11 kg$ per year (=$917g$) per month.
+
+$t_{tree} = CO2 / 917 g/month$
+
+### Car kilometers
+The car kilometers are defined as the distance an average car would need to travel to emit the same amount of CO2.
+An average European car emits $175 gCO2e$ per km.
+
+$d_{car} = CO2 / 175 g/km$
+
+### Flights London-Paris
+A flight between London and Paris is estimated to emit $50000g$ of CO2 equivalents.
+
+$n_{L-P} = CO2 / 50000$
+
+The value is given as a percentage when less than one flight is equivalent to the emitted CO2.
+
+
 ## References
 
 > **Green Algorithms: Quantifying the Carbon Footprint of Computation**  
