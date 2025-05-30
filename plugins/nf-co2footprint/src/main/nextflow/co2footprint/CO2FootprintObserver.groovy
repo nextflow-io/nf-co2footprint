@@ -170,7 +170,7 @@ class CO2FootprintObserver implements TraceObserver {
 
         // make sure parent paths exists
         paths.each {key, path ->
-            Path parent = path.normalize().getParent()
+            final Path parent = path.normalize().getParent()
             if (parent) {
                 Files.createDirectories(parent)
                 return
@@ -199,7 +199,7 @@ class CO2FootprintObserver implements TraceObserver {
             total_co2 += co2Record.getCO2e()
         }
 
-        CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(total_co2)
+        final CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(total_co2)
 
         // Write report and summary
         co2eSummaryFile.write(total_energy, total_co2, equivalences, config, version)
@@ -281,7 +281,7 @@ class CO2FootprintObserver implements TraceObserver {
         current.remove(taskId)
 
         // Extract CO2e records
-        CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace)
+        final CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace)
 
         // Collect results
         co2eRecords[taskId] = co2Record
@@ -305,13 +305,13 @@ class CO2FootprintObserver implements TraceObserver {
      */
     void onProcessCached(TaskHandler handler, TraceRecord trace) {
         log.trace("Trace report - cached process > $handler")
-        def taskId = handler.task.id
+        final TaskId taskId = handler.task.id
 
         // event was triggered by a stored task, ignore it
         if (trace == null) { return }
 
         // Extract records
-        CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace)
+        final CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace)
 
         // Collect results
         co2eRecords[taskId] = co2Record

@@ -93,7 +93,7 @@ class CO2FootprintReportSummary {
      *      - q3Label: label fot the task reporting the q3 value
      *      - maxLabel: label fot the task reporting the max value
      */
-    Map<String,?> compute(String name) {
+    Map<String, Object> compute(String name) {
 
         if( !names.contains(name) )
             throw new IllegalArgumentException("Invalid status field name: $name -- it must be one of the following: ${names.join(',')}")
@@ -150,7 +150,7 @@ class CO2FootprintReportSummary {
             }
         }
 
-        private BigDecimal round( double value ) {
+        private static BigDecimal round( double value ) {
             Math.round( value * 100 ) / 100
         }
 
@@ -188,12 +188,12 @@ class CO2FootprintReportSummary {
          *      - q3Label: label fot the task reporting the q3 value
          *      - maxLabel: label fot the task reporting the max value
          */
-        Map<String,?> compute() {
+        Map<String, Object> compute() {
             if( count==0 )
                 return null
 
-            final result = new LinkedHashMap<String,?>(12)
-            final sorted = tasks.sort( false, { CO2Record co2record -> metric.call(co2record) } )
+            final Map<String, Object> result = new LinkedHashMap<String, Object>(12)
+            final List<CO2Record> sorted = tasks.sort( false, { CO2Record co2record -> metric.call(co2record) } )
 
             result.mean = total / count as double
             result.min = quantile(sorted, 0)
@@ -250,14 +250,14 @@ class CO2FootprintReportSummary {
             else {
                 int i = (int)Math.floor(j); int k = (int)Math.ceil(j)
                 label(items[i],q)
-                final Xi = metric.call(items[i])
-                final Xk = metric.call(items[k])
+                final Double Xi = metric.call(items[i])
+                final Double Xk = metric.call(items[k])
                 return Xi + (j-i) * (Xk-Xi)
             }
         }
 
         protected double[] quantiles(List items) {
-            def result = new double[5]
+            double[] result = new double[5]
             result[0] = quantile(items,0)
             result[1] = quantile(items,25)
             result[2] = quantile(items,50)
