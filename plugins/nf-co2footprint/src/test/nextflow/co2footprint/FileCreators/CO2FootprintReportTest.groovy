@@ -4,7 +4,7 @@ import nextflow.Session
 import nextflow.co2footprint.CIDataMatrix
 import nextflow.co2footprint.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
-import nextflow.co2footprint.CO2FootprintResourcesAggregator
+import nextflow.co2footprint.CO2RecordAggregator
 import nextflow.co2footprint.CO2Record
 import nextflow.co2footprint.TDPDataMatrix
 import nextflow.processor.TaskId
@@ -22,8 +22,8 @@ class CO2FootprintReportTest extends Specification{
 
     @Shared
     Path reportPath = tempPath.resolve('report_test.html')
-    @Shared
-    CO2FootprintReport co2FootprintReport
+
+    static CO2FootprintReport co2FootprintReport
 
     def setupSpec() {
         TaskId taskId = new TaskId(111)
@@ -70,8 +70,8 @@ class CO2FootprintReportTest extends Specification{
 
         CO2EquivalencesRecord equivalencesRecord = new CO2EquivalencesRecord(10.0, 10.0, 10.0)
 
-        CO2FootprintResourcesAggregator aggregator = new CO2FootprintResourcesAggregator(session)
-        aggregator.aggregate(co2Record, 'reportTestProcess')
+        CO2RecordAggregator aggregator = new CO2RecordAggregator()
+        aggregator.add(co2Record, 'reportTestProcess')
 
         co2FootprintReport = new CO2FootprintReport(reportPath, false, 10_000)
         co2FootprintReport.addEntries(
@@ -86,35 +86,39 @@ class CO2FootprintReportTest extends Specification{
         String payloadJson = co2FootprintReport.renderPayloadJson()
 
         then:
-        payloadJson ==
-                '{ ' +
-                    '"trace":' +
-                    '[\n' +
+        String expectedPayloadJson =
+            '{' +
+                '"trace":' +
+                    '[' +
                         '{' +
                             '"task_id":"111","hash":"-","native_id":"-","process":"reportTestProcess","module":"-","container":"-",' +
                             '"tag":"-","name":"-","status":"-","exit":"-","submit":"-","start":"-","complete":"-","duration":"-",' +
-                            '"realtime":"3600000","%cpu":"100.0","%mem":"-","rss":"-","vmem":"-","peak_rss":"-","peak_vmem":"-","rchar":"-",' +
+                            '"realtime":"1h","%cpu":"100.0%","%mem":"-","rss":"-","vmem":"-","peak_rss":"-","peak_vmem":"-","rchar":"-",' +
                             '"wchar":"-","syscr":"-","syscw":"-","read_bytes":"-","write_bytes":"-","attempt":"-","workdir":"-","script":"-",' +
-                            '"scratch":"-","queue":"-","cpus":"1","memory":"7516192768","disk":"-","time":"-","env":"-","error_action":"-",' +
+                            '"scratch":"-","queue":"-","cpus":"1","memory":"7 GB","disk":"-","time":"-","env":"-","error_action":"-",' +
                             '"vol_ctxt":"-","inv_ctxt":"-","hostname":"-","cpu_model":"Unknown model","energy":"1.0","co2e":"1.0",' +
-                            '"time":"1.0","ci":"475.0","cpus":"1","powerdrawCPU":"12.0","cpuUsage":"100.0","memory":"1073741824","cpu_model":"Unknown model"' +
+                            '"time":"1.0","ci":"475.0","cpus":"1","powerdrawCPU":"12.0","cpuUsage":"100.0","memory":"1073741824",' +
+                            '"name":"testTask","cpu_model":"Unknown model"' +
                         '}' +
-                    '], ' +
-                    '"summary":' +
+                    '],' +
+                '"summary":' +
                     '[' +
-                        '{"co2e":' +
-                            '{' +
-                                '"mean":1.0,"min":1.0,"q1":1.0,"q2":1.0,"q3":1.0,"max":1.0,"minLabel":"testTask",' +
-                                '"maxLabel":"testTask","q1Label":"testTask","q2Label":"testTask","q3Label":"testTask"' +
-                            '},' +
+                        '{' +
                             '"process":"reportTestProcess",' +
-                            '"energy":{' +
-                                '"mean":1.0,"min":1.0,"q1":1.0,"q2":1.0,"q3":1.0,"max":1.0,' +
-                                '"minLabel":"testTask","maxLabel":"testTask","q1Label":"testTask","q2Label":"testTask","q3Label":"testTask"' +
-                            '}' +
+                            '"co2e":' +
+                                '{' +
+                                    '"mean":1.0,"minLabel":"testTask","min":1.0,"q1Label":"testTask","q1":1.0,"q2Label":"testTask","q2":1.0,"q3Label":"testTask","q3":1.0,"maxLabel":"testTask","max":1.0' +
+                                //  '"mean":1.0,"min":1.0,"q1":1.0,"q2":1.0,"q3":1.0,"max":1.0,"minLabel":"testTask","maxLabel":"testTask","q1Label":"testTask","q2Label":"testTask","q3Label":"testTask"'
+                                '},' +
+                            '"energy":' +
+                                '{' +
+                                    '"mean":1.0,"minLabel":"testTask","min":1.0,"q1Label":"testTask","q1":1.0,"q2Label":"testTask","q2":1.0,"q3Label":"testTask","q3":1.0,"maxLabel":"testTask","max":1.0' +
+                                //  '"mean":1.0,"min":1.0,"q1":1.0,"q2":1.0,"q3":1.0,"max":1.0,"minLabel":"testTask","maxLabel":"testTask","q1Label":"testTask","q2Label":"testTask","q3Label":"testTask"'
+                                '}' +
                         '}' +
-                    '] ' +
+                    ']' +
                 '}'
+        payloadJson == expectedPayloadJson
     }
 
     def 'Test options JSON generation' () {
@@ -124,16 +128,16 @@ class CO2FootprintReportTest extends Specification{
         then:
         optionsJson ==
                 '[' +
-                    '{ "option":"ci", "value":"475.0" },' +
-                    '{ "option":"customCpuTdpFile", "value":"null" },' +
-                    '{ "option":"ignoreCpuModel", "value":"false" },' +
-                    '{ "option":"location", "value":"null" },' +
-                    '{ "option":"powerdrawCpuDefault", "value":"null" },' +
-                    '{ "option":"powerdrawMem", "value":"0.3725" },' +
-                    '{ "option":"pue", "value":"1.0" },' +
-                    "{ \"option\":\"reportFile\", \"value\":\"${reportPath}\" }," +
-                    "{ \"option\":\"summaryFile\", \"value\":\"${tempPath}\" }," +
-                    "{ \"option\":\"traceFile\", \"value\":\"${tempPath}\" }" +
+                    '{"option":"ci","value":"475.0"},'+
+                    '{"option":"customCpuTdpFile","value":null},' +
+                    '{"option":"ignoreCpuModel","value":"false"},' +
+                    '{"option":"location","value":null},' +
+                    '{"option":"powerdrawCpuDefault","value":null},' +
+                    '{"option":"powerdrawMem","value":"0.3725"},' +
+                    '{"option":"pue","value":"1.0"},' +
+                    "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
+                    "{\"option\":\"summaryFile\",\"value\":\"${tempPath}\"}," +
+                    "{\"option\":\"traceFile\",\"value\":\"${tempPath}\"}" +
                 ']'
     }
 
