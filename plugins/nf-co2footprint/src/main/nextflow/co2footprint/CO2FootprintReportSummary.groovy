@@ -93,7 +93,7 @@ class CO2FootprintReportSummary {
      *      - q3Label: label fot the task reporting the q3 value
      *      - maxLabel: label fot the task reporting the max value
      */
-    Map<String,?> compute(String name) {
+    Map<String, Object> compute(String name) {
 
         if( !names.contains(name) )
             throw new IllegalArgumentException("Invalid status field name: $name -- it must be one of the following: ${names.join(',')}")
@@ -188,11 +188,11 @@ class CO2FootprintReportSummary {
          *      - q3Label: label fot the task reporting the q3 value
          *      - maxLabel: label fot the task reporting the max value
          */
-        Map<String,?> compute() {
+        Map<String, Object> compute() {
             if( count==0 )
                 return null
 
-            final Map<String, ?> result = new LinkedHashMap<String,?>(12)
+            final Map<String, Object> result = new LinkedHashMap<String, Object>(12)
             final List<CO2Record> sorted = tasks.sort( false, { CO2Record co2record -> metric.call(co2record) } )
 
             result.mean = total / count as double
