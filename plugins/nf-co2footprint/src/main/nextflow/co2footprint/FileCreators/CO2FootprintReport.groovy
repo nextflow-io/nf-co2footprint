@@ -144,17 +144,20 @@ class CO2FootprintReport extends CO2FootprintFile{
     }
 
     /**
-     * @return The tasks json payload
+     * Render the Payload Json
+     *
+     * @return Rendered JSON as a String
      */
-    protected String renderTasksJson() {
-        return co2eRecords.size()<= maxTasks ? renderJsonData(traceRecords.values(), co2eRecords) : 'null'
-    }
-
     protected String renderPayloadJson() {
-        return JsonOutput.toJson([trace: renderTasksJson(), summary: aggregator.renderSummaryJson()])
+        return "{" +
+            "\"trace\":${renderTasksJson(traceRecords, co2eRecords)}," +
+            "\"summary\":${JsonOutput.toJson(aggregator.computeProcessStats())}" +
+        "}"
     }
 
     /**
+     * Render the entered options / config as a JSON String
+     *
      * @return The options json payload
      */
     protected String renderOptionsJson() {
@@ -162,7 +165,7 @@ class CO2FootprintReport extends CO2FootprintFile{
 
         // Render JSON
         List<Map<String, String>> options = all_options.collect { String name, value ->
-            [option: name, value: (value instanceof Closure) ? 'dynamic' : value as String]
+            [option: name, value: (value instanceof Closure) ? '"dynamic"' : value as String]
         }
 
         return JsonOutput.toJson(options)
@@ -171,8 +174,6 @@ class CO2FootprintReport extends CO2FootprintFile{
     /**
      * Render the total co2 footprint values for html report
      *
-     * @param data A collection of {@link nextflow.trace.TraceRecord}s representing the tasks executed
-     * @param dataCO2 A collection of {@link nextflow.co2footprint.CO2Record}s representing the tasks executed
      * @return The rendered json
      */
     protected Map<String, String> renderCO2TotalsJson() {
@@ -187,29 +188,32 @@ class CO2FootprintReport extends CO2FootprintFile{
     }
 
     /**
-     * Render the executed tasks json payload
+     * Render the executed tasks JSON
      *
-     * @param data A collection of {@link nextflow.trace.TraceRecord}s representing the tasks executed
-     * @param dataCO2 A collection of {@link nextflow.co2footprint.CO2Record}s representing the tasks executed
-     * @return The rendered json payload
+     * @param data A Map of {@link nextflow.processor.TaskId}s and {@link nextflow.trace.TraceRecord}s representing the tasks executed
+     * @param dataCO2 A Map of {@link nextflow.processor.TaskId}s and {@link nextflow.co2footprint.CO2Record}s representing the co2Record traces
+     * @return The collected List of JSON entries
      */
-    protected static String renderJsonData(Collection<TraceRecord> data, Map<TaskId, CO2Record> dataCO2) {
-        List<String> formats = TraceRecord.FIELDS.values().collect { it!='str' ? 'num' : 'str' }
-        List<String> fields = TraceRecord.FIELDS.keySet() as List
-        List<String> co2Formats = CO2Record.FIELDS.values().collect { it!='str' ? 'num' : 'str' }
-        List<String> co2Fields = CO2Record.FIELDS.keySet() as List
+    protected List<String> renderTasksJson(
+            Map<TaskId, TraceRecord> traceRecords, Map<TaskId, CO2Record> co2Records
+    ){
+        // Select maximum number of Records (limits also co2Records by only using the limited TaskIds)
+        traceRecords = traceRecords.take(maxTasks)
 
-        StringBuilder result = new StringBuilder()
-        result << '[\n'
-        data.each { TraceRecord traceRecord ->
-            traceRecord.renderJson(result,fields,formats)
-            dataCO2[traceRecord.getTaskId()].renderJson(result,co2Fields,co2Formats)
-            result << ','
+        final List<String> results = []
+        traceRecords.each { TaskId taskId ,TraceRecord traceRecord ->
+
+            CharSequence traceRecordJson = traceRecord.renderJson()
+            traceRecordJson = traceRecordJson.dropRight(1)
+            traceRecordJson = traceRecordJson + ','
+
+            CharSequence co2RecordJson = co2Records[taskId].renderJson()
+            co2RecordJson = co2RecordJson.drop(1)
+
+            results.add( (traceRecordJson + co2RecordJson).toString() )
         }
-        result.dropRight(1)
-        result << ']'
 
-        return result.toString()
+        return results
     }
 
     /**
