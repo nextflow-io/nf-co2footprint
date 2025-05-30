@@ -25,9 +25,21 @@ class TDPDataMatrix extends DataMatrix {
     Integer cores = null
     Integer threads = null
 
+    /**
+     * Initialize TDPDataMatrix with full list of properties
+     *
+     * @param data Data as a List of Lists
+     * @param columnIndex Column Index as a LinkedHashSet of Strings
+     * @param rowIndex Row Index as a LinkedHashSet of Strings
+     * @param fallbackModel Fallback model as a String (represents row in data table)
+     * @param tdp TDP value that overwrites default
+     * @param cores Number of cores that overwrites default
+     * @param threads Number of threads that overwrites default
+     */
     TDPDataMatrix(
             List<List> data = [], LinkedHashSet<String> columnIndex = [], LinkedHashSet<String> rowIndex = [],
-            Object fallbackModel='default', Integer tdp=null, Integer cores=null, Integer threads=null
+            Object fallbackModel='default',
+            Integer tdp=null, Integer cores=null, Integer threads=null
     ) {
         // Initialize DataMatrix without non-ASCII characters in indices
         super(
@@ -44,27 +56,55 @@ class TDPDataMatrix extends DataMatrix {
     }
 
     /**
-    * Create a TDPDataMatrix from a CSV file.
-    *
-    * @param path Path to the CSV file
-    * @param separator Separator used in the CSV file (default is ',')
-    * @param columnIndexPos Position of the column index (default is 0)
-    * @param rowIndexPos Position of the row index (default is null)
-    * @param rowIndexColumn Name of the column used for the row index (default is 'name')
-    * @return A TDPDataMatrix object
-    */
-    static TDPDataMatrix fromCsv(
-            Path path, String separator = ',', Integer columnIndexPos = 0, Integer rowIndexPos = null,
-            Object rowIndexColumn = 'name'
+     * Initialize TDPDataMatrix with given DataMatrix
+     *
+     * @param dataMatrix DataMatrix
+     * @param fallbackModel Fallback model as a String (represents row in data table)
+     * @param tdp TDP value that overwrites default
+     * @param cores Number of cores that overwrites default
+     * @param threads Number of threads that overwrites default
+     */
+    TDPDataMatrix(
+            DataMatrix dataMatrix, Object fallbackModel='default',
+            Integer tdp=null, Integer cores=null, Integer threads=null
     ) {
-        DataMatrix dm = DataMatrix.fromCsv(path, separator, columnIndexPos, rowIndexPos, rowIndexColumn)
-        TDPDataMatrix tdpMatrix = new TDPDataMatrix(
-                dm.getData(), dm.getOrderedColumnKeys(), dm.getOrderedRowKeys(),
-                'default', null, null, null
+        // Initialize DataMatrix without non-ASCII characters in indices
+        super(
+                dataMatrix.getData(),
+                dataMatrix.getOrderedColumnKeys().collect {toASCII(it as String)} as LinkedHashSet,
+                dataMatrix.getOrderedRowKeys().collect {toASCII(it as String)} as LinkedHashSet
         )
-        return tdpMatrix
+
+        // Initialize own values
+        this.fallbackModel = fallbackModel
+        this.tdp = tdp
+        this.cores = cores
+        this.threads = threads
     }
 
+    /**
+     * Initialize TDPDataMatrix with given TDPDataMatrix
+     *
+     * @param tpdDataMatrix TDPDataMatrix
+     * @param fallbackModel Fallback model as a String (represents row in data table)
+     * @param tdp TDP value that overwrites default
+     * @param cores Number of cores that overwrites default
+     * @param threads Number of threads that overwrites default
+     */
+    TDPDataMatrix(TDPDataMatrix tpdDataMatrix) {
+        // Initialize DataMatrix without non-ASCII characters in indices
+        super(
+                tpdDataMatrix.getData(),
+                tpdDataMatrix.getOrderedColumnKeys().collect {toASCII(it as String)} as LinkedHashSet,
+                tpdDataMatrix.getOrderedRowKeys().collect {toASCII(it as String)} as LinkedHashSet
+        )
+
+        // Initialize own values
+        this.fallbackModel = tpdDataMatrix.fallbackModel
+        this.tdp = tpdDataMatrix.tdp
+        this.cores = tpdDataMatrix.cores
+        this.threads = tpdDataMatrix.threads
+    }
 
     /**
      * Remove non-ASCII symbols (®, ™,...)  from String.
@@ -228,38 +268,58 @@ class TDPDataMatrix extends DataMatrix {
     }
 
     /**
-     * Replaces this instance with a new TDPDataMatrix
+     * Check for replacements
      *
-     * @param newTDPDataMatrix
+     * @param newTDPDataMatrix New TDP data matrix
      */
-    void update(TDPDataMatrix newTDPDataMatrix) {
-        this.fallbackModel = newTDPDataMatrix.fallbackModel
-        this.tdp = newTDPDataMatrix.tdp
-        this.cores = newTDPDataMatrix.cores
-        this.threads = newTDPDataMatrix.threads
-
-        this.data = newTDPDataMatrix.data
-        this.rowIndex = newTDPDataMatrix.rowIndex
-        this.columnIndex = newTDPDataMatrix.columnIndex
-    }
-
-
-    static compareToOldData(TDPDataMatrix oldData, TDPDataMatrix newData) {
-        // Compare entries to warn about changing
-        if (oldData) {
-            for (String model : oldData.getRowIndex().keySet()) {
-                TDPDataMatrix oldEntry = oldData.matchModel(model, false)
-                TDPDataMatrix newEntry = newData.matchModel(model, false)
-                if (oldEntry && oldEntry.getData() != newEntry.getData()) {
-                    log.info(
-                            "Already existing TDP value (${oldEntry.getTDP()} W) of '${model}' " +
-                            "is overwritten with custom value: ${newEntry.getTDP()} W"
-                    )
-                }
+    void checkForReplacements(TDPDataMatrix newTDPDataMatrix) {
+        TDPDataMatrix oldEntry
+        TDPDataMatrix newEntry
+        for (String model : this.getRowIndex().keySet()) {
+            oldEntry = this.matchModel(model, false)
+            newEntry = newTDPDataMatrix.matchModel(model, false)
+            if (oldEntry && oldEntry.getData() != newEntry.getData()) {
+                log.info(
+                        "Already existing TDP value (${oldEntry.getTDP()} W) of '${model}' " +
+                        "is overwritten with custom value: ${newEntry.getTDP()} W"
+                )
             }
         }
     }
 
+    /**
+     * Replaces this instance with a new TDPDataMatrix
+     *
+     * @param newTDPDataMatrix New TDP data matrix
+     */
+    void update(TDPDataMatrix newTDPDataMatrix, Boolean warnOnReplacements=true) {
+        // Compare entries to warn about changing
+        if (warnOnReplacements) { checkForReplacements(newTDPDataMatrix) }
+
+        TDPDataMatrix(newTDPDataMatrix)
+    }
+
+    /**
+     * Create a TDPDataMatrix from a CSV file.
+     *
+     * @param path Path to the CSV file
+     * @param separator Separator used in the CSV file (default is ',')
+     * @param columnIndexPos Position of the column index (default is 0)
+     * @param rowIndexPos Position of the row index (default is null)
+     * @param rowIndexColumn Name of the column used for the row index (default is 'name')
+     * @return A TDPDataMatrix object
+     */
+    static TDPDataMatrix fromCsv(
+            Path path,
+            String separator = ',', Integer columnIndexPos = 0,
+            Integer rowIndexPos = null, Object rowIndexColumn = 'name'
+    ) {
+        DataMatrix dataMatrix = DataMatrix.fromCsv(path, separator, columnIndexPos, rowIndexPos, rowIndexColumn)
+
+        // Check whether all mandatory columns were given
+        dataMatrix.columnIndex.keySet().containsAll(['name', 'tdp (W)', 'cores'])
+
+        return new TDPDataMatrix(dataMatrix)
+    }
 
 }
-

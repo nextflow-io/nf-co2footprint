@@ -4,6 +4,7 @@
 
 ## Bug Fixes:
 - Adjusted rendering of flights to deliver percentage < 1.0 flights and number of flights afterwards
+- Check row replacement upon supplying a customTDPDataTable
 
 ## Misc
 - Moved call to OS when memory is exceeded into this case to avoid unnecessary calls
