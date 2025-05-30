@@ -1,6 +1,5 @@
 package nextflow.co2footprint
 
-import groovy.json.JsonOutput
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
@@ -39,6 +38,9 @@ class CO2RecordAggregator {
     class QuantileItem{
         private final CO2Record co2Record
         private final Number value
+
+        CO2Record getCO2Record() { co2Record }
+        Number getValue() { value }
 
         QuantileItem(CO2Record co2Record, Number value){
             this.co2Record = co2Record
@@ -108,14 +110,13 @@ class CO2RecordAggregator {
         */
 
         QuantileItem quantileItem
-        Double total = 0d
+        Double total = co2Records.sum {metricExtractionFunction.call(it) } as Double
+        result.put('mean', (total / co2Records.size()) as double)
         ['min': 0d, 'q1': .25d, 'q2': .50d, 'q3': .75d, 'max': 1d].each { String key, double q ->
             quantileItem = getQuantile(sortedCO2Records, q, metricExtractionFunction)
             result.put("${key}Label" as String, quantileItem.co2Record.getName())
             result.put(key, quantileItem.value)
-            total += quantileItem.value
         }
-        result.put('mean', (total / co2Records.size()) as double)
 
         return result
     }
@@ -126,28 +127,26 @@ class CO2RecordAggregator {
      * @param co2Records
      * @return A map like this: [metricName: [entryKey (minLabel, q1,...): value], ...]
      */
-    Map<String, Map<String, ?>> computeStats(List<CO2Record> co2Records) {
+    Map<String, ?> computeStats(List<CO2Record> co2Records) {
         return this.metricExtractionFunctions.collectEntries {
             String metricName, Closure<Double> metricExtractionFunction ->
                 [metricName, computeStat(co2Records, metricExtractionFunction)]
-        } as Map<String, Map<String, ?>>
+        } as Map<String, ?>
     }
 
     /**
      * Compute a list of processes with their Stats
      *
-     * @return  A map of process specific stats: [ [processName1: [metricName1: [entryKey1: value, ...],...], processName2: ...] ]
+     * @return  A map of process specific stats: [ [process: processName1:, metricName1: [entryKey1: value, ...],...],...]
      */
-    List<Map<String, Map<String, Map<String, ?>>>> computeProcessStats() {
-        return this.processCO2Records.collect { String processName, List<CO2Record> co2Records ->
-            [(processName): computeStats(co2Records)]
-        } as List<Map<String, Map<String, Map<String, ?>>>>
-    }
-
-    /**
-     * @return The execution summary json
-     */
-    String renderSummaryJson() {
-        return JsonOutput.toJson(computeProcessStats())
+    List<Map<String, ?>> computeProcessStats() {
+        Map<String, ?> stats
+        List<Map<String, ?>> processStats = this.processCO2Records.collect {
+            String processName, List<CO2Record> co2Records ->
+                stats = [process: processName] as Map<String, ?>
+                stats.putAll(computeStats(co2Records))
+                return stats
+        }
+        return processStats
     }
 }
