@@ -5,7 +5,6 @@ import nextflow.co2footprint.utils.Converter
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import nextflow.trace.TraceRecord
-import groovy.json.StringEscapeUtils
 
 
 /**
@@ -27,7 +26,6 @@ class CO2Record extends TraceRecord {
     private final Long memory
     private final String name
     private final String cpu_model
-
 
     // Properties of entries
     final public static Map<String,String> FIELDS = [
@@ -57,8 +55,8 @@ class CO2Record extends TraceRecord {
      * @param cpu_model  CPU model name
      */
     CO2Record(
-            Double energy=0d, Double co2e=0d, Double time=0d, Double ci, Integer cpus=0, Double powerdrawCPU=0d,
-            Double cpuUsage=0d, Long memory=0d, String name=0d, String cpu_model=0d
+            Double energy=null, Double co2e=null, Double time=null, Double ci=null, Integer cpus=null, Double powerdrawCPU=null,
+            Double cpuUsage=null, Long memory=null, String name=null, String cpu_model=null
     ) {
         this.energy = energy
         this.co2e = co2e
@@ -70,7 +68,7 @@ class CO2Record extends TraceRecord {
         this.memory = memory
         this.name = name
         this.cpu_model = cpu_model
-        this.store = new LinkedHashMap<>([
+        Map<String, Object> store = new LinkedHashMap<>([
                 'energy':           energy,
                 'co2e':             co2e,
                 'time':             time,
@@ -82,6 +80,7 @@ class CO2Record extends TraceRecord {
                 'name':             name,
                 'cpu_model':        cpu_model
         ])
+        super.store << store
     }
 
     Double getEnergyConsumption() { energy }
@@ -125,22 +124,13 @@ class CO2Record extends TraceRecord {
         ]
     }
 
+    /**
+     * Renders the JSON output of a CO2Record
+     *
+     * @param stringBuilder A StringBuilder to attach elongate the String with
+     */
     @Override
-    CharSequence renderJson(StringBuilder result, List<String> fields, List<String> formats) {
-        final QUOTE = '"'
-        final NA = '-'
-        if( result == null ) result = new StringBuilder()
-        result.deleteCharAt(result.length() - 1) // remove the last character "}"
-        result << ','
-        for( int i=0; i<fields.size(); i++ ) {
-            String name = fields[i]
-            if ( name == 'name' ) continue // skip the name field (it's already in the key)
-            if ( i ) result << ','
-            String format = i<formats?.size() ? formats[i] : null
-            String value = StringEscapeUtils.escapeJavaScript(getFmtStr(name, format) ?: NA)
-            result << QUOTE << name << QUOTE << ":" << QUOTE << value << QUOTE
-        }
-        result << "}"
-        return result
+    CharSequence renderJson(StringBuilder stringBuilder=new StringBuilder()) {
+        return super.renderJson(stringBuilder, FIELDS.keySet() as List, FIELDS.values() as List)
     }
 }
