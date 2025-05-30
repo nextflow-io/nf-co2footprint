@@ -14,6 +14,7 @@
 - Testing with MD5 sums for file creation
 - Testing of files via saved snapshots when checksum fails
 - Removal of inherited methods in `CO2Record`
+- Extended documentation for CO2e equivalents
 
 # Version 1.0.0-beta1
 ## Features:
