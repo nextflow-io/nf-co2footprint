@@ -236,24 +236,24 @@ class CO2FootprintObserverTest extends Specification{
         // Check Report File
         Files.isRegularFile(reportPath)
         List<String> reportLines = reportPath.readLines()
-        reportLines.size() == 1046
+        reportLines.size() == 1045
         String timeLine = reportLines[194]
         timeLine == "          " +
                 "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                 " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
-        String optionsLine = reportLines[1040]
+        String optionsLine = reportLines[1039]
         optionsLine == "  window.options = [" +
-                "{ \"option\":\"ci\", \"value\":\"480.0\" }," +
-                "{ \"option\":\"customCpuTdpFile\", \"value\":\"null\" }," +
-                "{ \"option\":\"ignoreCpuModel\", \"value\":\"false\" }," +
-                "{ \"option\":\"location\", \"value\":\"null\" }," +
-                "{ \"option\":\"powerdrawCpuDefault\", \"value\":\"null\" }," +
-                "{ \"option\":\"powerdrawMem\", \"value\":\"0.3725\" }," +
-                "{ \"option\":\"pue\", \"value\":\"1.0\" }," +
-                "{ \"option\":\"reportFile\", \"value\":\"${reportPath}\" }," +
-                "{ \"option\":\"summaryFile\", \"value\":\"${summaryPath}\" }," +
-                "{ \"option\":\"traceFile\", \"value\":\"${tracePath}\" }];"
+                '{"option":"ci","value":"480.0"},'+
+                '{"option":"customCpuTdpFile","value":null},' +
+                '{"option":"ignoreCpuModel","value":"false"},' +
+                '{"option":"location","value":null},' +
+                '{"option":"powerdrawCpuDefault","value":null},' +
+                '{"option":"powerdrawMem","value":"0.3725"},' +
+                '{"option":"pue","value":"1.0"},' +
+                "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
+                "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
+                "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];"
         // 207 is the plugin version, 642 is a Javascript (nothing written by hand)
-        checksumChecker.compareChecksums(reportPath, [194, 207, 642, 1040], '15f60bd59bf74d992f9662393a5f1bff')
+        checksumChecker.compareChecksums(reportPath, [194, 207, 642, 1039], '96115ce73be6820e94a9b9bc387a585b') //'2fbcc9d795a19d39fb90c3527c7514dc'
     }
 }
