@@ -222,7 +222,10 @@ class CO2FootprintObserverTest extends Specification{
         traceLines[1].split('\t') as List<String> == [
             '111', 'null', 'null', '14.61 Wh', '7.01 g', '1ms', '480.0 gCO₂eq/kWh', '1', '12.0', 'Unknown model', '100.0', '7.0 B'
         ] // GA: CO2e is 6.94g with CI of 475 gCO2eq/kWh
-        checksumChecker.compareChecksums(tracePath, [], 'b99e9632b39da7a99ce53dffc4a7656f')
+        checksumChecker.compareChecksums(
+                tracePath,
+                'b99e9632b39da7a99ce53dffc4a7656f'
+        )
 
         // Check Summary File
         Files.isRegularFile(summaryPath)
@@ -231,7 +234,12 @@ class CO2FootprintObserverTest extends Specification{
         summaryLines[17] == "summaryFile: ${summaryPath}"
         summaryLines[18] == "traceFile: ${tracePath}"
         // 12 is the plugin version (changes on Github CI to current version)
-        checksumChecker.compareChecksums(summaryPath, [12, 16, 17, 18], '0059c55719eeb11ddfe80b8edc0258ea')
+        checksumChecker.compareChecksums(
+                summaryPath,
+                '0059c55719eeb11ddfe80b8edc0258ea',
+                [12, 16, 17, 18],
+                this.class.getResource('/summary_test.txt').getPath() as Path
+        )
 
         // Check Report File
         Files.isRegularFile(reportPath)
@@ -254,6 +262,11 @@ class CO2FootprintObserverTest extends Specification{
                 "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
                 "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];"
         // 207 is the plugin version, 642 is a Javascript (nothing written by hand)
-        checksumChecker.compareChecksums(reportPath, [194, 207, 642, 1039], '96115ce73be6820e94a9b9bc387a585b') //'2fbcc9d795a19d39fb90c3527c7514dc'
+        checksumChecker.compareChecksums(
+                reportPath,
+                '96115ce73be6820e94a9b9bc387a585b', //'2fbcc9d795a19d39fb90c3527c7514dc'
+                [194, 207, 642, 1039],
+                this.class.getResource('/report_test.html').getPath() as Path
+        )
     }
 }
