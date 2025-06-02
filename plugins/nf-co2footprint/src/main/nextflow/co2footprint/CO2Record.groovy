@@ -127,7 +127,7 @@ class CO2Record extends TraceRecord {
     /**
      * Renders the JSON output of a CO2Record
      *
-     * @param stringBuilder A StringBuilder to attach elongate the String with
+     * @param stringBuilder A StringBuilder used to elongate the String
      */
     @Override
     CharSequence renderJson(StringBuilder stringBuilder=new StringBuilder()) {

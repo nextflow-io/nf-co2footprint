@@ -5,7 +5,7 @@ import groovy.util.logging.Slf4j
 
 
 /**
- * Model and compute a series summary
+ * Compute summary statistics of the accumulated CO2Records of several tasks
  */
 @Slf4j
 @CompileStatic
@@ -23,6 +23,12 @@ class CO2RecordAggregator {
         ]
     }
 
+    /**
+     * Adds a CO2Record to the list of records for the given process.
+     *
+     * @param co2record The CO2Record to add.
+     * @param processName The name of the process to associate with the record.
+     */
     void add( CO2Record co2record, String processName ) {
         if(processCO2Records.containsKey(processName)) {
             processCO2Records[processName].add(co2record)
@@ -53,7 +59,7 @@ class CO2RecordAggregator {
      *
      * @param items A list of CO2Records
      * @param q The q-th quantile. It must be a number between 0 & 1
-     * @return The q-th quantile
+     * @return A QuantileItem with the base record and the computed quantile value.
      */
     QuantileItem getQuantile(
             List<CO2Record> sortedCO2Records, double q, Closure<Double> transformFunction={ return it as Double}
@@ -78,8 +84,10 @@ class CO2RecordAggregator {
     }
 
     /**
-     * Compute the stats for the collected tasks
+     * Computes summary statistics for a list of CO2Record objects based on a given metric.
      *
+     * @param co2Records A list of CO2Record objects to analyze.
+     * @param metricExtractionFunction A closure that extracts a numeric value from each CO2Record.
      * @return
      *      A {@link Map} holding the summary containing the following stats:
      *      - min: minimal value
@@ -122,10 +130,11 @@ class CO2RecordAggregator {
     }
 
     /**
-     * Compute all stats of a List of CO2Records
+     * Computes summary statistics for each metric defined in the metricExtractionFunctions map.
      *
-     * @param co2Records
-     * @return A map like this: [metricName: [entryKey (minLabel, q1,...): value], ...]
+     * @param co2Records A list of CO2Record objects.
+     * @return A map where each key is a metric name and each value is a map of summary statistics
+     *         as returned by {@link #computeStat}.
      */
     Map<String, ?> computeStats(List<CO2Record> co2Records) {
         return this.metricExtractionFunctions.collectEntries {
@@ -135,9 +144,15 @@ class CO2RecordAggregator {
     }
 
     /**
-     * Compute a list of processes with their Stats
+     * Computes metric statistics for each individual process.
      *
-     * @return  A map of process specific stats: [ [process: processName1:, metricName1: [entryKey1: value, ...],...],...]
+     * For every process in processCO2Records, this method calculates summary stats (min, quartiles,
+     * mean, max, etc.) for each defined metric, and returns them along with the process name.
+     *
+     * @return A list of maps, each containing:
+     *         - 'process': the name of the process
+     *         - one entry per metric (e.g., 'energy', 'emissions'), each with its corresponding stats map
+     *         The format looks like this: [ [process: processName1:, metricName1: [entryKey1: value, ...],...],...]
      */
     List<Map<String, ?>> computeProcessStats() {
         Map<String, ?> stats

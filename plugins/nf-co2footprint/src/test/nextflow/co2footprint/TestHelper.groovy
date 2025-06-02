@@ -100,9 +100,10 @@ class ChecksumChecker {
      * Compare the recorded checksum to the new checksum of a file.
      *
      * @param path Path to the file for the checksum calculation
-     * @param excludedLines Lines to be excluded in the checksum calculation
      * @param recordedChecksum  The expected checksum to verify against. If null, the method will
      *                          attempt to retrieve it from the class checksum map.
+     * @param excludedLines Lines to be excluded in the checksum calculation
+     * @param recordedPath Path with the complete file to compare to when the checksums don't match
      */
     void compareChecksums(Path path, String recordedChecksum=null, List<Integer> excludedLines=[], Path recordPath=null) {
         String newChecksum = calculateMD5(path.toFile(), excludedLines)
