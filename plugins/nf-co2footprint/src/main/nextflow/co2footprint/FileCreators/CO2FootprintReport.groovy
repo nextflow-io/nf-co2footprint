@@ -129,7 +129,8 @@ class CO2FootprintReport extends CO2FootprintFile{
                 plugin_version: version,
                 assets_css : [
                         readTemplate('nextflow/trace/assets/bootstrap.min.css'),
-                        readTemplate('nextflow/trace/assets/datatables.min.css')
+                        readTemplate('nextflow/trace/assets/datatables.min.css'),
+                        readTemplate('assets/CO2FootprintReportTemplate.css')
                 ],
                 assets_js : [
                         readTemplate('nextflow/trace/assets/jquery-3.2.1.min.js'),
