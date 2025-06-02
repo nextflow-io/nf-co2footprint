@@ -2,7 +2,7 @@
 window.data_byprocess = {};
 
 /* helper functions that takes an array of numbers 
-    units are in milliwatt-hours (mWh) or milligramm (mg) and are converted to its base unit */
+    units are in milliwatt-hours (mWh) or milligram (mg) and are converted to its base unit */
 function norm_units( list ) {
   if( list == null ) return null;
   var result = new Array(list.length);
@@ -227,6 +227,8 @@ $(function() {
       }
       return Math.round( uf * 1000 ) / 1000;
     }
+  
+  // Function to create the table of tasks
   function make_tasks_table(){
     // reset
       if ( $.fn.dataTable.isDataTable( '#tasks_table' ) ) {
@@ -328,12 +330,13 @@ $(function() {
       $(".buttons-colvisGroup:contains('All')").click();
   }
 
+  // Executor for task table creation (on page load)
   if( window.data.trace==null ) {
-      // nascondere
-      $('#table-container').remove()
+      // Hide tasks table if too many tasks are present
+      $('#tasks-table').remove()
   }
   else {
-      $('#no-table-container').remove()
+      $('#tasks-omitted-table').remove()
       // Dropdown changed about raw / human readable values in table
       $('#nf-table-humanreadable').change(function(){
         make_tasks_table();
@@ -342,7 +345,7 @@ $(function() {
       make_tasks_table();
   }
 
-  // Create options table
+  // Function to create the table of options / configurations
   function make_options_table(){
     // reset
     if ( $.fn.dataTable.isDataTable( '#options_table' ) ) {
@@ -360,6 +363,6 @@ $(function() {
     });
   }
 
-  // Make the table on page load
+  // Executor for options table creation (on page load)
   make_options_table();
 });
