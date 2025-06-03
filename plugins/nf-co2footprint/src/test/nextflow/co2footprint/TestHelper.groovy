@@ -138,7 +138,14 @@ class ChecksumChecker {
                 String lineNew, lineRecord
                 while ((lineNew = readerNew.readLine()) != null & (lineRecord = readerRecord.readLine()) != null) {
                     if (!excludedLines.contains(linePosition)) {
-                        assert lineNew == lineRecord, "Mismatch in line ${linePosition}"
+                        if (lineNew.size() < 10000 & lineRecord.size() < 10000){
+                            assert lineNew == lineRecord, "Mismatch in line ${linePosition}"
+                        } else if (lineNew != lineRecord) {
+                             throw new AssertionFailedError(
+                                     "Mismatching new line: ${lineNew}\n" +
+                                     "Mismatch in line ${linePosition}. Output too long, omitting recorded line."
+                             )
+                        }
                     }
                     linePosition += 1
                 }
