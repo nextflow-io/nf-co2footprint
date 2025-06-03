@@ -1,11 +1,9 @@
 package nextflow.co2footprint
 
-import com.sun.management.OperatingSystemMXBean
+import nextflow.co2footprint.utils.HelperFunctions
 import groovy.util.logging.Slf4j
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
-
-import java.lang.management.ManagementFactory
 
 @Slf4j
 /**
@@ -27,25 +25,32 @@ class CO2FootprintComputer {
         this.config = config
     }
 
+
     /**
-     * Core function to compute CO2 emissions for each task:
-     * $C = t * (n_c * P_c * u_c + n_m * P_m) * PUE * CI * 0.001$
-     * $C$ = co2e
-     * $t$ = runtime_h
-     * $n_c$ = numberOfCores
-     * $P_c$ = powerdrawPerCore
-     * $u_c$ = coreUsage
-     * $n_m$ = memory
-     * $P_m$ = powerdrawMem
-     * $PUE$ = pue
-     * $CI$ = ci
-     * as in https://doi.org/10.1002/advs.202100707
-     * PSF: pragmatic scaling factor -> not used here since we aim at the CO2e of one pipeline run
-     * Factor 0.001 needed to convert Pc and Pm from W to kW
-     * @param taskID Identification of the task
-     * @param trace TraceRecord from Nextflow
-     * @return CO2Record of the resulting energy consumption and CO2 equivalents
-     */
+    * Computes the CO2 emissions and energy usage for a given Nextflow task.
+    *
+    * Calculation formula (from Green Algorithms, https://doi.org/10.1002/advs.202100707):
+    *   CO2e = t * (n_c * P_c * u_c + n_m * P_m) * PUE * CI * 0.001
+    *     where:
+    *       t   = runtime in hours
+    *       n_c = number of CPU cores
+    *       P_c = power draw per core (W)
+    *       u_c = CPU usage (fraction)
+    *       n_m = memory used (GB)
+    *       P_m = power draw per GB memory (W)
+    *       PUE = power usage effectiveness (datacenter efficiency)
+    *       CI  = carbon intensity (gCO2e/kWh)
+    *   The result is converted to mWh (energy) and mgCO2e (emissions).
+    *
+    * Memory assignment logic:
+    *   - Uses requested memory if available.
+    *   - If requested memory is null, uses available system memory.
+    *   - If peak memory (RSS) exceeds requested, uses available system memory.
+    *
+    * @param taskID  The Nextflow TaskId for this task.
+    * @param trace   The TraceRecord containing task resource usage.
+    * @return        CO2Record with energy consumption, CO2 emissions, and task/resource details.
+    */
     CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace) {
 
         /**
@@ -56,50 +61,43 @@ class CO2FootprintComputer {
         /**
          * Realtime of computation
          */
-        final BigDecimal runtime_h = trace.get('realtime') as BigDecimal / (1000*60*60)                  // [h]
+        final BigDecimal runtime_h = (HelperFunctions.getTraceOrDefault(trace, taskID, 'realtime', 0) as BigDecimal) / (1000*60*60) // [h]
 
         /**
          * Factors of core power usage
          */
-        final Integer numberOfCores = trace.get('cpus') as Integer      // [#]
-        final BigDecimal powerdrawPerCore = tdpDataMatrix.matchModel(cpuModel).getCoreTDP()      // [W/core]
+        final Integer numberOfCores = HelperFunctions.getTraceOrDefault(trace, taskID, 'cpus', 1) as Integer           // [#]
+        final BigDecimal powerdrawPerCore = tdpDataMatrix.matchModel(cpuModel).getCoreTDP()            // [W/core]
 
         // uc: core usage factor (between 0 and 1)
-        BigDecimal cpuUsage = trace.get('%cpu') as BigDecimal
-        if ( cpuUsage == null ) {  // TODO: why is value null, because task was finished so fast that it was not captured? Or are there other reasons?
-            log.warn(
-                    'The reported CPU usage is null for at least one task.' +
-                    'Assuming 100% usage for each requested CPU!'
-            )
-            cpuUsage = numberOfCores * 100  // Assuming requested cpus were used with 100%
-        }
+        BigDecimal cpuUsage = HelperFunctions.getTraceOrDefault(trace, taskID, '%cpu', numberOfCores * 100) as BigDecimal
 
         if ( cpuUsage == 0.0 ) {
             log.warn("The reported CPU usage is 0.0 for task ${taskID}.")
         }
+        
         final BigDecimal coreUsage = cpuUsage / (100.0 * numberOfCores)
 
         /**
          * Factors of memory power usage
          */
         Long requestedMemory = trace.get('memory') as Long        // [bytes]
-        final Long requiredMemory = trace.get('peak_rss') as Long       // [bytes]
-        if ( requestedMemory == null || requiredMemory > requestedMemory) {
-            /**
-             * Detect operating system
-             */
-            final OperatingSystemMXBean OS = { (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean() }()
+        final Long requiredMemory = trace.get('peak_rss') as Long // [bytes]
 
-            final Long availableMemory = OS.getTotalMemorySize() as Long    // [bytes]
+        if (requestedMemory == null) {
+            Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
+            log.warn("Requested memory is null for task ${taskID}. Setting to available memory (${availableMemory/(1024**3)} GB).")
+            requestedMemory = availableMemory
+        } else if (requiredMemory != null && requiredMemory > requestedMemory) {
+            Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
             log.warn(
-                    "The required memory (${requiredMemory/(1024**3)} GB) for the task" +
-                    " exceeds the requested memory (${requestedMemory/(1024**3)} GB)." +
-                    "Setting requested to maximum available memory (${availableMemory/(1024**3)} GB)."
+                "The required memory (${requiredMemory/(1024**3)} GB) for the task exceeds the requested memory (${requestedMemory/(1024**3)} GB). " +
+                "Setting requested to maximum available memory (${availableMemory/(1024**3)} GB)."
             )
             requestedMemory = availableMemory
         }
 
-        final BigDecimal memory = requestedMemory / 1024**3       // conversion to [GB]
+        final BigDecimal memory = requestedMemory / 1024**3 // conversion to [GB]
 
         final BigDecimal powerdrawMem  = config.getPowerdrawMem() // [W per GB]
 

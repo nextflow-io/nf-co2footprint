@@ -14,7 +14,7 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 import groovy.util.logging.Slf4j
-
+import nextflow.co2footprint.utils.HelperFunctions   
 
 @Slf4j
 class CO2FootprintComputerTest extends Specification{
@@ -78,5 +78,53 @@ class CO2FootprintComputerTest extends Specification{
         co2e                || carKm        || treeMonths       || planePercent || planeFlights
         10**8 + 500000.0    || 574.2857d    ||  109.5965d       || 201.000000d  || '2.0'
         11587.399           || 6.62e-02d    ||  1.26e-02        || 2.317480E-2d || '0.0'
+    }
+
+    // ------ Test Missing/Null Value Handling ------
+    def "memory assignment logic covers all cases"() {
+        given:
+        HelperFunctions.metaClass.static.getAvailableSystemMemory = { TaskId taskID ->
+            if (throwError) throw new IllegalStateException("No memory info")
+            else return availableMemory
+        }
+
+        def traceRecord = new TraceRecord()
+        traceRecord.realtime = 3600000L
+        traceRecord.cpus = 1
+        traceRecord.cpu_model = "TestCPU"
+        traceRecord.'%cpu' = 100.0
+        traceRecord.memory = memory
+        traceRecord.peak_rss = peak_rss
+
+        CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, ciDataMatrix, [:])
+        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
+
+        when:
+        def result = null
+        def caught = null
+        try {
+            result = co2FootprintComputer.computeTaskCO2footprint(new TaskId(1), traceRecord)
+        } catch (Exception e) {
+            caught = e
+        }
+
+        then:
+        if (expectException) {
+            assert caught instanceof IllegalStateException
+        } else {
+            assert result.memory == expectedMemory
+        }
+
+        cleanup:
+        GroovySystem.metaClassRegistry.removeMetaClass(HelperFunctions)
+
+        where:
+        memory             | peak_rss           | availableMemory     | throwError | expectException | expectedMemory
+        8L*1024**3         | 4L*1024**3         | 64L*1024**3         | false      | false           | 8L              // requested used
+        null               | 4L*1024**3         | 64L*1024**3         | false      | false           | 64L             // available used (requested null)
+        4L*1024**3         | 8L*1024**3         | 64L*1024**3         | false      | false           | 64L             // available used (required > requested)
+        null               | null               | 32L*1024**3         | false      | false           | 32L             // available used (both null)
+        4L*1024**3         | null               | 64L*1024**3         | false      | false           | 4L              // requested used (required null)
+        null               | 4L*1024**3         | null                | true       | true            | null            // error thrown (available memory error)
     }
 }
