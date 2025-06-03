@@ -7,6 +7,7 @@
 
 ## Bug Fixes:
 - Adjusted rendering of flights to deliver percentage < 1.0 flights and number of flights afterwards
+- Add null checks, fallbacks, and logging to CO₂ calculation in `CO2FootprintComputer` class 
 
 ## Misc
 - Moved call to OS when memory is exceeded into this case to avoid unnecessary calls
