@@ -262,7 +262,7 @@ class CO2FootprintObserverTest extends Specification{
                 "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
                 "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
                 "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];"
-        // 225 is the plugin version, 642 is a Javascript (nothing written by hand)
+        // 225 is the plugin version
         checksumChecker.compareChecksums(
                 reportPath,
                 '60766083f72ed7e5034149e3cfe6c51f',
