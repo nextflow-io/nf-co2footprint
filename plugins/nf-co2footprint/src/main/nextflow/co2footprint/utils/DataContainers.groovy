@@ -312,11 +312,26 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Collect indices via keys from a BiMap
-     */
+    * Collects the integer indices for a set of keys from a BiMap.
+    *
+    * For each key in the provided set, this method searches the BiMap's key set for a matching key
+    * (using string representation for comparison). If a key is not found, a warning is logged and
+    * the key is skipped. The resulting list contains only the indices for keys that were found.
+    *
+    * @param keys   The set of keys to look up.
+    * @param bimap  The BiMap mapping keys to integer indices.
+    * @return       A list of integer indices corresponding to the found keys, in the order of input keys.
+    */
     private static List<Integer> collectIndices(LinkedHashSet<Object> keys, BiMap<Object, Integer> bimap) {
-        List<Integer> indices = keys.collect( { key -> bimap.getValue(key) } )
-        indices.removeAll( {it == null })
+        List<Integer> indices = keys.collect { key ->
+            def foundKey = bimap.keySet().find {it.toString() == key.toString()}
+            if (foundKey == null) {
+                log.warn("Key '${key}' not found in in the row index!}")
+                return null
+            }
+            return bimap.getValue(foundKey)
+        }
+        indices.removeAll { it == null }
         return indices
     }
 
