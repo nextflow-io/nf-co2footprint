@@ -81,6 +81,29 @@ class CO2FootprintReportTest extends Specification{
         )
     }
 
+    def 'Test correct value rendering for totalsJson' () {
+        given:
+        Path tempPath = Files.createTempDirectory('tmpdir')
+        CO2FootprintReport co2FootprintReport = new CO2FootprintReport(
+                tempPath.resolve('report_test.html')
+        )
+
+        when:
+        CO2EquivalencesRecord equivalences = new CO2EquivalencesRecord(carKm, treeMonths, planePercent)
+        co2FootprintReport.addEntries(
+                10, 10, equivalences, null, null, null, null, null, null
+        )
+        Map<String, String> totalsJson = co2FootprintReport.renderCO2TotalsJson()
+
+        then:
+        totalsJson == totalsJsonResult
+
+        where:
+        carKm   || treeMonths   || planePercent  || totalsJsonResult
+        10.0    || 10.0         || 10.0          || [ co2: '10.0 mg', energy:'10.0 mWh', car: '10.0', tree: '10months', plane_percent: '10.0', plane_flights: null]
+        10.0    || 10.0         || 100.0         || [ co2: '10.0 mg', energy:'10.0 mWh', car: '10.0', tree: '10months', plane_percent: null, plane_flights: '1.0']
+    }
+
     def 'Test payLoad JSON generation' () {
         when:
         String payloadJson = co2FootprintReport.renderPayloadJson()

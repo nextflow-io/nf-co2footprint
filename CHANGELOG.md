@@ -1,9 +1,6 @@
 ## [Unreleased]
 
 # Version 1.0.0
-
-
-# Version 1.0.0
 ## Features:
 - When a message is excluded from the log it is still sent to the `trace` level log
 
@@ -16,6 +13,7 @@
 - Testing with MD5 sums for file creation
 - Deescalated access rights of variables for tighter scope
 - Extended documentation for CO2e equivalents
+- Adjusted folder structure of tests to main
 
 # Version 1.0.0-beta1
 ## Features:
