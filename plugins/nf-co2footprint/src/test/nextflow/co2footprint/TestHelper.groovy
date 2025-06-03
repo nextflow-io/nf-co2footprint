@@ -19,6 +19,7 @@ package nextflow.co2footprint
 
 import com.google.common.jimfs.Configuration
 import com.google.common.jimfs.Jimfs
+import org.opentest4j.AssertionFailedError
 
 import java.nio.file.Files
 import java.nio.file.Path
@@ -99,13 +100,58 @@ class ChecksumChecker {
      * Compare the recorded checksum to the new checksum of a file.
      *
      * @param path Path to the file for the checksum calculation
-     * @param excludedLines Lines to be excluded in the checksum calculation
      * @param recordedChecksum  The expected checksum to verify against. If null, the method will
      *                          attempt to retrieve it from the class checksum map.
+     * @param excludedLines Lines to be excluded in the checksum calculation
+     * @param recordedPath Path with the complete file to compare to when the checksums don't match
      */
-    void compareChecksums(Path path, List<Integer> excludedLines=[], String recordedChecksum=null) {
+    void compareChecksums(Path path, String recordedChecksum=null, List<Integer> excludedLines=[], Path recordPath=null) {
         String newChecksum = calculateMD5(path.toFile(), excludedLines)
         recordedChecksum ?= this.checksums[path.getFileName() as String]
-        assert recordedChecksum == newChecksum
+        try {
+            assert recordedChecksum == newChecksum
+        }
+        catch (AssertionError assertionError) {
+            if(recordPath) {
+                compareFiles(path, recordPath, excludedLines)
+                throw new AssertionFailedError(
+                        "Recorded checksum '${recordedChecksum}' and new checksum '${newChecksum}' did not match," +
+                        "but the checked lines (all except ${excludedLines}) in ${recordPath} and '${path}' reveal no difference."
+                )
+            } else {
+                throw assertionError
+            }
+        }
+    }
+
+    /**
+     * Compare two files line by line
+     *
+     * @param path Path to the new file
+     * @param recordPath Path to the recorded File
+     * @param excludedLines Lines that are not compared (useful for excluding timestamps and other non comparable stuff)
+     */
+    static void compareFiles(Path path, Path recordPath, List<Integer> excludedLines=[]) {
+        int linePosition = 0
+        path.withReader { Reader readerNew ->
+            recordPath.withReader { Reader readerRecord ->
+                String lineNew, lineRecord
+                while ((lineNew = readerNew.readLine()) != null & (lineRecord = readerRecord.readLine()) != null) {
+                    if (!excludedLines.contains(linePosition)) {
+                        assert lineNew == lineRecord, "Mismatch in line ${linePosition}"
+                    }
+                    linePosition += 1
+                }
+
+                // Check for extra lines:
+                if (readerNew.readLine() != null) {
+                    throw new AssertionFailedError("New file has extra lines")
+                }
+                // Check for extra lines:
+                if (readerRecord.readLine() != null) {
+                    throw new AssertionFailedError("Recorded file has extra lines at the end.")
+                }
+            }
+        }
     }
 }

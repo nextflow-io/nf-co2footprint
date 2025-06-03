@@ -3,17 +3,22 @@
 # Version 1.0.0
 ## Features:
 - When a message is excluded from the log it is still sent to the `trace` level log
+- Speedier Report generation through refactoring of Co2 aggregation
 
 ## Bug Fixes:
 - Adjusted rendering of flights to deliver percentage < 1.0 flights and number of flights afterwards
 - Add null checks, fallbacks, and logging to CO₂ calculation in `CO2FootprintComputer` class 
+- Enabled access to `store` of `CO2Record`s within parent methods
 
 ## Misc
 - Moved call to OS when memory is exceeded into this case to avoid unnecessary calls
 - Testing with MD5 sums for file creation
 - Deescalated access rights of variables for tighter scope
 - Extended documentation for CO2e equivalents
+- Testing of files via saved snapshots when checksum fails
+- Removal of inherited methods in `CO2Record`
 - Adjusted folder structure of tests to main
+
 
 # Version 1.0.0-beta1
 ## Features:

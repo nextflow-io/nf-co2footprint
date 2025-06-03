@@ -222,7 +222,10 @@ class CO2FootprintObserverTest extends Specification{
         traceLines[1].split('\t') as List<String> == [
             '111', 'null', 'null', '14.61 Wh', '7.01 g', '1ms', '480.0 gCO₂eq/kWh', '1', '12.0', 'Unknown model', '100.0', '7.0 B'
         ] // GA: CO2e is 6.94g with CI of 475 gCO2eq/kWh
-        checksumChecker.compareChecksums(tracePath, [], 'b99e9632b39da7a99ce53dffc4a7656f')
+        checksumChecker.compareChecksums(
+                tracePath,
+                'b99e9632b39da7a99ce53dffc4a7656f'
+        )
 
         // Check Summary File
         Files.isRegularFile(summaryPath)
@@ -231,29 +234,39 @@ class CO2FootprintObserverTest extends Specification{
         summaryLines[17] == "summaryFile: ${summaryPath}"
         summaryLines[18] == "traceFile: ${tracePath}"
         // 12 is the plugin version (changes on Github CI to current version)
-        checksumChecker.compareChecksums(summaryPath, [12, 16, 17, 18], '0059c55719eeb11ddfe80b8edc0258ea')
+        checksumChecker.compareChecksums(
+                summaryPath,
+                '0059c55719eeb11ddfe80b8edc0258ea',
+                [12, 16, 17, 18],
+                this.class.getResource('/summary_test.txt').getPath() as Path
+        )
 
         // Check Report File
         Files.isRegularFile(reportPath)
         List<String> reportLines = reportPath.readLines()
-        reportLines.size() == 1046
+        reportLines.size() == 1045
         String timeLine = reportLines[194]
         timeLine == "          " +
                 "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                 " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
-        String optionsLine = reportLines[1040]
+        String optionsLine = reportLines[1039]
         optionsLine == "  window.options = [" +
-                "{ \"option\":\"ci\", \"value\":\"480.0\" }," +
-                "{ \"option\":\"customCpuTdpFile\", \"value\":\"null\" }," +
-                "{ \"option\":\"ignoreCpuModel\", \"value\":\"false\" }," +
-                "{ \"option\":\"location\", \"value\":\"null\" }," +
-                "{ \"option\":\"powerdrawCpuDefault\", \"value\":\"null\" }," +
-                "{ \"option\":\"powerdrawMem\", \"value\":\"0.3725\" }," +
-                "{ \"option\":\"pue\", \"value\":\"1.0\" }," +
-                "{ \"option\":\"reportFile\", \"value\":\"${reportPath}\" }," +
-                "{ \"option\":\"summaryFile\", \"value\":\"${summaryPath}\" }," +
-                "{ \"option\":\"traceFile\", \"value\":\"${tracePath}\" }];"
+                '{"option":"ci","value":"480.0"},'+
+                '{"option":"customCpuTdpFile","value":null},' +
+                '{"option":"ignoreCpuModel","value":"false"},' +
+                '{"option":"location","value":null},' +
+                '{"option":"powerdrawCpuDefault","value":null},' +
+                '{"option":"powerdrawMem","value":"0.3725"},' +
+                '{"option":"pue","value":"1.0"},' +
+                "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
+                "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
+                "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];"
         // 207 is the plugin version, 642 is a Javascript (nothing written by hand)
-        checksumChecker.compareChecksums(reportPath, [194, 207, 642, 1040], '15f60bd59bf74d992f9662393a5f1bff')
+        checksumChecker.compareChecksums(
+                reportPath,
+                '3497371a728007f87708a9a0a9b53798',
+                [194, 207, 642, 1039],
+                this.class.getResource('/report_test.html').getPath() as Path
+        )
     }
 }

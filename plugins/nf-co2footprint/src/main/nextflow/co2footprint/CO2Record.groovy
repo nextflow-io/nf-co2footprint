@@ -5,7 +5,6 @@ import nextflow.co2footprint.utils.Converter
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import nextflow.trace.TraceRecord
-import groovy.json.StringEscapeUtils
 
 
 /**
@@ -16,6 +15,7 @@ import groovy.json.StringEscapeUtils
 @CompileStatic
 class CO2Record extends TraceRecord {
 
+    // Entries
     private final Double energy
     private final Double co2e
     private final Double time
@@ -27,7 +27,37 @@ class CO2Record extends TraceRecord {
     private final String name
     private final String cpu_model
 
-    CO2Record(Double energy, Double co2e, Double time, Double ci, Integer cpus, Double powerdrawCPU, Double cpuUsage, Long memory, String name, String cpu_model) {
+    // Properties of entries
+    final public static Map<String,String> FIELDS = [
+            energy:         'num',
+            co2e:           'num',
+            time:           'num',
+            ci:             'num',
+            cpus:           'num',
+            powerdrawCPU:   'num',
+            cpuUsage:       'num',
+            memory:         'num',
+            name:           'str',
+            cpu_model:      'str'
+    ]
+
+    /**
+     * Constructs a CO2Record
+     *
+     * @param energy Energy used
+     * @param co2e CO2 equivalent emissions
+     * @param time Time spent on task
+     * @param cpus Number of CPU cores used
+     * @param powerdrawCPU TDP of CPU
+     * @param cpuUsage Usage of CPU
+     * @param memory Memory used
+     * @param name Name of Task
+     * @param cpu_model  CPU model name
+     */
+    CO2Record(
+            Double energy=null, Double co2e=null, Double time=null, Double ci=null, Integer cpus=null, Double powerdrawCPU=null,
+            Double cpuUsage=null, Long memory=null, String name=null, String cpu_model=null
+    ) {
         this.energy = energy
         this.co2e = co2e
         this.time = time
@@ -38,7 +68,7 @@ class CO2Record extends TraceRecord {
         this.memory = memory
         this.name = name
         this.cpu_model = cpu_model
-        this.store = new LinkedHashMap<>([
+        Map<String, Object> store = new LinkedHashMap<>([
                 'energy':           energy,
                 'co2e':             co2e,
                 'time':             time,
@@ -50,20 +80,8 @@ class CO2Record extends TraceRecord {
                 'name':             name,
                 'cpu_model':        cpu_model
         ])
+        super.store << store
     }
-
-    final public static Map<String,String> FIELDS = [
-        energy:         'num',
-        co2e:           'num',
-        time:           'num',
-        ci:             'num',
-        cpus:           'num',
-        powerdrawCPU:   'num',
-        cpuUsage:       'num',
-        memory:         'num',
-        name:           'str',
-        cpu_model:      'str'
-    ]
 
     Double getEnergyConsumption() { energy }
     String getEnergyConsumptionReadable() { Converter.toReadableUnits(energy,'m', 'Wh') }
@@ -94,6 +112,10 @@ class CO2Record extends TraceRecord {
     String getCPUModel() { cpu_model }
     String getCPUModelReadable() { cpu_model }
 
+    /**
+     * Get the Entries in a readable format for the summary
+     * @return List of readable Entries
+     */
     List<String> getReadableEntries() {
         return [
                 this.getNameReadable(), this.getEnergyConsumptionReadable(), this.getCO2eReadable(),
@@ -102,73 +124,13 @@ class CO2Record extends TraceRecord {
         ]
     }
 
-    //@PackageScope
-    Map<String,Object> store
-
-    @Override
-    String toString() {
-        "${this.class.simpleName} ${store}"
-    }
-
-    @Override
-    CharSequence renderJson(StringBuilder result, List<String> fields, List<String> formats) {
-        final String QUOTE = '"'
-        final String NA = '-'
-        if( result == null ) result = new StringBuilder()
-        result.deleteCharAt(result.length() - 1) // remove the last character "}"
-        result << ','
-        for( int i=0; i<fields.size(); i++ ) {
-            final String name = fields[i]
-            if ( name == 'name' ) continue // skip the name field (it's already in the key)
-            if ( i ) result << ','
-            final String format = i<formats?.size() ? formats[i] : null
-            final String value = StringEscapeUtils.escapeJavaScript(getFmtStr(name, format) ?: NA)
-            result << QUOTE << name << QUOTE << ":" << QUOTE << value << QUOTE
-        }
-        result << "}"
-        return result
-    }
-
     /**
-     * Get a trace field value and apply a conversion rule to it
+     * Renders the JSON output of a CO2Record
      *
-     * @param name The field name e.g. task_id, status, etc.
-     * @param converter A converter string
-     * @return A string value formatted according the specified converter
+     * @param stringBuilder A StringBuilder used to elongate the String
      */
     @Override
-    String getFmtStr( String name, String converter = null ) {
-        assert name
-        final val = store.get(name)
-
-        String sType=null
-        String sFormat=null
-        if( converter ) {
-            int p = converter.indexOf(':')
-            if( p == -1 ) {
-                sType = converter
-            }
-            else {
-                sType = converter.substring(0,p)
-                sFormat = converter.substring(p+1)
-            }
-        }
-
-        final String type = sType ?: FIELDS.get(name)
-        if( !type )
-            throw new IllegalArgumentException("Not a valid trace field name: '$name'")
-
-
-        final Closure<String> formatter = FORMATTER.get(type)
-        if( !formatter )
-            throw new IllegalArgumentException("Not a valid trace formatter for field: '$name' with type: '$type'")
-
-        try {
-            return formatter.call(val, sFormat)
-        }
-        catch( Throwable ignore ) {
-            log.debug("Not a valid trace value -- field: '$name'; value: '$val'; format: '$sFormat'")
-            return null
-        }
+    CharSequence renderJson(StringBuilder stringBuilder=new StringBuilder()) {
+        return super.renderJson(stringBuilder, FIELDS.keySet() as List, FIELDS.values() as List)
     }
 }
