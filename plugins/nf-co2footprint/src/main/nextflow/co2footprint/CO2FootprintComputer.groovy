@@ -84,16 +84,25 @@ class CO2FootprintComputer {
         Long requestedMemory = trace.get('memory') as Long        // [bytes]
         final Long requiredMemory = trace.get('peak_rss') as Long // [bytes]
 
+        // Check if requested memory is missing
         if (requestedMemory == null) {
+            // If missing, get the available system memory
             Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
+            // Warn that requested memory was null and fallback is used
             log.warn("Requested memory is null for task ${taskID}. Setting to available memory (${availableMemory/(1024**3)} GB).")
+            // Use available system memory as the requested memory
             requestedMemory = availableMemory
-        } else if (requiredMemory != null && requiredMemory > requestedMemory) {
+        }
+        // If peak memory usage (requiredMemory) is known and exceeds the requested memory
+        else if (requiredMemory != null && requiredMemory > requestedMemory) {
+            // Get the available system memory
             Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
+            // Warn that required memory exceeded requested, so fallback is used
             log.warn(
                 "The required memory (${requiredMemory/(1024**3)} GB) for the task exceeds the requested memory (${requestedMemory/(1024**3)} GB). " +
                 "Setting requested to maximum available memory (${availableMemory/(1024**3)} GB)."
             )
+            // Use available system memory as the requested memory
             requestedMemory = availableMemory
         }
 

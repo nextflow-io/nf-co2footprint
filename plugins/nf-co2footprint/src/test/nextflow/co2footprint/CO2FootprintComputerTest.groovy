@@ -83,11 +83,13 @@ class CO2FootprintComputerTest extends Specification{
     // ------ Test Missing/Null Value Handling ------
     def "memory assignment logic covers all cases"() {
         given:
+        // Mock the static HelperFunctions.getAvailableSystemMemory method for this test case
         HelperFunctions.metaClass.static.getAvailableSystemMemory = { TaskId taskID ->
             if (throwError) throw new IllegalStateException("No memory info")
             else return availableMemory
         }
 
+        // Prepare a TraceRecord with test parameters for each case
         def traceRecord = new TraceRecord()
         traceRecord.realtime = 3600000L
         traceRecord.cpus = 1
@@ -96,10 +98,12 @@ class CO2FootprintComputerTest extends Specification{
         traceRecord.memory = memory
         traceRecord.peak_rss = peak_rss
 
+        // Create config and the CO2FootprintComputer under test
         CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, ciDataMatrix, [:])
         CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
 
         when:
+        // Try to compute the CO2 footprint, catching any exceptions
         def result = null
         def caught = null
         try {
@@ -109,13 +113,16 @@ class CO2FootprintComputerTest extends Specification{
         }
 
         then:
+        // If we expect an exception, assert it was thrown
         if (expectException) {
             assert caught instanceof IllegalStateException
         } else {
+            // Otherwise, check that the computed memory matches the expected value (in GB)
             assert result.memory == expectedMemory
         }
 
         cleanup:
+        // Remove the metaClass override to avoid side effects on other tests
         GroovySystem.metaClassRegistry.removeMetaClass(HelperFunctions)
 
         where:
