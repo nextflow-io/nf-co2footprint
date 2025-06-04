@@ -136,7 +136,7 @@ class CO2FootprintObserverTest extends Specification{
         Session session = mockSessionWithCI(tracePath, summaryPath, reportPath, 475.0)
 
         // Create task and handler
-        TaskRun task = new TaskRun(id: TaskId.of(111))
+        TaskRun task = new TaskRun(id: traceRecord.getTaskId())
         task.processor = Mock(TaskProcessor)
         TaskHandler handler = new NopeExecutor().createTaskHandler(task)
 
@@ -244,12 +244,13 @@ class CO2FootprintObserverTest extends Specification{
         // Check Report File
         Files.isRegularFile(reportPath)
         List<String> reportLines = reportPath.readLines()
-        reportLines.size() == 1045
-        String timeLine = reportLines[194]
+        int numLines = reportLines.size()
+        numLines == 1182
+        String timeLine = reportLines[212]
         timeLine == "          " +
                 "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                 " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
-        String optionsLine = reportLines[1039]
+        String optionsLine = reportLines[1176]
         optionsLine == "  window.options = [" +
                 '{"option":"ci","value":"480.0"},'+
                 '{"option":"customCpuTdpFile","value":null},' +
@@ -261,11 +262,11 @@ class CO2FootprintObserverTest extends Specification{
                 "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
                 "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
                 "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];"
-        // 207 is the plugin version, 642 is a Javascript (nothing written by hand)
+        // 225 is the plugin version
         checksumChecker.compareChecksums(
                 reportPath,
-                '3497371a728007f87708a9a0a9b53798',
-                [194, 207, 642, 1039],
+                '083b9a46932584fb0ad3bf1816334f44',
+                [212, 225, 1176],
                 this.class.getResource('/report_test.html').getPath() as Path
         )
     }
