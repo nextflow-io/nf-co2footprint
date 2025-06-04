@@ -231,12 +231,10 @@ class CO2FootprintReport extends CO2FootprintFile{
      * @return     The loaded template as a string
      */
     private String readTemplate( String path ) {
-        StringWriter writer = new StringWriter()
-        InputStream res = this.class.getClassLoader().getResourceAsStream( path )
-        int ch
-        while( (ch=res.read()) != -1 ) {
-            writer.append(ch as char)
+        InputStream res = this.class.getClassLoader().getResourceAsStream(path)
+        if (res == null) {
+            throw new FileNotFoundException("Template not found at path: $path")
         }
-        writer.toString()
+        return new BufferedReader(new InputStreamReader(res, "UTF-8")).text
     }
 }
