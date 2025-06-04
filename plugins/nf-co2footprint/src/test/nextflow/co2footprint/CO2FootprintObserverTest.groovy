@@ -136,7 +136,7 @@ class CO2FootprintObserverTest extends Specification{
         Session session = mockSessionWithCI(tracePath, summaryPath, reportPath, 475.0)
 
         // Create task and handler
-        TaskRun task = new TaskRun(id: TaskId.of(111))
+        TaskRun task = new TaskRun(id: traceRecord.getTaskId())
         task.processor = Mock(TaskProcessor)
         TaskHandler handler = new NopeExecutor().createTaskHandler(task)
 
@@ -245,12 +245,12 @@ class CO2FootprintObserverTest extends Specification{
         Files.isRegularFile(reportPath)
         List<String> reportLines = reportPath.readLines()
         int numLines = reportLines.size()
-        numLines == 1186
+        numLines == 1182
         String timeLine = reportLines[212]
         timeLine == "          " +
                 "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                 " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
-        String optionsLine = reportLines[1180]
+        String optionsLine = reportLines[1176]
         optionsLine == "  window.options = [" +
                 '{"option":"ci","value":"480.0"},'+
                 '{"option":"customCpuTdpFile","value":null},' +
@@ -265,8 +265,8 @@ class CO2FootprintObserverTest extends Specification{
         // 225 is the plugin version
         checksumChecker.compareChecksums(
                 reportPath,
-                '60766083f72ed7e5034149e3cfe6c51f',
-                [212, 225, 1180],
+                '3f3dadb83789a1ad474213a9123be403',
+                [212, 225, 1176],
                 this.class.getResource('/report_test.html').getPath() as Path
         )
     }

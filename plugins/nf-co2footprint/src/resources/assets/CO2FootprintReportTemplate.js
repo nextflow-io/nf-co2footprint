@@ -122,7 +122,7 @@ $(function() {
     var scopes = ['p', 'n', 'u', 'm', '', 'K', 'M', 'G', 'T', 'P', 'E']; // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
     var scopeIndex = scopes.indexOf(scope);
     
-    while (value >= 1000 && scopeIndex < units.length - 1) {
+    while (value >= 1000 && scopeIndex < scopes.length - 1) {
       value /= 1000;
       scopeIndex++;
     }
@@ -208,7 +208,7 @@ $(function() {
     var targetValueFormatted = Math.floor(targetValue)
 
     // Singularize unit if value is exactly 1 and unit is plural
-    if (targetValueFormatted == 1 && ['days', 'weeks', 'months', 'years'].contains(targetUnit)) {
+    if (targetValueFormatted == 1 && ['days', 'weeks', 'months', 'years'].includes(targetUnit)) {
       targetUnit = targetUnit.slice(0, -1) // e.g. "days" -> "day"
     }
 
@@ -219,8 +219,6 @@ $(function() {
 
     // Only add to output if above threshold or no threshold set
     if (threshold == null || targetValueFormatted > threshold) {
-      console.log(threshold)
-      console.log(targetValueFormatted)
       value = targetValue - targetValueFormatted
       unit = largestUnit
 
@@ -228,8 +226,6 @@ $(function() {
       var formattedValue = targetValueFormatted.toFixed(2)
       readableString += readableString ? ' ' + formattedValue + targetUnit : formattedValue + targetUnit
     }
-
-    console.log(readableString)
 
     // If we've reached the smallest unit or max steps, return the result
     if (numSteps == 0) {
