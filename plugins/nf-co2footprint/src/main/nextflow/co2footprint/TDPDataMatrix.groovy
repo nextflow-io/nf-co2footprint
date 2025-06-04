@@ -17,9 +17,9 @@ import java.util.regex.Matcher
  */
 class TDPDataMatrix extends DataMatrix {
 
-    private final Object tdpID = "tdp (W)"
-    private final Object coresID = "cores"
-    private final Object threadsID = "threads"
+    private final Object tdpID = 'tdp (W)'
+    private final Object coresID = 'cores'
+    private final Object threadsID = 'threads'
     Object fallbackModel = 'default'
     Integer tdp = null
     Integer cores = null
