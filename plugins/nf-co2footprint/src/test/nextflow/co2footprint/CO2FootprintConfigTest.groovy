@@ -54,7 +54,7 @@ class CO2FootprintConfigTest extends Specification {
         ['machineType': 'compute cluster']      || [:]                      || ['machineType']          || 1.67
         ['machineType': 'local']                || [:]                      || ['machineType']          || 1.0
         [:]                                     || ['executor': 'local']    || ['machineType']          || 1.0
-        [:]                                     || ['executor': 'awsbatch'] || ['machineType']          || 1.67
+        [:]                                     || ['executor': 'awsbatch'] || ['machineType']          || 1.15
         ['machineType': 'local', 'pue': 2.0]    || [:]                      || ['machineType', 'pue']   || 2.0
         ['pue': 2.0]                            || ['executor': 'awsbatch'] || ['machineType', 'pue']   || 2.0
     }
