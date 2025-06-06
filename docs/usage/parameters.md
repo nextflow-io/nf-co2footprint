@@ -31,7 +31,7 @@ The following parameters are currently available:
   `nextflow secrets set EM_API_KEY "paste_api_key_here"`. Then, set the config parameter to `secrets.EM_API_KEY`.  
   **Default**: `null`
 
-- **`pue`** 
+- **`pue`**  
   Power usage effectivenes efficiency coefficient of the data centre. For local cluster you can usually find out your specific PUE at the system administrators or system managers. Also the current [yearly worldwide average](https://www.statista.com/statistics/1229367/data-center-average-annual-pue-worldwide/) could be used.  
   **Default**: 1.00
 
@@ -61,11 +61,9 @@ The following parameters are currently available:
   **Default**: 12.0.
   
 - **`machineType`**  
-  The type of machine the computation is executed upon. It determines the `pue` if the parameter is not explicitly specified in the config file. Must be one of: `'compute cluster'`, `'local'`, or `''`.  
+  Specifies the type of machine used for computation. It determines the `pue` if the parameter is not explicitly specified in the config file. Must be one of: `'compute cluster'` or `'local'`.
   If not specified (`null`), the plugin infers `machineType` from the Nextflow `process.executor` setting, mapping it to either `'compute cluster'` or `'local'`.  
-  `''` can be used if you want to bypass this behavior.  
   **Default**: `null` 
     - `'local'`: sets `pue` to 1.0  
     - `'compute cluster'`: sets `pue` to 1.67
-    - `''`:  sets `pue` to 1.0  
   
