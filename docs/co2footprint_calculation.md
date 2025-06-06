@@ -42,25 +42,33 @@ This includes failed tasks as well.
 --- 
 
 ## Additional equivalences
+
+Let \( E_{\mathrm{CO_2e}} \) denote the **total emitted CO₂ equivalent** (in grams) for the computation or pipeline run. This value is used in the following equivalence calculations:
+
 ### Tree sequestration time
 This equates to the time a tree needs to bind the same amount of carbon from the atmosphere.
-It is estimated to be on average $10-11 kg$ per year (=$917g$) per month.
+It is estimated to be on average $10$-$11~\mathrm{kg}$ per year (= $917~\mathrm{g}$ per month).
 
-$t_{tree} = CO2 / 917 g/month$
+$$
+t_{\text{tree}} = \frac{E_{\mathrm{CO_2e}}}{917~\mathrm{gCO_2e}/\mathrm{month}}
+$$
 
 ### Car kilometers
-The car kilometers are defined as the distance an average car would need to travel to emit the same amount of CO2.
-An average European car emits $175 gCO2e$ per km.
+The car kilometers are defined as the distance an average car would need to travel to emit the same amount of CO₂.
+An average European car emits $175~\mathrm{gCO_2e}$ per km.
 
-$d_{car} = CO2 / 175 g/km$
+$$
+d_{\text{car}} = \frac{E_{\mathrm{CO_2e}}}{175~\mathrm{gCO_2e}/\mathrm{km}}
+$$
 
 ### Flights London-Paris
-A flight between London and Paris is estimated to emit $50000g$ of CO2 equivalents.
+A flight between London and Paris is estimated to emit $50\,000~\mathrm{g}$ of CO₂ equivalents.
 
-$n_{L-P} = CO2 / 50000$
+$$
+n_{\text{L-P}} = \frac{E_{\mathrm{CO_2e}}}{50\,000~\mathrm{gCO_2e}}
+$$
 
-The value is given as a percentage when less than one flight is equivalent to the emitted CO2.
-
+The value is given as a percentage when less than one flight is equivalent to the emitted CO₂.
 
 ## References
 
