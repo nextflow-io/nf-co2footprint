@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
+import spock.lang.Unroll
 
 import java.nio.file.Files
 import java.nio.file.Path
@@ -212,5 +213,34 @@ class TDPDataMatrixTest extends Specification {
         df.matchModel('Intel® i3-Fantasy(TM) 10Trillion GW').getData() == [[100, 4, 8]]
         listAppender.list[1] as String == '[WARN] Could not find CPU model "Intel® i3-Fantasy(TM) 10Trillion GW" in given TDP data table. ' +
                 'Using default CPU power draw value (100.0 W).'
+    }
+
+    @Unroll
+    def "Should use fallback row '#fallbackModel' when CPU model is unknown"() {
+        given:
+        def data = [
+            [50, 2, 4],   // default local
+            [60, 4, 8],   // default compute cluster
+            [100, 8, 16], // default
+            [90, 4, 16]  // some other model
+        ]
+        def columns = ['tdp (W)', 'cores', 'threads'] as LinkedHashSet
+        def rows = ['default local', 'default compute cluster', 'default', 'other'] as LinkedHashSet
+
+        and:
+        def tdpMatrix = new TDPDataMatrix(data, columns, rows, fallbackModel, null, null, null)
+
+        when:
+        def result = tdpMatrix.matchModel('NonExistentCPU')
+
+        then:
+        result.getOrderedRowKeys() == [fallbackModel] as LinkedHashSet
+        result.getTDP() == expectedTDP
+
+        where:
+        fallbackModel             || expectedTDP
+        'default local'           || 50
+        'default compute cluster' || 60
+        'default'                 || 100
     }
 }
