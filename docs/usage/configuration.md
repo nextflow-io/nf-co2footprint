@@ -23,11 +23,11 @@ co2footprint {
   traceFile = "${params.outdir}/pipeline_info/co2footprint_trace_${co2_timestamp}.txt"
   summaryFile = "${params.outdir}/pipeline_info/co2footprint_summary_${co2_timestamp}.txt"
   reportFile = "${params.outdir}/pipeline_info/co2footprint_report_${co2_timestamp}.html"
-  location = '<your_zone_code>'     // replace with your zone code
-  ci = <your_ci>                    // replace with carbon intensity (gCO2eq/kWh)
-  apiKey = secrets.EM_API_KEY       // set your API key as Nextflow secret with the name 'EM_API_KEY'
-  pue = <your_pue>                  // replace with PUE of your data center
-  machineType = ''                  // set to 'compute cluster', 'local', or leave empty
+  location = '<your_zone_code>'               // replace with your zone code
+  ci = <your_ci>                              // replace with carbon intensity (gCO2eq/kWh)
+  apiKey = secrets.EM_API_KEY                 // set your API key as Nextflow secret with the name 'EM_API_KEY'
+  pue = <your_pue>                            // replace with PUE of your data center
+  machineType = '<compute cluster|local>'     // set to 'compute cluster' or 'local'
 }
 ```
 You can find your `zone code` on the [zones overview](https://portal.electricitymaps.com/docs/getting-started#zonesoverview) section on the Electricity Maps website. It has to match one of those defined there to be used within the plugin. To obtain the `apikey` you have to register in the [developer portal](https://portal.electricitymaps.com). 
