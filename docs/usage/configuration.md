@@ -53,40 +53,41 @@ The plugin uses the `ci`, `location`, and `apiKey` parameters to determine the c
 
 ## Cloud computations
 
-At the moment the nf-co2footprint can not natively support cloud computations.
+Currently, **nf-co2footprint** does not natively support cloud environments because cloud-specific instance types may not included in the TDP table, and default PUE values for cloud providers are missing.
 
-!!! warning
+!!! info
 
-    This is not tested and might not work as intended, but cloud native support will be implemented soon.
+    For AWS Batch, the plugin uses a default PUE of **1.15**.
 
-If you are still keen to get insights into your CO₂ you could try to find out the following and append it to your config:
+If you still want to estimate your CO₂ footprint on the cloud, you can manually provide:
 
-- The location and hereby CI of your instance.
-- The PUE of the data center, where the instance is located.
-- The power draw per core of your selected instance.
-- If available the power draw of the memory per GB.
+- The location of your instance (e.g., `'DE'` for AWS region `eu-central-1`)
+- The PUE of the data center
+- If the plugins TDP table does not include your cloud compute instance and you know the per-core TDP for your instance, set `ignoreCpuModel = true` and specify `powerdrawCpuDefault`.
 
-Your configuration could look something like:
+**Example configuration:**
 
 ```groovy title="nextflow_cloud.config"
 plugins {
   id 'nf-co2footprint@1.0.0-beta'
 }
 
-def co2_timestamp = new java.util.Date().format( 'yyyy-MM-dd_HH-mm-ss')
+def co2_timestamp = new Date().format('yyyy-MM-dd_HH-mm-ss')
 
 co2footprint {
     traceFile           = "${params.outdir}/co2footprint/co2footprint_trace_${co2_timestamp}.txt"
-    reportFile          = "${params.outdir}/co2footprint/co2footprint_report_${co2_timestamp}.html"
     summaryFile         = "${params.outdir}/co2footprint/co2footprint_summary_${co2_timestamp}.txt"
-    ci                  = 300
-    pue                 = 1.4
+    reportFile          = "${params.outdir}/co2footprint/co2footprint_report_${co2_timestamp}.html"
+    location            = 'DE'
+    apiKey              = secrets.EM_API_KEY
+    pue                 = 1.3
     ignoreCpuModel      = true
     powerdrawCpuDefault = 8
-    powerdrawMem        = 0.3725
 }
 ```
 
 ## GPU computations
 
-So far tracking of GPU driven computations are not implemented, and functionality might be impaired.
+!!! warning
+
+    GPU support is not yet implemented. Tracking of GPU-driven computations may not work or may be incomplete.

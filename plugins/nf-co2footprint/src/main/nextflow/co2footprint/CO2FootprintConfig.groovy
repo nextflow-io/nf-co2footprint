@@ -92,11 +92,11 @@ class CO2FootprintConfig {
 
         // Assign PUE if not already given
         pue ?= switch (machineType) {
-            case 'local' ->  1.0
-            case 'compute cluster' -> 1.67
+            case 'local' -> 1.0
+            case 'compute cluster' -> 
+                processMap?.get('executor') == 'awsbatch' ? 1.15 : 1.67
             default -> 1.0
         }
-
         // Reassign values based on machineType
         if (machineType) {
             if (supportedMachineTypes.contains(machineType)) {
