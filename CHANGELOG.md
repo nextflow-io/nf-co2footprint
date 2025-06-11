@@ -24,6 +24,7 @@
 - Added requests to report warnings as Github issues
 - Added template to report missing chips
 - Changed Javascript method to use Converter methods
+- Modified Aggregator to include TraceRecords for tracking of CACHED processes
 
 # Version 1.0.0-beta1
 ## Features:
