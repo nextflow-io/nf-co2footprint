@@ -83,30 +83,6 @@ class TDPDataMatrix extends DataMatrix {
     }
 
     /**
-     * Initialize TDPDataMatrix with given TDPDataMatrix
-     *
-     * @param tpdDataMatrix TDPDataMatrix
-     * @param fallbackModel Fallback model as a String (represents row in data table)
-     * @param tdp TDP value that overwrites default
-     * @param cores Number of cores that overwrites default
-     * @param threads Number of threads that overwrites default
-     */
-    TDPDataMatrix(TDPDataMatrix tpdDataMatrix) {
-        // Initialize DataMatrix without non-ASCII characters in indices
-        super(
-                tpdDataMatrix.getData(),
-                tpdDataMatrix.getOrderedColumnKeys().collect {toASCII(it as String)} as LinkedHashSet,
-                tpdDataMatrix.getOrderedRowKeys().collect {toASCII(it as String)} as LinkedHashSet
-        )
-
-        // Initialize own values
-        this.fallbackModel = tpdDataMatrix.fallbackModel
-        this.tdp = tpdDataMatrix.tdp
-        this.cores = tpdDataMatrix.cores
-        this.threads = tpdDataMatrix.threads
-    }
-
-    /**
      * Remove non-ASCII symbols (®, ™,...)  from String.
      *
      * @param str Input string
@@ -122,7 +98,7 @@ class TDPDataMatrix extends DataMatrix {
      * @param model CPU model
      * @return DataMatrix with one entry, representing the model
      */
-    TDPDataMatrix matchModel(String model, Boolean fallbackToDefault=true, String originalModel=model) {
+    TDPDataMatrix matchModel(String model, Boolean fallbackToDefault=true, Boolean warnOnMismatch=true, String originalModel=model) {
         model = model ?: ''
         // Construct regular expression to address potential differences in exact name matching
         String modelRegex = toASCII(model, Matcher.quoteReplacement('\\s?'))                          // Convert to ASCII
@@ -149,6 +125,7 @@ class TDPDataMatrix extends DataMatrix {
             return matchModel(
                     String.join('@', model.split('@').dropRight(1)).trim(),
                     fallbackToDefault,
+                    warnOnMismatch,
                     originalModel
             )
         }
@@ -161,7 +138,9 @@ class TDPDataMatrix extends DataMatrix {
             )
         }
         else {
-            log.warn("No exact match found for '${model}'.")
+            if (warnOnMismatch) {
+                log.warn("No match found for '${model}'.")
+            }
             return null
         }
 
@@ -268,35 +247,47 @@ class TDPDataMatrix extends DataMatrix {
     }
 
     /**
-     * Check for replacements
-     *
-     * @param newTDPDataMatrix New TDP data matrix
-     */
-    void checkForReplacements(TDPDataMatrix newTDPDataMatrix) {
-        TDPDataMatrix oldEntry
-        TDPDataMatrix newEntry
-        for (String model : this.getRowIndex().keySet()) {
-            oldEntry = this.matchModel(model, false)
-            newEntry = newTDPDataMatrix.matchModel(model, false)
-            if (oldEntry && oldEntry.getData() != newEntry.getData()) {
-                log.info(
-                        "Already existing TDP value (${oldEntry.getTDP()} W) of '${model}' " +
-                        "is overwritten with custom value: ${newEntry.getTDP()} W"
-                )
-            }
-        }
-    }
-
-    /**
      * Replaces this instance with a new TDPDataMatrix
      *
      * @param newTDPDataMatrix New TDP data matrix
+     * @param warnOnReplacements Boolean whether to issue a warning on replacing a value
      */
     void update(TDPDataMatrix newTDPDataMatrix, Boolean warnOnReplacements=true) {
-        // Compare entries to warn about changing
-        if (warnOnReplacements) { checkForReplacements(newTDPDataMatrix) }
+        TDPDataMatrix oldEntry
+        TDPDataMatrix newEntry
+        List<Object> row
 
-        TDPDataMatrix(newTDPDataMatrix)
+        for (String model : newTDPDataMatrix.getRowIndex().keySet()) {
+            // Extract entries
+            newEntry = newTDPDataMatrix.matchModel(model, false)
+            oldEntry = this.matchModel(model, false, false)
+
+            if (oldEntry) {
+                // Ensure that key is preserved (no duplicate matches)
+                model = oldEntry.getRowIndex().keySet()[0]
+
+                // Compare entries to warn about changing
+                if (warnOnReplacements && oldEntry.getData() != newEntry.getData()) {
+                    log.info(
+                        "Already existing TDP value (${oldEntry.getTDP()} W) of '${model}' " +
+                        "is overwritten with custom value: ${newEntry.getTDP()} W"
+                    )
+                }
+            }
+
+            // Ensure matching row structure (Replaces mismatches with null)
+            row = this.getColumnIndex().keySet().collect { Object columnID ->
+                try {
+                    newEntry.get(0, columnID, true)
+                }
+                catch (IllegalArgumentException ignore) {
+                    null
+                }
+            }
+
+            // Add new data as a row
+            this.putRow(row, model)
+        }
     }
 
     /**
