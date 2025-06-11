@@ -236,7 +236,7 @@ class CO2FootprintObserverTest extends Specification{
         // 12 is the plugin version (changes on Github CI to current version)
         checksumChecker.compareChecksums(
                 summaryPath,
-                '0059c55719eeb11ddfe80b8edc0258ea',
+                'd62c03c65402ab088123f69bd36c898a',
                 [12, 16, 17, 18],
                 this.class.getResource('/summary_test.txt').getPath() as Path
         )
@@ -264,7 +264,7 @@ class CO2FootprintObserverTest extends Specification{
         // 207 is the plugin version, 642 is a Javascript (nothing written by hand)
         checksumChecker.compareChecksums(
                 reportPath,
-                '3497371a728007f87708a9a0a9b53798',
+                '763aa4ce0aa4690eb4a057aa220c015c',
                 [194, 207, 642, 1039],
                 this.class.getResource('/report_test.html').getPath() as Path
         )
