@@ -8,23 +8,42 @@ import groovy.util.logging.Slf4j
 import java.nio.file.Path
 import java.util.regex.Matcher
 
-
-@Slf4j
 /**
- * Structure for the thermal design power (TDP) values
+ * Structure for the thermal design power (TDP) values.
+ * 
+ * Provides methods for loading, matching, and retrieving TDP, core, and thread values
+ * for CPU models, including fallback and custom data support.
  *
  * @author Josua Carl <josua.carl@uni-tuebingen.de>
  */
+@Slf4j
 class TDPDataMatrix extends DataMatrix {
 
+    // Column IDs for TDP, cores, and threads
     private final Object tdpID = 'tdp (W)'
     private final Object coresID = 'cores'
     private final Object threadsID = 'threads'
+
+    // Fallback/default model name
     Object fallbackModel = 'default'
+
+    // Optional override values
     Integer tdp = null
     Integer cores = null
     Integer threads = null
 
+    
+    /**
+     * Constructor for TDPDataMatrix.
+     *
+     * @param data         Matrix data
+     * @param columnIndex  Column index set
+     * @param rowIndex     Row index set
+     * @param fallbackModel Fallback model name
+     * @param tdp          TDP value (optional)
+     * @param cores        Number of cores (optional)
+     * @param threads      Number of threads (optional)
+     */
     TDPDataMatrix(
             List<List> data = [], LinkedHashSet<String> columnIndex = [], LinkedHashSet<String> rowIndex = [],
             Object fallbackModel='default', Integer tdp=null, Integer cores=null, Integer threads=null
@@ -78,12 +97,16 @@ class TDPDataMatrix extends DataMatrix {
 
     /**
      * Match a CPU model to the given TDP matrix.
+     * Tries to find a matching row for the model, with fallback to default if not found.
      *
-     * @param model CPU model
-     * @return DataMatrix with one entry, representing the model
+     * @param model             CPU model string
+     * @param fallbackToDefault Whether to fallback to default if not found (default: true)
+     * @param originalModel     Original model string (for logging)
+     * @return                  TDPDataMatrix with one entry, representing the model
      */
     TDPDataMatrix matchModel(String model, Boolean fallbackToDefault=true, String originalModel=model) {
         model = model ?: ''
+
         // Construct regular expression to address potential differences in exact name matching
         String modelRegex = toASCII(model, Matcher.quoteReplacement('\\s?'))                          // Convert to ASCII
                 .toLowerCase()                                                        // Convert to lower case
@@ -98,14 +121,14 @@ class TDPDataMatrix extends DataMatrix {
                 str.matches(modelRegex)
         }
 
-
         DataMatrix modelData
+
         // Match only if exactly one match in index / model names
         if (matches.size() == 1) {
             modelData = select([matches[0]] as LinkedHashSet)
         }
         else if ( model.contains('@') ) {
-            // Case info appended with @
+            // Case info appended with @, try again with less specific model string
             return matchModel(
                     String.join('@', model.split('@').dropRight(1)).trim(),
                     fallbackToDefault,
@@ -134,10 +157,10 @@ class TDPDataMatrix extends DataMatrix {
     /**
      * Return TDP value of DataMatrix row. If none is given, the first position is assumed.
      *
-     * @param dm DataMatrix with TDP values
-     * @param rowID ID of the respective row, defaults to null
-     * @param rowIdx Index of the respective row, defaults to 0, neglected when rowID is given
-     * @return
+     * @param dm     DataMatrix with TDP values (default: this)
+     * @param rowID  ID of the respective row (default: null)
+     * @param rowIdx Index of the respective row (default: 0, ignored if rowID is given)
+     * @return       TDP value (W)
      */
     Double getTDP(DataMatrix dm=null, Object rowID=null, Integer rowIdx=0) {
         dm = dm ?: this
@@ -151,12 +174,12 @@ class TDPDataMatrix extends DataMatrix {
     }
 
     /**
-     * Return TDP value of DataMatrix row. If none is given, the first position is assumed.
+     * Return number of cores of DataMatrix row. If none is given, the first position is assumed.
      *
-     * @param dm DataMatrix with TPD values
-     * @param rowID ID of the respective row, defaults to null
-     * @param rowIdx Index of the respective row, defaults to 0, neglected when rowID is given
-     * @return
+     * @param dm     DataMatrix with core values (default: this)
+     * @param rowID  ID of the respective row (default: null)
+     * @param rowIdx Index of the respective row (default: 0, ignored if rowID is given)
+     * @return       Number of cores
      */
     Integer getCores(DataMatrix dm=null, Object rowID=null, Integer rowIdx=0) {
         dm = dm ?: this
@@ -171,12 +194,12 @@ class TDPDataMatrix extends DataMatrix {
     }
 
     /**
-     * Return TDP value of DataMatrix row. If none is given, the first position is assumed.
+     * Return number of threads of DataMatrix row. If none is given, the first position is assumed.
      *
-     * @param dm DataMatrix with TPD values
-     * @param rowID ID of the respective row, defaults to null
-     * @param rowIdx Index of the respective row, defaults to 0, neglected when rowID is given
-     * @return
+     * @param dm     DataMatrix with thread values (default: this)
+     * @param rowID  ID of the respective row (default: null)
+     * @param rowIdx Index of the respective row (default: 0, ignored if rowID is given)
+     * @return       Number of threads
      */
     Integer getThreads(DataMatrix dm=null, Object rowID=null, Integer rowIdx=0) {
         dm = dm ?: this
@@ -191,12 +214,12 @@ class TDPDataMatrix extends DataMatrix {
     }
 
     /**
-     * Return TDP value of DataMatrix row. If none is given, the first position is assumed.
+     * Return per-core TDP value of DataMatrix row.
      *
-     * @param dm DataMatrix with TPD values
-     * @param rowID ID of the respective row, defaults to null
-     * @param rowIdx Index of the respective row, defaults to 0, neglected when rowID is given
-     * @return
+     * @param dm     DataMatrix with TDP values (default: this)
+     * @param rowIdx Index of the respective row (default: 0)
+     * @param rowID  ID of the respective row (default: null)
+     * @return       TDP per core (W)
      */
     Double getCoreTDP(DataMatrix dm=null, Integer rowIdx=0, Object rowID=null) {
         dm = dm ?: this
@@ -204,23 +227,23 @@ class TDPDataMatrix extends DataMatrix {
     }
 
     /**
-     * Return TDP value of DataMatrix row. If none is given, the first position is assumed.
+     * Return per-thread TDP value of DataMatrix row.
      *
-     * @param dm DataMatrix with TPD values
-     * @param rowID ID of the respective row, defaults to null
-     * @param rowIdx Index of the respective row, defaults to 0, neglected when rowID is given
-     * @return
+     * @param dm     DataMatrix with TDP values (default: this)
+     * @param rowIdx Index of the respective row (default: 0)
+     * @param rowID  ID of the respective row (default: null)
+     * @return       TDP per thread (W)
      */
     Double getThreadTDP(DataMatrix dm=null, Integer rowIdx=0, Object rowID=null) {
         dm = dm ?: this
         return getTDP(dm, rowID, rowIdx) / getThreads(dm, rowID, rowIdx)
     }
 
-    /**
-     * Return first name (row index) of the TPDDataMatrix.
+/**
+     * Return first name (row index) of the TDPDataMatrix.
      *
-     * @param dm DataMatrix with TPD values
-     * @return first model name
+     * @param dm DataMatrix with TDP values (default: this)
+     * @return   First model name
      */
     String getFirstName(DataMatrix dm=null) {
         dm = dm ?: this
@@ -228,9 +251,9 @@ class TDPDataMatrix extends DataMatrix {
     }
 
     /**
-     * Replaces this instance with a new TDPDataMatrix
+     * Replaces this instance with a new TDPDataMatrix.
      *
-     * @param newTDPDataMatrix
+     * @param newTDPDataMatrix New TDPDataMatrix to copy data from
      */
     void update(TDPDataMatrix newTDPDataMatrix) {
         this.fallbackModel = newTDPDataMatrix.fallbackModel
@@ -243,7 +266,12 @@ class TDPDataMatrix extends DataMatrix {
         this.columnIndex = newTDPDataMatrix.columnIndex
     }
 
-
+    /**
+     * Compare two TDPDataMatrix objects and log if values are overwritten.
+     *
+     * @param oldData Old TDPDataMatrix
+     * @param newData New TDPDataMatrix
+     */
     static compareToOldData(TDPDataMatrix oldData, TDPDataMatrix newData) {
         // Compare entries to warn about changing
         if (oldData) {

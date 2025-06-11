@@ -2,11 +2,22 @@ package nextflow.co2footprint
 
 import nextflow.co2footprint.utils.Converter
 
+/**
+ * Stores equivalence values for CO₂ emissions:
+ * - Kilometers by car
+ * - Months for a tree to sequester
+ * - Percent of a Paris-London flight
+ */
 class CO2EquivalencesRecord {
     private final Double carKilometers
     private final Double treeMonths
     private final Double planePercent
 
+    /**
+     * @param carKilometers  Distance in km
+     * @param treeMonths     Months for a tree
+     * @param planePercent   Percent of a flight
+     */
     CO2EquivalencesRecord(Double carKilometers=null, Double treeMonths=null, Double planePercent=null) {
         this.carKilometers = carKilometers
         this.treeMonths = treeMonths
@@ -25,6 +36,9 @@ class CO2EquivalencesRecord {
     Integer getPlaneFlights() { planePercent / 100 as Integer }
     String getPlaneFlightsReadable() { Converter.toScientificNotation(this.getPlaneFlights()) }
 
+    /**
+     * Returns a list of readable equivalence strings.
+     */
     List<String> getReadableEquivalences() {
         List<String> readableEquivalences = new ArrayList<String>()
 
@@ -47,6 +61,6 @@ class CO2EquivalencesRecord {
             readableEquivalences.add(outStr)
         }
 
-        return  readableEquivalences
+        return readableEquivalences
     }
 }

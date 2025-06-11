@@ -21,90 +21,68 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.util.concurrent.ConcurrentHashMap
 
-@Slf4j
+
 /**
- * Implements the CO2Footprint observer
+ * Observer for CO₂ footprint reporting in Nextflow workflows.
  *
- * @author Júlia Mir Pedrol <mirp.julia@gmail.com>, Sabrina Krakau <sabrinakrakau@gmail.com>, Josua Carl <josua.carl@uni-tuebingen.de>
+ * Tracks task execution, collects resource usage, computes CO₂ emissions,
+ * and writes trace, summary, and HTML report files.
+ *
+ * @author Júlia Mir Pedrol <mirp.julia@gmail.com>,
+ *         Sabrina Krakau <sabrinakrakau@gmail.com>,
+ *         Josua Carl <josua.carl@uni-tuebingen.de>
  */
+@Slf4j
 class CO2FootprintObserver implements TraceObserver {
 
-    /**
-     * Plugin version
-     */
+    // Plugin version
     private String version
 
-    /**
-     * Holds workflow session
-     */
+    // Holds workflow session
     private Session session
 
-    /**
-     * The path where the files are created. It is set by the object constructor
-     */
+    // Output file paths
     private Map<String, Path> paths = [:]
 
-    /**
-     * The actual file object
-     */
+    // Output file objects
     private CO2FootprintTrace co2eTraceFile
     private CO2FootprintSummary co2eSummaryFile
     private CO2FootprintReport co2eReportFile
 
-    /**
-     * Overwrite existing files (required in some cases, as rolling filename has been deprecated)
-     */
+    // Overwrite existing files if true
     private boolean overwrite
-
-    /**
-     * Max number of tasks allowed in the report, when they exceed this
-     * number the tasks table is omitted
-     */
+     
+    // Max number of tasks allowed in the report, when they exceed this number the tasks table is omitted
     private int maxTasks
 
-    /**
-     * Configuration of the plugin
-     */
+    // Plugin configuration 
     CO2FootprintConfig config
 
-    /**
-     * Compute resources usage stats
-     */
+    // Aggregator for resource usage stats
     private CO2RecordAggregator aggregator
 
-    /**
-     * Computer for the CO2 emissions
-     */
+    // Calculator for CO₂ footprint
     private CO2FootprintComputer co2FootprintComputer
-
     CO2FootprintComputer getCO2FootprintComputer() { co2FootprintComputer }
 
-    /**
-     * Holds the the start time for tasks started/submitted but not yet completed
-     */
+    // Holds the the start time for tasks started/submitted but not yet completed
     @PackageScope
     Map<TaskId, TraceRecord> current = new ConcurrentHashMap<>()
 
-    /**
-     * CO2 emission Records with task IDs
-     */
+    // Stores CO₂ emission records by task ID
     final private Map<TaskId,CO2Record> co2eRecords = new ConcurrentHashMap<>()
-
     Map<TaskId,CO2Record> getCO2eRecords() { co2eRecords }
 
-
-    /**
-     * Holds tasks with their trace records
-     */
+    // Stores all trace records by task ID
     final private Map<TaskId, TraceRecord> traceRecords = new LinkedHashMap<>()
 
     /**
-     * Creates a report observer
+     * Constructor for the observer.
      *
-     * @param session The current session within which the Observer is called
-     * @param version The current version of the plugin
-     * @param config The configuration of the Plugin
-     * @param co2FootprintComputer The computation instance
+     * @param session Nextflow session
+     * @param version Plugin version
+     * @param config Plugin configuration
+     * @param co2FootprintComputer CO₂ computation instance
      * @param overwrite Whether to overwrite existing documents
      * @param maxTasks The maximum number of tasks until the table in the report is dropped
      */
@@ -131,20 +109,19 @@ class CO2FootprintObserver implements TraceObserver {
     }
 
     /**
-     * Enables the collection of the task executions metrics in order to be reported in the HTML report
+     * Enables the collection of the task executions metrics in order to be reported in the HTML report.
      *
-     * @return {@code true}
+     * @return {@code true} to enable metrics collection
      */
     @Override
     boolean enableMetrics() { return true }
 
-
     /**
-     * Set the number max allowed tasks. If this number is exceed the the tasks
-     * json in not included in the final report
+     * Set the maximum number of tasks to include in the report table.
+     * If exceeded, the table is omitted.
      *
-     * @param value The number of max task record allowed to be included in the HTML report
-     * @return The {@link CO2FootprintObserver} itself
+     * @param value Maximum number of tasks to include in the report
+     * @return This observer instance
      */
     CO2FootprintObserver setMaxTasks(int value) {
         this.maxTasks = value
@@ -156,9 +133,9 @@ class CO2FootprintObserver implements TraceObserver {
     // ---- WORKFLOW LEVEL ----
 
     /**
-     * Start of the workflow; Creates the trace file
+     * Start of the workflow; Creates the trace file.
      *
-     * @param session A {@link nextflow.Session} object representing the current session
+     * @param session The current Nextflow session
      */
     @Override
     void onFlowCreate(Session session) {
@@ -184,7 +161,6 @@ class CO2FootprintObserver implements TraceObserver {
 
         co2eReportFile = new CO2FootprintReport(paths['co2eReport'], overwrite, maxTasks)
     }
-
 
     /**
      * Save the pending processes and close the files
@@ -219,18 +195,17 @@ class CO2FootprintObserver implements TraceObserver {
     /**
      * This method is invoked when a process is created
      *
-     * @param process A {@link nextflow.processor.TaskProcessor} object representing the process created
+     * @param process The process created ({@link nextflow.processor.TaskProcessor})
      */
     @Override
     void onProcessCreate(TaskProcessor process) { 
     }
 
-
     /**
-     * This method is invoked before a process run is going to be submitted
+     * This method is invoked before a process run is going to be submitted.
      *
-     * @param handler A {@link nextflow.processor.TaskHandler} object representing the task submitted
-     * @param trace A {@link nextflow.trace.TraceRecord} object representing current task
+     * @param handler The task handler ({@link nextflow.processor.TaskHandler})
+     * @param trace   The trace record for the task ({@link nextflow.trace.TraceRecord})
      */
     @Override
     void onProcessSubmit(TaskHandler handler, TraceRecord trace) {
@@ -244,10 +219,10 @@ class CO2FootprintObserver implements TraceObserver {
     }
 
     /**
-     * This method is invoked when a process run is going to start
+     * This method is invoked when a process run is going to start.
      *
-     * @param handler A {@link nextflow.processor.TaskHandler} object representing the task submitted
-     * @param trace A {@link nextflow.trace.TraceRecord} object representing current task
+     * @param handler The task handler ({@link nextflow.processor.TaskHandler})
+     * @param trace   The trace record for the task ({@link nextflow.trace.TraceRecord})
      */
     @Override
     void onProcessStart(TaskHandler handler, TraceRecord trace) {
@@ -261,10 +236,10 @@ class CO2FootprintObserver implements TraceObserver {
     }
 
     /**
-     * This method is invoked when a process run completes
+     * This method is invoked when a process run completes.
      *
-     * @param handler A {@link nextflow.processor.TaskHandler} object representing the task submitted
-     * @param trace A {@link nextflow.trace.TraceRecord} object representing current task
+     * @param handler The task handler ({@link nextflow.processor.TaskHandler})
+     * @param trace   The trace record for the task ({@link nextflow.trace.TraceRecord})
      */
     @Override
     void onProcessComplete(TaskHandler handler, TraceRecord trace) {
@@ -277,7 +252,7 @@ class CO2FootprintObserver implements TraceObserver {
             return
         }
 
-        // remove the record from the current records
+        // Remove the record from the current records
         current.remove(taskId)
 
         // Extract CO2e records
@@ -292,22 +267,22 @@ class CO2FootprintObserver implements TraceObserver {
             aggregator.add(co2Record, trace.getSimpleName())
         }
 
-        // save to files
+        // Save to files
         co2eTraceFile.write(taskId, trace, co2Record)
     }
 
-    @Override
     /**
-     * This method is invoked when a process was cached
+     * This method is invoked when a process was cached.
      *
-     * @param handler A {@link nextflow.processor.TaskHandler} object representing the task submitted
-     * @param trace A {@link nextflow.trace.TraceRecord} object representing current task
+     * @param handler The task handler ({@link nextflow.processor.TaskHandler})
+     * @param trace   The trace record for the task ({@link nextflow.trace.TraceRecord})
      */
+    @Override
     void onProcessCached(TaskHandler handler, TraceRecord trace) {
         log.trace("Trace report - cached process > $handler")
         final TaskId taskId = handler.task.id
 
-        // event was triggered by a stored task, ignore it
+        // Event was triggered by a stored task, ignore it
         if (trace == null) { return }
 
         // Extract records
@@ -323,9 +298,8 @@ class CO2FootprintObserver implements TraceObserver {
         }
 
 
-        // save to the files
+        // Save to the files
         co2eTraceFile.write(taskId, trace, co2Record)
     }
-
 
 }

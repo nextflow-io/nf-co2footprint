@@ -1,19 +1,3 @@
-/*
- * Copyright 2021, Seqera Labs
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package nextflow.co2footprint
 
 import nextflow.co2footprint.utils.DeduplicateMarkerFilter
@@ -35,7 +19,10 @@ import ch.qos.logback.classic.LoggerContext
 import ch.qos.logback.classic.turbo.TurboFilter
 
 /**
- * Implements the CO2Footprint observer factory
+ * Factory class for creating the CO2Footprint trace observer.
+ * 
+ * Loads external data for CPU TDP and carbon intensity, sets up deduplicated logging,
+ * and creates the observer with all required configuration and data.
  *
  * @author Júlia Mir Pedrol <mirp.julia@gmail.com>, Sabrina Krakau <sabrinakrakau@gmail.com>
  */
@@ -78,7 +65,14 @@ class CO2FootprintFactory implements TraceObserverFactory {
     private final CIDataMatrix ciDataMatrix = CIDataMatrix.fromCsv(
             Paths.get(this.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
     )
-
+    
+    /**
+     * Creates and returns the CO2Footprint trace observer.
+     * Loads configuration, sets up the observer, and injects all required data.
+     *
+     * @param session The Nextflow session
+     * @return Collection of TraceObserver (with one CO2FootprintObserver)
+     */
     @Override
     Collection<TraceObserver> create(Session session) {
         getPluginVersion()
