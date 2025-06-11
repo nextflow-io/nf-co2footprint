@@ -50,7 +50,7 @@ class CO2FootprintSummary extends CO2FootprintFile {
         summaryWriter = new Agent<PrintWriter>(co2eSummaryFile)
 
         String outText = """\
-        Total CO2e footprint measures of this workflow run
+        Total CO2e footprint measures of this workflow run (including cached tasks):
         CO2e emissions: ${Converter.toReadableUnits(total_co2,'m', 'g')}
         Energy consumption: ${Converter.toReadableUnits(total_energy,'m', 'Wh')}
 
