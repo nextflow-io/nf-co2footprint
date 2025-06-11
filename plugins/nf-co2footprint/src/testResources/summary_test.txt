@@ -1,4 +1,4 @@
-Total CO2e footprint measures of this workflow run
+Total CO2e footprint measures of this workflow run (including cached tasks):
 CO2e emissions: 4.61 g
 Energy consumption: 9.61 Wh
 
