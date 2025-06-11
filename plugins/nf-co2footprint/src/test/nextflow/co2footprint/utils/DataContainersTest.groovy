@@ -162,6 +162,33 @@ class DataMatrixTest extends  Specification {
         df == df2
     }
 
+    def 'Should add a row at the end and replace an entry' () {
+        setup:
+        Matrix df2 = new DataMatrix(
+                [
+                        [1, 2, '3'],
+                        [4, '6', 7],
+                ],
+                ['C1', 'C2', 'C3'] as LinkedHashSet,
+                ['R1', 'R2'] as LinkedHashSet,
+        )
+
+        when:
+        df2.putRow([1, 2, 4], 'R1')
+        df2.putRow([1, 2, 5], 'R3')
+
+        then:
+        df2 == new DataMatrix(
+                [
+                        [1, 2, 4],
+                        [4, '6', 7],
+                        [1, 2, 5],
+                ],
+                ['C1', 'C2', 'C3'] as LinkedHashSet,
+                ['R1', 'R2', 'R3'] as LinkedHashSet,
+        )
+    }
+
     def 'Should save a csv table of DataMatrix' () {
         setup:
         Path filePath = tempPath.resolve('dm.csv')
