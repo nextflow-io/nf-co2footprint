@@ -289,7 +289,7 @@ class CO2FootprintObserver implements TraceObserver {
         // Aggregate results
         synchronized (traceRecords) {
             traceRecords[ trace.taskId ] = trace
-            aggregator.add(co2Record, trace.getSimpleName())
+            aggregator.add(trace, co2Record)
         }
 
         // save to files
@@ -319,7 +319,7 @@ class CO2FootprintObserver implements TraceObserver {
         // Aggregate results
         synchronized (traceRecords) {
             traceRecords[ trace.taskId ] = trace
-            aggregator.add(co2Record, trace.getSimpleName())
+            aggregator.add(trace, co2Record)
         }
 
 
