@@ -18,7 +18,7 @@
 - Testing of files via saved snapshots when checksum fails
 - Removal of inherited methods in `CO2Record`
 - Adjusted folder structure of tests to main
-
+- Changed Javascript method to use Converter methods
 
 # Version 1.0.0-beta1
 ## Features:
