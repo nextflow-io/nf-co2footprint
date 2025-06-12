@@ -92,7 +92,7 @@ class CO2FootprintReportTest extends Specification{
         when:
         CO2EquivalencesRecord equivalences = new CO2EquivalencesRecord(carKm, treeMonths, planePercent)
         co2FootprintReport.addEntries(
-                10, 10, equivalences, null, null, null, null, null, null
+                [co2e: 10, energy: 10], null, equivalences, null, null, null, null, null, null
         )
         Map<String, String> totalsJson = co2FootprintReport.renderCO2TotalsJson()
 
