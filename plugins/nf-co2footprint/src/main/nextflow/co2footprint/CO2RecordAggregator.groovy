@@ -135,11 +135,21 @@ class CO2RecordAggregator {
             */
 
             QuantileItem quantileItem
-            Double total = sortedRecords.sum { Map<String, TraceRecord> record ->
+
+            // List all values
+            List<Double> allValues = sortedRecords.collect { Map<String, TraceRecord> record ->
                 metricExtractionFunction.call(record['traceRecord'], record['co2Record'])
-            } as Double
+            }
+            result.put('all', allValues)
+
+            // Add total
+            Double total = allValues.sum() as Double
             result.put('total', total as double)
+
+            // Add mean
             result.put('mean', (total / sortedRecords.size()) as double)
+
+            // Add quantiles
             ['min': 0d, 'q1': .25d, 'q2': .50d, 'q3': .75d, 'max': 1d].each { String key, double q ->
                 quantileItem = getQuantile(sortedRecords, q, metricExtractionFunction)
                 result.put("${key}Label" as String, (quantileItem.getRecord().get('co2Record') as CO2Record).getName())
