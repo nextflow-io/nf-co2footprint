@@ -41,7 +41,8 @@ class CO2FootprintObserverTest extends Specification{
                  'cpus': 1,
                  'cpu_model': "Unknown model",
                  '%cpu': 100.0,
-                 'memory': (7 as Long) * (1024**3 as Long) // 7 GB 
+                 'memory': (7 as Long) * (1024**3 as Long), // 7 GB
+                 'status': 'CACHED'
             ]
         )
     }
@@ -220,7 +221,7 @@ class CO2FootprintObserverTest extends Specification{
         ]
 
         traceLines[1].split('\t') as List<String> == [
-            '111', 'null', 'null', '9.61 Wh', '4.61 g', '1ms', '480.0 gCO₂eq/kWh', '1', '7.0', 'Unknown model', '100.0', '7.0 B'
+            '111', 'CACHED', 'null', '9.61 Wh', '4.61 g', '1ms', '480.0 gCO₂eq/kWh', '1', '7.0', 'Unknown model', '100.0', '7.0 B'
         ] // GA: CO2e is 6.94g with CI of 475 gCO2eq/kWh
         checksumChecker.compareChecksums(
                 tracePath,
