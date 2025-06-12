@@ -42,7 +42,7 @@ class CO2FootprintObserverTest extends Specification{
                  'cpu_model': "Unknown model",
                  '%cpu': 100.0,
                  'memory': (7 as Long) * (1024**3 as Long), // 7 GB
-                 'status': 'CACHED'
+                 'status': 'COMPLETED'
             ]
         )
     }
@@ -221,11 +221,11 @@ class CO2FootprintObserverTest extends Specification{
         ]
 
         traceLines[1].split('\t') as List<String> == [
-            '111', 'CACHED', 'null', '14.61 Wh', '7.01 g', '1ms', '480.0 gCO₂eq/kWh', '1', '12.0', 'Unknown model', '100.0', '7.0 B'
+            '111', 'COMPLETED', 'null', '14.61 Wh', '7.01 g', '1ms', '480.0 gCO₂eq/kWh', '1', '12.0', 'Unknown model', '100.0', '7.0 B'
         ] // GA: CO2e is 6.94g with CI of 475 gCO2eq/kWh
         checksumChecker.compareChecksums(
                 tracePath,
-                '7e63d0d824074bab0ca4d26161be6666'
+                'f88018c00975e5e2bd2e48f38b5a465e'
         )
 
         // Check Summary File
@@ -265,7 +265,7 @@ class CO2FootprintObserverTest extends Specification{
         // 207 is the plugin version, 642 is a Javascript (nothing written by hand)
         checksumChecker.compareChecksums(
                 reportPath,
-                'dac75a95ffbba1cf1e1f35fed5ddf4b3',
+                'e003ba02fe53849daf6ec066f93b88c0',
                 [194, 207, 642, 1039],
                 this.class.getResource('/report_test.html').getPath() as Path
         )

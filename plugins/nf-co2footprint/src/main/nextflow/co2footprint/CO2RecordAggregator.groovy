@@ -21,11 +21,11 @@ class CO2RecordAggregator {
         this.metricExtractionFunctions ?= metricExtractionFunctions ?: [
                 co2e: { TraceRecord traceRecord, CO2Record co2Record -> co2Record.getCO2e() },
                 energy: { TraceRecord traceRecord, CO2Record co2Record -> co2Record.getEnergyConsumption() },
-                co2e_cached: { TraceRecord traceRecord, CO2Record co2Record ->
-                    traceRecord.getStore()['status'] == 'CACHED' ? co2Record.getCO2e() : null
+                co2e_non_cached: { TraceRecord traceRecord, CO2Record co2Record ->
+                    traceRecord.getStore()['status'] != 'CACHED' ? co2Record.getCO2e() : null
                 },
-                energy_cached: { TraceRecord traceRecord, CO2Record co2Record ->
-                    traceRecord.getStore()['status'] == 'CACHED' ? co2Record.getEnergyConsumption() : null
+                energy_non_cached: { TraceRecord traceRecord, CO2Record co2Record ->
+                    traceRecord.getStore()['status'] != 'CACHED' ? co2Record.getEnergyConsumption() : null
                 }
         ]
     }
@@ -138,6 +138,7 @@ class CO2RecordAggregator {
             Double total = sortedRecords.sum { Map<String, TraceRecord> record ->
                 metricExtractionFunction.call(record['traceRecord'], record['co2Record'])
             } as Double
+            result.put('total', total as double)
             result.put('mean', (total / sortedRecords.size()) as double)
             ['min': 0d, 'q1': .25d, 'q2': .50d, 'q3': .75d, 'max': 1d].each { String key, double q ->
                 quantileItem = getQuantile(sortedRecords, q, metricExtractionFunction)
@@ -156,11 +157,11 @@ class CO2RecordAggregator {
      * @return A map where each key is a metric name and each value is a map of summary statistics
      *         as returned by {@link #computeStat}.
      */
-    Map<String, ?> computeStats(List<Map<String, TraceRecord>> records) {
+    Map<String, Map<String, ?>> computeStats(List<Map<String, TraceRecord>> records) {
         return this.metricExtractionFunctions.collectEntries {
             String metricName, Closure<Double> metricExtractionFunction ->
                 [metricName, computeStat(records, metricExtractionFunction)]
-        } as Map<String, ?>
+        }
     }
 
     /**
@@ -174,14 +175,10 @@ class CO2RecordAggregator {
      *         - one entry per metric (e.g., 'energy', 'emissions'), each with its corresponding stats map
      *         The format looks like this: [ [process: processName1:, metricName1: [entryKey1: value, ...],...],...]
      */
-    List<Map<String, ?>> computeProcessStats() {
-        Map<String, ?> stats
-        List<Map<String, ?>> processStats = this.processCO2Records.collect {
+    Map<String, Map<String, Map<String, ?>>> computeProcessStats() {
+        return this.processCO2Records.collectEntries {
             String processName, List<Map<String, TraceRecord>> records ->
-                stats = [process: processName] as Map<String, ?>
-                stats.putAll(computeStats(records))
-                return stats
+                [processName, computeStats(records)]
         }
-        return processStats
     }
 }

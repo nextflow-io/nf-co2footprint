@@ -131,15 +131,19 @@ class CO2FootprintReportTest extends Specification{
                             '"co2e":' +
                                 '{' +
                                     '"mean":1.0,"minLabel":"testTask","min":1.0,"q1Label":"testTask","q1":1.0,"q2Label":"testTask","q2":1.0,"q3Label":"testTask","q3":1.0,"maxLabel":"testTask","max":1.0' +
-                                //  '"mean":1.0,"min":1.0,"q1":1.0,"q2":1.0,"q3":1.0,"max":1.0,"minLabel":"testTask","maxLabel":"testTask","q1Label":"testTask","q2Label":"testTask","q3Label":"testTask"'
                                 '},' +
                             '"energy":' +
                                 '{' +
                                     '"mean":1.0,"minLabel":"testTask","min":1.0,"q1Label":"testTask","q1":1.0,"q2Label":"testTask","q2":1.0,"q3Label":"testTask","q3":1.0,"maxLabel":"testTask","max":1.0' +
-                                //  '"mean":1.0,"min":1.0,"q1":1.0,"q2":1.0,"q3":1.0,"max":1.0,"minLabel":"testTask","maxLabel":"testTask","q1Label":"testTask","q2Label":"testTask","q3Label":"testTask"'
                                 '},' +
-                            '"co2e_cached":{},' +
-                            '"energy_cached":{}' +
+                            '"co2e_non_cached":' +
+                                '{' +
+                                    '"mean":1.0,"minLabel":"testTask","min":1.0,"q1Label":"testTask","q1":1.0,"q2Label":"testTask","q2":1.0,"q3Label":"testTask","q3":1.0,"maxLabel":"testTask","max":1.0' +
+                                '},' +
+                            '"energy_non_cached":' +
+                                '{' +
+                                    '"mean":1.0,"minLabel":"testTask","min":1.0,"q1Label":"testTask","q1":1.0,"q2Label":"testTask","q2":1.0,"q3Label":"testTask","q3":1.0,"maxLabel":"testTask","max":1.0' +
+                                '}' +
                         '}' +
                     ']' +
                 '}'
