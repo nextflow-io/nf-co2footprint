@@ -261,49 +261,65 @@ $(function() {
   }
 
   // Collect metrics by process
-  for(let i in window.data.summary){
-    let metrics = window.data.summary[i];
-    let proc = metrics.process;
+  for(let processName in window.data.summary){
+    let metrics = window.data.summary[processName];
 
-    if(!window.data_byprocess.hasOwnProperty(proc)){
-      window.data_byprocess[proc] = {};
-    }
+    // Add an empty map if the process is not already present
+    window.statsByProcess[processName] ??= {};
 
-    for (let key in metrics) {
-      if (metrics[key] != null) {
-        window.data_byprocess[proc][key] = [];
-        if( metrics[key].min == metrics[key].max ) {
-            // min equals max ==> show just a value
-            window.data_byprocess[proc][key].push(metrics[key].min);
-        }
-        else {
-            // otherwise show all values
-            window.data_byprocess[proc][key].push(metrics[key].min);
-            window.data_byprocess[proc][key].push(metrics[key].q1);
-            window.data_byprocess[proc][key].push(metrics[key].q1);
-            window.data_byprocess[proc][key].push(metrics[key].q2);
-            window.data_byprocess[proc][key].push(metrics[key].q3);
-            window.data_byprocess[proc][key].push(metrics[key].q3);
-            window.data_byprocess[proc][key].push(metrics[key].max);
-        }
-        if (key == "time") {
-          window.data_byprocess[proc][key] = window.data_byprocess[proc][key].map(function(d,i){
-            return moment.duration(d).asMinutes().toFixed(1);
-          });
-        }
+    for (let metricName in metrics) {
+      // Skip if metric is not present
+      if (metrics[metricName] == null) { continue; }
+
+      if( metrics[metricName]['min'] == metrics[metricName]['max'] ) {
+        // min equals max ==> show just a value
+        window.statsByProcess[processName][metricName] = [ metrics[metricName]['min'] ];
+      }
+      else {
+          // otherwise show all values
+          window.statsByProcess[processName][metricName] = ['min', 'q1', 'q2', 'q3', 'max'].map(stat => metrics[metricName][stat])
+      }
+      if (metricName == "time") {
+        window.statsByProcess[processName][metricName] = window.statsByProcess[processName][metricName].map(function(d,i){
+          return moment.duration(d).asMinutes().toFixed(1);
+        });
       }
     }
   }
 
   // Plot histograms of resource usage
   var data = [];
-  for(var pname in window.data_byprocess){
-    if( !window.data_byprocess.hasOwnProperty(pname) )
-        continue;
-    var smry = window.data_byprocess[pname];
-    data.push({x:pname, y: norm_units(smry.co2e), name: pname, legendgroup: pname, type:'box', boxmean: true, boxpoints: false});
-    // energy will be plotted with transparent color, hiding hover info and legend, but linked to tye right y-axis
-    data.push({x:pname, y: norm_units(smry.energy), name: pname, legendgroup: pname, type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend:false, hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'});
+  for(var processName in window.statsByProcess){
+
+    // Extract process statistics
+    var stats = window.statsByProcess[processName];
+
+    // Add CO2 Boxplot to plot
+    data.push(
+      {
+        x:processName, y: norm_units(stats.co2e), name: processName, legendgroup: processName,
+        type:'box', boxmean: true, boxpoints: false
+      }
+    );
+
+    // Add outline of CO2 emissions from non-cached processes to plot
+    data.push(
+      {
+        x:processName, y: norm_units(stats.co2e_non_cached), name: processName, legendgroup: processName,
+        type:'box', boxmean: true, boxpoints: false, showlegend: false,
+        marker: { color: 'rgba(128, 128, 128, 0.01)' }, fillcolor: 'rgba(128, 128, 128, 0.01)', line: { color: 'rgba(128, 128, 128, 0.25)' },
+        hovertext: 'Non-cached CO2e emissions', hoverinfo: 'text'
+      }
+    );
+
+    // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
+    data.push(
+      {
+        x:processName, y: norm_units(stats.energy), name: processName, legendgroup: processName,
+        type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
+        hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
+      }
+    );
   }
 
   var tickformat = [{

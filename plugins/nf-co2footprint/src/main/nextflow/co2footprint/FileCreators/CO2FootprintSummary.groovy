@@ -45,14 +45,14 @@ class CO2FootprintSummary extends CO2FootprintFile {
      * @param config        CO2FootprintConfiguration
      * @param version       Plugin version
      */
-    void write(Double total_energy, Double total_co2, CO2EquivalencesRecord equivalences, CO2FootprintConfig config, String version) {
+    void write(Map<String, Double> totalStats, CO2EquivalencesRecord equivalences, CO2FootprintConfig config, String version) {
         // Launch the agent (for thread safety, though only one write is performed)
         summaryWriter = new Agent<PrintWriter>(co2eSummaryFile)
 
         String outText = """\
         Total CO2e footprint measures of this workflow run (including cached tasks):
-        CO2e emissions: ${Converter.toReadableUnits(total_co2,'m', 'g')}
-        Energy consumption: ${Converter.toReadableUnits(total_energy,'m', 'Wh')}
+        CO2e emissions: ${Converter.toReadableUnits(totalStats['co2'],'m', 'g')}
+        Energy consumption: ${Converter.toReadableUnits(totalStats['energy'],'m', 'Wh')}
 
         """.stripIndent()
 
