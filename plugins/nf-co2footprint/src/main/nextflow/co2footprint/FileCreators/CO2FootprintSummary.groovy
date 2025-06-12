@@ -51,7 +51,7 @@ class CO2FootprintSummary extends CO2FootprintFile {
 
         String outText = """\
         Total CO2e footprint measures of this workflow run (including cached tasks):
-        CO2e emissions: ${Converter.toReadableUnits(totalStats['co2'],'m', 'g')}
+        CO2e emissions: ${Converter.toReadableUnits(totalStats['co2e'],'m', 'g')}
         Energy consumption: ${Converter.toReadableUnits(totalStats['energy'],'m', 'Wh')}
 
         """.stripIndent()

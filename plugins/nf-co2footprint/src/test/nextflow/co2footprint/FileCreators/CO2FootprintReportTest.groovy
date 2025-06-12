@@ -75,8 +75,9 @@ class CO2FootprintReportTest extends Specification{
 
         co2FootprintReport = new CO2FootprintReport(reportPath, false, 10_000)
         co2FootprintReport.addEntries(
-                10.0d, 100.0d,
-                equivalencesRecord, aggregator, config,
+                [co2: 10.0d, energy: 100.0d, co2_non_cached: 10.0d, energy_non_cached: 100.0d],
+                aggregator.computeProcessStats(),
+                equivalencesRecord, config,
                 'test-version', session, [(taskId): traceRecord], [(taskId): co2Record]
         )
     }

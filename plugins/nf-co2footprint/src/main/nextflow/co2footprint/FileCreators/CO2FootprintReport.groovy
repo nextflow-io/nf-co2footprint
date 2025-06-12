@@ -181,9 +181,9 @@ class CO2FootprintReport extends CO2FootprintFile{
      */
     protected Map<String, String> renderCO2TotalsJson() {
         return [
-            co2: Converter.toReadableUnits(totalStats['co2'],'m', 'g'),
+            co2: Converter.toReadableUnits(totalStats['co2e'],'m', 'g'),
             energy:Converter.toReadableUnits(totalStats['energy'],'m','Wh'),
-            co2_non_cached: Converter.toReadableUnits(totalStats['co2_non_cached'],'m', 'g'),
+            co2_non_cached: Converter.toReadableUnits(totalStats['co2e_non_cached'],'m', 'g'),
             energy_non_cached:Converter.toReadableUnits(totalStats['energy_non_cached'],'m','Wh'),
             car: equivalences.getCarKilometersReadable(),
             tree: equivalences.getTreeMonthsReadable(),

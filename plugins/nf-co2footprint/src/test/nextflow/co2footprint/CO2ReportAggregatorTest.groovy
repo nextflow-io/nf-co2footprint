@@ -63,10 +63,10 @@ class CO2ReportAggregatorTest extends Specification {
 
         then:
         stats == [
-                co2e             : [mean: 1.0, minLabel: 'testTask_1', min: 0.0, q1Label: 'testTask_1', q1: 0.5, q2Label: 'testTask_2', q2: 1.0, q3Label: 'testTask_2', q3: 1.5, maxLabel: 'testTask_3', max: 2.0],
-                energy           : [mean: 1.0, minLabel: 'testTask_1', min: 0.0, q1Label: 'testTask_1', q1: 0.5, q2Label: 'testTask_2', q2: 1.0, q3Label: 'testTask_2', q3: 1.5, maxLabel: 'testTask_3', max: 2.0],
-                co2e_non_cached  : [mean: 0.5, minLabel: 'testTask_1', min: 0.0, q1Label: 'testTask_1', q1: 0.25, q2Label: 'testTask_1', q2: 0.5, q3Label: 'testTask_1', q3: 0.75, maxLabel: 'testTask_2', max: 1.0],
-                energy_non_cached: [mean: 0.5, minLabel: 'testTask_1', min: 0.0, q1Label: 'testTask_1', q1: 0.25, q2Label: 'testTask_1', q2: 0.5, q3Label: 'testTask_1', q3: 0.75, maxLabel: 'testTask_2', max: 1.0]
+                co2e             : [all: [0.0, 1.0, 2.0], total: 3.0, mean: 1.0, minLabel: 'testTask_1', min: 0.0, q1Label: 'testTask_1', q1: 0.5, q2Label: 'testTask_2', q2: 1.0, q3Label: 'testTask_2', q3: 1.5, maxLabel: 'testTask_3', max: 2.0],
+                energy           : [all: [0.0, 1.0, 2.0], total: 3.0, mean: 1.0, minLabel: 'testTask_1', min: 0.0, q1Label: 'testTask_1', q1: 0.5, q2Label: 'testTask_2', q2: 1.0, q3Label: 'testTask_2', q3: 1.5, maxLabel: 'testTask_3', max: 2.0],
+                co2e_non_cached  : [all: [0.0, 1.0], total: 1.0, mean: 0.5, minLabel: 'testTask_1', min: 0.0, q1Label: 'testTask_1', q1: 0.25, q2Label: 'testTask_1', q2: 0.5, q3Label: 'testTask_1', q3: 0.75, maxLabel: 'testTask_2', max: 1.0],
+                energy_non_cached: [all: [0.0, 1.0], total: 1.0, mean: 0.5, minLabel: 'testTask_1', min: 0.0, q1Label: 'testTask_1', q1: 0.25, q2Label: 'testTask_1', q2: 0.5, q3Label: 'testTask_1', q3: 0.75, maxLabel: 'testTask_2', max: 1.0]
         ]
     }
 }
