@@ -62,7 +62,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         final InputStreamReader reader = new InputStreamReader(this.class.getResourceAsStream('/META-INF/MANIFEST.MF'))
         String line
         while ( (line = reader.readLine()) && !version ) {
-            def h = line.split(": ")
+            def h = line.split(': ')
             if ( h[0] == 'Plugin-Version' ) this.version = h[1]
         }
         reader.close()

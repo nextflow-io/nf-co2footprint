@@ -35,7 +35,7 @@ class CO2FootprintReportTest extends Specification{
                         'process': 'reportTestProcess',
                         'realtime': (1 as Long) * (3600000 as Long), // 1 h
                         'cpus': 1,
-                        'cpu_model': "Unknown model",
+                        'cpu_model': 'Unknown model',
                         '%cpu': 100.0,
                         'memory': (7 as Long) * (1024**3 as Long) // 7 GB
                 ]

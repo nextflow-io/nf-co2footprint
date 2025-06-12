@@ -100,7 +100,7 @@ class CO2FootprintConfig {
         // Reassign values based on machineType
         if (machineType) {
             if (supportedMachineTypes.contains(machineType)) {
-                cpuData.fallbackModel = "default $machineType"
+                cpuData.fallbackModel = "default $machineType" as String
             }
             else {
                 final String message = "machineType '${machineType}' is not supported." +
