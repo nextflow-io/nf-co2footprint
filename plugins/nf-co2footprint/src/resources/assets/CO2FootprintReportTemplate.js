@@ -1,20 +1,248 @@
 // JavaScript used to power the Nextflow Report Template output.
-window.data_byprocess = {};
+ 
+//
+// Converter methods
+//
 
 /**
- * helper functions that takes an array of numbers 
- * units are in milliwatt-hours (mWh) or milligram (mg) and are converted to its base unit 
-*/
+ * Converts a list of numbers in milli-units (mWh, mg,...) to base units (Wh, g)
+ * @param {ArrayLike} list An array with numbers
+ * @returns The array, with each value divided by 1000
+ */
 function norm_units( list ) {
-  if( list == null ) return null;
-  var result = new Array(list.length);
-  for( i=0; i<list.length; i++ ) {
-    var value = list[i];
-    result[i] = value / 1000;
-  }
-  return result;
+  return list?.map(v => v / 1000) ?? null;
 }
 
+/**
+ * Convert to readable units, optionally with a starting scope and a unit label
+ * 
+ * @param {*} value The value to be converted
+ * @param {*} scope The current scope of the value
+ * @param {*} unit The unit of the value
+ * @returns Decimally shifted value
+ */
+function toReadableUnits(value, scope = '', unit = '') {
+  var scopes = ['p', 'n', 'u', 'm', '', 'K', 'M', 'G', 'T', 'P', 'E']; // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
+  var scopeIndex = scopes.indexOf(scope);
+  
+  while (value >= 1000 && scopeIndex < scopes.length - 1) {
+    value /= 1000;
+    scopeIndex++;
+  }
+  while (value <= 1 && scopeIndex > 0) {
+    value *= 1000;
+    scopeIndex--;
+  }
+
+  value = Math.round(value * 100) / 100;
+  return value + ' ' + scopes[scopeIndex] + unit;    
+}
+
+
+/**
+ * Convert bytes to readable units
+ * 
+ * @param {*} value Bytes to be converted to readable scope
+ * @returns Bytes in a readable scope
+ */
+function toReadableByteUnits(value){
+  units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']  // Units: Byte, Kilobyte, Megabyte, Gigabyte, Terabyte, Petabyte, Exabyte
+  unit_index=0
+
+  while (value >= 1024 && unit_index < units.length - 1) {
+    value /= 1024;
+    unit_index++;
+  }
+  
+  return value + ' ' + units[unit_index];
+}
+
+/**
+ * Converts the given time to another unit of time
+ *
+ * @param {*} value The time as a number in original given unit
+ * @param {*} unit Given unit of time
+ * @param {*} targetUnit Unit of time to be converted to
+ * @return Number of converted time
+ */
+function convertTime(value, unit='ms', targetUnit='s') {
+    var units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']   // Units of time
+    var steps = [1000.0, 1000.0, 1000.0, 60.0, 60.0, 24.0, 7.0, 4.35, 12.0]                // (Average) magnitude change between units
+
+    var givenUnitPos = units.indexOf(unit)
+    var targetUnitPos = units.indexOf(targetUnit)
+
+
+    // Obtain conversion rates in the given range
+    if (targetUnitPos > givenUnitPos) {
+      steps.slice(givenUnitPos, targetUnitPos).forEach( function(it) { value /= it} )
+    }
+    else if (targetUnitPos < givenUnitPos) {
+      steps.slice(targetUnitPos, givenUnitPos).forEach( function(it) { value *= it} )
+    }
+
+    return value
+}
+
+/**
+ * Converts a time value to a human-readable string
+ *
+ * @param {*} value The time as a number in original given unit
+ * @param {*} unit Given unit of time
+ * @param {*} smallestUnit The smallest unit to convert to
+ * @param {*} largestUnit The largest unit to convert to
+ * @param {*} threshold The minimum value for the conversion to be included in the output
+ * @param {*} numSteps The maximum number of conversion steps to perform
+ * @param {*} readableString The string to append the result to
+ * @return A human-readable string representation of the time value
+ */
+function toReadableTimeUnits(value, unit='ms', smallestUnit='s', largestUnit='years', threshold=0.0, numSteps=null, readableString='') {
+  // Ordered list of supported time units
+  var units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']
+
+  // Calculate the number of conversion steps left
+  var smallestIdx = units.indexOf(smallestUnit)
+  var largestIdx = units.indexOf(largestUnit)
+  numSteps = (numSteps == null) ? (largestIdx - smallestIdx) : (numSteps - 1)
+
+  // Convert value to the current target unit
+  var targetUnit = largestUnit
+  var targetValue = convertTime(value, unit, targetUnit)
+  var targetValueFormatted = Math.floor(targetValue)
+
+  // Singularize unit if value is exactly 1 and unit is plural
+  if (targetValueFormatted == 1 && ['days', 'weeks', 'months', 'years'].includes(targetUnit)) {
+    targetUnit = targetUnit.slice(0, -1) // e.g. "days" -> "day"
+  }
+
+  // If this is the last step, use the remaining value as is
+  if (numSteps == 0) {
+    targetValueFormatted = targetValue
+  }
+
+  // Only add to output if above threshold or no threshold set
+  if (threshold == null || targetValueFormatted > threshold) {
+    value = targetValue - targetValueFormatted
+    unit = largestUnit
+
+    // Format to 2 decimals, remove trailing zeros
+    var formattedValue = targetValueFormatted.toFixed(2)
+    readableString += readableString ? ' ' + formattedValue + targetUnit : formattedValue + targetUnit
+  }
+
+  // If we've reached the smallest unit or max steps, return the result
+  if (numSteps == 0) {
+    var result = readableString.trim()
+    return result ? result : '0' + smallestUnit
+  }
+
+  // Otherwise, continue with the next smaller unit
+  var nextLargestUnit = units[largestIdx - 1]
+  return toReadableTimeUnits(
+    value, unit,
+    smallestUnit, nextLargestUnit,
+    threshold, numSteps, readableString
+  )
+}
+
+//
+// Render functions
+//
+
+/**
+ * Perform checks on the data before using other methods to process
+ * 
+ * @param {*} data The data (number/string/...)
+ * @param {*} type Type of the data
+ * @param {function} parseFunction Function to parse the data
+ * @returns 
+ */
+function check_data(data, type, parseFunction) {
+  if (type === 'sort') {
+    return parseFunction(data);
+  }
+  if($('#nf-table-humanreadable').val() == 'false'){
+    return data;
+  }
+  if (data == '-' || data == 0){
+    return data;
+  }
+  return null
+}
+
+/**
+ * Render CO2 equivalents in desired output format
+ * 
+ * @param {*} mg 
+ * @param {*} type Type of the data
+ * @returns CO2 equivalents as a readable unit
+ */
+function make_co2e(mg, type){
+  return toReadableUnits(mg, 'm', 'g');
+}
+
+/**
+ * Render energy in desired output format
+ * 
+ * @param {*} mWh Energy in milli-Watt-hours
+ * @param {*} type Type of the data
+ * @returns Energy as a readable unit
+ */
+function make_energy(mWh, type){
+  return check_data(mWh, type, parseFloat) ?? toReadableUnits(mWh, 'm', 'Wh');
+}
+
+/**
+ * Render time in desired output format
+ * 
+ * @param {*} ms Time in milliseconds
+ * @param {*} type Type of the data
+ * @returns The readable time
+ */
+function make_time(ms, type){
+  return check_data(data, type, parseInt) ?? toReadableTimeUnits(parseFloat(ms), 'ms', 'ns');
+}
+
+/**
+ * Render carbon intensity in desired output format
+ * 
+ * @param {*} ci Carbon intensity value
+ * @param {*} type Type of the data
+ * @returns Carbon intensity as a readable unit
+ */
+function make_carbon_intensity(ci, type) {
+  return check_data(data, type, parseFloat) ?? toReadableUnits(ci, 'm', 'gCO<sub>2</sub>eq/kWh');
+}
+
+/**
+ * Render memory size in desired output format
+ * 
+ * @param {*} bytes Number of bytes
+ * @param {*} type Type of the data
+ * @returns The bytes at a readable scale
+ */
+function make_memory(bytes, type){
+  return check_data(bytes, type, parseInt) ?? toReadableByteUnits(bytes);
+}
+
+/**
+ * Render usage factor in desired output format
+ * 
+ * @param {*} usageFactor Usage factor of CPU in percent
+ * @param {*} type Type of the data
+ * @returns A rounded usage factor
+ */
+function make_core_usage_factor(usageFactor, type){
+  return check_data(usageFactor, type, parseFloat) ?? Math.round( usageFactor * 1000 ) / 1000;
+}
+
+
+// Map for collecting statistics by process
+window.data_byprocess = {};
+
+//
+// This block is only executed after the page is fully loaded 
+//
 $(function() {
   // Script block clicked
   $('#tasks_table').on('click', '.script_block', function(e){
@@ -104,236 +332,7 @@ $(function() {
     },
   };
   
-  Plotly.newPlot('co2eplot', data, layout);
-  
-  //
-  // Converter methods
-  //
-
-  /**
-   * Convert to readable units, optionally with a starting scope and a unit label
-   * 
-   * @param {*} value The value to be converted
-   * @param {*} scope The current scope of the value
-   * @param {*} unit The unit of the value
-   * @returns Decimally shifted value
-   */
-  function toReadableUnits(value, scope = '', unit = '') {
-    var scopes = ['p', 'n', 'u', 'm', '', 'K', 'M', 'G', 'T', 'P', 'E']; // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
-    var scopeIndex = scopes.indexOf(scope);
-    
-    while (value >= 1000 && scopeIndex < scopes.length - 1) {
-      value /= 1000;
-      scopeIndex++;
-    }
-    while (value <= 1 && scopeIndex > 0) {
-      value *= 1000;
-      scopeIndex--;
-    }
-
-    value = Math.round(value * 100) / 100;
-    return value + ' ' + scopes[scopeIndex] + unit;    
-  }
-
-  
-  /**
-   * Convert bytes to readable units
-   * 
-   * @param {*} value Bytes to be converted to readable scope
-   * @returns Bytes in a readable scope
-   */
-  function toReadableByteUnits(value){
-    units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']  // Units: Byte, Kilobyte, Megabyte, Gigabyte, Terabyte, Petabyte, Exabyte
-    unit_index=0
-
-    while (value >= 1024 && unit_index < units.length - 1) {
-      value /= 1024;
-      unit_index++;
-    }
-    
-    return value + ' ' + units[unit_index];
-  }
-
-  /**
-   * Converts the given time to another unit of time
-   *
-   * @param {*} value The time as a number in original given unit
-   * @param {*} unit Given unit of time
-   * @param {*} targetUnit Unit of time to be converted to
-   * @return Number of converted time
-   */
-  function convertTime(value, unit='ms', targetUnit='s') {
-      var units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']   // Units of time
-      var steps = [1000.0, 1000.0, 1000.0, 60.0, 60.0, 24.0, 7.0, 4.35, 12.0]                // (Average) magnitude change between units
-
-      var givenUnitPos = units.indexOf(unit)
-      var targetUnitPos = units.indexOf(targetUnit)
-
-
-      // Obtain conversion rates in the given range
-      if (targetUnitPos > givenUnitPos) {
-        steps.slice(givenUnitPos, targetUnitPos).forEach( function(it) { value /= it} )
-      }
-      else if (targetUnitPos < givenUnitPos) {
-        steps.slice(targetUnitPos, givenUnitPos).forEach( function(it) { value *= it} )
-      }
-
-      return value
-  }
-
-  /**
-   * Converts a time value to a human-readable string
-   *
-   * @param {*} value The time as a number in original given unit
-   * @param {*} unit Given unit of time
-   * @param {*} smallestUnit The smallest unit to convert to
-   * @param {*} largestUnit The largest unit to convert to
-   * @param {*} threshold The minimum value for the conversion to be included in the output
-   * @param {*} numSteps The maximum number of conversion steps to perform
-   * @param {*} readableString The string to append the result to
-   * @return A human-readable string representation of the time value
-   */
-  function toReadableTimeUnits(value, unit='ms', smallestUnit='s', largestUnit='years', threshold=0.0, numSteps=null, readableString='') {
-    // Ordered list of supported time units
-    var units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']
-
-    // Calculate the number of conversion steps left
-    var smallestIdx = units.indexOf(smallestUnit)
-    var largestIdx = units.indexOf(largestUnit)
-    numSteps = (numSteps == null) ? (largestIdx - smallestIdx) : (numSteps - 1)
-
-    // Convert value to the current target unit
-    var targetUnit = largestUnit
-    var targetValue = convertTime(value, unit, targetUnit)
-    var targetValueFormatted = Math.floor(targetValue)
-
-    // Singularize unit if value is exactly 1 and unit is plural
-    if (targetValueFormatted == 1 && ['days', 'weeks', 'months', 'years'].includes(targetUnit)) {
-      targetUnit = targetUnit.slice(0, -1) // e.g. "days" -> "day"
-    }
-
-    // If this is the last step, use the remaining value as is
-    if (numSteps == 0) {
-      targetValueFormatted = targetValue
-    }
-
-    // Only add to output if above threshold or no threshold set
-    if (threshold == null || targetValueFormatted > threshold) {
-      value = targetValue - targetValueFormatted
-      unit = largestUnit
-
-      // Format to 2 decimals, remove trailing zeros
-      var formattedValue = targetValueFormatted.toFixed(2)
-      readableString += readableString ? ' ' + formattedValue + targetUnit : formattedValue + targetUnit
-    }
-
-    // If we've reached the smallest unit or max steps, return the result
-    if (numSteps == 0) {
-      var result = readableString.trim()
-      return result ? result : '0' + smallestUnit
-    }
-
-    // Otherwise, continue with the next smaller unit
-    var nextLargestUnit = units[largestIdx - 1]
-    return toReadableTimeUnits(
-      value, unit,
-      smallestUnit, nextLargestUnit,
-      threshold, numSteps, readableString
-    )
-  }
-
-
-  //
-  // Functions to render the trace table
-  //
-
-  /**
-   * Perform checks on the data before using other methods to process
-   * 
-   * @param {*} data The data (number/string/...)
-   * @param {*} type Type of the data
-   * @param {function} parseFunction Function to parse the data
-   * @returns 
-   */
-  function check_data(data, type, parseFunction) {
-    if (type === 'sort') {
-      return parseFunction(data);
-    }
-    if($('#nf-table-humanreadable').val() == 'false'){
-      return data;
-    }
-    if (data == '-' || data == 0){
-      return data;
-    }
-    return null
-  }
-
-  /**
-   * Render CO2 equivalents in desired output format
-   * 
-   * @param {*} mg 
-   * @param {*} type Type of the data
-   * @returns CO2 equivalents as a readable unit
-   */
-  function make_co2e(mg, type){
-    return toReadableUnits(mg, 'm', 'g');
-  }
-
-  /**
-   * Render energy in desired output format
-   * 
-   * @param {*} mWh Energy in milli-Watt-hours
-   * @param {*} type Type of the data
-   * @returns Energy as a readable unit
-   */
-  function make_energy(mWh, type){
-    return check_data(mWh, type, parseFloat) ?? toReadableUnits(mWh, 'm', 'Wh');
-  }
-
-  /**
-   * Render time in desired output format
-   * 
-   * @param {*} ms Time in milliseconds
-   * @param {*} type Type of the data
-   * @returns The readable time
-   */
-  function make_time(ms, type){
-    return check_data(data, type, parseInt) ?? toReadableTimeUnits(parseFloat(ms), 'ms', 'ns');
-  }
-
-  /**
-   * Render carbon intensity in desired output format
-   * 
-   * @param {*} ci Carbon intensity value
-   * @param {*} type Type of the data
-   * @returns Carbon intensity as a readable unit
-   */
-  function make_carbon_intensity(ci, type) {
-    return check_data(data, type, parseFloat) ?? toReadableUnits(ci, 'm', 'gCO<sub>2</sub>eq/kWh');
-  }
-
-  /**
-   * Render memory size in desired output format
-   * 
-   * @param {*} bytes Number of bytes
-   * @param {*} type Type of the data
-   * @returns The bytes at a readable scale
-   */
-  function make_memory(bytes, type){
-    return check_data(bytes, type, parseInt) ?? toReadableByteUnits(bytes);
-  }
-
-  /**
-   * Render usage factor in desired output format
-   * 
-   * @param {*} usageFactor Usage factor of CPU in percent
-   * @param {*} type Type of the data
-   * @returns A rounded usage factor
-   */
-  function make_core_usage_factor(usageFactor, type){
-    return check_data(usageFactor, type, parseFloat) ?? Math.round( usageFactor * 1000 ) / 1000;
-    }
-  
+  Plotly.newPlot('co2eplot', data, layout);  
 
   //
   // Table creation functions
