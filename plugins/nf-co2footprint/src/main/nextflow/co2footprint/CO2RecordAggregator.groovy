@@ -22,10 +22,10 @@ class CO2RecordAggregator {
                 co2e: { TraceRecord traceRecord, CO2Record co2Record -> co2Record.getCO2e() },
                 energy: { TraceRecord traceRecord, CO2Record co2Record -> co2Record.getEnergyConsumption() },
                 co2e_cached: { TraceRecord traceRecord, CO2Record co2Record ->
-                    traceRecord.getStore()['status'] == 'CACHED' ? co2Record.getCO2e() : 0d
+                    traceRecord.getStore()['status'] == 'CACHED' ? co2Record.getCO2e() : null
                 },
                 energy_cached: { TraceRecord traceRecord, CO2Record co2Record ->
-                    traceRecord.getStore()['status'] == 'CACHED' ? co2Record.getEnergyConsumption() : 0d
+                    traceRecord.getStore()['status'] == 'CACHED' ? co2Record.getEnergyConsumption() : null
                 }
         ]
     }
@@ -72,7 +72,7 @@ class CO2RecordAggregator {
      * @return A QuantileItem with the base record and the computed quantile value.
      */
     QuantileItem getQuantile(
-            List<Map<String, TraceRecord>> sortedRecords, double q, Closure<Double> transformFunction={ return it as Double}
+            List<Map<String, TraceRecord>> sortedRecords, double q, Closure<Double> transformFunction={ return it as Double }
     ) {
         assert sortedRecords, 'Argument items cannot be empty'
         assert q>=0 && q<=1, 'Quantile must be between 0 and 1'
@@ -115,27 +115,35 @@ class CO2RecordAggregator {
     Map<String,?> computeStat(List<Map<String, TraceRecord>> records, Closure<Double> metricExtractionFunction) {
 
         final Map<String, ?> result = new LinkedHashMap<String,?>(12)
-        final List<Map<String, TraceRecord>> sortedRecords = records.sort(
-                { Map<String, TraceRecord> record -> metricExtractionFunction(record['traceRecord'], record['co2Record']) }
-        )
 
-        /*
-            Unlike the Nextflow Report, we are not rounding the results nor discarding entries with all zeros.
-            This decision is taken to avoid the loss of information in the report.
-            Plots will show values of 0, making the representation of all processes consistent.
-            This class reports all values in milli-unit to increase precision.
-            Values are converted to the required units by CO2FootprintReportTemplate.js
-        */
+        // Remove all records that are null (and thus marked to be sorted out)
+        List<Map<String, TraceRecord>> records2 = records.findAll { Map<String, TraceRecord> record ->
+            metricExtractionFunction(record['traceRecord'], record['co2Record']) != null
+        }
 
-        QuantileItem quantileItem
-        Double total = sortedRecords.sum { Map<String, TraceRecord> record ->
-            metricExtractionFunction.call(record['traceRecord'], record['co2Record'])
-        } as Double
-        result.put('mean', (total / records.size()) as double)
-        ['min': 0d, 'q1': .25d, 'q2': .50d, 'q3': .75d, 'max': 1d].each { String key, double q ->
-            quantileItem = getQuantile(sortedRecords, q, metricExtractionFunction)
-            result.put("${key}Label" as String, (quantileItem.getRecord().get('co2Record') as CO2Record).getName())
-            result.put(key, quantileItem.value)
+        if (records2) {
+            final List<Map<String, TraceRecord>> sortedRecords = records2.sort(
+                    { Map<String, TraceRecord> record -> metricExtractionFunction(record['traceRecord'], record['co2Record']) }
+            )
+
+            /*
+                Unlike the Nextflow Report, we are not rounding the results nor discarding entries with all zeros.
+                This decision is taken to avoid the loss of information in the report.
+                Plots will show values of 0, making the representation of all processes consistent.
+                This class reports all values in milli-unit to increase precision.
+                Values are converted to the required units by CO2FootprintReportTemplate.js
+            */
+
+            QuantileItem quantileItem
+            Double total = sortedRecords.sum { Map<String, TraceRecord> record ->
+                metricExtractionFunction.call(record['traceRecord'], record['co2Record'])
+            } as Double
+            result.put('mean', (total / sortedRecords.size()) as double)
+            ['min': 0d, 'q1': .25d, 'q2': .50d, 'q3': .75d, 'max': 1d].each { String key, double q ->
+                quantileItem = getQuantile(sortedRecords, q, metricExtractionFunction)
+                result.put("${key}Label" as String, (quantileItem.getRecord().get('co2Record') as CO2Record).getName())
+                result.put(key, quantileItem.value)
+            }
         }
 
         return result

@@ -71,7 +71,7 @@ class CO2FootprintReportTest extends Specification{
         CO2EquivalencesRecord equivalencesRecord = new CO2EquivalencesRecord(10.0, 10.0, 10.0)
 
         CO2RecordAggregator aggregator = new CO2RecordAggregator()
-        aggregator.add(co2Record, 'reportTestProcess')
+        aggregator.add(traceRecord, co2Record)
 
         co2FootprintReport = new CO2FootprintReport(reportPath, false, 10_000)
         co2FootprintReport.addEntries(
@@ -137,7 +137,9 @@ class CO2FootprintReportTest extends Specification{
                                 '{' +
                                     '"mean":1.0,"minLabel":"testTask","min":1.0,"q1Label":"testTask","q1":1.0,"q2Label":"testTask","q2":1.0,"q3Label":"testTask","q3":1.0,"maxLabel":"testTask","max":1.0' +
                                 //  '"mean":1.0,"min":1.0,"q1":1.0,"q2":1.0,"q3":1.0,"max":1.0,"minLabel":"testTask","maxLabel":"testTask","q1Label":"testTask","q2Label":"testTask","q3Label":"testTask"'
-                                '}' +
+                                '},' +
+                            '"co2e_cached":{},' +
+                            '"energy_cached":{}' +
                         '}' +
                     ']' +
                 '}'
