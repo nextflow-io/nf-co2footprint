@@ -21,7 +21,7 @@ class CO2FootprintFile {
     /**
      * Constructor for generic file class.
      *
-     * @param path      Path to the file, or where it is targeted to be written
+     * @param path Path to the file, or where it is targeted to be written
      * @param overwrite Whether to overwrite existing files with the same path
      */
     CO2FootprintFile(Path path, boolean overwrite) {

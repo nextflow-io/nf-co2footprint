@@ -4,6 +4,7 @@ import nextflow.co2footprint.utils.Converter
 
 /**
  * Stores equivalence values for CO₂ emissions:
+ *
  * - Kilometers by car
  * - Months for a tree to sequester
  * - Percent of a Paris-London flight
@@ -14,6 +15,8 @@ class CO2EquivalencesRecord {
     private final Double planePercent
 
     /**
+     * Create a record of CO2 Equivalences
+     *
      * @param carKilometers  Distance in km
      * @param treeMonths     Months for a tree
      * @param planePercent   Percent of a flight

@@ -51,6 +51,7 @@ class CO2FootprintConfig {
     String getSummaryFile() { summaryFile }
     String getReportFile() { reportFile }
     String getLocation() { location }
+
     /**
      * Returns the carbon intensity value.
      * If set as a closure (for real-time API), invokes it to get the current value.
@@ -164,6 +165,7 @@ class CO2FootprintConfig {
 
     /**
      * Collects input file options for reporting.
+     *
      * @return SortedMap of input file options
      */
     SortedMap<String, Object> collectInputFileOptions() {
@@ -174,6 +176,7 @@ class CO2FootprintConfig {
 
     /**
      * Collects output file options for reporting.
+     *
      * @return SortedMap of output file options
      */
     SortedMap<String, Object> collectOutputFileOptions() {
@@ -186,6 +189,7 @@ class CO2FootprintConfig {
 
     /**
      * Collects CO₂ calculation options for reporting.
+     *
      * @return SortedMap of calculation options
      */
     SortedMap<String, Object> collectCO2CalcOptions() {

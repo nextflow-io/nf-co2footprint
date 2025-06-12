@@ -118,7 +118,7 @@ class CO2FootprintObserver implements TraceObserver {
 
     /**
      * Set the maximum number of tasks to include in the report table.
-     * If exceeded, the table is omitted.
+     * If exceeded, the table is cut off after the maximum number.
      *
      * @param value Maximum number of tasks to include in the report
      * @return This observer instance

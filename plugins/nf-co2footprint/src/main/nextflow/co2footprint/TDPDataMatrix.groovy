@@ -128,7 +128,7 @@ class TDPDataMatrix extends DataMatrix {
             modelData = select([matches[0]] as LinkedHashSet)
         }
         else if ( model.contains('@') ) {
-            // Case info appended with @, try again with less specific model string
+            // Case info appended with @ -> try again with less specific model string
             return matchModel(
                     String.join('@', model.split('@').dropRight(1)).trim(),
                     fallbackToDefault,

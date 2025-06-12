@@ -93,6 +93,7 @@ class CO2Record extends TraceRecord {
                 'name':             name,
                 'cpu_model':        cpu_model
         ])
+        // Overload the store of the parent to ensure inherited methods can access the stored data
         super.store << store
     }
 
