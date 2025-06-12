@@ -8,6 +8,9 @@ import nextflow.trace.TraceRecord
 
 class CO2ReportAggregatorTest extends Specification {
     @Shared
+    CO2RecordAggregator co2RecordAggregator = new CO2RecordAggregator()
+
+    @Shared
     TraceRecord traceRecord = new TraceRecord()
 
     @Shared
@@ -41,9 +44,6 @@ class CO2ReportAggregatorTest extends Specification {
     }
 
     def 'Test quantile computation'() {
-        setup:
-        CO2RecordAggregator co2RecordAggregator = new CO2RecordAggregator()
-
         when:
         List<QuantileItem> quantiles = ['min': 0d, 'q1': .25d, 'q2': .50d, 'q3': .75d, 'max': 1d].collect { String key, double q ->
             co2RecordAggregator.getQuantile(
@@ -58,9 +58,6 @@ class CO2ReportAggregatorTest extends Specification {
     }
 
     def 'Test stat computation'() {
-        setup:
-        CO2RecordAggregator co2RecordAggregator = new CO2RecordAggregator()
-
         when:
         Map<String, ?> stats = co2RecordAggregator.computeStats(records)
 
