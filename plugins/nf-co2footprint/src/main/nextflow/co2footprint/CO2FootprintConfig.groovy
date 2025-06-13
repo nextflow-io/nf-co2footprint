@@ -43,7 +43,7 @@ class CO2FootprintConfig {
     private String  machineType = null      // Type of computer on which the workflow is run ['local', 'compute cluster', '']
 
     // Supported machine types
-    private final List<String> supportedMachineTypes = ['local', 'compute cluster', '']
+    private final List<String> supportedMachineTypes = ['local', 'compute cluster']
 
     // Getter methods for config values
     String getTimestamp() { timestamp }
