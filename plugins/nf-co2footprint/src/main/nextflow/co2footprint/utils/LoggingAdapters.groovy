@@ -104,14 +104,16 @@ class DeduplicateMarkerFilter extends TurboFilter {
             }
     }
 
-    // Simple getters / setters
+    // --- Getters and setters ---
+
+    /**
+     * Set the list of filtered markers.
+     */
     void setFilteredMarkers(List<Marker> filteredMarkers) { this.filteredMarkers = filteredMarkers }
     List<Marker> getFilteredMarkers() { return filteredMarkers }
 
     /**
-     * The allowed number of occurrences before the message is no longer repeated
-     *
-     * @param allowedOccurrences
+     * Set the allowed number of occurrences before a message is suppressed.
      */
     void setAllowedOccurrences(int allowedOccurrences) { this.allowedOccurrences = allowedOccurrences }
     int getAllowedOccurrences() { return allowedOccurrences }
@@ -119,9 +121,10 @@ class DeduplicateMarkerFilter extends TurboFilter {
     void setCacheSize(int cacheSize) { this.cacheSize = cacheSize }
     int getCacheSize() { return cacheSize }
 
-    // Advanced manipulation of parameters
+    // --- Advanced marker manipulation ---
+
     /**
-     * Adds a Marker to the list of filtered Markers
+     * Add a Marker to the list of filtered markers.
      * @param marker Marker or name of marker to filter by
      */
     void addFilteredMarker(def marker) {

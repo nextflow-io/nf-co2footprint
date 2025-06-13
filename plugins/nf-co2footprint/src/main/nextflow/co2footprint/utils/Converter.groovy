@@ -4,15 +4,18 @@ import java.math.RoundingMode
 import java.text.DecimalFormat
 
 /**
- * Functions to convert values
+ * Utility functions to convert and format values for reporting.
+ *
+ * Includes methods for scientific notation, readable units, byte units,
+ * and human-readable time formatting.
  */
 class Converter {
 
     /**
-     * Changes a number into scientific notation ($x.x \times 10^y$)
+     * Converts a number into scientific notation (e.g., 1.23E3).
      *
-     * @param value
-     * @return
+     * @param value The number to convert
+     * @return String in scientific notation or rounded if in [0.001, 999]
      */
     static String toScientificNotation(Double value) {
         if (value == 0) {
@@ -28,7 +31,9 @@ class Converter {
     }
 
     /**
-     * Convert any unit to readable by taking $10^3$ steps
+     * Converts a numeric value to a human-readable string with SI prefixes.
+     * For example, 1200 with unit 'Wh' becomes '1.2 KWh'.
+     * Scales the value up or down by factors of 1000 and adjusts the prefix accordingly.
      *
      * @param value Value that should be converted
      * @param scope Symbol for scope of the unit (e.g. kilo = k)
@@ -39,10 +44,12 @@ class Converter {
         final List<String> scopes = ['p', 'n', 'u', 'm', '', 'K', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
         int scopeIndex = scopes.indexOf(scope)
 
+        // Scale up if value is large
         while (value >= 1000 && scopeIndex < scopes.size() - 1) {
             value /= 1000
             scopeIndex++
         }
+        // Scale down if value is small
         while (value <= 1 && scopeIndex > 0) {
             value *= 1000
             scopeIndex--
@@ -52,7 +59,8 @@ class Converter {
     }
 
     /**
-     * Adds prefixes such as Mega (MB) to Bytes and calculates correct number.
+     * Converts a byte value to a human-readable string with binary prefixes.
+     * For example, 1048576 becomes '1 MB'.
      *
      * @param value Amount of bytes
      * @return String of the value together with the appropriate unit
@@ -71,12 +79,13 @@ class Converter {
 
 
     /**
-     * Converts the given time to another unit of time
+     * Converts a time value from one unit to another.
+     * For example, 120000 ms to minutes returns 2.
      *
      * @param value The time as a number in original given unit
-     * @param unit Given unit of time
-     * @param targetUnit Unit of time to be converted to
-     * @return Number of converted time
+     * @param unit Given unit of time (e.g. 'ms')
+     * @param targetUnit Unit of time to be converted to (e.g. 'min')
+     * @return Number of converted time as BigDecimal
      */
     static BigDecimal convertTime(def value, String unit='ms', String targetUnit='s') {
         value = value as BigDecimal
@@ -86,7 +95,7 @@ class Converter {
         int givenUnitPos = units.indexOf(unit)
         int targetUnitPos = units.indexOf(targetUnit)
 
-        // Obtain conversion rates in the given range
+        // Move up or down the units list, multiplying or dividing as needed
         if (targetUnitPos > givenUnitPos) {
             steps.subList(givenUnitPos, targetUnitPos).each { step -> value /= step }
         }
@@ -98,15 +107,16 @@ class Converter {
     }
 
     /**
-     * Converts a time value to a human-readable string
+     * Converts a time value to a human-readable string, e.g. "2 days 3 h 4 min".
+     * Recursively breaks down the value into the largest possible units.
      *
      * @param value The time as a number in original given unit
-     * @param unit Given unit of time
-     * @param smallestUnit The smallest unit to convert to
-     * @param largestUnit The largest unit to convert to
-     * @param threshold The minimum value for the conversion to be included in the output
-     * @param numSteps The maximum number of conversion steps to perform
-     * @param readableString The string to append the result to
+     * @param unit Given unit of time (default: 'ms')
+     * @param smallestUnit The smallest unit to convert to (default: 's')
+     * @param largestUnit The largest unit to convert to (default: 'years')
+     * @param threshold The minimum value for the conversion to be included in the output (optional)
+     * @param numSteps The maximum number of conversion steps to perform (optional)
+     * @param readableString The string to append the result to (for recursion, optional)
      * @return A human-readable string representation of the time value
      */
     static String toReadableTimeUnits(

@@ -5,20 +5,23 @@ import groovy.util.logging.Slf4j
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
 
-@Slf4j
+
 /**
- * Class for computation of energy usage, CO2 emission and equivalences
+ * Class for computation of energy usage, CO2 emission, and equivalence metrics.
  */
+@Slf4j
 class CO2FootprintComputer {
 
+    // Holds CPU TDP data for different processors
     private final TDPDataMatrix tdpDataMatrix
+    // Holds configuration parameters for CO₂ calculations
     private final CO2FootprintConfig config
 
     /**
-     * Instance for computation of energy usage, CO2 emission and equivalences
-     * @param tdpDataMatrix Thermal design power Data Matrix
-     * @param ciDataMatrix  Carbon intensity Data Matrix
-     * @param config Co2FootprintConfig configuration of the plugin
+     * Constructor for CO2FootprintComputer.
+     * 
+     * @param tdpDataMatrix  Data matrix with CPU TDP (Thermal Design Power) values.
+     * @param config         Configuration object with plugin and calculation settings.
      */
     CO2FootprintComputer(TDPDataMatrix tdpDataMatrix, CO2FootprintConfig config) {
         this.tdpDataMatrix = tdpDataMatrix

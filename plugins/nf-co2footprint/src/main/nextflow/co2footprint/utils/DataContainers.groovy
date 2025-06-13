@@ -6,17 +6,27 @@ import java.nio.file.Path
 import java.nio.file.Files
 
 /**
- * Bidirectional Map with maintained K-V pairs in both directions
- * @param <K>
- * @param
+ * Bidirectional Map with maintained K-V pairs in both directions.
+ *
+ * Allows fast lookup of value by key and key by value.
+ * Maintains insertion order and supports unique keys and values.
+ *
+ * @param <K> Key type
+ * @param <V> Value type
  *
  * @author Josua Carl <josua.carl@uni-tuebingen.de>
  */
 class BiMap<K, V> {
 
+    // Map from key to value
     private final Map<K, V> keyToValueMap = new LinkedHashMap<>()
+    // Map from value to key
     private final Map<V, K> valueToKeyMap = new LinkedHashMap<>()
 
+    /**
+     * Construct a BiMap from a map or from parallel lists of keys and values.
+     * If both keys and values are provided, they must be unique and of equal length.
+     */
     BiMap(Map<K,V> map = [:], List<K> keys = [], List<V> values = []) {
         if (keys && values) {
             assert  keys.size() == values.size()
@@ -28,6 +38,9 @@ class BiMap<K, V> {
         }
     }
 
+    /**
+     * Checks equality of two BiMap instances by comparing both key-value and value-key maps.
+     */
     @Override
     boolean equals(Object other) {
         if ( other == null ) { return false }
@@ -38,9 +51,8 @@ class BiMap<K, V> {
     }
 
     /**
-     * Method to put a key-value pair into the bidirectional map
-     * @param key
-     * @param value
+     * Put a key-value pair into the bidirectional map.
+     * Both key and value must be unique.
      */
     void put(K key, V value)
     {
@@ -48,71 +60,102 @@ class BiMap<K, V> {
         valueToKeyMap.put(value, key)
     }
 
-    // method to get a value based on the key
+    /**
+     * Get a value based on the key.
+     */
     V getValue(K key) {
         return keyToValueMap.get(key)
     }
 
-    // method to get a key based on the value
+    /**
+     * Get a key based on the value.
+     */
     K getKey(V value) {
         return valueToKeyMap.get(value)
     }
 
-    // method to check if a key exists in the map
+    /**
+     * Check if a key exists in the map.
+     */
     boolean containsKey(K key) {
         return keyToValueMap.containsKey(key)
     }
 
-    // method to check if a value exists in the map
+    /**
+     * Check if a value exists in the map.
+     */
     boolean containsValue(V value) {
         return valueToKeyMap.containsKey(value)
     }
 
-    // method to check if a key exists in the map
+    /**
+     * Filter keys using a closure and return a list of matching keys.
+     */
     List filterKeys(Closure filterFunction) {
         return keyToValueMap.keySet().stream().filter(filterFunction).toList()
     }
 
-    // method to filter the Values for a function
+    /**
+     * Filter values using a closure and return a list of matching values.
+     */
     List filterValues(Closure filterFunction) {
         return valueToKeyMap.keySet().stream().filter(filterFunction).toList()
     }
 
-    // method to remove a key-value pair based on the key
+    /**
+     * Remove a key-value pair based on the key.
+     * Returns the removed value.
+     */
     V removeByKey(K key) {
         final V value = keyToValueMap.remove(key)
         valueToKeyMap.remove(value)
         return value
     }
 
-    // method to remove a key-value pair based on the key
+    /**
+     * Remove a key-value pair based on the value.
+     * Returns the removed key.
+     */
     K removeByValue(V value) {
         final K key = valueToKeyMap.remove(value)
         keyToValueMap.remove(key)
         return key
     }
 
-    // method to remove all key-value pairs from the bidirectional map
+    /**
+     * Remove all key-value pairs from the bidirectional map.
+     * Returns this BiMap for chaining.
+     */
     BiMap<K,V> clear() {
         keyToValueMap.clear()
         valueToKeyMap.clear()
         return this
     }
 
-    // method to get a set of all keys in the bidirectional map
+    /**
+     * Get a set of all keys in the bidirectional map.
+     */
     Set<K> keySet() {
         return keyToValueMap.keySet()
     }
 
-    // method to get a set of all values in the bidirectional map
+    /**
+     * Get a set of all values in the bidirectional map.
+     */
     Set<V> valueSet() {
         return valueToKeyMap.keySet()
     }
 
+    /**
+    * Get the number of key-value pairs in the map.
+    */
     Integer size() {
         return keyToValueMap.size()
     }
 
+    /**
+     * Return a new BiMap sorted by values.
+     */
     BiMap<K,V> sortByValues() {
         final List<V> values = valueToKeyMap.keySet().sort()
         final List<K> keys = values.collect { value -> valueToKeyMap[value]}
@@ -120,6 +163,9 @@ class BiMap<K, V> {
         return new BiMap(null, keys, values)
     }
 
+    /**
+     * Return a new BiMap sorted by keys.
+     */
     BiMap<K,V> sortByKeys() {
         final List<K> keys = keyToValueMap.keySet().sort()
         final List<V> values = keys.collect { key -> keyToValueMap[key]}
@@ -127,6 +173,9 @@ class BiMap<K, V> {
         return new BiMap(null, keys, values)
     }
 
+    /**
+     * String representation of the BiMap (shows key-to-value mapping).
+     */
     String toString() {
         return keyToValueMap.toString()
     }
@@ -135,41 +184,51 @@ class BiMap<K, V> {
 
 
 /**
- * Interface for a Table/Matrix
+ * Interface for a Table/Matrix.
+ * Defines the basic structure and required methods for a matrix-like data container.
  *
  * @author Josua Carl <josua.carl@uni-tuebingen.de>
  */
 interface Matrix {
+    // The matrix data as a list of lists (rows of columns)
     List<List<Object>> data = []
+    // Column index mapping (column name -> index)
     BiMap<Object, Integer> columnIndex = [:] as BiMap
+    // Row index mapping (row name -> index)
     BiMap<Object, Integer> rowIndex = [:] as BiMap
 
-    // Select method
+    // Get a value from the matrix at the specified row and column.
     Object get(Object row, Object column, boolean rowRawIndex, boolean columnRawIndex)
 
-    // Select method
+    // Select a submatrix by rows and columns.
     Matrix select(LinkedHashSet<Object> rows, LinkedHashSet<Object> columns)
 
-    // Set methods
+    // Set a value in the matrix at the specified row and column.
     void set(Object value, Object row, Object column, boolean rowRawIndex, boolean columnRawIndex)
 }
 
 /**
- * DataMatrix / Table Base Class
+ * DataMatrix / Table Base Class.
+ * Implements a 2D data structure with named row and column indices, supporting selection and CSV I/O.
  *
  * @author Josua Carl <josua.carl@uni-tuebingen.de>
  */
 @Slf4j
 class DataMatrix implements Matrix {
+    // The matrix data as a list of lists (rows of columns)
     protected List<List<Object>> data = []
+    // Column index mapping (column name -> index)
     protected BiMap<Object, Integer> columnIndex = [:] as BiMap
+    // Row index mapping (row name -> index)
     protected BiMap<Object, Integer> rowIndex = [:] as BiMap
 
     /**
      * Constructor to initialize DataMatrix with data, columnIndex, and rowIndex.
-     * @param data The data as a list of lists.
+     * If no indices are provided, defaults to integer ranges.
+     *
+     * @param data        The data as a list of lists.
      * @param columnIndex The column index as a LinkedHashSet.
-     * @param rowIndex The row index as a LinkedHashSet.
+     * @param rowIndex    The row index as a LinkedHashSet.
      */
     DataMatrix(
             List<List> data = [],
@@ -178,7 +237,7 @@ class DataMatrix implements Matrix {
     ) throws IllegalStateException  {
         this.data = data
 
-        // Default the Indices with a Integer Range
+        // Default the indices to integer ranges if not provided
         if (!rowIndex && data.size() > 0) {
             rowIndex = new IntRange(0, data.size() - 1)
         }
@@ -196,13 +255,14 @@ class DataMatrix implements Matrix {
 
     /**
      * Read CSV file and return a DataMatrix object.
+     * Handles optional row and column indices.
      *
-     * @param path Path to the CSV file.
-     * @param separator Separator used in the CSV file (default is ',').
-     * @param columnIndexPos Position of the column index in the CSV file (default is 0).
-     * @param rowIndexPos Position of the row index in the CSV file (default is null).
-     * @param rowIndexColumn Column name for the row index (default is null).
-     * @return A DataMatrix object containing the data from the CSV file.
+     * @param path            Path to the CSV file.
+     * @param separator       Separator used in the CSV file (default is ',').
+     * @param columnIndexPos  Position of the column index in the CSV file (default is 0).
+     * @param rowIndexPos     Position of the row index in the CSV file (default is null).
+     * @param rowIndexColumn  Column name for the row index (default is null).
+     * @return                A DataMatrix object containing the data from the CSV file.
      */
     static DataMatrix fromCsv(
             Path path, String separator = ',', Integer columnIndexPos = 0, Integer rowIndexPos = null,
@@ -210,10 +270,10 @@ class DataMatrix implements Matrix {
     ) throws IOException {
         List<String> lines = Files.readAllLines(path)
 
-        // Extract column index
+        // Extract column index from the specified line
         LinkedHashSet<Object> columnIndex = columnIndexPos != null ? lines.remove(columnIndexPos).split(separator) : null
 
-        // Handle row index column
+        // Handle row index column if specified
         if (rowIndexPos != null) {
             rowIndexColumn = columnIndex[rowIndexPos]
         }
@@ -229,7 +289,7 @@ class DataMatrix implements Matrix {
         int start = 0
         int end = 0
 
-        // Parse each line of the CSV
+        // Parse each line of the CSV, handling quoted fields and separators
         lines.each { line ->
             List<Object> row = []
             line.eachWithIndex { character, i ->
@@ -244,7 +304,7 @@ class DataMatrix implements Matrix {
             row.add(inferTypeOfString(line.substring(start, end + 1)))
             start = 0
 
-            // Extract row index
+            // Extract row index if specified
             if (rowIndexPos != null) {
                 Object rowIdx = row[rowIndexPos]
                 row.remove(rowIdx)
@@ -259,7 +319,12 @@ class DataMatrix implements Matrix {
 
     }
 
-    // Integrity tests
+     // --- Integrity checks ---
+
+    /**
+     * Ensure all rows have the same length as the first row.
+     * Throws IllegalStateException if not.
+     */
     void assertRowLengthEqual() throws IllegalStateException  {
        data.eachWithIndex { row, i ->
            if (row.size() != this.data[0].size()) {
@@ -270,6 +335,9 @@ class DataMatrix implements Matrix {
        }
     }
 
+    /**
+     * Ensure the number of rows matches the row index size.
+     */
     private void assertRowIndexLengthMatches() throws IllegalStateException {
         if (this.data.size() != this.rowIndex.size()) {
             final String message = "Data size ${this.data.size()} does not match rowIndex length ${this.rowIndex.size()}"
@@ -278,6 +346,9 @@ class DataMatrix implements Matrix {
         }
     }
 
+    /**
+     * Ensure the number of columns matches the column index size.
+     */
     void assertColumnIndexLengthMatches() throws IllegalStateException  {
         if (this.data.size() == 0 && this.columnIndex.size() != 0) {
             final String message = 'Passed column index without data.'
@@ -290,6 +361,9 @@ class DataMatrix implements Matrix {
         }
     }
 
+    /**
+     * Run all integrity checks for the matrix.
+     */
     void assertIntegrity() throws IllegalStateException  {
         assertRowLengthEqual()
 
@@ -297,6 +371,9 @@ class DataMatrix implements Matrix {
         assertColumnIndexLengthMatches()
     }
 
+    /**
+     * Compare two DataMatrix objects for equality (data and indices).
+     */
     @Override
     boolean equals(Object other) {
         if ( other == null ) { return false }
@@ -306,12 +383,15 @@ class DataMatrix implements Matrix {
         return false
     }
 
+    /**
+     * Returns true if the matrix contains any data.
+     */
     boolean asBoolean(){
         return this.data.size() != 0 && this.data[0].size() != 0
     }
 
     /**
-     * Collect indices via keys from a BiMap
+     * Helper to collect index positions for a set of keys from a BiMap.
      */
     private static List<Integer> collectIndices(LinkedHashSet<Object> keys, BiMap<Object, Integer> bimap) {
         List<Integer> indices = keys.collect( { key -> bimap.getValue(key) } )
@@ -320,7 +400,8 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Select rows of the DataMatrix
+     * Select only the specified rows from the DataMatrix.
+     * Returns a new DataMatrix with the selected rows.
      */
     private DataMatrix selectRows(LinkedHashSet<Object> rows){
         final List<Integer> iList = collectIndices(rows, this.rowIndex)
@@ -330,7 +411,8 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Select columns of the DataMatrix.
+     * Select only the specified columns from the DataMatrix.
+     * Returns a new DataMatrix with the selected columns.
      */
     private DataMatrix selectColumns(LinkedHashSet<Object> columns){
         // Collect indices
@@ -341,7 +423,8 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Select a part of the DataMatrix. If no value is given for an entry, everything is selected.
+     * Select a submatrix by rows and columns.
+     * If no rows or columns are specified, selects all.
      */
     DataMatrix select(
             LinkedHashSet<Object> rows=null,
@@ -353,45 +436,43 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Get data entries as Lists.
+     * Get the matrix data as a list of lists.
      */
     List<List> getData() {
         return this.data
     }
 
     /**
-     * Get row index.
+     * Get the row index BiMap.
      */
     BiMap<Object, Integer> getRowIndex() {
         return this.rowIndex
     }
 
     /**
-     * Get column index.
+     * Get the column index BiMap.
      */
     BiMap<Object, Integer> getColumnIndex() {
         return this.columnIndex
     }
 
     /**
-     * Return the Row Keys in data matrix order
-     * @return Row Keys in order
+     * Return the row keys in matrix order.
      */
     LinkedHashSet getOrderedRowKeys() {
         return this.rowIndex.valueSet().sort().collect {i -> this.rowIndex.getKey(i)}
     }
 
     /**
-     * Return the Column Keys in data matrix order
-     * @return Column Keys in order
+     * Return the column keys in matrix order.
      */
     LinkedHashSet getOrderedColumnKeys() {
         return this.columnIndex.valueSet().sort().collect {i -> this.columnIndex.getKey(i)}
     }
 
     /**
-     * Get data entries by specifying row and column that you want to access, as well as whether they are Integer
-     * indices.
+     * Get a value from the matrix by row and column.
+     * Row and column can be names or integer indices, controlled by rowRawIndex/columnRawIndex.
      */
     Object get(Object row, Object column, boolean rowRawIndex=false, boolean columnRawIndex=false) {
         // Resolve row index
@@ -415,7 +496,8 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Set an entry to the specified value.
+     * Set a value in the matrix at the specified row and column.
+     * Row and column can be names or integer indices, controlled by rowRawIndex/columnRawIndex.
      */
     void set(Object value, Object row, Object column, boolean rowRawIndex=false, boolean columnRawIndex=false) {
         row = rowRawIndex ? row as Integer : this.rowIndex.getValue(row)
@@ -446,7 +528,8 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Save data with simple CSV format.
+     * Save the matrix data as a CSV file.
+     * Handles quoting of values containing the separator.
      */
     void saveCsv(Path path, String separator=',') {
         String csvString = ''
@@ -470,7 +553,8 @@ class DataMatrix implements Matrix {
     }
 
     /**
-     * Infer simple numeric data types from String.
+     * Infer simple numeric data types from a String.
+     * Tries Integer, then Double, otherwise returns the original String.
      */
     private static def inferTypeOfString(String str) {
         try { return Integer.parseInt(str) } catch(NumberFormatException ignore){ }

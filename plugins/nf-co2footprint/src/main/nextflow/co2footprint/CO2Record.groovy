@@ -8,6 +8,10 @@ import nextflow.trace.TraceRecord
 
 
 /**
+ * Represents a single CO₂ record for a Nextflow task.
+ *
+ * Stores energy usage, CO₂ emissions, and resource usage for a task,
+ * and provides readable and JSON representations for reporting.
  *
  * @author Júlia Mir Pedrol <mirp.julia@gmail.com>, Sabrina Krakau <sabrinakrakau@gmail.com>
  */
@@ -15,19 +19,28 @@ import nextflow.trace.TraceRecord
 @CompileStatic
 class CO2Record extends TraceRecord {
 
-    // Entries
+    // Energy used (Wh)
     private final Double energy
+    // CO2 equivalent emissions (g)
     private final Double co2e
+    // Time spent on task (ms)
     private final Double time
+    // Carbon intensity (gCO₂eq/kWh)
     private final Double ci
+    // Number of CPU cores used
     private final Integer cpus
+    // Power draw of CPU (W)
     private final Double powerdrawCPU
+    // CPU usage (%)
     private final Double cpuUsage
+    // Memory used (bytes)
     private final Long memory
+    // Name of Task
     private final String name
+    // CPU model name
     private final String cpu_model
 
-    // Properties of entries
+    // Properties of entries for JSON rendering
     final public static Map<String,String> FIELDS = [
             energy:         'num',
             co2e:           'num',
@@ -80,9 +93,11 @@ class CO2Record extends TraceRecord {
                 'name':             name,
                 'cpu_model':        cpu_model
         ])
+        // Overload the store of the parent to ensure inherited methods can access the stored data
         super.store << store
     }
 
+    // Getters for properties with readable formats
     Double getEnergyConsumption() { energy }
     String getEnergyConsumptionReadable() { Converter.toReadableUnits(energy,'m', 'Wh') }
 
@@ -125,9 +140,10 @@ class CO2Record extends TraceRecord {
     }
 
     /**
-     * Renders the JSON output of a CO2Record
+     * Renders the JSON output of a CO2Record.
      *
      * @param stringBuilder A StringBuilder used to elongate the String
+     * @return JSON representation of the record
      */
     @Override
     CharSequence renderJson(StringBuilder stringBuilder=new StringBuilder()) {

@@ -19,15 +19,16 @@ import nextflow.trace.TraceRecord
 import java.nio.file.Path
 
 
-@Slf4j
 /**
- * Class to generate the HTML report file
+ * Generates the HTML CO₂ footprint report file.
+ *
+ * Collects all summary and per-task data, renders the HTML template,
+ * and writes the final report to disk.
  */
+@Slf4j
 class CO2FootprintReport extends CO2FootprintFile{
 
-    /**
-     * Maximum number of tasks until table is dropped
-     */
+    // Maximum number of tasks to include in the report table
     private int maxTasks
 
     // Information for final report
@@ -41,26 +42,33 @@ class CO2FootprintReport extends CO2FootprintFile{
     private Map<TaskId, TraceRecord> traceRecords
     private Map<TaskId, CO2Record> co2eRecords
 
-    // Writer
+    // Writer for the HTML file
     private BufferedWriter writer = TraceHelper.newFileWriter(path, overwrite, 'Report')
 
+    /**
+     * Constructor for the HTML report file.
+     *
+     * @param path      Path to the report file
+     * @param overwrite Whether to overwrite existing files
+     * @param maxTasks  Maximum number of tasks to include in the report table
+     */
     CO2FootprintReport(Path path, boolean overwrite=false, int maxTasks=10_000) {
         super(path, overwrite)
         this.maxTasks = maxTasks
     }
 
     /**
-     * Write the final report and close the file
+     * Store all data needed for the report.
      *
-     * @param total_energy
-     * @param total_co2
-     * @param equivalences
-     * @param aggregator
-     * @param config
-     * @param version
-     * @param session
-     * @param traceRecords
-     * @param co2eRecords
+     * @param total_energy  Total energy used (Wh)
+     * @param total_co2     Total CO₂ emissions (g)
+     * @param equivalences  CO₂ equivalence calculations
+     * @param aggregator    Aggregator for process stats
+     * @param config        Plugin configuration
+     * @param version       Plugin version
+     * @param session       Nextflow session
+     * @param traceRecords  Map of TaskId to TraceRecord
+     * @param co2eRecords   Map of TaskId to CO2Record
      */
     void addEntries(
             Double total_energy,
@@ -84,6 +92,9 @@ class CO2FootprintReport extends CO2FootprintFile{
         this.co2eRecords = co2eRecords
     }
 
+    /**
+     * Write the HTML report to disk.
+     */
     void write() {
         try {
             final String html_output = renderHtml()
@@ -94,22 +105,18 @@ class CO2FootprintReport extends CO2FootprintFile{
         }
     }
 
+    /**
+     * Close the report file writer.
+     */
     void close() {
         writer.close()
     }
 
-
     // ---- RENDERING METHODS -----
 
     /**
-     * Render the report HTML document
+     * Render the report HTML document.
      *
-     * @param total_energy
-     * @param total_co2
-     * @param equivalences
-     * @param config
-     * @param version
-     * @param session
      * @return Rendered HTML String
      */
     protected String renderHtml() {
@@ -144,7 +151,7 @@ class CO2FootprintReport extends CO2FootprintFile{
     }
 
     /**
-     * Render the Payload Json
+     * Render the payload JSON for the report.
      *
      * @return Rendered JSON as a String
      */
@@ -156,7 +163,7 @@ class CO2FootprintReport extends CO2FootprintFile{
     }
 
     /**
-     * Render the entered options / config as a JSON String
+     * Render the entered options / config as a JSON String.
      *
      * @return The options json payload
      */
@@ -172,9 +179,9 @@ class CO2FootprintReport extends CO2FootprintFile{
     }
 
     /**
-     * Render the total co2 footprint values for html report
+     * Render the total CO₂ footprint values for the HTML report.
      *
-     * @return The rendered json
+     * @return The rendered JSON map
      */
     protected Map<String, String> renderCO2TotalsJson() {
         return [
@@ -188,16 +195,16 @@ class CO2FootprintReport extends CO2FootprintFile{
     }
 
     /**
-     * Render the executed tasks JSON
+     * Render the executed tasks as a JSON list.
      *
-     * @param data A Map of {@link nextflow.processor.TaskId}s and {@link nextflow.trace.TraceRecord}s representing the tasks executed
-     * @param dataCO2 A Map of {@link nextflow.processor.TaskId}s and {@link nextflow.co2footprint.CO2Record}s representing the co2Record traces
-     * @return The collected List of JSON entries
+     * @param traceRecords Map of TaskId to TraceRecord
+     * @param co2Records   Map of TaskId to CO2Record
+     * @return             List of JSON entries as strings
      */
     protected List<String> renderTasksJson(
             Map<TaskId, TraceRecord> traceRecords, Map<TaskId, CO2Record> co2Records
     ){
-        // Select maximum number of Records (limits also co2Records by only using the limited TaskIds)
+        // Limit to maxTasks
         traceRecords = traceRecords.take(maxTasks)
 
         final List<String> results = []
@@ -217,10 +224,10 @@ class CO2FootprintReport extends CO2FootprintFile{
     }
 
     /**
-     * Read the document HTML template from the application classpath
+     * Read the document HTML template from the application classpath.
      *
      * @param path A resource path location
-     * @return The loaded template as a string
+     * @return     The loaded template as a string
      */
     private String readTemplate( String path ) {
         StringWriter writer = new StringWriter()
