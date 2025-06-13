@@ -253,7 +253,6 @@ class DataMatrix implements Matrix {
         assertIntegrity()
     }
 
-
     /**
      * Read CSV file and return a DataMatrix object.
      * Handles optional row and column indices.
@@ -505,6 +504,27 @@ class DataMatrix implements Matrix {
         column = columnRawIndex ? column as Integer : this.columnIndex.getValue(column)
 
         data[row][column] = value
+    }
+
+    /**
+     * Put a row into the DataMatrix. If the given rowId is already present, the old row is replaced.
+     *
+     * @param row List of Objects to be added at the rowId
+     * @param rowId ID of the row
+     */
+    void putRow(List<Object> row, Object rowId) {
+        assert row.size() == this.data[0].size()
+        Integer rowIdx = this.rowIndex.getValue(rowId)
+
+        if (rowIdx != null) {
+            data[rowIdx] = row
+        }
+        else {
+            rowIdx = data.size()
+            data.add(row)
+        }
+
+        this.rowIndex.put(rowId, rowIdx)
     }
 
     /**

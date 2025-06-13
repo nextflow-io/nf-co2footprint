@@ -31,7 +31,7 @@ class TDPDataMatrixTest extends Specification {
                     [100, 4, 8],
             ],
             ['tdp (W)', 'cores', 'threads'] as LinkedHashSet,
-            ['Intel® i3-Fantasy', 'Ampere ultraEfficient Processor', 'AMD YPS-x42', 'default'] as LinkedHashSet,
+            ['Indel® i3-Fantasy', 'Ambere ultraEfficient Processor', 'AMT YPS-x42', 'default'] as LinkedHashSet,
     )
 
     static LoggerContext lc = LoggerFactory.getILoggerFactory() as LoggerContext
@@ -74,7 +74,7 @@ class TDPDataMatrixTest extends Specification {
 
     def 'Should get a valid DataMatrix Extension' () {
         setup:
-        String modelName = 'AMD YPS-x42'
+        String modelName = 'AMT YPS-x42'
         Matrix model = new TDPDataMatrix(
                 [
                         [42, 10**3, 2*10**3],
@@ -114,7 +114,7 @@ class TDPDataMatrixTest extends Specification {
 
         then:
         // non-ASCII symbols are replaced
-        firstName == 'Intel i3-Fantasy'
+        firstName == 'Indel i3-Fantasy'
     }
 
     def 'Should return correct TPD per Core/Thread' () {
@@ -148,58 +148,58 @@ class TDPDataMatrixTest extends Specification {
         df.matchModel('default').getData() == [[100, 4, 8]]
 
         // match standard model
-        df.matchModel('AMD YPS-x42').getData() == [[42, 10**3, 2 * 10**3]]
+        df.matchModel('AMT YPS-x42').getData() == [[42, 10**3, 2 * 10**3]]
     }
 
     def 'Should match the non-ASCII model names correctly' () {
         expect:
         // match against model with ASCII characters
-        df.matchModel('Intel® i3-Fantasy™').getData() == [[13, 1, 1]]
+        df.matchModel('Indel® i3-Fantasy™').getData() == [[13, 1, 1]]
 
         // match against missing ASCII characters
-        df.matchModel('Intel i3-Fantasy').getData() == [[13, 1, 1]]
+        df.matchModel('Indel i3-Fantasy').getData() == [[13, 1, 1]]
 
         // match against replaces ASCII characters
-        df.matchModel('Intel(R) i3-Fantasy(TM)').getData() == [[13, 1, 1]]
+        df.matchModel('Indel(R) i3-Fantasy(TM)').getData() == [[13, 1, 1]]
 
         // match against mix of non-ASCII and replaced ASCII symbols
-        df.matchModel('Intel® i3-Fantasy(TM)').getData() == [[13, 1, 1]]
+        df.matchModel('Indel® i3-Fantasy(TM)').getData() == [[13, 1, 1]]
     }
 
     def 'Should match the @ Statement model names correctly' () {
         expect:
         // match against @ statement
-        df.matchModel('Intel® i3-Fantasy(TM) @ 10Trillion GW').getData() == [[13, 1, 1]]
+        df.matchModel('Indel® i3-Fantasy(TM) @ 10Trillion GW').getData() == [[13, 1, 1]]
 
         // match against multiple @ statements
-        df.matchModel('Intel® i3-Fantasy(TM) @ 10Trillion GW @ 0.00001MHz').getData() == [[13, 1, 1]]
+        df.matchModel('Indel® i3-Fantasy(TM) @ 10Trillion GW @ 0.00001MHz').getData() == [[13, 1, 1]]
     }
 
     def 'Should match the processor/CPU containing model names correctly' () {
         expect:
         // match against extra 'Processor'
-        df.matchModel('Intel® Processor i3-Fantasy(TM)').getData() == [[13, 1, 1]]
+        df.matchModel('Indel® Processor i3-Fantasy(TM)').getData() == [[13, 1, 1]]
 
         // match against extra 'Processor & 'Processors'
-        df.matchModel('Intel® Processor i3-Fantasy(TM) Processors').getData() == [[13, 1, 1]]
+        df.matchModel('Indel® Processor i3-Fantasy(TM) Processors').getData() == [[13, 1, 1]]
 
         // match against extra 'CPUs'
-        df.matchModel('Intel® CPUs i3-Fantasy(TM)').getData() == [[13, 1, 1]]
+        df.matchModel('Indel® CPUs i3-Fantasy(TM)').getData() == [[13, 1, 1]]
 
         // match against missing 'processor'
-        df.matchModel('ampere ultraefficient').getData() == [[13, 2, 2]]
+        df.matchModel('ambere ultraefficient').getData() == [[13, 2, 2]]
     }
 
     def 'Should match the differing case model names correctly' () {
         expect:
         // match against lower case
-        df.matchModel('ampere ultraefficient').getData() == [[13, 2, 2]]
+        df.matchModel('ambere ultraefficient').getData() == [[13, 2, 2]]
 
         // match against upper case
-        df.matchModel('AMPERE ULTRAEFFICIENT').getData() == [[13, 2, 2]]
+        df.matchModel('AMBERE ULTRAEFFICIENT').getData() == [[13, 2, 2]]
 
         // match against arbitrary case
-        df.matchModel('amPErE ulTrAEffIciEnt').getData() == [[13, 2, 2]]
+        df.matchModel('amBErE ulTrAEffIciEnt').getData() == [[13, 2, 2]]
     }
 
     def 'Should not match non-existent model names and issue warnings' () {
@@ -210,8 +210,8 @@ class TDPDataMatrixTest extends Specification {
                 'Using default CPU power draw value (100.0 W).'
 
         // match against unaccounted variance of model
-        df.matchModel('Intel® i3-Fantasy(TM) 10Trillion GW').getData() == [[100, 4, 8]]
-        listAppender.list[1] as String == '[WARN] Could not find CPU model "Intel® i3-Fantasy(TM) 10Trillion GW" in given TDP data table. ' +
+        df.matchModel('Indel® i3-Fantasy(TM) 10Trillion GW').getData() == [[100, 4, 8]]
+        listAppender.list[1] as String == '[WARN] Could not find CPU model "Indel® i3-Fantasy(TM) 10Trillion GW" in given TDP data table. ' +
                 'Using default CPU power draw value (100.0 W).'
     }
 
@@ -242,5 +242,38 @@ class TDPDataMatrixTest extends Specification {
         'default local'           || 50
         'default compute cluster' || 60
         'default'                 || 100
+    }
+
+    def 'Should update the data correctly' () {
+        setup:
+        Matrix df2 = new TDPDataMatrix(
+                df.data, df.getOrderedColumnKeys(), df.getOrderedRowKeys()
+        )
+
+        Matrix df3 = new TDPDataMatrix(
+                [
+                        [13, 13, 'red'],
+                        [12, 12, 'redder'],
+                ],
+                ['tdp (W)', 'cores', 'color'] as LinkedHashSet,
+                ['Indel i3-Fantasy', 'Indel i5-Fantasy'] as LinkedHashSet
+        )
+
+
+        when:
+        df2.update(df3)
+
+        then:
+        df2 == new TDPDataMatrix(
+                [
+                        [13, 13, null],
+                        [13, 2, 2],
+                        [42, 10**3, 2*10**3],
+                        [100, 4, 8],
+                        [12, 12, null],
+                ],
+                ['tdp (W)', 'cores', 'threads'] as LinkedHashSet,
+                ['Indel® i3-Fantasy', 'Ambere ultraEfficient Processor', 'AMT YPS-x42', 'default', 'Indel i5-Fantasy'] as LinkedHashSet,
+        )
     }
 }
