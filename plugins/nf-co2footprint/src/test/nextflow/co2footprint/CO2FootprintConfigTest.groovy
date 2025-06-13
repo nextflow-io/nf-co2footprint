@@ -118,7 +118,7 @@ class CO2FootprintConfigTest extends Specification {
     }
 
     // Helper method to validate default properties
-    private void validateDefaultProperties(CO2FootprintConfig config) {
+    private static void validateDefaultProperties(CO2FootprintConfig config) {
         assert config.powerdrawMem == 0.3725
         assert config.pue == 1.0
     }
