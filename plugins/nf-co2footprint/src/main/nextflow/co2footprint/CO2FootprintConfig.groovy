@@ -96,7 +96,7 @@ class CO2FootprintConfig {
         pue ?= switch (machineType) {
             case 'local' -> 1.0
             case 'compute cluster' -> 1.67
-            case 'cloud' -> 1.56 
+            case 'cloud' -> 1.56  // source: (https://datacenter.uptimeinstitute.com/rs/711-RIA-145/images/2024.GlobalDataCenterSurvey.Report.pdf)
             default -> 1.0 // Fallback PUE (assigned if machineType is null)
         }
         
