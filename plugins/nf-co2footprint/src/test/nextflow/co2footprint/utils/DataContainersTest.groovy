@@ -12,7 +12,7 @@ import java.nio.file.Files
 class BiMapTest extends  Specification {
     def 'Should create an empty bidirectional Map'() {
         setup:
-        BiMap<String, Integer> bm = [:]
+        BiMap<String, Integer> bm = new BiMap()
 
         expect:
         bm.size() == 0
@@ -52,7 +52,7 @@ class BiMapTest extends  Specification {
         BiMap<String, Integer> bm = new BiMap(['E1': 1, 'E2': 2])
 
         when:
-        Integer value = bm.removeByKey('E1')
+        Integer value = bm.removeByKey('E1') as Integer
         String key = bm.removeByValue(2)
 
         then:
