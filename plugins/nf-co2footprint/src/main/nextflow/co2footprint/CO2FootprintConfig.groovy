@@ -1,9 +1,9 @@
 package nextflow.co2footprint
 
+import nextflow.co2footprint.utils.DataMatrix
 import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
 import nextflow.trace.TraceHelper
-
 import java.nio.file.Paths
 
 /**
@@ -45,7 +45,7 @@ class CO2FootprintConfig {
     private String  machineType = null      // Type of computer on which the workflow is run ['local', 'compute cluster', '']
 
     // Constants
-    private final List<String> supportedMachineTypes = ['local', 'compute cluster', '']
+    private final List<String> supportedMachineTypes = ['local', 'compute cluster', 'cloud']
 
     // Getter methods for private values
     String getTimestamp() { timestamp }
@@ -87,16 +87,19 @@ class CO2FootprintConfig {
             ci = ciValueComputer.computeCI()
         }
 
-        // Assign machine Type if not already given
-        machineType = machineType == null ? matchProcessExecutor(processMap?.get('executor') as String) : machineType
+        // Sets machineType and pue based on the executor if machineType is not already set
+        if (this.machineType == null) {
+            setMachineTypeAndPueFromExecutor(processMap?.get('executor') as String)
+        } 
 
         // Assign PUE if not already given
         pue ?= switch (machineType) {
             case 'local' -> 1.0
-            case 'compute cluster' -> 
-                processMap?.get('executor') == 'awsbatch' ? 1.15 : 1.67
-            default -> 1.0
+            case 'compute cluster' -> 1.67
+            case 'cloud' -> 1.56 
+            default -> 1.0 // Fallback PUE (assigned if machineType is null)
         }
+        
         // Reassign values based on machineType
         if (machineType) {
             if (supportedMachineTypes.contains(machineType)) {
@@ -121,30 +124,40 @@ class CO2FootprintConfig {
                     TDPDataMatrix.fromCsv(Paths.get(customCpuTdpFile as String))
             )
         }
+    }  
+
+    /**
+     * Checks if the given DataMatrix contains all required columns.
+     * If not, it logs an error and throws an IllegalStateException.
+     *
+     * @param matrix The DataMatrix to check.
+     * @param requiredColumns The list of required column names.
+     */
+    private void checkRequiredColumns(DataMatrix matrix, List<String> requiredColumns) {
+        def matrixColumns = matrix.columnIndex.keySet()
+        if (!matrixColumns.containsAll(requiredColumns)) {
+            def missing = requiredColumns - matrixColumns
+            log.error("CSV is missing required columns: ${missing}")
+            throw new IllegalStateException("CSV is missing required columns: ${missing}")
+        }
     }
 
-
-    private static String matchProcessExecutor(String executor) {
-        return switch(executor) {
-            case 'awsbatch' -> 'compute cluster'                // AWS cloud
-            case 'azurebatch' -> 'compute cluster'              // MS Azure cloud
-            case 'bridge' -> 'compute cluster'
-            case 'flux' -> 'compute cluster'
-            case 'google-batch' -> 'compute cluster'            // Google cloud
-            case 'google-lifesciences' -> 'compute cluster'     // Google cloud
-            case 'condor' -> 'compute cluster'
-            case 'hq' -> 'compute cluster'
-            case 'k8s' -> 'compute cluster'
-            case 'local' -> 'local'
-            case 'lsf' -> 'compute cluster'
-            case 'moab' -> 'compute cluster'
-            case 'nqsii' -> 'compute cluster'
-            case 'oar' -> 'compute cluster'
-            case 'pbs' -> 'compute cluster'
-            case 'pbspro' -> 'compute cluster'
-            case 'sge' -> 'compute cluster'
-            case 'slurm' -> 'compute cluster'
-            default -> null
+    /**
+     * Sets the machine type and PUE based on the executor.
+     * It reads a CSV file to get the machine type and PUE for the given executor.
+     *
+     * @param executor The executor name (e.g., 'awsbatch', 'local', etc.)
+     */
+    private void setMachineTypeAndPueFromExecutor(String executor) {
+        // Read the CSV file as a DataMatrix - set RowIndex to 'executor'
+        DataMatrix matrix = DataMatrix.fromCsv(Paths.get(this.class.getResource('/executor_machine_pue_mapping.csv').toURI()), ',', 0, null, 'executor')    
+        // Check if matrix contains the required columns
+        checkRequiredColumns(matrix, ['machineType', 'pue'])
+        try {
+            this.machineType = matrix.get(executor, 'machineType') as String
+            this.pue ?= matrix.get(executor, 'pue') as Double // assign pue only if not already set
+        } catch (IllegalArgumentException e) {
+            log.warn("Executor '${executor}' is not supported. MachineType set to null.")
         }
     }
 
