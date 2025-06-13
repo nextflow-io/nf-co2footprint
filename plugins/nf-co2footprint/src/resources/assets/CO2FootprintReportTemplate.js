@@ -297,7 +297,7 @@ $(function() {
     // Add CO2 Boxplot to plot
     data.push(
       {
-        x:processName, y: norm_units(stats.co2e), name: processName, legendgroup: processName,
+        x:processName, y: norm_units(stats.co2e), name: processName + ' - Total', legendgroup: 'Total',
         type:'box', boxmean: true, boxpoints: false
       }
     );
@@ -305,47 +305,43 @@ $(function() {
     // Add outline of CO2 emissions from non-cached processes to plot
     data.push(
       {
-        x:processName, y: norm_units(stats.co2e_non_cached), name: processName, legendgroup: processName,
-        type:'box', boxmean: true, boxpoints: false, showlegend: false,
+        x:processName, y: norm_units(stats.co2e_non_cached), name: processName + ' - Not cached', legendgroup: 'Not cached',
+        type:'box', boxmean: true, boxpoints: false,
         marker: { color: 'rgba(128, 128, 128, 0.01)' }, fillcolor: 'rgba(128, 128, 128, 0.01)', line: { color: 'rgba(128, 128, 128, 0.25)' },
-        hovertext: 'Non-cached CO2e emissions', hoverinfo: 'text'
+        hovertext: 'Non-cached CO2e emissions'
       }
     );
 
     // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
     data.push(
       {
-        x:processName, y: norm_units(stats.energy), name: processName, legendgroup: processName,
+        x:processName, y: norm_units(stats.energy), name: processName + ' - Total', legendgroup: 'Total',
         type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
         hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
       }
     );
   }
 
-  var tickformat = [{
-    "dtickrange": [null, 4],
-    "value": ".2f"
-  },
-  {
-    "dtickrange": [4, null],
-    "value": ".3s"
-  }];
-
   var layout = {
     title: 'CO<sub>2</sub> emission & energy consumption',
-    legend: {x: 1.1},
-    xaxis: {domain: [0.2, 1]},
-    yaxis: {title: 'CO2e emission (g)',
-            rangemode: 'tozero',
-            tickformatstops: tickformat
+    legend: {
+      x: 1.1
     },
-    yaxis2: {title: 'Energy consumption (Wh)',
-            rangemode: 'tozero',
-            gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
-            overlaying: 'y',
-            side: 'right',
-            tickformatstops: tickformat
+    xaxis: {
+      title: 'Processes',
     },
+    yaxis: {
+      title: 'CO2e emission (g)',
+      rangemode: 'tozero',
+    },
+    yaxis2: {
+      title: 'Energy consumption (Wh)',
+      rangemode: 'tozero',
+      gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
+      overlaying: 'y',
+      side: 'right',
+    },
+    boxmode: 'group',
   };
 
   Plotly.newPlot('co2eplot', data, layout);
