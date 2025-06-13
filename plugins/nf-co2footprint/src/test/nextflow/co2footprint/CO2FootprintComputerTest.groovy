@@ -1,16 +1,14 @@
 package nextflow.co2footprint
 
-import nextflow.Session
-import nextflow.executor.NopeExecutor
+import nextflow.co2footprint.DataContainers.CIDataMatrix
+import nextflow.co2footprint.DataContainers.TDPDataMatrix
+import nextflow.co2footprint.Records.CO2EquivalencesRecord
+import nextflow.co2footprint.Records.CO2Record
 import nextflow.processor.TaskId
-import nextflow.processor.TaskProcessor
-import nextflow.processor.TaskRun
 import nextflow.trace.TraceRecord
 import spock.lang.Shared
 import spock.lang.Specification
 
-import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
 
 import groovy.util.logging.Slf4j

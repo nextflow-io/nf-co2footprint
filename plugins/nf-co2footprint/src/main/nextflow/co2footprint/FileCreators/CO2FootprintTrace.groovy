@@ -2,7 +2,7 @@ package nextflow.co2footprint.FileCreators
 
 import groovy.util.logging.Slf4j
 import groovyx.gpars.agent.Agent
-import nextflow.co2footprint.CO2Record
+import nextflow.co2footprint.Records.CO2Record
 import nextflow.processor.TaskId
 import nextflow.trace.TraceHelper
 import nextflow.trace.TraceRecord

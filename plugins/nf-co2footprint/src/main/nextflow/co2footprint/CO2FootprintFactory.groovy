@@ -1,5 +1,7 @@
 package nextflow.co2footprint
 
+import nextflow.co2footprint.DataContainers.CIDataMatrix
+import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.utils.DeduplicateMarkerFilter
 import nextflow.co2footprint.utils.Markers
 
