@@ -237,7 +237,7 @@ class CO2FootprintObserverTest extends Specification{
         // 12 is the plugin version (changes on Github CI to current version)
         checksumChecker.compareChecksums(
                 summaryPath,
-                'd62c03c65402ab088123f69bd36c898a',
+                '281475aa52ab89352e8f2c65004af197',
                 [12, 16, 17, 18],
                 this.class.getResource('/summary_test.txt').getPath() as Path
         )
@@ -246,12 +246,12 @@ class CO2FootprintObserverTest extends Specification{
         Files.isRegularFile(reportPath)
         List<String> reportLines = reportPath.readLines()
         Integer lineCount = reportLines.size()
-        lineCount == 1056
+        lineCount == 1069
         String timeLine = reportLines[194]
         timeLine == "          " +
                 "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                 " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
-        String optionsLine = reportLines[1050]
+        String optionsLine = reportLines[1063]
         optionsLine == "  window.options = [" +
                 '{"option":"ci","value":"480.0"},'+
                 '{"option":"customCpuTdpFile","value":null},' +
@@ -266,8 +266,8 @@ class CO2FootprintObserverTest extends Specification{
         // 207 is the plugin version, 642 is a Javascript (nothing written by hand)
         checksumChecker.compareChecksums(
                 reportPath,
-                '64e43d865dd6e034ac11ec2a59e00f7f',
-                [194, 207, 642, 1050],
+                'e644efddd7f64fb91d079e705914c6bb',
+                [194, 207, 642, 1063],
                 this.class.getResource('/report_test.html').getPath() as Path
         )
     }
