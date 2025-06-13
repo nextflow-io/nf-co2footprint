@@ -1,4 +1,4 @@
-package nextflow.co2footprint
+package nextflow.co2footprint.Records
 
 import nextflow.co2footprint.utils.Converter
 

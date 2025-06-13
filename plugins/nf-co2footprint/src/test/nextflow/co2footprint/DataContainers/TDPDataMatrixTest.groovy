@@ -1,15 +1,11 @@
-package nextflow.co2footprint
+package nextflow.co2footprint.DataContainers
 
 import ch.qos.logback.classic.LoggerContext
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.classic.turbo.TurboFilter
 import ch.qos.logback.core.read.ListAppender
-
-import nextflow.co2footprint.utils.DataMatrix
 import nextflow.co2footprint.utils.DeduplicateMarkerFilter
 import nextflow.co2footprint.utils.Markers
-import nextflow.co2footprint.utils.Matrix
-
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spock.lang.Shared

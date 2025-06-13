@@ -1,7 +1,10 @@
 package nextflow.co2footprint
 
-import groovy.transform.PackageScope
+
 import groovy.util.logging.Slf4j
+import nextflow.co2footprint.DataContainers.CIDataMatrix
+import nextflow.co2footprint.DataContainers.CIValueComputer
+import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.trace.TraceHelper
 
 import java.nio.file.Paths

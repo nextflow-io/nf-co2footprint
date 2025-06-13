@@ -1,5 +1,8 @@
 package nextflow.co2footprint.utils
 
+import nextflow.co2footprint.DataContainers.BiMap
+import nextflow.co2footprint.DataContainers.DataMatrix
+import nextflow.co2footprint.DataContainers.Matrix
 import spock.lang.Specification
 
 import java.nio.file.Path
