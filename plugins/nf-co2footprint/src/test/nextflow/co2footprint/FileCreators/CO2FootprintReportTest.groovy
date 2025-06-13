@@ -102,7 +102,7 @@ class CO2FootprintReportTest extends Specification{
 
         where:
         carKm   || treeMonths   || planePercent  || totalsJsonResult
-        10.0    || 10.0         || 10.0          || [ co2e: '10.0 mg', energy:'10.0 mWh', co2e_non_cached:'10.0 mg', energy_non_cached:'10.0 mWh', car: '10.0', tree: '10months', plane_percent: '10.0', plane_flights: null]
+        10.0    || 10.0         || 10.0          || [ co2e: '10.0 mg', energy:'10.0 mWh', co2e_non_cached:'10.0 mg', energy_non_cached:'10.0 mWh', car: '10.0', tree: '10months', plane_percent: '10.0 %', plane_flights: null]
         10.0    || 10.0         || 100.0         || [ co2e: '10.0 mg', energy:'10.0 mWh', co2e_non_cached:'10.0 mg', energy_non_cached:'10.0 mWh', car: '10.0', tree: '10months', plane_percent: null, plane_flights: '1.0']
     }
 
@@ -185,7 +185,7 @@ class CO2FootprintReportTest extends Specification{
                 "energy_non_cached":  "100.0 mWh",
                 "car": "10.0",
                 "tree": "10months",
-                "plane_percent": "10.0",
+                "plane_percent": "10.0 %",
                 "plane_flights": null
             ]
     }
