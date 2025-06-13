@@ -2,6 +2,7 @@ package nextflow.co2footprint
 
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
+import nextflow.trace.TraceRecord
 
 
 /**
@@ -14,27 +15,36 @@ class CO2RecordAggregator {
     private final Map<String, Closure<Double>> metricExtractionFunctions
 
     // Entries
-    private final Map<String, List<CO2Record>> processCO2Records = [:]
+    private final Map<String, List<Map<String, TraceRecord>>> processCO2Records = [:]
 
     CO2RecordAggregator( Map<String, Closure<Double>> metricExtractionFunctions=null )  {
         this.metricExtractionFunctions ?= metricExtractionFunctions ?: [
-                co2e: { CO2Record co2record -> co2record.getCO2e() },
-                energy: { CO2Record co2record -> co2record.getEnergyConsumption() }
+                co2e: { TraceRecord traceRecord, CO2Record co2Record -> co2Record.getCO2e() },
+                energy: { TraceRecord traceRecord, CO2Record co2Record -> co2Record.getEnergyConsumption() },
+                co2e_non_cached: { TraceRecord traceRecord, CO2Record co2Record ->
+                    traceRecord.getStore()['status'] != 'CACHED' ? co2Record.getCO2e() : null
+                },
+                energy_non_cached: { TraceRecord traceRecord, CO2Record co2Record ->
+                    traceRecord.getStore()['status'] != 'CACHED' ? co2Record.getEnergyConsumption() : null
+                }
         ]
     }
 
     /**
      * Adds a CO2Record to the list of records for the given process.
      *
-     * @param co2record The CO2Record to add.
-     * @param processName The name of the process to associate with the record.
+     * @param traceRecord The TraceRecord to add
+     * @param co2record The CO2Record to add
      */
-    void add( CO2Record co2record, String processName ) {
+    void add( TraceRecord traceRecord, CO2Record co2Record) {
+        String processName = traceRecord.getSimpleName()
+        Map<String, TraceRecord> record = [ traceRecord: traceRecord, co2Record: co2Record ] as Map<String, TraceRecord>
+
         if(processCO2Records.containsKey(processName)) {
-            processCO2Records[processName].add(co2record)
+            processCO2Records[processName].add(record)
         }
         else {
-            processCO2Records[processName] = [co2record]
+            processCO2Records[processName] = [record]
         }
     }
 
@@ -42,14 +52,14 @@ class CO2RecordAggregator {
      * Class to store quantiles
      */
     class QuantileItem{
-        private final CO2Record co2Record
+        private final Map<String, TraceRecord> record
         private final Number value
 
-        CO2Record getCO2Record() { co2Record }
+        Map<String, TraceRecord> getRecord() { record }
         Number getValue() { value }
 
-        QuantileItem(CO2Record co2Record, Number value){
-            this.co2Record = co2Record
+        QuantileItem(Map<String, TraceRecord> record, Number value){
+            this.record = record
             this.value = value
         }
     }
@@ -57,36 +67,36 @@ class CO2RecordAggregator {
     /**
      * Calculate the q-th quantile
      *
-     * @param items A list of CO2Records
+     * @param items A list of mapped trace & CO2 records
      * @param q The q-th quantile. It must be a number between 0 & 1
      * @return A QuantileItem with the base record and the computed quantile value.
      */
     QuantileItem getQuantile(
-            List<CO2Record> sortedCO2Records, double q, Closure<Double> transformFunction={ return it as Double}
+            List<Map<String, TraceRecord>> sortedRecords, double q, Closure<Double> transformFunction={ return it as Double }
     ) {
-        assert sortedCO2Records, 'Argument items cannot be empty'
+        assert sortedRecords, 'Argument items cannot be empty'
         assert q>=0 && q<=1, 'Quantile must be between 0 and 1'
 
-        final double pos = q * (sortedCO2Records.size() - 1)
+        final double pos = q * (sortedRecords.size() - 1)
         final int lower = Math.floor(pos) as int
         final int upper = Math.ceil(pos) as int
 
         final Double value
         if (lower == upper) {
-            value = transformFunction(sortedCO2Records[lower])
+            value = transformFunction(sortedRecords[lower].get('traceRecord'), sortedRecords[lower].get('co2Record'))
         } else {
             // linear interpolation
-            value = transformFunction(sortedCO2Records[lower]) * (upper - pos) +
-                    transformFunction(sortedCO2Records[upper]) * (pos - lower)
+            value = transformFunction(sortedRecords[lower].get('traceRecord'), sortedRecords[lower].get('co2Record')) * (upper - pos) +
+                    transformFunction(sortedRecords[upper].get('traceRecord'), sortedRecords[upper].get('co2Record')) * (pos - lower)
         }
 
-        return new QuantileItem(sortedCO2Records[lower], value)
+        return new QuantileItem(sortedRecords[lower], value)
     }
 
     /**
      * Computes summary statistics for a list of CO2Record objects based on a given metric.
      *
-     * @param co2Records A list of CO2Record objects to analyze.
+     * @param items A list of mapped trace & CO2 records
      * @param metricExtractionFunction A closure that extracts a numeric value from each CO2Record.
      * @return
      *      A {@link Map} holding the summary containing the following stats:
@@ -102,28 +112,49 @@ class CO2RecordAggregator {
      *      - q3Label: label fot the task reporting the q3 value
      *      - maxLabel: label fot the task reporting the max value
      */
-    Map<String,?> computeStat(List<CO2Record> co2Records, Closure<Double> metricExtractionFunction) {
+    Map<String,?> computeStat(List<Map<String, TraceRecord>> records, Closure<Double> metricExtractionFunction) {
 
         final Map<String, ?> result = new LinkedHashMap<String,?>(12)
-        final List<CO2Record> sortedCO2Records = co2Records.sort(
-                { CO2Record co2record -> metricExtractionFunction(co2record) }
-        )
 
-        /*
-            Unlike the Nextflow Report, we are not rounding the results nor discarding entries with all zeros.
-            This decision is taken to avoid the loss of information in the report.
-            Plots will show values of 0, making the representation of all processes consistent.
-            This class reports all values in milli-unit to increase precision.
-            Values are converted to the required units by CO2FootprintReportTemplate.js
-        */
+        // Remove all records that are null (and thus marked to be sorted out)
+        List<Map<String, TraceRecord>> records2 = records.findAll { Map<String, TraceRecord> record ->
+            metricExtractionFunction(record['traceRecord'], record['co2Record']) != null
+        }
 
-        QuantileItem quantileItem
-        Double total = co2Records.sum {metricExtractionFunction.call(it) } as Double
-        result.put('mean', (total / co2Records.size()) as double)
-        ['min': 0d, 'q1': .25d, 'q2': .50d, 'q3': .75d, 'max': 1d].each { String key, double q ->
-            quantileItem = getQuantile(sortedCO2Records, q, metricExtractionFunction)
-            result.put("${key}Label" as String, quantileItem.co2Record.getName())
-            result.put(key, quantileItem.value)
+        if (records2) {
+            final List<Map<String, TraceRecord>> sortedRecords = records2.sort(
+                    { Map<String, TraceRecord> record -> metricExtractionFunction(record['traceRecord'], record['co2Record']) }
+            )
+
+            /*
+                Unlike the Nextflow Report, we are not rounding the results nor discarding entries with all zeros.
+                This decision is taken to avoid the loss of information in the report.
+                Plots will show values of 0, making the representation of all processes consistent.
+                This class reports all values in milli-unit to increase precision.
+                Values are converted to the required units by CO2FootprintReportTemplate.js
+            */
+
+            QuantileItem quantileItem
+
+            // List all values
+            List<Double> allValues = sortedRecords.collect { Map<String, TraceRecord> record ->
+                metricExtractionFunction.call(record['traceRecord'], record['co2Record'])
+            }
+            result.put('all', allValues)
+
+            // Add total
+            Double total = allValues.sum() as Double
+            result.put('total', total as double)
+
+            // Add mean
+            result.put('mean', (total / sortedRecords.size()) as double)
+
+            // Add quantiles
+            ['min': 0d, 'q1': .25d, 'q2': .50d, 'q3': .75d, 'max': 1d].each { String key, double q ->
+                quantileItem = getQuantile(sortedRecords, q, metricExtractionFunction)
+                result.put("${key}Label" as String, (quantileItem.getRecord().get('co2Record') as CO2Record).getName())
+                result.put(key, quantileItem.value)
+            }
         }
 
         return result
@@ -132,15 +163,15 @@ class CO2RecordAggregator {
     /**
      * Computes summary statistics for each metric defined in the metricExtractionFunctions map.
      *
-     * @param co2Records A list of CO2Record objects.
+     * @param items A list of mapped trace & CO2 records
      * @return A map where each key is a metric name and each value is a map of summary statistics
      *         as returned by {@link #computeStat}.
      */
-    Map<String, ?> computeStats(List<CO2Record> co2Records) {
+    Map<String, Map<String, ?>> computeStats(List<Map<String, TraceRecord>> records) {
         return this.metricExtractionFunctions.collectEntries {
             String metricName, Closure<Double> metricExtractionFunction ->
-                [metricName, computeStat(co2Records, metricExtractionFunction)]
-        } as Map<String, ?>
+                [metricName, computeStat(records, metricExtractionFunction)]
+        }
     }
 
     /**
@@ -154,14 +185,10 @@ class CO2RecordAggregator {
      *         - one entry per metric (e.g., 'energy', 'emissions'), each with its corresponding stats map
      *         The format looks like this: [ [process: processName1:, metricName1: [entryKey1: value, ...],...],...]
      */
-    List<Map<String, ?>> computeProcessStats() {
-        Map<String, ?> stats
-        List<Map<String, ?>> processStats = this.processCO2Records.collect {
-            String processName, List<CO2Record> co2Records ->
-                stats = [process: processName] as Map<String, ?>
-                stats.putAll(computeStats(co2Records))
-                return stats
+    Map<String, Map<String, Map<String, ?>>> computeProcessStats() {
+        return this.processCO2Records.collectEntries {
+            String processName, List<Map<String, TraceRecord>> records ->
+                [processName, computeStats(records)]
         }
-        return processStats
     }
 }
