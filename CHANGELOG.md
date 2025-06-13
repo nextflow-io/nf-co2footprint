@@ -5,6 +5,7 @@
 - When a message is excluded from the log it is still sent to the `trace` level log
 - Speedier Report generation through refactoring of Co2 aggregation
 - Merge provided custom TDP matrices into the old `TDPDataMatrix`, instead of fully replacing it
+- Added metric to indicate newly generated / non-cached CO2 emissions into report
 
 ## Bug Fixes:
 - Adjusted rendering of flights to deliver percentage < 1.0 flights and number of flights afterwards
