@@ -21,6 +21,7 @@
 - Removal of inherited methods in `CO2Record`
 - Adjusted folder structure of tests to main
 - Added a method to extend DataMatrix by rows
+- Added "How to cite"
 
 # Version 1.0.0-beta1
 ## Features:
