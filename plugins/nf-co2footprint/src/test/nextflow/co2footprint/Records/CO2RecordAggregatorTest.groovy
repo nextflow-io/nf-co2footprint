@@ -1,11 +1,12 @@
-package nextflow.co2footprint
+package nextflow.co2footprint.Records
 
-import nextflow.co2footprint.CO2RecordAggregator.QuantileItem
+
+import nextflow.co2footprint.Records.CO2RecordAggregator.QuantileItem
 
 import spock.lang.Shared
 import spock.lang.Specification
 
-class CO2ReportAggregatorTest extends Specification{
+class CO2RecordAggregatorTest extends Specification{
     @Shared
     CO2RecordAggregator co2RecordAggregator = new CO2RecordAggregator()
 

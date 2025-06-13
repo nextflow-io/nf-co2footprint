@@ -1,10 +1,10 @@
 package nextflow.co2footprint.FileCreators
 
 import groovy.json.JsonOutput
-import nextflow.co2footprint.CO2EquivalencesRecord
+import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
-import nextflow.co2footprint.CO2RecordAggregator
-import nextflow.co2footprint.CO2Record
+import nextflow.co2footprint.Records.CO2RecordAggregator
+import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.utils.Converter
 
 import groovy.text.GStringTemplateEngine
@@ -191,7 +191,7 @@ class CO2FootprintReport extends CO2FootprintFile{
      * Render the executed tasks JSON
      *
      * @param data A Map of {@link nextflow.processor.TaskId}s and {@link nextflow.trace.TraceRecord}s representing the tasks executed
-     * @param dataCO2 A Map of {@link nextflow.processor.TaskId}s and {@link nextflow.co2footprint.CO2Record}s representing the co2Record traces
+     * @param dataCO2 A Map of {@link nextflow.processor.TaskId}s and {@link CO2Record}s representing the co2Record traces
      * @return The collected List of JSON entries
      */
     protected List<String> renderTasksJson(

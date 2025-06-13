@@ -2,11 +2,9 @@ package nextflow.co2footprint
 
 import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
-import org.slf4j.LoggerFactory
-import ch.qos.logback.classic.LoggerContext
-import nextflow.co2footprint.utils.DeduplicateMarkerFilter
-
-
+import nextflow.co2footprint.Records.CO2EquivalencesRecord
+import nextflow.co2footprint.Records.CO2Record
+import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.Session
 import nextflow.co2footprint.FileCreators.CO2FootprintReport
 import nextflow.co2footprint.FileCreators.CO2FootprintSummary
@@ -88,7 +86,7 @@ class CO2FootprintObserver implements TraceObserver {
     /**
      * CO2 emission Records with task IDs
      */
-    final private Map<TaskId,CO2Record> co2eRecords = new ConcurrentHashMap<>()
+    final private Map<TaskId, CO2Record> co2eRecords = new ConcurrentHashMap<>()
 
     Map<TaskId,CO2Record> getCO2eRecords() { co2eRecords }
 

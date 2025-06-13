@@ -1,5 +1,7 @@
 package nextflow.co2footprint
 
+import nextflow.co2footprint.DataContainers.CIDataMatrix
+import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import spock.lang.Specification
 import groovy.util.logging.Slf4j
 import java.util.concurrent.ConcurrentHashMap
@@ -75,7 +77,7 @@ class CO2FootprintConfigTest extends Specification {
     }
 
     // Helper method to validate default properties
-    private void validateDefaultProperties(CO2FootprintConfig config) {
+    private static void validateDefaultProperties(CO2FootprintConfig config) {
         assert config.powerdrawMem == 0.3725
         assert config.pue == 1.0
     }

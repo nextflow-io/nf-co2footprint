@@ -1,5 +1,8 @@
 package nextflow.co2footprint
 
+import nextflow.co2footprint.DataContainers.TDPDataMatrix
+import nextflow.co2footprint.Records.CO2EquivalencesRecord
+import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.utils.HelperFunctions
 import groovy.util.logging.Slf4j
 import nextflow.processor.TaskId

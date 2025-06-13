@@ -1,4 +1,5 @@
-package nextflow.co2footprint
+package nextflow.co2footprint.DataContainers
+
 
 import spock.lang.Specification
 import java.nio.file.Path
