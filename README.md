@@ -64,7 +64,8 @@ S. Krakau, J. Mir-Pedrol, J. Carl, and N. Volkmann, nextflow-io/nf-co2footprint 
     year    =   {2025}
     publisher = {Nextflow-io}
     version =   {v1.0.0}
-    url     =   {https://github.com/nextflow-io/nf-co2footprint}
+    url     =   {https://doi.org/10.5281/zenodo.14622304}
+    doi     =   {10.5281/zenodo.14622304}
 }
 ```
 
