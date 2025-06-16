@@ -61,11 +61,10 @@ The following parameters are currently available:
   **Default**: 12.0.
   
 - **`machineType`**  
-  The type of machine the computation is executed upon. It determines the `pue` if the parameter is not explicitly specified in the config file. Must be one of: `'compute cluster'`, `'local'`, or `''`.  
-  If not specified (`null`), the plugin infers `machineType` from the Nextflow `process.executor` setting, mapping it to either `'compute cluster'` or `'local'`.  
-  `''` can be used if you want to bypass this behavior.  
-  **Default**: `null` 
+  Specifies the type of machine used for computation. It determines the `pue` if the parameter is not explicitly specified in the config file. Must be one of: `'compute cluster'`, `'local'` or `'cloud'`.
+  If not specified (`null`), the plugin infers `machineType` from the Nextflow `process.executor` setting, mapping it to either `'compute cluster'`, `'local'` or `'cloud'`.
     - `'local'`: sets `pue` to 1.0  
     - `'compute cluster'`: sets `pue` to 1.67
-    - `''`:  sets `pue` to 1.0  
-  
+    - `'cloud'`: sets `pue` to 1.56  
+      <sup>Source: [Uptime Institute 2024 Global Data Center Survey](https://datacenter.uptimeinstitute.com/rs/711-RIA-145/images/2024.GlobalDataCenterSurvey.Report.pdf)</sup>
+    
