@@ -78,12 +78,14 @@ class CO2FootprintConfigTest extends Specification {
 
     def 'should throw exception if required columns are missing'() {
         given:
-        def matrix = Mock(DataMatrix)
-        matrix.columnIndex >> [foo: 0, bar: 1] // missing required columns
-        CO2FootprintConfig config = new CO2FootprintConfig([:], tdp, ci, [:])
+        // Create a real DataMatrix with missing columns
+        def data = [[1], [2]]
+        def columnIndex = ['foo'] as LinkedHashSet
+        def rowIndex = [0, 1] as LinkedHashSet
+        def matrix = new DataMatrix(data, columnIndex, rowIndex)
 
         when:
-        config.checkRequiredColumns(matrix, ['executor', 'machineType', 'pue'])
+        matrix.checkRequiredColumns(['required1', 'required2'])
 
         then:
         def e = thrown(IllegalStateException)

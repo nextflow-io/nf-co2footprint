@@ -57,7 +57,7 @@ Currently, **nf-co2footprint** does not natively support cloud environments beca
 
 !!! info
 
-    **AWS Batch is the best supported cloud environment.** The plugin includes AWS-specific processors with TDP values (though some are estimated or not fully reliable) in the TDP data table, and uses a default PUE of **1.15** for AWS Batch.
+    For AWS Batch, the plugin uses a default PUE of **1.15**.
 
 If you still want to estimate your CO₂ footprint on the cloud, you can manually provide:
 

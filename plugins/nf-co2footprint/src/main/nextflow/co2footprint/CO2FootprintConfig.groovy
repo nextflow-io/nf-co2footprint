@@ -127,22 +127,6 @@ class CO2FootprintConfig {
     }  
 
     /**
-     * Checks if the given DataMatrix contains all required columns.
-     * If not, it logs an error and throws an IllegalStateException.
-     *
-     * @param matrix The DataMatrix to check.
-     * @param requiredColumns The list of required column names.
-     */
-    private void checkRequiredColumns(DataMatrix matrix, List<String> requiredColumns) {
-        def matrixColumns = matrix.columnIndex.keySet()
-        if (!matrixColumns.containsAll(requiredColumns)) {
-            def missing = requiredColumns - matrixColumns
-            log.error("CSV is missing required columns: ${missing}")
-            throw new IllegalStateException("CSV is missing required columns: ${missing}")
-        }
-    }
-
-    /**
      * Sets the machine type and PUE based on the executor.
      * It reads a CSV file to get the machine type and PUE for the given executor.
      *
@@ -152,7 +136,7 @@ class CO2FootprintConfig {
         // Read the CSV file as a DataMatrix - set RowIndex to 'executor'
         DataMatrix matrix = DataMatrix.fromCsv(Paths.get(this.class.getResource('/executor_machine_pue_mapping.csv').toURI()), ',', 0, null, 'executor')    
         // Check if matrix contains the required columns
-        checkRequiredColumns(matrix, ['machineType', 'pue'])
+        matrix.checkRequiredColumns(['machineType', 'pue'])
         try {
             this.machineType = matrix.get(executor, 'machineType') as String
             this.pue ?= matrix.get(executor, 'pue') as Double // assign pue only if not already set
