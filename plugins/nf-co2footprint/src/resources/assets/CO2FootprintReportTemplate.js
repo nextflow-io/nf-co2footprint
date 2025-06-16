@@ -305,7 +305,7 @@ $(function() {
     // Add outline of CO2 emissions from non-cached processes to plot
     data.push(
       {
-        x:processName, y: norm_units(stats.co2e_non_cached), name: processName + ' - Not cached', legendgroup: 'Not cached',
+        x:processName, y: norm_units(stats.co2e_non_cached), name: processName + ' - without cached', legendgroup: 'without cached',
         type:'box', boxmean: true, boxpoints: false,
         marker: { color: 'rgba(128, 128, 128, 0.01)' }, fillcolor: 'rgba(128, 128, 128, 0.01)', line: { color: 'rgba(128, 128, 128, 0.25)' },
         hovertext: 'Non-cached CO2e emissions'
