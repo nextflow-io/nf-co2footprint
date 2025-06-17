@@ -328,8 +328,6 @@ $(function() {
         hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
       }
     );
-
-
   }
 
   var layout = {
@@ -357,7 +355,7 @@ $(function() {
   Plotly.newPlot('co2e-total-plot', plot_data_total, layout);
   Plotly.newPlot('co2e-non-cached-plot', plot_data_non_cached, layout);
 
-  
+
   // Convert to readable units, optionally with a starting scope and a unit label
   function readable_units(value, scope = '', unit = '') {
     var units = ['p', 'n', 'u', 'm', '', 'K', 'M', 'G', 'T', 'P', 'E']; // pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
