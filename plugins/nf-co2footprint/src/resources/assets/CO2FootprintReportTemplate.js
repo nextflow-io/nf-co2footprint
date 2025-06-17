@@ -288,38 +288,48 @@ $(function() {
   }
 
   // Plot histograms of resource usage
-  var data = [];
+  var plot_data_total = [];
+  var plot_data_non_cached = [];
   for(var processName in window.statsByProcess){
 
     // Extract process statistics
     var stats = window.statsByProcess[processName];
 
     // Add CO2 Boxplot to plot
-    data.push(
+    plot_data_total.push(
       {
-        x:processName, y: norm_units(stats.co2e), name: processName + ' - Total', legendgroup: 'Total',
+        x:processName, y: norm_units(stats.co2e), name: processName,
         type:'box', boxmean: true, boxpoints: false
       }
     );
 
-    // Add outline of CO2 emissions from non-cached processes to plot
-    data.push(
-      {
-        x:processName, y: norm_units(stats.co2e_non_cached), name: processName + ' - without cached', legendgroup: 'without cached',
-        type:'box', boxmean: true, boxpoints: false,
-        marker: { color: 'rgba(128, 128, 128, 0.01)' }, fillcolor: 'rgba(128, 128, 128, 0.01)', line: { color: 'rgba(128, 128, 128, 0.25)' },
-        hovertext: 'Non-cached CO2e emissions'
-      }
-    );
-
     // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
-    data.push(
+    plot_data_total.push(
       {
-        x:processName, y: norm_units(stats.energy), name: processName + ' - Total', legendgroup: 'Total',
+        x:processName, y: norm_units(stats.energy), name: processName,
         type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
         hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
       }
     );
+
+    // Add outline of CO2 emissions from non-cached processes to plot
+    plot_data_non_cached.push(
+      {
+        x:processName, y: norm_units(stats.co2e_non_cached), name: processName,
+        type:'box', boxmean: true, boxpoints: false,
+      }
+    );
+
+    // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
+    plot_data_non_cached.push(
+      {
+        x:processName, y: norm_units(stats.energy_non_cached), name: processName,
+        type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
+        hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
+      }
+    );
+
+
   }
 
   var layout = {
@@ -344,7 +354,15 @@ $(function() {
     boxmode: 'group',
   };
 
-  Plotly.newPlot('co2eplot', data, layout);
+  Plotly.newPlot('co2e-total-plot', plot_data_total, layout);
+  Plotly.newPlot('co2e-non-cached-plot', plot_data_non_cached, layout);
+
+  
+  // Convert to readable units, optionally with a starting scope and a unit label
+  function readable_units(value, scope = '', unit = '') {
+    var units = ['p', 'n', 'u', 'm', '', 'K', 'M', 'G', 'T', 'P', 'E']; // pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
+    var scopeIndex = units.indexOf(scope);
+    if (scopeIndex === -1) scopeIndex = 4; // Default to '' (no prefix) if not found
 
   //
   // Table creation functions
