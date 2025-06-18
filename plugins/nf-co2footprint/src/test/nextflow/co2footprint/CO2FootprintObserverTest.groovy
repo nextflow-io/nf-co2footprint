@@ -265,7 +265,7 @@ class CO2FootprintObserverTest extends Specification{
         // 225 is the plugin version
         checksumChecker.compareChecksums(
                 reportPath,
-                'c294dae1ce6acf53094876d05f995be8',
+                '84e48225a1d70c996a5e26508de837ab',
                 [212, 225, 1175],
                 this.class.getResource('/report_test.html').getPath() as Path
         )

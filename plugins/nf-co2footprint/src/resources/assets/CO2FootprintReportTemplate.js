@@ -1,5 +1,5 @@
 // JavaScript used to power the Nextflow Report Template output.
- 
+
 //
 // Converter methods
 //
@@ -15,7 +15,7 @@ function norm_units( list ) {
 
 /**
  * Convert to readable units, optionally with a starting scope and a unit label
- * 
+ *
  * @param {*} value The value to be converted
  * @param {*} scope The current scope of the value
  * @param {*} unit The unit of the value
@@ -24,7 +24,7 @@ function norm_units( list ) {
 function toReadableUnits(value, scope = '', unit = '') {
   var scopes = ['p', 'n', 'u', 'm', '', 'K', 'M', 'G', 'T', 'P', 'E']; // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
   var scopeIndex = scopes.indexOf(scope);
-  
+
   while (value >= 1000 && scopeIndex < scopes.length - 1) {
     value /= 1000;
     scopeIndex++;
@@ -35,13 +35,13 @@ function toReadableUnits(value, scope = '', unit = '') {
   }
 
   value = Math.round(value * 100) / 100;
-  return value + ' ' + scopes[scopeIndex] + unit;    
+  return value + ' ' + scopes[scopeIndex] + unit;
 }
 
 
 /**
  * Convert bytes to readable units
- * 
+ *
  * @param {*} value Bytes to be converted to readable scope
  * @returns Bytes in a readable scope
  */
@@ -53,7 +53,7 @@ function toReadableByteUnits(value){
     value /= 1024;
     unit_index++;
   }
-  
+
   return value + ' ' + units[unit_index];
 }
 
@@ -151,11 +151,11 @@ function toReadableTimeUnits(value, unit='ms', smallestUnit='s', largestUnit='ye
 
 /**
  * Perform checks on the data before using other methods to process
- * 
+ *
  * @param {*} data The data (number/string/...)
  * @param {*} type Type of the data
  * @param {function} parseFunction Function to parse the data
- * @returns 
+ * @returns
  */
 function check_data(data, type, parseFunction) {
   if (type === 'sort') {
@@ -172,8 +172,8 @@ function check_data(data, type, parseFunction) {
 
 /**
  * Render CO2 equivalents in desired output format
- * 
- * @param {*} mg 
+ *
+ * @param {*} mg
  * @param {*} type Type of the data
  * @returns CO2 equivalents as a readable unit
  */
@@ -183,7 +183,7 @@ function make_co2e(mg, type){
 
 /**
  * Render energy in desired output format
- * 
+ *
  * @param {*} mWh Energy in milli-Watt-hours
  * @param {*} type Type of the data
  * @returns Energy as a readable unit
@@ -194,7 +194,7 @@ function make_energy(mWh, type){
 
 /**
  * Render time in desired output format
- * 
+ *
  * @param {*} ms Time in milliseconds
  * @param {*} type Type of the data
  * @returns The readable time
@@ -205,7 +205,7 @@ function make_time(ms, type){
 
 /**
  * Render carbon intensity in desired output format
- * 
+ *
  * @param {*} ci Carbon intensity value
  * @param {*} type Type of the data
  * @returns Carbon intensity as a readable unit
@@ -216,7 +216,7 @@ function make_carbon_intensity(ci, type) {
 
 /**
  * Render memory size in desired output format
- * 
+ *
  * @param {*} bytes Number of bytes
  * @param {*} type Type of the data
  * @returns The bytes at a readable scale
@@ -227,7 +227,7 @@ function make_memory(bytes, type){
 
 /**
  * Render usage factor in desired output format
- * 
+ *
  * @param {*} usageFactor Usage factor of CPU in percent
  * @param {*} type Type of the data
  * @returns A rounded usage factor
@@ -241,7 +241,7 @@ function make_core_usage_factor(usageFactor, type){
 window.data_byprocess = {};
 
 //
-// This block is only executed after the page is fully loaded 
+// This block is only executed after the page is fully loaded
 //
 $(function() {
   // Script block clicked
@@ -264,7 +264,7 @@ $(function() {
   for(let i in window.data.summary){
     let metrics = window.data.summary[i];
     let proc = metrics.process;
-    
+
     if(!window.data_byprocess.hasOwnProperty(proc)){
       window.data_byprocess[proc] = {};
     }
@@ -305,7 +305,7 @@ $(function() {
     // energy will be plotted with transparent color, hiding hover info and legend, but linked to tye right y-axis
     data.push({x:pname, y: norm_units(smry.energy), name: pname, legendgroup: pname, type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend:false, hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'});
   }
-  
+
   var tickformat = [{
     "dtickrange": [null, 4],
     "value": ".2f"
@@ -331,8 +331,8 @@ $(function() {
             tickformatstops: tickformat
     },
   };
-  
-  Plotly.newPlot('co2eplot', data, layout);  
+
+  Plotly.newPlot('co2eplot', data, layout);
 
   //
   // Table creation functions
