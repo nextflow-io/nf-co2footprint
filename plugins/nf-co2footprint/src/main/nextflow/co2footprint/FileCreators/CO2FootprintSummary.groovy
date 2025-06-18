@@ -9,20 +9,27 @@ import nextflow.trace.TraceHelper
 
 import java.nio.file.Path
 
-@Slf4j
+
 /**
- * Class to generate the summary text file
+ * Generates the summary text file for the CO₂ footprint.
+ *
+ * Writes total energy, CO₂ emissions, equivalences, and plugin options
+ * to a human-readable summary file at the end of the workflow.
  */
+@Slf4j
 class CO2FootprintSummary extends CO2FootprintFile {
 
+    // Writer for the summary file
     PrintWriter co2eSummaryFile
 
+    // Agent for thread-safe writing (not strictly needed for single write)
     Agent<PrintWriter> summaryWriter
 
     /**
-     * Constructor for summary file
-     * @param path
-     * @param overwrite
+     * Constructor for summary file.
+     *
+     * @param path      Path to the summary file
+     * @param overwrite Whether to overwrite existing files
      */
     CO2FootprintSummary(Path path, boolean overwrite) {
         super(path, overwrite)
@@ -30,16 +37,16 @@ class CO2FootprintSummary extends CO2FootprintFile {
     }
 
     /**
-     * Make last changes to file and save it.
+     * Write the summary file with totals and options.
      *
-     * @param total_energy Total expended energy during the run
-     * @param total_co2 Total emitted CO2e during the run
-     * @param equivalences Equivalences to CO2 emissions
-     * @param config CO2FootprintConfiguration
-     * @return
+     * @param total_energy  Total expended energy during the run (Wh)
+     * @param total_co2     Total emitted CO₂e during the run (g)
+     * @param equivalences  Equivalences to CO₂ emissions
+     * @param config        CO2FootprintConfiguration
+     * @param version       Plugin version
      */
     void write(Double total_energy, Double total_co2, CO2EquivalencesRecord equivalences, CO2FootprintConfig config, String version) {
-        // launch the agent
+        // Launch the agent (for thread safety, though only one write is performed)
         summaryWriter = new Agent<PrintWriter>(co2eSummaryFile)
 
         String outText = """\
@@ -65,14 +72,16 @@ class CO2FootprintSummary extends CO2FootprintFile {
         nf-co2footprint options:
         """.stripIndent()
         config.collectInputFileOptions().each { key, value -> outText += "${key}: ${value}\n" }
-        config.collectOutputFileOptions().each {key, value ->  outText += "${key}: ${value}\n" }
+        config.collectOutputFileOptions().each { key, value -> outText += "${key}: ${value}\n" }
         config.collectCO2CalcOptions().each { key, value -> outText += "${key}: ${value}\n" }
 
         co2eSummaryFile.print(outText)
-
         co2eSummaryFile.flush()
     }
 
+    /**
+     * Close the summary file writer.
+     */
     void close() {
         co2eSummaryFile.close()
     }

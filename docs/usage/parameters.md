@@ -67,4 +67,3 @@ The following parameters are currently available:
     - `'compute cluster'`: sets `pue` to 1.67
     - `'cloud'`: sets `pue` to 1.56  
       <sup>Source: [Uptime Institute 2024 Global Data Center Survey](https://datacenter.uptimeinstitute.com/rs/711-RIA-145/images/2024.GlobalDataCenterSurvey.Report.pdf)</sup>
-    

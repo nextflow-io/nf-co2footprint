@@ -9,33 +9,40 @@ import nextflow.trace.TraceRecord
 
 import java.nio.file.Path
 
-@Slf4j
 /**
- * Class to generate the Trace file
+ * Generates the CO₂ footprint trace file.
+ *
+ * Writes per-task energy, CO₂, and resource usage in tab-separated format.
+ * Uses an agent for thread-safe writing.
  */
+@Slf4j
 class CO2FootprintTrace extends CO2FootprintFile {
 
+    // Agent for thread-safe writing to the trace file
     private Agent<PrintWriter> traceWriter
 
     /**
-     * Create the trace file
+     * Constructor for the trace file.
      *
-     * @param path A path to the file where save the CO2 emission data
+     * @param path      Path to the trace file
+     * @param overwrite Whether to overwrite existing files
      */
     CO2FootprintTrace(Path path, boolean overwrite) {
         super(path, overwrite)
     }
 
     /**
-     * Create the trace file, if file already exists it is "rolled" to a new file
+     * Create the trace file and write the header.
+     * If file already exists, it is overwritten or rolled depending on settings.
      */
     void create() {
-        // create a new trace file
+        // Create a new trace file writer
         file = new PrintWriter(TraceHelper.newFileWriter(path, overwrite, 'co2footprint'))
 
-        // launch the agent
+        // Launch the agent for thread-safe writing
         traceWriter = new Agent<PrintWriter>(file)
 
+        // Write the header line to the trace file
         List<String> headers = [
                 'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'time', 'carbon_intensity', 'cpus', 'powerdraw_cpu',
                 'cpu_model', 'cpu_usage', 'requested_memory'
@@ -47,6 +54,13 @@ class CO2FootprintTrace extends CO2FootprintFile {
         }
     }
 
+    /**
+     * Write a single task's trace record to the file.
+     *
+     * @param taskId    Task identifier
+     * @param trace     TraceRecord for the task
+     * @param co2Record CO2Record for the task
+     */
     void write(TaskId taskId, TraceRecord trace, CO2Record co2Record){
         List<String> records = co2Record.getReadableEntries()
 
@@ -59,14 +73,15 @@ class CO2FootprintTrace extends CO2FootprintFile {
     }
 
     /**
-     * Close the file after retrieving the remaining information from the current CO2Record
-     * @param current
+     * Close the trace file after writing any remaining records.
+     *
+     * @param current Map of TaskId to TraceRecord for unfinished tasks
      */
     void close(Map<TaskId, TraceRecord> current) {
-        // wait for termination and flush the agent content
+        // Wait for agent to finish and flush content
         traceWriter.await()
 
-        // write the remaining records
+        // Write remaining records for unfinished tasks
         current.values().each { record ->
             file.println("${record.taskId}\t-")
         }
