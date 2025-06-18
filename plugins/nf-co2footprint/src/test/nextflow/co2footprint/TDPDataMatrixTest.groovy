@@ -213,7 +213,7 @@ class TDPDataMatrixTest extends Specification {
 
         // match against unaccounted variance of model
         df.matchModel('Indel® i3-Fantasy(TM) 10Trillion GW').getData() == [[100, 4, 8]]
-        listAppender.list[1] as String == '[WARN] Could not find CPU model "Intel® i3-Fantasy(TM) 10Trillion GW" in given TDP data table. ' +
+        listAppender.list[1] as String == '[WARN] Could not find CPU model "Indel® i3-Fantasy(TM) 10Trillion GW" in given TDP data table. ' +
                 'Using default CPU power draw value (100.0 W). You can help us by reporting this warning and your ' +
                 '`.nextflow.log` file to https://github.com/nextflow-io/nf-co2footprint/issues/new?template=missing_chip.yaml. Thanks.'
     }
