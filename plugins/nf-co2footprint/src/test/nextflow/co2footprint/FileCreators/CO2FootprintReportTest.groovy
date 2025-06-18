@@ -71,12 +71,13 @@ class CO2FootprintReportTest extends Specification{
         CO2EquivalencesRecord equivalencesRecord = new CO2EquivalencesRecord(10.0, 10.0, 10.0)
 
         CO2RecordAggregator aggregator = new CO2RecordAggregator()
-        aggregator.add(co2Record, 'reportTestProcess')
+        aggregator.add(traceRecord, co2Record)
 
         co2FootprintReport = new CO2FootprintReport(reportPath, false, 10_000)
         co2FootprintReport.addEntries(
-                10.0d, 100.0d,
-                equivalencesRecord, aggregator, config,
+                [co2e: 10.0d, energy: 100.0d, co2e_non_cached: 10.0d, energy_non_cached: 100.0d],
+                aggregator.computeProcessStats(),
+                equivalencesRecord, config,
                 'test-version', session, [(taskId): traceRecord], [(taskId): co2Record]
         )
     }
@@ -91,7 +92,8 @@ class CO2FootprintReportTest extends Specification{
         when:
         CO2EquivalencesRecord equivalences = new CO2EquivalencesRecord(carKm, treeMonths, planePercent)
         co2FootprintReport.addEntries(
-                10, 10, equivalences, null, null, null, null, null, null
+                [co2e: 10d, energy: 10d, co2e_non_cached: 10d, energy_non_cached: 10d],
+                null, equivalences, null, null, null, null, null
         )
         Map<String, String> totalsJson = co2FootprintReport.renderCO2TotalsJson()
 
@@ -100,8 +102,8 @@ class CO2FootprintReportTest extends Specification{
 
         where:
         carKm   || treeMonths   || planePercent  || totalsJsonResult
-        10.0    || 10.0         || 10.0          || [ co2: '10.0 mg', energy:'10.0 mWh', car: '10.0', tree: '10months', plane_percent: '10.0', plane_flights: null]
-        10.0    || 10.0         || 100.0         || [ co2: '10.0 mg', energy:'10.0 mWh', car: '10.0', tree: '10months', plane_percent: null, plane_flights: '1.0']
+        10.0    || 10.0         || 10.0          || [ co2e: '10.0 mg', energy:'10.0 mWh', co2e_non_cached:'10.0 mg', energy_non_cached:'10.0 mWh', car: '10.0', tree: '10months', plane_percent: '10.0 %', plane_flights: null]
+        10.0    || 10.0         || 100.0         || [ co2e: '10.0 mg', energy:'10.0 mWh', co2e_non_cached:'10.0 mg', energy_non_cached:'10.0 mWh', car: '10.0', tree: '10months', plane_percent: null, plane_flights: '1.0']
     }
 
     def 'Test payLoad JSON generation' () {
@@ -125,21 +127,27 @@ class CO2FootprintReportTest extends Specification{
                         '}' +
                     '],' +
                 '"summary":' +
-                    '[' +
+                    '{' +
+                        '"reportTestProcess":' +
                         '{' +
-                            '"process":"reportTestProcess",' +
                             '"co2e":' +
                                 '{' +
-                                    '"mean":1.0,"minLabel":"testTask","min":1.0,"q1Label":"testTask","q1":1.0,"q2Label":"testTask","q2":1.0,"q3Label":"testTask","q3":1.0,"maxLabel":"testTask","max":1.0' +
-                                //  '"mean":1.0,"min":1.0,"q1":1.0,"q2":1.0,"q3":1.0,"max":1.0,"minLabel":"testTask","maxLabel":"testTask","q1Label":"testTask","q2Label":"testTask","q3Label":"testTask"'
+                                    '"all":[1.0],"total":1.0,"mean":1.0,"minLabel":"testTask","min":1.0,"q1Label":"testTask","q1":1.0,"q2Label":"testTask","q2":1.0,"q3Label":"testTask","q3":1.0,"maxLabel":"testTask","max":1.0' +
                                 '},' +
                             '"energy":' +
                                 '{' +
-                                    '"mean":1.0,"minLabel":"testTask","min":1.0,"q1Label":"testTask","q1":1.0,"q2Label":"testTask","q2":1.0,"q3Label":"testTask","q3":1.0,"maxLabel":"testTask","max":1.0' +
-                                //  '"mean":1.0,"min":1.0,"q1":1.0,"q2":1.0,"q3":1.0,"max":1.0,"minLabel":"testTask","maxLabel":"testTask","q1Label":"testTask","q2Label":"testTask","q3Label":"testTask"'
+                                    '"all":[1.0],"total":1.0,"mean":1.0,"minLabel":"testTask","min":1.0,"q1Label":"testTask","q1":1.0,"q2Label":"testTask","q2":1.0,"q3Label":"testTask","q3":1.0,"maxLabel":"testTask","max":1.0' +
+                                '},' +
+                            '"co2e_non_cached":' +
+                                '{' +
+                                    '"all":[1.0],"total":1.0,"mean":1.0,"minLabel":"testTask","min":1.0,"q1Label":"testTask","q1":1.0,"q2Label":"testTask","q2":1.0,"q3Label":"testTask","q3":1.0,"maxLabel":"testTask","max":1.0' +
+                                '},' +
+                            '"energy_non_cached":' +
+                                '{' +
+                                    '"all":[1.0],"total":1.0,"mean":1.0,"minLabel":"testTask","min":1.0,"q1Label":"testTask","q1":1.0,"q2Label":"testTask","q2":1.0,"q3Label":"testTask","q3":1.0,"maxLabel":"testTask","max":1.0' +
                                 '}' +
                         '}' +
-                    ']' +
+                    '}' +
                 '}'
         payloadJson == expectedPayloadJson
     }
@@ -171,11 +179,13 @@ class CO2FootprintReportTest extends Specification{
         then:
         totalsJson ==
             [
-                "co2": "100.0 mg",
-                "energy":  "10.0 mWh",
+                "co2e": "10.0 mg",
+                "energy":  "100.0 mWh",
+                "co2e_non_cached": "10.0 mg",
+                "energy_non_cached":  "100.0 mWh",
                 "car": "10.0",
                 "tree": "10months",
-                "plane_percent": "10.0",
+                "plane_percent": "10.0 %",
                 "plane_flights": null
             ]
     }

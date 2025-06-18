@@ -3,7 +3,6 @@ package nextflow.co2footprint.FileCreators
 import groovy.json.JsonOutput
 import nextflow.co2footprint.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
-import nextflow.co2footprint.CO2RecordAggregator
 import nextflow.co2footprint.CO2Record
 import nextflow.co2footprint.utils.Converter
 
@@ -32,10 +31,9 @@ class CO2FootprintReport extends CO2FootprintFile{
     private int maxTasks
 
     // Information for final report
-    private Double total_energy
-    private Double total_co2
     private CO2EquivalencesRecord equivalences
-    private CO2RecordAggregator aggregator
+    private Map<String, Double> totalStats
+    private Map<String, Map<String, Map<String, ?>>> processStats
     private CO2FootprintConfig config
     private String version
     private Session session
@@ -60,10 +58,9 @@ class CO2FootprintReport extends CO2FootprintFile{
     /**
      * Store all data needed for the report.
      *
-     * @param total_energy  Total energy used (Wh)
-     * @param total_co2     Total CO₂ emissions (g)
+     * @param totalStats Total energy used (Wh) & Total CO₂ emissions (g)
+     * @param processStats Statistics (quantiles, ...) per process
      * @param equivalences  CO₂ equivalence calculations
-     * @param aggregator    Aggregator for process stats
      * @param config        Plugin configuration
      * @param version       Plugin version
      * @param session       Nextflow session
@@ -71,20 +68,18 @@ class CO2FootprintReport extends CO2FootprintFile{
      * @param co2eRecords   Map of TaskId to CO2Record
      */
     void addEntries(
-            Double total_energy,
-            Double total_co2,
+            Map<String, Double> totalStats,
+            Map<String, Map<String, Map<String, ?>>> processStats,
             CO2EquivalencesRecord equivalences,
-            CO2RecordAggregator aggregator,
             CO2FootprintConfig config,
             String version,
             Session session,
             Map<TaskId, TraceRecord> traceRecords,
             Map<TaskId, CO2Record> co2eRecords
     ) {
-        this.total_energy = total_energy
-        this.total_co2 = total_co2
+        this.totalStats = totalStats
+        this.processStats = processStats
         this.equivalences = equivalences
-        this.aggregator = aggregator
         this.config = config
         this.version = version
         this.session = session
@@ -159,7 +154,7 @@ class CO2FootprintReport extends CO2FootprintFile{
     protected String renderPayloadJson() {
         return "{" +
             "\"trace\":${renderTasksJson(traceRecords, co2eRecords)}," +
-            "\"summary\":${JsonOutput.toJson(aggregator.computeProcessStats())}" +
+            "\"summary\":${JsonOutput.toJson(processStats)}" +
         "}"
     }
 
@@ -186,8 +181,10 @@ class CO2FootprintReport extends CO2FootprintFile{
      */
     protected Map<String, String> renderCO2TotalsJson() {
         return [
-            co2: Converter.toReadableUnits(total_co2,'m', 'g'),
-            energy:Converter.toReadableUnits(total_energy,'m','Wh'),
+            co2e: Converter.toReadableUnits(totalStats['co2e'],'m', 'g'),
+            energy:Converter.toReadableUnits(totalStats['energy'],'m','Wh'),
+            co2e_non_cached: Converter.toReadableUnits(totalStats['co2e_non_cached'],'m', 'g'),
+            energy_non_cached:Converter.toReadableUnits(totalStats['energy_non_cached'],'m','Wh'),
             car: equivalences.getCarKilometersReadable(),
             tree: equivalences.getTreeMonthsReadable(),
             plane_percent: equivalences.getPlanePercent() < 100.0 ? equivalences.getPlanePercentReadable() : null,

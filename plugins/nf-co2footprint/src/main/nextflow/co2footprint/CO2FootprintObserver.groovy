@@ -2,10 +2,6 @@ package nextflow.co2footprint
 
 import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
-import org.slf4j.LoggerFactory
-import ch.qos.logback.classic.LoggerContext
-import nextflow.co2footprint.utils.DeduplicateMarkerFilter
-
 
 import nextflow.Session
 import nextflow.co2footprint.FileCreators.CO2FootprintReport
@@ -168,19 +164,25 @@ class CO2FootprintObserver implements TraceObserver {
     void onFlowComplete() {
         log.debug("Workflow completed -- rendering & saving files")
 
-        Double total_energy = 0d
-        Double total_co2 = 0d
-        co2eRecords.values().each {co2Record ->
-            total_energy += co2Record.getEnergyConsumption()
-            total_co2 += co2Record.getCO2e()
+        // Compute the statistics (total, mean, min, max, quantiles) on process level
+        final Map<String, Map<String, Map<String, ?>>> processStats = aggregator.computeProcessStats()
+
+        // Collect the total sums of all metrics
+        final Map<String, Double> totalStats = [:]
+        processStats.each { String processName, Map<String, Map<String, ?>> processMetrics ->
+            processMetrics.each { String metricName, Map<String, ?> metricValue ->
+                // Add up the different metrics (co2e, energy, ...)
+                totalStats[metricName] = (metricValue['total'] as Double ?: 0d) + (totalStats.get(metricName) as Double ?: 0d)
+            }
         }
 
-        final CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(total_co2)
+        // Calculate the equivalences to the total CO2e emissions
+        final CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(totalStats['co2e'])
 
         // Write report and summary
-        co2eSummaryFile.write(total_energy, total_co2, equivalences, config, version)
+        co2eSummaryFile.write(totalStats, equivalences, config, version)
 
-        co2eReportFile.addEntries(total_energy, total_co2, equivalences, aggregator, config, version, session, traceRecords, co2eRecords)
+        co2eReportFile.addEntries(totalStats, processStats, equivalences, config, version, session, traceRecords, co2eRecords)
         co2eReportFile.write()
 
         // Close all files (writes remaining tasks in the trace file)
@@ -264,7 +266,7 @@ class CO2FootprintObserver implements TraceObserver {
         // Aggregate results
         synchronized (traceRecords) {
             traceRecords[ trace.taskId ] = trace
-            aggregator.add(co2Record, trace.getSimpleName())
+            aggregator.add(trace, co2Record)
         }
 
         // Save to files
@@ -294,7 +296,7 @@ class CO2FootprintObserver implements TraceObserver {
         // Aggregate results
         synchronized (traceRecords) {
             traceRecords[ trace.taskId ] = trace
-            aggregator.add(co2Record, trace.getSimpleName())
+            aggregator.add(trace, co2Record)
         }
 
 

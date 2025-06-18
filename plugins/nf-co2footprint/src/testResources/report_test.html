@@ -166,6 +166,27 @@ footer a {
   padding: 0.2rem 0.5rem;
   font-size: 1.1rem;
 }
+
+.tab-pane {
+  display: block !important;
+  position: relative !important;
+  visibility: hidden;
+  overflow: hidden;
+  width: 100%;
+  height: 0;
+  z-index: 0;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.3s ease-in-out;
+}
+
+.tab-pane.active {
+  visibility: visible;
+  overflow: visible;
+  height: auto;
+  z-index: 1;
+  opacity: 1;
+}
+
   </style>
 
 </head>
@@ -210,7 +231,7 @@ footer a {
       <dl>
         <dt>Run times</dt>
         <dd>
-          <span id="workflow_start">03-Jun-2025 17:35:07</span> - <span id="workflow_complete">03-Jun-2025 17:35:07</span>
+          <span id="workflow_start">30-May-2025 12:46:51</span> - <span id="workflow_complete">30-May-2025 12:46:51</span>
           (<span id="completed_fromnow"></span>duration: <strong>null</strong>)
         </dd>
 
@@ -227,42 +248,83 @@ footer a {
       </dl>
 
       <h3 class="mt-5">Total CO<sub>2</sub>e footprint measures</h3>
-      <div class="row text-center mt-4 mb-5">
-        <div class="col-12 col-md-6 col-xl"><div class="metric-card card my-3">
+      <div class="d-flex flex-wrap mt-4 mb-5" style="gap: 1.5rem; margin-left: -0.75rem; margin-right: -0.75rem;">
+        <div class="metric-card card p-1" style="width: 18%; text-align: center; flex: 1 1 200px; min-width: 200px;">
           <span class="metric">4.61 g</span>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m19.21 12.04l-1.53-.11l-.3-1.5A5.484 5.484 0 0 0 12 6C9.94 6 8.08 7.14 7.12 8.96l-.5.95l-1.07.11A3.99 3.99 0 0 0 2 14c0 2.21 1.79 4 4 4h13c1.65 0 3-1.35 3-3c0-1.55-1.22-2.86-2.79-2.96z" opacity=".3"/><path fill="currentColor" d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5c0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4c0-2.05 1.53-3.76 3.56-3.97l1.07-.11l.5-.95A5.469 5.469 0 0 1 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5l1.53.11A2.98 2.98 0 0 1 22 15c0 1.65-1.35 3-3 3z"/></svg>
           <span class="metric-title">CO<sub>2</sub>e emissions</span>
-        </div></div>
-        <div class="col-12 col-md-6 col-xl"><div class="metric-card card my-3">
+        </div>
+        <div class="metric-card card p-1" style="width: 18%; text-align: center; flex: 1 1 200px; min-width: 200px;">
           <span class="metric">9.61 Wh</span>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSEnergySocket0"><g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20Zm4-23v-5m-8 5v-5"/><path fill="#fff" d="M24 32a8 8 0 0 0 8-8v-3H16v3a8 8 0 0 0 8 8Z"/><path d="M24 44V32"/></g></mask><path fill="currentColor" d="M0 0h48v48H0z" mask="url(#ipSEnergySocket0)"/></svg>
           <span class="metric-title">Energy consumption</span>
-        </div></div>
-        <div class="col-12 col-md-6 col-xl"><div class="metric-card card my-3">
+        </div>
+        <div class="metric-card card p-1" style="width: 18%; text-align: center; flex: 1 1 200px; min-width: 200px;">
           <span class="metric">3h 40min 30.72s</span>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M378.31 378.49L298.42 288h30.63c9.01 0 16.98-5 20.78-13.06c3.8-8.04 2.55-17.26-3.28-24.05L268.42 160h28.89c9.1 0 17.3-5.35 20.86-13.61c3.52-8.13 1.86-17.59-4.24-24.08L203.66 4.83c-6.03-6.45-17.28-6.45-23.32 0L70.06 122.31c-6.1 6.49-7.75 15.95-4.24 24.08C69.38 154.65 77.59 160 86.69 160h28.89l-78.14 90.91c-5.81 6.78-7.06 15.99-3.27 24.04C37.97 283 45.93 288 54.95 288h30.63L5.69 378.49c-6 6.79-7.36 16.09-3.56 24.26c3.75 8.05 12 13.25 21.01 13.25H160v24.45l-30.29 48.4c-5.32 10.64 2.42 23.16 14.31 23.16h95.96c11.89 0 19.63-12.52 14.31-23.16L224 440.45V416h136.86c9.01 0 17.26-5.2 21.01-13.25c3.8-8.17 2.44-17.47-3.56-24.26z"/></svg>
           <span class="metric-title">Tree sequestration time</span>
-        </div></div>
-        <div class="col-12 col-md-6 col-xl"><div class="metric-card card my-3">
+        </div>
+        <div class="metric-card card p-1" style="width: 18%; text-align: center; flex: 1 1 200px; min-width: 200px;">
           <span class="metric">0.026</span>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m5 11l1.5-4.5h11L19 11m-1.5 5a1.5 1.5 0 0 1-1.5-1.5a1.5 1.5 0 0 1 1.5-1.5a1.5 1.5 0 0 1 1.5 1.5a1.5 1.5 0 0 1-1.5 1.5m-11 0A1.5 1.5 0 0 1 5 14.5A1.5 1.5 0 0 1 6.5 13A1.5 1.5 0 0 1 8 14.5A1.5 1.5 0 0 1 6.5 16M18.92 6c-.2-.58-.76-1-1.42-1h-11c-.66 0-1.22.42-1.42 1L3 12v8a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h12v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-8l-2.08-6Z"/></svg>
           <span class="metric-title">km by car</span>
-        </div></div>
-        <div class="col-12 col-md-6 col-xl"><div class="metric-card card my-3">
-          
-          <span class="metric">0.009%</span>
-          
+        </div>
+        <div class="metric-card card p-1" style="width: 18%; text-align: center; flex: 1 1 200px; min-width: 200px;">
+          <span class="metric">0.009 %</span>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M20.56 3.91c.59.59.59 1.54 0 2.12l-3.89 3.89l2.12 9.19l-1.41 1.42l-3.88-7.43L9.6 17l.36 2.47l-1.07 1.06l-1.76-3.18l-3.19-1.77L5 14.5l2.5.37L11.37 11L3.94 7.09l1.42-1.41l9.19 2.12l3.89-3.89c.56-.58 1.56-.58 2.12 0Z"/></svg>
           <span class="metric-title">Flight Paris - London</span>
-        </div></div>
+        </div>
       </div>
+
+      <details>
+        <summary style="cursor: pointer;">
+          <span style="padding: 3px; border-radius: 10px; border: 2px solid #58bd9f; font-weight: bold">Without cached tasks:</span>
+        </summary>
+        <div class="d-flex flex-wrap mt-4 mb-5" style="gap: 1.5rem; margin-left: -0.75rem; margin-right: -0.75rem;">
+          <div class="metric-card card p-1" style="width: 18%; text-align: center; flex: 1 1 200px; min-width: 200px;">
+            <span class="metric">4.61 g</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m19.21 12.04l-1.53-.11l-.3-1.5A5.484 5.484 0 0 0 12 6C9.94 6 8.08 7.14 7.12 8.96l-.5.95l-1.07.11A3.99 3.99 0 0 0 2 14c0 2.21 1.79 4 4 4h13c1.65 0 3-1.35 3-3c0-1.55-1.22-2.86-2.79-2.96z" opacity=".3"/><path fill="currentColor" d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5c0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4c0-2.05 1.53-3.76 3.56-3.97l1.07-.11l.5-.95A5.469 5.469 0 0 1 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5l1.53.11A2.98 2.98 0 0 1 22 15c0 1.65-1.35 3-3 3z"/></svg>
+            <span class="metric-title">CO<sub>2</sub>e emissions</span>
+          </div>
+
+          <div class="metric-card card p-1" style="width: 18%; text-align: center; flex: 1 1 200px; min-width: 200px;">
+            <span class="metric">9.61 Wh</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSEnergySocket0"><g fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20Zm4-23v-5m-8 5v-5"/><path fill="#fff" d="M24 32a8 8 0 0 0 8-8v-3H16v3a8 8 0 0 0 8 8Z"/><path d="M24 44V32"/></g></mask><path fill="currentColor" d="M0 0h48v48H0z" mask="url(#ipSEnergySocket0)"/></svg>
+            <span class="metric-title">Energy consumption</span>
+          </div>
+          <div style="width: 18%; flex: 1 1 200px; min-width: 200px;"></div>
+          <div style="width: 18%; flex: 1 1 200px; min-width: 200px;"></div>
+          <div style="width: 18%; flex: 1 1 200px; min-width: 200px;"></div>
+        </div>
+      </details>
+
     </div>
   </div>
 
   <div class="container">
     <h2 id="resources" style="padding-top: 40px;">CO<sub>2</sub>e Footprint Measures</h2>
 
-    <div id="co2eplot"></div>
+    <ul class="nav nav-tabs" id="co2eplot_tabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="co2e-total-plot_tablink" data-toggle="tab" href="#co2e-total-plot_tabpanel" role="tab" aria-controls="co2e-total-plot_tabpanel" aria-expanded="false">
+          All tasks
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="co2e-non-cached-plot_tablink" data-toggle="tab" href="#co2e-non-cached-plot_tabpanel" role="tab" aria-controls="co2e-non-cached-plot_tabpanel" aria-expanded="false">
+          Without cached tasks
+        </a>
+      </li>
+    </ul>
+    <div class="tab-content" id="co2eplot_tabcontent">
+      <div class="tab-pane fade show active" id="co2e-total-plot_tabpanel" role="tabpanel">
+        <div id="co2e-total-plot"></div>
+      </div>
+      <div class="tab-pane fade" id="co2e-non-cached-plot_tabpanel" role="tabpanel">
+        <div id="co2e-non-cached-plot"></div>
+      </div>
+    </div>
+
     <p class="mt-3">The plot shows the distribution of CO<sub>2</sub>e emissions and corresponding energy consumptions for each workflow process. The values that are displayed when hovering over the plot refer to the CO<sub>2</sub>e emissions.</p>
   </div>
 
@@ -928,7 +990,7 @@ function make_core_usage_factor(usageFactor, type){
 
 
 // Map for collecting statistics by process
-window.data_byprocess = {};
+window.statsByProcess = {};
 
 //
 // This block is only executed after the page is fully loaded
@@ -951,78 +1013,99 @@ $(function() {
   }
 
   // Collect metrics by process
-  for(let i in window.data.summary){
-    let metrics = window.data.summary[i];
-    let proc = metrics.process;
+  for(let processName in window.data.summary){
+    let metrics = window.data.summary[processName];
 
-    if(!window.data_byprocess.hasOwnProperty(proc)){
-      window.data_byprocess[proc] = {};
-    }
+    // Add an empty map if the process is not already present
+    window.statsByProcess[processName] ??= {};
 
-    for (let key in metrics) {
-      if (metrics[key] != null) {
-        window.data_byprocess[proc][key] = [];
-        if( metrics[key].min == metrics[key].max ) {
-            // min equals max ==> show just a value
-            window.data_byprocess[proc][key].push(metrics[key].min);
-        }
-        else {
-            // otherwise show all values
-            window.data_byprocess[proc][key].push(metrics[key].min);
-            window.data_byprocess[proc][key].push(metrics[key].q1);
-            window.data_byprocess[proc][key].push(metrics[key].q1);
-            window.data_byprocess[proc][key].push(metrics[key].q2);
-            window.data_byprocess[proc][key].push(metrics[key].q3);
-            window.data_byprocess[proc][key].push(metrics[key].q3);
-            window.data_byprocess[proc][key].push(metrics[key].max);
-        }
-        if (key == "time") {
-          window.data_byprocess[proc][key] = window.data_byprocess[proc][key].map(function(d,i){
-            return moment.duration(d).asMinutes().toFixed(1);
-          });
-        }
+    for (let metricName in metrics) {
+      // Skip if metric is not present
+      if (metrics[metricName] == null) { continue; }
+
+      if( metrics[metricName]['min'] == metrics[metricName]['max'] ) {
+        // min equals max ==> show just a value
+        window.statsByProcess[processName][metricName] = [ metrics[metricName]['min'] ];
+      }
+      else {
+          // otherwise show all values
+          window.statsByProcess[processName][metricName] = ['min', 'q1', 'q2', 'q3', 'max'].map(stat => metrics[metricName][stat])
+      }
+      if (metricName == "time") {
+        window.statsByProcess[processName][metricName] = window.statsByProcess[processName][metricName].map(function(d,i){
+          return moment.duration(d).asMinutes().toFixed(1);
+        });
       }
     }
   }
 
   // Plot histograms of resource usage
-  var data = [];
-  for(var pname in window.data_byprocess){
-    if( !window.data_byprocess.hasOwnProperty(pname) )
-        continue;
-    var smry = window.data_byprocess[pname];
-    data.push({x:pname, y: norm_units(smry.co2e), name: pname, legendgroup: pname, type:'box', boxmean: true, boxpoints: false});
-    // energy will be plotted with transparent color, hiding hover info and legend, but linked to tye right y-axis
-    data.push({x:pname, y: norm_units(smry.energy), name: pname, legendgroup: pname, type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend:false, hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'});
-  }
+  var plot_data_total = [];
+  var plot_data_non_cached = [];
+  for(var processName in window.statsByProcess){
 
-  var tickformat = [{
-    "dtickrange": [null, 4],
-    "value": ".2f"
-  },
-  {
-    "dtickrange": [4, null],
-    "value": ".3s"
-  }];
+    // Extract process statistics
+    var stats = window.statsByProcess[processName];
+
+    // Add CO2 Boxplot to plot
+    plot_data_total.push(
+      {
+        x:processName, y: norm_units(stats.co2e), name: processName,
+        type:'box', boxmean: true, boxpoints: false
+      }
+    );
+
+    // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
+    plot_data_total.push(
+      {
+        x:processName, y: norm_units(stats.energy), name: processName,
+        type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
+        hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
+      }
+    );
+
+    // Add outline of CO2 emissions from non-cached processes to plot
+    plot_data_non_cached.push(
+      {
+        x:processName, y: norm_units(stats.co2e_non_cached), name: processName,
+        type:'box', boxmean: true, boxpoints: false,
+      }
+    );
+
+    // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
+    plot_data_non_cached.push(
+      {
+        x:processName, y: norm_units(stats.energy_non_cached), name: processName,
+        type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
+        hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
+      }
+    );
+  }
 
   var layout = {
     title: 'CO<sub>2</sub> emission & energy consumption',
-    legend: {x: 1.1},
-    xaxis: {domain: [0.2, 1]},
-    yaxis: {title: 'CO2e emission (g)',
-            rangemode: 'tozero',
-            tickformatstops: tickformat
+    legend: {
+      x: 1.1
     },
-    yaxis2: {title: 'Energy consumption (Wh)',
-            rangemode: 'tozero',
-            gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
-            overlaying: 'y',
-            side: 'right',
-            tickformatstops: tickformat
+    xaxis: {
+      title: 'Processes',
     },
+    yaxis: {
+      title: 'CO2e emission (g)',
+      rangemode: 'tozero',
+    },
+    yaxis2: {
+      title: 'Energy consumption (Wh)',
+      rangemode: 'tozero',
+      gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
+      overlaying: 'y',
+      side: 'right',
+    },
+    boxmode: 'group',
   };
 
-  Plotly.newPlot('co2eplot', data, layout);
+  Plotly.newPlot('co2e-total-plot', plot_data_total, layout);
+  Plotly.newPlot('co2e-non-cached-plot', plot_data_non_cached, layout);
 
   //
   // Table creation functions
@@ -1172,8 +1255,8 @@ $(function() {
 });
 
   // Nextflow report data
-  window.data = {"trace":[{"task_id":"111","hash":"-","native_id":"-","process":"observerTestProcess","module":"-","container":"-","tag":"-","name":"-","status":"-","exit":"-","submit":"-","start":"-","complete":"-","duration":"-","realtime":"1h","%cpu":"100.0%","%mem":"-","rss":"-","vmem":"-","peak_rss":"-","peak_vmem":"-","rchar":"-","wchar":"-","syscr":"-","syscw":"-","read_bytes":"-","write_bytes":"-","attempt":"-","workdir":"-","script":"-","scratch":"-","queue":"-","cpus":"1","memory":"7 GB","disk":"-","time":"-","env":"-","error_action":"-","vol_ctxt":"-","inv_ctxt":"-","hostname":"-","cpu_model":"Unknown model","energy":"9607.5","co2e":"4611.6","time":"1.0","ci":"480.0","cpus":"1","powerdrawCPU":"7.0","cpuUsage":"100.0","memory":"7","name":"-","cpu_model":"Unknown model"}],"summary":[{"process":"observerTestProcess","co2e":{"mean":4611.6,"minLabel":null,"min":4611.6,"q1Label":null,"q1":4611.6,"q2Label":null,"q2":4611.6,"q3Label":null,"q3":4611.6,"maxLabel":null,"max":4611.6},"energy":{"mean":9607.5,"minLabel":null,"min":9607.5,"q1Label":null,"q1":9607.5,"q2Label":null,"q2":9607.5,"q3Label":null,"q3":9607.5,"maxLabel":null,"max":9607.5}}]};
-  window.options = [{"option":"ci","value":"480.0"},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir3130015630595823207/report_test.html"},{"option":"summaryFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir3130015630595823207/summary_test.txt"},{"option":"traceFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir3130015630595823207/trace_test.txt"}];
+  window.data = {"trace":[{"task_id":"111","hash":"-","native_id":"-","process":"observerTestProcess","module":"-","container":"-","tag":"-","name":"-","status":"COMPLETED","exit":"-","submit":"-","start":"-","complete":"-","duration":"-","realtime":"1h","%cpu":"100.0%","%mem":"-","rss":"-","vmem":"-","peak_rss":"-","peak_vmem":"-","rchar":"-","wchar":"-","syscr":"-","syscw":"-","read_bytes":"-","write_bytes":"-","attempt":"-","workdir":"-","script":"-","scratch":"-","queue":"-","cpus":"1","memory":"7 GB","disk":"-","time":"-","env":"-","error_action":"-","vol_ctxt":"-","inv_ctxt":"-","hostname":"-","cpu_model":"Unknown model","energy":"9607.5","co2e":"4611.6","time":"1.0","ci":"480.0","cpus":"1","powerdrawCPU":"7.0","cpuUsage":"100.0","memory":"7","name":"-","cpu_model":"Unknown model"}],"summary":{"observerTestProcess":{"co2e":{"all":[4611.6],"total":4611.6,"mean":4611.6,"minLabel":null,"min":4611.6,"q1Label":null,"q1":4611.6,"q2Label":null,"q2":4611.6,"q3Label":null,"q3":4611.6,"maxLabel":null,"max":4611.6},"energy":{"all":[9607.5],"total":9607.5,"mean":9607.5,"minLabel":null,"min":9607.5,"q1Label":null,"q1":9607.5,"q2Label":null,"q2":9607.5,"q3Label":null,"q3":9607.5,"maxLabel":null,"max":9607.5},"co2e_non_cached":{"all":[4611.6],"total":4611.6,"mean":4611.6,"minLabel":null,"min":4611.6,"q1Label":null,"q1":4611.6,"q2Label":null,"q2":4611.6,"q3Label":null,"q3":4611.6,"maxLabel":null,"max":4611.6},"energy_non_cached":{"all":[9607.5],"total":9607.5,"mean":9607.5,"minLabel":null,"min":9607.5,"q1Label":null,"q1":9607.5,"q2Label":null,"q2":9607.5,"q3Label":null,"q3":9607.5,"maxLabel":null,"max":9607.5}}}};
+  window.options = [{"option":"ci","value":"480.0"},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir14244490045350207129/report_test.html"},{"option":"summaryFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir14244490045350207129/summary_test.txt"},{"option":"traceFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir14244490045350207129/trace_test.txt"}];
 
   </script>
 

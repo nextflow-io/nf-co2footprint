@@ -1,11 +1,11 @@
-Total CO2e footprint measures of this workflow run
+Total CO2e footprint measures of this workflow run (including cached tasks):
 CO2e emissions: 4.61 g
 Energy consumption: 9.61 Wh
 
 Which equals:
 - 0.026 km travelled by car
 - It takes one tree 3h 40min 30.72s to sequester the equivalent amount of CO2 from the atmosphere
-- 0.009% of a flight from Paris to London
+- 0.009 % of a flight from Paris to London
 
 The calculation of these values is based on the carbon footprint computation method developed in the Green Algorithms project.
 Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation. Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707

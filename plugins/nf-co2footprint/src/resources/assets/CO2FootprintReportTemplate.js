@@ -238,7 +238,7 @@ function make_core_usage_factor(usageFactor, type){
 
 
 // Map for collecting statistics by process
-window.data_byprocess = {};
+window.statsByProcess = {};
 
 //
 // This block is only executed after the page is fully loaded
@@ -261,78 +261,99 @@ $(function() {
   }
 
   // Collect metrics by process
-  for(let i in window.data.summary){
-    let metrics = window.data.summary[i];
-    let proc = metrics.process;
+  for(let processName in window.data.summary){
+    let metrics = window.data.summary[processName];
 
-    if(!window.data_byprocess.hasOwnProperty(proc)){
-      window.data_byprocess[proc] = {};
-    }
+    // Add an empty map if the process is not already present
+    window.statsByProcess[processName] ??= {};
 
-    for (let key in metrics) {
-      if (metrics[key] != null) {
-        window.data_byprocess[proc][key] = [];
-        if( metrics[key].min == metrics[key].max ) {
-            // min equals max ==> show just a value
-            window.data_byprocess[proc][key].push(metrics[key].min);
-        }
-        else {
-            // otherwise show all values
-            window.data_byprocess[proc][key].push(metrics[key].min);
-            window.data_byprocess[proc][key].push(metrics[key].q1);
-            window.data_byprocess[proc][key].push(metrics[key].q1);
-            window.data_byprocess[proc][key].push(metrics[key].q2);
-            window.data_byprocess[proc][key].push(metrics[key].q3);
-            window.data_byprocess[proc][key].push(metrics[key].q3);
-            window.data_byprocess[proc][key].push(metrics[key].max);
-        }
-        if (key == "time") {
-          window.data_byprocess[proc][key] = window.data_byprocess[proc][key].map(function(d,i){
-            return moment.duration(d).asMinutes().toFixed(1);
-          });
-        }
+    for (let metricName in metrics) {
+      // Skip if metric is not present
+      if (metrics[metricName] == null) { continue; }
+
+      if( metrics[metricName]['min'] == metrics[metricName]['max'] ) {
+        // min equals max ==> show just a value
+        window.statsByProcess[processName][metricName] = [ metrics[metricName]['min'] ];
+      }
+      else {
+          // otherwise show all values
+          window.statsByProcess[processName][metricName] = ['min', 'q1', 'q2', 'q3', 'max'].map(stat => metrics[metricName][stat])
+      }
+      if (metricName == "time") {
+        window.statsByProcess[processName][metricName] = window.statsByProcess[processName][metricName].map(function(d,i){
+          return moment.duration(d).asMinutes().toFixed(1);
+        });
       }
     }
   }
 
   // Plot histograms of resource usage
-  var data = [];
-  for(var pname in window.data_byprocess){
-    if( !window.data_byprocess.hasOwnProperty(pname) )
-        continue;
-    var smry = window.data_byprocess[pname];
-    data.push({x:pname, y: norm_units(smry.co2e), name: pname, legendgroup: pname, type:'box', boxmean: true, boxpoints: false});
-    // energy will be plotted with transparent color, hiding hover info and legend, but linked to tye right y-axis
-    data.push({x:pname, y: norm_units(smry.energy), name: pname, legendgroup: pname, type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend:false, hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'});
-  }
+  var plot_data_total = [];
+  var plot_data_non_cached = [];
+  for(var processName in window.statsByProcess){
 
-  var tickformat = [{
-    "dtickrange": [null, 4],
-    "value": ".2f"
-  },
-  {
-    "dtickrange": [4, null],
-    "value": ".3s"
-  }];
+    // Extract process statistics
+    var stats = window.statsByProcess[processName];
+
+    // Add CO2 Boxplot to plot
+    plot_data_total.push(
+      {
+        x:processName, y: norm_units(stats.co2e), name: processName,
+        type:'box', boxmean: true, boxpoints: false
+      }
+    );
+
+    // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
+    plot_data_total.push(
+      {
+        x:processName, y: norm_units(stats.energy), name: processName,
+        type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
+        hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
+      }
+    );
+
+    // Add outline of CO2 emissions from non-cached processes to plot
+    plot_data_non_cached.push(
+      {
+        x:processName, y: norm_units(stats.co2e_non_cached), name: processName,
+        type:'box', boxmean: true, boxpoints: false,
+      }
+    );
+
+    // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
+    plot_data_non_cached.push(
+      {
+        x:processName, y: norm_units(stats.energy_non_cached), name: processName,
+        type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
+        hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
+      }
+    );
+  }
 
   var layout = {
     title: 'CO<sub>2</sub> emission & energy consumption',
-    legend: {x: 1.1},
-    xaxis: {domain: [0.2, 1]},
-    yaxis: {title: 'CO2e emission (g)',
-            rangemode: 'tozero',
-            tickformatstops: tickformat
+    legend: {
+      x: 1.1
     },
-    yaxis2: {title: 'Energy consumption (Wh)',
-            rangemode: 'tozero',
-            gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
-            overlaying: 'y',
-            side: 'right',
-            tickformatstops: tickformat
+    xaxis: {
+      title: 'Processes',
     },
+    yaxis: {
+      title: 'CO2e emission (g)',
+      rangemode: 'tozero',
+    },
+    yaxis2: {
+      title: 'Energy consumption (Wh)',
+      rangemode: 'tozero',
+      gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
+      overlaying: 'y',
+      side: 'right',
+    },
+    boxmode: 'group',
   };
 
-  Plotly.newPlot('co2eplot', data, layout);
+  Plotly.newPlot('co2e-total-plot', plot_data_total, layout);
+  Plotly.newPlot('co2e-non-cached-plot', plot_data_non_cached, layout);
 
   //
   // Table creation functions
