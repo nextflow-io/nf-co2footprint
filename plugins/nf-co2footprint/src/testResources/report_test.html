@@ -166,6 +166,27 @@ footer a {
   padding: 0.2rem 0.5rem;
   font-size: 1.1rem;
 }
+
+.tab-pane {
+  display: block !important;
+  position: relative !important;
+  visibility: hidden;
+  overflow: hidden;
+  width: 100%;
+  height: 0;
+  z-index: 0;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.3s ease-in-out;
+}
+
+.tab-pane.active {
+  visibility: visible;
+  overflow: visible;
+  height: auto;
+  z-index: 1;
+  opacity: 1;
+}
+
   </style>
 
 </head>
@@ -299,12 +320,13 @@ footer a {
       <div class="tab-pane fade show active" id="co2e-total-plot_tabpanel" role="tabpanel">
         <div id="co2e-total-plot"></div>
       </div>
-      <div class="tab-pane fade show active" id="co2e-non-cached-plot_tabpanel" role="tabpanel">
+      <div class="tab-pane fade" id="co2e-non-cached-plot_tabpanel" role="tabpanel">
         <div id="co2e-non-cached-plot"></div>
       </div>
     </div>
+
+    <p class="mt-3">The plot shows the distribution of CO<sub>2</sub>e emissions and corresponding energy consumptions for each workflow process. The values that are displayed when hovering over the plot refer to the CO<sub>2</sub>e emissions.</p>
   </div>
-  <p class="mt-3">The plot shows the distribution of CO<sub>2</sub>e emissions and corresponding energy consumptions for each workflow process. The values that are displayed when hovering over the plot refer to the CO<sub>2</sub>e emissions.</p>
 
   <div class="container">
     <h2 id="tasks" style="padding-top: 40px;">Tasks</h2>
