@@ -1,5 +1,6 @@
 package nextflow.co2footprint
 
+import nextflow.co2footprint.utils.DataMatrix
 import spock.lang.Specification
 import groovy.util.logging.Slf4j
 import java.util.concurrent.ConcurrentHashMap
@@ -50,13 +51,14 @@ class CO2FootprintConfigTest extends Specification {
         config.getPue() == pue
 
         where:
-        pluginConfig                            || processConfig            || keys                     || pue
-        ['machineType': 'compute cluster']      || [:]                      || ['machineType']          || 1.67
-        ['machineType': 'local']                || [:]                      || ['machineType']          || 1.0
-        [:]                                     || ['executor': 'local']    || ['machineType']          || 1.0
-        [:]                                     || ['executor': 'awsbatch'] || ['machineType']          || 1.67
-        ['machineType': 'local', 'pue': 2.0]    || [:]                      || ['machineType', 'pue']   || 2.0
-        ['pue': 2.0]                            || ['executor': 'awsbatch'] || ['machineType', 'pue']   || 2.0
+        pluginConfig                            || processConfig                || keys                     || pue
+        ['machineType': 'compute cluster']      || [:]                          || ['machineType']          || 1.67
+        ['machineType': 'local']                || [:]                          || ['machineType']          || 1.0
+        [:]                                     || ['executor': 'local']        || ['machineType']          || 1.0
+        [:]                                     || ['executor': 'awsbatch']     || ['machineType']          || 1.15
+        [:]                                     || ['executor': 'azurebatch']   || ['machineType']          || 1.18
+        ['machineType': 'local', 'pue': 2.0]    || [:]                          || ['machineType', 'pue']   || 2.0
+        ['pue': 2.0]                            || ['executor': 'awsbatch']     || ['machineType', 'pue']   || 2.0
     }
     def 'test dynamic ci computation with GLOBAL fallback'() {
         expect:
@@ -72,6 +74,47 @@ class CO2FootprintConfigTest extends Specification {
         'US'        || 400.0
         'FR'        || 250.0
         'INVALID'   || 400.0 // Falls back to GLOBAL
+    }
+
+    def 'should throw exception if required columns are missing'() {
+        given:
+        // Create a real DataMatrix with missing columns
+        def data = [[1], [2]]
+        def columnIndex = ['foo'] as LinkedHashSet
+        def rowIndex = [0, 1] as LinkedHashSet
+        def matrix = new DataMatrix(data, columnIndex, rowIndex)
+
+        when:
+        matrix.checkRequiredColumns(['required1', 'required2'])
+
+        then:
+        def e = thrown(IllegalStateException)
+        e.message.contains("CSV is missing required columns")
+    }
+
+    def 'should log warning and set machineType to null for unknown executor'() {
+        given:
+        def configMap = [:]
+        def processMap = [executor: 'notarealexecutor']
+
+        when:
+        CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdp, ci, processMap)
+
+        then:
+        config.machineType == null
+        // Optionally: check logs for warning if your framework supports it
+    }
+
+    def 'should not overwrite pue if already set'() {
+        given:
+        def configMap = [pue: 2.22]
+        def processMap = [executor: 'awsbatch']
+
+        when:
+        CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdp, ci, processMap)
+
+        then:
+        config.pue == 2.22
     }
 
     // Helper method to validate default properties

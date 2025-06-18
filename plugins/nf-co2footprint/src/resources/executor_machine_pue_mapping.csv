@@ -1,0 +1,19 @@
+executor,machineType,pue,source
+awsbatch,cloud,1.15,https://sustainability.aboutamazon.com/products-services/aws-cloud
+azurebatch,cloud,1.18,https://azure.microsoft.com/en-us/blog/how-microsoft-measures-datacenter-water-and-energy-use-to-improve-azure-cloud-sustainability/?utm_source=chatgpt.com
+google-batch,cloud,1.1,https://datacenters.google/efficiency/
+google-lifesciences,cloud,1.1,https://datacenters.google/efficiency/
+bridge,compute cluster,1.67,
+flux,compute cluster,1.67,
+condor,compute cluster,1.67,
+hq,compute cluster,1.67,
+k8s,compute cluster,1.67,
+lsf ,compute cluster,1.67,
+moab,compute cluster,1.67,
+nqsii,compute cluster,1.67,
+oar,compute cluster,1.67,
+pbs,compute cluster,1.67,
+pbspro,compute cluster,1.67,
+sge,compute cluster,1.67,
+slurm,compute cluster,1.67,
+local,local,1,

@@ -1,9 +1,9 @@
 package nextflow.co2footprint
 
+import nextflow.co2footprint.utils.DataMatrix
 import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
 import nextflow.trace.TraceHelper
-
 import java.nio.file.Paths
 
 /**
@@ -43,7 +43,7 @@ class CO2FootprintConfig {
     private String  machineType = null      // Type of computer on which the workflow is run ['local', 'compute cluster', '']
 
     // Supported machine types
-    private final List<String> supportedMachineTypes = ['local', 'compute cluster']
+    private final List<String> supportedMachineTypes = ['local', 'compute cluster', 'cloud']
 
     // Getter methods for config values
     String getTimestamp() { timestamp }
@@ -98,14 +98,17 @@ class CO2FootprintConfig {
             ci = ciValueComputer.computeCI()
         }
 
-        // Assign machine Type if not already given
-        machineType = machineType == null ? matchProcessExecutor(processMap?.get('executor') as String) : machineType
+        // Sets machineType and pue based on the executor if machineType is not already set
+        if (this.machineType == null) {
+            setMachineTypeAndPueFromExecutor(processMap?.get('executor') as String)
+        } 
 
         // Assign PUE if not already given
         pue ?= switch (machineType) {
-            case 'local' ->  1.0
+            case 'local' -> 1.0
             case 'compute cluster' -> 1.67
-            default -> 1.0
+            case 'cloud' -> 1.56  // source: (https://datacenter.uptimeinstitute.com/rs/711-RIA-145/images/2024.GlobalDataCenterSurvey.Report.pdf)
+            default -> 1.0 // Fallback PUE (assigned if machineType is null)
         }
 
         // Set fallback CPU model based on machine type
@@ -132,34 +135,24 @@ class CO2FootprintConfig {
                     TDPDataMatrix.fromCsv(Paths.get(customCpuTdpFile as String))
             )
         }
-    }
+    }  
 
     /**
-     * Maps Nextflow executor names to machine types.
-     * @param executor Executor name (e.g. 'slurm', 'local')
-     * @return Machine type string or null if not recognized
+     * Sets the machine type and PUE based on the executor.
+     * It reads a CSV file to get the machine type and PUE for the given executor.
+     *
+     * @param executor The executor name (e.g., 'awsbatch', 'local', etc.)
      */
-    private static String matchProcessExecutor(String executor) {
-        return switch(executor) {
-            case 'awsbatch' -> 'compute cluster'                // AWS cloud
-            case 'azurebatch' -> 'compute cluster'              // MS Azure cloud
-            case 'bridge' -> 'compute cluster'
-            case 'flux' -> 'compute cluster'
-            case 'google-batch' -> 'compute cluster'            // Google cloud
-            case 'google-lifesciences' -> 'compute cluster'     // Google cloud
-            case 'condor' -> 'compute cluster'
-            case 'hq' -> 'compute cluster'
-            case 'k8s' -> 'compute cluster'
-            case 'local' -> 'local'
-            case 'lsf' -> 'compute cluster'
-            case 'moab' -> 'compute cluster'
-            case 'nqsii' -> 'compute cluster'
-            case 'oar' -> 'compute cluster'
-            case 'pbs' -> 'compute cluster'
-            case 'pbspro' -> 'compute cluster'
-            case 'sge' -> 'compute cluster'
-            case 'slurm' -> 'compute cluster'
-            default -> null
+    private void setMachineTypeAndPueFromExecutor(String executor) {
+        // Read the CSV file as a DataMatrix - set RowIndex to 'executor'
+        DataMatrix matrix = DataMatrix.fromCsv(Paths.get(this.class.getResource('/executor_machine_pue_mapping.csv').toURI()), ',', 0, null, 'executor')    
+        // Check if matrix contains the required columns
+        matrix.checkRequiredColumns(['machineType', 'pue'])
+        try {
+            this.machineType = matrix.get(executor, 'machineType') as String
+            this.pue ?= matrix.get(executor, 'pue') as Double // assign pue only if not already set
+        } catch (IllegalArgumentException e) {
+            log.warn("Executor '${executor}' is not supported. MachineType set to null.")
         }
     }
 

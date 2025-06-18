@@ -573,4 +573,20 @@ class DataMatrix implements Matrix {
         }
         return stringRepresentation
     }
+
+    /**
+    * Checks if the given DataMatrix contains all required columns.
+    * If not, it logs an error and throws an IllegalStateException.
+    *
+    * @param matrix The DataMatrix to check.
+    * @param requiredColumns The list of required column names.
+    */
+    void checkRequiredColumns(List<String> requiredColumns) {
+        def matrixColumns = this.columnIndex.keySet()
+        if (!matrixColumns.containsAll(requiredColumns)) {
+            def missing = requiredColumns - matrixColumns
+            log.error("CSV is missing required columns: ${missing}")
+            throw new IllegalStateException("CSV is missing required columns: ${missing}")
+        }
+    }
 }
