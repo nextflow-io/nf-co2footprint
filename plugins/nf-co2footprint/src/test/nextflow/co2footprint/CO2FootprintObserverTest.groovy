@@ -225,7 +225,7 @@ class CO2FootprintObserverTest extends Specification{
         ] // GA: CO2e is 6.94g with CI of 475 gCO2eq/kWh
         checksumChecker.compareChecksums(
                 tracePath,
-                '5af2e6abe22188ec238d4f35155b16d0'
+                'b9954831fd932fb04ec37ff6fbcbdb11'
         )
 
         // Check Summary File
@@ -237,7 +237,7 @@ class CO2FootprintObserverTest extends Specification{
         // 12 is the plugin version (changes on Github CI to current version)
         checksumChecker.compareChecksums(
                 summaryPath,
-                'dcfa86975afa951c0849e3359c944bc5',
+                '0d9b03dec6969ca8bee731821f88ac0e',
                 [12, 16, 17, 18],
                 this.class.getResource('/summary_test.txt').getPath() as Path
         )
@@ -246,12 +246,12 @@ class CO2FootprintObserverTest extends Specification{
         Files.isRegularFile(reportPath)
         List<String> reportLines = reportPath.readLines()
         int numLines = reportLines.size()
-        numLines == 1181
+        numLines == 1242
         String timeLine = reportLines[212]
         timeLine == "          " +
                 "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                 " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
-        String optionsLine = reportLines[1175]
+        String optionsLine = reportLines[1236]
         optionsLine == "  window.options = [" +
                 '{"option":"ci","value":"480.0"},'+
                 '{"option":"customCpuTdpFile","value":null},' +
@@ -266,8 +266,8 @@ class CO2FootprintObserverTest extends Specification{
         // 225 is the plugin version
         checksumChecker.compareChecksums(
                 reportPath,
-                '84e48225a1d70c996a5e26508de837ab',
-                [212, 225, 1175],
+                '58b3ec9575775f9e6d8dd518f4bbb089',
+                [212, 225, 1236],
                 this.class.getResource('/report_test.html').getPath() as Path
         )
     }
