@@ -4,6 +4,9 @@ import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
 
 import nextflow.Session
+import nextflow.co2footprint.Records.CO2EquivalencesRecord
+import nextflow.co2footprint.Records.CO2Record
+import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.FileCreators.CO2FootprintReport
 import nextflow.co2footprint.FileCreators.CO2FootprintSummary
 import nextflow.co2footprint.FileCreators.CO2FootprintTrace
@@ -47,11 +50,11 @@ class CO2FootprintObserver implements TraceObserver {
 
     // Overwrite existing files if true
     private boolean overwrite
-     
+
     // Max number of tasks allowed in the report, when they exceed this number the tasks table is omitted
     private int maxTasks
 
-    // Plugin configuration 
+    // Plugin configuration
     CO2FootprintConfig config
 
     // Aggregator for resource usage stats
@@ -66,7 +69,7 @@ class CO2FootprintObserver implements TraceObserver {
     Map<TaskId, TraceRecord> current = new ConcurrentHashMap<>()
 
     // Stores CO₂ emission records by task ID
-    final private Map<TaskId,CO2Record> co2eRecords = new ConcurrentHashMap<>()
+    final private Map<TaskId, CO2Record> co2eRecords = new ConcurrentHashMap<>()
     Map<TaskId,CO2Record> getCO2eRecords() { co2eRecords }
 
     // Stores all trace records by task ID

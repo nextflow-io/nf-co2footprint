@@ -1,8 +1,11 @@
 package nextflow.co2footprint
 
-import nextflow.co2footprint.utils.DataMatrix
-import groovy.transform.PackageScope
+
 import groovy.util.logging.Slf4j
+import nextflow.co2footprint.DataContainers.DataMatrix
+import nextflow.co2footprint.DataContainers.CIDataMatrix
+import nextflow.co2footprint.DataContainers.CIValueComputer
+import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.trace.TraceHelper
 import java.nio.file.Paths
 
@@ -101,7 +104,7 @@ class CO2FootprintConfig {
         // Sets machineType and pue based on the executor if machineType is not already set
         if (this.machineType == null) {
             setMachineTypeAndPueFromExecutor(processMap?.get('executor') as String)
-        } 
+        }
 
         // Assign PUE if not already given
         pue ?= switch (machineType) {
@@ -135,7 +138,7 @@ class CO2FootprintConfig {
                     TDPDataMatrix.fromCsv(Paths.get(customCpuTdpFile as String))
             )
         }
-    }  
+    }
 
     /**
      * Sets the machine type and PUE based on the executor.
@@ -145,7 +148,7 @@ class CO2FootprintConfig {
      */
     private void setMachineTypeAndPueFromExecutor(String executor) {
         // Read the CSV file as a DataMatrix - set RowIndex to 'executor'
-        DataMatrix matrix = DataMatrix.fromCsv(Paths.get(this.class.getResource('/executor_machine_pue_mapping.csv').toURI()), ',', 0, null, 'executor')    
+        DataMatrix matrix = DataMatrix.fromCsv(Paths.get(this.class.getResource('/executor_machine_pue_mapping.csv').toURI()), ',', 0, null, 'executor')
         // Check if matrix contains the required columns
         matrix.checkRequiredColumns(['machineType', 'pue'])
         try {

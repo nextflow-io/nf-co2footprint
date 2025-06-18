@@ -1,9 +1,6 @@
-package nextflow.co2footprint
+package nextflow.co2footprint.utils
 
 import ch.qos.logback.classic.turbo.TurboFilter
-import nextflow.co2footprint.utils.DeduplicateMarkerFilter
-import nextflow.co2footprint.utils.Markers
-
 import ch.qos.logback.classic.LoggerContext
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.read.ListAppender

@@ -1,6 +1,6 @@
-package nextflow.co2footprint
+package nextflow.co2footprint.DataContainers
 
-import nextflow.co2footprint.utils.DataMatrix
+
 import nextflow.co2footprint.utils.Markers
 
 import groovy.util.logging.Slf4j
