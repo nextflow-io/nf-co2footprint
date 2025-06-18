@@ -1,6 +1,8 @@
 package nextflow.co2footprint
 
 import nextflow.co2footprint.DataContainers.DataMatrix
+import nextflow.co2footprint.DataContainers.TDPDataMatrix
+import nextflow.co2footprint.DataContainers.CIDataMatrix
 import spock.lang.Specification
 import groovy.util.logging.Slf4j
 import java.util.concurrent.ConcurrentHashMap
