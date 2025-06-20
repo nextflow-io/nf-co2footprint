@@ -1,9 +1,11 @@
 package nextflow.co2footprint.FileCreators
 
 import groovy.json.JsonOutput
+import nextflow.co2footprint.CO2FootprintComputer
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.Records.CO2Record
+import nextflow.co2footprint.Records.TimeCiRecords
 import nextflow.co2footprint.utils.Converter
 
 import groovy.text.GStringTemplateEngine
@@ -16,6 +18,7 @@ import nextflow.trace.TraceHelper
 import nextflow.trace.TraceRecord
 
 import java.nio.file.Path
+import java.time.LocalDateTime
 
 
 /**
@@ -39,6 +42,7 @@ class CO2FootprintReport extends CO2FootprintFile{
     private Session session
     private Map<TaskId, TraceRecord> traceRecords
     private Map<TaskId, CO2Record> co2eRecords
+    private TimeCiRecords timeCiRecords
 
     // Writer for the HTML file
     private BufferedWriter writer = TraceHelper.newFileWriter(path, overwrite, 'Report')
@@ -66,6 +70,7 @@ class CO2FootprintReport extends CO2FootprintFile{
      * @param session       Nextflow session
      * @param traceRecords  Map of TaskId to TraceRecord
      * @param co2eRecords   Map of TaskId to CO2Record
+     * @param timeCiRecords   Map of LocalDateTime to carbon intensities
      */
     void addEntries(
             Map<String, Double> totalStats,
@@ -75,7 +80,8 @@ class CO2FootprintReport extends CO2FootprintFile{
             String version,
             Session session,
             Map<TaskId, TraceRecord> traceRecords,
-            Map<TaskId, CO2Record> co2eRecords
+            Map<TaskId, CO2Record> co2eRecords,
+            TimeCiRecords timeCiRecords
     ) {
         this.totalStats = totalStats
         this.processStats = processStats
@@ -85,6 +91,9 @@ class CO2FootprintReport extends CO2FootprintFile{
         this.session = session
         this.traceRecords = traceRecords
         this.co2eRecords = co2eRecords
+        this.timeCiRecords = timeCiRecords
+        // TODO: Add CI Records into Report
+        // TODO: Testing TimeCiRecords
     }
 
     /**

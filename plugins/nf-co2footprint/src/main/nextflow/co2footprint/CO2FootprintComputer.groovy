@@ -3,10 +3,16 @@ package nextflow.co2footprint
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
+import nextflow.co2footprint.Records.TimeCiRecords
 import nextflow.co2footprint.utils.HelperFunctions
 import groovy.util.logging.Slf4j
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
+
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentSkipListSet
 
 
 /**
@@ -30,7 +36,6 @@ class CO2FootprintComputer {
         this.tdpDataMatrix = tdpDataMatrix
         this.config = config
     }
-
 
     /**
     * Computes the CO2 emissions and energy usage for a given Nextflow task.
@@ -57,7 +62,7 @@ class CO2FootprintComputer {
     * @param trace   The TraceRecord containing task resource usage.
     * @return        CO2Record with energy consumption, CO2 emissions, and task/resource details.
     */
-    CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace) {
+    CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace, TimeCiRecords timeCiRecords) {
 
         /**
          * CPU model information
@@ -122,7 +127,7 @@ class CO2FootprintComputer {
         final BigDecimal pue = config.getPue()    // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
 
         // CI: carbon intensity [gCO2e kWh−1]
-        final BigDecimal ci = config.getCi()
+        final BigDecimal ci = timeCiRecords.getCI(trace)
 
         /**
          * Calculate energy consumption [kWh]
