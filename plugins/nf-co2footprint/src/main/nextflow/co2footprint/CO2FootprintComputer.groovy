@@ -38,7 +38,7 @@ class CO2FootprintComputer {
     * Computes the CO₂ emissions and energy usage for a given Nextflow task.
     *
     * Calculation formula (from Green Algorithms, https://doi.org/10.1002/advs.202100707):
-    *   CO₂e = t * (n_c * P_c * u_c + n_m * P_m) * PUE * CI * 0.001    
+    *   CO₂e = t * (n_c * P_c * u_c + n_m * P_m) * PUE * CI * 0.001
     *     where:
     *   - t   : runtime [h]
     *   - n_c : number of CPU cores
@@ -58,17 +58,17 @@ class CO2FootprintComputer {
     * @return        CO2Record with energy consumption, CO₂ emissions, and task/resource details.
     */
     CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace) {
-        
+
         /* ===== CPU Information ===== */
 
         final String cpuModel = config.value('ignoreCpuModel') ? 'default' : trace.get('cpu_model') as String
 
         // Runtime [h]
-        final BigDecimal runtime_h = (getTraceOrDefault(trace, taskID, 'realtime', 0, 'missing-realtime') as BigDecimal) / (1000 * 60 * 60) 
+        final BigDecimal runtime_h = (getTraceOrDefault(trace, taskID, 'realtime', 0, 'missing-realtime') as BigDecimal) / (1000 * 60 * 60)
 
         // Number of CPU cores
-        final Integer numberOfCores = getTraceOrDefault(trace, taskID, 'cpus', 1, 'missing-cpus') as Integer 
-        
+        final Integer numberOfCores = getTraceOrDefault(trace, taskID, 'cpus', 1, 'missing-cpus') as Integer
+
         // CPU usage: fraction of total requested cores
         BigDecimal cpuUsage = getTraceOrDefault(trace, taskID, '%cpu', numberOfCores * 100, 'missing-%cpu') as BigDecimal
         if ( cpuUsage == 0.0 ) {
@@ -80,7 +80,7 @@ class CO2FootprintComputer {
         }
         final BigDecimal coreUsage = cpuUsage / (100.0 * numberOfCores)
 
-        // Per-core power draw: either custom polynomial model or TDP lookup [W/core]        
+        // Per-core power draw: either custom polynomial model or TDP lookup [W/core]
         final def cpuPowerModel = config.value('cpuPowerModel')
         final BigDecimal powerdrawPerCore = cpuPowerModel ? getPowerDrawFromModel(cpuPowerModel, coreUsage) : tdpDataMatrix.matchModel(cpuModel).getCoreTDP()
 
@@ -115,10 +115,10 @@ class CO2FootprintComputer {
         /* ===== Data Center Effectiveness and Carbon Intensity ===== */
 
          // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
-        final BigDecimal pue = config.value('pue')   
+        final BigDecimal pue = config.value('pue')
 
         // CI: carbon intensity [gCO₂e kWh−1]
-        final BigDecimal ci = config.value('ci')
+        final BigDecimal ci = timeCi ? getAverageCI(trace) : config.value('ci')
 
         // Personal energy mix based carbon intensity
         final Double ciMarket = config.value('ciMarket')

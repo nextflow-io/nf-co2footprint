@@ -10,6 +10,7 @@ import nextflow.trace.TraceHelper
 
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.time.LocalDateTime
 
 /**
  * Configuration class for CO₂ footprint calculations.
@@ -96,6 +97,25 @@ class CO2FootprintConfig extends BaseConfig {
                 'cpuPowerModel', 'Polynomial coefficients for CPU power model (highest degree first)',
                 null, List<Number>
         )
+    }
+
+    /**
+     * Returns the carbon intensity value.
+     * If set as a closure (for real-time API), invokes it to get the current value.
+     */
+    Double getCi() {
+        (get("ci") instanceof Closure) ?
+                (value("ci") as Closure<Map<LocalDateTime, Double>>)().values()[0] :
+                (value("ci") as Map<LocalDateTime, Double>).values()[0]
+    }
+    /**
+     * Returns the carbon intensity at timestamps
+     * @return
+     */
+    Map<LocalDateTime, Double> getTimeCi(){
+        (get("ci") instanceof Closure) ?
+                (value("ci") as Closure<Map<LocalDateTime, Double>>)() :
+                value("ci")
     }
 
     /**
