@@ -29,6 +29,7 @@
 - Moved non nf-hello template files into categorizing folder structure (except `CO2FootprintComputer`)
 - Changed missing executor logging to indicate a still functioning run
 - Added "How to cite" & CITATION.cff
+- Added warning when using 'cloud' `machineType`
 
 # Version 1.0.0-beta1
 ## Features:
