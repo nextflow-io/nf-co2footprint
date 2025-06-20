@@ -6,6 +6,9 @@ import groovy.util.logging.Slf4j
 import nextflow.co2footprint.utils.Markers
 import groovy.json.JsonSlurper
 
+import java.text.DateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 /**
  * Class to compute carbon intensity (CI) values.
@@ -37,7 +40,7 @@ class CIValueComputer {
      * @param processName (Optional) The process name for logging/marker purposes.
      * @return The carbon intensity value as a Double, or null if not found.
      */
-    protected Double getRealtimeCI() {
+    protected Map<LocalDateTime, Double> getRealtimeCI() {
         // Build the API URL
         URL url = new URI("https://api.electricitymap.org/v3/carbon-intensity/latest?zone=${this.location}").toURL()
 
@@ -47,10 +50,13 @@ class CIValueComputer {
 
         Map json
         Double ci
+        LocalDateTime time
 
         if (connection.responseCode == 200) {
             // Parse the successful API response
             json = new JsonSlurper().parse(connection.inputStream) as Map
+
+            time = LocalDateTime.parse(json['datetime'] as String)
             ci = json['carbonIntensity'] as Double
 
             log.info(Markers.unique,"API call successful. Response code: ${connection.responseCode} (${connection.responseMessage})")
@@ -61,6 +67,7 @@ class CIValueComputer {
 
             log.warn(Markers.unique, "API call failed. Response code: ${connection.responseCode} (${errorMessage})")
 
+            time = LocalDateTime.now()
             // Fallback to the location in the CSV
             ci = this.ciData.findCiInMatrix(this.location)
             // Fallback to the global default value if no value is found for the location
@@ -68,7 +75,7 @@ class CIValueComputer {
                 ci = this.ciData.findCiInMatrix('GLOBAL')
             }
         }
-        return ci
+        return [(time): ci]
     }
 
     /**

@@ -8,6 +8,11 @@ import groovy.util.logging.Slf4j
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
 
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentSkipListSet
+
 
 /**
  * Class for computation of energy usage, CO2 emission, and equivalence metrics.
@@ -30,7 +35,6 @@ class CO2FootprintComputer {
         this.tdpDataMatrix = tdpDataMatrix
         this.config = config
     }
-
 
     /**
     * Computes the CO2 emissions and energy usage for a given Nextflow task.
@@ -122,7 +126,7 @@ class CO2FootprintComputer {
         final BigDecimal pue = config.getPue()    // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
 
         // CI: carbon intensity [gCO2e kWh−1]
-        final BigDecimal ci = config.getCi()
+        final BigDecimal ci = timeCi ? getAverageCI(trace) : config.getCi()
 
         // Personal energy mix based carbon intensity
         final Double ciMarket = config.getCiMarket()
