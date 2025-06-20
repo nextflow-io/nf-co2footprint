@@ -109,8 +109,7 @@ class CO2FootprintConfig {
         if (machineType == 'cloud') {
             log.warn(
                     'Cloud instances are not yet fully supported. ' +
-                    'We are working on integrating processors that are used on cloud machines' +
-                    'and working on general seamless integration of major cloud providers. ' +
+                    'We are working on the seamless integration of major cloud providers. ' +
                     'In the meantime we recommend following the instructions at ' +
                     'https://nextflow-io.github.io/nf-co2footprint/usage/configuration/#cloud-computations' +
                     'to fully integrate your cloud instances into the plugin.'
