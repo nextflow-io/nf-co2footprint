@@ -17,6 +17,7 @@ import nextflow.trace.TraceHelper
 import nextflow.trace.TraceRecord
 
 import java.nio.file.Path
+import java.time.LocalDateTime
 
 
 /**
@@ -40,6 +41,7 @@ class ReportFileCreator extends BaseFileCreator{
     private Session session
     private Map<TaskId, TraceRecord> traceRecords
     private Map<TaskId, CO2Record> co2eRecords
+    private Map<LocalDateTime, Double> timeCiRecords
 
     // Writer for the HTML file
     private BufferedWriter writer
@@ -67,6 +69,7 @@ class ReportFileCreator extends BaseFileCreator{
      * @param session       Nextflow session
      * @param traceRecords  Map of TaskId to TraceRecord
      * @param co2eRecords   Map of TaskId to CO2Record
+     * @param timeCiRecords   Map of LocalDateTime to carbon intensities
      */
     void addEntries(
             Map<String, Map<String, Map<String, ?>>> processStats,
@@ -76,7 +79,8 @@ class ReportFileCreator extends BaseFileCreator{
             String version,
             Session session,
             Map<TaskId, TraceRecord> traceRecords,
-            Map<TaskId, CO2Record> co2eRecords
+            Map<TaskId, CO2Record> co2eRecords,
+            Map<LocalDateTime, Double> timeCiRecords
     ) {
         this.processStats = processStats
         this.totalStats = totalStats
@@ -86,6 +90,9 @@ class ReportFileCreator extends BaseFileCreator{
         this.session = session
         this.traceRecords = traceRecords
         this.co2eRecords = co2eRecords
+        this.timeCiRecords = timeCiRecords
+        // TODO: Add CI Records into Report
+        // TODO: Testing TimeCiRecords
     }
 
     /**
