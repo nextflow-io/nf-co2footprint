@@ -6,6 +6,7 @@ import nextflow.co2footprint.utils.Markers
 import groovy.util.logging.Slf4j
 
 import java.nio.file.Path
+import java.security.InvalidKeyException
 import java.util.regex.Matcher
 
 /**
@@ -152,7 +153,9 @@ class TDPDataMatrix extends DataMatrix {
         }
         else {
             if (warnOnMismatch) {
-                log.warn("No match found for '${model}'.")
+                String message = "No match found for '${model}'. Fallback to default set to `${fallbackToDefault}`."
+                log.error(message)
+                throw new InvalidKeyException(message)
             }
             return null
         }
