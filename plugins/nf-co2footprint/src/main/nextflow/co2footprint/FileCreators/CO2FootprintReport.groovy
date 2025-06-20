@@ -5,6 +5,7 @@ import nextflow.co2footprint.CO2FootprintComputer
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.Records.CO2Record
+import nextflow.co2footprint.Records.TimeCiRecords
 import nextflow.co2footprint.utils.Converter
 
 import groovy.text.GStringTemplateEngine
@@ -41,7 +42,7 @@ class CO2FootprintReport extends CO2FootprintFile{
     private Session session
     private Map<TaskId, TraceRecord> traceRecords
     private Map<TaskId, CO2Record> co2eRecords
-    private Map<LocalDateTime, Double> timeCiRecords
+    private TimeCiRecords timeCiRecords
 
     // Writer for the HTML file
     private BufferedWriter writer = TraceHelper.newFileWriter(path, overwrite, 'Report')
@@ -80,7 +81,7 @@ class CO2FootprintReport extends CO2FootprintFile{
             Session session,
             Map<TaskId, TraceRecord> traceRecords,
             Map<TaskId, CO2Record> co2eRecords,
-            Map<LocalDateTime, Double> timeCiRecords
+            TimeCiRecords timeCiRecords
     ) {
         this.totalStats = totalStats
         this.processStats = processStats
