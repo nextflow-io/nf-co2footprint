@@ -5,10 +5,7 @@ import nextflow.co2footprint.utils.HelperFunctions
 import groovy.util.logging.Slf4j
 import nextflow.co2footprint.Logging.Markers
 import groovy.json.JsonSlurper
-
-import java.text.DateFormat
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 /**
  * Class to compute carbon intensity (CI) values.
@@ -40,7 +37,7 @@ class CIValueComputer {
      * @param processName (Optional) The process name for logging/marker purposes.
      * @return The carbon intensity value as a Double, or null if not found.
      */
-    protected Map<LocalDateTime, Double> getRealtimeCI() {
+    protected Map<String, ?> getRealtimeCI() {
         // Build the API URL
         URL url = new URI("https://api.electricitymap.org/v3/carbon-intensity/latest?zone=${this.location}").toURL()
 
@@ -65,7 +62,7 @@ class CIValueComputer {
             // Handle API error response
             String errorResponse = connection.errorStream.text
             String errorMessage = new JsonSlurper().parseText(errorResponse).message
-            log.warn(Markers.unique, 
+            log.warn(Markers.unique,
                     "API call failed. Response code: ${connection.responseCode} (${errorMessage})",
                     'api-call-failed-warning')
 
@@ -77,7 +74,7 @@ class CIValueComputer {
                 ci = this.ciData.findCiInMatrix('GLOBAL')
             }
         }
-        return [(time): ci]
+        return [time: time, ci: ci]
     }
 
     /**
@@ -92,8 +89,8 @@ class CIValueComputer {
      * @return A closure for real-time CI retrieval if the API key is set, or a Double value from the matrix.
      *         Returns null if no value is found.
      */
-    def computeCI() {
-        def ci
+    def computeTimeCI() {
+        Double ci
 
         if (this.location) {
             this.location = this.location.toUpperCase() // Ensure location is always uppercase
