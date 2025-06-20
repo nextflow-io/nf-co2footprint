@@ -30,7 +30,7 @@ co2footprint {
   machineType = '<compute cluster|local>'     // set to 'compute cluster' or 'local'
 }
 ```
-You can find your `zone code` on the [zones overview](https://portal.electricitymaps.com/docs/getting-started#zonesoverview) section on the Electricity Maps website. It has to match one of those defined there to be used within the plugin. To obtain the `apikey` you have to register in the [developer portal](https://portal.electricitymaps.com). 
+You can find your `zone code` on the [geographical coverage](https://portal.electricitymaps.com/docs/getting-started#geographical-coverage) section on the Electricity Maps website. It has to match one of those defined there to be used within the plugin. To obtain the `apikey` you have to register in the [developer portal](https://portal.electricitymaps.com). 
 
 Include the config file for your pipeline run using the `-c` Nextflow parameter, for example as follows:
 
@@ -53,33 +53,33 @@ The plugin uses the `ci`, `location`, and `apiKey` parameters to determine the c
 
 ## Cloud computations
 
-Currently, **nf-co2footprint** does not natively support cloud environments because cloud-specific instance types may not included in the TDP table, and default PUE values for cloud providers are missing.
+While the CO2 footprint calculation should function on cloud instances, **nf-co2footprint** can currently not natively support cloud environments because cloud-specific values, such as specific CPU models or PUE values may be missing in our datasets. Therefore most calculations would likely rely on inexact fallback values.
+
+To improve the estimate of your CO₂ footprint on the cloud, you are encouraged to manually provide:
+- [The location of your instance](https://portal.electricitymaps.com/docs/getting-started#geographical-coverage) (e.g., zone code `'DE'` for AWS region `eu-central-1`)
+- The PUE of the data center (cloud providers often give global averages)
+- If the plugins TDP table does not include the CPU of your cloud compute instance and you know the per-core TDP for your instance, set `ignoreCpuModel = true` and specify `powerdrawCpuDefault`. You may also provide a `customCpuTdpFile` if there are multiple models. For more information have a look at [parameters.md](parameters.md).
 
 !!! info
 
     For AWS Batch, the plugin uses a default PUE of **1.15**.
 
-If you still want to estimate your CO₂ footprint on the cloud, you can manually provide:
-
-- The location of your instance (e.g., `'DE'` for AWS region `eu-central-1`)
-- The PUE of the data center
-- If the plugins TDP table does not include your cloud compute instance and you know the per-core TDP for your instance, set `ignoreCpuModel = true` and specify `powerdrawCpuDefault`.
-
-**Example configuration:**
+**Example:**
 
 ```groovy title="nextflow_cloud.config"
 plugins {
   id 'nf-co2footprint@1.0.0-beta'
 }
 
-def co2_timestamp = new Date().format('yyyy-MM-dd_HH-mm-ss')
+def co2_timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
 
 co2footprint {
-    traceFile           = "${params.outdir}/co2footprint/co2footprint_trace_${co2_timestamp}.txt"
-    summaryFile         = "${params.outdir}/co2footprint/co2footprint_summary_${co2_timestamp}.txt"
-    reportFile          = "${params.outdir}/co2footprint/co2footprint_report_${co2_timestamp}.html"
-    location            = 'DE'
+    traceFile = "${params.outdir}/pipeline_info/co2footprint_trace_${co2_timestamp}.txt"
+    summaryFile = "${params.outdir}/pipeline_info/co2footprint_summary_${co2_timestamp}.txt"
+    reportFile = "${params.outdir}/pipeline_info/co2footprint_report_${co2_timestamp}.html"
     apiKey              = secrets.EM_API_KEY
+    
+    location            = 'DE'
     pue                 = 1.3
     ignoreCpuModel      = true
     powerdrawCpuDefault = 8
