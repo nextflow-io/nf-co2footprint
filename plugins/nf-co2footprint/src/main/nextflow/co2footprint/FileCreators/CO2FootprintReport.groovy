@@ -3,7 +3,6 @@ package nextflow.co2footprint.FileCreators
 import groovy.json.JsonOutput
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
-import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.utils.Converter
 
