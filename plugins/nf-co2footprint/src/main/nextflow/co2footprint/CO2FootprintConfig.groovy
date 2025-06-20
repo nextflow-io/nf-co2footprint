@@ -104,18 +104,14 @@ class CO2FootprintConfig extends BaseConfig {
      * If set as a closure (for real-time API), invokes it to get the current value.
      */
     Double getCi() {
-        (get("ci") instanceof Closure) ?
-                (value("ci") as Closure<Map<LocalDateTime, Double>>)().values()[0] :
-                (value("ci") as Map<LocalDateTime, Double>).values()[0]
+        (get("ci") instanceof Closure) ? value("ci")['ci'] : value("ci")
     }
     /**
      * Returns the carbon intensity at timestamps
-     * @return
+     * @return Carbon intensity at timestamps
      */
-    Map<LocalDateTime, Double> getTimeCi(){
-        (get("ci") instanceof Closure) ?
-                (value("ci") as Closure<Map<LocalDateTime, Double>>)() :
-                value("ci")
+    Map<String, ?> getTimeCi(){
+        (get("ci") instanceof Closure) ? value("ci") : value("ci")
     }
 
     /**
@@ -153,7 +149,7 @@ class CO2FootprintConfig extends BaseConfig {
             CIValueComputer ciValueComputer = new CIValueComputer(value('emApiKey'), value('location'), ciData)
             // ci is either set to a Closure (in case the electricity maps API is used) or to a Double (in the other cases)
             // The closure is invoked each time the CO2 emissions are calculated (for each task) to make a new API call to update the real time ci value.
-            set('ci', ciValueComputer.computeCI())
+            set('ci', ciValueComputer.computeTimeCI())
         }
 
         /* ===== Determine Machine Type and PUE ===== */

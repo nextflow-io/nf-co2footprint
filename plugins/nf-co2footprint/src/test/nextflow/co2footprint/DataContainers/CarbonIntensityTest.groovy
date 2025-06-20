@@ -90,7 +90,7 @@ class CIValueComputerTest extends Specification {
         computer.getRealtimeCI() >> 123.45
 
         when:
-        def ciClosure = computer.computeCI()
+        def ciClosure = computer.computeTimeCI()
         def ciValue = ciClosure()
 
         then:
@@ -106,7 +106,7 @@ class CIValueComputerTest extends Specification {
         ciData.findCiInMatrix(location) >> 50.0
 
         when:
-        def ciValue = computer.computeCI()
+        def ciValue = computer.computeTimeCI()
 
         then:
         ciValue == 50.0
@@ -122,7 +122,7 @@ class CIValueComputerTest extends Specification {
         ciData.findCiInMatrix('GLOBAL') >> 80.0
 
         when:
-        def ciValue = computer.computeCI()
+        def ciValue = computer.computeTimeCI()
 
         then:
         ciValue == 80.0
@@ -138,7 +138,7 @@ class CIValueComputerTest extends Specification {
         ciData.findCiInMatrix('GLOBAL') >> null
 
         when:
-        def ciValue = computer.computeCI()
+        def ciValue = computer.computeTimeCI()
 
         then:
         ciValue == null

@@ -12,25 +12,28 @@ class TimeCiRecords {
     private Timer timer = new Timer(true) // true = daemon thread
 
     // CI values
-    private ConcurrentHashMap<LocalDateTime, Double> timeCi
+    private ConcurrentHashMap<LocalDateTime, Double> timeCIs
 
     // Config
     private CO2FootprintConfig config
 
-    TimeCiRecords(CO2FootprintConfig config, ConcurrentHashMap<LocalDateTime, Double> timeCi=[:] as ConcurrentHashMap) {
+    TimeCiRecords(CO2FootprintConfig config, ConcurrentHashMap<LocalDateTime, Double> timeCIs=[:] as ConcurrentHashMap) {
         this.config = config
-        this.timeCi = timeCi as ConcurrentHashMap
+        this.timeCIs = timeCIs as ConcurrentHashMap
     }
 
-    ConcurrentHashMap<LocalDateTime, Double> getTimeCi() { timeCi }
+    ConcurrentHashMap<LocalDateTime, Double> getTimeCIs() { timeCIs }
+    Double getCI(TraceRecord traceRecord) { this.timeCIs ? getAverageCI(traceRecord) : config.getCi() }
 
     /**
      * Adds time CI pairs to CI record
      *
      * @param timeCi Map of LocalDateTime and Double that is added to the CI record
      */
-    private void add(Map<LocalDateTime, Double> timeCi=this.config.getTimeCi()) {
-        this.timeCi.putAll(timeCi)
+    private void add(Map<String, ?> timeCi=this.config.getTimeCi()) {
+        this.timeCIs.putAll(
+                [(timeCi['time'] as LocalDateTime): timeCi['ci'] as Double]
+        )
     }
 
     /**
@@ -61,7 +64,7 @@ class TimeCiRecords {
      * @param trace
      * @return
      */
-    Double getAverageCI(TraceRecord trace, Map<LocalDateTime, Double> timeCi=this.timeCi) {
+    Double getAverageCI(TraceRecord trace, Map<LocalDateTime, Double> timeCIs=this.timeCIs) {
         LocalDateTime start = LocalDateTime.parse(trace.get('start') as String)
         LocalDateTime end = LocalDateTime.parse(trace.get('complete') as String)
         Long duration = start.until(end, ChronoUnit.MILLIS)
@@ -69,18 +72,18 @@ class TimeCiRecords {
         Double averageCi = 0d
 
         // Construct before, during and after key sets
-        Set<LocalDateTime> during = timeCi.keySet().clone() as Set<LocalDateTime>
+        Set<LocalDateTime> during = timeCIs.keySet().clone() as Set<LocalDateTime>
         Set<LocalDateTime> before = during.findAll {LocalDateTime time -> time < start}
         during.removeAll(before)
         Set<LocalDateTime> after = during.findAll {LocalDateTime time -> time > end}
         during.removeAll(after)
 
         // Add edge cases (start & end) to average ci by weight
-        averageCi += timeCi.get(before.max()) * (start.until(during.min(), ChronoUnit.MILLIS) / duration)
-        averageCi += timeCi.get(after.min()) * (during.max().until(end, ChronoUnit.MILLIS) / duration)
+        averageCi += timeCIs.get(before.max()) * (start.until(during.min(), ChronoUnit.MILLIS) / duration)
+        averageCi += timeCIs.get(after.min()) * (during.max().until(end, ChronoUnit.MILLIS) / duration)
 
         // Add weighted average of fully covered duration
-        averageCi += timeCi.subMap(during).values().average() * (during.min().until(during.max(), ChronoUnit.MILLIS) / duration)
+        averageCi += timeCIs.subMap(during).values().average() * (during.min().until(during.max(), ChronoUnit.MILLIS) / duration)
 
 
         return averageCi
