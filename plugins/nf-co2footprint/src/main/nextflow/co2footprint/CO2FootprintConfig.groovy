@@ -106,6 +106,17 @@ class CO2FootprintConfig {
             setMachineTypeAndPueFromExecutor(processMap?.get('executor') as String)
         }
 
+        if (machineType == 'cloud') {
+            log.warn(
+                    'Cloud instances are not yet fully supported. ' +
+                    'We are working on integrating processors that are used on cloud machines' +
+                    'and working on general seamless integration of major cloud providers. ' +
+                    'In the meantime we recommend following the instructions at ' +
+                    'https://nextflow-io.github.io/nf-co2footprint/usage/configuration/#cloud-computations' +
+                    'to fully integrate your cloud instances into the plugin.'
+            )
+        }
+
         // Assign PUE if not already given
         pue ?= switch (machineType) {
             case 'local' -> 1.0
