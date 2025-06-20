@@ -222,7 +222,7 @@ class CO2FootprintObserver implements TraceObserver {
         // Write report and summary
         summaryFile.write(totalStats, co2FootprintComputer, config, version)
 
-        reportFile.addEntries(processStats, totalStats, co2FootprintComputer, config, version, session, traceRecords, co2eRecords)
+        reportFile.addEntries(processStats, totalStats, co2FootprintComputer, config, version, session, traceRecords, co2eRecords, timeCiRecords)
         reportFile.write()
 
         // Close all files (writes remaining tasks in the trace file)
