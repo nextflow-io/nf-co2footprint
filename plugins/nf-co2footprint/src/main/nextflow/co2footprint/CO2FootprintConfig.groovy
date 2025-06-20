@@ -8,6 +8,7 @@ import nextflow.co2footprint.DataContainers.CIValueComputer
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.trace.TraceHelper
 import java.nio.file.Paths
+import java.time.LocalDateTime
 
 /**
  * Configuration class for CO₂ footprint calculations.
@@ -61,7 +62,18 @@ class CO2FootprintConfig {
      * If set as a closure (for real-time API), invokes it to get the current value.
      */
     Double getCi() {
-        (ci instanceof Closure) ? (ci as Closure<Double>)() : ci
+        (ci instanceof Closure) ?
+                (ci as Closure<Map<LocalDateTime, Double>>)().values()[0] :
+                (ci as Map<LocalDateTime, Double>).values()[0]
+    }
+    /**
+     * Returns the carbon intensity at timestamps
+     * @return
+     */
+    Map<LocalDateTime, Double> getTimeCi(){
+        (ci instanceof Closure) ?
+                (ci as Closure<Map<LocalDateTime, Double>>)() :
+                ci
     }
 
     /**

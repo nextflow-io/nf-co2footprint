@@ -32,7 +32,6 @@ class CO2FootprintComputer {
         this.config = config
     }
 
-
     /**
     * Computes the CO2 emissions and energy usage for a given Nextflow task.
     *
@@ -78,7 +77,7 @@ class CO2FootprintComputer {
 
         // uc: core usage factor (between 0 and 1)
         BigDecimal cpuUsage = HelperFunctions.getTraceOrDefault(trace, taskID, '%cpu', numberOfCores * 100, 'missing-%cpu') as BigDecimal
-        
+
         if ( cpuUsage == 0.0 ) {
             log.warn(
                 Markers.unique,
@@ -122,7 +121,7 @@ class CO2FootprintComputer {
         final BigDecimal pue = config.getPue()    // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
 
         // CI: carbon intensity [gCO2e kWh−1]
-        final BigDecimal ci = config.getCi()
+        final BigDecimal ci = timeCi ? getAverageCI(trace) : config.getCi()
 
         // Personal energy mix based carbon intensity
         final Double ciMarket = config.getCiMarket()
