@@ -39,20 +39,18 @@ class CIValueComputer {
      */
     protected Double getRealtimeCI() {
         // Build the API URL
-        URL url = new URL("https://api.electricitymap.org/v3/carbon-intensity/latest?zone=${this.location}")
+        URL url = new URI("https://api.electricitymap.org/v3/carbon-intensity/latest?zone=${this.location}").toURL()
 
         // Open the connection
         HttpURLConnection connection = (HttpURLConnection) url.openConnection()
         connection.setRequestProperty("auth-token", this.apiKey)
 
-        Map json = null
-        Double ci = null
-        String updatedAt = null
-
+        Map json
+        Double ci
 
         if (connection.responseCode == 200) {
             // Parse the successful API response
-            json = new JsonSlurper().parse(connection.inputStream)
+            json = new JsonSlurper().parse(connection.inputStream) as Map
             ci = json['carbonIntensity'] as Double
 
             log.info(Markers.unique,"API call successful. Response code: ${connection.responseCode} (${connection.responseMessage})")
@@ -85,7 +83,7 @@ class CIValueComputer {
      * @return A closure for real-time CI retrieval if the API key is set, or a Double value from the matrix.
      *         Returns null if no value is found.
      */
-    private def computeCI() {
+    def computeCI() {
         def ci
 
         if (this.location) {

@@ -60,7 +60,7 @@ class CO2FootprintConfig {
      * If set as a closure (for real-time API), invokes it to get the current value.
      */
     Double getCi() {
-        (ci instanceof Closure) ? ci() : ci
+        (ci instanceof Closure) ? (ci as Closure<Double>)() : ci
     }
     Double getPue() { pue }
     Boolean getIgnoreCpuModel() { ignoreCpuModel }
@@ -154,7 +154,7 @@ class CO2FootprintConfig {
         try {
             this.machineType = matrix.get(executor, 'machineType') as String
             this.pue ?= matrix.get(executor, 'pue') as Double // assign pue only if not already set
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException ignore) {
             log.warn("Executor '${executor}' is not supported. MachineType set to null.")
         }
     }
