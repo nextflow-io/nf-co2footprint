@@ -195,7 +195,7 @@ class CO2FootprintObserver implements TraceObserver {
         // Write report and summary
         co2eSummaryFile.write(totalStats, co2FootprintComputer, config, version)
 
-        co2eReportFile.addEntries(processStats, totalStats, co2FootprintComputer, config, version, session, traceRecords, co2eRecords)
+        co2eReportFile.addEntries(processStats, totalStats, co2FootprintComputer, config, version, session, traceRecords, co2eRecords, timeCiRecords)
         co2eReportFile.write()
 
         // Close all files (writes remaining tasks in the trace file)
@@ -271,7 +271,7 @@ class CO2FootprintObserver implements TraceObserver {
         current.remove(taskId)
 
         // Extract CO2e records
-        final CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace)
+        final CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace, timeCiRecords)
 
         // Collect results
         co2eRecords[taskId] = co2Record
@@ -301,7 +301,7 @@ class CO2FootprintObserver implements TraceObserver {
         if (trace == null) { return }
 
         // Extract records
-        final CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace)
+        final CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace, timeCiRecords)
 
         // Collect results
         co2eRecords[taskId] = co2Record
