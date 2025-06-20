@@ -1,0 +1,1426 @@
+name,launch date,source,intended usage,tdp (W),cores,threads
+amd a4-9120c,2019-01-06,https://en.wikichip.org/wiki/amd/a4/a4-9120c,Mobile,6.0,2,2.0
+amd a6-9220c,2019-01-06,https://en.wikichip.org/wiki/amd/a6/a6-9220c,Mobile,6.0,2,2.0
+amd a8 7680,2019-01-17,https://en.wikichip.org/wiki/amd/a8/7680,Desktop,45.0,4,4.0
+alchemy au1200-333mgc,2005-05-01,https://en.wikichip.org/wiki/alchemy/au1200-333mgc,Embedded,1.5,1,
+alchemy au1200-333mgd,2005-05-01,https://en.wikichip.org/wiki/alchemy/au1200-333mgd,Embedded,1.5,1,
+alchemy au1200-333mgf,2005-05-01,https://en.wikichip.org/wiki/alchemy/au1200-333mgf,Embedded,1.5,1,
+alchemy au1200-333mgi,2005-05-01,https://en.wikichip.org/wiki/alchemy/au1200-333mgi,Embedded,1.5,1,
+alchemy au1200-400mgc,2005-05-01,https://en.wikichip.org/wiki/alchemy/au1200-400mgc,Embedded,1.6,1,
+alchemy au1200-400mgd,2005-05-01,https://en.wikichip.org/wiki/alchemy/au1200-400mgd,Embedded,1.6,1,
+alchemy au1200-500mgc,2005-05-01,https://en.wikichip.org/wiki/alchemy/au1200-500mgc,Embedded,1.6,1,
+alchemy au1200-500mgd,2005-05-01,https://en.wikichip.org/wiki/alchemy/au1200-500mgd,Embedded,1.6,1,
+alchemy au1210-333mgd,2007-06-05,https://en.wikichip.org/wiki/alchemy/au1210-333mgd,Embedded,0.92,1,
+alchemy au1210-333mgf,2007-06-05,https://en.wikichip.org/wiki/alchemy/au1210-333mgf,Embedded,0.92,1,
+alchemy au1210-400mgd,2007-06-05,https://en.wikichip.org/wiki/alchemy/au1210-400mgd,Embedded,1.0,1,
+alchemy au1210-400mgf,2007-06-05,https://en.wikichip.org/wiki/alchemy/au1210-400mgf,Embedded,1.0,1,
+alchemy au1250-400mgd,2007-06-05,https://en.wikichip.org/wiki/alchemy/au1250-400mgd,Embedded,1.2,1,
+alchemy au1250-400mgf,2007-06-05,https://en.wikichip.org/wiki/alchemy/au1250-400mgf,Embedded,1.2,1,
+alchemy au1250-500mgd,2007-06-05,https://en.wikichip.org/wiki/alchemy/au1250-500mgd,Embedded,1.3,1,
+alchemy au1250-500mgf,2007-06-05,https://en.wikichip.org/wiki/alchemy/au1250-500mgf,Embedded,1.4,1,
+alchemy au1250-600mgd,2007-06-05,https://en.wikichip.org/wiki/alchemy/au1250-600mgd,Embedded,1.4,1,
+alchemy au1550-333mbc,2004-05-01,https://en.wikichip.org/wiki/alchemy/au1550-333mbc,Embedded,1.35,1,
+alchemy au1550-333mbd,2004-05-01,https://en.wikichip.org/wiki/alchemy/au1550-333mbd,Embedded,1.35,1,
+alchemy au1550-333mbf,2004-05-01,https://en.wikichip.org/wiki/alchemy/au1550-333mbf,Embedded,1.35,1,
+alchemy au1550-333mbi,2004-05-01,https://en.wikichip.org/wiki/alchemy/au1550-333mbi,Embedded,1.35,1,
+alchemy au1550-400mbc,2004-05-01,https://en.wikichip.org/wiki/alchemy/au1550-400mbc,Embedded,1.46,1,
+alchemy au1550-400mbd,2004-05-01,https://en.wikichip.org/wiki/alchemy/au1550-400mbd,Embedded,1.46,1,
+alchemy au1550-500mbc,2004-05-01,https://en.wikichip.org/wiki/alchemy/au1550-500mbc,Embedded,1.44,1,
+alchemy au1550-500mbd,2004-05-01,https://en.wikichip.org/wiki/alchemy/au1550-500mbd,Embedded,1.44,1,
+amd amd-k6-iiie400acr,2000-09-25,https://en.wikichip.org/wiki/amd/k6-iii%2B/amd-k6-iiie%2B-400acr,Embedded,9.5,1,1.0
+amd amd-k6-iiie400atz,2000-09-25,https://en.wikichip.org/wiki/amd/k6-iii%2B/amd-k6-iiie%2B-400atz,Embedded,9.5,1,1.0
+amd amd-k6-iiie400icr,2000-09-25,https://en.wikichip.org/wiki/amd/k6-iii%2B/amd-k6-iiie%2B-400icr,Embedded,9.5,1,1.0
+amd amd-k6-iiie400itz,2000-09-25,https://en.wikichip.org/wiki/amd/k6-iii%2B/amd-k6-iiie%2B-400itz,Embedded,9.5,1,1.0
+amd amd-k6-iiie450acr,2000-09-25,https://en.wikichip.org/wiki/amd/k6-iii%2B/amd-k6-iiie%2B-450acr,Embedded,12.0,1,1.0
+amd amd-k6-iiie450apz,2000-09-25,https://en.wikichip.org/wiki/amd/k6-iii%2B/amd-k6-iiie%2B-450apz,Embedded,12.0,1,1.0
+amd amd-k6-iiie500acr,2000-09-25,https://en.wikichip.org/wiki/amd/k6-iii%2B/amd-k6-iiie%2B-500acr,Embedded,14.5,1,1.0
+amd amd-k6-iiie500anz,2000-09-25,https://en.wikichip.org/wiki/amd/k6-iii%2B/amd-k6-iiie%2B-500anz,Embedded,14.5,1,1.0
+amd amd-k6-iiie550acr,2000-09-25,https://en.wikichip.org/wiki/amd/k6-iii%2B/amd-k6-iiie%2B-550acr,Embedded,17.0,1,1.0
+amd athlon 200ge,2018-09-06,https://en.wikichip.org/wiki/amd/athlon/200ge,Desktop,35.0,2,4.0
+amd athlon 220ge,2018-12-21,https://en.wikichip.org/wiki/amd/athlon/220ge,Desktop,35.0,2,4.0
+amd athlon 240ge,2018-12-21,https://en.wikichip.org/wiki/amd/athlon/240ge,Desktop,35.0,2,4.0
+amd athlon 3000g,2019-11-20,https://en.wikichip.org/wiki/amd/athlon/3000g,Desktop,35.0,2,4.0
+amd athlon 300u,2019-01-06,https://en.wikichip.org/wiki/amd/athlon/300u,Mobile,15.0,2,4.0
+amd athlon gold 3150u,2020-01-06,https://en.wikichip.org/wiki/amd/athlon_gold/3150u,Mobile,15.0,2,4.0
+amd athlon mp 1000,2001-06-05,https://en.wikichip.org/wiki/amd/athlon_mp/ahx1000ams3c,Server,46.1,1,1.0
+amd athlon mp 1200,2001-06-05,https://en.wikichip.org/wiki/amd/athlon_mp/ahx1200ams3c,Server,54.7,1,1.0
+amd athlon mp 1500,2001-10-15,https://en.wikichip.org/wiki/amd/athlon_mp/amp1500dms3c,Server,60.0,1,1.0
+amd athlon mp 1600,2001-10-15,https://en.wikichip.org/wiki/amd/athlon_mp/amp1600dms3c,Server,62.8,1,1.0
+amd athlon mp 1800,2001-10-15,https://en.wikichip.org/wiki/amd/athlon_mp/amp1800dms3c,Server,66.0,1,1.0
+amd athlon mp 1900,2001-12-12,https://en.wikichip.org/wiki/amd/athlon_mp/amp1900dms3c,Server,66.0,1,1.0
+amd athlon mp 2000,2002-03-13,https://en.wikichip.org/wiki/amd/athlon_mp/amp2000dms3c,Server,66.0,1,1.0
+amd athlon mp 2100,2002-06-19,https://en.wikichip.org/wiki/amd/athlon_mp/amp2100dms3c,Server,66.0,1,1.0
+amd athlon mp 2200,2002-08-27,https://en.wikichip.org/wiki/amd/athlon_mp/amsn2200dkt3c,Server,60.0,1,1.0
+amd athlon mp 2400,2002-12-10,https://en.wikichip.org/wiki/amd/athlon_mp/amsn2400dkt3c,Server,60.0,1,1.0
+amd athlon mp 2600,2003-05-06,https://en.wikichip.org/wiki/amd/athlon_mp/amsn2600dut4c,Server,60.0,1,1.0
+amd athlon mp 2800,2003-05-06,https://en.wikichip.org/wiki/amd/athlon_mp/amsn2800dut4c,Server,60.0,1,1.0
+amd athlon pro 200ge,2018-09-06,https://en.wikichip.org/wiki/amd/athlon/pro_200ge,Desktop,35.0,2,4.0
+amd athlon pro 300ge,2019-09-30,https://en.wikichip.org/wiki/amd/athlon/pro_300ge,Desktop,35.0,2,4.0
+amd athlon pro 300u,2019-04-08,https://en.wikichip.org/wiki/amd/athlon/pro_300u,Mobile,15.0,2,4.0
+amd athlon silver 3050u,2020-01-06,https://en.wikichip.org/wiki/amd/athlon_silver/3050u,Mobile,15.0,2,2.0
+amd athlon xp-m 1000,,https://en.wikichip.org/wiki/amd/athlon_xp-m/axml1000gts3b,Mobile,16.0,1,1.0
+amd athlon xp-m 1200,,https://en.wikichip.org/wiki/amd/athlon_xp-m/axml1200gts3b,Mobile,16.0,1,1.0
+amd athlon xp-m 1300,,https://en.wikichip.org/wiki/amd/athlon_xp-m/axml1300gcs3b,Mobile,16.0,1,1.0
+amd athlon xp-m 1400,2003-03-12,https://en.wikichip.org/wiki/amd/athlon_xp-m/axms1400gws3c,Mobile,25.0,1,1.0
+amd athlon xp-m 1500,2003-03-12,https://en.wikichip.org/wiki/amd/athlon_xp-m/axms1500gxs3b,Mobile,25.0,1,1.0
+amd athlon xp-m 1600,2003-03-12,https://en.wikichip.org/wiki/amd/athlon_xp-m/axms1600gxs3c,Mobile,25.0,1,1.0
+amd athlon xp-m 1700,2003-03-12,https://en.wikichip.org/wiki/amd/athlon_xp-m/axms1700gxs3c,Mobile,25.0,1,1.0
+amd athlon xp-m 1800,,https://en.wikichip.org/wiki/amd/athlon_xp-m/axms1800gxs4c,Mobile,25.0,1,1.0
+amd athlon xp-m 1900,2003-06-17,https://en.wikichip.org/wiki/amd/athlon_xp-m/axmd1900gjq3c,Mobile,35.0,1,1.0
+amd athlon xp-m 2000,2003-06-17,https://en.wikichip.org/wiki/amd/athlon_xp-m/axmd2000gjq3c,Mobile,35.0,1,1.0
+amd athlon xp-m 2100,2004-03-17,https://en.wikichip.org/wiki/amd/athlon_xp-m/axms2100gxs4b,Mobile,25.0,1,1.0
+amd athlon xp-m 2200,2004-07-19,https://en.wikichip.org/wiki/amd/athlon_xp-m/axmd2200gjq4c,Mobile,35.0,1,1.0
+amd athlon xp-m 2400,,https://en.wikichip.org/wiki/amd/athlon_xp-m/axmd2400gjq4c,Mobile,35.0,1,1.0
+amd athlon xp-m 2600,,https://en.wikichip.org/wiki/amd/athlon_xp-m/axmd2600gjq4d,Mobile,35.0,1,1.0
+amd athlon xp-m 950,,https://en.wikichip.org/wiki/amd/athlon_xp-m/axml0950gts3b,Mobile,16.0,1,1.0
+intel atom 230,2008-06-03,https://en.wikichip.org/wiki/intel/atom/230,Mobile,4.0,1,2.0
+intel atom 330,2008-09-21,https://en.wikichip.org/wiki/intel/atom/330,Mobile,8.0,2,4.0
+intel atom c3308,2017-08-15,https://en.wikichip.org/wiki/intel/atom/c3308,Server; Embedded,9.5,2,2.0
+intel atom c3338,2017-02-22,https://en.wikichip.org/wiki/intel/atom/c3338,Server; Embedded,9.0,2,2.0
+intel atom c3508,2017-08-15,https://en.wikichip.org/wiki/intel/atom/c3508,Server; Embedded,11.25,4,4.0
+intel atom c3538,2017-08-15,https://en.wikichip.org/wiki/intel/atom/c3538,Server; Embedded,15.0,4,4.0
+intel atom c3558,2017-08-15,https://en.wikichip.org/wiki/intel/atom/c3558,Server; Embedded,16.0,4,4.0
+intel atom c3708,2017-08-15,https://en.wikichip.org/wiki/intel/atom/c3708,Server; Embedded,17.0,8,8.0
+intel atom c3750,2017-08-15,https://en.wikichip.org/wiki/intel/atom/c3750,Embedded; Server,21.0,8,8.0
+intel atom c3758,2017-08-15,https://en.wikichip.org/wiki/intel/atom/c3758,Server; Embedded,25.0,8,8.0
+intel atom c3808,2017-08-15,https://en.wikichip.org/wiki/intel/atom/c3808,Server; Embedded,25.0,12,12.0
+intel atom c3830,2017-08-15,https://en.wikichip.org/wiki/intel/atom/c3830,Server; Embedded,21.0,12,12.0
+intel atom c3850,2017-08-15,https://en.wikichip.org/wiki/intel/atom/c3850,Server; Embedded,25.0,12,12.0
+intel atom c3858,2017-08-15,https://en.wikichip.org/wiki/intel/atom/c3858,Server; Embedded,25.0,12,12.0
+intel atom c3950,2017-08-15,https://en.wikichip.org/wiki/intel/atom/c3950,Server; Embedded,24.0,16,16.0
+intel atom c3955,2017-08-15,https://en.wikichip.org/wiki/intel/atom/c3955,Server; Embedded,32.0,16,16.0
+intel atom c3958,2017-08-15,https://en.wikichip.org/wiki/intel/atom/c3958,Server; Embedded,31.0,16,16.0
+intel atom n270,2008-06-03,https://en.wikichip.org/wiki/intel/atom/n270,Mobile,2.5,1,2.0
+intel atom n280,2009-02-07,https://en.wikichip.org/wiki/intel/atom/n280,Mobile,2.5,1,2.0
+intel atom x5-e3930,2017-01-01,https://en.wikichip.org/wiki/intel/atom_x5/x5-e3930,Embedded,6.5,2,2.0
+intel atom x5-e3940,2017-01-01,https://en.wikichip.org/wiki/intel/atom_x5/x5-e3940,Embedded,9.5,4,4.0
+intel atom x5-e8000,2016-02-08,https://en.wikichip.org/wiki/intel/atom_x5/x5-e8000,Embedded,5.0,4,4.0
+intel atom x7-e3950,2017-01-01,https://en.wikichip.org/wiki/intel/atom_x7/x7-e3950,Embedded,12.0,4,4.0
+intel atom z500,2008-04-02,https://en.wikichip.org/wiki/intel/atom/z500,Mobile,0.65,1,2.0
+intel atom z510,2008-04-02,https://en.wikichip.org/wiki/intel/atom/z510,Mobile,2.0,1,1.0
+intel atom z510p,2009-03-02,https://en.wikichip.org/wiki/intel/atom/z510p,Mobile,2.0,1,2.0
+intel atom z510pt,2009-03-02,https://en.wikichip.org/wiki/intel/atom/z510pt,Mobile,2.0,1,2.0
+intel atom z515,2009-04-08,https://en.wikichip.org/wiki/intel/atom/z515,Mobile,0.65,1,2.0
+intel atom z520,2008-04-02,https://en.wikichip.org/wiki/intel/atom/z520,Mobile,2.0,1,2.0
+intel atom z520pt,2009-03-02,https://en.wikichip.org/wiki/intel/atom/z520pt,Mobile,2.0,1,2.0
+intel atom z530,2008-04-02,https://en.wikichip.org/wiki/intel/atom/z530,Mobile,2.2,1,2.0
+intel atom z530p,2009-03-02,https://en.wikichip.org/wiki/intel/atom/z530p,Mobile,2.0,1,2.0
+intel atom z540,2008-04-02,https://en.wikichip.org/wiki/intel/atom/z540,Mobile,2.4,1,2.0
+intel atom z550,2009-04-08,https://en.wikichip.org/wiki/intel/atom/z550,Mobile,2.4,1,2.0
+intel atom z560,2010-06-01,https://en.wikichip.org/wiki/intel/atom/z560,Mobile,2.5,1,2.0
+intel atom z600,2010-05-04,https://en.wikichip.org/wiki/intel/atom/z600,Mobile,1.3,1,2.0
+intel atom z605,2010-05-04,https://en.wikichip.org/wiki/intel/atom/z605,Mobile,2.2,1,2.0
+intel atom z610,2010-05-04,https://en.wikichip.org/wiki/intel/atom/z610,Mobile,1.3,1,2.0
+intel atom z612,2010-05-04,https://en.wikichip.org/wiki/intel/atom/z612,Mobile,1.3,1,2.0
+intel atom z615,2010-05-04,https://en.wikichip.org/wiki/intel/atom/z615,Mobile,2.2,1,2.0
+intel atom z620,2010-05-04,https://en.wikichip.org/wiki/intel/atom/z620,Mobile,1.3,1,2.0
+intel atom z625,2010-05-04,https://en.wikichip.org/wiki/intel/atom/z625,Mobile,2.2,1,2.0
+intel atom z650,2011-04-11,https://en.wikichip.org/wiki/intel/atom/z650,Mobile,3.0,1,2.0
+intel atom z670,2011-04-11,https://en.wikichip.org/wiki/intel/atom/z670,Mobile,3.0,1,2.0
+baikal electronics baikal-t1,2016-02-01,https://en.wikichip.org/wiki/baikal/baikal-t1,Embedded,5.0,2,2.0
+intel celeron 1007u,2013-01-20,https://en.wikichip.org/wiki/intel/celeron/1007u,Mobile,17.0,2,2.0
+intel celeron 3755u,2015-01-05,https://en.wikichip.org/wiki/intel/celeron/3755u,Mobile,15.0,2,2.0
+intel celeron 3855u,2015-12-27,https://en.wikichip.org/wiki/intel/celeron/3855u,Mobile,15.0,2,2.0
+intel celeron 3865u,2017-01-03,https://en.wikichip.org/wiki/intel/celeron/3865u,Mobile,15.0,2,2.0
+intel celeron 3955u,2015-12-27,https://en.wikichip.org/wiki/intel/celeron/3955u,Mobile,15.0,2,2.0
+intel celeron 3965u,2017-01-03,https://en.wikichip.org/wiki/intel/celeron/3965u,Mobile,15.0,2,2.0
+intel celeron 3965y,,https://en.wikichip.org/wiki/intel/celeron/3965y,Mobile,6.0,2,2.0
+intel celeron 4205u,2019-01-01,https://en.wikichip.org/wiki/intel/celeron/4205u,Mobile,15.0,2,2.0
+intel celeron 4305u,2019-04-16,https://en.wikichip.org/wiki/intel/celeron/4305u,Mobile,15.0,2,2.0
+intel celeron 787,2011-07-01,https://en.wikichip.org/wiki/intel/celeron/787,Mobile,17.0,1,1.0
+intel celeron 797,2012-01-01,https://en.wikichip.org/wiki/intel/celeron/797,Mobile,17.0,1,1.0
+intel celeron 807,2012-07-01,https://en.wikichip.org/wiki/intel/celeron/807,Mobile,17.0,1,2.0
+intel celeron 807ue,2012-07-01,https://en.wikichip.org/wiki/intel/celeron/807ue,Embedded,10.0,1,1.0
+intel celeron 817,2012-01-01,https://en.wikichip.org/wiki/intel/celeron/817,Mobile,17.0,2,2.0
+intel celeron 827,2012-01-01,https://en.wikichip.org/wiki/intel/celeron/827,Mobile,17.0,1,1.0
+intel celeron 827e,2011-07-01,https://en.wikichip.org/wiki/intel/celeron/827e,Embedded,17.0,1,1.0
+intel celeron 837,2012-01-01,https://en.wikichip.org/wiki/intel/celeron/837,Mobile,17.0,2,2.0
+intel celeron 847,2011-06-01,https://en.wikichip.org/wiki/intel/celeron/847,Mobile,17.0,2,2.0
+intel celeron 847e,2011-06-01,https://en.wikichip.org/wiki/intel/celeron/847e,Embedded,17.0,2,2.0
+intel celeron 857,2011-07-01,https://en.wikichip.org/wiki/intel/celeron/857,Mobile,17.0,2,2.0
+intel celeron 867,2012-01-01,https://en.wikichip.org/wiki/intel/celeron/867,Mobile,17.0,2,2.0
+intel celeron 877,2012-07-01,https://en.wikichip.org/wiki/intel/celeron/877,Mobile,17.0,2,2.0
+intel celeron 887,2012-09-01,https://en.wikichip.org/wiki/intel/celeron/887,Mobile,17.0,2,2.0
+intel celeron 887e,2012-09-01,https://en.wikichip.org/wiki/intel/celeron/887e,Embedded,17.0,2,2.0
+intel celeron 897,2012-01-01,https://en.wikichip.org/wiki/intel/celeron/897,Mobile,17.0,2,2.0
+intel celeron b710,2011-06-01,https://en.wikichip.org/wiki/intel/celeron/b710,Mobile,35.0,1,1.0
+intel celeron b720,2012-01-01,https://en.wikichip.org/wiki/intel/celeron/b720,Mobile,35.0,1,1.0
+intel celeron b730,2012-07-01,https://en.wikichip.org/wiki/intel/celeron/b730,Mobile,35.0,1,2.0
+intel celeron b800,2011-06-01,https://en.wikichip.org/wiki/intel/celeron/b800,Mobile,35.0,2,2.0
+intel celeron b810,2011-03-14,https://en.wikichip.org/wiki/intel/celeron/b810,Mobile,35.0,2,2.0
+intel celeron b810e,2011-06-01,https://en.wikichip.org/wiki/intel/celeron/b810e,Embedded,35.0,2,2.0
+intel celeron b815,2012-01-01,https://en.wikichip.org/wiki/intel/celeron/b815,Mobile,35.0,2,2.0
+intel celeron b820,2012-07-01,https://en.wikichip.org/wiki/intel/celeron/b820,Mobile,35.0,2,2.0
+intel celeron b830,2011-07-01,https://en.wikichip.org/wiki/intel/celeron/b830,Mobile,35.0,2,2.0
+intel celeron b840,2011-07-01,https://en.wikichip.org/wiki/intel/celeron/b840,Mobile,35.0,2,2.0
+intel celeron b860e,2012-01-01,https://en.wikichip.org/wiki/intel/celeron/b860e,Embedded,35.0,2,2.0
+intel celeron g3900,2015-10-19,https://en.wikichip.org/wiki/intel/celeron/g3900,Desktop,51.0,2,2.0
+intel celeron g3900e,2016-01-02,https://en.wikichip.org/wiki/intel/celeron/g3900e,Embedded,35.0,2,2.0
+intel celeron g3900t,2015-10-19,https://en.wikichip.org/wiki/intel/celeron/g3900t,Embedded,35.0,2,2.0
+intel celeron g3900te,2015-10-19,https://en.wikichip.org/wiki/intel/celeron/g3900te,Embedded,35.0,2,2.0
+intel celeron g3902e,2016-01-02,https://en.wikichip.org/wiki/intel/celeron/g3902e,Embedded,25.0,2,2.0
+intel celeron g3920,2015-10-19,https://en.wikichip.org/wiki/intel/celeron/g3920,Desktop,51.0,2,2.0
+intel celeron g3930,2017-01-03,https://en.wikichip.org/wiki/intel/celeron/g3930,Desktop,51.0,2,2.0
+intel celeron g3930e,2017-06-12,https://en.wikichip.org/wiki/intel/celeron/g3930e,Desktop; Embedded,54.0,2,2.0
+intel celeron g3930t,2017-01-03,https://en.wikichip.org/wiki/intel/celeron/g3930t,Desktop,35.0,2,2.0
+intel celeron g3930te,2017-06-12,https://en.wikichip.org/wiki/intel/celeron/g3930te,Desktop; Embedded,35.0,2,2.0
+intel celeron g3950,2017-01-03,https://en.wikichip.org/wiki/intel/celeron/g3950,Desktop,51.0,2,2.0
+intel celeron g4900,2018-04-02,https://en.wikichip.org/wiki/intel/celeron/g4900,Desktop,54.0,2,2.0
+intel celeron g4900t,2018-04-02,https://en.wikichip.org/wiki/intel/celeron/g4900t,Desktop,35.0,2,2.0
+intel celeron g4920,2018-04-02,https://en.wikichip.org/wiki/intel/celeron/g4920,Desktop,54.0,2,2.0
+intel celeron g4930,2019-04-23,https://en.wikichip.org/wiki/intel/celeron/g4930,Desktop,54.0,2,2.0
+intel celeron g4930t,2019-04-23,https://en.wikichip.org/wiki/intel/celeron/g4930t,Desktop; Embedded,35.0,2,2.0
+intel celeron g4950,2019-04-23,https://en.wikichip.org/wiki/intel/celeron/g4950,Desktop,54.0,2,2.0
+intel celeron j3060,2016-01-15,https://en.wikichip.org/wiki/intel/celeron/j3060,Desktop,6.0,2,2.0
+intel celeron j3160,2016-01-15,https://en.wikichip.org/wiki/intel/celeron/j3160,Desktop,6.0,4,4.0
+intel celeron j3355,2016-08-30,https://en.wikichip.org/wiki/intel/celeron/j3355,Desktop,10.0,2,2.0
+intel celeron j3455,2016-08-30,https://en.wikichip.org/wiki/intel/celeron/j3455,Desktop,10.0,4,4.0
+intel celeron j4005,2017-12-11,https://en.wikichip.org/wiki/intel/celeron/j4005,Desktop,10.0,2,2.0
+intel celeron j4105,2017-12-11,https://en.wikichip.org/wiki/intel/celeron/j4105,Desktop,10.0,4,4.0
+intel celeron n3000,2015-03-01,https://en.wikichip.org/wiki/intel/celeron/n3000,Mobile,4.0,2,2.0
+intel celeron n3010,2016-01-10,https://en.wikichip.org/wiki/intel/celeron/n3010,Mobile,4.0,2,2.0
+intel celeron n3050,2015-03-01,https://en.wikichip.org/wiki/intel/celeron/n3050,Mobile,6.0,2,2.0
+intel celeron n3060,2016-01-15,https://en.wikichip.org/wiki/intel/celeron/n3060,Mobile,6.0,2,2.0
+intel celeron n3150,2015-03-01,https://en.wikichip.org/wiki/intel/celeron/n3150,Mobile,6.0,4,4.0
+intel celeron n3160,2016-01-15,https://en.wikichip.org/wiki/intel/celeron/n3160,Mobile,4.0,4,4.0
+intel celeron n3350,2016-08-30,https://en.wikichip.org/wiki/intel/celeron/n3350,Mobile,6.0,2,2.0
+intel celeron n3450,2016-08-30,https://en.wikichip.org/wiki/intel/celeron/n3450,Mobile,6.0,4,4.0
+intel celeron n4000,2017-12-11,https://en.wikichip.org/wiki/intel/celeron/n4000,Mobile,6.0,2,2.0
+intel celeron n4100,2017-12-11,https://en.wikichip.org/wiki/intel/celeron/n4100,Mobile,6.0,4,4.0
+intel celeron p4500,2010-03-28,https://en.wikichip.org/wiki/intel/celeron/p4500,Mobile; Embedded,35.0,2,2.0
+intel celeron p4505,2010-03-28,https://en.wikichip.org/wiki/intel/celeron/p4505,Mobile; Embedded,35.0,2,2.0
+intel celeron p4600,2010-03-28,https://en.wikichip.org/wiki/intel/celeron/p4600,Mobile,35.0,2,2.0
+intel celeron u3400,2010-05-24,https://en.wikichip.org/wiki/intel/celeron/u3400,Mobile,18.0,2,2.0
+intel celeron u3405,2010-08-15,https://en.wikichip.org/wiki/intel/celeron/u3405,Mobile; Embedded,18.0,2,2.0
+intel celeron u3600,2011-01-11,https://en.wikichip.org/wiki/intel/celeron/u3600,Mobile,18.0,2,2.0
+intel core i3-1000g1,2019-08-01,https://en.wikichip.org/wiki/intel/core_i3/i3-1000g1,Mobile,9.0,2,4.0
+intel core i3-1000g4,2019-08-01,https://en.wikichip.org/wiki/intel/core_i3/i3-1000g4,Mobile,9.0,2,4.0
+intel core i3-1005g1,2019-08-01,https://en.wikichip.org/wiki/intel/core_i3/i3-1005g1,Mobile,15.0,2,4.0
+intel core i3-2308m,2011-02-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2308m,Mobile,35.0,2,4.0
+intel core i3-2310e,2011-02-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2310e,Embedded,35.0,2,4.0
+intel core i3-2310m,2011-02-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2310m,Mobile,35.0,2,4.0
+intel core i3-2312m,2011-06-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2312m,Mobile,35.0,2,4.0
+intel core i3-2328m,2012-09-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2328m,Mobile,35.0,2,4.0
+intel core i3-2330e,2011-06-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2330e,Embedded,35.0,2,4.0
+intel core i3-2330m,2011-06-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2330m,Mobile,35.0,2,4.0
+intel core i3-2332m,2011-09-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2332m,Mobile,35.0,2,4.0
+intel core i3-2340ue,2011-06-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2340ue,Embedded,17.0,2,4.0
+intel core i3-2348m,2013-01-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2348m,Mobile,35.0,2,4.0
+intel core i3-2350lm,2011-10-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2350lm,Mobile,17.0,2,4.0
+intel core i3-2350m,2011-10-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2350m,Mobile,35.0,2,4.0
+intel core i3-2355m,2012-01-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2355m,Mobile,17.0,2,4.0
+intel core i3-2357m,2011-06-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2357m,Mobile,17.0,2,4.0
+intel core i3-2365m,2012-09-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2365m,Mobile,17.0,2,4.0
+intel core i3-2367m,2011-10-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2367m,Mobile,17.0,2,4.0
+intel core i3-2370lm,2012-01-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2370lm,Mobile,17.0,2,4.0
+intel core i3-2370m,2012-01-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2370m,Mobile,35.0,2,4.0
+intel core i3-2375m,2013-01-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2375m,Mobile,17.0,2,4.0
+intel core i3-2377m,2012-09-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2377m,Mobile,17.0,2,4.0
+intel core i3-2390m,2012-01-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2390m,Mobile,35.0,2,4.0
+intel core i3-2393m,2011-08-14,https://en.wikichip.org/wiki/intel/core_i3/i3-2393m,Mobile,35.0,2,4.0
+intel core i3-2394m,2011-10-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2394m,Mobile,35.0,2,4.0
+intel core i3-2395m,2012-01-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2395m,Mobile,35.0,2,4.0
+intel core i3-2397m,2012-01-01,https://en.wikichip.org/wiki/intel/core_i3/i3-2397m,Mobile,17.0,2,4.0
+intel core i3-330e,2010-01-07,https://en.wikichip.org/wiki/intel/core_i3/i3-330e,Mobile; Embedded,35.0,2,4.0
+intel core i3-330m,2010-01-07,https://en.wikichip.org/wiki/intel/core_i3/i3-330m,Mobile,35.0,2,4.0
+intel core i3-330um,2010-05-24,https://en.wikichip.org/wiki/intel/core_i3/i3-330um,Mobile,18.0,2,4.0
+intel core i3-350m,2010-01-07,https://en.wikichip.org/wiki/intel/core_i3/i3-350m,Mobile,35.0,2,4.0
+intel core i3-370m,2010-06-22,https://en.wikichip.org/wiki/intel/core_i3/i3-370m,Mobile,35.0,2,4.0
+intel core i3-380m,2010-09-26,https://en.wikichip.org/wiki/intel/core_i3/i3-380m,Mobile,35.0,2,4.0
+intel core i3-380um,2010-10-01,https://en.wikichip.org/wiki/intel/core_i3/i3-380um,Mobile,18.0,2,4.0
+intel core i3-390m,2011-01-11,https://en.wikichip.org/wiki/intel/core_i3/i3-390m,Mobile,35.0,2,4.0
+intel core i3-6006u,2016-11-10,https://en.wikichip.org/wiki/intel/core_i3/i3-6006u,Mobile,15.0,2,4.0
+intel core i3-6098p,2015-12-27,https://en.wikichip.org/wiki/intel/core_i3/i3-6098p,Desktop,54.0,2,4.0
+intel core i3-6100,2015-09-27,https://en.wikichip.org/wiki/intel/core_i3/i3-6100,Desktop,51.0,2,4.0
+intel core i3-6100e,2015-10-12,https://en.wikichip.org/wiki/intel/core_i3/i3-6100e,Embedded,35.0,2,4.0
+intel core i3-6100h,2015-09-27,https://en.wikichip.org/wiki/intel/core_i3/i3-6100h,Mobile,35.0,2,4.0
+intel core i3-6100t,2015-09-27,https://en.wikichip.org/wiki/intel/core_i3/i3-6100t,Desktop,35.0,2,4.0
+intel core i3-6100te,2015-10-12,https://en.wikichip.org/wiki/intel/core_i3/i3-6100te,Embedded,35.0,2,4.0
+intel core i3-6100u,2015-09-27,https://en.wikichip.org/wiki/intel/core_i3/i3-6100u,Mobile,15.0,2,4.0
+intel core i3-6102e,2015-10-12,https://en.wikichip.org/wiki/intel/core_i3/i3-6102e,Embedded,25.0,2,4.0
+intel core i3-6120t,,https://en.wikichip.org/wiki/intel/core_i3/6120t,Desktop,35.0,2,4.0
+intel core i3-6157u,2016-06-01,https://en.wikichip.org/wiki/intel/core_i3/i3-6157u,Mobile,28.0,2,4.0
+intel core i3-6167u,2015-09-27,https://en.wikichip.org/wiki/intel/core_i3/i3-6167u,Mobile,28.0,2,4.0
+intel core i3-6300,2015-09-27,https://en.wikichip.org/wiki/intel/core_i3/i3-6300,Desktop,51.0,2,4.0
+intel core i3-6300t,2015-09-27,https://en.wikichip.org/wiki/intel/core_i3/i3-6300t,Desktop,35.0,2,4.0
+intel core i3-6320,2015-09-27,https://en.wikichip.org/wiki/intel/core_i3/i3-6320,Desktop,51.0,2,4.0
+intel core i3-6320t,,https://en.wikichip.org/wiki/intel/core_i3/6320t,Desktop,35.0,2,4.0
+intel core i3-7007u,,https://en.wikichip.org/wiki/intel/core_i3/i3-7007u,Mobile; Embedded,15.0,2,4.0
+intel core i3-7020u,2018-04-10,https://en.wikichip.org/wiki/intel/core_i3/i3-7020u,Mobile; Embedded,15.0,2,4.0
+intel core i3-7100,2017-01-03,https://en.wikichip.org/wiki/intel/core_i3/i3-7100,Desktop,51.0,2,4.0
+intel core i3-7100e,2017-01-03,https://en.wikichip.org/wiki/intel/core_i3/i3-7100e,Embedded,35.0,2,4.0
+intel core i3-7100h,2017-01-03,https://en.wikichip.org/wiki/intel/core_i3/i3-7100h,Mobile,35.0,2,4.0
+intel core i3-7100t,2017-01-03,https://en.wikichip.org/wiki/intel/core_i3/i3-7100t,Desktop,35.0,2,4.0
+intel core i3-7100u,2016-08-30,https://en.wikichip.org/wiki/intel/core_i3/i3-7100u,Mobile; Embedded,15.0,2,4.0
+intel core i3-7101e,2017-01-03,https://en.wikichip.org/wiki/intel/core_i3/i3-7101e,Desktop; Embedded,54.0,2,4.0
+intel core i3-7101te,2017-01-03,https://en.wikichip.org/wiki/intel/core_i3/i3-7101te,Desktop; Embedded,35.0,2,4.0
+intel core i3-7102e,2017-01-03,https://en.wikichip.org/wiki/intel/core_i3/i3-7102e,Embedded,25.0,2,4.0
+intel core i3-7110u,,https://en.wikichip.org/wiki/intel/core_i3/i3-7110u,Mobile; Embedded,15.0,2,4.0
+intel core i3-7120,,https://en.wikichip.org/wiki/intel/core_i3/i3-7120,Desktop,51.0,2,4.0
+intel core i3-7120t,,https://en.wikichip.org/wiki/intel/core_i3/i3-7120t,Desktop,35.0,2,4.0
+intel core i3-7130u,2017-06-12,https://en.wikichip.org/wiki/intel/core_i3/i3-7130u,Mobile,15.0,2,4.0
+intel core i3-7167u,2017-01-03,https://en.wikichip.org/wiki/intel/core_i3/i3-7167u,Mobile,28.0,2,4.0
+intel core i3-7300,2017-01-03,https://en.wikichip.org/wiki/intel/core_i3/i3-7300,Desktop,51.0,2,4.0
+intel core i3-7300t,2017-01-03,https://en.wikichip.org/wiki/intel/core_i3/i3-7300t,Desktop,35.0,2,4.0
+intel core i3-7310t,2017-01-01,https://en.wikichip.org/wiki/intel/core_i3/i3-7310t,Desktop,35.0,2,4.0
+intel core i3-7310u,,https://en.wikichip.org/wiki/intel/core_i3/i3-7310u,Mobile,15.0,2,4.0
+intel core i3-7320,2017-01-03,https://en.wikichip.org/wiki/intel/core_i3/i3-7320,Desktop,51.0,2,4.0
+intel core i3-7320t,,https://en.wikichip.org/wiki/intel/core_i3/i3-7320t,Desktop,35.0,2,4.0
+intel core i3-7340,,https://en.wikichip.org/wiki/intel/core_i3/i3-7340,Desktop,51.0,2,4.0
+intel core i3-7350k,2017-01-03,https://en.wikichip.org/wiki/intel/core_i3/i3-7350k,Desktop,60.0,2,4.0
+intel core i3-8000,2018-03-01,https://en.wikichip.org/wiki/intel/core_i3/i3-8000,Desktop,65.0,4,4.0
+intel core i3-8000t,2018-03-01,https://en.wikichip.org/wiki/intel/core_i3/i3-8000t,Desktop,35.0,4,4.0
+intel core i3-8020,,https://en.wikichip.org/wiki/intel/core_i3/i3-8020,Desktop,51.0,4,4.0
+intel core i3-8020t,,https://en.wikichip.org/wiki/intel/core_i3/i3-8020t,Desktop,35.0,4,4.0
+intel core i3-8100,2017-10-05,https://en.wikichip.org/wiki/intel/core_i3/i3-8100,Desktop,65.0,4,4.0
+intel core i3-8100f,2019-01-07,https://en.wikichip.org/wiki/intel/core_i3/i3-8100f,Desktop,65.0,4,4.0
+intel core i3-8100h,2018-07-05,https://en.wikichip.org/wiki/intel/core_i3/i3-8100h,Mobile,45.0,4,4.0
+intel core i3-8100t,2018-04-02,https://en.wikichip.org/wiki/intel/core_i3/i3-8100t,Desktop,35.0,4,4.0
+intel core i3-8109u,2018-04-02,https://en.wikichip.org/wiki/intel/core_i3/i3-8109u,Mobile,28.0,2,4.0
+intel core i3-8120,,https://en.wikichip.org/wiki/intel/core_i3/i3-8120,Desktop,51.0,4,4.0
+intel core i3-8120t,,https://en.wikichip.org/wiki/intel/core_i3/i3-8120t,Desktop,35.0,4,4.0
+intel core i3-8121u,2018-05-15,https://en.wikichip.org/wiki/intel/core_i3/i3-8121u,Mobile,15.0,2,4.0
+intel core i3-8130u,2018-02-12,https://en.wikichip.org/wiki/intel/core_i3/i3-8130u,Mobile,15.0,2,4.0
+intel core i3-8145u,2018-08-28,https://en.wikichip.org/wiki/intel/core_i3/i3-8145u,Mobile,15.0,2,4.0
+intel core i3-8300,2018-04-02,https://en.wikichip.org/wiki/intel/core_i3/i3-8300,Desktop,62.0,4,4.0
+intel core i3-8300t,2018-04-02,https://en.wikichip.org/wiki/intel/core_i3/i3-8300t,Desktop,35.0,4,4.0
+intel core i3-8320,,https://en.wikichip.org/wiki/intel/core_i3/i3-8320,Desktop,51.0,4,4.0
+intel core i3-8320t,,https://en.wikichip.org/wiki/intel/core_i3/i3-8320t,Desktop,35.0,4,4.0
+intel core i3-8350k,2017-10-05,https://en.wikichip.org/wiki/intel/core_i3/i3-8350k,Desktop,91.0,4,4.0
+intel core i3-9000,,https://en.wikichip.org/wiki/intel/core_i3/i3-9000,Desktop,65.0,4,4.0
+intel core i3-9000t,,https://en.wikichip.org/wiki/intel/core_i3/i3-9000t,Desktop,35.0,4,4.0
+intel core i3-9100,2019-04-23,https://en.wikichip.org/wiki/intel/core_i3/i3-9100,Desktop,65.0,4,4.0
+intel core i3-9100f,2019-04-23,https://en.wikichip.org/wiki/intel/core_i3/i3-9100f,Desktop,65.0,4,4.0
+intel core i3-9100t,2019-04-23,https://en.wikichip.org/wiki/intel/core_i3/i3-9100t,Desktop,35.0,4,4.0
+intel core i3-9300,2019-04-23,https://en.wikichip.org/wiki/intel/core_i3/i3-9300,Desktop,62.0,4,4.0
+intel core i3-9300t,2019-04-23,https://en.wikichip.org/wiki/intel/core_i3/i3-9300t,Desktop,35.0,4,4.0
+intel core i3-9350kf,2019-01-07,https://en.wikichip.org/wiki/intel/core_i3/i3-9350kf,Desktop,91.0,4,4.0
+intel core i5-1030g4,2019-08-01,https://en.wikichip.org/wiki/intel/core_i5/i5-1030g4,Mobile,9.0,4,8.0
+intel core i5-1030g7,2019-08-01,https://en.wikichip.org/wiki/intel/core_i5/i5-1030g7,Mobile,9.0,4,8.0
+intel core i5-1035g1,2019-08-01,https://en.wikichip.org/wiki/intel/core_i5/i5-1035g1,Mobile,15.0,4,8.0
+intel core i5-1035g4,2019-08-01,https://en.wikichip.org/wiki/intel/core_i5/i5-1035g4,Mobile,15.0,4,8.0
+intel core i5-1035g7,2019-08-01,https://en.wikichip.org/wiki/intel/core_i5/i5-1035g7,Mobile,15.0,4,8.0
+intel core i5-12600k,2021-11-04,https://en.wikichip.org/wiki/intel/core_i5/i5-12600k,Desktop,125.0,10,16.0
+intel core i5-12600kf,2021-11-04,https://en.wikichip.org/wiki/intel/core_i5/i5-12600kf,Desktop,125.0,10,16.0
+intel core i5-13600k,2022-10-20,https://en.wikichip.org/wiki/intel/core_i5/i5-13600k,Desktop; Enthusiast,125.0,14,20.0
+intel core i5-13600kf,2022-10-20,https://en.wikichip.org/wiki/intel/core_i5/i5-13600kf,Desktop; Enthusiast,125.0,14,20.0
+intel core i5-2410m,2011-02-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2410m,Mobile,35.0,2,4.0
+intel core i5-2415m,2011-02-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2415m,Mobile,35.0,2,4.0
+intel core i5-2430m,2011-10-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2430m,Mobile,35.0,2,4.0
+intel core i5-2435m,2011-10-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2435m,Mobile,35.0,2,4.0
+intel core i5-2450m,2012-01-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2450m,Mobile,35.0,2,4.0
+intel core i5-2467m,2011-06-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2467m,Mobile,17.0,2,4.0
+intel core i5-2475m,2012-01-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2475m,Mobile,35.0,2,4.0
+intel core i5-2477m,2011-06-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2477m,Mobile,35.0,2,4.0
+intel core i5-2487m,2012-01-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2487m,Mobile,35.0,2,4.0
+intel core i5-2490m,2011-10-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2490m,Mobile,35.0,2,4.0
+intel core i5-2497m,2011-06-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2497m,Mobile,35.0,2,4.0
+intel core i5-2510e,2011-02-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2510e,Embedded,35.0,2,4.0
+intel core i5-2515e,2011-02-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2515e,Embedded,35.0,2,4.0
+intel core i5-2520m,2011-02-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2520m,Mobile,35.0,2,4.0
+intel core i5-2537m,2011-02-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2537m,Mobile,17.0,2,4.0
+intel core i5-2540lm,2011-02-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2540lm,Mobile,35.0,2,4.0
+intel core i5-2540m,2011-02-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2540m,Mobile,35.0,2,4.0
+intel core i5-2547m,2011-06-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2547m,Mobile,35.0,2,4.0
+intel core i5-2557m,2011-06-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2557m,Mobile,17.0,2,4.0
+intel core i5-2560lm,2011-10-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2560lm,Mobile,35.0,2,4.0
+intel core i5-2560m,2011-10-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2560m,Mobile,35.0,2,4.0
+intel core i5-2580m,2012-01-01,https://en.wikichip.org/wiki/intel/core_i5/i5-2580m,Mobile,35.0,2,4.0
+intel core i5-430m,2010-01-07,https://en.wikichip.org/wiki/intel/core_i5/i5-430m,Mobile,35.0,2,4.0
+intel core i5-430um,2010-06-20,https://en.wikichip.org/wiki/intel/core_i5/i5-430um,Mobile,18.0,2,4.0
+intel core i5-450m,2010-06-20,https://en.wikichip.org/wiki/intel/core_i5/i5-450m,Mobile,35.0,2,4.0
+intel core i5-4570r,2013-06-04,https://en.wikichip.org/wiki/intel/core_i5/i5-4570r,Desktop,65.0,4,4.0
+intel core i5-460m,2010-09-26,https://en.wikichip.org/wiki/intel/core_i5/i5-460m,Mobile,35.0,2,4.0
+intel core i5-4670r,2013-06-04,https://en.wikichip.org/wiki/intel/core_i5/i5-4670r,Desktop,65.0,4,4.0
+intel core i5-470um,2010-10-01,https://en.wikichip.org/wiki/intel/core_i5/i5-470um,Mobile,18.0,2,4.0
+intel core i5-480m,2011-01-11,https://en.wikichip.org/wiki/intel/core_i5/i5-480m,Mobile,35.0,2,4.0
+intel core i5-520e,2010-01-07,https://en.wikichip.org/wiki/intel/core_i5/i5-520e,Embedded,35.0,2,4.0
+intel core i5-520m,2010-01-07,https://en.wikichip.org/wiki/intel/core_i5/i5-520m,Mobile; Embedded,35.0,2,4.0
+intel core i5-520um,2010-01-07,https://en.wikichip.org/wiki/intel/core_i5/i5-520um,Mobile,18.0,2,4.0
+intel core i5-5350h,2015-04-15,https://en.wikichip.org/wiki/intel/core_i5/i5-5350h,Mobile,47.0,2,4.0
+intel core i5-540m,2010-01-07,https://en.wikichip.org/wiki/intel/core_i5/i5-540m,Mobile,35.0,2,4.0
+intel core i5-540um,2010-05-24,https://en.wikichip.org/wiki/intel/core_i5/i5-540um,Mobile,18.0,2,4.0
+intel core i5-5575r,2015-04-15,https://en.wikichip.org/wiki/intel/core_i5/i5-5575r,Desktop,65.0,4,4.0
+intel core i5-560m,2010-09-26,https://en.wikichip.org/wiki/intel/core_i5/i5-560m,Mobile,35.0,2,4.0
+intel core i5-560um,2010-09-26,https://en.wikichip.org/wiki/intel/core_i5/i5-560um,Mobile,18.0,2,4.0
+intel core i5-5675c,2015-04-15,https://en.wikichip.org/wiki/intel/core_i5/i5-5675c,Desktop,65.0,4,4.0
+intel core i5-5675r,2015-04-15,https://en.wikichip.org/wiki/intel/core_i5/i5-5675r,Desktop,65.0,4,4.0
+intel core i5-580m,2010-09-26,https://en.wikichip.org/wiki/intel/core_i5/i5-580m,Mobile,35.0,2,4.0
+intel core i5-6198du,2015-12-27,https://en.wikichip.org/wiki/intel/core_i5/i5-6198du,Mobile,15.0,2,4.0
+intel core i5-6200u,2015-09-27,https://en.wikichip.org/wiki/intel/core_i5/i5-6200u,Mobile,15.0,2,4.0
+intel core i5-6260u,2015-09-27,https://en.wikichip.org/wiki/intel/core_i5/i5-6260u,Mobile,15.0,2,4.0
+intel core i5-6267u,2015-09-27,https://en.wikichip.org/wiki/intel/core_i5/i5-6267u,Mobile,28.0,2,4.0
+intel core i5-6287u,2015-09-27,https://en.wikichip.org/wiki/intel/core_i5/i5-6287u,Mobile,28.0,2,4.0
+intel core i5-6300hq,2015-09-27,https://en.wikichip.org/wiki/intel/core_i5/i5-6300hq,Mobile,45.0,4,4.0
+intel core i5-6300u,2015-09-27,https://en.wikichip.org/wiki/intel/core_i5/i5-6300u,Mobile,15.0,2,4.0
+intel core i5-6350hq,2016-01-02,https://en.wikichip.org/wiki/intel/core_i5/i5-6350hq,Mobile,45.0,4,4.0
+intel core i5-6360u,2015-09-27,https://en.wikichip.org/wiki/intel/core_i5/i5-6360u,Mobile,15.0,2,4.0
+intel core i5-6400,2015-09-27,https://en.wikichip.org/wiki/intel/core_i5/i5-6400,Desktop,65.0,4,4.0
+intel core i5-6400t,2015-09-27,https://en.wikichip.org/wiki/intel/core_i5/i5-6400t,Desktop,35.0,4,4.0
+intel core i5-6402p,2015-12-27,https://en.wikichip.org/wiki/intel/core_i5/i5-6402p,Desktop,65.0,4,4.0
+intel core i5-6440eq,2015-10-12,https://en.wikichip.org/wiki/intel/core_i5/i5-6440eq,Embedded,45.0,4,4.0
+intel core i5-6440hq,2015-10-27,https://en.wikichip.org/wiki/intel/core_i5/i5-6440hq,Mobile,45.0,4,4.0
+intel core i5-6442eq,2015-10-12,https://en.wikichip.org/wiki/intel/core_i5/i5-6442eq,Embedded,25.0,4,4.0
+intel core i5-6500,2015-09-27,https://en.wikichip.org/wiki/intel/core_i5/i5-6500,Desktop,65.0,4,4.0
+intel core i5-6500t,2015-09-27,https://en.wikichip.org/wiki/intel/core_i5/i5-6500t,Desktop,35.0,4,4.0
+intel core i5-6500te,2015-10-19,https://en.wikichip.org/wiki/intel/core_i5/i5-6500te,Embedded,35.0,4,4.0
+intel core i5-6585r,2016-04-22,https://en.wikichip.org/wiki/intel/core_i5/i5-6585r,Desktop,65.0,4,4.0
+intel core i5-6600,2015-09-27,https://en.wikichip.org/wiki/intel/core_i5/i5-6600,Desktop,65.0,4,4.0
+intel core i5-6600k,2015-09-27,https://en.wikichip.org/wiki/intel/core_i5/i5-6600k,Desktop,91.0,4,4.0
+intel core i5-6600t,2015-09-27,https://en.wikichip.org/wiki/intel/core_i5/i5-6600t,Desktop,35.0,4,4.0
+intel core i5-6685r,2016-04-22,https://en.wikichip.org/wiki/intel/core_i5/i5-6685r,Desktop,65.0,4,4.0
+intel core i5-7200u,2016-08-30,https://en.wikichip.org/wiki/intel/core_i5/i5-7200u,Mobile,15.0,2,4.0
+intel core i5-7210u,,https://en.wikichip.org/wiki/intel/core_i5/i5-7210u,Mobile,15.0,2,4.0
+intel core i5-7260u,2017-01-03,https://en.wikichip.org/wiki/intel/core_i5/i5-7260u,Mobile,15.0,2,4.0
+intel core i5-7267u,2017-01-03,https://en.wikichip.org/wiki/intel/core_i5/i5-7267u,Mobile,28.0,2,4.0
+intel core i5-7287u,2017-01-03,https://en.wikichip.org/wiki/intel/core_i5/i5-7287u,Mobile,28.0,2,4.0
+intel core i5-7300hq,2017-01-03,https://en.wikichip.org/wiki/intel/core_i5/i5-7300hq,Mobile,45.0,4,4.0
+intel core i5-7300u,2017-01-03,https://en.wikichip.org/wiki/intel/core_i5/i5-7300u,Embedded; Mobile,15.0,2,4.0
+intel core i5-7360u,2017-01-03,https://en.wikichip.org/wiki/intel/core_i5/i5-7360u,Mobile,15.0,2,4.0
+intel core i5-7400,2017-01-03,https://en.wikichip.org/wiki/intel/core_i5/i5-7400,Desktop,65.0,4,4.0
+intel core i5-7400t,2017-01-03,https://en.wikichip.org/wiki/intel/core_i5/i5-7400t,Desktop,35.0,4,4.0
+intel core i5-7440eq,2017-01-03,https://en.wikichip.org/wiki/intel/core_i5/i5-7440eq,Embedded,45.0,4,4.0
+intel core i5-7440hq,2017-01-03,https://en.wikichip.org/wiki/intel/core_i5/i5-7440hq,Mobile,45.0,4,4.0
+intel core i5-7442eq,2017-01-03,https://en.wikichip.org/wiki/intel/core_i5/i5-7442eq,Embedded,25.0,4,4.0
+intel core i5-7500,2017-01-03,https://en.wikichip.org/wiki/intel/core_i5/i5-7500,Desktop; Embedded,65.0,4,4.0
+intel core i5-7500t,2017-01-03,https://en.wikichip.org/wiki/intel/core_i5/i5-7500t,Desktop; Embedded,35.0,4,4.0
+intel core i5-7600,2017-01-03,https://en.wikichip.org/wiki/intel/core_i5/i5-7600,Desktop,65.0,4,4.0
+intel core i5-7600k,2017-01-03,https://en.wikichip.org/wiki/intel/core_i5/i5-7600k,Desktop,91.0,4,4.0
+intel core i5-7600t,2017-01-03,https://en.wikichip.org/wiki/intel/core_i5/i5-7600t,Desktop,35.0,4,4.0
+intel core i5-7640x,2017-06-26,https://en.wikichip.org/wiki/intel/core_i5/i5-7640x,Desktop,112.0,4,4.0
+intel core i5-7y54,2016-08-30,https://en.wikichip.org/wiki/intel/core_i5/i5-7y54,Mobile,4.5,2,4.0
+intel core i5-7y57,2017-01-03,https://en.wikichip.org/wiki/intel/core_i5/i5-7y57,Mobile,4.5,2,4.0
+intel core i5-8200y,2018-08-28,https://en.wikichip.org/wiki/intel/core_i5/i5-8200y,Mobile,5.0,2,4.0
+intel core i5-8210y,2018-10-30,https://en.wikichip.org/wiki/intel/core_i5/i5-8210y,Mobile,7.0,2,4.0
+intel core i5-8250u,2017-08-21,https://en.wikichip.org/wiki/intel/core_i5/i5-8250u,Mobile,15.0,4,8.0
+intel core i5-8259u,2018-04-02,https://en.wikichip.org/wiki/intel/core_i5/i5-8259u,Mobile,28.0,4,8.0
+intel core i5-8265u,2018-08-28,https://en.wikichip.org/wiki/intel/core_i5/i5-8265u,Mobile,15.0,4,8.0
+intel core i5-8269u,2018-04-02,https://en.wikichip.org/wiki/intel/core_i5/i5-8269u,Mobile,28.0,4,8.0
+intel core i5-8300h,2018-04-02,https://en.wikichip.org/wiki/intel/core_i5/i5-8300h,Mobile,45.0,4,8.0
+intel core i5-8305g,2018-01-07,https://en.wikichip.org/wiki/intel/core_i5/i5-8305g,Mobile,65.0,4,8.0
+intel core i5-8310y,2019-04-04,https://en.wikichip.org/wiki/intel/core_i5/i5-8310y,Mobile,7.0,2,4.0
+intel core i5-8350u,2017-08-21,https://en.wikichip.org/wiki/intel/core_i5/i5-8350u,Mobile,15.0,4,8.0
+intel core i5-8365u,2019-04-16,https://en.wikichip.org/wiki/intel/core_i5/i5-8365u,Mobile,15.0,4,8.0
+intel core i5-8400,2017-10-05,https://en.wikichip.org/wiki/intel/core_i5/i5-8400,Desktop,65.0,6,6.0
+intel core i5-8400b,2018-04-02,https://en.wikichip.org/wiki/intel/core_i5/i5-8400b,Mobile,65.0,6,6.0
+intel core i5-8400h,2018-04-02,https://en.wikichip.org/wiki/intel/core_i5/i5-8400h,Mobile,45.0,4,8.0
+intel core i5-8400t,2018-04-02,https://en.wikichip.org/wiki/intel/core_i5/i5-8400t,Desktop,35.0,6,6.0
+intel core i5-8420,,https://en.wikichip.org/wiki/intel/core_i5/i5-8420,Desktop,65.0,6,6.0
+intel core i5-8420t,,https://en.wikichip.org/wiki/intel/core_i5/i5-8420t,Desktop,35.0,6,6.0
+intel core i5-8500,2018-04-02,https://en.wikichip.org/wiki/intel/core_i5/i5-8500,Desktop,65.0,6,6.0
+intel core i5-8500b,2018-04-02,https://en.wikichip.org/wiki/intel/core_i5/i5-8500b,Desktop,65.0,6,6.0
+intel core i5-8500t,2018-04-02,https://en.wikichip.org/wiki/intel/core_i5/i5-8500t,Desktop,35.0,6,6.0
+intel core i5-8550,,https://en.wikichip.org/wiki/intel/core_i5/i5-8550,Desktop,65.0,6,6.0
+intel core i5-8600,2018-04-02,https://en.wikichip.org/wiki/intel/core_i5/i5-8600,Desktop,65.0,6,6.0
+intel core i5-8600k,2017-10-05,https://en.wikichip.org/wiki/intel/core_i5/i5-8600k,Desktop,95.0,6,6.0
+intel core i5-8600t,2018-04-02,https://en.wikichip.org/wiki/intel/core_i5/i5-8600t,Desktop,35.0,6,6.0
+intel core i5-8650,,https://en.wikichip.org/wiki/intel/core_i5/i5-8650,Desktop,65.0,6,6.0
+intel core i5-9300h,2019-04-23,https://en.wikichip.org/wiki/intel/core_i5/i5-9300h,Mobile,45.0,4,8.0
+intel core i5-9400,2019-01-07,https://en.wikichip.org/wiki/intel/core_i5/i5-9400,Desktop,65.0,6,6.0
+intel core i5-9400f,2019-01-07,https://en.wikichip.org/wiki/intel/core_i5/i5-9400f,Desktop,65.0,6,6.0
+intel core i5-9400h,2019-04-23,https://en.wikichip.org/wiki/intel/core_i5/i5-9400h,Mobile,45.0,4,8.0
+intel core i5-9400t,2019-04-23,https://en.wikichip.org/wiki/intel/core_i5/i5-9400t,Desktop,35.0,6,6.0
+intel core i5-9500,2019-04-23,https://en.wikichip.org/wiki/intel/core_i5/i5-9500,Desktop,65.0,6,6.0
+intel core i5-9500f,2019-04-23,https://en.wikichip.org/wiki/intel/core_i5/i5-9500f,Desktop,65.0,6,6.0
+intel core i5-9500t,2019-04-23,https://en.wikichip.org/wiki/intel/core_i5/i5-9500t,Desktop,35.0,6,6.0
+intel core i5-9600,2019-04-23,https://en.wikichip.org/wiki/intel/core_i5/i5-9600,Desktop,65.0,6,6.0
+intel core i5-9600k,2018-10-19,https://en.wikichip.org/wiki/intel/core_i5/i5-9600k,Desktop,95.0,6,6.0
+intel core i5-9600kf,2019-01-07,https://en.wikichip.org/wiki/intel/core_i5/i5-9600kf,Desktop,95.0,6,6.0
+intel core i7-10510u,,https://en.wikichip.org/wiki/intel/core_i7/i7-10510u,Mobile,15.0,4,8.0
+intel core i7-1060g7,2019-08-01,https://en.wikichip.org/wiki/intel/core_i7/i7-1060g7,Mobile,9.0,4,8.0
+intel core i7-1065g7,2019-08-01,https://en.wikichip.org/wiki/intel/core_i7/i7-1065g7,Mobile,15.0,4,8.0
+intel core i7-1068g7,,https://en.wikichip.org/wiki/intel/core_i7/i7-1068g7,Mobile,28.0,4,8.0
+intel core i7-12700k,2021-11-04,https://en.wikichip.org/wiki/intel/core_i7/i7-12700k,Desktop,125.0,12,20.0
+intel core i7-12700kf,2021-11-04,https://en.wikichip.org/wiki/intel/core_i7/i7-12700kf,Desktop,125.0,12,20.0
+intel core i7-13700k,2022-10-20,https://en.wikichip.org/wiki/intel/core_i7/i7-13700k,Desktop; Enthusiast,125.0,16,24.0
+intel core i7-13700kf,2022-10-20,https://en.wikichip.org/wiki/intel/core_i7/i7-13700kf,Desktop; Enthusiast,125.0,16,24.0
+intel core i7-2535qm,2011-01-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2535qm,Mobile,35.0,4,8.0
+intel core i7-2570qm,2011-01-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2570qm,Mobile,35.0,4,8.0
+intel core i7-2610ue,2011-02-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2610ue,Embedded,17.0,2,4.0
+intel core i7-2617m,2011-02-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2617m,Mobile,17.0,2,4.0
+intel core i7-2620m,2011-02-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2620m,Mobile,35.0,2,4.0
+intel core i7-2627m,2011-01-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2627m,Mobile,35.0,2,4.0
+intel core i7-2629m,2011-02-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2629m,Mobile,25.0,2,4.0
+intel core i7-2630qm,2011-01-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2630qm,Mobile,45.0,4,8.0
+intel core i7-2635qm,2011-01-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2635qm,Mobile,45.0,4,8.0
+intel core i7-2637m,2011-06-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2637m,Mobile,17.0,2,4.0
+intel core i7-2640m,2011-09-04,https://en.wikichip.org/wiki/intel/core_i7/i7-2640m,Mobile,35.0,2,4.0
+intel core i7-2649m,2011-02-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2649m,Mobile,25.0,2,4.0
+intel core i7-2655le,2011-02-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2655le,Embedded,25.0,2,4.0
+intel core i7-2655qm,2011-09-04,https://en.wikichip.org/wiki/intel/core_i7/i7-2655qm,Mobile,45.0,4,8.0
+intel core i7-2657m,2011-02-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2657m,Mobile,17.0,2,4.0
+intel core i7-2660m,2011-01-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2660m,Mobile,35.0,2,4.0
+intel core i7-2667m,2011-01-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2667m,Mobile,35.0,2,4.0
+intel core i7-2669m,2011-01-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2669m,Mobile,35.0,2,4.0
+intel core i7-2670qm,2011-09-04,https://en.wikichip.org/wiki/intel/core_i7/i7-2670qm,Mobile,45.0,4,8.0
+intel core i7-2675qm,2011-09-04,https://en.wikichip.org/wiki/intel/core_i7/i7-2675qm,Mobile,45.0,4,8.0
+intel core i7-2677m,2011-06-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2677m,Mobile,17.0,2,4.0
+intel core i7-2685qm,2011-01-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2685qm,Mobile,35.0,4,8.0
+intel core i7-2689m,2011-01-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2689m,Mobile,35.0,2,4.0
+intel core i7-2710qe,2011-01-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2710qe,Embedded,45.0,4,8.0
+intel core i7-2715qe,2011-01-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2715qe,Embedded,45.0,4,8.0
+intel core i7-2720qm,2011-01-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2720qm,Mobile,45.0,4,8.0
+intel core i7-2740qm,2011-09-04,https://en.wikichip.org/wiki/intel/core_i7/i7-2740qm,Mobile,45.0,4,8.0
+intel core i7-2760qm,2011-09-04,https://en.wikichip.org/wiki/intel/core_i7/i7-2760qm,Mobile,45.0,4,8.0
+intel core i7-2820qm,2011-01-01,https://en.wikichip.org/wiki/intel/core_i7/i7-2820qm,Mobile,45.0,4,8.0
+intel core i7-2840qm,2011-09-04,https://en.wikichip.org/wiki/intel/core_i7/i7-2840qm,Mobile,45.0,4,8.0
+intel core i7-2860qm,2011-09-04,https://en.wikichip.org/wiki/intel/core_i7/i7-2860qm,Mobile,45.0,4,8.0
+intel core i7-2920xm extreme edition,2011-01-09,https://en.wikichip.org/wiki/intel/core_i7ee/i7-2920xm,Mobile,55.0,4,8.0
+intel core i7-2960xm extreme edition,2011-09-04,https://en.wikichip.org/wiki/intel/core_i7ee/i7-2960xm,Mobile,55.0,4,8.0
+intel core i7-3770k,2012-04-23,https://en.wikichip.org/wiki/intel/core_i7/i7-3770k,Desktop,77.0,4,8.0
+intel core i7-3920xm extreme edition,2012-04-28,https://en.wikichip.org/wiki/intel/core_i7ee/i7-3920xm,Mobile,55.0,4,8.0
+intel core i7-3940xm extreme edition,2012-09-30,https://en.wikichip.org/wiki/intel/core_i7ee/i7-3940xm,Mobile,55.0,4,8.0
+intel core i7-3960x extreme edition,2011-11-14,https://en.wikichip.org/wiki/intel/core_i7ee/i7-3960x,Desktop,130.0,6,12.0
+intel core i7-3970x extreme edition,2012-11-12,https://en.wikichip.org/wiki/intel/core_i7ee/i7-3970x,Desktop,150.0,6,12.0
+intel core i7-4750hq,2013-06-02,https://en.wikichip.org/wiki/intel/core_i7/i7-4750hq,Mobile,47.0,4,8.0
+intel core i7-4760hq,2014-04-14,https://en.wikichip.org/wiki/intel/core_i7/i7-4760hq,Mobile,47.0,4,8.0
+intel core i7-4770hq,2014-07-20,https://en.wikichip.org/wiki/intel/core_i7/i7-4770hq,Mobile,47.0,4,8.0
+intel core i7-4770r,2013-06-04,https://en.wikichip.org/wiki/intel/core_i7/i7-4770r,Desktop,47.0,4,8.0
+intel core i7-4850eq,2014-02-20,https://en.wikichip.org/wiki/intel/core_i7/i7-4850eq,Mobile,47.0,4,8.0
+intel core i7-4850hq,2013-06-04,https://en.wikichip.org/wiki/intel/core_i7/i7-4850hq,Mobile,47.0,4,8.0
+intel core i7-4860eq,2014-02-20,https://en.wikichip.org/wiki/intel/core_i7/i7-4860eq,Mobile,47.0,4,8.0
+intel core i7-4860hq,2014-01-19,https://en.wikichip.org/wiki/intel/core_i7/i7-4860hq,Mobile,47.0,4,8.0
+intel core i7-4870hq,2014-07-20,https://en.wikichip.org/wiki/intel/core_i7/i7-4870hq,Mobile,47.0,4,8.0
+intel core i7-4930mx extreme edition,2013-06-02,https://en.wikichip.org/wiki/intel/core_i7ee/i7-4930mx,Mobile,57.0,4,8.0
+intel core i7-4940mx extreme edition,2014-01-19,https://en.wikichip.org/wiki/intel/core_i7ee/i7-4940mx,Mobile,57.0,4,8.0
+intel core i7-4950hq,2013-06-04,https://en.wikichip.org/wiki/intel/core_i7/i7-4950hq,Mobile,47.0,4,8.0
+intel core i7-4960hq,2013-09-01,https://en.wikichip.org/wiki/intel/core_i7/i7-4960hq,Mobile,47.0,4,8.0
+intel core i7-4960x extreme edition,2013-09-10,https://en.wikichip.org/wiki/intel/core_i7ee/i7-4960x,Desktop,130.0,6,12.0
+intel core i7-4980hq,2014-09-01,https://en.wikichip.org/wiki/intel/core_i7/i7-4980hq,Mobile,47.0,4,8.0
+intel core i7-5750hq,2015-04-15,https://en.wikichip.org/wiki/intel/core_i7/i7-5750hq,Mobile,47.0,4,8.0
+intel core i7-5775c,2015-04-15,https://en.wikichip.org/wiki/intel/core_i7/i7-5775c,Desktop,65.0,4,8.0
+intel core i7-5775r,2015-04-15,https://en.wikichip.org/wiki/intel/core_i7/i7-5775r,Desktop,65.0,4,8.0
+intel core i7-5850eq,2015-06-02,https://en.wikichip.org/wiki/intel/core_i7/i7-5850eq,Mobile,47.0,4,8.0
+intel core i7-5850hq,2015-06-02,https://en.wikichip.org/wiki/intel/core_i7/i7-5850hq,Mobile,47.0,4,8.0
+intel core i7-5950hq,2015-06-02,https://en.wikichip.org/wiki/intel/core_i7/i7-5950hq,Mobile,47.0,4,8.0
+intel core i7-5960x extreme edition,2014-08-29,https://en.wikichip.org/wiki/intel/core_i7ee/i7-5960x,Desktop,140.0,8,16.0
+intel core i7-610e,2010-01-07,https://en.wikichip.org/wiki/intel/core_i7/i7-610e,Mobile; Embedded,35.0,2,4.0
+intel core i7-620le,2010-01-07,https://en.wikichip.org/wiki/intel/core_i7/i7-620le,Embedded,25.0,2,4.0
+intel core i7-620lm,2010-01-07,https://en.wikichip.org/wiki/intel/core_i7/i7-620lm,Mobile,25.0,2,4.0
+intel core i7-620m,2010-01-07,https://en.wikichip.org/wiki/intel/core_i7/i7-620m,Mobile; Embedded,35.0,2,4.0
+intel core i7-620ue,2010-01-07,https://en.wikichip.org/wiki/intel/core_i7/i7-620ue,Embedded,18.0,2,4.0
+intel core i7-620um,2010-01-07,https://en.wikichip.org/wiki/intel/core_i7/i7-620um,Mobile,18.0,2,4.0
+intel core i7-640lm,2010-01-07,https://en.wikichip.org/wiki/intel/core_i7/i7-640lm,Mobile,25.0,2,4.0
+intel core i7-640m,2010-09-13,https://en.wikichip.org/wiki/intel/core_i7/i7-640m,Mobile,35.0,2,4.0
+intel core i7-640um,2010-01-07,https://en.wikichip.org/wiki/intel/core_i7/i7-640um,Mobile,18.0,2,4.0
+intel core i7-6498du,2015-09-27,https://en.wikichip.org/wiki/intel/core_i7/i7-6498du,Mobile,15.0,2,4.0
+intel core i7-6500u,2015-09-27,https://en.wikichip.org/wiki/intel/core_i7/i7-6500u,Mobile,15.0,2,4.0
+intel core i7-6560u,2015-09-27,https://en.wikichip.org/wiki/intel/core_i7/i7-6560u,Mobile,15.0,2,4.0
+intel core i7-6567u,2015-09-27,https://en.wikichip.org/wiki/intel/core_i7/i7-6567u,Mobile,28.0,2,4.0
+intel core i7-6600u,2015-09-27,https://en.wikichip.org/wiki/intel/core_i7/i7-6600u,Mobile,15.0,2,4.0
+intel core i7-660lm,2010-09-13,https://en.wikichip.org/wiki/intel/core_i7/i7-660lm,Mobile,25.0,2,4.0
+intel core i7-660ue,2010-08-15,https://en.wikichip.org/wiki/intel/core_i7/i7-660ue,Mobile; Embedded,18.0,2,4.0
+intel core i7-660um,2010-01-07,https://en.wikichip.org/wiki/intel/core_i7/i7-660um,Mobile,18.0,2,4.0
+intel core i7-6650u,2015-09-27,https://en.wikichip.org/wiki/intel/core_i7/i7-6650u,Mobile,15.0,2,4.0
+intel core i7-6660u,2016-03-20,https://en.wikichip.org/wiki/intel/core_i7/i7-6660u,Mobile,15.0,2,4.0
+intel core i7-6700,2015-09-27,https://en.wikichip.org/wiki/intel/core_i7/i7-6700,Desktop,65.0,4,8.0
+intel core i7-6700hq,2015-09-27,https://en.wikichip.org/wiki/intel/core_i7/i7-6700hq,Mobile,45.0,4,8.0
+intel core i7-6700k,2015-09-27,https://en.wikichip.org/wiki/intel/core_i7/i7-6700k,Desktop,91.0,4,8.0
+intel core i7-6700t,2015-09-27,https://en.wikichip.org/wiki/intel/core_i7/i7-6700t,Desktop,35.0,4,8.0
+intel core i7-6700te,2015-10-19,https://en.wikichip.org/wiki/intel/core_i7/i7-6700te,Embedded,35.0,4,8.0
+intel core i7-6770hq,2016-01-02,https://en.wikichip.org/wiki/intel/core_i7/i7-6770hq,Mobile,45.0,4,8.0
+intel core i7-6785r,2016-04-22,https://en.wikichip.org/wiki/intel/core_i7/i7-6785r,Desktop,65.0,4,8.0
+intel core i7-680um,2010-05-27,https://en.wikichip.org/wiki/intel/core_i7/i7-680um,Mobile,18.0,2,4.0
+intel core i7-6820eq,2015-10-12,https://en.wikichip.org/wiki/intel/core_i7/i7-6820eq,Embedded,45.0,4,8.0
+intel core i7-6820hk,2015-09-27,https://en.wikichip.org/wiki/intel/core_i7/i7-6820hk,Mobile,45.0,4,8.0
+intel core i7-6820hq,2015-10-27,https://en.wikichip.org/wiki/intel/core_i7/i7-6820hq,Mobile,45.0,4,8.0
+intel core i7-6822eq,2015-10-12,https://en.wikichip.org/wiki/intel/core_i7/i7-6822eq,Embedded,25.0,4,8.0
+intel core i7-6870hq,2016-01-02,https://en.wikichip.org/wiki/intel/core_i7/i7-6870hq,Mobile,45.0,4,8.0
+intel core i7-6920hq,2015-10-27,https://en.wikichip.org/wiki/intel/core_i7/i7-6920hq,Mobile,45.0,4,8.0
+intel core i7-6950x extreme edition,2016-05-31,https://en.wikichip.org/wiki/intel/core_i7ee/i7-6950x,Desktop,140.0,10,20.0
+intel core i7-6970hq,2016-01-02,https://en.wikichip.org/wiki/intel/core_i7/i7-6970hq,Mobile,45.0,4,8.0
+intel core i7-720qm,2009-09-23,https://en.wikichip.org/wiki/intel/core_i7/i7-720qm,Mobile,45.0,4,8.0
+intel core i7-740qm,2010-06-22,https://en.wikichip.org/wiki/intel/core_i7/i7-740qm,Mobile,45.0,4,8.0
+intel core i7-7500u,2016-08-30,https://en.wikichip.org/wiki/intel/core_i7/i7-7500u,Mobile,15.0,2,4.0
+intel core i7-7510u,,https://en.wikichip.org/wiki/intel/core_i7/i7-7510u,Mobile,15.0,2,4.0
+intel core i7-7560u,2017-01-03,https://en.wikichip.org/wiki/intel/core_i7/i7-7560u,Mobile,15.0,2,4.0
+intel core i7-7567u,2017-01-03,https://en.wikichip.org/wiki/intel/core_i7/i7-7567u,Mobile,28.0,2,4.0
+intel core i7-7600u,2017-01-03,https://en.wikichip.org/wiki/intel/core_i7/i7-7600u,Embedded; Mobile,15.0,2,4.0
+intel core i7-7660u,2017-01-03,https://en.wikichip.org/wiki/intel/core_i7/i7-7660u,Mobile,15.0,2,4.0
+intel core i7-7700,2017-01-03,https://en.wikichip.org/wiki/intel/core_i7/i7-7700,Desktop; Embedded,65.0,4,8.0
+intel core i7-7700hq,2017-01-03,https://en.wikichip.org/wiki/intel/core_i7/i7-7700hq,Mobile,45.0,4,8.0
+intel core i7-7700k,2017-01-03,https://en.wikichip.org/wiki/intel/core_i7/i7-7700k,Desktop,91.0,4,8.0
+intel core i7-7700t,2017-01-03,https://en.wikichip.org/wiki/intel/core_i7/i7-7700t,Desktop; Embedded,35.0,4,8.0
+intel core i7-7740x,2017-06-26,https://en.wikichip.org/wiki/intel/core_i7/i7-7740x,Desktop,112.0,4,8.0
+intel core i7-7800x,2017-06-26,https://en.wikichip.org/wiki/intel/core_i7/i7-7800x,Desktop,140.0,6,12.0
+intel core i7-7820eq,2017-01-03,https://en.wikichip.org/wiki/intel/core_i7/i7-7820eq,Embedded; Mobile,45.0,4,8.0
+intel core i7-7820hk,2017-01-03,https://en.wikichip.org/wiki/intel/core_i7/i7-7820hk,Mobile,45.0,4,8.0
+intel core i7-7820hq,2017-01-03,https://en.wikichip.org/wiki/intel/core_i7/i7-7820hq,Mobile,45.0,4,8.0
+intel core i7-7820x,2017-06-26,https://en.wikichip.org/wiki/intel/core_i7/i7-7820x,Desktop,140.0,8,16.0
+intel core i7-7920hq,2017-01-03,https://en.wikichip.org/wiki/intel/core_i7/i7-7920hq,Mobile,45.0,4,8.0
+intel core i7-7y75,2016-08-30,https://en.wikichip.org/wiki/intel/core_i7/i7-7y75,Mobile,4.5,2,4.0
+intel core i7-8086k,2018-06-08,https://en.wikichip.org/wiki/intel/core_i7/i7-8086k,Desktop,95.0,6,12.0
+intel core i7-820qm,2009-09-23,https://en.wikichip.org/wiki/intel/core_i7/i7-820qm,Mobile,45.0,4,8.0
+intel core i7-840qm,2010-06-22,https://en.wikichip.org/wiki/intel/core_i7/i7-840qm,Mobile,45.0,4,8.0
+intel core i7-8500y,2018-08-28,https://en.wikichip.org/wiki/intel/core_i7/i7-8500y,Mobile,5.0,2,4.0
+intel core i7-8510y,2019-04-04,https://en.wikichip.org/wiki/intel/core_i7/i7-8510y,Mobile,7.0,2,4.0
+intel core i7-8550u,2017-08-21,https://en.wikichip.org/wiki/intel/core_i7/i7-8550u,Mobile,15.0,4,8.0
+intel core i7-8559u,2018-04-02,https://en.wikichip.org/wiki/intel/core_i7/i7-8559u,Mobile,28.0,4,8.0
+intel core i7-8565u,2018-08-28,https://en.wikichip.org/wiki/intel/core_i7/i7-8565u,Mobile,15.0,4,8.0
+intel core i7-8650u,2017-08-21,https://en.wikichip.org/wiki/intel/core_i7/i7-8650u,Mobile,15.0,4,8.0
+intel core i7-8665u,2019-04-16,https://en.wikichip.org/wiki/intel/core_i7/i7-8665u,Mobile,15.0,4,8.0
+intel core i7-8670,,https://en.wikichip.org/wiki/intel/core_i7/i7-8670,Desktop,65.0,6,12.0
+intel core i7-8670t,,https://en.wikichip.org/wiki/intel/core_i7/i7-8670t,Desktop,35.0,6,12.0
+intel core i7-8700,2017-10-05,https://en.wikichip.org/wiki/intel/core_i7/i7-8700,Desktop,65.0,6,12.0
+intel core i7-8700b,2018-04-02,https://en.wikichip.org/wiki/intel/core_i7/i7-8700b,Embedded,65.0,6,12.0
+intel core i7-8700k,2017-10-05,https://en.wikichip.org/wiki/intel/core_i7/i7-8700k,Desktop,95.0,6,12.0
+intel core i7-8700t,2018-04-02,https://en.wikichip.org/wiki/intel/core_i7/i7-8700t,Desktop,35.0,6,12.0
+intel core i7-8705g,2018-01-07,https://en.wikichip.org/wiki/intel/core_i7/i7-8705g,Mobile,65.0,4,8.0
+intel core i7-8706g,2018-01-07,https://en.wikichip.org/wiki/intel/core_i7/i7-8706g,Mobile,65.0,4,8.0
+intel core i7-8709g,2018-01-07,https://en.wikichip.org/wiki/intel/core_i7/i7-8709g,Mobile,100.0,4,8.0
+intel core i7-8750h,2018-04-02,https://en.wikichip.org/wiki/intel/core_i7/i7-8750h,Mobile,45.0,6,12.0
+intel core i7-8809g,2018-01-07,https://en.wikichip.org/wiki/intel/core_i7/i7-8809g,Mobile,100.0,4,8.0
+intel core i7-8850h,2018-04-02,https://en.wikichip.org/wiki/intel/core_i7/i7-8850h,Mobile,45.0,6,12.0
+intel core i7-920xm extreme edition,2009-09-23,https://en.wikichip.org/wiki/intel/core_i7ee/i7-920xm,Mobile,55.0,4,8.0
+intel core i7-940xm extreme edition,2010-06-22,https://en.wikichip.org/wiki/intel/core_i7ee/i7-940xm,Mobile,55.0,4,8.0
+intel core i7-965 extreme edition,2008-11-17,https://en.wikichip.org/wiki/intel/core_i7ee/i7-965,Desktop,130.0,4,8.0
+intel core i7-9700,2019-04-23,https://en.wikichip.org/wiki/intel/core_i7/i7-9700,Desktop,65.0,8,8.0
+intel core i7-9700f,2019-04-23,https://en.wikichip.org/wiki/intel/core_i7/i7-9700f,Desktop,65.0,8,8.0
+intel core i7-9700k,2018-10-19,https://en.wikichip.org/wiki/intel/core_i7/i7-9700k,Desktop,95.0,8,8.0
+intel core i7-9700kf,2019-01-07,https://en.wikichip.org/wiki/intel/core_i7/i7-9700kf,Desktop,95.0,8,8.0
+intel core i7-9700t,2019-04-23,https://en.wikichip.org/wiki/intel/core_i7/i7-9700t,Desktop,35.0,8,8.0
+intel core i7-975 extreme edition,2009-06-02,https://en.wikichip.org/wiki/intel/core_i7ee/i7-975,Desktop,130.0,4,8.0
+intel core i7-9750h,2019-04-23,https://en.wikichip.org/wiki/intel/core_i7/i7-9750h,Mobile,45.0,6,12.0
+intel core i7-9800x,2018-11-01,https://en.wikichip.org/wiki/intel/core_i7/i7-9800x,Desktop,165.0,8,16.0
+intel core i7-980x extreme edition,2010-03-16,https://en.wikichip.org/wiki/intel/core_i7ee/i7-980x,Desktop,130.0,6,12.0
+intel core i7-9850h,2019-04-23,https://en.wikichip.org/wiki/intel/core_i7/i7-9850h,Mobile,45.0,6,12.0
+intel core i7-990x extreme edition,2011-02-13,https://en.wikichip.org/wiki/intel/core_i7ee/i7-990x,Desktop,130.0,6,12.0
+intel core i9-12900k,2021-11-04,https://en.wikichip.org/wiki/intel/core_i9/i9-12900k,Desktop,125.0,16,24.0
+intel core i9-12900kf,2021-11-04,https://en.wikichip.org/wiki/intel/core_i9/i9-12900kf,Desktop,125.0,16,24.0
+intel core i9-13900k,2022-10-20,https://en.wikichip.org/wiki/intel/core_i9/i9-13900k,Desktop; Enthusiast,125.0,24,32.0
+intel core i9-13900kf,2022-10-20,https://en.wikichip.org/wiki/intel/core_i9/i9-13900kf,Desktop; Enthusiast,125.0,24,32.0
+intel core i9-7900x,2017-06-26,https://en.wikichip.org/wiki/intel/core_i9/i9-7900x,Desktop,140.0,10,20.0
+intel core i9-7920x,2017-08-28,https://en.wikichip.org/wiki/intel/core_i9/i9-7920x,Desktop,140.0,12,24.0
+intel core i9-7940x,2017-09-25,https://en.wikichip.org/wiki/intel/core_i9/i9-7940x,Desktop,165.0,14,28.0
+intel core i9-7960x,2017-09-25,https://en.wikichip.org/wiki/intel/core_i9/i9-7960x,Desktop,165.0,16,32.0
+intel core i9-7980xe,2017-09-25,https://en.wikichip.org/wiki/intel/core_i9/i9-7980xe,Desktop,165.0,18,36.0
+intel core i9-8950hk,2018-04-02,https://en.wikichip.org/wiki/intel/core_i9/i9-8950hk,Mobile,45.0,6,12.0
+intel core i9-9820x,2018-11-01,https://en.wikichip.org/wiki/intel/core_i9/i9-9820x,Desktop,165.0,10,20.0
+intel core i9-9880h,2019-04-23,https://en.wikichip.org/wiki/intel/core_i9/i9-9880h,Mobile,45.0,8,16.0
+intel core i9-9900,2019-04-23,https://en.wikichip.org/wiki/intel/core_i9/i9-9900,Desktop,65.0,8,16.0
+intel core i9-9900k,2018-10-19,https://en.wikichip.org/wiki/intel/core_i9/i9-9900k,Desktop,95.0,8,16.0
+intel core i9-9900kf,2019-01-07,https://en.wikichip.org/wiki/intel/core_i9/i9-9900kf,Desktop,95.0,8,16.0
+intel core i9-9900ks,2019-10-30,https://en.wikichip.org/wiki/intel/core_i9/i9-9900ks,Desktop,127.0,8,16.0
+intel core i9-9900t,2019-04-23,https://en.wikichip.org/wiki/intel/core_i9/i9-9900t,Desktop,35.0,8,16.0
+intel core i9-9900x,2018-11-01,https://en.wikichip.org/wiki/intel/core_i9/i9-9900x,Desktop,165.0,10,20.0
+intel core i9-9920x,2018-11-01,https://en.wikichip.org/wiki/intel/core_i9/i9-9920x,Desktop,165.0,12,24.0
+intel core i9-9940x,2018-11-01,https://en.wikichip.org/wiki/intel/core_i9/i9-9940x,Desktop,165.0,14,28.0
+intel core i9-9960x,2018-11-01,https://en.wikichip.org/wiki/intel/core_i9/i9-9960x,Desktop,165.0,16,32.0
+intel core i9-9980hk,2019-04-23,https://en.wikichip.org/wiki/intel/core_i9/i9-9980hk,Mobile,45.0,8,16.0
+intel core i9-9980xe,2018-11-01,https://en.wikichip.org/wiki/intel/core_i9/i9-9980xe,Desktop,165.0,18,36.0
+intel core i9-9990xe,2019-01-03,https://en.wikichip.org/wiki/intel/core_i9/i9-9990xe,Desktop; Workstation,255.0,14,28.0
+intel core m3-6y30,2015-09-27,https://en.wikichip.org/wiki/intel/core_m/m3-6y30,Mobile,4.5,2,4.0
+intel core m3-7y30,2016-08-30,https://en.wikichip.org/wiki/intel/core_m/m3-7y30,Mobile,4.5,2,4.0
+intel core m3-7y32,2017-04-10,https://en.wikichip.org/wiki/intel/core_m/m3-7y32,Mobile,4.5,2,4.0
+intel core m3-8100y,2018-08-28,https://en.wikichip.org/wiki/intel/core_m/m3-8100y,Mobile,5.0,2,4.0
+intel core m5-6y54,2015-09-27,https://en.wikichip.org/wiki/intel/core_m/m5-6y54,Mobile,4.5,2,4.0
+intel core m5-6y57,2015-09-27,https://en.wikichip.org/wiki/intel/core_m/m5-6y57,Mobile,4.5,2,4.0
+intel core m7-6y75,2015-09-27,https://en.wikichip.org/wiki/intel/core_m/m7-6y75,Mobile,4.5,2,4.0
+amd duron 1000 camaro,2001-12-17,https://en.wikichip.org/wiki/amd/duron/dhm1000avs1b,Mobile,25.0,1,1.0
+amd duron 1000 morgan,2001-08-20,https://en.wikichip.org/wiki/amd/duron/dhd1000amt1b,Desktop,46.1,1,1.0
+amd duron 1100 morgan,2001-10-01,https://en.wikichip.org/wiki/amd/duron/dhd1100amt1b,Desktop,50.3,1,1.0
+amd duron 1200 morgan,2001-11-15,https://en.wikichip.org/wiki/amd/duron/dhd1200amt1b,Desktop,54.7,1,1.0
+amd duron 1300 morgan,2002-01-21,https://en.wikichip.org/wiki/amd/duron/dhd1300amt1b,Desktop,60.0,1,1.0
+amd duron 1400 applebred,2003-08-15,https://en.wikichip.org/wiki/amd/duron/dhd1400dlv1c,Desktop,57.0,1,1.0
+amd duron 1600 applebred,2003-08-15,https://en.wikichip.org/wiki/amd/duron/dhd1600dlv1c,Desktop,57.0,1,1.0
+amd duron 1800 applebred,2003-08-15,https://en.wikichip.org/wiki/amd/duron/dhd1800dlv1c,Desktop,57.0,1,1.0
+amd duron 550 spitfire,2000-06-19,https://en.wikichip.org/wiki/amd/duron/d550aut1b,Desktop,25.4,1,1.0
+amd duron 600 spitfire,2000-06-19,https://en.wikichip.org/wiki/amd/duron/d600ast1b,Desktop,22.7,1,1.0
+amd duron 650 spitfire,2000-06-19,https://en.wikichip.org/wiki/amd/duron/d650ast1b,Desktop,24.3,1,1.0
+amd duron 700 spitfire,2000-06-19,https://en.wikichip.org/wiki/amd/duron/d700ast1b,Desktop,25.5,1,1.0
+amd duron 750 spitfire,2000-09-05,https://en.wikichip.org/wiki/amd/duron/d750ast1b,Desktop,31.2,1,1.0
+amd duron 800 camaro,2001-01-01,https://en.wikichip.org/wiki/amd/duron/dhg0800avs1b,Mobile,25.0,1,1.0
+amd duron 800 spitfire,2000-10-17,https://en.wikichip.org/wiki/amd/duron/d800aut1b,Desktop,35.4,1,1.0
+amd duron 850 camaro,2001-05-14,https://en.wikichip.org/wiki/amd/duron/dhm0850als1b,Mobile,25.0,1,1.0
+amd duron 850 spitfire,2001-01-08,https://en.wikichip.org/wiki/amd/duron/d850aut1b,Desktop,37.4,1,1.0
+amd duron 900 camaro,2001-08-20,https://en.wikichip.org/wiki/amd/duron/dhm0900aqs1b,Mobile,25.0,1,1.0
+amd duron 900 morgan,2001-04-02,https://en.wikichip.org/wiki/amd/duron/dhd900amt1b,Desktop,42.7,1,1.0
+amd duron 900 spitfire,2001-04-02,https://en.wikichip.org/wiki/amd/duron/d900aut1b,Desktop,39.5,1,1.0
+amd duron 950 camaro,2001-11-12,https://en.wikichip.org/wiki/amd/duron/dhm0950aqs1b,Mobile,25.0,1,1.0
+amd duron 950 morgan,2001-07-12,https://en.wikichip.org/wiki/amd/duron/dhd950amt1b,Desktop,44.4,1,1.0
+amd duron 950 spitfire,2001-06-06,https://en.wikichip.org/wiki/amd/duron/d950aut1b,Desktop,41.5,1,1.0
+ampere emag 8180,2018-09-08,https://en.wikichip.org/wiki/ampere_computing/emag/8180,Server,125.0,32,32.0
+amd embedded g-series t16r,2012-06-01,https://en.wikichip.org/wiki/amd/embedded/t16r,Embedded,4.5,1,1.0
+amd embedded g-series t24l,2011-03-01,https://en.wikichip.org/wiki/amd/embedded/t24l,Embedded,5.0,1,1.0
+amd embedded g-series t30l,2011-03-01,https://en.wikichip.org/wiki/amd/embedded/t30l,Embedded,18.0,1,1.0
+amd embedded g-series t40e,2011-05-23,https://en.wikichip.org/wiki/amd/embedded/t40e,Embedded,6.4,2,2.0
+amd embedded g-series t40n,2011-01-19,https://en.wikichip.org/wiki/amd/embedded/t40n,Embedded,18.0,2,2.0
+amd embedded g-series t40r,2011-05-23,https://en.wikichip.org/wiki/amd/embedded/t40r,Embedded,5.5,1,1.0
+amd embedded g-series t44r,2011-01-19,https://en.wikichip.org/wiki/amd/embedded/t44r,Embedded,9.0,1,1.0
+amd embedded g-series t48e,2012-01-01,https://en.wikichip.org/wiki/amd/embedded/t48e,Embedded,18.0,2,2.0
+amd embedded g-series t48l,2011-03-01,https://en.wikichip.org/wiki/amd/embedded/t48l,Embedded,18.0,2,2.0
+amd embedded g-series t48n,2011-01-19,https://en.wikichip.org/wiki/amd/embedded/t48n,Embedded,18.0,2,2.0
+amd embedded g-series t52r,2011-01-19,https://en.wikichip.org/wiki/amd/embedded/t52r,Embedded,18.0,1,1.0
+amd embedded g-series t56e,2012-01-01,https://en.wikichip.org/wiki/amd/embedded/t56e,Embedded,18.0,2,2.0
+amd embedded g-series t56n,2011-01-19,https://en.wikichip.org/wiki/amd/embedded/t56n,Embedded,18.0,2,2.0
+amd epyc 7232p,2019-08-07,https://en.wikichip.org/wiki/amd/epyc/7232p,Server,120.0,8,16.0
+amd epyc 7251,2017-06-20,https://en.wikichip.org/wiki/amd/epyc/7251,Server,120.0,8,16.0
+amd epyc 7252,2019-08-07,https://en.wikichip.org/wiki/amd/epyc/7252,Server,120.0,8,16.0
+amd epyc 7261,2018-06-14,https://en.wikichip.org/wiki/amd/epyc/7261,Server,155.0,8,16.0
+amd epyc 7262,2019-08-07,https://en.wikichip.org/wiki/amd/epyc/7262,Server,155.0,8,16.0
+amd epyc 7272,2019-08-07,https://en.wikichip.org/wiki/amd/epyc/7272,Server,120.0,12,24.0
+amd epyc 7281,2017-06-20,https://en.wikichip.org/wiki/amd/epyc/7281,Server,155.0,16,32.0
+amd epyc 7282,2019-08-07,https://en.wikichip.org/wiki/amd/epyc/7282,Server,120.0,16,32.0
+amd epyc 72f3,2021-03-15,https://en.wikichip.org/wiki/amd/epyc/72f3,Server,180.0,8,16.0
+amd epyc 7301,2017-06-20,https://en.wikichip.org/wiki/amd/epyc/7301,Server,155.0,16,32.0
+amd epyc 7302,2019-08-07,https://en.wikichip.org/wiki/amd/epyc/7302,Server,155.0,16,32.0
+amd epyc 7302p,2019-08-07,https://en.wikichip.org/wiki/amd/epyc/7302p,Server,155.0,16,32.0
+amd epyc 7313,2021-03-15,https://en.wikichip.org/wiki/amd/epyc/7313,Server,155.0,16,32.0
+amd epyc 7313p,2021-03-15,https://en.wikichip.org/wiki/amd/epyc/7313p,Server,155.0,16,32.0
+amd epyc 7343,2021-03-15,https://en.wikichip.org/wiki/amd/epyc/7343,Server,190.0,16,32.0
+amd epyc 7351,2017-06-20,https://en.wikichip.org/wiki/amd/epyc/7351,Server,155.0,16,32.0
+amd epyc 7351p,2017-06-20,https://en.wikichip.org/wiki/amd/epyc/7351p,Server,155.0,16,32.0
+amd epyc 7352,2019-08-07,https://en.wikichip.org/wiki/amd/epyc/7352,Server,155.0,24,48.0
+amd epyc 7371,2019-01-01,https://en.wikichip.org/wiki/amd/epyc/7371,Server,200.0,16,32.0
+amd epyc 73f3,2021-03-15,https://en.wikichip.org/wiki/amd/epyc/73f3,Server,240.0,16,32.0
+amd epyc 7401,2017-06-20,https://en.wikichip.org/wiki/amd/epyc/7401,Server,155.0,24,48.0
+amd epyc 7401p,2017-06-20,https://en.wikichip.org/wiki/amd/epyc/7401p,Server,155.0,24,48.0
+amd epyc 7402,2019-08-07,https://en.wikichip.org/wiki/amd/epyc/7402,Server,180.0,24,48.0
+amd epyc 7402p,2019-08-07,https://en.wikichip.org/wiki/amd/epyc/7402p,Server,180.0,24,48.0
+amd epyc 7413,2021-03-15,https://en.wikichip.org/wiki/amd/epyc/7413,Server,180.0,24,48.0
+amd epyc 7443,2021-03-15,https://en.wikichip.org/wiki/amd/epyc/7443,Server,200.0,24,48.0
+amd epyc 7443p,2021-03-15,https://en.wikichip.org/wiki/amd/epyc/7443p,Server,200.0,24,48.0
+amd epyc 7451,2017-06-20,https://en.wikichip.org/wiki/amd/epyc/7451,Server,180.0,24,48.0
+amd epyc 7452,2019-08-07,https://en.wikichip.org/wiki/amd/epyc/7452,Server,155.0,32,64.0
+amd epyc 7453,2021-03-15,https://en.wikichip.org/wiki/amd/epyc/7453,Server,225.0,28,56.0
+amd epyc 74f3,2021-03-15,https://en.wikichip.org/wiki/amd/epyc/74f3,Server,240.0,24,48.0
+amd epyc 7501,2017-06-20,https://en.wikichip.org/wiki/amd/epyc/7501,Server,155.0,32,64.0
+amd epyc 7502,2019-08-07,https://en.wikichip.org/wiki/amd/epyc/7502,Server,180.0,32,64.0
+amd epyc 7502p,2019-08-07,https://en.wikichip.org/wiki/amd/epyc/7502p,Server,180.0,32,64.0
+amd epyc 7513,2021-03-15,https://en.wikichip.org/wiki/amd/epyc/7513,Server,200.0,32,64.0
+amd epyc 7532,2020-02-19,https://en.wikichip.org/wiki/amd/epyc/7532,Server,200.0,32,64.0
+amd epyc 7542,2019-08-07,https://en.wikichip.org/wiki/amd/epyc/7542,Server,225.0,32,64.0
+amd epyc 7543,2021-03-15,https://en.wikichip.org/wiki/amd/epyc/7543,Server,225.0,32,64.0
+amd epyc 7543p,2021-03-15,https://en.wikichip.org/wiki/amd/epyc/7543p,Server,225.0,32,64.0
+amd epyc 7551,2017-06-20,https://en.wikichip.org/wiki/amd/epyc/7551,Server,180.0,32,64.0
+amd epyc 7551p,2017-06-20,https://en.wikichip.org/wiki/amd/epyc/7551p,Server,180.0,32,64.0
+amd epyc 7552,2019-08-07,https://en.wikichip.org/wiki/amd/epyc/7552,Server,200.0,48,96.0
+amd epyc 75f3,2021-03-15,https://en.wikichip.org/wiki/amd/epyc/75f3,Server,280.0,32,64.0
+amd epyc 7601,2017-06-20,https://en.wikichip.org/wiki/amd/epyc/7601,Server,180.0,32,64.0
+amd epyc 7642,2019-08-07,https://en.wikichip.org/wiki/amd/epyc/7642,Server,225.0,48,96.0
+amd epyc 7643,2021-03-15,https://en.wikichip.org/wiki/amd/epyc/7643,Server,225.0,48,96.0
+amd epyc 7662,2020-02-19,https://en.wikichip.org/wiki/amd/epyc/7662,Server,225.0,64,128.0
+amd epyc 7663,2021-03-15,https://en.wikichip.org/wiki/amd/epyc/7663,Server,240.0,56,112.0
+amd epyc 7702,2019-08-07,https://en.wikichip.org/wiki/amd/epyc/7702,Server,200.0,64,128.0
+amd epyc 7702p,2019-08-07,https://en.wikichip.org/wiki/amd/epyc/7702p,Server,200.0,64,128.0
+amd epyc 7713,2021-03-15,https://en.wikichip.org/wiki/amd/epyc/7713,Server,225.0,64,128.0
+amd epyc 7713p,2021-03-15,https://en.wikichip.org/wiki/amd/epyc/7713p,Server,225.0,64,128.0
+amd epyc 7742,2019-08-07,https://en.wikichip.org/wiki/amd/epyc/7742,Server,225.0,64,128.0
+amd epyc 7763,2021-03-15,https://en.wikichip.org/wiki/amd/epyc/7763,Server,280.0,64,128.0
+amd epyc 7f32,2020-04-14,https://en.wikichip.org/wiki/amd/epyc/7f32,Server,180.0,8,16.0
+amd epyc 7f52,2020-04-14,https://en.wikichip.org/wiki/amd/epyc/7f52,Server,240.0,16,32.0
+amd epyc 7f72,2020-04-14,https://en.wikichip.org/wiki/amd/epyc/7f72,Server,240.0,24,48.0
+amd epyc 7h12,2019-09-18,https://en.wikichip.org/wiki/amd/epyc/7h12,Server,280.0,64,128.0
+amd epyc 9124,2022-11-10,https://en.wikichip.org/wiki/amd/epyc/9124,Server,200.0,16,32.0
+amd epyc 9174f,2022-11-10,https://en.wikichip.org/wiki/amd/epyc/9174f,Server,320.0,16,32.0
+amd epyc 9224,2022-11-10,https://en.wikichip.org/wiki/amd/epyc/9224,Server,200.0,24,48.0
+amd epyc 9254,2022-11-10,https://en.wikichip.org/wiki/amd/epyc/9254,Server,200.0,24,48.0
+amd epyc 9274f,2022-11-10,https://en.wikichip.org/wiki/amd/epyc/9274f,Server,320.0,24,48.0
+amd epyc 9334,2022-11-10,https://en.wikichip.org/wiki/amd/epyc/9334,Server,210.0,32,64.0
+amd epyc 9354,2022-11-10,https://en.wikichip.org/wiki/amd/epyc/9354,Server,280.0,32,64.0
+amd epyc 9354p,2022-11-10,https://en.wikichip.org/wiki/amd/epyc/9354p,Server,280.0,32,64.0
+amd epyc 9374f,2022-11-10,https://en.wikichip.org/wiki/amd/epyc/9374f,Server,320.0,32,64.0
+amd epyc 9454,2022-11-10,https://en.wikichip.org/wiki/amd/epyc/9454,Server,290.0,48,96.0
+amd epyc 9454p,2022-11-10,https://en.wikichip.org/wiki/amd/epyc/9454p,Server,290.0,48,96.0
+amd epyc 9474f,2022-11-10,https://en.wikichip.org/wiki/amd/epyc/9474f,Server,360.0,48,96.0
+amd epyc 9534,2022-11-10,https://en.wikichip.org/wiki/amd/epyc/9534,Server,280.0,64,128.0
+amd epyc 9554,2022-11-10,https://en.wikichip.org/wiki/amd/epyc/9554,Server,360.0,64,128.0
+amd epyc 9554p,2022-11-10,https://en.wikichip.org/wiki/amd/epyc/9554p,Server,360.0,64,128.0
+amd epyc 9634,2022-11-10,https://en.wikichip.org/wiki/amd/epyc/9634,Server,290.0,84,168.0
+amd epyc 9654,2022-11-10,https://en.wikichip.org/wiki/amd/epyc/9654,Server,360.0,96,192.0
+amd epyc 9654p,2022-11-10,https://en.wikichip.org/wiki/amd/epyc/9654p,Server,360.0,96,192.0
+amd epyc embedded 3101,2018-02-21,https://en.wikichip.org/wiki/amd/epyc_embedded/3101,Server; Embedded,35.0,4,4.0
+amd epyc embedded 3151,2018-02-21,https://en.wikichip.org/wiki/amd/epyc_embedded/3151,Server; Embedded,45.0,4,8.0
+amd epyc embedded 3201,2018-02-21,https://en.wikichip.org/wiki/amd/epyc_embedded/3201,Server; Embedded,30.0,8,8.0
+amd epyc embedded 3251,2018-02-21,https://en.wikichip.org/wiki/amd/epyc_embedded/3251,Server; Embedded,55.0,8,16.0
+amd epyc embedded 3255,,https://en.wikichip.org/wiki/amd/epyc_embedded/3255,Server; Embedded,55.0,8,16.0
+amd epyc embedded 3301,2018-02-21,https://en.wikichip.org/wiki/amd/epyc_embedded/3301,Server; Embedded,65.0,12,12.0
+amd epyc embedded 3351,2018-02-21,https://en.wikichip.org/wiki/amd/epyc_embedded/3351,Server; Embedded,80.0,12,24.0
+amd epyc embedded 3401,2018-02-21,https://en.wikichip.org/wiki/amd/epyc_embedded/3401,Embedded; Server,85.0,16,16.0
+amd epyc embedded 3451,2018-02-21,https://en.wikichip.org/wiki/amd/epyc_embedded/3451,Server; Embedded,100.0,16,32.0
+samsung exynos 7885,2018-02-13,https://en.wikichip.org/wiki/samsung/exynos/7885,Mobile,8.0,8,8.0
+samsung exynos 8895,2017-03-29,https://en.wikichip.org/wiki/samsung/exynos/8895,Mobile,8.0,8,8.0
+samsung exynos 9825,2019-01-01,https://en.wikichip.org/wiki/samsung/exynos/9825,Mobile,5.0,8,8.0
+samsung exynos 990,2020-01-01,https://en.wikichip.org/wiki/samsung/exynos/990,Mobile,8.0,8,8.0
+mobileye eyeq1,2008-01-01,https://en.wikichip.org/wiki/mobileye/eyeq/eyeq1,Automotive,2.5,2,2.0
+tesla fsd chip,2019-03-10,https://en.wikichip.org/wiki/tesla_(car_company)/fsd_chip,Automotive,36.0,12,12.0
+phytium ft-1500a16,2016-07-26,https://en.wikichip.org/wiki/phytium/feiteng/ft-1500a-16,Workstation,35.0,16,16.0
+phytium ft-1500a4,2016-07-26,https://en.wikichip.org/wiki/phytium/feiteng/ft-1500a-4,Workstation,15.0,4,4.0
+core m 5y10,2014-09-02,https://en.wikichip.org/wiki/intel/core_m/5y10,Mobile,4.5,2,4.0
+core m 5y10a,2014-09-02,https://en.wikichip.org/wiki/intel/core_m/5y10a,Mobile,4.5,2,4.0
+core m 5y10c,2015-01-01,https://en.wikichip.org/wiki/intel/core_m/5y10c,Mobile,4.5,2,4.0
+core m 5y31,2015-01-01,https://en.wikichip.org/wiki/intel/core_m/5y31,Mobile,4.5,2,4.0
+core m 5y51,2015-01-01,https://en.wikichip.org/wiki/intel/core_m/5y51,Mobile,4.5,2,4.0
+core m 5y70,2014-09-02,https://en.wikichip.org/wiki/intel/core_m/5y70,Mobile,4.5,2,4.0
+core m 5y71,2015-01-01,https://en.wikichip.org/wiki/intel/core_m/5y71,Mobile,4.5,2,4.0
+amd k6-2450acz,2000-04-18,https://en.wikichip.org/wiki/amd/k6-2%2B/k6-2%2B-450acz,Mobile,16.0,1,1.0
+amd k6-2475acz,2000-04-18,https://en.wikichip.org/wiki/amd/k6-2%2B/k6-2%2B-475acz,Mobile,16.0,1,1.0
+amd k6-2500acz,2000-04-18,https://en.wikichip.org/wiki/amd/k6-2%2B/k6-2%2B-500acz,Mobile,16.0,1,1.0
+amd k6-2533acz,2000-09-05,https://en.wikichip.org/wiki/amd/k6-2%2B/k6-2%2B-533acz,Mobile,18.0,1,1.0
+amd k6-2550acz,2000-09-05,https://en.wikichip.org/wiki/amd/k6-2%2B/k6-2%2B-550acz,Mobile,18.0,1,1.0
+amd k6-2e350auz,2000-09-25,https://en.wikichip.org/wiki/amd/k6-2%2B/k6-2e%2B-350auz,Embedded,7.5,1,1.0
+amd k6-2e350iuz,2000-09-25,https://en.wikichip.org/wiki/amd/k6-2%2B/k6-2e%2B-350iuz,Embedded,7.5,1,1.0
+amd k6-2e400acr,2000-09-25,https://en.wikichip.org/wiki/amd/k6-2%2B/k6-2e%2B-400acr,Embedded,16.5,1,1.0
+amd k6-2e400atz,2000-09-25,https://en.wikichip.org/wiki/amd/k6-2%2B/k6-2e%2B-400atz,Embedded,9.5,1,1.0
+amd k6-2e400icr,2000-09-25,https://en.wikichip.org/wiki/amd/k6-2%2B/k6-2e%2B-400icr,Embedded,16.5,1,1.0
+amd k6-2e400itz,2000-09-25,https://en.wikichip.org/wiki/amd/k6-2%2B/k6-2e%2B-400itz,Embedded,9.5,1,1.0
+amd k6-2e450acr,2000-09-25,https://en.wikichip.org/wiki/amd/k6-2%2B/k6-2e%2B-450acr,Embedded,17.5,1,1.0
+amd k6-2e450apz,2000-09-25,https://en.wikichip.org/wiki/amd/k6-2%2B/k6-2e%2B-450apz,Embedded,12.0,1,1.0
+amd k6-2e450icr,2000-09-25,https://en.wikichip.org/wiki/amd/k6-2%2B/k6-2e%2B-450icr,Embedded,17.5,1,1.0
+amd k6-2e500acr,2000-09-25,https://en.wikichip.org/wiki/amd/k6-2%2B/k6-2e%2B-500acr,Embedded,18.5,1,1.0
+hisilicon kunpeng 916 hi1616,2017-08-01,https://en.wikichip.org/wiki/hisilicon/kunpeng/hi1616,Server,85.0,32,32.0
+hisilicon kunpeng 920-3226,2019-04-26,https://en.wikichip.org/wiki/hisilicon/kunpeng/920-3226,Server,120.0,32,32.0
+hisilicon kunpeng 920-4826,2019-04-26,https://en.wikichip.org/wiki/hisilicon/kunpeng/920-4826,Server,158.0,48,48.0
+hisilicon kunpeng 920-6426,2019-01-07,https://en.wikichip.org/wiki/hisilicon/kunpeng/920-6426,Server,195.0,64,64.0
+intel mobile pentium ii 233,1998-04-02,https://en.wikichip.org/wiki/intel/mobile_pentium_ii/233,Mobile,9.0,1,1.0
+intel mobile pentium ii 266,1998-04-02,https://en.wikichip.org/wiki/intel/mobile_pentium_ii/266,Mobile,10.3,1,1.0
+intel mobile pentium ii 266pe,1999-01-25,https://en.wikichip.org/wiki/intel/mobile_pentium_ii/266pe,Mobile,10.3,1,1.0
+intel mobile pentium ii 300,1998-09-09,https://en.wikichip.org/wiki/intel/mobile_pentium_ii/300,Mobile,11.1,1,1.0
+intel mobile pentium ii 300pe,1999-01-25,https://en.wikichip.org/wiki/intel/mobile_pentium_ii/300pe,Mobile,11.6,1,1.0
+intel mobile pentium ii 333,1999-01-25,https://en.wikichip.org/wiki/intel/mobile_pentium_ii/333,Mobile,11.8,1,1.0
+intel mobile pentium ii 366,1999-01-25,https://en.wikichip.org/wiki/intel/mobile_pentium_ii/366,Mobile,13.1,1,1.0
+intel mobile pentium ii 400,1999-06-14,https://en.wikichip.org/wiki/intel/mobile_pentium_ii/400,Mobile,13.1,1,1.0
+intel nervana nnp-i 1100,2019-11-12,https://en.wikichip.org/wiki/nervana/nnp/nnp-i_1100,Server; Edge,12.0,12,
+intel nervana nnp-i 1300,2019-11-12,https://en.wikichip.org/wiki/nervana/nnp/nnp-i_1300,Server; Edge,75.0,24,
+intel nervana nnp-t 1300,2019-11-12,https://en.wikichip.org/wiki/nervana/nnp/nnp-t_1300,Server,300.0,22,
+intel nervana nnp-t 1400,2019-11-12,https://en.wikichip.org/wiki/nervana/nnp/nnp-t_1400,Server,375.0,24,
+amd opteron a1120,2016-01-01,https://en.wikichip.org/wiki/amd/opteron/a1120,Server,25.0,4,
+amd opteron a1150,2016-01-01,https://en.wikichip.org/wiki/amd/opteron/a1150,Server,32.0,8,
+amd opteron a1170,2016-01-01,https://en.wikichip.org/wiki/amd/opteron/a1170,Server,32.0,8,
+intel pentium 4405u,2015-11-03,https://en.wikichip.org/wiki/intel/pentium_(2009)/4405u,Mobile,15.0,2,4.0
+intel pentium 4405y,2015-11-03,https://en.wikichip.org/wiki/intel/pentium_(2009)/4405y,Mobile,6.0,2,4.0
+intel pentium 907,2012-01-01,https://en.wikichip.org/wiki/intel/pentium_(2009)/907,Mobile,17.0,2,2.0
+intel pentium 917,2012-01-01,https://en.wikichip.org/wiki/intel/pentium_(2009)/917,Mobile,17.0,2,2.0
+intel pentium 927,2012-01-01,https://en.wikichip.org/wiki/intel/pentium_(2009)/927,Mobile,17.0,2,2.0
+intel pentium 957,2011-06-13,https://en.wikichip.org/wiki/intel/pentium_(2009)/957,Mobile,17.0,2,2.0
+intel pentium 967,2011-10-03,https://en.wikichip.org/wiki/intel/pentium_(2009)/967,Mobile,17.0,2,2.0
+intel pentium 977,2012-01-16,https://en.wikichip.org/wiki/intel/pentium_(2009)/977,Mobile,17.0,2,2.0
+intel pentium 987,2012-09-01,https://en.wikichip.org/wiki/intel/pentium_(2009)/987,Mobile,17.0,2,2.0
+intel pentium 997,2012-09-01,https://en.wikichip.org/wiki/intel/pentium_(2009)/997,Mobile,17.0,2,2.0
+intel pentium b940,2011-06-13,https://en.wikichip.org/wiki/intel/pentium_(2009)/b940,Mobile,35.0,2,2.0
+intel pentium b950,2011-06-13,https://en.wikichip.org/wiki/intel/pentium_(2009)/b950,Mobile,35.0,2,2.0
+intel pentium b960,2011-10-03,https://en.wikichip.org/wiki/intel/pentium_(2009)/b960,Mobile,35.0,2,2.0
+intel pentium b970,2012-01-16,https://en.wikichip.org/wiki/intel/pentium_(2009)/b970,Mobile,35.0,2,2.0
+intel pentium b980,2012-09-01,https://en.wikichip.org/wiki/intel/pentium_(2009)/b980,Mobile,35.0,2,2.0
+intel pentium g4400,2015-09-27,https://en.wikichip.org/wiki/intel/pentium_(2009)/g4400,Desktop,54.0,2,2.0
+intel pentium g4400t,2015-09-27,https://en.wikichip.org/wiki/intel/pentium_(2009)/g4400t,Desktop,35.0,2,2.0
+intel pentium g4400te,2015-12-09,https://en.wikichip.org/wiki/intel/pentium_(2009)/g4400te,Embedded,35.0,2,2.0
+intel pentium g4500,2015-09-27,https://en.wikichip.org/wiki/intel/pentium_(2009)/g4500,Desktop,51.0,2,2.0
+intel pentium g4500t,2015-09-27,https://en.wikichip.org/wiki/intel/pentium_(2009)/g4500t,Desktop,35.0,2,2.0
+intel pentium g4520,2015-09-27,https://en.wikichip.org/wiki/intel/pentium_(2009)/g4520,Desktop,51.0,2,2.0
+intel pentium g4560t,2017-01-03,https://en.wikichip.org/wiki/intel/pentium_(2009)/g4560t,Desktop,35.0,2,4.0
+intel pentium g4600t,2017-01-03,https://en.wikichip.org/wiki/intel/pentium_(2009)/g4600t,Desktop,35.0,2,4.0
+intel pentium gold 4410y,2017-01-03,https://en.wikichip.org/wiki/intel/pentium_gold/4410y,Mobile,6.0,2,4.0
+intel pentium gold 4415u,2017-01-03,https://en.wikichip.org/wiki/intel/pentium_gold/4415u,Mobile,15.0,2,4.0
+intel pentium gold 4415y,2017-06-04,https://en.wikichip.org/wiki/intel/pentium_gold/4415y,Mobile,6.0,2,4.0
+intel pentium gold 5405u,2019-01-01,https://en.wikichip.org/wiki/intel/pentium_gold/5405u,Mobile,15.0,2,4.0
+intel pentium gold g4560,2017-01-03,https://en.wikichip.org/wiki/intel/pentium_gold/g4560,Desktop,54.0,2,4.0
+intel pentium gold g4600,2017-01-03,https://en.wikichip.org/wiki/intel/pentium_gold/g4600,Desktop,51.0,2,4.0
+intel pentium gold g4620,2017-01-03,https://en.wikichip.org/wiki/intel/pentium_gold/g4620,Desktop,51.0,2,4.0
+intel pentium gold g5400,2018-04-02,https://en.wikichip.org/wiki/intel/pentium_gold/g5400,Desktop,54.0,2,4.0
+intel pentium gold g5400t,2018-04-02,https://en.wikichip.org/wiki/intel/pentium_gold/g5400t,Desktop,35.0,2,4.0
+intel pentium gold g5420,2019-04-23,https://en.wikichip.org/wiki/intel/pentium_gold/g5420,Desktop,54.0,2,4.0
+intel pentium gold g5420t,2019-04-23,https://en.wikichip.org/wiki/intel/pentium_gold/g5420t,Desktop; Embedded,35.0,2,4.0
+intel pentium gold g5500,2018-04-02,https://en.wikichip.org/wiki/intel/pentium_gold/g5500,Desktop,54.0,2,4.0
+intel pentium gold g5500t,2018-04-02,https://en.wikichip.org/wiki/intel/pentium_gold/g5500t,Desktop,35.0,2,4.0
+intel pentium gold g5600,2018-04-02,https://en.wikichip.org/wiki/intel/pentium_gold/g5600,Desktop,54.0,2,4.0
+intel pentium gold g5600t,2019-04-23,https://en.wikichip.org/wiki/intel/pentium_gold/g5600t,Desktop; Embedded,35.0,2,4.0
+intel pentium gold g5620,2019-04-23,https://en.wikichip.org/wiki/intel/pentium_gold/g5620,Desktop,54.0,2,4.0
+phytium ft-200064,2019-01-01,https://en.wikichip.org/wiki/phytium/feiteng/ft-2000%2B-64,Server,96.0,64,64.0
+intel pentium j3710,2016-01-10,https://en.wikichip.org/wiki/intel/pentium_(2009)/j3710,Desktop,6.5,4,4.0
+intel pentium j4205,2016-08-30,https://en.wikichip.org/wiki/intel/pentium_(2009)/j4205,Desktop,10.0,4,4.0
+intel pentium n3700,2015-03-01,https://en.wikichip.org/wiki/intel/pentium_(2009)/n3700,Mobile,6.0,4,4.0
+intel pentium n3710,2015-03-01,https://en.wikichip.org/wiki/intel/pentium_(2009)/n3710,Mobile,6.0,4,4.0
+intel pentium n4200,2016-08-30,https://en.wikichip.org/wiki/intel/pentium_(2009)/n4200,Mobile,6.0,4,4.0
+intel pentium p6000,2010-06-20,https://en.wikichip.org/wiki/intel/pentium_(2009)/p6000,Mobile,35.0,2,2.0
+intel pentium p6100,2010-09-26,https://en.wikichip.org/wiki/intel/pentium_(2009)/p6100,Mobile,35.0,2,2.0
+intel pentium p6200,2010-09-26,https://en.wikichip.org/wiki/intel/pentium_(2009)/p6200,Mobile,35.0,2,2.0
+intel pentium p6300,2011-01-11,https://en.wikichip.org/wiki/intel/pentium_(2009)/p6300,Mobile,35.0,2,2.0
+intel pentium silver j5005,2017-12-11,https://en.wikichip.org/wiki/intel/pentium_silver/j5005,Desktop,10.0,4,4.0
+intel pentium silver n5000,2017-12-11,https://en.wikichip.org/wiki/intel/pentium_silver/n5000,Mobile,6.0,4,4.0
+intel pentium u5400,2010-05-25,https://en.wikichip.org/wiki/intel/pentium_(2009)/u5400,Mobile,18.0,2,2.0
+intel pentium u5600,2011-01-11,https://en.wikichip.org/wiki/intel/pentium_(2009)/u5600,Mobile,18.0,2,2.0
+ibm power9 02aa986,2017-11-01,https://en.wikichip.org/wiki/ibm/power/02aa986,Server; Workstation,190.0,16,64.0
+ibm power9 02cy089,2017-11-01,https://en.wikichip.org/wiki/ibm/power/02cy089,Server; Workstation,160.0,8,32.0
+ibm power9 02cy227,2017-11-01,https://en.wikichip.org/wiki/ibm/power/02cy227,Server; Workstation,190.0,22,88.0
+ibm power9 02cy228,2017-11-01,https://en.wikichip.org/wiki/ibm/power/02cy228,Server; Workstation,190.0,20,80.0
+ibm power9 02cy230,2017-11-01,https://en.wikichip.org/wiki/ibm/power/02cy230,Server; Workstation,190.0,16,64.0
+ibm power9 02cy296,2017-11-01,https://en.wikichip.org/wiki/ibm/power/02cy296,Server; Workstation,190.0,22,88.0
+ibm power9 02cy297,2017-11-01,https://en.wikichip.org/wiki/ibm/power/02cy297,Server; Workstation,90.0,4,16.0
+ibm power9 02cy414,2017-11-01,https://en.wikichip.org/wiki/ibm/power/02cy414,Server; Workstation,160.0,22,88.0
+ibm power9 02cy415,2017-11-01,https://en.wikichip.org/wiki/ibm/power/02cy415,Server; Workstation,160.0,20,80.0
+ibm power9 02cy416,2017-11-01,https://en.wikichip.org/wiki/ibm/power/02cy416,Server; Workstation,130.0,18,72.0
+ibm power9 02cy417,2017-11-01,https://en.wikichip.org/wiki/ibm/power/02cy417,Server; Workstation,130.0,16,64.0
+ibm power9 02cy489,2017-11-01,https://en.wikichip.org/wiki/ibm/power/02cy489,Server; Workstation,190.0,18,72.0
+ibm power9 02cy771,2017-11-01,https://en.wikichip.org/wiki/ibm/power/02cy771,Server; Workstation,105.0,12,48.0
+qualcomm centriq 2434,2017-11-08,https://en.wikichip.org/wiki/qualcomm/centriq/2434,Server,110.0,40,40.0
+qualcomm centriq 2452,2017-11-08,https://en.wikichip.org/wiki/qualcomm/centriq/2452,Server,120.0,46,46.0
+qualcomm centriq 2460,2017-11-08,https://en.wikichip.org/wiki/qualcomm/centriq/2460,Server,120.0,48,48.0
+qualcomm snapdragon 865,2020-03-01,https://en.wikichip.org/wiki/qualcomm/snapdragon_800/865,Mobile,10.0,8,8.0
+qualcomm snapdragon 8cx,2019-03-01,https://en.wikichip.org/wiki/qualcomm/snapdragon_800/8cx,Mobile,7.0,8,8.0
+amd ryzen 3 1200,2017-07-27,https://en.wikichip.org/wiki/amd/ryzen_3/1200,Desktop,65.0,4,4.0
+amd ryzen 3 1300x,2017-07-27,https://en.wikichip.org/wiki/amd/ryzen_3/1300x,Desktop,65.0,4,4.0
+amd ryzen 3 2200g,2018-02-12,https://en.wikichip.org/wiki/amd/ryzen_3/2200g,Desktop,65.0,4,4.0
+amd ryzen 3 2200ge,2018-04-19,https://en.wikichip.org/wiki/amd/ryzen_3/2200ge,Desktop,35.0,4,4.0
+amd ryzen 3 2200u,2018-01-08,https://en.wikichip.org/wiki/amd/ryzen_3/2200u,Mobile,15.0,2,4.0
+amd ryzen 3 2300u,2018-01-08,https://en.wikichip.org/wiki/amd/ryzen_3/2300u,Mobile,15.0,4,4.0
+amd ryzen 3 2300x,2018-09-10,https://en.wikichip.org/wiki/amd/ryzen_3/2300x,Desktop,65.0,4,4.0
+amd ryzen 3 3200g,2019-07-07,https://en.wikichip.org/wiki/amd/ryzen_3/3200g,Desktop,65.0,4,4.0
+amd ryzen 3 3200u,2019-01-06,https://en.wikichip.org/wiki/amd/ryzen_3/3200u,Mobile,15.0,2,4.0
+amd ryzen 3 3250u,2020-01-06,https://en.wikichip.org/wiki/amd/ryzen_3/3250u,Mobile,15.0,2,4.0
+amd ryzen 3 3300u,2019-01-06,https://en.wikichip.org/wiki/amd/ryzen_3/3300u,Mobile,15.0,4,4.0
+amd ryzen 3 4300g,2020-07-21,https://en.wikichip.org/wiki/amd/ryzen_3/4300g,Desktop,65.0,4,8.0
+amd ryzen 3 4300ge,2020-07-21,https://en.wikichip.org/wiki/amd/ryzen_3/4300ge,Desktop,35.0,4,8.0
+amd ryzen 3 4300u,2020-01-06,https://en.wikichip.org/wiki/amd/ryzen_3/4300u,Mobile,15.0,4,4.0
+amd ryzen 3 5300g,2021-04-13,https://en.wikichip.org/wiki/amd/ryzen_3/5300g,Desktop,65.0,4,8.0
+amd ryzen 3 5300ge,2021-04-13,https://en.wikichip.org/wiki/amd/ryzen_3/5300ge,Desktop,35.0,4,8.0
+amd ryzen 3 5300u,2021-01-12,https://en.wikichip.org/wiki/amd/ryzen_3/5300u,Mobile,15.0,4,8.0
+amd ryzen 3 5400u,2021-01-12,https://en.wikichip.org/wiki/amd/ryzen_3/5400u,Mobile,15.0,4,8.0
+amd ryzen 3 pro 1200,,https://en.wikichip.org/wiki/amd/ryzen_3/pro_1200,Desktop,65.0,4,4.0
+amd ryzen 3 pro 1300,,https://en.wikichip.org/wiki/amd/ryzen_3/pro_1300,Desktop,65.0,4,4.0
+amd ryzen 3 pro 2200g,2018-05-10,https://en.wikichip.org/wiki/amd/ryzen_3/pro_2200g,Desktop,65.0,4,4.0
+amd ryzen 3 pro 2200ge,2018-05-10,https://en.wikichip.org/wiki/amd/ryzen_3/pro_2200ge,Desktop,35.0,4,4.0
+amd ryzen 3 pro 2300u,2018-01-08,https://en.wikichip.org/wiki/amd/ryzen_3/pro_2300u,Mobile,15.0,4,4.0
+amd ryzen 3 pro 3200g,2019-09-30,https://en.wikichip.org/wiki/amd/ryzen_3/pro_3200g,Desktop,65.0,4,4.0
+amd ryzen 3 pro 3200ge,2019-09-30,https://en.wikichip.org/wiki/amd/ryzen_3/pro_3200ge,Desktop,35.0,4,4.0
+amd ryzen 3 pro 3300u,2019-04-08,https://en.wikichip.org/wiki/amd/ryzen_3/pro_3300u,Mobile,15.0,4,4.0
+amd ryzen 3 pro 4350g,2020-07-21,https://en.wikichip.org/wiki/amd/ryzen_3/pro_4350g,Desktop,65.0,4,8.0
+amd ryzen 3 pro 4350ge,2020-07-21,https://en.wikichip.org/wiki/amd/ryzen_3/pro_4350ge,Desktop,35.0,4,8.0
+amd ryzen 3 pro 4450u,2020-05-07,https://en.wikichip.org/wiki/amd/ryzen_3/pro_4450u,Mobile,15.0,4,8.0
+amd ryzen 3 pro 5350g,2021-06-01,https://en.wikichip.org/wiki/amd/ryzen_3/pro_5350g,Desktop,65.0,4,8.0
+amd ryzen 3 pro 5350ge,2021-06-01,https://en.wikichip.org/wiki/amd/ryzen_3/pro_5350ge,Desktop,35.0,4,8.0
+amd ryzen 3 pro 5450u,2021-03-16,https://en.wikichip.org/wiki/amd/ryzen_3/pro_5450u,Mobile,15.0,4,8.0
+amd ryzen 5 1400,2017-04-11,https://en.wikichip.org/wiki/amd/ryzen_5/1400,Desktop,65.0,4,8.0
+amd ryzen 5 1500x,2017-04-11,https://en.wikichip.org/wiki/amd/ryzen_5/1500x,Desktop,65.0,4,8.0
+amd ryzen 5 1600,2017-04-11,https://en.wikichip.org/wiki/amd/ryzen_5/1600,Desktop,65.0,6,12.0
+amd ryzen 5 1600x,2017-04-11,https://en.wikichip.org/wiki/amd/ryzen_5/1600x,Desktop,95.0,6,12.0
+amd ryzen 5 2400g,2018-02-12,https://en.wikichip.org/wiki/amd/ryzen_5/2400g,Desktop,65.0,4,8.0
+amd ryzen 5 2400ge,2018-04-19,https://en.wikichip.org/wiki/amd/ryzen_5/2400ge,Desktop,35.0,4,8.0
+amd ryzen 5 2500u,2017-10-26,https://en.wikichip.org/wiki/amd/ryzen_5/2500u,Mobile,15.0,4,8.0
+amd ryzen 5 2500x,2018-09-10,https://en.wikichip.org/wiki/amd/ryzen_5/2500x,Desktop,65.0,4,8.0
+amd ryzen 5 2600,2018-04-19,https://en.wikichip.org/wiki/amd/ryzen_5/2600,Desktop,65.0,6,12.0
+amd ryzen 5 2600e,2018-09-10,https://en.wikichip.org/wiki/amd/ryzen_5/2600e,Desktop,45.0,6,12.0
+amd ryzen 5 2600h,2018-09-10,https://en.wikichip.org/wiki/amd/ryzen_5/2600h,Mobile,45.0,4,8.0
+amd ryzen 5 2600x,2018-04-19,https://en.wikichip.org/wiki/amd/ryzen_5/2600x,Desktop,95.0,6,12.0
+amd ryzen 5 3400g,2019-07-07,https://en.wikichip.org/wiki/amd/ryzen_5/3400g,Desktop,65.0,4,8.0
+amd ryzen 5 3500,,https://en.wikichip.org/wiki/amd/ryzen_5/3500,Desktop,65.0,6,6.0
+amd ryzen 5 3500u,2019-01-06,https://en.wikichip.org/wiki/amd/ryzen_5/3500u,Mobile,15.0,4,8.0
+amd ryzen 5 3500x,,https://en.wikichip.org/wiki/amd/ryzen_5/3500x,Desktop,65.0,6,6.0
+amd ryzen 5 3550h,2019-01-06,https://en.wikichip.org/wiki/amd/ryzen_5/3550h,Mobile,35.0,4,8.0
+amd ryzen 5 3580u,2019-10-01,https://en.wikichip.org/wiki/amd/ryzen_5/3580u,Mobile,15.0,4,8.0
+amd ryzen 5 3600,2019-07-07,https://en.wikichip.org/wiki/amd/ryzen_5/3600,Desktop,65.0,6,12.0
+amd ryzen 5 3600x,2019-07-07,https://en.wikichip.org/wiki/amd/ryzen_5/3600x,Desktop,95.0,6,12.0
+amd ryzen 5 3600xt,2020-07-07,https://en.wikichip.org/wiki/amd/ryzen_5/3600xt,Desktop,95.0,6,12.0
+amd ryzen 5 4500u,2020-01-06,https://en.wikichip.org/wiki/amd/ryzen_5/4500u,Mobile,15.0,6,6.0
+amd ryzen 5 4600g,2020-07-21,https://en.wikichip.org/wiki/amd/ryzen_5/4600g,Desktop,65.0,6,12.0
+amd ryzen 5 4600ge,2020-07-21,https://en.wikichip.org/wiki/amd/ryzen_5/4600ge,Desktop,35.0,6,12.0
+amd ryzen 5 4600h,2020-01-06,https://en.wikichip.org/wiki/amd/ryzen_5/4600h,Mobile,45.0,6,12.0
+amd ryzen 5 4600hs,2020-03-16,https://en.wikichip.org/wiki/amd/ryzen_5/4600hs,Mobile,35.0,6,12.0
+amd ryzen 5 4600u,2020-01-06,https://en.wikichip.org/wiki/amd/ryzen_5/4600u,Mobile,15.0,6,12.0
+amd ryzen 5 4680u,2021-04-13,https://en.wikichip.org/wiki/amd/ryzen_5/4680u,Mobile,15.0,6,12.0
+amd ryzen 5 5500u,2021-01-12,https://en.wikichip.org/wiki/amd/ryzen_5/5500u,Mobile,15.0,6,12.0
+amd ryzen 5 5600g,2021-04-13,https://en.wikichip.org/wiki/amd/ryzen_5/5600g,Desktop,65.0,6,12.0
+amd ryzen 5 5600ge,2021-04-13,https://en.wikichip.org/wiki/amd/ryzen_5/5600ge,Desktop,35.0,6,12.0
+amd ryzen 5 5600h,2021-01-12,https://en.wikichip.org/wiki/amd/ryzen_5/5600h,Mobile,45.0,6,12.0
+amd ryzen 5 5600hs,2021-01-12,https://en.wikichip.org/wiki/amd/ryzen_5/5600hs,Mobile,35.0,6,12.0
+amd ryzen 5 5600u,2021-01-12,https://en.wikichip.org/wiki/amd/ryzen_5/5600u,Mobile,15.0,6,12.0
+amd ryzen 5 5600x,2020-11-05,https://en.wikichip.org/wiki/amd/ryzen_5/5600x,Desktop,65.0,6,12.0
+amd ryzen 5 7600x,,https://en.wikichip.org/wiki/amd/ryzen_5/7600x,Desktop,105.0,6,12.0
+amd ryzen 5 pro 1500,2017-06-29,https://en.wikichip.org/wiki/amd/ryzen_5/pro_1500,Desktop,65.0,4,8.0
+amd ryzen 5 pro 1600,,https://en.wikichip.org/wiki/amd/ryzen_5/pro_1600,Desktop,65.0,6,12.0
+amd ryzen 5 pro 2400g,2018-05-10,https://en.wikichip.org/wiki/amd/ryzen_5/pro_2400g,Desktop,65.0,4,8.0
+amd ryzen 5 pro 2400ge,2018-05-10,https://en.wikichip.org/wiki/amd/ryzen_5/pro_2400ge,Desktop,35.0,4,8.0
+amd ryzen 5 pro 2500u,2018-01-08,https://en.wikichip.org/wiki/amd/ryzen_5/pro_2500u,Mobile,15.0,4,8.0
+amd ryzen 5 pro 2600,2018-09-06,https://en.wikichip.org/wiki/amd/ryzen_5/pro_2600,Desktop,65.0,6,12.0
+amd ryzen 5 pro 3400g,2019-09-30,https://en.wikichip.org/wiki/amd/ryzen_5/pro_3400g,Desktop,65.0,4,8.0
+amd ryzen 5 pro 3400ge,2019-09-30,https://en.wikichip.org/wiki/amd/ryzen_5/pro_3400ge,Desktop,35.0,4,8.0
+amd ryzen 5 pro 3500u,2019-04-08,https://en.wikichip.org/wiki/amd/ryzen_5/pro_3500u,Mobile,15.0,4,8.0
+amd ryzen 5 pro 3600,2019-09-30,https://en.wikichip.org/wiki/amd/ryzen_5/pro_3600,Desktop,65.0,6,12.0
+amd ryzen 5 pro 4650g,2020-07-21,https://en.wikichip.org/wiki/amd/ryzen_5/pro_4650g,Desktop,65.0,6,12.0
+amd ryzen 5 pro 4650ge,2020-07-21,https://en.wikichip.org/wiki/amd/ryzen_5/pro_4650ge,Desktop,35.0,6,12.0
+amd ryzen 5 pro 4650u,2020-05-07,https://en.wikichip.org/wiki/amd/ryzen_5/pro_4650u,Mobile,15.0,6,12.0
+amd ryzen 5 pro 5650ge,2021-06-01,https://en.wikichip.org/wiki/amd/ryzen_5/pro_5650ge,Desktop,35.0,6,12.0
+amd ryzen 5 pro 5650u,2021-03-16,https://en.wikichip.org/wiki/amd/ryzen_5/pro_5650u,Mobile,15.0,6,12.0
+amd ryzen 7 1700,2017-03-02,https://en.wikichip.org/wiki/amd/ryzen_7/1700,Desktop,65.0,8,16.0
+amd ryzen 7 1700x,2017-03-02,https://en.wikichip.org/wiki/amd/ryzen_7/1700x,Desktop,95.0,8,16.0
+amd ryzen 7 1800x,2017-03-02,https://en.wikichip.org/wiki/amd/ryzen_7/1800x,Desktop,95.0,8,16.0
+amd ryzen 7 2700,2018-04-19,https://en.wikichip.org/wiki/amd/ryzen_7/2700,Desktop,65.0,8,16.0
+amd ryzen 7 2700e,2018-09-10,https://en.wikichip.org/wiki/amd/ryzen_7/2700e,Desktop,45.0,8,16.0
+amd ryzen 7 2700u,2017-10-26,https://en.wikichip.org/wiki/amd/ryzen_7/2700u,Mobile,15.0,4,8.0
+amd ryzen 7 2700x gold edition,2019-04-29,https://en.wikichip.org/wiki/amd/ryzen_7/2700x_gold_edition,Desktop,105.0,8,16.0
+amd ryzen 7 2700x,2018-04-19,https://en.wikichip.org/wiki/amd/ryzen_7/2700x,Desktop,105.0,8,16.0
+amd ryzen 7 2800h,2018-09-10,https://en.wikichip.org/wiki/amd/ryzen_7/2800h,Mobile,45.0,4,8.0
+amd ryzen 7 3700u,2019-01-06,https://en.wikichip.org/wiki/amd/ryzen_7/3700u,Mobile,15.0,4,8.0
+amd ryzen 7 3700x,2019-07-07,https://en.wikichip.org/wiki/amd/ryzen_7/3700x,Desktop,65.0,8,16.0
+amd ryzen 7 3750h,2019-01-06,https://en.wikichip.org/wiki/amd/ryzen_7/3750h,Mobile,35.0,4,8.0
+amd ryzen 7 3780u,2019-10-01,https://en.wikichip.org/wiki/amd/ryzen_7/3780u,Mobile,15.0,4,8.0
+amd ryzen 7 3800x,2019-07-07,https://en.wikichip.org/wiki/amd/ryzen_7/3800x,Desktop,105.0,8,16.0
+amd ryzen 7 3800xt,2020-07-07,https://en.wikichip.org/wiki/amd/ryzen_7/3800xt,Desktop,105.0,8,16.0
+amd ryzen 7 4700g,2020-07-21,https://en.wikichip.org/wiki/amd/ryzen_7/4700g,Desktop,65.0,8,16.0
+amd ryzen 7 4700ge,2020-07-21,https://en.wikichip.org/wiki/amd/ryzen_7/4700ge,Desktop,35.0,8,16.0
+amd ryzen 7 4700u,2020-01-06,https://en.wikichip.org/wiki/amd/ryzen_7/4700u,Mobile,15.0,8,8.0
+amd ryzen 7 4800h,2020-01-06,https://en.wikichip.org/wiki/amd/ryzen_7/4800h,Mobile,45.0,8,16.0
+amd ryzen 7 4800hs,2020-03-16,https://en.wikichip.org/wiki/amd/ryzen_7/4800hs,Mobile,35.0,8,16.0
+amd ryzen 7 4800u,2020-01-06,https://en.wikichip.org/wiki/amd/ryzen_7/4800u,Mobile,15.0,8,16.0
+amd ryzen 7 4980u,2021-04-13,https://en.wikichip.org/wiki/amd/ryzen_7/4980u,Mobile,15.0,8,16.0
+amd ryzen 7 5700g,2021-04-13,https://en.wikichip.org/wiki/amd/ryzen_7/5700g,Desktop,65.0,8,16.0
+amd ryzen 7 5700ge,2021-04-13,https://en.wikichip.org/wiki/amd/ryzen_7/5700ge,Desktop,35.0,8,16.0
+amd ryzen 7 5700u,2021-01-12,https://en.wikichip.org/wiki/amd/ryzen_7/5700u,Mobile,15.0,8,16.0
+amd ryzen 7 5800,2021-01-12,https://en.wikichip.org/wiki/amd/ryzen_7/5800,Desktop,65.0,8,16.0
+amd ryzen 7 5800h,2021-01-12,https://en.wikichip.org/wiki/amd/ryzen_7/5800h,Mobile,45.0,8,16.0
+amd ryzen 7 5800hs,2021-01-12,https://en.wikichip.org/wiki/amd/ryzen_7/5800hs,Mobile,35.0,8,16.0
+amd ryzen 7 5800u,2021-01-12,https://en.wikichip.org/wiki/amd/ryzen_7/5800u,Mobile,15.0,8,16.0
+amd ryzen 7 5800x,2020-11-05,https://en.wikichip.org/wiki/amd/ryzen_7/5800x,Desktop,105.0,8,16.0
+amd ryzen 7 5800x3d,2022-04-20,https://en.wikichip.org/wiki/amd/ryzen_7/5800x3d,Desktop,105.0,8,16.0
+amd ryzen 7 7700,2023-01-10,https://en.wikichip.org/wiki/amd/ryzen_7/7700,Desktop,65.0,8,16.0
+amd ryzen 7 7700x,2022-09-27,https://en.wikichip.org/wiki/amd/ryzen_7/7700x,Desktop,105.0,8,16.0
+amd ryzen 7 7800x3d,,https://en.wikichip.org/wiki/amd/ryzen_7/7800x3d,Desktop,120.0,8,16.0
+amd ryzen 7 pro 1700,,https://en.wikichip.org/wiki/amd/ryzen_7/pro_1700,Desktop,65.0,8,16.0
+amd ryzen 7 pro 1700x,,https://en.wikichip.org/wiki/amd/ryzen_7/pro_1700x,Desktop,95.0,8,16.0
+amd ryzen 7 pro 2700,2018-09-06,https://en.wikichip.org/wiki/amd/ryzen_7/pro_2700,Desktop,65.0,8,16.0
+amd ryzen 7 pro 2700u,2018-01-08,https://en.wikichip.org/wiki/amd/ryzen_7/pro_2700u,Mobile,15.0,4,8.0
+amd ryzen 7 pro 2700x,2018-09-06,https://en.wikichip.org/wiki/amd/ryzen_7/pro_2700x,Desktop,105.0,8,16.0
+amd ryzen 7 pro 3700,2019-09-30,https://en.wikichip.org/wiki/amd/ryzen_7/pro_3700,Desktop,65.0,8,16.0
+amd ryzen 7 pro 3700u,2019-04-08,https://en.wikichip.org/wiki/amd/ryzen_7/pro_3700u,Mobile,15.0,4,8.0
+amd ryzen 7 pro 4750g,2020-07-21,https://en.wikichip.org/wiki/amd/ryzen_7/pro_4750g,Desktop,65.0,8,16.0
+amd ryzen 7 pro 4750ge,2020-07-21,https://en.wikichip.org/wiki/amd/ryzen_7/pro_4750ge,Desktop,35.0,8,16.0
+amd ryzen 7 pro 4750u,2020-05-07,https://en.wikichip.org/wiki/amd/ryzen_7/pro_4750u,Mobile,15.0,8,16.0
+amd ryzen 7 pro 5750g,2021-06-01,https://en.wikichip.org/wiki/amd/ryzen_7/pro_5750g,Desktop,65.0,8,16.0
+amd ryzen 7 pro 5750ge,2021-06-01,https://en.wikichip.org/wiki/amd/ryzen_7/pro_5750ge,Desktop,35.0,8,16.0
+amd ryzen 7 pro 5850u,2021-03-16,https://en.wikichip.org/wiki/amd/ryzen_7/pro_5850u,Mobile,15.0,8,16.0
+amd ryzen 9 3900,2019-09-24,https://en.wikichip.org/wiki/amd/ryzen_9/3900,Desktop,65.0,12,24.0
+amd ryzen 9 3900x,2019-07-07,https://en.wikichip.org/wiki/amd/ryzen_9/3900x,Desktop,105.0,12,24.0
+amd ryzen 9 3900xt,2020-07-07,https://en.wikichip.org/wiki/amd/ryzen_9/3900xt,Desktop,105.0,12,24.0
+amd ryzen 9 3950x,2019-11-25,https://en.wikichip.org/wiki/amd/ryzen_9/3950x,Desktop,105.0,16,32.0
+amd ryzen 9 4900h,2020-03-16,https://en.wikichip.org/wiki/amd/ryzen_9/4900h,Mobile,45.0,8,16.0
+amd ryzen 9 4900hs,2020-03-16,https://en.wikichip.org/wiki/amd/ryzen_9/4900hs,Mobile,35.0,8,16.0
+amd ryzen 9 5900,2021-01-12,https://en.wikichip.org/wiki/amd/ryzen_9/5900,Desktop,65.0,12,24.0
+amd ryzen 9 5900hs,2021-01-12,https://en.wikichip.org/wiki/amd/ryzen_9/5900hs,Mobile,35.0,8,16.0
+amd ryzen 9 5900hx,2021-01-12,https://en.wikichip.org/wiki/amd/ryzen_9/5900hx,Mobile,45.0,8,16.0
+amd ryzen 9 5900x,2020-11-05,https://en.wikichip.org/wiki/amd/ryzen_9/5900x,Desktop,105.0,12,24.0
+amd ryzen 9 5950x,2020-11-05,https://en.wikichip.org/wiki/amd/ryzen_9/5950x,Desktop,105.0,16,32.0
+amd ryzen 9 5980hs,2021-01-12,https://en.wikichip.org/wiki/amd/ryzen_9/5980hs,Mobile,35.0,8,16.0
+amd ryzen 9 5980hx,2021-01-12,https://en.wikichip.org/wiki/amd/ryzen_9/5980hx,Mobile,45.0,8,16.0
+amd ryzen 9 7950x3d,2023-02-28,https://en.wikichip.org/wiki/amd/ryzen_9/7950x3d,Desktop,120.0,16,32.0
+amd ryzen 9 pro 3900,2019-09-30,https://en.wikichip.org/wiki/amd/ryzen_9/pro_3900,Desktop,65.0,12,24.0
+amd ryzen embedded r1102g,2020-02-25,https://en.wikichip.org/wiki/amd/ryzen_embedded/r1102g,Embedded,6.0,2,2.0
+amd ryzen embedded r1305g,2020-02-25,https://en.wikichip.org/wiki/amd/ryzen_embedded/r1305g,Embedded,8.0,2,4.0
+amd ryzen embedded r1505g,2019-04-16,https://en.wikichip.org/wiki/amd/ryzen_embedded/r1505g,Embedded,15.0,2,4.0
+amd ryzen embedded r1606g,2019-04-16,https://en.wikichip.org/wiki/amd/ryzen_embedded/r1606g,Embedded,15.0,2,4.0
+amd ryzen embedded v1202b,2018-02-21,https://en.wikichip.org/wiki/amd/ryzen_embedded/v1202b,Embedded,15.0,2,4.0
+amd ryzen embedded v1404i,2018-12-01,https://en.wikichip.org/wiki/amd/ryzen_embedded/v1404i,Embedded,15.0,4,8.0
+amd ryzen embedded v1500b,2018-12-01,https://en.wikichip.org/wiki/amd/ryzen_embedded/v1500b,Embedded,16.0,4,8.0
+amd ryzen embedded v1605b,2018-02-21,https://en.wikichip.org/wiki/amd/ryzen_embedded/v1605b,Embedded,15.0,4,8.0
+amd ryzen embedded v1756b,2018-02-21,https://en.wikichip.org/wiki/amd/ryzen_embedded/v1756b,Embedded,45.0,4,8.0
+amd ryzen embedded v1780b,2018-12-01,https://en.wikichip.org/wiki/amd/ryzen_embedded/v1780b,Embedded,45.0,4,8.0
+amd ryzen embedded v1807b,2018-02-21,https://en.wikichip.org/wiki/amd/ryzen_embedded/v1807b,Embedded,45.0,4,8.0
+amd ryzen embedded v2516,2020-11-10,https://en.wikichip.org/wiki/amd/ryzen_embedded/v2516,Embedded,15.0,6,12.0
+amd ryzen embedded v2546,2020-11-10,https://en.wikichip.org/wiki/amd/ryzen_embedded/v2546,Embedded,45.0,6,12.0
+amd ryzen embedded v2718,2020-11-10,https://en.wikichip.org/wiki/amd/ryzen_embedded/v2718,Embedded,15.0,8,16.0
+amd ryzen embedded v2748,2020-11-10,https://en.wikichip.org/wiki/amd/ryzen_embedded/v2748,Embedded,45.0,8,16.0
+amd ryzen threadripper 1900x,2017-08-31,https://en.wikichip.org/wiki/amd/ryzen_threadripper/1900x,Desktop,180.0,8,16.0
+amd ryzen threadripper 1920x,2017-08-10,https://en.wikichip.org/wiki/amd/ryzen_threadripper/1920x,Desktop,180.0,12,24.0
+amd ryzen threadripper 1950x,2017-08-10,https://en.wikichip.org/wiki/amd/ryzen_threadripper/1950x,Desktop,180.0,16,32.0
+amd ryzen threadripper 2920x,2018-10-29,https://en.wikichip.org/wiki/amd/ryzen_threadripper/2920x,Desktop,180.0,12,24.0
+amd ryzen threadripper 2950x,2018-08-31,https://en.wikichip.org/wiki/amd/ryzen_threadripper/2950x,Desktop,180.0,16,32.0
+amd ryzen threadripper 2970wx,2018-10-29,https://en.wikichip.org/wiki/amd/ryzen_threadripper/2970wx,Desktop,250.0,24,48.0
+amd ryzen threadripper 2990wx,2018-08-13,https://en.wikichip.org/wiki/amd/ryzen_threadripper/2990wx,Desktop,250.0,32,64.0
+amd ryzen threadripper 3960x,2019-11-25,https://en.wikichip.org/wiki/amd/ryzen_threadripper/3960x,Desktop,280.0,24,48.0
+amd ryzen threadripper 3970x,2019-11-25,https://en.wikichip.org/wiki/amd/ryzen_threadripper/3970x,Desktop,280.0,32,64.0
+amd ryzen threadripper 3980x,,https://en.wikichip.org/wiki/amd/ryzen_threadripper/3980x,Desktop,280.0,48,96.0
+amd ryzen threadripper 3990x,2020-02-07,https://en.wikichip.org/wiki/amd/ryzen_threadripper/3990x,Desktop,280.0,64,128.0
+amd ryzen threadripper pro 3945wx,2020-07-14,https://en.wikichip.org/wiki/amd/ryzen_threadripper/pro_3945wx,Workstation,280.0,12,24.0
+amd ryzen threadripper pro 3955wx,2020-07-14,https://en.wikichip.org/wiki/amd/ryzen_threadripper/pro_3955wx,Workstation,280.0,16,32.0
+amd ryzen threadripper pro 3975wx,2020-07-14,https://en.wikichip.org/wiki/amd/ryzen_threadripper/pro_3975wx,Workstation,280.0,32,64.0
+amd ryzen threadripper pro 3995wx,2020-07-14,https://en.wikichip.org/wiki/amd/ryzen_threadripper/pro_3995wx,Workstation,280.0,64,128.0
+amd ryzen threadripper pro 5945wx,2022-03-08,https://en.wikichip.org/wiki/amd/ryzen_threadripper/pro_5945wx,Workstation,280.0,12,24.0
+amd ryzen threadripper pro 5955wx,2022-03-08,https://en.wikichip.org/wiki/amd/ryzen_threadripper/pro_5955wx,Workstation,280.0,16,32.0
+amd ryzen threadripper pro 5965wx,2022-03-08,https://en.wikichip.org/wiki/amd/ryzen_threadripper/pro_5965wx,Workstation,280.0,24,48.0
+amd ryzen threadripper pro 5975wx,2022-03-08,https://en.wikichip.org/wiki/amd/ryzen_threadripper/pro_5975wx,Workstation,280.0,32,64.0
+amd ryzen threadripper pro 5995wx,2022-03-08,https://en.wikichip.org/wiki/amd/ryzen_threadripper/pro_5995wx,Workstation,280.0,64,128.0
+socionext sc2a11,2017-01-01,https://en.wikichip.org/wiki/socionext/sc2a11,Server; Networking; IoT,5.0,24,24.0
+nvidia tegra xavier,2018-06-01,https://en.wikichip.org/wiki/nvidia/tegra/xavier,Artificial Intelligence; Embedded,30.0,8,8.0
+appliedmicro x-gene 1 apm883204-x1,2012-01-01,https://en.wikichip.org/wiki/apm/x-gene/apm883204-x1,Server,45.0,4,4.0
+appliedmicro x-gene 1 apm883208-x1,2012-01-01,https://en.wikichip.org/wiki/apm/x-gene/apm883208-x1,Server,45.0,8,8.0
+appliedmicro x-gene 1 apm883408-x1,2012-01-01,https://en.wikichip.org/wiki/apm/x-gene/apm883408-x1,Server,45.0,8,8.0
+appliedmicro x-gene 2 apm883208-x2,2015-03-01,https://en.wikichip.org/wiki/apm/x-gene/apm883208-x2,Server,35.0,8,8.0
+appliedmicro x-gene 2 apm883408-x2,2015-03-01,https://en.wikichip.org/wiki/apm/x-gene/apm883408-x2,Server,35.0,8,8.0
+appliedmicro x-gene 3 apm883832-x3,,https://en.wikichip.org/wiki/apm/x-gene/apm883832-x3,Server,125.0,32,32.0
+intel xeon bronze 3104,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_bronze/3104,Server; Workstation,85.0,6,6.0
+intel xeon bronze 3106,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_bronze/3106,Server; Workstation,85.0,8,8.0
+intel xeon bronze 3204,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_bronze/3204,Server; Workstation; Embedded,85.0,6,6.0
+intel xeon d-1513n,2017-07-01,https://en.wikichip.org/wiki/intel/xeon_d/d-1513n,Server; Embedded,35.0,4,8.0
+intel xeon d-1518,2015-03-09,https://en.wikichip.org/wiki/intel/xeon_d/d-1518,Server; Embedded,35.0,4,8.0
+intel xeon d-1520,2015-03-09,https://en.wikichip.org/wiki/intel/xeon_d/d-1520,Server,45.0,4,8.0
+intel xeon d-1521,2015-11-01,https://en.wikichip.org/wiki/intel/xeon_d/d-1521,Server,45.0,4,8.0
+intel xeon d-1523n,2017-07-01,https://en.wikichip.org/wiki/intel/xeon_d/d-1523n,Server; Embedded,45.0,4,8.0
+intel xeon d-1527,2015-11-01,https://en.wikichip.org/wiki/intel/xeon_d/d-1527,Server; Embedded,35.0,4,8.0
+intel xeon d-1528,2015-11-01,https://en.wikichip.org/wiki/intel/xeon_d/d-1528,Server; Embedded,35.0,6,12.0
+intel xeon d-1529,2016-04-01,https://en.wikichip.org/wiki/intel/xeon_d/d-1529,Server; Embedded,20.0,4,8.0
+intel xeon d-1531,2015-11-01,https://en.wikichip.org/wiki/intel/xeon_d/d-1531,Server,45.0,6,12.0
+intel xeon d-1533n,2017-07-01,https://en.wikichip.org/wiki/intel/xeon_d/d-1533n,Server; Embedded,45.0,6,12.0
+intel xeon d-1537,2015-11-01,https://en.wikichip.org/wiki/intel/xeon_d/d-1537,Server; Embedded,35.0,8,16.0
+intel xeon d-1539,2016-04-01,https://en.wikichip.org/wiki/intel/xeon_d/d-1539,Server; Embedded,35.0,8,16.0
+intel xeon d-1540,2015-03-09,https://en.wikichip.org/wiki/intel/xeon_d/d-1540,Server,45.0,8,16.0
+intel xeon d-1541,2015-11-01,https://en.wikichip.org/wiki/intel/xeon_d/d-1541,Server,45.0,8,16.0
+intel xeon d-1543n,2017-07-01,https://en.wikichip.org/wiki/intel/xeon_d/d-1543n,Server; Embedded,45.0,8,16.0
+intel xeon d-1548,2015-11-01,https://en.wikichip.org/wiki/intel/xeon_d/d-1548,Server; Embedded,45.0,8,16.0
+intel xeon d-1553n,2017-07-01,https://en.wikichip.org/wiki/intel/xeon_d/d-1553n,Server; Embedded,65.0,8,16.0
+intel xeon d-1557,2016-02-24,https://en.wikichip.org/wiki/intel/xeon_d/d-1557,Server; Embedded,45.0,12,24.0
+intel xeon d-1559,2016-04-01,https://en.wikichip.org/wiki/intel/xeon_d/d-1559,Server; Embedded,45.0,12,24.0
+intel xeon d-1567,2016-02-24,https://en.wikichip.org/wiki/intel/xeon_d/d-1567,Server; Embedded,65.0,12,24.0
+intel xeon d-1571,2016-02-24,https://en.wikichip.org/wiki/intel/xeon_d/d-1571,Server; Embedded,45.0,16,32.0
+intel xeon d-1577,2016-02-24,https://en.wikichip.org/wiki/intel/xeon_d/d-1577,Server; Embedded,45.0,16,32.0
+intel xeon d-1581,2016-02-24,https://en.wikichip.org/wiki/intel/xeon_d/d-1581,Server; Embedded,65.0,16,32.0
+intel xeon d-1587,2016-02-24,https://en.wikichip.org/wiki/intel/xeon_d/d-1587,Server; Embedded,65.0,16,32.0
+intel xeon d-1602,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_d/d-1602,Server,27.0,2,4.0
+intel xeon d-1612,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_d/d-1612,Server,22.0,4,8.0
+intel xeon d-1622,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_d/d-1622,Server,40.0,4,8.0
+intel xeon d-1623n,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_d/d-1623n,Server,35.0,4,8.0
+intel xeon d-1627,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_d/d-1627,Server,45.0,4,8.0
+intel xeon d-1632,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_d/d-1632,Server; Embedded,30.0,8,16.0
+intel xeon d-1633n,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_d/d-1633n,Server; Embedded,45.0,6,12.0
+intel xeon d-1637,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_d/d-1637,Server; Embedded,55.0,6,12.0
+intel xeon d-1649n,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_d/d-1649n,Server; Embedded,45.0,8,16.0
+intel xeon d-1653n,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_d/d-1653n,Embedded; Server,65.0,8,16.0
+intel xeon d-2123it,2018-02-07,https://en.wikichip.org/wiki/intel/xeon_d/d-2123it,Server; Embedded,60.0,4,8.0
+intel xeon d-2141i,2018-02-07,https://en.wikichip.org/wiki/intel/xeon_d/d-2141i,Server; Embedded,65.0,8,16.0
+intel xeon d-2142it,2018-02-07,https://en.wikichip.org/wiki/intel/xeon_d/d-2142it,Server; Embedded,65.0,8,16.0
+intel xeon d-2143it,2018-02-07,https://en.wikichip.org/wiki/intel/xeon_d/d-2143it,Server; Embedded,65.0,8,16.0
+intel xeon d-2145nt,2018-02-07,https://en.wikichip.org/wiki/intel/xeon_d/d-2145nt,Server; Embedded,65.0,8,16.0
+intel xeon d-2146nt,2018-02-07,https://en.wikichip.org/wiki/intel/xeon_d/d-2146nt,Server; Embedded,80.0,8,16.0
+intel xeon d-2161i,2018-02-07,https://en.wikichip.org/wiki/intel/xeon_d/d-2161i,Embedded; Server,90.0,12,24.0
+intel xeon d-2163it,2018-02-07,https://en.wikichip.org/wiki/intel/xeon_d/d-2163it,Server; Embedded,75.0,12,24.0
+intel xeon d-2166nt,2018-02-07,https://en.wikichip.org/wiki/intel/xeon_d/d-2166nt,Server; Embedded,85.0,12,24.0
+intel xeon d-2173it,2018-02-07,https://en.wikichip.org/wiki/intel/xeon_d/d-2173it,Server; Embedded,70.0,14,28.0
+intel xeon d-2177nt,2018-02-07,https://en.wikichip.org/wiki/intel/xeon_d/d-2177nt,Embedded; Server,105.0,14,28.0
+intel xeon d-2183it,2018-02-07,https://en.wikichip.org/wiki/intel/xeon_d/d-2183it,Server; Embedded,100.0,16,32.0
+intel xeon d-2187nt,2018-02-07,https://en.wikichip.org/wiki/intel/xeon_d/d-2187nt,Server; Embedded,110.0,16,32.0
+intel xeon d-2191,2018-02-07,https://en.wikichip.org/wiki/intel/xeon_d/d-2191,Server; Embedded,86.0,18,36.0
+intel xeon e-2104g,2018-07-12,https://en.wikichip.org/wiki/intel/xeon_e/e-2104g,Workstation,65.0,4,4.0
+intel xeon e-2124,2018-07-12,https://en.wikichip.org/wiki/intel/xeon_e/e-2124,Server; Workstation,71.0,4,4.0
+intel xeon e-2124g,2018-07-12,https://en.wikichip.org/wiki/intel/xeon_e/e-2124g,Workstation,71.0,4,4.0
+intel xeon e-2126g,2018-07-12,https://en.wikichip.org/wiki/intel/xeon_e/e-2126g,Workstation,80.0,6,6.0
+intel xeon e-2134,2018-07-12,https://en.wikichip.org/wiki/intel/xeon_e/e-2134,Workstation; Server,71.0,4,8.0
+intel xeon e-2136,2018-07-12,https://en.wikichip.org/wiki/intel/xeon_e/e-2136,Workstation; Server,80.0,6,12.0
+intel xeon e-2144g,2018-07-12,https://en.wikichip.org/wiki/intel/xeon_e/e-2144g,Workstation,71.0,4,8.0
+intel xeon e-2146g,2018-07-12,https://en.wikichip.org/wiki/intel/xeon_e/e-2146g,Workstation,80.0,6,12.0
+intel xeon e-2174g,2018-07-12,https://en.wikichip.org/wiki/intel/xeon_e/e-2174g,Workstation,71.0,4,8.0
+intel xeon e-2176g,2018-07-12,https://en.wikichip.org/wiki/intel/xeon_e/e-2176g,Workstation,80.0,6,12.0
+intel xeon e-2176m,2018-04-02,https://en.wikichip.org/wiki/intel/xeon_e/e-2176m,Workstation; Mobile,45.0,6,12.0
+intel xeon e-2186g,2018-07-12,https://en.wikichip.org/wiki/intel/xeon_e/e-2186g,Workstation,95.0,6,12.0
+intel xeon e-2186m,2018-04-02,https://en.wikichip.org/wiki/intel/xeon_e/e-2186m,Mobile; Workstation,45.0,6,12.0
+intel xeon e-2224,2019-05-27,https://en.wikichip.org/wiki/intel/xeon_e/e-2224,Server; Workstation,71.0,4,4.0
+intel xeon e-2224g,2019-05-27,https://en.wikichip.org/wiki/intel/xeon_e/e-2224g,Workstation; Server,71.0,4,4.0
+intel xeon e-2226g,2019-05-27,https://en.wikichip.org/wiki/intel/xeon_e/e-2226g,Workstation; Server,80.0,6,6.0
+intel xeon e-2234,2019-05-27,https://en.wikichip.org/wiki/intel/xeon_e/e-2234,Workstation; Server,71.0,4,8.0
+intel xeon e-2236,2019-05-27,https://en.wikichip.org/wiki/intel/xeon_e/e-2236,Workstation; Server,80.0,6,12.0
+intel xeon e-2244g,2019-05-27,https://en.wikichip.org/wiki/intel/xeon_e/e-2244g,Workstation; Server,71.0,4,8.0
+intel xeon e-2246g,2019-05-27,https://en.wikichip.org/wiki/intel/xeon_e/e-2246g,Server; Workstation,80.0,6,12.0
+intel xeon e-2274g,2019-05-27,https://en.wikichip.org/wiki/intel/xeon_e/e-2274g,Workstation; Server,83.0,4,8.0
+intel xeon e-2276g,2019-05-27,https://en.wikichip.org/wiki/intel/xeon_e/e-2276g,Workstation; Server,80.0,6,12.0
+intel xeon e-2276m,2019-05-27,https://en.wikichip.org/wiki/intel/xeon_e/e-2276m,Workstation; Server,45.0,6,12.0
+intel xeon e-2278g,2019-05-27,https://en.wikichip.org/wiki/intel/xeon_e/e-2278g,Workstation; Server,80.0,8,16.0
+intel xeon e-2286g,2019-05-27,https://en.wikichip.org/wiki/intel/xeon_e/e-2286g,Workstation; Server,95.0,6,12.0
+intel xeon e-2286m,2019-05-27,https://en.wikichip.org/wiki/intel/xeon_e/e-2286m,Server; Workstation,45.0,8,16.0
+intel xeon e-2288g,2019-05-27,https://en.wikichip.org/wiki/intel/xeon_e/e-2288g,Server; Workstation,95.0,8,16.0
+intel xeon e3-1205 v6,2017-03-28,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1205_v6,Workstation; Server,65.0,4,8.0
+intel xeon e3-1220 v5,2015-10-19,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1220_v5,Server,80.0,4,4.0
+intel xeon e3-1220 v6,2017-03-28,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1220_v6,Workstation; Server,72.0,4,4.0
+intel xeon e3-1225 v5,2015-10-19,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1225_v5,Server; Embedded,80.0,4,4.0
+intel xeon e3-1225 v6,2017-03-28,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1225_v6,Workstation; Server,73.0,4,4.0
+intel xeon e3-1230 v5,2015-10-19,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1230_v5,Server,80.0,4,8.0
+intel xeon e3-1230 v6,2017-03-28,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1230_v6,Server; Workstation,72.0,4,8.0
+intel xeon e3-1235l v5,2015-10-19,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1235l_v5,Server,25.0,4,4.0
+intel xeon e3-1240 v5,2015-10-19,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1240_v5,Server,80.0,4,8.0
+intel xeon e3-1240 v6,2017-03-28,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1240_v6,Workstation; Server,72.0,4,8.0
+intel xeon e3-1240l v5,2015-10-19,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1240l_v5,Server,25.0,4,8.0
+intel xeon e3-1245 v5,2015-10-19,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1245_v5,Server,80.0,4,8.0
+intel xeon e3-1245 v6,2017-03-28,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1245_v6,Workstation; Server,73.0,4,8.0
+intel xeon e3-1260l v5,2015-10-19,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1260l_v5,Server,45.0,4,8.0
+intel xeon e3-1268l v5,2015-10-19,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1268l_v5,Embedded,35.0,4,8.0
+intel xeon e3-1270 v5,2015-10-19,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1270_v5,Server,80.0,4,8.0
+intel xeon e3-1270 v6,2017-03-28,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1270_v6,Workstation; Server,72.0,4,8.0
+intel xeon e3-1275 v5,2015-10-19,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1275_v5,Server; Embedded,80.0,4,8.0
+intel xeon e3-1275 v6,2017-03-28,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1275_v6,Workstation; Server,73.0,4,8.0
+intel xeon e3-1280 v5,2015-10-19,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1280_v5,Server,80.0,4,8.0
+intel xeon e3-1280 v6,2017-03-28,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1280_v6,Workstation; Server,72.0,4,8.0
+intel xeon e3-1284l v3,2014-10-01,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1284l_v3,Server,47.0,4,8.0
+intel xeon e3-1285 v6,2017-08-01,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1285_v6,Workstation; Server,79.0,4,8.0
+intel xeon e3-1501l v6,2017-06-12,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1501l_v6,Workstation; Mobile,25.0,4,8.0
+intel xeon e3-1501m v6,2017-06-12,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1501m_v6,Mobile; Workstation,45.0,4,4.0
+intel xeon e3-1505l v5,2015-10-12,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1505l_v5,Embedded,25.0,4,8.0
+intel xeon e3-1505l v6,2017-01-03,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1505l_v6,Workstation; Embedded,25.0,4,8.0
+intel xeon e3-1505m v5,2015-10-12,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1505m_v5,Mobile,45.0,4,8.0
+intel xeon e3-1505m v6,2017-01-03,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1505m_v6,Workstation; Mobile,45.0,4,8.0
+intel xeon e3-1515m v5,2016-01-02,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1515m_v5,Mobile,45.0,4,8.0
+intel xeon e3-1535m v5,2015-10-12,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1535m_v5,Mobile,45.0,4,8.0
+intel xeon e3-1535m v6,2017-01-03,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1535m_v6,Workstation; Mobile,45.0,4,8.0
+intel xeon e3-1545m v5,2016-01-02,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1545m_v5,Mobile,45.0,4,8.0
+intel xeon e3-1558l v5,2016-05-31,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1558l_v5,Embedded,45.0,4,8.0
+intel xeon e3-1565l v5,2016-05-31,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1565l_v5,Server,35.0,4,8.0
+intel xeon e3-1575m v5,2016-01-02,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1575m_v5,Mobile,45.0,4,8.0
+intel xeon e3-1578l v5,2016-05-31,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1578l_v5,Embedded,45.0,4,8.0
+intel xeon e3-1585 v5,2016-05-31,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1585_v5,Server,65.0,4,8.0
+intel xeon e3-1585l v5,2016-05-31,https://en.wikichip.org/wiki/intel/xeon_e3/e3-1585l_v5,Server,45.0,4,8.0
+intel xeon e5-1603 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-1603_v4,Server,140.0,4,4.0
+intel xeon e5-1607 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-1607_v4,Server,140.0,4,4.0
+intel xeon e5-1620 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-1620_v4,Server,140.0,4,8.0
+intel xeon e5-1630 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-1630_v4,Server,140.0,4,8.0
+intel xeon e5-1650 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-1650_v4,Server,140.0,6,12.0
+intel xeon e5-1660 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-1660_v4,Server,140.0,8,16.0
+intel xeon e5-1680 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-1680_v4,Server,140.0,8,16.0
+intel xeon e5-2603 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2603_v4,Server,85.0,6,6.0
+intel xeon e5-2608l v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2608l_v4,Embedded,50.0,8,16.0
+intel xeon e5-2609 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2609_v4,Server,85.0,8,8.0
+intel xeon e5-2618l v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2618l_v4,Embedded,75.0,10,20.0
+intel xeon e5-2620 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2620_v4,Server,85.0,8,16.0
+intel xeon e5-2623 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2623_v4,Server,85.0,4,8.0
+intel xeon e5-2628l v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2628l_v4,Embedded,75.0,12,24.0
+intel xeon e5-2630 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2630_v4,Server,85.0,10,20.0
+intel xeon e5-2630l v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2630l_v4,Server,55.0,10,20.0
+intel xeon e5-2637 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2637_v4,Server,135.0,4,8.0
+intel xeon e5-2640 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2640_v4,Server,90.0,10,20.0
+intel xeon e5-2643 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2643_v4,Server,135.0,6,12.0
+intel xeon e5-2648l v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2648l_v4,Embedded,75.0,14,28.0
+intel xeon e5-2650 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2650_v4,Server,105.0,12,24.0
+intel xeon e5-2650l v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2650l_v4,Server,65.0,14,28.0
+intel xeon e5-2658 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2658_v4,Embedded,105.0,14,28.0
+intel xeon e5-2660 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2660_v4,Server,105.0,14,28.0
+intel xeon e5-2667 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2667_v4,Server,135.0,8,16.0
+intel xeon e5-2670 v3,2014-09-08,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2670_v3,Server,120.0,12,24.0
+intel xeon e5-2670 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2670_v4,Server,120.0,14,28.0
+intel xeon e5-2673 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2673_v4,Server,135.0,20,40.0
+intel xeon e5-2679 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2679_v4,Server,200.0,20,40.0
+intel xeon e5-2680 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2680_v4,Server,120.0,14,28.0
+intel xeon e5-2682 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2682_v4,Server,120.0,16,32.0
+intel xeon e5-2683 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2683_v4,Server,120.0,16,32.0
+intel xeon e5-2686 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2686_v4,Server,145.0,18,36.0
+intel xeon e5-2687w v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2687w_v4,Server,160.0,12,24.0
+intel xeon e5-2689 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2689_v4,Server,165.0,10,20.0
+intel xeon e5-2689a v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2689a_v4,Server,145.0,8,16.0
+intel xeon e5-2690 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2690_v4,Server,135.0,14,28.0
+intel xeon e5-2695 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2695_v4,Server,120.0,18,36.0
+intel xeon e5-2696 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2696_v4,Server,150.0,22,44.0
+intel xeon e5-2697 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2697_v4,Server,145.0,18,36.0
+intel xeon e5-2697a v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2697a_v4,Server,145.0,16,32.0
+intel xeon e5-2698 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2698_v4,Server,135.0,20,40.0
+intel xeon e5-2699 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2699_v4,Server,145.0,22,44.0
+intel xeon e5-2699a v4,2016-10-25,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2699a_v4,Server,145.0,22,44.0
+intel xeon e5-2699r v4,2016-10-25,https://en.wikichip.org/wiki/intel/xeon_e5/e5-2699r_v4,Embedded,145.0,22,44.0
+intel xeon e5-4610 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-4610_v4,Server,105.0,10,20.0
+intel xeon e5-4620 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-4620_v4,Server,105.0,10,20.0
+intel xeon e5-4627 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-4627_v4,Server,135.0,10,10.0
+intel xeon e5-4628l v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-4628l_v4,Embedded,75.0,14,28.0
+intel xeon e5-4640 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-4640_v4,Server,105.0,12,24.0
+intel xeon e5-4650 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-4650_v4,Server,105.0,14,28.0
+intel xeon e5-4655 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-4655_v4,Server,135.0,8,16.0
+intel xeon e5-4660 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-4660_v4,Server,120.0,16,32.0
+intel xeon e5-4667 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-4667_v4,Server,135.0,18,36.0
+intel xeon e5-4669 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e5/e5-4669_v4,Server,135.0,22,44.0
+intel xeon e7-2803,2011-04-05,https://en.wikichip.org/wiki/intel/xeon_e7/e7-2803,Server,105.0,6,12.0
+intel xeon e7-2820,2011-04-05,https://en.wikichip.org/wiki/intel/xeon_e7/e7-2820,Server,105.0,8,16.0
+intel xeon e7-2830,2011-04-05,https://en.wikichip.org/wiki/intel/xeon_e7/e7-2830,Server,105.0,8,16.0
+intel xeon e7-2850,2011-04-05,https://en.wikichip.org/wiki/intel/xeon_e7/e7-2850,Server,130.0,10,20.0
+intel xeon e7-2860,2011-04-05,https://en.wikichip.org/wiki/intel/xeon_e7/e7-2860,Server,130.0,10,20.0
+intel xeon e7-2870,2011-04-05,https://en.wikichip.org/wiki/intel/xeon_e7/e7-2870,Server,130.0,10,20.0
+intel xeon e7-4807,2011-04-05,https://en.wikichip.org/wiki/intel/xeon_e7/e7-4807,Server,95.0,6,12.0
+intel xeon e7-4820,2011-04-05,https://en.wikichip.org/wiki/intel/xeon_e7/e7-4820,Server,105.0,8,16.0
+intel xeon e7-4830,2011-04-05,https://en.wikichip.org/wiki/intel/xeon_e7/e7-4830,Server,105.0,8,16.0
+intel xeon e7-4850,2011-04-05,https://en.wikichip.org/wiki/intel/xeon_e7/e7-4850,Server,130.0,10,20.0
+intel xeon e7-4860,2011-04-05,https://en.wikichip.org/wiki/intel/xeon_e7/e7-4860,Server,130.0,10,20.0
+intel xeon e7-4870,2011-04-05,https://en.wikichip.org/wiki/intel/xeon_e7/e7-4870,Server,130.0,10,20.0
+intel xeon e7-8830,2011-04-05,https://en.wikichip.org/wiki/intel/xeon_e7/e7-8830,Server,105.0,8,16.0
+intel xeon e7-8837,2011-04-05,https://en.wikichip.org/wiki/intel/xeon_e7/e7-8837,Server,130.0,8,8.0
+intel xeon e7-8850,2011-04-05,https://en.wikichip.org/wiki/intel/xeon_e7/e7-8850,Server,130.0,10,20.0
+intel xeon e7-8860,2011-04-05,https://en.wikichip.org/wiki/intel/xeon_e7/e7-8860,Server,130.0,10,20.0
+intel xeon e7-8867l,2011-04-05,https://en.wikichip.org/wiki/intel/xeon_e7/e7-8867l,Server,105.0,10,20.0
+intel xeon e7-8870,2011-04-05,https://en.wikichip.org/wiki/intel/xeon_e7/e7-8870,Server,130.0,10,20.0
+intel xeon e7-8890 v4,2016-06-20,https://en.wikichip.org/wiki/intel/xeon_e7/e7-8890_v4,Server,165.0,24,48.0
+intel xeon e7-8894 v4,2017-01-01,https://en.wikichip.org/wiki/intel/xeon_e7/e7-8894_v4,Server,165.0,24,48.0
+intel xeon gold 5115,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/5115,Server,85.0,10,20.0
+intel xeon gold 5117,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/5117,Server,105.0,14,28.0
+intel xeon gold 5117f,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/5117f,Server,113.0,14,28.0
+intel xeon gold 5118,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/5118,Server,105.0,12,24.0
+intel xeon gold 5119t,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/5119t,Server,85.0,14,28.0
+intel xeon gold 5120,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/5120,Server,105.0,14,28.0
+intel xeon gold 6126,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6126,Server,125.0,12,24.0
+intel xeon gold 5120t,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/5120t,Server,105.0,14,28.0
+intel xeon gold 5122,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/5122,Server,105.0,4,8.0
+intel xeon gold 5215,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/5215,Server,85.0,10,20.0
+intel xeon gold 5215l,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/5215l,Server,85.0,10,20.0
+intel xeon gold 5215m,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/5215m,Server,85.0,10,20.0
+intel xeon gold 5217,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/5217,Server,115.0,8,16.0
+intel xeon gold 5218,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/5218,Server,125.0,16,32.0
+intel xeon gold 5218b,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/5218b,Server,125.0,16,32.0
+intel xeon gold 5218n,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/5218n,Server,105.0,16,32.0
+intel xeon gold 5218r,2020-02-24,https://en.wikichip.org/wiki/intel/xeon_gold/5218r,Server,125.0,20,40.0
+intel xeon gold 5218t,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/5218t,Server,105.0,16,32.0
+intel xeon gold 5220,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/5220,Server,125.0,18,36.0
+intel xeon gold 5220r,2020-02-24,https://en.wikichip.org/wiki/intel/xeon_gold/5220r,Server,150.0,24,48.0
+intel xeon gold 5220s,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/5220s,Server,125.0,18,36.0
+intel xeon gold 5220t,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/5220t,Server,105.0,18,36.0
+intel xeon gold 5222,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/5222,Server,105.0,4,8.0
+intel xeon gold 6126f,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6126f,Server,135.0,12,24.0
+intel xeon gold 6126t,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6126t,Server,125.0,12,24.0
+intel xeon gold 6128,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6128,Server,115.0,6,12.0
+intel xeon gold 6130,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6130,Server,125.0,16,32.0
+intel xeon gold 6130f,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6130f,Server,135.0,16,32.0
+intel xeon gold 6130t,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6130t,Server,125.0,16,32.0
+intel xeon gold 6132,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6132,Server,140.0,14,28.0
+intel xeon gold 6134,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6134,Server,130.0,8,16.0
+intel xeon gold 6134m,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6134m,Server,130.0,8,16.0
+intel xeon gold 6136,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6136,Server,150.0,12,24.0
+intel xeon gold 6138,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6138,Server,125.0,20,40.0
+intel xeon gold 6138f,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6138f,Server,135.0,20,40.0
+intel xeon gold 6138p,2018-05-16,https://en.wikichip.org/wiki/intel/xeon_gold/6138p,Server,195.0,20,40.0
+intel xeon gold 6138t,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6138t,Server,125.0,20,40.0
+intel xeon gold 6140,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6140,Server,140.0,18,36.0
+intel xeon gold 6140m,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6140m,Server,140.0,18,36.0
+intel xeon gold 6142,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6142,Server,150.0,16,32.0
+intel xeon gold 6142f,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6142f,Server,160.0,16,32.0
+intel xeon gold 6142m,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6142m,Server,150.0,16,32.0
+intel xeon gold 6144,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6144,Server,150.0,8,16.0
+intel xeon gold 6146,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6146,Server,165.0,12,24.0
+intel xeon gold 6148,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6148,Server,150.0,20,40.0
+intel xeon gold 6148f,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6148f,Server,160.0,20,40.0
+intel xeon gold 6150,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6150,Server,165.0,18,36.0
+intel xeon gold 6152,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6152,Server,140.0,22,44.0
+intel xeon gold 6154,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6154,Server,200.0,18,36.0
+intel xeon gold 6161,,https://en.wikichip.org/wiki/intel/xeon_gold/6161,Server,165.0,22,44.0
+intel xeon gold 6209u,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6209u,Server,125.0,20,40.0
+intel xeon gold 6210u,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6210u,Server,150.0,20,40.0
+intel xeon gold 6212u,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6212u,Server,165.0,24,48.0
+intel xeon gold 6222v,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6222v,Server,115.0,20,40.0
+intel xeon gold 6226,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6226,Server,125.0,12,24.0
+intel xeon gold 6226r,2020-02-24,https://en.wikichip.org/wiki/intel/xeon_gold/6226r,Server,150.0,16,32.0
+intel xeon gold 6230,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6230,Server,125.0,20,40.0
+intel xeon gold 6230n,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6230n,Server,125.0,20,40.0
+intel xeon gold 6230r,2020-02-24,https://en.wikichip.org/wiki/intel/xeon_gold/6230r,Server,150.0,26,52.0
+intel xeon gold 6230t,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6230t,Server,125.0,20,40.0
+intel xeon gold 6234,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6234,Server,130.0,8,16.0
+intel xeon gold 6238,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6238,Server,140.0,22,44.0
+intel xeon gold 6238l,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6238l,Server,140.0,22,44.0
+intel xeon gold 6238m,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6238m,Server,140.0,22,44.0
+intel xeon gold 6238r,2020-02-24,https://en.wikichip.org/wiki/intel/xeon_gold/6238r,Server,165.0,28,56.0
+intel xeon gold 6238t,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6238t,Server,125.0,22,44.0
+intel xeon gold 6240,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6240,Server,150.0,18,36.0
+intel xeon gold 6240l,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6240l,Server,150.0,18,36.0
+intel xeon gold 6240m,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6240m,Server,150.0,18,36.0
+intel xeon gold 6240r,2020-02-24,https://en.wikichip.org/wiki/intel/xeon_gold/6240r,Server,165.0,24,48.0
+intel xeon gold 6240y,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6240y,Server,150.0,18,36.0
+intel xeon gold 6242,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6242,Server,150.0,16,32.0
+intel xeon gold 6242r,2020-02-24,https://en.wikichip.org/wiki/intel/xeon_gold/6242r,Server,205.0,20,40.0
+intel xeon gold 6244,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6244,Server,150.0,8,16.0
+intel xeon gold 6246,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6246,Server,165.0,12,24.0
+intel xeon gold 6246r,2020-02-24,https://en.wikichip.org/wiki/intel/xeon_gold/6246r,Server,205.0,16,32.0
+intel xeon gold 6248,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6248,Server,150.0,20,40.0
+intel xeon gold 6248r,2020-02-24,https://en.wikichip.org/wiki/intel/xeon_gold/6248r,Server,205.0,24,48.0
+intel xeon gold 6252,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6252,Server,150.0,24,48.0
+intel xeon gold 6252n,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6252n,Server,150.0,24,48.0
+intel xeon gold 6254,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6254,Server,200.0,18,36.0
+intel xeon gold 6258r,2020-02-24,https://en.wikichip.org/wiki/intel/xeon_gold/6258r,Server,205.0,28,56.0
+intel xeon gold 6262v,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_gold/6262v,Server,135.0,24,48.0
+intel xeon phi 7235,2017-12-18,https://en.wikichip.org/wiki/intel/xeon_phi/7235,Workstation; Server; Supercomputer,250.0,64,256.0
+intel xeon phi 7285,2017-12-18,https://en.wikichip.org/wiki/intel/xeon_phi/7285,Workstation; Server; Supercomputer,250.0,68,272.0
+intel xeon phi 7295,2017-12-18,https://en.wikichip.org/wiki/intel/xeon_phi/7295,Workstation; Server; Supercomputer,320.0,72,288.0
+intel xeon platinum 8124,2017-01-01,https://en.wikichip.org/wiki/intel/xeon_platinum/8124,Server,240.0,18,36.0
+intel xeon platinum 8124m,2017-01-01,https://en.wikichip.org/wiki/intel/xeon_platinum/8124m,Server,240.0,18,36.0
+intel xeon platinum 8153,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_platinum/8153,Server,125.0,16,32.0
+intel xeon platinum 8156,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_platinum/8156,Server,105.0,4,8.0
+intel xeon platinum 8158,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_platinum/8158,Server,150.0,12,24.0
+intel xeon platinum 8160,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_platinum/8160,Server,150.0,24,48.0
+intel xeon platinum 8160f,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_platinum/8160f,Server,160.0,24,48.0
+intel xeon platinum 8160m,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_platinum/8160m,Server,150.0,24,48.0
+intel xeon platinum 8160t,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_platinum/8160t,Server,150.0,24,48.0
+intel xeon platinum 8164,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_platinum/8164,Server,150.0,26,52.0
+intel xeon platinum 8168,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_platinum/8168,Server,205.0,24,48.0
+intel xeon platinum 8170,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_platinum/8170,Server,165.0,26,52.0
+intel xeon platinum 8170f,,https://en.wikichip.org/wiki/intel/xeon_platinum/8170f,Server,165.0,26,52.0
+intel xeon platinum 8170m,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_platinum/8170m,Server,165.0,26,52.0
+intel xeon platinum 8176,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_platinum/8176,Server,165.0,28,56.0
+intel xeon platinum 8176f,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_platinum/8176f,Server,173.0,28,56.0
+intel xeon platinum 8176m,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_platinum/8176m,Server,165.0,28,56.0
+intel xeon platinum 8180,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_platinum/8180,Server,205.0,28,56.0
+intel xeon platinum 8180m,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_platinum/8180m,Server,205.0,28,56.0
+intel xeon platinum 8253,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_platinum/8253,Server,125.0,16,32.0
+intel xeon platinum 8256,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_platinum/8256,Server,105.0,4,8.0
+intel xeon platinum 8260,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_platinum/8260,Server,165.0,24,48.0
+intel xeon platinum 8260l,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_platinum/8260l,Server,165.0,24,48.0
+intel xeon platinum 8260m,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_platinum/8260m,Server,165.0,24,48.0
+intel xeon platinum 8260y,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_platinum/8260y,Server,165.0,24,48.0
+intel xeon platinum 8268,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_platinum/8268,Server,205.0,24,48.0
+intel xeon platinum 8270,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_platinum/8270,Server,205.0,26,52.0
+intel xeon platinum 8276,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_platinum/8276,Server,165.0,28,56.0
+intel xeon platinum 8276l,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_platinum/8276l,Server,165.0,28,56.0
+intel xeon platinum 8276m,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_platinum/8276m,Server,165.0,28,56.0
+intel xeon platinum 8280,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_platinum/8280,Server,205.0,28,56.0
+intel xeon platinum 8280l,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_platinum/8280l,Server,205.0,28,56.0
+intel xeon platinum 8280m,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_platinum/8280m,Server,205.0,28,56.0
+intel xeon platinum 8284,2019-07-10,https://en.wikichip.org/wiki/intel/xeon_platinum/8284,Server,240.0,28,56.0
+intel xeon platinum 9221,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_platinum/9221,Server; HPC,250.0,32,64.0
+intel xeon platinum 9222,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_platinum/9222,Server; HPC,250.0,32,64.0
+intel xeon platinum 9242,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_platinum/9242,Server; HPC,350.0,48,96.0
+intel xeon platinum 9282,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_platinum/9282,Server; HPC,400.0,56,112.0
+intel xeon silver 4108,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_silver/4108,Server,85.0,8,16.0
+intel xeon silver 4109t,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_silver/4109t,Server,70.0,8,16.0
+intel xeon silver 4110,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_silver/4110,Server,85.0,8,16.0
+intel xeon silver 4112,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_silver/4112,Server,85.0,4,8.0
+intel xeon silver 4114,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_silver/4114,Server,85.0,10,20.0
+intel xeon silver 4114t,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_silver/4114t,Server,85.0,10,20.0
+intel xeon silver 4116,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_silver/4116,Server,85.0,12,24.0
+intel xeon silver 4116t,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_silver/4116t,Server,85.0,12,24.0
+intel xeon silver 4208,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_silver/4208,Server,85.0,8,16.0
+intel xeon silver 4209t,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_silver/4209t,Server,70.0,8,16.0
+intel xeon silver 4210,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_silver/4210,Server,85.0,10,20.0
+intel xeon silver 4210r,2020-02-24,https://en.wikichip.org/wiki/intel/xeon_silver/4210r,Server,100.0,10,20.0
+intel xeon silver 4214,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_silver/4214,Server,85.0,12,24.0
+intel xeon silver 4214r,2020-02-24,https://en.wikichip.org/wiki/intel/xeon_silver/4214r,Server,100.0,12,24.0
+intel xeon silver 4214y,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_silver/4214y,Server,85.0,12,24.0
+intel xeon silver 4215,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_silver/4215,Server,85.0,8,16.0
+intel xeon silver 4215r,2020-02-24,https://en.wikichip.org/wiki/intel/xeon_silver/4215r,Server,130.0,8,16.0
+intel xeon silver 4216,2019-04-02,https://en.wikichip.org/wiki/intel/xeon_silver/4216,Server,100.0,16,32.0
+intel xeon w-2102,2017-08-29,https://en.wikichip.org/wiki/intel/xeon_w/w-2102,Workstation,120.0,4,4.0
+intel xeon w-2104,2017-08-29,https://en.wikichip.org/wiki/intel/xeon_w/w-2104,Workstation,120.0,4,4.0
+intel xeon w-2123,2017-08-29,https://en.wikichip.org/wiki/intel/xeon_w/w-2123,Workstation,120.0,4,8.0
+intel xeon w-2125,2017-08-29,https://en.wikichip.org/wiki/intel/xeon_w/w-2125,Workstation,120.0,4,8.0
+intel xeon w-2133,2017-08-29,https://en.wikichip.org/wiki/intel/xeon_w/w-2133,Workstation,140.0,6,12.0
+intel xeon w-2135,2017-08-29,https://en.wikichip.org/wiki/intel/xeon_w/w-2135,Workstation,140.0,6,12.0
+intel xeon w-2145,2017-08-29,https://en.wikichip.org/wiki/intel/xeon_w/w-2145,Workstation,140.0,8,16.0
+intel xeon w-2155,2017-08-29,https://en.wikichip.org/wiki/intel/xeon_w/w-2155,Workstation,140.0,10,20.0
+intel xeon w-2175,2017-08-29,https://en.wikichip.org/wiki/intel/xeon_w/w-2175,Workstation,140.0,14,28.0
+intel xeon w-2195,2017-08-29,https://en.wikichip.org/wiki/intel/xeon_w/w-2195,Workstation,140.0,18,36.0
+intel xeon w-3175x,2019-01-30,https://en.wikichip.org/wiki/intel/xeon_w/w-3175x,Workstation,255.0,28,56.0
+intel xeon w-3223,2019-06-03,https://en.wikichip.org/wiki/intel/xeon_w/w-3223,Workstation,160.0,8,16.0
+intel xeon w-3225,2019-06-03,https://en.wikichip.org/wiki/intel/xeon_w/w-3225,Workstation,160.0,8,16.0
+intel xeon w-3235,2019-06-03,https://en.wikichip.org/wiki/intel/xeon_w/w-3235,Workstation,180.0,12,24.0
+intel xeon w-3245,2019-06-03,https://en.wikichip.org/wiki/intel/xeon_w/w-3245,Workstation,205.0,16,32.0
+intel xeon w-3245m,2019-06-03,https://en.wikichip.org/wiki/intel/xeon_w/w-3245m,Workstation,205.0,16,32.0
+intel xeon w-3265,2019-06-03,https://en.wikichip.org/wiki/intel/xeon_w/w-3265,Workstation,205.0,24,48.0
+intel xeon w-3265m,2019-06-03,https://en.wikichip.org/wiki/intel/xeon_w/w-3265m,Workstation,205.0,24,48.0
+intel xeon w-3275,2019-06-03,https://en.wikichip.org/wiki/intel/xeon_w/w-3275,Workstation,205.0,28,56.0
+intel xeon w-3275m,2019-06-03,https://en.wikichip.org/wiki/intel/xeon_w/w-3275m,Workstation,205.0,28,56.0
+m128-30,,https://amperecomputing.com/briefs/ampere-altra-family-product-brief,,183.0,128,128.0
+m128-28,,https://amperecomputing.com/briefs/ampere-altra-family-product-brief,,154.0,128,128.0
+m128-26,,https://amperecomputing.com/briefs/ampere-altra-family-product-brief,,133.0,128,128.0
+m96-30,,https://amperecomputing.com/briefs/ampere-altra-family-product-brief,,157.0,96,96.0
+m96-28,,https://amperecomputing.com/briefs/ampere-altra-family-product-brief,,132.0,96,96.0
+q80-30,,https://amperecomputing.com/briefs/ampere-altra-family-product-brief,,161.0,80,80.0
+q80-28,,https://amperecomputing.com/briefs/ampere-altra-family-product-brief,,124.0,80,80.0
+q80-26,,https://amperecomputing.com/briefs/ampere-altra-family-product-brief,,113.0,80,80.0
+q64-30,,https://amperecomputing.com/briefs/ampere-altra-family-product-brief,,124.0,64,64.0
+q64-26,,https://amperecomputing.com/briefs/ampere-altra-family-product-brief,,87.0,64,64.0
+q64-22,,https://amperecomputing.com/briefs/ampere-altra-family-product-brief,,69.0,64,64.0
+q32-17,,https://amperecomputing.com/briefs/ampere-altra-family-product-brief,,40.0,32,32.0
+ampereone a192-32x,,https://amperecomputing.com/briefs/ampereone-family-product-brief,,276.0,192,192.0
+ampereone a192-26x,,https://amperecomputing.com/briefs/ampereone-family-product-brief,,211.0,192,192.0
+ampereone a160-28x,,https://amperecomputing.com/briefs/ampereone-family-product-brief,,215.0,160,160.0
+ampereone a144-27x,,https://amperecomputing.com/briefs/ampereone-family-product-brief,,214.0,144,144.0
+ampereone a144-26x,,https://amperecomputing.com/briefs/ampereone-family-product-brief,,332.0,144,144.0
+ampereone a144-24x,,https://amperecomputing.com/briefs/ampereone-family-product-brief,,185.0,144,144.0
+ampereone a128-34x,,https://amperecomputing.com/briefs/ampereone-family-product-brief,,280.0,128,128.0
+ampereone a96-37x,,https://amperecomputing.com/briefs/ampereone-family-product-brief,,292.0,96,96.0
+default compute cluster,,,Artificial Intelligence; HPC; Server; Supercomputer; Workstation,11.4,1,1.91
+default local,,,Desktop; Enthusiast; Mobile,12.82,1,1.64
+default embedded,,,Embedded,8.49,1,1.56
+default default,,,Artificial Intelligence; Automotive; Desktop; Edge; Embedded; Enthusiast; HPC; IoT; Mobile; Networking; Server; Supercomputer; Workstation,11.66,1,1.7
