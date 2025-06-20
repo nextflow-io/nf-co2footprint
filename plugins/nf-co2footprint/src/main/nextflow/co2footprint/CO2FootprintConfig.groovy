@@ -60,7 +60,7 @@ class CO2FootprintConfig {
      * If set as a closure (for real-time API), invokes it to get the current value.
      */
     Double getCi() {
-        (ci instanceof Closure) ? (ci as Closure)() as Double : ci
+        (ci instanceof Closure) ? (ci as Closure<Double>)() : ci
     }
     Double getPue() { pue }
     Boolean getIgnoreCpuModel() { ignoreCpuModel }
