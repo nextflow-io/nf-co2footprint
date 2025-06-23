@@ -100,18 +100,23 @@ class CO2FootprintConfig extends BaseConfig {
     }
 
     /**
+     * Returns whether or not the API is used for CI
+     */
+    boolean isCIAPICalled() { get("ci") instanceof  Closure }
+
+    /**
      * Returns the carbon intensity value.
      * If set as a closure (for real-time API), invokes it to get the current value.
      */
     Double getCi() {
-        (get("ci") instanceof Closure) ? value("ci")['ci'] : value("ci")
+        isCIAPICalled() ? value("ci")['ci'] : value("ci")
     }
     /**
      * Returns the carbon intensity at timestamps
      * @return Carbon intensity at timestamps
      */
     Map<String, ?> getTimeCi(){
-        (get("ci") instanceof Closure) ? value("ci") : value("ci")
+        isCIAPICalled() ? value("ci") : value("ci")
     }
 
     /**
