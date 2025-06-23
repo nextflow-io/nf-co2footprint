@@ -125,7 +125,6 @@ class ReportFileCreator extends BaseFileCreator{
      * @return Rendered HTML String
      */
     protected String renderHtml() {
-        Map co2Options = config.collectCO2CalcOptions()
         // render HTML report template
         final templateFields = [
                 // Plugin information
