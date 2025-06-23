@@ -121,7 +121,6 @@ class CO2FootprintReport extends CO2FootprintFile{
      * @return Rendered HTML String
      */
     protected String renderHtml() {
-        Map co2Options = config.collectCO2CalcOptions()
         // render HTML report template
         final tpl_fields = [
                 workflow : session.getWorkflowMetadata(),
