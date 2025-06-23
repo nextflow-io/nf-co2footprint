@@ -3,16 +3,11 @@ package nextflow.co2footprint
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
-import nextflow.co2footprint.Records.TimeCiRecords
+import nextflow.co2footprint.Records.TimeCiRecordCollector
 import nextflow.co2footprint.utils.HelperFunctions
 import groovy.util.logging.Slf4j
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
-
-import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentSkipListSet
 
 
 /**
@@ -62,7 +57,7 @@ class CO2FootprintComputer {
     * @param trace   The TraceRecord containing task resource usage.
     * @return        CO2Record with energy consumption, CO2 emissions, and task/resource details.
     */
-    CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace, TimeCiRecords timeCiRecords) {
+    CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace, TimeCiRecordCollector timeCiRecords) {
 
         /**
          * CPU model information
