@@ -132,6 +132,21 @@ $(function() {
   Plotly.newPlot('co2e-total-plot', plot_data_total, layout);
   Plotly.newPlot('co2e-non-cached-plot', plot_data_non_cached, layout);
 
+
+  //
+  // Carbon intensity plot
+  //
+    var ci_plot_data = [
+      {
+        x: Array.from( window.timeCiRecords.keys() ),
+        y: Array.from( window.timeCiRecords.values() ),
+        type: 'scatter'
+      }
+    ];
+
+  Plotly.newPlot('ci_plot', ci_plot_data)
+
+
   //
   // Table creation functions
   //
