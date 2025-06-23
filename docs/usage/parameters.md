@@ -45,11 +45,11 @@ The following parameters are currently available:
 
     Example custom CPU TDP file:
 
-    | name                          | tdp (W) | cores |
-    |-------------------------------|---------|-------|
+    | name                            | tdp (W) | cores |
+    |---------------------------------|---------|-------|
     | Intel(R) Xeon(R) CPU E5-2670 v3 | 120     | 12    |
-    | AMD EPYC 7742                 | 225     | 64    |
-    | Intel(R) Core(TM) i7-9700K    | 95      | 8     |
+    | AMD EPYC 7742                   | 225     | 64    |
+    | Intel(R) Core(TM) i7-9700K      | 95      | 8     |
 
 - **`ignoreCpuModel`**  
   Ignore the retrieved Nextflow trace `cpu_model` name and use the default CPU power draw value. This is useful, if the cpu model information provided by the linux kernel is not correct, for example, in the case of VMs emulating a different CPU architecture.  
