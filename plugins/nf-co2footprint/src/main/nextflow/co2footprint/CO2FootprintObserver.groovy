@@ -111,7 +111,7 @@ class CO2FootprintObserver implements TraceObserver {
         this.overwrite = overwrite
         this.maxTasks = maxTasks
 
-        this.timeCiRecords = new TimeCiRecords(config)
+        this.timeCiRecords = new TimeCiRecordCollector(config)
     }
 
     /**
