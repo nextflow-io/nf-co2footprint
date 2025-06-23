@@ -57,18 +57,23 @@ class CO2FootprintConfig {
     String getLocation() { location }
 
     /**
+     * Returns whether or not the API is used for CI
+     */
+    boolean isCIAPICalled() { ci instanceof  Closure }
+
+    /**
      * Returns the carbon intensity value.
      * If set as a closure (for real-time API), invokes it to get the current value.
      */
     Double getCi() {
-        (ci instanceof Closure) ? (ci as Closure<Map<String, Double>>)()['ci']: ci
+        isCIAPICalled() ? (ci as Closure<Map<String, Double>>)()['ci']: ci
     }
     /**
      * Returns the carbon intensity at timestamps
      * @return Carbon intensity at timestamps
      */
     Map<String, ?> getTimeCi(){
-        (ci instanceof Closure) ? (ci as Closure<Map<String, ?>>)() : ci
+        isCIAPICalled() ? (ci as Closure<Map<String, ?>>)() : ci
     }
     Double getPue() { pue }
     Boolean getIgnoreCpuModel() { ignoreCpuModel }
