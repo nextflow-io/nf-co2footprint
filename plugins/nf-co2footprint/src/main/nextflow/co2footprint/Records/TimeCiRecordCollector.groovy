@@ -86,7 +86,6 @@ class TimeCiRecordCollector {
         during.removeAll(after)
         after ?= [during.max()]
 
-        Integer distance = 0
         // Add edge cases (start & end) to average ci by weight
         averageCi += timeCIs.get(before.max()) * (start.until(during.min(), ChronoUnit.MILLIS) / duration)
         averageCi += timeCIs.get(after.min()) * (during.max().until(end, ChronoUnit.MILLIS) / duration)
