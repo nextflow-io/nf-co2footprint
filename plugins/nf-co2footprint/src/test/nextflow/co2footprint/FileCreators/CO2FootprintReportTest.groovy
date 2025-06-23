@@ -7,6 +7,7 @@ import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
+import nextflow.co2footprint.Records.TimeCiRecordCollector
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
 import spock.lang.Shared
@@ -22,6 +23,9 @@ class CO2FootprintReportTest extends Specification{
 
     @Shared
     Path reportPath = tempPath.resolve('report_test.html')
+
+    @Shared
+    TimeCiRecordCollector timeCiRecordCollector
 
     static CO2FootprintReport co2FootprintReport
 
@@ -64,6 +68,9 @@ class CO2FootprintReportTest extends Specification{
                 Mock(CIDataMatrix),
                 [:]
         )
+
+        timeCiRecordCollector = new TimeCiRecordCollector(config)
+
         CO2Record co2Record = new CO2Record(
                 1.0d, 1.0d, 1.0d, 475.0, 1, 12, 100.0, 1024**3, 'testTask', 'Unknown model'
         )
@@ -78,7 +85,7 @@ class CO2FootprintReportTest extends Specification{
                 [co2e: 10.0d, energy: 100.0d, co2e_non_cached: 10.0d, energy_non_cached: 100.0d],
                 aggregator.computeProcessStats(),
                 equivalencesRecord, config,
-                'test-version', session, [(taskId): traceRecord], [(taskId): co2Record]
+                'test-version', session, [(taskId): traceRecord], [(taskId): co2Record], timeCiRecordCollector
         )
     }
 
@@ -93,7 +100,7 @@ class CO2FootprintReportTest extends Specification{
         CO2EquivalencesRecord equivalences = new CO2EquivalencesRecord(carKm, treeMonths, planePercent)
         co2FootprintReport.addEntries(
                 [co2e: 10d, energy: 10d, co2e_non_cached: 10d, energy_non_cached: 10d],
-                null, equivalences, null, null, null, null, null
+                null, equivalences, null, null, null, null, null, timeCiRecordCollector
         )
         Map<String, String> totalsJson = co2FootprintReport.renderCO2TotalsJson()
 
