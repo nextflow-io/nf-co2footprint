@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.ConcurrentHashMap
 
-class TimeCiRecords {
+class TimeCiRecordCollector {
     // Timer for cyclical tasks
     private Timer timer = new Timer(true) // true = daemon thread
 
@@ -17,7 +17,7 @@ class TimeCiRecords {
     // Config
     private CO2FootprintConfig config
 
-    TimeCiRecords(CO2FootprintConfig config, ConcurrentHashMap<LocalDateTime, Double> timeCIs=[:] as ConcurrentHashMap) {
+    TimeCiRecordCollector(CO2FootprintConfig config, ConcurrentHashMap<LocalDateTime, Double> timeCIs=[:] as ConcurrentHashMap) {
         this.config = config
         this.timeCIs = timeCIs as ConcurrentHashMap
     }
