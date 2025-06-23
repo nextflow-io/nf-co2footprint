@@ -6,6 +6,7 @@ import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.TimeCiRecords
 import nextflow.co2footprint.Metrics.Converter
+import nextflow.co2footprint.Records.TimeCiRecordCollector
 
 import groovy.util.logging.Slf4j
 import nextflow.exception.MissingValueException
@@ -57,7 +58,7 @@ class CO2FootprintComputer {
     * @param trace   The TraceRecord containing task resource usage.
     * @return        CO2Record with energy consumption, CO₂ emissions, and task/resource details.
     */
-    CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace, TimeCiRecords timeCiRecords) {
+    CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace, TimeCiRecordCollector timeCiRecords) {
 
         /* ===== CPU Information ===== */
 

@@ -1,12 +1,11 @@
 package nextflow.co2footprint.FileCreation
 
 import groovy.json.JsonOutput
-import nextflow.co2footprint.CO2FootprintComputer
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Metrics.Converter
-import nextflow.co2footprint.Records.TimeCiRecords
+import nextflow.co2footprint.Records.TimeCiRecordCollector
 
 import groovy.text.GStringTemplateEngine
 import groovy.text.Template
@@ -42,7 +41,7 @@ class ReportFileCreator extends BaseFileCreator{
     private Session session
     private Map<TaskId, TraceRecord> traceRecords
     private Map<TaskId, CO2Record> co2eRecords
-    private TimeCiRecords timeCiRecords
+    private TimeCiRecordCollector timeCiRecords
 
     // Writer for the HTML file
     private BufferedWriter writer
@@ -81,7 +80,7 @@ class ReportFileCreator extends BaseFileCreator{
             Session session,
             Map<TaskId, TraceRecord> traceRecords,
             Map<TaskId, CO2Record> co2eRecords,
-            TimeCiRecords timeCiRecords
+            TimeCiRecordCollector timeCiRecords
     ) {
         this.processStats = processStats
         this.totalStats = totalStats
