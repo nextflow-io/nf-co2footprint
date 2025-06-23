@@ -10,7 +10,7 @@ import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.FileCreators.CO2FootprintReport
 import nextflow.co2footprint.FileCreators.CO2FootprintSummary
 import nextflow.co2footprint.FileCreators.CO2FootprintTrace
-import nextflow.co2footprint.Records.TimeCiRecords
+import nextflow.co2footprint.Records.TimeCiRecordCollector
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskId
 import nextflow.processor.TaskProcessor
@@ -66,8 +66,8 @@ class CO2FootprintObserver implements TraceObserver {
     CO2FootprintComputer getCO2FootprintComputer() { co2FootprintComputer }
 
     // Record for CI values during execution
-    TimeCiRecords timeCiRecords
-    TimeCiRecords getTimeCiRecords() { timeCiRecords }
+    TimeCiRecordCollector timeCiRecords
+    TimeCiRecordCollector getTimeCiRecords() { timeCiRecords }
 
     // Holds the the start time for tasks started/submitted but not yet completed
     @PackageScope
