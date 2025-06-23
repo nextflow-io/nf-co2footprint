@@ -32,7 +32,7 @@ The following parameters are currently available:
   **Default**: `null`
 
 - **`pue`**  
-  Power usage effectivenes efficiency coefficient of the data centre. For local cluster you can usually find out your specific PUE at the system administrators or system managers. Also the current [yearly worldwide average](https://www.statista.com/statistics/1229367/data-center-average-annual-pue-worldwide/) could be used.  
+  Power usage effectiveness efficiency coefficient of the data centre. For local cluster you can usually find out your specific PUE at the system administrators or system managers. Also, the current [yearly worldwide average](https://www.statista.com/statistics/1229367/data-center-average-annual-pue-worldwide/) could be used.  
   **Default**: 1.00
 
 - **`powerdrawMem`**  
