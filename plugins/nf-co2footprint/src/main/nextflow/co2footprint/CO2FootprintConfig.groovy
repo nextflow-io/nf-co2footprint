@@ -148,16 +148,19 @@ class CO2FootprintConfig {
      */
     private void setMachineTypeAndPueFromExecutor(String executor) {
         // Read the CSV file as a DataMatrix - set RowIndex to 'executor'
-        DataMatrix matrix = DataMatrix.fromCsv(Paths.get(this.class.getResource('/executor_machine_pue_mapping.csv').toURI()), ',', 0, null, 'executor')
-        // Check if matrix contains the required columns
-        matrix.checkRequiredColumns(['machineType', 'pue'])
-        try {
-            this.machineType = matrix.get(executor, 'machineType') as String
-            this.pue ?= matrix.get(executor, 'pue') as Double // assign pue only if not already set
-        } catch (IllegalArgumentException ignore) {
-            log.warn("Executor '${executor}' is not supported. MachineType set to null.")
-        }
+    DataMatrix machineTypeMatrix = DataMatrix.fromCsv(Paths.get(this.class.getResource('/executor_machine_pue_mapping.csv').toURI()), ',', 0, null, 'executor')
+    // Check if matrix contains the required columns
+    machineTypeMatrix.checkRequiredColumns(['machineType', 'pue'])
+    if (machineTypeMatrix.rowIndex.containsKey(executor)) {
+        this.machineType = machineTypeMatrix.get(executor, 'machineType') as String
+        this.pue ?= machineTypeMatrix.get(executor, 'pue') as Double // assign pue only if not already set
     }
+    else {
+        log.warn(
+                "Executor '${executor}' is not mapped. MachineType set to null." +
+                "To eliminate this warning you can set `machineType` in the config to one of ${supportedMachineTypes}.")
+    }
+}
 
     /**
      * Collects input file options for reporting.
