@@ -91,8 +91,6 @@ class CO2FootprintReport extends CO2FootprintFile{
         this.traceRecords = traceRecords
         this.co2eRecords = co2eRecords
         this.timeCiRecordCollector = timeCiRecordCollector
-        // TODO: Add CI Records into Report
-        // TODO: Testing TimeCiRecords
     }
 
     /**
@@ -145,7 +143,8 @@ class CO2FootprintReport extends CO2FootprintFile{
                         readTemplate('assets/CO2FootprintReportTemplate.js')
                 ],
                 options : renderOptionsJson(),
-                used_EM_api: co2Options.ci instanceof Closure // true if the CI value is calculated using the electricityMaps API
+                used_EM_api: config.isCIAPICalled(), // true if the CI value is calculated using the electricityMaps API
+                timeCiRecords: timeCiRecordCollector.getTimeCIs()
         ]
         final String template = readTemplate('assets/CO2FootprintReportTemplate.html')
         final GStringTemplateEngine engine = new GStringTemplateEngine()
