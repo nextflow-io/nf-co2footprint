@@ -61,8 +61,8 @@ class CO2FootprintObserver implements TraceObserver {
     CO2FootprintComputer getCO2FootprintComputer() { co2FootprintComputer }
 
     // Record for CI values during execution
-    TimeCiRecordCollector timeCiRecords
-    TimeCiRecordCollector getTimeCiRecords() { timeCiRecords }
+    TimeCiRecordCollector timeCiRecordCollector
+    TimeCiRecordCollector getTimeCiRecordCollector() { timeCiRecordCollector }
 
     // Holds the the start time for tasks started/submitted but not yet completed
     @PackageScope
@@ -106,7 +106,7 @@ class CO2FootprintObserver implements TraceObserver {
         this.overwrite = overwrite
         this.maxTasks = maxTasks
 
-        this.timeCiRecords = new TimeCiRecordCollector(config)
+        this.timeCiRecordCollector = new TimeCiRecordCollector(config)
     }
 
     /**
@@ -177,7 +177,7 @@ class CO2FootprintObserver implements TraceObserver {
         this.aggregator = new CO2RecordAggregator()
 
         // Start hourly CI updating
-        timeCiRecords.start()
+        timeCiRecordCollector.start()
 
         // Create trace file
         traceFile.create()
@@ -190,7 +190,7 @@ class CO2FootprintObserver implements TraceObserver {
         log.debug('Workflow completed -- rendering & saving files')
 
         // Stop hourly CI updating
-        timeCiRecords.stop()
+        timeCiRecordCollector.stop()
 
         // Compute the statistics (total, mean, min, max, quantiles) on process level
         final Map<String, Map<String, Map<String, ?>>> processStats = aggregator.computeProcessStats()
@@ -222,7 +222,7 @@ class CO2FootprintObserver implements TraceObserver {
         // Write report and summary
         summaryFile.write(totalStats, co2FootprintComputer, config, version)
 
-        reportFile.addEntries(processStats, totalStats, co2FootprintComputer, config, version, session, traceRecords, co2eRecords, timeCiRecords)
+        reportFile.addEntries(processStats, totalStats, co2FootprintComputer, config, version, session, traceRecords, co2eRecords, timeCiRecordCollector)
         reportFile.write()
 
         // Close all files (writes remaining tasks in the trace file)
