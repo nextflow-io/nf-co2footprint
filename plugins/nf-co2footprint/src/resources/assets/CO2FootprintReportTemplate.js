@@ -144,7 +144,7 @@ $(function() {
       }
     ];
 
-  Plotly.newPlot('ci_plot', ci_plot_data)
+  Plotly.newPlot('ci-plot', ci_plot_data)
 
 
   //
