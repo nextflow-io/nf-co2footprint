@@ -8,6 +8,8 @@ import spock.lang.Shared
 import spock.lang.Specification
 
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.ConcurrentHashMap
 
@@ -79,8 +81,8 @@ class TimeCiRecordCollectorTest  extends Specification {
         timeCiRecordCollector.stop()
         Thread.sleep(1000)                  // wait 2 seconds
 
-        traceRecord.get('start') >> now
-        traceRecord.get('complete') >> LocalDateTime.now()
+        traceRecord.get('start') >> now.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        traceRecord.get('complete') >> LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         Double weightedCI = timeCiRecordCollector.getWeightedCI(traceRecord)
 
         then:
