@@ -5,6 +5,7 @@ import groovy.util.logging.Slf4j
 import nextflow.co2footprint.Logging.Markers
 import groovy.json.JsonSlurper
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 /**
  * Class to compute carbon intensity (CI) values.
@@ -52,7 +53,7 @@ class CIValueComputer {
             // Parse the successful API response
             json = new JsonSlurper().parse(connection.inputStream) as Map
 
-            time = LocalDateTime.parse(json['datetime'] as String)
+            time = OffsetDateTime.parse(json['datetime'] as String).toLocalDateTime()
             ci = json['carbonIntensity'] as Double
             log.info(
                 Markers.unique,

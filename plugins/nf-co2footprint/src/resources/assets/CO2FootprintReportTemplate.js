@@ -136,15 +136,58 @@ $(function() {
   //
   // Carbon intensity plot
   //
+  if (window.timeCiRecords.size > 1) {
+    var timestamps = Array.from( window.timeCiRecords.keys() )
+    var ciValues = Array.from( window.timeCiRecords.values() )
     var ci_plot_data = [
       {
-        x: Array.from( window.timeCiRecords.keys() ),
-        y: Array.from( window.timeCiRecords.values() ),
+        name: "Carbon intensity",
+        x: timestamps, y: ciValues,
         type: 'scatter'
-      }
+      },
     ];
 
-  Plotly.newPlot('ci-plot', ci_plot_data)
+    var tasksStart = null;
+    var tasksEnd = null;
+    for (let task of window.data.trace) {
+      if(tasksStart == null || tasksStart > task['start']) { tasksStart = task['start']};
+      if(tasksEnd == null ||tasksEnd < task['complete']) { tasksEnd = task['complete']};
+      ci_plot_data.push(
+        {
+          name: "Task " + task["task_id"],
+          x: [task['start'], task['complete']], y: [task['%cpu'], task['%cpu']],
+          type: 'scatter',  fill: 'tozeroy', mode: 'none', yaxis: 'y2',
+        }
+      );
+    }
+
+    var ci_layout = {
+      title: 'Carbon intensity index',
+      legend: {
+        x: 1.1
+      },
+      xaxis: {
+        title: 'Time',
+        ticklabelstandoff: 10,
+        overlay: 'x2',
+        range: [tasksStart, tasksEnd],
+      },
+      yaxis: {
+        title: 'Carbon Intensity (g/kWh)',
+        rangemode: 'tozero',
+      },
+      yaxis2: {
+       title: 'CPU usage (%)',
+       rangemode: 'tozero',
+       gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
+       overlaying: 'y',
+       side: 'right',
+      },
+    };
+
+    Plotly.newPlot('ci-plot', ci_plot_data, ci_layout)
+  }
+
 
 
   //

@@ -37,7 +37,7 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
     // Nextflow report data
     window.data = ${data};
     window.options = ${options};
-    window.timeCiRecords = ${timeCiRecords};
+    window.timeCiRecords = new Map(Object.entries(${timeCiRecords}));
   </script>
 
 </head>
@@ -58,6 +58,8 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
         <li class="nav-item"><a class="nav-link" href="#measures">Measures</a></li>
         <li class="nav-item"><a class="nav-link" href="#tasks">Tasks</a></li>
         <li class="nav-item"><a class="nav-link" href="#options">Options</a></li>
+        <li class="nav-item"><a class="nav-link" href="#ci-heading">Carbon intensity</a></li>
+        <li class="nav-item"><a class="nav-link" href="#attribution-and-references">Attribution</a></li>
       </ul>
     </div>
     <code class="d-none d-md-inline navbar-text">
@@ -306,74 +308,6 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
         scrolling side to side will reveal more columns.</p>
     </div>
 
-    <!-- References -->
-    <div class="container my-5">
-      <div class="card shadow-sm">
-        <div class="card-body">
-          <h2 id="attribution-and-references" class="section">Data Attribution &amp; References</h2>
-          <ul class="pl-3 mb-0">
-            <li class="mb-3">
-              The calculation of these values is based on the carbon footprint computation method
-              developed in the
-              <a href="https://www.green-algorithms.org/" target="_blank" rel="noopener" style="color: #28a745">Green Algorithms</a> project.<br>
-              <span class="font-italic small">
-                Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation.
-                Adv. Sci. 2021, 2100707.
-                <a href="https://doi.org/10.1002/advs.202100707" target="_blank" rel="noopener">
-                  https://doi.org/10.1002/advs.202100707
-                </a>
-              </span>
-            </li>
-            <li class="mb-3">
-              <% if (used_EM_api) { %>
-                The carbon intensity (CI) values used in the calculation are based on real-time data from
-                <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener" style="color: #17a2b8">Electricity Maps</a>
-                accessed via their API, under the
-                <a href="https://opendatacommons.org/licenses/odbl/1-0/" target="_blank" rel="noopener">Open Database License (ODbL)</a>.
-                In the event that real-time data was unavailable, fallback values from the 2024 yearly historical data were used.<br>
-                <span class="font-italic small">
-                  Electricity Maps (2025). Real-time Carbon Intensity Data accessed via API
-                  (<% if (workflow.start.format('MMM dd, yyyy') != workflow.complete.format('MMM dd, yyyy')) { %>
-                    for the period ${workflow.start.format('MMM dd, yyyy')} to ${workflow.complete.format('MMM dd, yyyy')}
-                  <% } else { %>
-                    retrieved: ${workflow.start.format('MMM dd, yyyy')}
-                  <% } %>).
-                  Electricity Maps.
-                  <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">
-                    https://www.electricitymaps.com
-                  </a>
-                </span>
-              <% } else { %>
-                The carbon intensity (CI) values used in the calculation originate from
-                <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">Electricity Maps</a>
-                under the
-                <a href="https://opendatacommons.org/licenses/odbl/1-0/" target="_blank" rel="noopener">Open Database License (ODbL)</a>.<br>
-                <span class="font-italic small">
-                  Electricity Maps (2025). 2024 Yearly Carbon Intensity Data (Version January 27, 2025). Electricity Maps.
-                  <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">
-                    https://www.electricitymaps.com
-                  </a>
-                </span>
-              <% } %>
-            </li>
-            <li class="mb-3">
-              The processors thermal design power (TDP) values used in the calculation originate from
-              <a href="https://en.wikichip.org/wiki/WikiChip" target="_blank" rel="noopener">WikiChip</a>
-              under the
-              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> license.<br>
-              <span class="font-italic small">
-                WikiChip LLC (2025). CPU Data including Thermal Design Power (TDP) (Version June 20, 2025).
-                WikiChip.
-                <a href="https://en.wikichip.org/wiki/WikiChip" target="_blank" rel="noopener">
-                  https://en.wikichip.org/wiki/WikiChip
-                </a>
-              </span>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
     <!-- Execution options table -->
     <div class="container">
       <div id="options-table">
@@ -386,6 +320,7 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
     </div>
   </div>
 
+  <!-- CI fluctuation plot -->
   <% if (used_EM_api) { %>
   <div class="container">
     <h2 id="ci-heading" class="section">Carbon intensity fluctuation</h2>
@@ -393,6 +328,74 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
     <p class="mt-3 mb-3">This plot shows the carbon intensity fluctuation during workflow computation.</p>
   </div>
   <% } %>
+
+  <!-- References -->
+  <div class="container my-5">
+      <div class="card shadow-sm">
+          <div class="card-body">
+              <h2 id="attribution-and-references" class="section">Data Attribution &amp; References</h2>
+              <ul class="pl-3 mb-0">
+                  <li class="mb-3">
+                      The calculation of these values is based on the carbon footprint computation method
+                      developed in the
+                      <a href="https://www.green-algorithms.org/" target="_blank" rel="noopener" style="color: #28a745">Green Algorithms</a> project.<br>
+                      <span class="font-italic small">
+                Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation.
+                Adv. Sci. 2021, 2100707.
+                <a href="https://doi.org/10.1002/advs.202100707" target="_blank" rel="noopener">
+                  https://doi.org/10.1002/advs.202100707
+                </a>
+              </span>
+                  </li>
+                  <li class="mb-3">
+                      <% if (used_EM_api) { %>
+                      The carbon intensity (CI) values used in the calculation are based on real-time data from
+                      <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener" style="color: #17a2b8">Electricity Maps</a>
+                      accessed via their API, under the
+                      <a href="https://opendatacommons.org/licenses/odbl/1-0/" target="_blank" rel="noopener">Open Database License (ODbL)</a>.
+                      In the event that real-time data was unavailable, fallback values from the 2024 yearly historical data were used.<br>
+                      <span class="font-italic small">
+                  Electricity Maps (2025). Real-time Carbon Intensity Data accessed via API
+                  (<% if (workflow.start.format('MMM dd, yyyy') != workflow.complete.format('MMM dd, yyyy')) { %>
+                    for the period ${workflow.start.format('MMM dd, yyyy')} to ${workflow.complete.format('MMM dd, yyyy')}
+                  <% } else { %>
+                    retrieved: ${workflow.start.format('MMM dd, yyyy')}
+                  <% } %>).
+                  Electricity Maps.
+                  <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">
+                    https://www.electricitymaps.com
+                  </a>
+                </span>
+                      <% } else { %>
+                      The carbon intensity (CI) values used in the calculation originate from
+                      <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">Electricity Maps</a>
+                      under the
+                      <a href="https://opendatacommons.org/licenses/odbl/1-0/" target="_blank" rel="noopener">Open Database License (ODbL)</a>.<br>
+                      <span class="font-italic small">
+                  Electricity Maps (2025). 2024 Yearly Carbon Intensity Data (Version January 27, 2025). Electricity Maps.
+                  <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">
+                    https://www.electricitymaps.com
+                  </a>
+                </span>
+                      <% } %>
+                  </li>
+                  <li class="mb-3">
+                      The processors thermal design power (TDP) values used in the calculation originate from
+                      <a href="https://en.wikichip.org/wiki/WikiChip" target="_blank" rel="noopener">WikiChip</a>
+                      under the
+                      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> license.<br>
+                      <span class="font-italic small">
+                WikiChip LLC (2025). CPU Data including Thermal Design Power (TDP) (Version June 20, 2025).
+                WikiChip.
+                <a href="https://en.wikichip.org/wiki/WikiChip" target="_blank" rel="noopener">
+                  https://en.wikichip.org/wiki/WikiChip
+                </a>
+              </span>
+                  </li>
+              </ul>
+          </div>
+      </div>
+  </div>
 
   <!-- Footer -->
   <footer>
