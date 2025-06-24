@@ -30,6 +30,7 @@
 - Changed missing executor logging to indicate a still functioning run
 - Added "How to cite" & CITATION.cff
 - Added warning when using 'cloud' `machineType`
+- Added CPUs from WikiChip to work around licensing issues
 
 # Version 1.0.0-beta1
 ## Features:
