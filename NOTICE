@@ -10,6 +10,10 @@ This repository contains both source code and data, each under separate licenses
    Licensed under the **Open Data Commons Open Database License (ODbL) v1.0**.
    See [CI LICENSE](plugins/nf-co2footprint/src/resources/ci_data/LICENSE) for the full license text.
 
+3. **CPU Dataset** (`plugins/nf-co2footprint/src/resources/cpu_tdp_data`)
+   Licensed under the **Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) License**.
+   See [CPU LICENSE](plugins/nf-co2footprint/src/resources/cpu_tdp_data/LICENSE) for the full license text.
+
 If you use, modify or redistribute the CI data, you must credit the original source and comply with the attribution, share-alike, and open-access requirements of the ODbL.
 
 If you use, modify or redistribute the code, follow the Apache 2.0 licensing and attribution requirements.

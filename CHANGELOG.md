@@ -27,6 +27,7 @@
 - Changed Javascript method to use Converter methods
 - Modified Aggregator to include TraceRecords for tracking of CACHED processes
 - Moved non nf-hello template files into categorizing folder structure (except `CO2FootprintComputer`)
+- Added CPUs from WikiChip to work around licensing issues
 
 # Version 1.0.0-beta1
 ## Features:
