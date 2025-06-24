@@ -17,7 +17,6 @@ import nextflow.trace.TraceHelper
 import nextflow.trace.TraceRecord
 
 import java.nio.file.Path
-import java.time.LocalDateTime
 
 
 /**
@@ -143,7 +142,7 @@ class CO2FootprintReport extends CO2FootprintFile{
                 ],
                 options : renderOptionsJson(),
                 used_EM_api: config.isCIAPICalled(), // true if the CI value is calculated using the electricityMaps API
-                timeCiRecords: timeCiRecordCollector.getTimeCIs()
+                timeCiRecords: JsonOutput.toJson(timeCiRecordCollector.getTimeCIs())
         ]
         final String template = readTemplate('assets/CO2FootprintReportTemplate.html')
         final GStringTemplateEngine engine = new GStringTemplateEngine()

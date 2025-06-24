@@ -116,7 +116,6 @@ class CO2FootprintConfig {
 
         // Determine the carbon intensity (CI) value
         if (ci == null) {
-
             CIValueComputer ciValueComputer = new CIValueComputer(emApiKey, location, ciData)
             // ci is either set to a Closure (in case the electricity maps API is used) or to a Double (in the other cases)
             // The closure is invoked each time the CO2 emissions are calculated (for each task) to make a new API call to update the real time ci value.
