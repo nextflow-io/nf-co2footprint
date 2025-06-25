@@ -1,0 +1,42 @@
+cff-version: 1.2.0
+message: "If you use or reference this software, please cite it as below"
+authors:
+  - family-names: Carl
+    given-names: Josua
+    orcid: https://orcid.org/0009-0001-7336-9808
+  - family-names: Nadja
+    given-names: Volkmann
+    orcid: https://orcid.org/?  <-- Add Nadja's OrcID
+  - family-names: Mir-Pedrol
+    given-names: Júlia
+    orcid: https://orcid.org/0000-0001-6104-9260
+  - family-names: Ewels
+    given-names: Phil
+    orcid: https://orcid.org/0000-0003-4101-2502
+  - family-names: Lannelongue
+    given-names: Loïc
+    orcid: https://orcid.org/0000-0002-9135-1345
+  - family-names: Nahnsen
+    given-names: Sven
+    orcid: https://orcid.org/0000-0002-4375-0691
+  - family-names: Krakau
+    given-names: Sabrina
+    orcid: https://orcid.org/0000-0003-0603-7907
+title: "nf-co2footprint - A nextflow plugin to track CO2 equivalent emissions"
+version: 1.0.0
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.14622304
+doi: 10.5281/zenodo.14622304
+date-released: 2024-06-10
+repository-code: "https://github.com/nextflow-io/nf-co2footprint/"
+license: Apache License 2.0
+keywords:
+  - "co2footprint"
+  - "co2 footprint"
+  - "co2 emissions"
+  - "carbon emissions"
+  - "carbon footprint"
+  - "nextflow"
+  - "workflow"
+  - "pipeline"

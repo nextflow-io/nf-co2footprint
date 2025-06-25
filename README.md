@@ -51,14 +51,16 @@ We thank the following people for their extensive assistance in the development 
 
 ### How to cite:
 ```text
-S. Krakau, J. Mir-Pedrol, J. Carl, and N. Volkmann, nextflow-io/nf-co2footprint v1.0.0. (Jun., 2025). nextflow-io. Available: https://github.com/nextflow-io/nf-co2footprint
+J. Carl, N. Volkmann, J. Mir-Pedrol, P. Ewels, S. Nahnsen, S. Krakau nextflow-io/nf-co2footprint v1.0.0. (Jun., 2025). nextflow-io. Available: https://github.com/nextflow-io/nf-co2footprint
 ```
 ```Bibtex
 @software{nf_co2footprint_plugin,
-    author =    {Sabrina Krakau and
+    author =    {Josua Carl and
+                 Nadja Volkmann and
                  Júlia Mir-Pedrol and
-                 Josua Carl and
-                 Nadja Volkmann}
+                 Phil Ewels and
+                 Sven Nahnsen and
+                 Sabrina Krakau}
     title   =   {nextflow-io/nf-co2footprint}
     month   =   {June}
     year    =   {2025}
