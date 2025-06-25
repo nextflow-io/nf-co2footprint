@@ -22,7 +22,7 @@ authors:
   - family-names: Krakau
     given-names: Sabrina
     orcid: https://orcid.org/0000-0003-0603-7907
-title: "nf-co2footprint - A nextflow plugin to track CO2 equivalent emissions"
+title: "nf-co2footprint - A nextflow plugin to track CO2e emissions"
 version: 1.0.0
 identifiers:
   - type: doi
