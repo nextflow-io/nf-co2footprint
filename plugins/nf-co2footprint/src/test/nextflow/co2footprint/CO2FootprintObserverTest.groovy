@@ -122,9 +122,9 @@ class CO2FootprintObserverTest extends Specification{
             total_co2 += co2Record.getCO2e()
         }
         // Energy consumption converted to Wh
-        round(total_energy / 1000) == 9.61
+        round(total_energy / 1000) == 13.61
         // Total CO2 in g (should reflect the CI value you set)
-        round(total_co2 / 1000) == 4.56
+        round(total_co2 / 1000) == 6.46
     }
 
     def 'test full run with co2e equivalences calculation and specific CI' () {
@@ -162,9 +162,9 @@ class CO2FootprintObserverTest extends Specification{
 
         expect:
         // Values compared to result from www.green-algorithms.org
-        co2EquivalencesRecord.getCarKilometers().round(7) == 0.0260743 as Double
-        co2EquivalencesRecord.getTreeMonths().round(7) == 0.004976 as Double
-        co2EquivalencesRecord.getPlanePercent().round(7) == 0.009126 as Double
+        co2EquivalencesRecord.getCarKilometers().round(7) == 0.0369314 as Double
+        co2EquivalencesRecord.getTreeMonths().round(7) == 0.007048 as Double
+        co2EquivalencesRecord.getPlanePercent().round(7) == 0.012926 as Double
     }
 
 
@@ -222,11 +222,11 @@ class CO2FootprintObserverTest extends Specification{
         ]
 
         traceLines[1].split('\t') as List<String> == [
-            '111', 'COMPLETED', 'null', '9.61 Wh', '4.61 g', '1ms', '480.0 gCO₂eq/kWh', '1', '7.0', 'Unknown model', '100.0', '7.0 B'
+            '111', 'COMPLETED', 'null', '13.61 Wh', '6.53 g', '1ms', '480.0 gCO₂eq/kWh', '1', '11.0', 'Unknown model', '100.0', '7.0 B'
         ] // GA: CO2e is 6.94g with CI of 475 gCO2eq/kWh
         checksumChecker.compareChecksums(
                 tracePath,
-                'b9954831fd932fb04ec37ff6fbcbdb11'
+                '0978bbded96fe277867b8bb0fd800efe'
         )
 
         // Check Summary File
@@ -238,7 +238,7 @@ class CO2FootprintObserverTest extends Specification{
         // 12 is the plugin version (changes on Github CI to current version)
         checksumChecker.compareChecksums(
                 summaryPath,
-                '0d9b03dec6969ca8bee731821f88ac0e',
+                '6cafd8d5736475524ace6b53e29fa508',
                 [12, 16, 17, 18],
                 this.class.getResource('/summary_test.txt').getPath() as Path
         )
@@ -267,7 +267,7 @@ class CO2FootprintObserverTest extends Specification{
         // 246 is the plugin version
         checksumChecker.compareChecksums(
                 reportPath,
-                'd8d38d55117fad2bd478bc56f880b07b',
+                'bd1ed209bb8fb237efad11396089e542',
                 [233, 246, 1258],
                 this.class.getResource('/report_test.html').getPath() as Path
         )
