@@ -9,7 +9,7 @@ A Nextflow plugin to estimate the CO₂ footprint of pipeline runs.
 The nf-co2footprint plugin estimates the energy consumption for each pipeline task based on the Nextflow resource usage metrics and information about the power consumption of the underlying compute system.
 The carbon intensity of the energy production is then used to estimate the respective CO₂ emission.
 
-The calculation is based on the carbon footprint computation method developed in the [Green Algorithms Project](https://www.green-algorithms.org/).
+The calculation is based on the carbon footprint computation method developed in the [Green Algorithms Project](https://www.green-algorithms.org).
 
 > **Green Algorithms: Quantifying the Carbon Footprint of Computation**  
 > Lannelongue, L., Grealey, J., Inouye, M.,  
