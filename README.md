@@ -42,12 +42,24 @@ After your changes are accepted. maintainers may then [publish](contributing/pub
 
 ## Credits
 
-The nf-co2footprint plugin is mainly developed and maintained by [Sabrina Krakau](https://github.com/skrakau), [Júlia Mir-Pedrol](https://github.com/mirpedrol), [Josua Carl](https://github.com/josuacarl), and [Nadja Volkmann](https://github.com/nadnein) at [QBiC](https://www.qbic.uni-tuebingen.de/).
+The `nf-co2footprint` plugin is mainly developed by:
+- [Sabrina Krakau](https://github.com/skrakau)
+- [Júlia Mir-Pedrol](https://github.com/mirpedrol)
+- [Josua Carl](https://github.com/josuacarl)
+- [Nadja Volkmann](https://github.com/nadnein)
+
+at [QBiC](https://www.qbic.uni-tuebingen.de/)
 
 We thank the following people for their extensive assistance in the development of this plugin:
 
 - [Phil Ewels](https://github.com/ewels)
 - [Paolo Di Tommaso](https://github.com/pditommaso)
+- [Matthias Hörtenhuber](https://github.com/mashehu)
+- [Till Englert](https://github.com/tillenglert)
+- [Bastian Eisenmann](https://github.com/Bastian-Eisenmann)
+- [Hemant Kumar Joon](https://github.com/hemantjoon)
+- [Jorge Aguilera](https://github.com/jorgeaguileraseqera)
+- [Ben Sherman](https://github.com/bentsherman)
 
 ### How to cite:
 ```text
