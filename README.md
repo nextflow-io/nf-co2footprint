@@ -43,10 +43,11 @@ After your changes are accepted. maintainers may then [publish](contributing/pub
 ## Credits
 
 The `nf-co2footprint` plugin is mainly developed by:
-- [Sabrina Krakau](https://github.com/skrakau)
-- [Júlia Mir-Pedrol](https://github.com/mirpedrol)
+
 - [Josua Carl](https://github.com/josuacarl)
 - [Nadja Volkmann](https://github.com/nadnein)
+- [Júlia Mir-Pedrol](https://github.com/mirpedrol)
+- [Sabrina Krakau](https://github.com/skrakau)
 
 at [QBiC](https://www.qbic.uni-tuebingen.de/)
 
