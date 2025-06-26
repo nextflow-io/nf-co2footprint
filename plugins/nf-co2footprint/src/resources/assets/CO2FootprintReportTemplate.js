@@ -136,7 +136,18 @@ $(function() {
   //
   // Carbon intensity plot
   //
-  if (window.timeCiRecords.size > 1) {
+
+  // CI is defined in an hourly context, therefore we can add one additional point at the end to indicate the continuation
+  if (window.timeCiRecords.size > 0) {
+    var lastTime = [...window.timeCiRecords.keys()].pop();
+    const lastCi = window.timeCiRecords.get(lastTime);
+
+    const date = new Date(lastTime);
+    date.setHours(date.getHours() + 1);
+
+    lastTime = date.toISOString().slice(0, 16);
+    window.timeCiRecords.set(lastTime, lastCi)
+
     var timestamps = Array.from( window.timeCiRecords.keys() )
     var ciValues = Array.from( window.timeCiRecords.values() )
     var ci_plot_data = [
