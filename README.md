@@ -59,8 +59,6 @@ We thank the following people for their extensive assistance in the development 
 - [Till Englert](https://github.com/tillenglert)
 - [Bastian Eisenmann](https://github.com/Bastian-Eisenmann)
 - [Hemant Kumar Joon](https://github.com/hemantjoon)
-- [Jorge Aguilera](https://github.com/jorgeaguileraseqera)
-- [Ben Sherman](https://github.com/bentsherman)
 
 ### How to cite:
 ```text
