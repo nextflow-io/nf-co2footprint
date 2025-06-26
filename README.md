@@ -61,7 +61,7 @@ J. Carl, N. Volkmann, J. Mir-Pedrol, P. Ewels, S. Nahnsen, S. Krakau nextflow-io
                  Phil Ewels and
                  Sven Nahnsen and
                  Sabrina Krakau}
-    title   =   {nextflow-io/nf-co2footprint}
+    title   =   {nextflow-io/nf-co2footprint - A Nextflow plugin to estimate the CO2e footprint of pipeline runs}
     month   =   {June}
     year    =   {2025}
     publisher = {Nextflow-io}
