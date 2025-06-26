@@ -32,7 +32,7 @@ CI & = \text{carbon intensity of energy production, which is the amount of CO₂
 \end{aligned}
 $$
 
-For the final CO₂e estimation of a pipeline run, the values of all cached and completed tasks are summed up.
+For the final CO₂e estimation of a pipeline run, the values of reused cached and completed tasks are summed up.
 This includes failed tasks as well.
 
 !!! note
