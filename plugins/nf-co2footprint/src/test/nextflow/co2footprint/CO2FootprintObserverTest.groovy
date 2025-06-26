@@ -268,7 +268,7 @@ class CO2FootprintObserverTest extends Specification{
         checksumChecker.compareChecksums(
                 reportPath,
                 'e1299389272b334e2891dbb0190d2c16',
-                [1103, 1152, 1292],
+                [1114, 1163, 1176],
                 this.class.getResource('/report_test.html').getPath() as Path
         )
     }
