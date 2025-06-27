@@ -67,3 +67,7 @@ The following parameters are currently available:
     - `'compute cluster'`: sets `pue` to 1.67
     - `'cloud'`: sets `pue` to 1.56  
       <sup>Source: [Uptime Institute 2024 Global Data Center Survey](https://datacenter.uptimeinstitute.com/rs/711-RIA-145/images/2024.GlobalDataCenterSurvey.Report.pdf)</sup>
+
+- **`personalEnergyMixCi`**  
+  This parameter can be added to account for individual differences in the energy mix that is used for computation. It is strongly recommended to read the section on "Accounting for a personal energy mix" in [the configuration docs](configuration.md) beforehand. This parameter does not replace the location-based CI, but adds another value to the final report.
+  **Default**:  `null`
