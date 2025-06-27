@@ -215,7 +215,6 @@ class CO2FootprintReport extends CO2FootprintFile{
             totalsMap.putAll(makeCO2Total(suffix))
         }
 
-        log.info("${totalsMap}")
         return totalsMap
     }
 
