@@ -38,7 +38,7 @@ class CO2RecordAggregatorTest extends Specification{
             [
                     traceRecord:tr,
                     co2Record  : new CO2Record(
-                            value, value, 1.0d, 475.0, 1, 12, 100.0, 1024**3, "testTask_${counter}", 'Unknown model'
+                            value, value, null, 1.0d, 475.0, null, 1, 12, 100.0, 1024**3, "testTask_${counter}", 'Unknown model'
                     )
             ]
         }

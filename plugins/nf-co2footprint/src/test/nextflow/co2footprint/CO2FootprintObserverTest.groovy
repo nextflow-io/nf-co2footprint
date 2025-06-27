@@ -222,7 +222,7 @@ class CO2FootprintObserverTest extends Specification{
         ]
 
         traceLines[1].split('\t') as List<String> == [
-            '111', 'COMPLETED', 'null', '13.61 Wh', '6.53 g', '1ms', '480.0 gCO₂eq/kWh', '1', '11.0', 'Unknown model', '100.0', '7.0 B'
+            '111', 'COMPLETED', 'null', '13.61 Wh', '6.53 g', 'null', '1ms', '480.0 gCO₂eq/kWh', 'null', '1', '11.0', 'Unknown model', '100.0', '7.0 B'
         ] // GA: CO2e is 6.94g with CI of 475 gCO2eq/kWh
         checksumChecker.compareChecksums(
                 tracePath,
