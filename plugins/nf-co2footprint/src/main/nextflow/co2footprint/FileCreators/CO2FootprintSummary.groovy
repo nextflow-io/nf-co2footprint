@@ -2,6 +2,7 @@ package nextflow.co2footprint.FileCreators
 
 import groovy.util.logging.Slf4j
 import groovyx.gpars.agent.Agent
+import nextflow.co2footprint.CO2FootprintComputer
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.utils.Converter
@@ -45,9 +46,11 @@ class CO2FootprintSummary extends CO2FootprintFile {
      * @param config        CO2FootprintConfiguration
      * @param version       Plugin version
      */
-    void write(Map<String, Double> totalStats, CO2EquivalencesRecord equivalences, CO2FootprintConfig config, String version) {
+    void write(Map<String, Double> totalStats, CO2FootprintComputer co2FootprintComputer, CO2FootprintConfig config, String version) {
         // Launch the agent (for thread safety, though only one write is performed)
         summaryWriter = new Agent<PrintWriter>(co2eSummaryFile)
+
+        CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(totalStats['co2e'])
 
         String outText = """\
         Total CO2e footprint measures of this workflow run (including cached tasks):
