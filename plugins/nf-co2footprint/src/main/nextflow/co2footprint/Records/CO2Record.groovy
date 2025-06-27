@@ -23,10 +23,14 @@ class CO2Record extends TraceRecord {
     private final Double energy
     // CO2 equivalent emissions (g)
     private final Double co2e
+    // Personal energy mix CO2 equivalent emissions (g)
+    private final Double personalEnergyMixco2e
     // Time spent on task (ms)
     private final Double time
     // Carbon intensity (gCO₂eq/kWh)
     private final Double ci
+    // Personal energy mix carbon intensity (gCO₂eq/kWh)
+    private final Double personalEnergyMixCi
     // Number of CPU cores used
     private final Integer cpus
     // Power draw of CPU (W)
@@ -42,16 +46,18 @@ class CO2Record extends TraceRecord {
 
     // Properties of entries for JSON rendering
     final public static Map<String,String> FIELDS = [
-            energy:         'num',
-            co2e:           'num',
-            time:           'num',
-            ci:             'num',
-            cpus:           'num',
-            powerdrawCPU:   'num',
-            cpuUsage:       'num',
-            memory:         'num',
-            name:           'str',
-            cpu_model:      'str'
+            energy:                     'num',
+            co2e:                       'num',
+            personalEnergyMixco2e:      'num',
+            time:                       'num',
+            ci:                         'num',
+            personalEnergyMixCi:        'num',
+            cpus:                       'num',
+            powerdrawCPU:               'num',
+            cpuUsage:                   'num',
+            memory:                     'num',
+            name:                       'str',
+            cpu_model:                  'str'
     ]
 
     /**
@@ -68,13 +74,16 @@ class CO2Record extends TraceRecord {
      * @param cpu_model  CPU model name
      */
     CO2Record(
-            Double energy=null, Double co2e=null, Double time=null, Double ci=null, Integer cpus=null, Double powerdrawCPU=null,
+            Double energy=null, Double co2e=null, Double personalEnergyMixco2e=null, Double time=null,
+            Double ci=null, Double personalEnergyMixCi=null, Integer cpus=null, Double powerdrawCPU=null,
             Double cpuUsage=null, Long memory=null, String name=null, String cpu_model=null
     ) {
         this.energy = energy
         this.co2e = co2e
+        this.personalEnergyMixco2e = personalEnergyMixco2e
         this.time = time
         this.ci = ci
+        this.personalEnergyMixCi = personalEnergyMixCi
         this.cpus = cpus
         this.powerdrawCPU = powerdrawCPU
         this.cpuUsage = cpuUsage
@@ -82,16 +91,18 @@ class CO2Record extends TraceRecord {
         this.name = name
         this.cpu_model = cpu_model
         Map<String, Object> store = new LinkedHashMap<>([
-                'energy':           energy,
-                'co2e':             co2e,
-                'time':             time,
-                'ci':               ci,
-                'cpus':             cpus,
-                'powerdrawCPU':     powerdrawCPU,
-                'cpuUsage':         cpuUsage,
-                'memory':           memory,
-                'name':             name,
-                'cpu_model':        cpu_model
+                'energy':                   energy,
+                'co2e':                     co2e,
+                'personalEnergyMixco2e':    personalEnergyMixco2e,
+                'time':                     time,
+                'ci':                       ci,
+                'personalEnergyMixCi':      personalEnergyMixCi,
+                'cpus':                     cpus,
+                'powerdrawCPU':             powerdrawCPU,
+                'cpuUsage':                 cpuUsage,
+                'memory':                   memory,
+                'name':                     name,
+                'cpu_model':                cpu_model
         ])
         // Overload the store of the parent to ensure inherited methods can access the stored data
         super.store << store
@@ -104,10 +115,19 @@ class CO2Record extends TraceRecord {
     Double getCO2e() { co2e }
     String getCO2eReadable() { Converter.toReadableUnits(co2e,'m', 'g') }
 
+    Double getPersonalEnergyMixCO2e() { personalEnergyMixco2e }
+    String getPersonalEnergyMixCO2eReadable() {
+        personalEnergyMixco2e ? Converter.toReadableUnits(personalEnergyMixco2e,'m', 'g') : null
+    }
+
     Double getTime() { time }
     String getTimeReadable() { Converter.toReadableTimeUnits(time, 'ms', 'ms', 'days', 0.0d) }
 
     String getCIReadable() { Converter.toReadableUnits(ci, '', 'gCO₂eq/kWh') }
+
+    String getPersonalEnergyMixCIReadable() {
+        personalEnergyMixCi ? Converter.toReadableUnits(personalEnergyMixCi, '', 'gCO₂eq/kWh') : null
+    }
 
     Integer getCPUs() { cpus }
     String getCPUsReadable() { cpus as String }
@@ -133,9 +153,9 @@ class CO2Record extends TraceRecord {
      */
     List<String> getReadableEntries() {
         return [
-                this.getNameReadable(), this.getEnergyConsumptionReadable(), this.getCO2eReadable(),
-                this.getTimeReadable(), this.getCIReadable(), this.getCPUsReadable(), this.getPowerdrawCPUReadable(),
-                this.getCPUModelReadable(), this.getCPUUsageReadable(), this.getMemoryReadable()
+                this.getNameReadable(), this.getEnergyConsumptionReadable(), this.getCO2eReadable(), this.getPersonalEnergyMixCO2eReadable(),
+                this.getTimeReadable(), this.getCIReadable(), this.getPersonalEnergyMixCIReadable(), this.getCPUsReadable(),
+                this.getPowerdrawCPUReadable(), this.getCPUModelReadable(), this.getCPUUsageReadable(), this.getMemoryReadable()
         ]
     }
 

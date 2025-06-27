@@ -124,6 +124,9 @@ class CO2FootprintComputer {
         // CI: carbon intensity [gCO2e kWh−1]
         final BigDecimal ci = config.getCi()
 
+        // Personal energy mix based carbon intensity
+        final Double personalEnergyMixCi = config.getPersonalEnergyMixCi()
+
         /**
          * Calculate energy consumption [kWh]
          */
@@ -138,6 +141,7 @@ class CO2FootprintComputer {
          * Resulting CO2 emission
          */
         BigDecimal co2e = (energy * ci) // Emissions in CO2 equivalents [g] CO2e
+        BigDecimal personalEnergyMixco2e = personalEnergyMixCi ? (energy * personalEnergyMixCi) : null
 
         energy = energy * 1000000       // Conversion to [mWh]
         co2e = co2e * 1000              // Conversion to [mg] CO2e
@@ -145,8 +149,10 @@ class CO2FootprintComputer {
         return new CO2Record(
                 energy,
                 co2e,
+                personalEnergyMixco2e,
                 runtime_h,
                 ci,
+                personalEnergyMixCi,
                 numberOfCores as Integer,
                 powerdrawPerCore,
                 cpuUsage,
