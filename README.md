@@ -42,7 +42,7 @@ After your changes are accepted. maintainers may then [publish](contributing/pub
 
 ## Credits
 
-The `nf-co2footprint` plugin is mainly developed by:
+The `nf-co2footprint` plugin has been mainly developed by:
 
 - [Josua Carl](https://github.com/josuacarl)
 - [Nadja Volkmann](https://github.com/nadnein)
