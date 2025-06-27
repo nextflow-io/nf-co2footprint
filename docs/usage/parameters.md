@@ -22,7 +22,7 @@ The following parameters are currently available:
   **Default**:  `null`
 
 - **`ci`**  
-  Set this parameter only if you know the carbon intensity (ci) value for your location and prefer not to use the Electricity Maps API. However, using the API is recommended to retrieve real-time data for more accurate calculations.  
+  Location-based carbon intensity (CI). Set this parameter only if you know the CI for your location and prefer not to use the Electricity Maps API. However, using the API is recommended to retrieve real-time data for more accurate calculations.  
   **Default**:  `null`
 
 - **`apiKey`**  
@@ -68,6 +68,6 @@ The following parameters are currently available:
     - `'cloud'`: sets `pue` to 1.56  
       <sup>Source: [Uptime Institute 2024 Global Data Center Survey](https://datacenter.uptimeinstitute.com/rs/711-RIA-145/images/2024.GlobalDataCenterSurvey.Report.pdf)</sup>
 
-- **`personalEnergyMixCi`**  
+- **`ciMarket`**  
   This parameter can be added to account for individual differences in the energy mix that is used for computation. It is strongly recommended to read the section on "Accounting for a personal energy mix" in [the configuration docs](configuration.md) beforehand. This parameter does not replace the location-based CI, but adds another value to the final report.
   **Default**:  `null`

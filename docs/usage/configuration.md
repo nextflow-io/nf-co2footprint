@@ -55,7 +55,7 @@ The plugin uses the `ci`, `location`, and `apiKey` parameters to determine the c
 
 ### Accounting for a personal energy mix
 
-The `personalEnergyMixCi` parameter can be used to provide a custom value to account for differences to your regional average. This can occur due to:
+The `ciMarket` parameter can be used to provide a custom value to account for differences to your regional average. This can occur due to:
 - A different market share through a contract with your energy provider, guaranteeing to provide a certain percentage of electricity from renewable sources
 - Direct contributions to the used electricity (e.g. via owned solar panels)
 
