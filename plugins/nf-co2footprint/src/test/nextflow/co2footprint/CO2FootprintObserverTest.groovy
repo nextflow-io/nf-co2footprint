@@ -264,11 +264,11 @@ class CO2FootprintObserverTest extends Specification{
         timeLine == "          " +
                 "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                 " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
-        // 1165 is the plugin version
+        // 1199 is the plugin version
         checksumChecker.compareChecksums(
                 reportPath,
-                'e1299389272b334e2891dbb0190d2c16',
-                [1114, 1163, 1176],
+                'dc87bdc54e07963ffebf22044a0e7ccb',
+                [1137, 1186, 1199],
                 this.class.getResource('/report_test.html').getPath() as Path
         )
     }
