@@ -70,8 +70,6 @@ class CO2FootprintReportTest extends Specification{
                 1, 12, 100.0, 1024**3, 'testTask', 'Unknown model'
         )
 
-        CO2EquivalencesRecord equivalencesRecord = new CO2EquivalencesRecord(10.0, 10.0, 10.0)
-
         CO2RecordAggregator aggregator = new CO2RecordAggregator()
         aggregator.add(traceRecord, co2Record)
 
