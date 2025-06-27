@@ -1,6 +1,7 @@
 package nextflow.co2footprint.FileCreators
 
 import groovy.json.JsonOutput
+import nextflow.co2footprint.CO2FootprintComputer
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.Records.CO2Record
@@ -31,9 +32,9 @@ class CO2FootprintReport extends CO2FootprintFile{
     private int maxTasks
 
     // Information for final report
-    private CO2EquivalencesRecord equivalences
-    private Map<String, Double> totalStats
     private Map<String, Map<String, Map<String, ?>>> processStats
+    private Map<String, Double> totalStats
+    private CO2FootprintComputer co2FootprintComputer
     private CO2FootprintConfig config
     private String version
     private Session session
@@ -58,8 +59,8 @@ class CO2FootprintReport extends CO2FootprintFile{
     /**
      * Store all data needed for the report.
      *
-     * @param totalStats Total energy used (Wh) & Total CO₂ emissions (g)
      * @param processStats Statistics (quantiles, ...) per process
+     * @param totalStats Total energy used (Wh) & Total CO₂ emissions (g)
      * @param equivalences  CO₂ equivalence calculations
      * @param config        Plugin configuration
      * @param version       Plugin version
@@ -68,18 +69,18 @@ class CO2FootprintReport extends CO2FootprintFile{
      * @param co2eRecords   Map of TaskId to CO2Record
      */
     void addEntries(
-            Map<String, Double> totalStats,
             Map<String, Map<String, Map<String, ?>>> processStats,
-            CO2EquivalencesRecord equivalences,
+            Map<String, Double> totalStats,
+            CO2FootprintComputer co2FootprintComputer,
             CO2FootprintConfig config,
             String version,
             Session session,
             Map<TaskId, TraceRecord> traceRecords,
             Map<TaskId, CO2Record> co2eRecords
     ) {
-        this.totalStats = totalStats
         this.processStats = processStats
-        this.equivalences = equivalences
+        this.totalStats = totalStats
+        this.co2FootprintComputer = co2FootprintComputer
         this.config = config
         this.version = version
         this.session = session
@@ -175,21 +176,38 @@ class CO2FootprintReport extends CO2FootprintFile{
     }
 
     /**
+     * Make a map for the total stats of one CO2 emission / energy consumption pair
+     *
+     * @param suffix Suffix for the specific total emission summary map
+     * @return A map for one total value instance
+     */
+    private Map<String, String> makeCO2Total(suffix) {
+        CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(totalStats["co2e${suffix}" as String])
+
+        return [
+                ("co2e${suffix}" as String): Converter.toReadableUnits(totalStats["co2e${suffix}" as String],'m', 'g'),
+                ("energy${suffix}" as String):Converter.toReadableUnits(totalStats["energy${suffix}" as String],'m','Wh'),
+                ("car${suffix}" as String): equivalences.getCarKilometersReadable(),
+                ("tree${suffix}" as String): equivalences.getTreeMonthsReadable(),
+                ("plane_percent${suffix}" as String): equivalences.getPlanePercent() < 100.0 ? equivalences.getPlanePercentReadable() : null,
+                ("plane_flights${suffix}" as String): equivalences.getPlaneFlights() >= 1 ? equivalences.getPlaneFlightsReadable() : null,
+        ]
+    }
+
+    /**
      * Render the total CO₂ footprint values for the HTML report.
      *
-     * @return The rendered JSON map
+     * @return The JSON map
      */
     protected Map<String, String> renderCO2TotalsJson() {
-        return [
-            co2e: Converter.toReadableUnits(totalStats['co2e'],'m', 'g'),
-            energy:Converter.toReadableUnits(totalStats['energy'],'m','Wh'),
-            co2e_non_cached: Converter.toReadableUnits(totalStats['co2e_non_cached'],'m', 'g'),
-            energy_non_cached:Converter.toReadableUnits(totalStats['energy_non_cached'],'m','Wh'),
-            car: equivalences.getCarKilometersReadable(),
-            tree: equivalences.getTreeMonthsReadable(),
-            plane_percent: equivalences.getPlanePercent() < 100.0 ? equivalences.getPlanePercentReadable() : null,
-            plane_flights: equivalences.getPlaneFlights() >= 1 ? equivalences.getPlaneFlightsReadable() : null
-        ]
+        Map<String, String> totalsMap = [:]
+
+        ['', '_non_cached', '_personalEnergyMix'].each { String suffix ->
+            totalsMap.putAll(makeCO2Total(suffix))
+        }
+
+        log.info("${totalsMap}")
+        return totalsMap
     }
 
     /**

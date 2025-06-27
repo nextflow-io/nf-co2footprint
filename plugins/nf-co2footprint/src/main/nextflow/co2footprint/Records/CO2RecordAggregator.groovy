@@ -26,7 +26,13 @@ class CO2RecordAggregator {
                 },
                 energy_non_cached: { TraceRecord traceRecord, CO2Record co2Record ->
                     traceRecord.getStore()['status'] != 'CACHED' ? co2Record.getEnergyConsumption() : null
-                }
+                },
+                co2e_personalEnergyMix: {
+                    TraceRecord traceRecord, CO2Record co2Record -> co2Record.getPersonalEnergyMixCO2e()
+                },
+                energy_personalEnergyMix: {
+                    TraceRecord traceRecord, CO2Record co2Record -> co2Record.getEnergyConsumption()
+                },
         ]
     }
 
