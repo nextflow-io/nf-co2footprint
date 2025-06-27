@@ -386,8 +386,6 @@ $(function() {
 
   // CI is defined in an hourly context, therefore we can add one additional point at the end to indicate the continuation
   if (window.timeCiRecords.size > 0) {
-
-
     // Add main line of CI values
     var timestamps = Array.from( window.timeCiRecords.keys() )
     var ciValues = Array.from( window.timeCiRecords.values() )
@@ -456,7 +454,7 @@ $(function() {
       }
     };
 
-    Plotly.newPlot('ci-plot', ci_plot_data, ci_layout);
+    Plotly.newPlot('ci-plot', ci_plot_data, ci_layout)
   }
 
 
