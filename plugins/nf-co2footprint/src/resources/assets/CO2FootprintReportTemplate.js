@@ -1,4 +1,16 @@
 // JavaScript used to power the Nextflow Report Template output.
+/**
+ * Shift a Date by x hours
+ *
+ * @param {*} timeString The Date in String format
+ * @param {*} shift The shift (e.g. +/-10)
+ * @returns The shifted date as a String
+ */
+function shiftHours(timeString, shift) {
+const date = new Date(timeString);
+date.setHours(date.getHours() + shift);
+return date.toISOString().slice(0, 16);
+}
 
 /**
  * Decides whether raw or readable values are to be displayed
@@ -139,30 +151,42 @@ $(function() {
 
   // CI is defined in an hourly context, therefore we can add one additional point at the end to indicate the continuation
   if (window.timeCiRecords.size > 0) {
-    var lastTime = [...window.timeCiRecords.keys()].pop();
-    const lastCi = window.timeCiRecords.get(lastTime);
 
-    const date = new Date(lastTime);
-    date.setHours(date.getHours() + 1);
 
-    lastTime = date.toISOString().slice(0, 16);
-    window.timeCiRecords.set(lastTime, lastCi)
-
+    // Add main line of CI values
     var timestamps = Array.from( window.timeCiRecords.keys() )
     var ciValues = Array.from( window.timeCiRecords.values() )
+
     var ci_plot_data = [
+      // Add timestamps + CI values to plot
       {
         name: "Carbon intensity",
         x: timestamps, y: ciValues,
-        type: 'scatter'
+        type: 'scatter', legendgroup: "Carbon intensity"
       },
+
+      // Add 1 day to first and last point
+      {
+        name: "Carbon intensity prepend",
+        x: [shiftHours(timestamps[0], -24), timestamps[0]],
+        y: [ciValues[0], ciValues[0]],
+        type: 'scatter', legendgroup: "Carbon intensity", mode: "lines", line: {dash: 'dot'},
+      },
+       // Add 1 day to first and last point
+      {
+        name: "Carbon intensity append",
+        x: [shiftHours(timestamps[timestamps.length - 1], 24),timestamps[timestamps.length - 1]],
+        y: [ciValues[ciValues.length - 1], ciValues[ciValues.length - 1]],
+        type: 'scatter', legendgroup: "Carbon intensity", mode: "lines", line: {dash: 'dot'},
+      }
     ];
 
+    // Add CPU load of tasks
     var tasksStart = null;
     var tasksEnd = null;
     for (let task of window.data.trace) {
-      if(tasksStart == null || tasksStart > task['start']) { tasksStart = task['start']};
-      if(tasksEnd == null ||tasksEnd < task['complete']) { tasksEnd = task['complete']};
+      if(tasksStart == null || tasksStart > task['start']) { tasksStart = task['start'] };
+      if(tasksEnd == null ||tasksEnd < task['complete']) { tasksEnd = task['complete'] };
       ci_plot_data.push(
         {
           name: "Task " + task["task_id"],
@@ -172,6 +196,7 @@ $(function() {
       );
     }
 
+    // Make layout
     var ci_layout = {
       title: 'Carbon intensity index',
       legend: {
@@ -193,12 +218,11 @@ $(function() {
        gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
        overlaying: 'y',
        side: 'right',
-      },
+      }
     };
 
-    Plotly.newPlot('ci-plot', ci_plot_data, ci_layout)
+    Plotly.newPlot('ci-plot', ci_plot_data, ci_layout);
   }
-
 
 
   //
