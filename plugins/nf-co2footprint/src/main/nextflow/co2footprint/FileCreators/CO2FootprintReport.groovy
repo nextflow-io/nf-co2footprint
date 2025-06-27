@@ -211,7 +211,7 @@ class CO2FootprintReport extends CO2FootprintFile{
     protected Map<String, String> renderCO2TotalsJson() {
         Map<String, String> totalsMap = [:]
 
-        ['', '_non_cached', '_personalEnergyMix'].each { String suffix ->
+        ['', '_non_cached', '_market'].each { String suffix ->
             totalsMap.putAll(makeCO2Total(suffix))
         }
 

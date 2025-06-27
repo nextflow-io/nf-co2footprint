@@ -37,7 +37,7 @@ class CO2FootprintConfig {
     private String  reportFile = "co2footprint_report_${timestamp}.html"
     private String  location = null
     private def     ci = null                       // CI: carbon intensity
-    private def     personalEnergyMixCi = null      // marked based CI: carbon intensity
+    private def     ciMarket = null      // marked based CI: carbon intensity
     private String  apiKey = null                   // API key for electricityMaps
     private Double  pue = null                      // PUE: power usage effectiveness efficiency, coefficient of the data centre
     private Double  powerdrawMem = 0.3725           // Power draw of memory [W per GB]
@@ -63,8 +63,8 @@ class CO2FootprintConfig {
     Double getCi() {
         (ci instanceof Closure) ? (ci as Closure<Double>)() : ci
     }
-    Double getPersonalEnergyMixCi() {
-        (personalEnergyMixCi instanceof Closure) ? (personalEnergyMixCi as Closure<Double>)() : personalEnergyMixCi
+    Double getCiMarket() {
+        (ciMarket instanceof Closure) ? (ciMarket as Closure<Double>)() : ciMarket
     }
     Double getPue() { pue }
     Boolean getIgnoreCpuModel() { ignoreCpuModel }

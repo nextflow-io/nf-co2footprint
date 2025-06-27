@@ -24,13 +24,13 @@ class CO2Record extends TraceRecord {
     // CO2 equivalent emissions (g)
     private final Double co2e
     // Personal energy mix CO2 equivalent emissions (g)
-    private final Double personalEnergyMixco2e
+    private final Double co2eMarket
     // Time spent on task (ms)
     private final Double time
     // Carbon intensity (gCO₂eq/kWh)
     private final Double ci
     // Personal energy mix carbon intensity (gCO₂eq/kWh)
-    private final Double personalEnergyMixCi
+    private final Double ciMarket
     // Number of CPU cores used
     private final Integer cpus
     // Power draw of CPU (W)
@@ -48,10 +48,10 @@ class CO2Record extends TraceRecord {
     final public static Map<String,String> FIELDS = [
             energy:                     'num',
             co2e:                       'num',
-            personalEnergyMixco2e:      'num',
+            co2eMarket:                 'num',
             time:                       'num',
             ci:                         'num',
-            personalEnergyMixCi:        'num',
+            ciMarket:                   'num',
             cpus:                       'num',
             powerdrawCPU:               'num',
             cpuUsage:                   'num',
@@ -74,16 +74,16 @@ class CO2Record extends TraceRecord {
      * @param cpu_model  CPU model name
      */
     CO2Record(
-            Double energy=null, Double co2e=null, Double personalEnergyMixco2e=null, Double time=null,
-            Double ci=null, Double personalEnergyMixCi=null, Integer cpus=null, Double powerdrawCPU=null,
+            Double energy=null, Double co2e=null, Double co2eMarket=null, Double time=null,
+            Double ci=null, Double ciMarket=null, Integer cpus=null, Double powerdrawCPU=null,
             Double cpuUsage=null, Long memory=null, String name=null, String cpu_model=null
     ) {
         this.energy = energy
         this.co2e = co2e
-        this.personalEnergyMixco2e = personalEnergyMixco2e
+        this.co2eMarket = co2eMarket
         this.time = time
         this.ci = ci
-        this.personalEnergyMixCi = personalEnergyMixCi
+        this.ciMarket = ciMarket
         this.cpus = cpus
         this.powerdrawCPU = powerdrawCPU
         this.cpuUsage = cpuUsage
@@ -93,10 +93,10 @@ class CO2Record extends TraceRecord {
         Map<String, Object> store = new LinkedHashMap<>([
                 'energy':                   energy,
                 'co2e':                     co2e,
-                'personalEnergyMixco2e':    personalEnergyMixco2e,
+                'co2eMarket':               co2eMarket,
                 'time':                     time,
                 'ci':                       ci,
-                'personalEnergyMixCi':      personalEnergyMixCi,
+                'ciMarket':                 ciMarket,
                 'cpus':                     cpus,
                 'powerdrawCPU':             powerdrawCPU,
                 'cpuUsage':                 cpuUsage,
@@ -115,9 +115,9 @@ class CO2Record extends TraceRecord {
     Double getCO2e() { co2e }
     String getCO2eReadable() { Converter.toReadableUnits(co2e,'m', 'g') }
 
-    Double getPersonalEnergyMixCO2e() { personalEnergyMixco2e }
-    String getPersonalEnergyMixCO2eReadable() {
-        personalEnergyMixco2e ? Converter.toReadableUnits(personalEnergyMixco2e,'m', 'g') : null
+    Double getCO2eMarket() { co2eMarket }
+    String getCO2eMarketReadable() {
+        co2eMarket ? Converter.toReadableUnits(co2eMarket,'m', 'g') : null
     }
 
     Double getTime() { time }
@@ -125,8 +125,8 @@ class CO2Record extends TraceRecord {
 
     String getCIReadable() { Converter.toReadableUnits(ci, '', 'gCO₂eq/kWh') }
 
-    String getPersonalEnergyMixCIReadable() {
-        personalEnergyMixCi ? Converter.toReadableUnits(personalEnergyMixCi, '', 'gCO₂eq/kWh') : null
+    String getCiMarketReadable() {
+        ciMarket ? Converter.toReadableUnits(ciMarket, '', 'gCO₂eq/kWh') : null
     }
 
     Integer getCPUs() { cpus }
@@ -153,8 +153,8 @@ class CO2Record extends TraceRecord {
      */
     List<String> getReadableEntries() {
         return [
-                this.getNameReadable(), this.getEnergyConsumptionReadable(), this.getCO2eReadable(), this.getPersonalEnergyMixCO2eReadable(),
-                this.getTimeReadable(), this.getCIReadable(), this.getPersonalEnergyMixCIReadable(), this.getCPUsReadable(),
+                this.getNameReadable(), this.getEnergyConsumptionReadable(), this.getCO2eReadable(), this.getCO2eMarketReadable(),
+                this.getTimeReadable(), this.getCIReadable(), this.getCiMarketReadable(), this.getCPUsReadable(),
                 this.getPowerdrawCPUReadable(), this.getCPUModelReadable(), this.getCPUUsageReadable(), this.getMemoryReadable()
         ]
     }

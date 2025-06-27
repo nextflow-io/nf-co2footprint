@@ -124,7 +124,7 @@ class CO2FootprintReportTest extends Specification{
                             '"wchar":"-","syscr":"-","syscw":"-","read_bytes":"-","write_bytes":"-","attempt":"-","workdir":"-","script":"-",' +
                             '"scratch":"-","queue":"-","cpus":"1","memory":"7 GB","disk":"-","time":"-","env":"-","error_action":"-",' +
                             '"vol_ctxt":"-","inv_ctxt":"-","hostname":"-","cpu_model":"Unknown model","energy":"1.0","co2e":"1.0",' +
-                            '"personalEnergyMixco2e":"-","time":"1.0","ci":"475.0","personalEnergyMixCi":"-","cpus":"1",' +
+                            '"co2eMarket":"-","time":"1.0","ci":"475.0","ciMarket":"-","cpus":"1",' +
                             '"powerdrawCPU":"12.0","cpuUsage":"100.0","memory":"1073741824","name":"testTask","cpu_model":"Unknown model"' +
                         '}' +
                     '],' +
@@ -148,8 +148,8 @@ class CO2FootprintReportTest extends Specification{
                                 '{' +
                                     '"all":[1.0],"total":1.0,"mean":1.0,"minLabel":"testTask","min":1.0,"q1Label":"testTask","q1":1.0,"q2Label":"testTask","q2":1.0,"q3Label":"testTask","q3":1.0,"maxLabel":"testTask","max":1.0' +
                                 '},' +
-                            '"co2e_personalEnergyMix":{},' +
-                            '"energy_personalEnergyMix":' +
+                            '"co2e_market":{},' +
+                            '"energy_market":' +
                                 '{' +
                                     '"all":[1.0],"total":1.0,"mean":1.0,"minLabel":"testTask","min":1.0,"q1Label":"testTask","q1":1.0,"q2Label":"testTask","q2":1.0,"q3Label":"testTask","q3":1.0,"maxLabel":"testTask","max":1.0' +
                                 '}' +
