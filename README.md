@@ -49,7 +49,7 @@ The `nf-co2footprint` plugin has been mainly developed by:
 - [Júlia Mir-Pedrol](https://github.com/mirpedrol)
 - [Sabrina Krakau](https://github.com/skrakau)
 
-at [QBiC](https://www.qbic.uni-tuebingen.de/)
+at [QBiC](https://www.qbic.uni-tuebingen.de/). Special thanks to [Loïc Lannelongue](https://github.com/Llannelongue) from the [University of Cambridge, UK](https://www.lannelongue-group.org/) for collaboration and contributing to this project.
 
 We thank the following people for their extensive assistance in the development of this plugin:
 
