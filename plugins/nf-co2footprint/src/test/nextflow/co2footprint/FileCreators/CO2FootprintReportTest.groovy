@@ -1,6 +1,7 @@
 package nextflow.co2footprint.FileCreators
 
 import nextflow.Session
+import nextflow.co2footprint.CO2FootprintComputer
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
@@ -76,9 +77,9 @@ class CO2FootprintReportTest extends Specification{
 
         co2FootprintReport = new CO2FootprintReport(reportPath, false, 10_000)
         co2FootprintReport.addEntries(
-                [co2e: 10.0d, energy: 100.0d, co2e_non_cached: 10.0d, energy_non_cached: 100.0d],
                 aggregator.computeProcessStats(),
-                equivalencesRecord, config,
+                [co2e: 10.0d, energy: 100.0d, co2e_non_cached: 10.0d, energy_non_cached: 100.0d],
+                new CO2FootprintComputer(Mock(TDPDataMatrix), config), config,
                 'test-version', session, [(taskId): traceRecord], [(taskId): co2Record]
         )
     }
@@ -91,20 +92,22 @@ class CO2FootprintReportTest extends Specification{
         )
 
         when:
-        CO2EquivalencesRecord equivalences = new CO2EquivalencesRecord(carKm, treeMonths, planePercent)
         co2FootprintReport.addEntries(
-                [co2e: 10d, energy: 10d, co2e_non_cached: 10d, energy_non_cached: 10d],
-                null, equivalences, null, null, null, null, null
+                null,
+                [co2e: co2e, energy: 10d, co2e_non_cached: co2e, energy_non_cached: 10d],
+                new CO2FootprintComputer(Mock(TDPDataMatrix), null),
+                null, null, null, null, null
         )
         Map<String, String> totalsJson = co2FootprintReport.renderCO2TotalsJson()
 
         then:
         totalsJson == totalsJsonResult
-
         where:
-        carKm   || treeMonths   || planePercent  || totalsJsonResult
-        10.0    || 10.0         || 10.0          || [ co2e: '10.0 mg', energy:'10.0 mWh', co2e_non_cached:'10.0 mg', energy_non_cached:'10.0 mWh', car: '10.0', tree: '10months', plane_percent: '10.0 %', plane_flights: null]
-        10.0    || 10.0         || 100.0         || [ co2e: '10.0 mg', energy:'10.0 mWh', co2e_non_cached:'10.0 mg', energy_non_cached:'10.0 mWh', car: '10.0', tree: '10months', plane_percent: null, plane_flights: '1.0']
+        co2e                || totalsJsonResult
+        10.0d               || [co2e: '10.0 mg', energy:'10.0 mWh', car: '5.71E-5', tree: '28.69s', plane_percent: '2.00E-5 %', plane_flights: null,
+                                co2e_non_cached:'10.0 mg', energy_non_cached:'10.0 mWh', car_non_cached: '5.71E-5', tree_non_cached: '28.69s', plane_percent_non_cached: '2.00E-5 %', plane_flights_non_cached: null]
+        10_000_000_000.0d   || [co2e: '10.0 Mg', energy:'10.0 mWh', car: '5.71E4', tree: '908years 9months 3days 19h 38min 55.87s', plane_percent: null, plane_flights: '200.0',
+                                co2e_non_cached:'10.0 Mg', energy_non_cached:'10.0 mWh', car_non_cached: '5.71E4', tree_non_cached: '908years 9months 3days 19h 38min 55.87s', plane_percent_non_cached: null, plane_flights_non_cached: '200.0']
     }
 
     def 'Test payLoad JSON generation' () {
@@ -146,6 +149,11 @@ class CO2FootprintReportTest extends Specification{
                             '"energy_non_cached":' +
                                 '{' +
                                     '"all":[1.0],"total":1.0,"mean":1.0,"minLabel":"testTask","min":1.0,"q1Label":"testTask","q1":1.0,"q2Label":"testTask","q2":1.0,"q3Label":"testTask","q3":1.0,"maxLabel":"testTask","max":1.0' +
+                                '},' +
+                            '"co2e_personalEnergyMix":{},' +
+                            '"energy_personalEnergyMix":' +
+                                '{' +
+                                    '"all":[1.0],"total":1.0,"mean":1.0,"minLabel":"testTask","min":1.0,"q1Label":"testTask","q1":1.0,"q2Label":"testTask","q2":1.0,"q3Label":"testTask","q3":1.0,"maxLabel":"testTask","max":1.0' +
                                 '}' +
                         '}' +
                     '}' +
@@ -182,12 +190,16 @@ class CO2FootprintReportTest extends Specification{
             [
                 "co2e": "10.0 mg",
                 "energy":  "100.0 mWh",
+                "car": "5.71E-5",
+                "tree": "28.69s",
+                "plane_percent": "2.00E-5 %",
+                "plane_flights": null,
                 "co2e_non_cached": "10.0 mg",
                 "energy_non_cached":  "100.0 mWh",
-                "car": "10.0",
-                "tree": "10months",
-                "plane_percent": "10.0 %",
-                "plane_flights": null
+                car_non_cached: "5.71E-5",
+                tree_non_cached: "28.69s",
+                plane_percent_non_cached: '2.00E-5 %',
+                plane_flights_non_cached: null
             ]
     }
 
