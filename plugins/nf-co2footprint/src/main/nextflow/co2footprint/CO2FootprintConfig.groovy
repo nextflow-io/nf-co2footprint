@@ -8,6 +8,7 @@ import nextflow.co2footprint.DataContainers.CIValueComputer
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.trace.TraceHelper
 import java.nio.file.Paths
+import java.time.LocalDateTime
 
 /**
  * Configuration class for CO₂ footprint calculations.
@@ -56,11 +57,23 @@ class CO2FootprintConfig {
     String getLocation() { location }
 
     /**
+     * Returns whether or not the API is used for CI
+     */
+    boolean isCIAPICalled() { ci instanceof  Closure }
+
+    /**
      * Returns the carbon intensity value.
      * If set as a closure (for real-time API), invokes it to get the current value.
      */
     Double getCi() {
-        (ci instanceof Closure) ? (ci as Closure<Double>)() : ci
+        isCIAPICalled() ? (ci as Closure<Map<String, Double>>)()['ci']: ci
+    }
+    /**
+     * Returns the carbon intensity at timestamps
+     * @return Carbon intensity at timestamps
+     */
+    Map<String, ?> getTimeCi(){
+        isCIAPICalled() ? (ci as Closure<Map<String, ?>>)() : ci
     }
     Double getPue() { pue }
     Boolean getIgnoreCpuModel() { ignoreCpuModel }
@@ -94,11 +107,11 @@ class CO2FootprintConfig {
 
         // Determine the carbon intensity (CI) value
         if (ci == null) {
-
             CIValueComputer ciValueComputer = new CIValueComputer(apiKey, location, ciData)
             // ci is either set to a Closure (in case the electricity maps API is used) or to a Double (in the other cases)
             // The closure is invoked each time the CO2 emissions are calculated (for each task) to make a new API call to update the real time ci value.
-            ci = ciValueComputer.computeCI()
+            ci = ciValueComputer.computeTimeCI()
+            log.info(ci as String)
         }
 
         // Sets machineType and pue based on the executor if machineType is not already set

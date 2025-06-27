@@ -4,6 +4,7 @@ import groovy.json.JsonOutput
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.Records.CO2Record
+import nextflow.co2footprint.Records.TimeCiRecordCollector
 import nextflow.co2footprint.utils.Converter
 
 import groovy.text.GStringTemplateEngine
@@ -39,6 +40,7 @@ class CO2FootprintReport extends CO2FootprintFile{
     private Session session
     private Map<TaskId, TraceRecord> traceRecords
     private Map<TaskId, CO2Record> co2eRecords
+    private TimeCiRecordCollector timeCiRecordCollector
 
     // Writer for the HTML file
     private BufferedWriter writer = TraceHelper.newFileWriter(path, overwrite, 'Report')
@@ -66,6 +68,7 @@ class CO2FootprintReport extends CO2FootprintFile{
      * @param session       Nextflow session
      * @param traceRecords  Map of TaskId to TraceRecord
      * @param co2eRecords   Map of TaskId to CO2Record
+     * @param timeCiRecordCollector   Time & CI Record collector that contains a map of all carbon intensities at different times
      */
     void addEntries(
             Map<String, Double> totalStats,
@@ -75,7 +78,8 @@ class CO2FootprintReport extends CO2FootprintFile{
             String version,
             Session session,
             Map<TaskId, TraceRecord> traceRecords,
-            Map<TaskId, CO2Record> co2eRecords
+            Map<TaskId, CO2Record> co2eRecords,
+            TimeCiRecordCollector timeCiRecordCollector
     ) {
         this.totalStats = totalStats
         this.processStats = processStats
@@ -85,6 +89,7 @@ class CO2FootprintReport extends CO2FootprintFile{
         this.session = session
         this.traceRecords = traceRecords
         this.co2eRecords = co2eRecords
+        this.timeCiRecordCollector = timeCiRecordCollector
     }
 
     /**
@@ -115,7 +120,6 @@ class CO2FootprintReport extends CO2FootprintFile{
      * @return Rendered HTML String
      */
     protected String renderHtml() {
-        Map co2Options = config.collectCO2CalcOptions()
         // render HTML report template
         final tpl_fields = [
                 workflow : session.getWorkflowMetadata(),
@@ -137,7 +141,8 @@ class CO2FootprintReport extends CO2FootprintFile{
                         readTemplate('assets/CO2FootprintReportTemplate.js')
                 ],
                 options : renderOptionsJson(),
-                used_EM_api: co2Options.ci instanceof Closure // true if the CI value is calculated using the electricityMaps API
+                used_EM_api: config.isCIAPICalled(), // true if the CI value is calculated using the electricityMaps API
+                timeCiRecords: JsonOutput.toJson(timeCiRecordCollector.getTimeCIs())
         ]
         final String template = readTemplate('assets/CO2FootprintReportTemplate.html')
         final GStringTemplateEngine engine = new GStringTemplateEngine()
