@@ -355,7 +355,7 @@ footer a {
       <div class="card-body">
         <h2 id="attribution-and-references" class="h4 mb-4">Data Attribution &amp; References</h2>
         <ul class="pl-3 mb-0">
-          <li class="mb-2">
+          <li class="mb-3">
             The calculation of these values is based on the carbon footprint computation method
             developed in the
             <a href="https://www.green-algorithms.org/" target="_blank" rel="noopener" style="color: #28a745">Green Algorithms</a> project.<br>
@@ -367,19 +367,7 @@ footer a {
               </a>
             </span>
           </li>
-          <li>
-            The CPU specifications used in the calculation are based on data from
-            <a href="https://en.wikichip.org/wiki/WikiChip" target="_blank" rel="noopener" style="color: #17a2b8">WikiChip</a>
-            accessed via their API, under the
-            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0) license</a>.
-            <span class="font-italic small">
-              WikiChip LLC (2025). CPU data including thermal design power (TDP) (Version June 20, 2025). WikiChip.
-              <a href="https://en.wikichip.org/wiki/WikiChip" target="_blank" rel="noopener">
-                https://en.wikichip.org/wiki/WikiChip
-              </a>
-            </span>
-          </li>
-          <li>
+          <li class="mb-3">
             
               The carbon intensity (CI) values used in the calculation originate from
               <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">Electricity Maps</a>
@@ -392,6 +380,19 @@ footer a {
                 </a>
               </span>
             
+          </li>
+          <li class="mb-3">
+            The processors thermal design power (TDP) values used in the calculation originate from
+            <a href="https://en.wikichip.org/wiki/WikiChip" target="_blank" rel="noopener">WikiChip</a>
+            under the
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> license.<br>
+            <span class="font-italic small">
+              WikiChip LLC (2025). CPU Data including Thermal Design Power (TDP) (Version June 20, 2025).
+              WikiChip.
+              <a href="https://en.wikichip.org/wiki/WikiChip" target="_blank" rel="noopener">
+                https://en.wikichip.org/wiki/WikiChip
+              </a>
+            </span>
           </li>
         </ul>
       </div>
@@ -1268,7 +1269,7 @@ $(function() {
 
   // Nextflow report data
   window.data = {"trace":[{"task_id":"111","hash":"-","native_id":"-","process":"observerTestProcess","module":"-","container":"-","tag":"-","name":"-","status":"COMPLETED","exit":"-","submit":"-","start":"-","complete":"-","duration":"-","realtime":"1h","%cpu":"100.0%","%mem":"-","rss":"-","vmem":"-","peak_rss":"-","peak_vmem":"-","rchar":"-","wchar":"-","syscr":"-","syscw":"-","read_bytes":"-","write_bytes":"-","attempt":"-","workdir":"-","script":"-","scratch":"-","queue":"-","cpus":"1","memory":"7 GB","disk":"-","time":"-","env":"-","error_action":"-","vol_ctxt":"-","inv_ctxt":"-","hostname":"-","cpu_model":"Unknown model","energy":"13607.5","co2e":"6531.6","time":"1.0","ci":"480.0","cpus":"1","powerdrawCPU":"11.0","cpuUsage":"100.0","memory":"7","name":"-","cpu_model":"Unknown model"}],"summary":{"observerTestProcess":{"co2e":{"all":[6531.6],"total":6531.6,"mean":6531.6,"minLabel":null,"min":6531.6,"q1Label":null,"q1":6531.6,"q2Label":null,"q2":6531.6,"q3Label":null,"q3":6531.6,"maxLabel":null,"max":6531.6},"energy":{"all":[13607.5],"total":13607.5,"mean":13607.5,"minLabel":null,"min":13607.5,"q1Label":null,"q1":13607.5,"q2Label":null,"q2":13607.5,"q3Label":null,"q3":13607.5,"maxLabel":null,"max":13607.5},"co2e_non_cached":{"all":[6531.6],"total":6531.6,"mean":6531.6,"minLabel":null,"min":6531.6,"q1Label":null,"q1":6531.6,"q2Label":null,"q2":6531.6,"q3Label":null,"q3":6531.6,"maxLabel":null,"max":6531.6},"energy_non_cached":{"all":[13607.5],"total":13607.5,"mean":13607.5,"minLabel":null,"min":13607.5,"q1Label":null,"q1":13607.5,"q2Label":null,"q2":13607.5,"q3Label":null,"q3":13607.5,"maxLabel":null,"max":13607.5}}}};
-  window.options = [{"option":"ci","value":"480.0"},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir13991708981411606292/report_test.html"},{"option":"summaryFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir13991708981411606292/summary_test.txt"},{"option":"traceFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir13991708981411606292/trace_test.txt"}];
+  window.options = [{"option":"ci","value":"480.0"},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir4317663209722694476/report_test.html"},{"option":"summaryFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir4317663209722694476/summary_test.txt"},{"option":"traceFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir4317663209722694476/trace_test.txt"}];
 
   </script>
 
