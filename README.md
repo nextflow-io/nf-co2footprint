@@ -97,9 +97,9 @@ Depending on the configuration, either historical yearly data from 2024 is used 
 
 You are free to use, share, and adapt the data under the terms of the ODbL. For more details and attribution requirements, see the [NOTICE](https://github.com/nextflow-io/nf-co2footprint/blob/master/NOTICE) file.
 
-### CPU data
+### CPU TDP data
 
-This project uses data about CPUs from [WikiChip](https://en.wikichip.org/wiki/WikiChip) under the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) license.
+To estimate the CPU power draw this project uses CPU TDP data from [WikiChip](https://en.wikichip.org/wiki/WikiChip) under the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) license.
 
 > **WikiChip: CPU Data**  
 > WikiChip LLC (2025). CPU Data including Thermal Design Power (TDP) (Version June 20, 2025).  

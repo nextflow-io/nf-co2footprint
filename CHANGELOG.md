@@ -31,6 +31,7 @@
 - Added "How to cite" & CITATION.cff
 - Added warning when using 'cloud' `machineType`
 - Added CPUs from WikiChip to work around licensing issues
+- Added CPU TDP data from WikiChip
 
 # Version 1.0.0-beta1
 ## Features:
