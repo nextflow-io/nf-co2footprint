@@ -105,4 +105,4 @@ This project uses data about CPUs from [WikiChip](https://en.wikichip.org/wiki/W
 > WikiChip LLC (2025). CPU data including thermal design power (TDP) (Version June 20, 2025).  
 > WikiChip. [https://en.wikichip.org/wiki/WikiChip](https://en.wikichip.org/wiki/WikiChip)
 
-You are free to use, share, and adapt the data under the terms of the ODbL. For more details and attribution requirements, see the [NOTICE](./NOTICE) file.
+You are free to use, share, and adapt the data under the terms of the CC BY-NC-SA 4.0. For more details and attribution requirements, see the [NOTICE](./NOTICE) file.
