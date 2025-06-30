@@ -9,7 +9,7 @@ A Nextflow plugin to estimate the CO₂ footprint of pipeline runs.
 The nf-co2footprint plugin estimates the energy consumption for each pipeline task based on the Nextflow resource usage metrics and information about the power consumption of the underlying compute system.
 The carbon intensity of the energy production is then used to estimate the respective CO₂ emission.
 
-The calculation is based on the carbon footprint computation method developed in the [Green Algorithms Project](https://www.green-algorithms.org/).
+The calculation is based on the carbon footprint computation method developed in the [Green Algorithms Project](https://www.green-algorithms.org).
 
 > **Green Algorithms: Quantifying the Carbon Footprint of Computation**  
 > Lannelongue, L., Grealey, J., Inouye, M.,  
@@ -42,12 +42,45 @@ After your changes are accepted. maintainers may then [publish](contributing/pub
 
 ## Credits
 
-The nf-co2footprint plugin is mainly developed and maintained by [Sabrina Krakau](https://github.com/skrakau), [Júlia Mir-Pedrol](https://github.com/mirpedrol), [Josua Carl](https://github.com/josuacarl), and [Nadja Volkmann](https://github.com/nadnein) at [QBiC](https://www.qbic.uni-tuebingen.de/).
+The `nf-co2footprint` plugin has been mainly developed by:
 
-We thank the following people for their extensive assistance in the development of this plugin:
+- [Josua Carl](https://github.com/josuacarl)
+- [Nadja Volkmann](https://github.com/nadnein)
+- [Júlia Mir-Pedrol](https://github.com/mirpedrol)
+- [Sabrina Krakau](https://github.com/skrakau)
+
+at [QBiC](https://www.qbic.uni-tuebingen.de/). Special thanks to [Loïc Lannelongue](https://github.com/Llannelongue) from the [University of Cambridge, UK](https://www.lannelongue-group.org/) for collaboration and contributing to this project.
+
+We additionally thank the following people for their extensive assistance in the development of this plugin:
 
 - [Phil Ewels](https://github.com/ewels)
 - [Paolo Di Tommaso](https://github.com/pditommaso)
+- [Matthias Hörtenhuber](https://github.com/mashehu)
+- [Till Englert](https://github.com/tillenglert)
+- [Bastian Eisenmann](https://github.com/Bastian-Eisenmann)
+- [Hemant Kumar Joon](https://github.com/hemantjoon)
+
+### How to cite:
+```text
+J. Carl, N. Volkmann, J. Mir-Pedrol, P. Ewels, S. Nahnsen, S. Krakau nextflow-io/nf-co2footprint v1.0.0. (Jun., 2025). nextflow-io. Available: https://github.com/nextflow-io/nf-co2footprint
+```
+```Bibtex
+@software{nf_co2footprint_plugin,
+    author =    {Josua Carl and
+                 Nadja Volkmann and
+                 Júlia Mir-Pedrol and
+                 Phil Ewels and
+                 Sven Nahnsen and
+                 Sabrina Krakau}
+    title   =   {nextflow-io/nf-co2footprint - A Nextflow plugin to estimate the CO2e footprint of pipeline runs}
+    month   =   {June}
+    year    =   {2025}
+    publisher = {Nextflow-io}
+    version =   {v1.0.0}
+    url     =   {https://doi.org/10.5281/zenodo.14622304}
+    doi     =   {10.5281/zenodo.14622304}
+}
+```
 
 --- 
 
