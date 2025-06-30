@@ -55,7 +55,8 @@ The plugin uses the `ci`, `location`, and `apiKey` parameters to determine the c
 
 While the CO2 footprint calculation should function on cloud instances, **nf-co2footprint** can currently not natively support cloud environments because cloud-specific values, such as specific CPU models or PUE values may be missing in our datasets. Therefore most calculations would likely rely on inexact fallback values.
 
-To improve the estimate of your CO₂ footprint on the cloud, you are encouraged to manually provide:
+To improve the estimate of your CO₂ footprint on the cloud, you are encouraged to manually provide:  
+
 - [The location of your instance](https://portal.electricitymaps.com/docs/getting-started#geographical-coverage) (e.g., zone code `'DE'` for AWS region `eu-central-1`)
 - The PUE of the data center (cloud providers often give global averages)
 - If the plugins TDP table does not include the CPU of your cloud compute instance and you know the per-core TDP for your instance, set `ignoreCpuModel = true` and specify `powerdrawCpuDefault`. You may also provide a `customCpuTdpFile` if there are multiple models. For more information have a look at [parameters.md](parameters.md).
