@@ -32,7 +32,7 @@ The following parameters are currently available:
   **Default**: `null`
 
 - **`pue`**  
-  Power usage effectivenes efficiency coefficient of the data centre. For local cluster you can usually find out your specific PUE at the system administrators or system managers. Also the current [yearly worldwide average](https://www.statista.com/statistics/1229367/data-center-average-annual-pue-worldwide/) could be used.  
+  Power usage effectiveness efficiency coefficient of the data centre. For local cluster you can usually find out your specific PUE at the system administrators or system managers. Also, the current [yearly worldwide average](https://www.statista.com/statistics/1229367/data-center-average-annual-pue-worldwide/) could be used.  
   **Default**: 1.00
 
 - **`powerdrawMem`**  
@@ -40,16 +40,16 @@ The following parameters are currently available:
   **Default**: 0.3725.
   
 - **`customCpuTdpFile`**  
-  Input CSV file containing custom CPU TDP data. This should contain the following columns: `name`, `tdp (W)`, `cores`. Note that this overwrites TDP values for already provided CPU models. You can find the by default used TDP data [here](https://nextflow-io.github.io/nf-co2footprint/plugins/nf-co2footprint/src/resources/cpu_tdp_data/CPU_TDP.csv).  
+  Input CSV file containing custom CPU TDP data. This should contain the following columns: `name`, `tdp (W)`, `cores`. Note that this overwrites TDP values for already provided CPU models. You can find the by default used TDP data [here](https://nextflow-io.github.io/nf-co2footprint/plugins/nf-co2footprint/src/resources/cpu_tdp_data/CPU_TDP_wikichip.csv).  
   **Default**: `null`.
 
     Example custom CPU TDP file:
 
-    | name                          | tdp (W) | cores |
-    |-------------------------------|---------|-------|
+    | name                            | tdp (W) | cores |
+    |---------------------------------|---------|-------|
     | Intel(R) Xeon(R) CPU E5-2670 v3 | 120     | 12    |
-    | AMD EPYC 7742                 | 225     | 64    |
-    | Intel(R) Core(TM) i7-9700K    | 95      | 8     |
+    | AMD EPYC 7742                   | 225     | 64    |
+    | Intel(R) Core(TM) i7-9700K      | 95      | 8     |
 
 - **`ignoreCpuModel`**  
   Ignore the retrieved Nextflow trace `cpu_model` name and use the default CPU power draw value. This is useful, if the cpu model information provided by the linux kernel is not correct, for example, in the case of VMs emulating a different CPU architecture.  
