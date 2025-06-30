@@ -24,9 +24,9 @@ co2footprint {
   summaryFile = "${params.outdir}/pipeline_info/co2footprint_summary_${co2_timestamp}.txt"
   reportFile = "${params.outdir}/pipeline_info/co2footprint_report_${co2_timestamp}.html"
   location = '<your_zone_code>'               // replace with your zone code
-  ci = your_ci                                // replace with carbon intensity (gCO2eq/kWh)
+  ci = <your_ci>                              // replace with carbon intensity (gCO2eq/kWh)
   apiKey = secrets.EM_API_KEY                 // set your API key as Nextflow secret with the name 'EM_API_KEY'
-  pue = your_pue                              // replace with PUE of your data center
+  pue = <your_pue>                            // replace with PUE of your data center
   machineType = '<compute cluster|local>'     // set to 'compute cluster' or 'local'
 }
 ```
@@ -40,7 +40,7 @@ nextflow run nextflow-io/hello -c nextflow.config
 
 For a complete list and detailed descriptions of all available configuration parameters, please refer to the [Parameters](./parameters.md) section.
 
-## Carbon intensity (ci)
+## Carbon intensity (CI)
 
 ### How are they determined by default?
 
@@ -55,16 +55,18 @@ The plugin uses the `ci`, `location`, and `apiKey` parameters to determine the c
 
 ### Accounting for a personal energy mix
 
-The `ciMarket` parameter can be used to provide a custom value to account for differences to your regional average. This can occur due to:
-- A different market share through a contract with your energy provider, guaranteeing to provide a certain percentage of electricity from renewable sources
-- Direct contributions to the used electricity (e.g. via owned solar panels)
+The `ciMarket` parameter can be used to provide a custom value to account for differences to your regional average. This can occur due to:  
 
-You can calculate an approximation of your CI via the average of the [emission factors](https://github.com/electricitymaps/electricitymaps-contrib/wiki/Default-emission-factors) weighted by their respective share in your mix.
+-  A different market share through a contract with your energy provider, guaranteeing to provide a certain percentage of electricity from renewable sources  
+-  Direct contributions to the used electricity (e.g. via owned solar panels)
+
+You can calculate an approximation of your regional CI via the average of the [emission factors](https://github.com/electricitymaps/electricitymaps-contrib/wiki/Default-emission-factors) weighted by their respective share in your mix.
 
 Example: If your institution would produce half of their energy themselves through 20% hydroelectric and 80% solar power generation:
-$$$
-(ci_{hydro} * 0.2 + ci_{solar} * 0.8) * 0.5 + mean_{region} * 0.5
-$$$
+
+$$
+\mathrm{ci}_{\mathrm{total}} = \left( \mathrm{ci}_{\mathrm{hydro}} \cdot 0.2 + \mathrm{ci}_{\mathrm{solar}} \cdot 0.8 \right) \cdot 0.5 + \mathrm{ci}_{\mathrm{region}} \cdot 0.5
+$$
 
 !!! info
 

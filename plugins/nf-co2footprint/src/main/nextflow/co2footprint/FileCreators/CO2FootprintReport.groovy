@@ -176,12 +176,20 @@ class CO2FootprintReport extends CO2FootprintFile{
     }
 
     /**
-     * Make a map for the total stats of one CO2 emission / energy consumption pair
-     *
-     * @param suffix Suffix for the specific total emission summary map
-     * @return A map for one total value instance
-     */
+    * Builds a map summarizing total CO₂ emissions and energy consumption for a specific category.
+    *
+    * For the given suffix (e.g., '', '_non_cached', '_market'), this method:
+    *   - Retrieves the total CO₂ emissions and energy consumption from the stats map.
+    *   - Converts these values to human-readable units.
+    *   - Calculates equivalence values (e.g., car kilometers, tree months, plane flights).
+    *   - Returns a map with all these values, using keys that include the suffix.
+    * If no CO₂ value is available for the suffix, returns an empty map.
+    *
+    * @param suffix Suffix identifying the summary category (e.g., '', '_non_cached', '_market')
+    * @return Map<String, String> containing formatted totals and equivalences for the given suffix
+    */
     private Map<String, String> makeCO2Total(suffix) {
+        // Retrieve total CO₂ emissions and energy consumption for the given suffix
         Double co2e = totalStats["co2e${suffix}" as String]
         Double energy = totalStats["energy${suffix}" as String]
 

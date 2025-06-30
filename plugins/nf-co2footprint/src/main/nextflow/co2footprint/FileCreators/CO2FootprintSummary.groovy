@@ -40,11 +40,10 @@ class CO2FootprintSummary extends CO2FootprintFile {
     /**
      * Write the summary file with totals and options.
      *
-     * @param total_energy  Total expended energy during the run (Wh)
-     * @param total_co2     Total emitted CO₂e during the run (g)
-     * @param equivalences  Equivalences to CO₂ emissions
-     * @param config        CO2FootprintConfiguration
-     * @param version       Plugin version
+     * @param totalStats             Map containing total energy ('energy') in Wh and total CO₂ emissions ('co2e') in grams.
+     * @param co2FootprintComputer   CO2FootprintComputer instance for calculating equivalences.
+     * @param config                 CO2FootprintConfig instance with plugin configuration.
+     * @param version                Plugin version string.
      */
     void write(Map<String, Double> totalStats, CO2FootprintComputer co2FootprintComputer, CO2FootprintConfig config, String version) {
         // Launch the agent (for thread safety, though only one write is performed)

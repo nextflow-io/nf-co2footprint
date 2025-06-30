@@ -61,18 +61,21 @@ class CO2Record extends TraceRecord {
     ]
 
     /**
-     * Constructs a CO2Record
-     *
-     * @param energy Energy used
-     * @param co2e CO2 equivalent emissions
-     * @param time Time spent on task
-     * @param cpus Number of CPU cores used
-     * @param powerdrawCPU TDP of CPU
-     * @param cpuUsage Usage of CPU
-     * @param memory Memory used
-     * @param name Name of Task
-     * @param cpu_model  CPU model name
-     */
+    * Constructs a CO2Record representing the resource usage and emissions for a single task.
+    *
+    * @param energy        Total energy consumed by the task (Wh)
+    * @param co2e          CO₂ equivalent emissions (g) based on location-based carbon intensity
+    * @param co2eMarket    CO₂ equivalent emissions (g) based on market-based (personal energy mix) carbon intensity
+    * @param time          Time spent on the task (ms)
+    * @param ci            Location-based carbon intensity used for calculation (gCO₂eq/kWh)
+    * @param ciMarket      Market-based carbon intensity used for calculation (gCO₂eq/kWh)
+    * @param cpus          Number of CPU cores used
+    * @param powerdrawCPU  Power draw (TDP) of the CPU (W)
+    * @param cpuUsage      CPU usage percentage during the task (%)
+    * @param memory        Memory used by the task (bytes)
+    * @param name          Name of the task
+    * @param cpu_model     CPU model name
+    */
     CO2Record(
             Double energy=null, Double co2e=null, Double co2eMarket=null, Double time=null,
             Double ci=null, Double ciMarket=null, Integer cpus=null, Double powerdrawCPU=null,
