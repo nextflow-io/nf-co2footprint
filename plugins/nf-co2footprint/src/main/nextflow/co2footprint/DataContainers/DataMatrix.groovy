@@ -116,7 +116,6 @@ class DataMatrix implements Matrix {
             // Add row to data
             data.add(row)
         }
-        log.info("Row index size: ${rowIndex.size()}, Column index size: ${columnIndex.size()}, Data size: ${data.size()}")
 
         return new DataMatrix(data, columnIndex, rowIndex)
 
