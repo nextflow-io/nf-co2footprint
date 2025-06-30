@@ -16,12 +16,12 @@ import groovy.json.JsonSlurper
  */
 @Slf4j
 class CIValueComputer {
-    String apiKey
+    String emApiKey
     String location
     CIDataMatrix ciData
 
-    CIValueComputer(String apiKey, String location, CIDataMatrix ciData) {
-        this.apiKey = apiKey
+    CIValueComputer(String emApiKey, String location, CIDataMatrix ciData) {
+        this.emApiKey = emApiKey
         this.location = location
         this.ciData = ciData
     }
@@ -43,7 +43,7 @@ class CIValueComputer {
 
         // Open the connection
         HttpURLConnection connection = (HttpURLConnection) url.openConnection()
-        connection.setRequestProperty("auth-token", this.apiKey)
+        connection.setRequestProperty("auth-token", this.emApiKey)
 
         Map json
         Double ci
@@ -90,7 +90,7 @@ class CIValueComputer {
             this.location = this.location.toUpperCase() // Ensure location is always uppercase
 
             // Check if the API key is set and retrieve real-time carbon intensity
-            if (this.apiKey && this.apiKey instanceof String) {
+            if (this.emApiKey && this.emApiKey instanceof String) {
 
                 log.info(Markers.unique, "API key is set. Attempting to retrieve real-time carbon intensity.")
                 return { getRealtimeCI() }

@@ -18,16 +18,16 @@ The following parameters are currently available:
   **Default**: `co2footprint_report_<timestamp>.html`
 
 - **`location`**  
-  Specifies the zone code for the location where computations are run, based on the available zone codes in the [zones overview](https://portal.electricitymaps.com/docs/getting-started#zonesoverview) section on the Electricity Maps website. If the provided location does not match any listed zone codes, it will be set to `null`.  
+  Specifies the zone code for the location where computations are run. You can find your `zone code` on the [zones overview](https://portal.electricitymaps.com/docs/getting-started#zonesoverview) section on the Electricity Maps website. It has to match one of those defined there to be used within the plugin, otherwise it will be set to `null`.     
   **Default**:  `null`
 
 - **`ci`**  
   Location-based carbon intensity (CI). Set this parameter only if you know the CI for your location and prefer not to use the Electricity Maps API. However, using the API is recommended to retrieve real-time data for more accurate calculations.  
   **Default**:  `null`
 
-- **`apiKey`**  
+- **`emApiKey`**  
   Your Electricity Maps API token.  
-  First, create a Nextflow secret with the name `EM_API_KEY` for your API key using:  
+  To obtain your `emApiKey` you have to register in the [developer portal](https://portal.electricitymaps.com).Then, create a Nextflow secret with the name `EM_API_KEY` for your API key using:  
   `nextflow secrets set EM_API_KEY "paste_api_key_here"`. Then, set the config parameter to `secrets.EM_API_KEY`.  
   **Default**: `null`
 
