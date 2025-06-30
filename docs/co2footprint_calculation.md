@@ -43,7 +43,7 @@ This includes failed tasks as well.
 
 ## Additional equivalence metrics for easier interpretation of carbon emissions
 
-Let $x~\mathrm{gCO_2e} $ denote the **total emitted CO₂e** (in grams) for the computation or pipeline run. This value is used in the following equivalence calculations:
+Let $x~\mathrm{gCO_2e}$ denote the **total emitted CO₂e** (in grams) for the computation or pipeline run. This value is used in the following equivalence calculations:
 
 ### Tree sequestration time
 The tree sequestration time equates to the time a tree needs to bind the same amount of carbon from the atmosphere.
