@@ -24,13 +24,11 @@ co2footprint {
   summaryFile = "${params.outdir}/pipeline_info/co2footprint_summary_${co2_timestamp}.txt"
   reportFile = "${params.outdir}/pipeline_info/co2footprint_report_${co2_timestamp}.html"
   location = '<your_zone_code>'               // replace with your zone code
-  ci = <your_ci>                              // replace with carbon intensity (gCO2eq/kWh)
-  apiKey = secrets.EM_API_KEY                 // set your API key as Nextflow secret with the name 'EM_API_KEY'
+  emApiKey = secrets.EM_API_KEY                 // set your API key as Nextflow secret with the name 'EM_API_KEY'
   pue = <your_pue>                            // replace with PUE of your data center
   machineType = '<compute cluster|local>'     // set to 'compute cluster' or 'local'
 }
 ```
-You can find your `zone code` on the [geographical coverage](https://portal.electricitymaps.com/docs/getting-started#geographical-coverage) section on the Electricity Maps website. It has to match one of those defined there to be used within the plugin. To obtain the `apikey` you have to register in the [developer portal](https://portal.electricitymaps.com). 
 
 Include the config file for your pipeline run using the `-c` Nextflow parameter, for example as follows:
 
@@ -42,12 +40,15 @@ For a complete list and detailed descriptions of all available configuration par
 
 ## Carbon intensity (CI)
 
-### How are they determined by default?
+### How are CI values determined by default?  
 
-The plugin uses the `ci`, `location`, and `apiKey` parameters to determine the carbon intensity (in gCO₂eq/kWh) that is used in the energy impact calculations. The logic is as follows:
+The plugin can retrieve **real-time carbon intensity (CI) values** in grams of CO₂-equivalent per kilowatt-hour (gCO₂eq/kWh) from [Electricity Maps](https://www.electricitymaps.com/) if a valid API key and location are provided. This enables task-specific CI estimates based on the actual energy mix at execution time.  
+If **no API key is supplied**, the plugin will fall back to using **2024 yearly average values** for the specified zone (if available). When no location is provided either, a global default CI value is used.
+
+The logic applied in detail: 
 
 1. **If `ci` is explicitly set**, this value is used directly as the carbon intensity, and no API call is made.
-2. **If `ci` is not set**, but both `location` and `apiKey` are provided, the plugin will query the [Electricity Maps API](https://www.electricitymaps.com/) for a real-time carbon intensity value for the specified zone. The API call is made once per Nextflow task to retrieve the most up-to-date carbon intensity.
+2. **If `ci` is not set**, but both `location` and `emApiKey` are provided, the plugin will query the [Electricity Maps API](https://www.electricitymaps.com/) for a real-time carbon intensity value for the specified zone. The API call is made once per Nextflow task to retrieve the most up-to-date carbon intensity.
 3. **If only `location` is set**, the plugin will fallback to a default value for the specified zone. 
 4. **If neither `ci` nor valid `location` and `apiKey` are provided**, the plugin will  fallback to a global default value.
 
@@ -102,12 +103,11 @@ plugins {
 def co2_timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
 
 co2footprint {
-    traceFile = "${params.outdir}/pipeline_info/co2footprint_trace_${co2_timestamp}.txt"
-    summaryFile = "${params.outdir}/pipeline_info/co2footprint_summary_${co2_timestamp}.txt"
-    reportFile = "${params.outdir}/pipeline_info/co2footprint_report_${co2_timestamp}.html"
-    apiKey              = secrets.EM_API_KEY
-    
+    traceFile           = "${params.outdir}/co2footprint/co2footprint_trace_${co2_timestamp}.txt"
+    summaryFile         = "${params.outdir}/co2footprint/co2footprint_summary_${co2_timestamp}.txt"
+    reportFile          = "${params.outdir}/co2footprint/co2footprint_report_${co2_timestamp}.html"
     location            = 'DE'
+    emApiKey            = secrets.EM_API_KEY
     pue                 = 1.3
     ignoreCpuModel      = true
     powerdrawCpuDefault = 8
