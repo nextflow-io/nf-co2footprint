@@ -28,7 +28,7 @@ class CO2FootprintObserverTest extends Specification{
 
     // ------ TEST UTILITY METHODS ------
     @Shared
-    ChecksumChecker checksumChecker = new ChecksumChecker()
+    FileChecker fileChecker = new FileChecker()
 
     @Shared
     def traceRecord = new TraceRecord()
@@ -212,7 +212,9 @@ class CO2FootprintObserverTest extends Specification{
         observer.onFlowComplete()
 
         then:
+        //
         // Check Trace File
+        //
         Files.isRegularFile(tracePath)
         List<String> traceLines = tracePath.readLines()
         traceLines.size() == 2
@@ -220,34 +222,35 @@ class CO2FootprintObserverTest extends Specification{
         traceLines[0].split('\t') as List<String> == [
                 'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'time', 'carbon_intensity', 'cpus', 'powerdraw_cpu', 'cpu_model', 'cpu_usage', 'requested_memory'
         ]
-
         traceLines[1].split('\t') as List<String> == [
             '111', 'COMPLETED', 'null', '13.61 Wh', '6.53 g', 'null', '1ms', '480.0 gCO₂eq/kWh', 'null', '1', '11.0', 'Unknown model', '100.0', '7.0 B'
         ] // GA: CO2e is 6.94g with CI of 475 gCO2eq/kWh
-        checksumChecker.compareChecksums(
-                tracePath,
-                '12870c60ba2a982fd5b85ed0c3edf3ef'
-        )
+        fileChecker.compareChecksums(tracePath, '12870c60ba2a982fd5b85ed0c3edf3ef')
 
+
+
+        //
         // Check Summary File
+        //
         Files.isRegularFile(summaryPath)
         List<String> summaryLines = summaryPath.readLines()
+
+        // Check special lines
         summaryLines[16] == "reportFile: ${reportPath}"
         summaryLines[17] == "summaryFile: ${summaryPath}"
         summaryLines[18] == "traceFile: ${tracePath}"
-        // 12 is the plugin version (changes on Github CI to current version)
-        checksumChecker.compareChecksums(
-                summaryPath,
-                '6cafd8d5736475524ace6b53e29fa508',
-                [12, 16, 17, 18],
-                this.class.getResource('/summary_test.txt').getPath() as Path
-        )
 
+        // 12 is the plugin version (changes on Github CI to current version)
+        fileChecker.runChecks(summaryPath)
+
+
+        //
         // Check Report File
+        //
         Files.isRegularFile(reportPath)
         List<String> reportLines = reportPath.readLines()
-        int numLines = reportLines.size()
-        numLines == 1298
+
+        // Check special lines
         String timeLine = reportLines[233]
         timeLine == "          " +
                 "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
@@ -264,12 +267,8 @@ class CO2FootprintObserverTest extends Specification{
                 "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
                 "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
                 "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];"
+
         // 246 is the plugin version
-        checksumChecker.compareChecksums(
-                reportPath,
-                'c26967cb59fcbb752dc89bac422e9f8d',
-                [233, 246, 1292],
-                this.class.getResource('/report_test.html').getPath() as Path
-        )
+        fileChecker.runChecks(reportPath)
     }
 }

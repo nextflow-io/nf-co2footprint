@@ -1,0 +1,12 @@
+{
+  "report_test.html": {
+    "checksum": "d8d38d55117fad2bd478bc56f880b07b",
+    "num_lines": 1264,
+    "excluded_lines":  [233, 246, 1258]
+  },
+  "summary_test.txt": {
+    "checksum": "0d9b03dec6969ca8bee731821f88ac0e",
+    "num_lines": 25,
+    "excluded_lines": [12, 16, 17, 18]
+  }
+}
