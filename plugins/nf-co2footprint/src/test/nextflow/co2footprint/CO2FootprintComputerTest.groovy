@@ -23,7 +23,7 @@ class CO2FootprintComputerTest extends Specification{
 
     @Shared
     TDPDataMatrix tdpDataMatrix = TDPDataMatrix.fromCsv(
-            Paths.get(this.class.getResource('/cpu_tdp_data/CPU_TDP.csv').toURI())
+            Paths.get(this.class.getResource('/cpu_tdp_data/CPU_TDP_wikichip.csv').toURI())
     )
     @Shared
     CIDataMatrix ciDataMatrix = CIDataMatrix.fromCsv(
@@ -51,11 +51,11 @@ class CO2FootprintComputerTest extends Specification{
 
         where:
         cpuModel           | configMap                        || expectedEnergy | expectedCO2
-        "Unknown model"    | [:]                              || 9.61           | 4.61
+        "Unknown model"    | [:]                              || 13.61          | 6.53
         "AMD EPYC 7251"    | [:]                              || 17.61          | 8.45
-        "Unknown model"    | [pue: 1.4]                       || 13.45          | 6.46
-        "Unknown model"    | [location: 'DE']                 || 9.61           | 3.21
-        "Unknown model"    | [ci: 338.66]                     || 9.61           | 3.25
+        "Unknown model"    | [pue: 1.4]                       || 19.05          | 9.14
+        "Unknown model"    | [location: 'DE']                 || 13.61          | 4.54
+        "Unknown model"    | [ci: 338.66]                     || 13.61          | 4.61
     }
 
     // ------ Equivalences Calculation ------

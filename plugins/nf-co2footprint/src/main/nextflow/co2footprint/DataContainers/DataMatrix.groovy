@@ -75,6 +75,7 @@ class DataMatrix implements Matrix {
         if (rowIndexPos != null) {
             rowIndexColumn = columnIndex[rowIndexPos]
         }
+
         if (rowIndexColumn != null) {
             rowIndexPos = columnIndex.findIndexOf { it == rowIndexColumn } as Integer
             columnIndex.remove(rowIndexColumn)
@@ -86,7 +87,7 @@ class DataMatrix implements Matrix {
         boolean escaped = false
         int start = 0
         int end = 0
-
+        
         // Parse each line of the CSV, handling quoted fields and separators
         lines.each { line ->
             List<Object> row = []
@@ -106,6 +107,9 @@ class DataMatrix implements Matrix {
             if (rowIndexPos != null) {
                 Object rowIdx = row[rowIndexPos]
                 row.remove(rowIdx)
+                if (rowIndex.contains(rowIdx)) {
+                    log.warn("Duplicate row index detected: ${rowIdx}. Only the first occurrence will be used in the row index.")
+                }
                 rowIndex.add(rowIdx)
             }
 

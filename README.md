@@ -86,6 +86,8 @@ J. Carl, N. Volkmann, J. Mir-Pedrol, P. Ewels, S. Nahnsen, S. Krakau nextflow-io
 
 ## Data Attribution
 
+### Carbon intensity
+
 This project uses carbon intensity (CI) data from [Electricity Maps](https://www.electricitymaps.com/) under the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1-0/).  
 Depending on the configuration, either historical yearly data from 2024 is used or real-time CI values are accessed via the Electricity Maps API.
 
@@ -93,4 +95,14 @@ Depending on the configuration, either historical yearly data from 2024 is used 
 > Electricity Maps (2025). 2024 Yearly Carbon Intensity Data (Version January 27, 2025).  
 > Electricity Maps. [https://www.electricitymaps.com](https://www.electricitymaps.com)
 
-You are free to use, share, and adapt the data under the terms of the ODbL. For more details and attribution requirements, see the [NOTICE](./NOTICE) file.
+You are free to use, share, and adapt the data under the terms of the ODbL. For more details and attribution requirements, see the [NOTICE](https://github.com/nextflow-io/nf-co2footprint/blob/master/NOTICE) file.
+
+### CPU TDP data
+
+To estimate the CPU power draw this project uses CPU TDP data from [WikiChip](https://en.wikichip.org/wiki/WikiChip) under the [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) license.
+
+> **WikiChip: CPU Data**  
+> WikiChip LLC (2025). CPU Data including Thermal Design Power (TDP) (Version June 20, 2025).  
+> WikiChip. [https://en.wikichip.org/wiki/WikiChip](https://en.wikichip.org/wiki/WikiChip)
+
+You are free to use, share, and adapt the data under the terms of the CC BY-NC-SA 4.0. For more details and attribution requirements, see the [NOTICE](https://github.com/nextflow-io/nf-co2footprint/blob/master/NOTICE) file.
