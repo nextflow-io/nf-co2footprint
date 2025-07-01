@@ -15,7 +15,7 @@ plugins {
   id 'nf-co2footprint@1.0.0-beta'
 }
 
-// Optional config settings for CO₂ reporting:
+// Optional example config settings for CO₂ reporting:
 
 def co2_timestamp = new Date().format('yyyy-MM-dd_HH-mm-ss')
 
@@ -23,10 +23,10 @@ co2footprint {
   traceFile = "${params.outdir}/pipeline_info/co2footprint_trace_${co2_timestamp}.txt"
   summaryFile = "${params.outdir}/pipeline_info/co2footprint_summary_${co2_timestamp}.txt"
   reportFile = "${params.outdir}/pipeline_info/co2footprint_report_${co2_timestamp}.html"
-  location = '<your_zone_code>'               // replace with your zone code
-  emApiKey = secrets.EM_API_KEY                 // set your API key as Nextflow secret with the name 'EM_API_KEY'
-  pue = <your_pue>                            // replace with PUE of your data center
-  machineType = '<compute cluster|local>'     // set to 'compute cluster' or 'local'
+  location = 'DE'                             // replace with your zone code
+  emApiKey = secrets.EM_API_KEY               // set your API key as Nextflow secret with the name 'EM_API_KEY'
+  pue = 1.3                                   // replace with PUE of your data center
+  machineType = 'compute cluster'             // set to 'compute cluster', 'local', or 'cloud'
 }
 ```
 
