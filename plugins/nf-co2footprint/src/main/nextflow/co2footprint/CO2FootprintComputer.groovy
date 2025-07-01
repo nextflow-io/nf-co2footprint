@@ -56,6 +56,7 @@ class CO2FootprintComputer {
     *
     * @param taskID  The Nextflow TaskId for this task.
     * @param trace   The TraceRecord containing task resource usage.
+    * @param timeCiRecords Collector for carbon intensity records.
     * @return        CO2Record with energy consumption, CO₂ emissions, and task/resource details.
     */
     CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace, TimeCiRecordCollector timeCiRecords) {

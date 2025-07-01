@@ -12,6 +12,15 @@ import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.ConcurrentHashMap
 
+/**
+ * Collects and manages time-resolved carbon intensity (CI) values for workflow tasks.
+ *
+ * The TimeCiRecordCollector class:
+ *   - Periodically fetches and stores carbon intensity values (e.g., from an API) with timestamps.
+ *   - Maintains a time-indexed map of CI values for use in carbon footprint calculations.
+ *   - Provides methods to add new CI records, start/stop periodic updates, and retrieve CI values.
+ *   - Calculates the weighted average CI for a given task based on its runtime and the recorded CI values.
+ */
 @Slf4j
 class TimeCiRecordCollector {
     // Timer for cyclical tasks
@@ -22,13 +31,33 @@ class TimeCiRecordCollector {
 
     // Config
     private CO2FootprintConfig config
-
+    
+    /**
+     * Constructor for TimeCiRecordCollector.
+     *
+     * @param config Configuration instance with CI settings
+     * @param timeCIs Optional initial time CI map (default: empty ConcurrentHashMap)
+     */
     TimeCiRecordCollector(CO2FootprintConfig config, ConcurrentHashMap<LocalDateTime, Double> timeCIs=[:] as ConcurrentHashMap) {
         this.config = config
         this.timeCIs = timeCIs as ConcurrentHashMap
     }
 
+    /**
+     * Returns the time CIs map.
+     *
+     * @return ConcurrentHashMap of LocalDateTime to Double representing carbon intensity values
+     */
     ConcurrentHashMap<LocalDateTime, Double> getTimeCIs() { timeCIs }
+
+    /**
+     * Returns the carbon intensity (CI) for a given trace record.
+     * If timeCIs is set, it calculates the weighted CI based on the trace record's runtime.
+     * Otherwise, it returns the CI value set in the config.
+     *
+     * @param traceRecord The trace record containing task start and end times
+     * @return The carbon intensity value for the trace record
+     */
     Double getCI(TraceRecord traceRecord) { this.timeCIs ? getWeightedCI(traceRecord) : config.getCi() }
 
     /**
@@ -48,7 +77,7 @@ class TimeCiRecordCollector {
      * @param period Period of scheduled repetition (default: 1 hour)
      */
     void start(CO2FootprintConfig config=this.config, Integer delay=0, Integer period=1000*60*60) {
-        if ( config.isCIAPICalled() ) {
+        if ( config.isCiAPICalled() ) {
             log.trace("Started periodically fetching the CI every ${Converter.toReadableTimeUnits(period, 'ms')}")
             timer.scheduleAtFixedRate(new TimerTask() {
                 void run() {
@@ -67,12 +96,19 @@ class TimeCiRecordCollector {
     }
 
     /**
-     * Calculates the weighted average carbon intensity
-     *
-     * @param trace A trace record with starting and end time
-     * @param timeCIs The timestamped CI values
-     * @return The weighted averaged of the carbon intensity (CI)
-     */
+    * Calculates the weighted average carbon intensity (CI) for a given task based on its runtime and the available time-resolved CI values.
+    *
+    * The method determines which CI values from the provided timeCIs map overlap with the task's execution window (from start to end time).
+    * It then computes a weighted average, where each CI value is weighted by the fraction of the task's duration it covers.
+    * - If the task overlaps multiple CI intervals, each interval's CI is weighted accordingly.
+    * - If the task starts before or ends after the available CI intervals, the nearest CI value is used for the uncovered portion.
+    * - If no suitable CI values are found, a MissingValueException is thrown.
+    *
+    * @param trace   The TraceRecord containing the task's start and end times (in milliseconds since epoch)
+    * @param timeCIs Map of LocalDateTime to Double representing timestamped CI values (defaults to this.timeCIs)
+    * @return        The weighted average carbon intensity for the task's runtime
+    * @throws        MissingValueException if no CI values are available for the task's time window
+    */
     Double getWeightedCI(TraceRecord trace, Map<LocalDateTime, Double> timeCIs=this.timeCIs) {
 
         // Obtain recorded star, end, and duration

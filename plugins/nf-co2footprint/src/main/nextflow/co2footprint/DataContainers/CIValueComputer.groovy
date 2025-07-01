@@ -34,8 +34,7 @@ class CIValueComputer {
      * If no value is found for the location, falls back to the 'GLOBAL' CI value.
      * If 'GLOBAL' is also not found, an exception will be thrown by findCiInMatrix.
      *
-     * @param processName (Optional) The process name for logging/marker purposes.
-     * @return The carbon intensity value as a Double, or null if not found.
+     * @return A map containing the time of the CI value and the CI value itself.
      */
     protected Map<String, ?> getRealtimeCI() {
         // Build the API URL
