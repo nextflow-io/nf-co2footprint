@@ -73,7 +73,7 @@ class CO2FootprintConfig {
      * Returns the carbon intensity at timestamps
      * @return Carbon intensity at timestamps
      */
-    Map<String, ?> getTimeCi(){
+    def getTimeCi(){
         isCIAPICalled() ? (ci as Closure<Map<String, ?>>)() : ci
     }
 
