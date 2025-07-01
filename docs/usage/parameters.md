@@ -22,7 +22,7 @@ The following parameters are currently available:
 ## Location & Carbon Intensity
 
 - **`location`**  
-  Zone code for the location where computations are run. Find your `zone code` on the [Electricity Maps zones overview](https://portal.electricitymaps.com/docs/getting-started#zonesoverview). It has to match one of those defined there to be used within the plugin, otherwise it will be set to `null`.  
+  Zone code of the geographical location of the computing machine. Find your `zone code` on the [Electricity Maps zones overview](https://portal.electricitymaps.com/docs/getting-started#zonesoverview). If the provided code does not match one of the defined, it will be set to `null`, resulting in a fallback to the worldwide default value.  
   **Default**: `null`
 
 - **`emApiKey`**  
