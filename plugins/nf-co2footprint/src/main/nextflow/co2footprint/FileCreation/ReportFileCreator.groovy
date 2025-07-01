@@ -135,7 +135,7 @@ class ReportFileCreator extends BaseFileCreator{
                 // Data
                 data : renderDataJson(),
                 co2_totals: renderCO2TotalsJson(),
-                used_EM_api: config.isCIAPICalled(), // true if the CI value is calculated using the electricityMaps API
+                used_EM_api: config.isCiAPICalled(), // true if the CI value is calculated using the electricityMaps API
                 timeCiRecords: JsonOutput.toJson(timeCiRecordCollector.getTimeCIs()),
 
                 // Assets for rendering

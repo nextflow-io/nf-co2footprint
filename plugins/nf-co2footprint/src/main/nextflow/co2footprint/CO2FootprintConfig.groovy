@@ -102,21 +102,28 @@ class CO2FootprintConfig extends BaseConfig {
     /**
      * Returns whether or not the API is used for CI
      */
-    boolean isCIAPICalled() { get("ci") instanceof  Closure }
+    boolean isCiAPICalled() { get("ci") instanceof  Closure }
 
     /**
-     * Returns the carbon intensity value.
-     * If set as a closure (for real-time API), invokes it to get the current value.
-     */
+    * Returns the current carbon intensity (CI) value.
+    * If `ci` is a closure (for real-time API usage), calls the closure and returns the value under the key 'ci' from the resulting map.
+    * If `ci` is not a closure, returns the CI value as set in the config.
+    *
+    * @return The current carbon intensity value (gCO₂e/kWh)
+    */
     Double getCi() {
-        isCIAPICalled() ? value("ci")['ci'] : value("ci")
+        isCiAPICalled() ? value("ci")['ci'] : value("ci")
     }
+
     /**
-     * Returns the carbon intensity at timestamps
-     * @return Carbon intensity at timestamps
+     * Returns the map of timestamped carbon intensity (CI) values.
+     * If `ci` is a closure (for real-time API usage), calls the closure and returns the resulting map (timestamps as keys, CI values as values).
+     * If `ci` is not a closure, returns the static CI value as set in the config.
+     *
+     * @return Map of timestamps to carbon intensity values, or the static CI value if not time-resolved
      */
-    def getTimeCi(){
-        isCIAPICalled() ? value("ci") : value("ci")
+    def getTimeCi() {
+        isCiAPICalled() ? value("ci") : value("ci")
     }
 
     /**
