@@ -115,7 +115,7 @@ class CO2FootprintConfig extends BaseConfig {
      * Returns the carbon intensity at timestamps
      * @return Carbon intensity at timestamps
      */
-    Map<String, ?> getTimeCi(){
+    def getTimeCi(){
         isCIAPICalled() ? value("ci") : value("ci")
     }
 
