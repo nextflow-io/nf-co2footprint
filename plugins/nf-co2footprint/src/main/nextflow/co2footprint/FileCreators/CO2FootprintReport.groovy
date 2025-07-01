@@ -141,7 +141,7 @@ class CO2FootprintReport extends CO2FootprintFile{
                         readTemplate('assets/CO2FootprintReportTemplate.js')
                 ],
                 options : renderOptionsJson(),
-                used_EM_api: config.isCIAPICalled(), // true if the CI value is calculated using the electricityMaps API
+                used_EM_api: config.isCiAPICalled(), // true if the CI value is calculated using the electricityMaps API
                 timeCiRecords: JsonOutput.toJson(timeCiRecordCollector.getTimeCIs())
         ]
         final String template = readTemplate('assets/CO2FootprintReportTemplate.html')
