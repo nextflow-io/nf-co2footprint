@@ -1,28 +1,4 @@
 // JavaScript used to power the Nextflow Report Template output.
-
-//
-// Selector methods
-//
-/**
- * Get property from the trace via a comparator
- *
- * @param {String} property Name of the property in the trace
- * @param {function} comparison comparison function
- * @returns
- */
-function getTraceSelect(property, comparison) {
-  var val = null
-  for (let task of window.data.trace){
-    if (val == null || comparison(task[property], val) ) {
-      val = task[property]
-    }
-  }
-  return val
-}
-
-//
-// Render functions
-//
 /**
  * Decides whether raw or readable values are to be displayed
  *
@@ -157,81 +133,6 @@ $(function() {
 
 
   //
-  // Carbon intensity plot
-  //
-
-  // Set first and last ci as constant ci or equivalent to first & last recorded at starting and end time of traces
-  const startTime = getTraceSelect('start',   function (a,b) { return a < b })
-  const endTime = getTraceSelect('complete',  function (a,b) { return a > b })
-
-  if (window.timeCiRecords.size == 0) {
-    window.timeCiRecords.set(startTime, window.data.trace[0]["ci"])
-    window.timeCiRecords.set(endTime, window.data.trace[0]["ci"])
-  }
-  else {
-    const arr = Array.from( window.timeCiRecords.values() )
-    window.timeCiRecords.set(startTime, arr[0])
-    window.timeCiRecords.set(endTime, arr[arr.length - 1])
-  }
-
-  // Add main line of CI values
-  const timeCiRecords = new Map([...window.timeCiRecords].sort())
-  var timestamps = Array.from( timeCiRecords.keys() )
-  var ciValues = Array.from( timeCiRecords.values() )
-
-  var ci_plot_data = [
-    // Add timestamps + CI values to plot
-    {
-      name: "Carbon intensity",
-      x: timestamps, y: ciValues,
-      type: 'scatter', legendgroup: "Carbon intensity"
-    }
-  ];
-
-  // Add CPU load of tasks
-  var tasksStart = null;
-  var tasksEnd = null;
-  for (let task of window.data.trace) {
-    if(tasksStart == null || tasksStart > task['start']) { tasksStart = task['start'] };
-    if(tasksEnd == null ||tasksEnd < task['complete']) { tasksEnd = task['complete'] };
-    ci_plot_data.push(
-      {
-        name: "Task " + task["task_id"],
-        x: [task['start'], task['complete']], y: [task['%cpu'], task['%cpu']],
-        type: 'scatter',  fill: 'tozeroy', mode: 'none', yaxis: 'y2',
-      }
-    );
-  }
-
-  // Make layout
-  var ci_layout = {
-    title: 'Carbon intensity index',
-    legend: {
-      x: 1.1
-    },
-    xaxis: {
-      title: 'Time',
-      ticklabelstandoff: 10,
-      overlay: 'x2',
-      range: [tasksStart, tasksEnd],
-    },
-    yaxis: {
-      title: 'Carbon Intensity (g/kWh)',
-      rangemode: 'tozero',
-    },
-    yaxis2: {
-      title: 'CPU usage (%)',
-      rangemode: 'tozero',
-      gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
-      overlaying: 'y',
-      side: 'right',
-    }
-  }
-
-  Plotly.newPlot('ci-plot', ci_plot_data, ci_layout)
-
-
-  //
   // Table creation functions
   //
 
@@ -359,4 +260,115 @@ $(function() {
 
   // Executor for options table creation (on page load)
   make_options_table();
+
+  //
+  // Carbon intensity plot
+  //
+
+  function make_ci_plot() {
+    var ci_plot_data = []
+
+    // Tasks:
+    // Collect all time boundaries
+    const timePoints = new Set()
+    for (const task of window.data.trace) {
+      timePoints.add(task["start"])
+      timePoints.add(task["complete"])
+    }
+    const sortedTimes = Array.from(timePoints).sort()
+
+    // Define first and last point
+    var tasksStart = sortedTimes[0]
+    var tasksEnd = sortedTimes[sortedTimes.length - 1]
+
+    // For each subinterval, calculate the total energy from active intervals
+    // Add first point to energy trace
+    const timeSteps = [tasksStart], totalEnergy = [0.0]
+    // Add intermediate points to energy trace
+    for (let i = 0; i < sortedTimes.length - 1; i++) {
+      const t0 = sortedTimes[i]
+      const t1 = sortedTimes[i + 1]
+
+      // Sum energy of intervals active in [t0, t1)
+      let total = 0
+      for (const task of window.data.trace) {
+        if (task["start"] <= t0 && task["complete"] > t0) {
+          total += task["energy"]
+        }
+      }
+
+      timeSteps.push(t0, t1)
+      totalEnergy.push(total, total)
+    }
+    // Add last point to energy trace
+    timeSteps.push(tasksEnd)
+    totalEnergy.push(0.0)
+
+    // CI values:
+    if (window.timeCiRecords.size == 0) {
+          window.timeCiRecords.set(tasksStart, window.data.trace[0]["ci"])
+          window.timeCiRecords.set(tasksEnd, window.data.trace[0]["ci"])
+    }
+    else {
+      const arr = Array.from( window.timeCiRecords.values() )
+      window.timeCiRecords.set(tasksStart, arr[0])
+      window.timeCiRecords.set(tasksEnd, arr[arr.length - 1])
+    }
+
+    const timeCiRecords = new Map([...window.timeCiRecords].sort())
+    var timestamps = Array.from( timeCiRecords.keys() )
+    var ciValues = Array.from( timeCiRecords.values() )
+
+    // Add CI trace to plot
+    ci_plot_data.push(
+      {
+        name: "Carbon intensity",
+        x: timestamps, y: ciValues,
+        type: "scatter",
+        line: { color: "grey" },
+        marker: { color: "grey" },
+      }
+    )
+
+    // Add energy trace to plot
+    ci_plot_data.push(
+      {
+        name:"Energy consumption",
+        x: timeSteps, y: totalEnergy,
+        type: "scatter", fill: "tozeroy", yaxis: "y2",
+        line: { color: "#FFCC00", shape: "hv"  },
+      }
+    )
+
+    // Layout:
+    var ci_layout = {
+      title: 'Carbon intensity index',
+      legend: {
+        x: 1.1
+      },
+      xaxis: {
+        title: 'Time',
+        ticklabelstandoff: 10,
+        overlay: 'x2',
+        range: [tasksStart, tasksEnd],
+      },
+      yaxis: {
+        title: 'Carbon Intensity (g/kWh)',
+        rangemode: 'tozero',
+      },
+      yaxis2: {
+        title: 'Energy consumption (kWh)',
+        rangemode: 'tozero',
+        gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
+        overlaying: 'y',
+        side: 'right',
+      }
+    }
+
+    // Create plot:
+    Plotly.newPlot('ci-plot', ci_plot_data, ci_layout)
+  }
+
+  // Executor for ci plot generation
+  make_ci_plot()
 });
