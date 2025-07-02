@@ -84,7 +84,7 @@ While the CO2 footprint calculation works on cloud instances, **nf-co2footprint*
 To improve the estimate of your CO₂ footprint on the cloud, you are encouraged to manually provide:  
 
 - [The location of your instance](https://portal.electricitymaps.com/docs/getting-started#geographical-coverage) (e.g., zone code `'DE'` for AWS region `eu-central-1`)
-- Set the `ciMarket` parameter if you know the ci of the energy mix used by the cloud instance
+- Set the `ciMarket` parameter if you know the CI of the energy mix used by the cloud instance
 - The PUE of the data center (cloud providers often give global averages)
 - If the plugin’s TDP table does not include the CPU models used by your cloud compute instance and you know the per-core TDP for those models, you have two options:  
     - If you have multiple CPU models, provide a `customCpuTdpFile` containing their TDP values.
