@@ -17,7 +17,7 @@ plugins {
 
 // Optional config settings for CO₂ reporting:
 
-def co2_timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
+def co2_timestamp = new Date().format('yyyy-MM-dd_HH-mm-ss')
 
 co2footprint {
   traceFile = "${params.outdir}/pipeline_info/co2footprint_trace_${co2_timestamp}.txt"
@@ -40,16 +40,37 @@ nextflow run nextflow-io/hello -c nextflow.config
 
 For a complete list and detailed descriptions of all available configuration parameters, please refer to the [Parameters](./parameters.md) section.
 
-## How the plugin determines the carbon intensity (ci) value
+## Carbon intensity (CI)
+
+### How are they determined by default?
 
 The plugin uses the `ci`, `location`, and `apiKey` parameters to determine the carbon intensity (in gCO₂eq/kWh) that is used in the energy impact calculations. The logic is as follows:
 
 1. **If `ci` is explicitly set**, this value is used directly as the carbon intensity, and no API call is made.
 2. **If `ci` is not set**, but both `location` and `apiKey` are provided, the plugin will query the [Electricity Maps API](https://www.electricitymaps.com/) for a real-time carbon intensity value for the specified zone. The API call is made once per Nextflow task to retrieve the most up-to-date carbon intensity.
 3. **If only `location` is set**, the plugin will fallback to a default value for the specified zone. 
-3. **If neither `ci` nor valid `location` and `apiKey` are provided**, the plugin will  fallback to a global default value.
+4. **If neither `ci` nor valid `location` and `apiKey` are provided**, the plugin will  fallback to a global default value.
 
 > Carbon intensity data is retrieved from [Electricity Maps](https://www.electricitymaps.com/) and used under the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1-0/). See the full attribution and license terms [here](https://nextflow-io.github.io/nf-co2footprint/).
+
+### Accounting for a personal energy mix
+
+The `ciMarket` parameter can be used to provide a custom value to account for differences to your regional average. This can occur due to:  
+
+-  A different market share through a contract with your energy provider, guaranteeing to provide a certain percentage of electricity from renewable sources  
+-  Direct contributions to the used electricity (e.g. via owned solar panels)
+
+You can calculate an approximation of your personal/marked-based CI via the average of the [emission factors](https://github.com/electricitymaps/electricitymaps-contrib/wiki/Default-emission-factors) weighted by their respective share in your mix.
+
+Example: If your institution would produce half of their energy themselves through 20% hydroelectric and 80% solar power generation:
+
+$$
+\mathrm{ci}_{\mathrm{total}} = \left( \mathrm{ci}_{\mathrm{hydro}} \cdot 0.2 + \mathrm{ci}_{\mathrm{solar}} \cdot 0.8 \right) \cdot 0.5 + \mathrm{ci}_{\mathrm{region}} \cdot 0.5
+$$
+
+!!! info
+
+    We encourage the reporting of emission values by location instead of marked-based carbon intensities. The energy is still drawn from a finite pool of renewables, currently available to your grid. It would likely be utilized for another buyer, regardless of the contract. This is not to say that these contracts are without merit, but the short-term differences are limited.
 
 ## Cloud computations
 
@@ -65,7 +86,13 @@ To improve the estimate of your CO₂ footprint on the cloud, you are encouraged
 
     For AWS Batch, the plugin uses a default PUE of **1.15**.
 
-**Example:**
+If you still want to estimate your CO₂ footprint on the cloud, you can manually provide:
+
+- The location of your instance (e.g., `'DE'` for AWS region `eu-central-1`)
+- The PUE of the data center
+- If the plugins TDP table does not include your cloud compute instance, and you know the per-core TDP for your instance, set `ignoreCpuModel = true` and specify `powerdrawCpuDefault`.
+
+**Example configuration:**
 
 ```groovy title="nextflow_cloud.config"
 plugins {

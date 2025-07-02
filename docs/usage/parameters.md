@@ -22,7 +22,7 @@ The following parameters are currently available:
   **Default**:  `null`
 
 - **`ci`**  
-  Set this parameter only if you know the carbon intensity (ci) value for your location and prefer not to use the Electricity Maps API. However, using the API is recommended to retrieve real-time data for more accurate calculations.  
+  Location-based carbon intensity (CI). Set this parameter only if you know the CI for your location and prefer not to use the Electricity Maps API. However, using the API is recommended to retrieve real-time data for more accurate calculations.  
   **Default**:  `null`
 
 - **`apiKey`**  
@@ -62,8 +62,14 @@ The following parameters are currently available:
   
 - **`machineType`**  
   Specifies the type of machine used for computation. It determines the `pue` if the parameter is not explicitly specified in the config file. Must be one of: `'compute cluster'`, `'local'` or `'cloud'`.
-  If not specified (`null`), the plugin infers `machineType` from the Nextflow `process.executor` setting, mapping it to either `'compute cluster'`, `'local'` or `'cloud'`.
+  If not specified the plugin infers `machineType` from the Nextflow `process.executor` setting, mapping it to either `'compute cluster'`, `'local'` or `'cloud'`.
     - `'local'`: sets `pue` to 1.0  
     - `'compute cluster'`: sets `pue` to 1.67
     - `'cloud'`: sets `pue` to 1.56  
       <sup>Source: [Uptime Institute 2024 Global Data Center Survey](https://datacenter.uptimeinstitute.com/rs/711-RIA-145/images/2024.GlobalDataCenterSurvey.Report.pdf)</sup>
+  **Default**:  `null`
+
+- **`ciMarket`**  
+  This parameter can be added to account for individual differences in the energy mix that is used for computation. It is strongly recommended to read the [Accounting for a personal energy mix](configuration.md#accounting-for-a-personal-energy-mix)
+  section beforehand. This parameter does not replace the location-based CI, but adds another value to the final report.  
+  **Default**:  `null`

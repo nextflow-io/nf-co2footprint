@@ -179,13 +179,10 @@ class CO2FootprintObserver implements TraceObserver {
             }
         }
 
-        // Calculate the equivalences to the total CO2e emissions
-        final CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(totalStats['co2e'])
-
         // Write report and summary
-        co2eSummaryFile.write(totalStats, equivalences, config, version)
+        co2eSummaryFile.write(totalStats, co2FootprintComputer, config, version)
 
-        co2eReportFile.addEntries(totalStats, processStats, equivalences, config, version, session, traceRecords, co2eRecords)
+        co2eReportFile.addEntries(processStats, totalStats, co2FootprintComputer, config, version, session, traceRecords, co2eRecords)
         co2eReportFile.write()
 
         // Close all files (writes remaining tasks in the trace file)

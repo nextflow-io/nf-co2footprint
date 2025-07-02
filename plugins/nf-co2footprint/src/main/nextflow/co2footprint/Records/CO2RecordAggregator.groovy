@@ -14,9 +14,16 @@ class CO2RecordAggregator {
     // Transformation method to the desired metric
     private final Map<String, Closure<Double>> metricExtractionFunctions
 
-    // Entries
+    // Stores lists of trace/CO2 record maps for each process name
     private final Map<String, List<Map<String, TraceRecord>>> processCO2Records = [:]
 
+    /**
+     * Constructs a CO2RecordAggregator with optional custom metric extraction functions.
+     *
+     * @param metricExtractionFunctions
+     *        Optional map of metric names to closures for extracting metric values.
+     *        If not provided, defaults for common CO₂ and energy metrics are used.
+     */
     CO2RecordAggregator( Map<String, Closure<Double>> metricExtractionFunctions=null )  {
         this.metricExtractionFunctions ?= metricExtractionFunctions ?: [
                 co2e: { TraceRecord traceRecord, CO2Record co2Record -> co2Record.getCO2e() },
@@ -26,7 +33,13 @@ class CO2RecordAggregator {
                 },
                 energy_non_cached: { TraceRecord traceRecord, CO2Record co2Record ->
                     traceRecord.getStore()['status'] != 'CACHED' ? co2Record.getEnergyConsumption() : null
-                }
+                },
+                co2e_market: {
+                    TraceRecord traceRecord, CO2Record co2Record -> co2Record.getCO2eMarket()
+                },
+                energy_market: {
+                    TraceRecord traceRecord, CO2Record co2Record -> co2Record.getEnergyConsumption()
+                },
         ]
     }
 

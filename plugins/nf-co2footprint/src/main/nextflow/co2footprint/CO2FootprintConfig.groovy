@@ -36,14 +36,15 @@ class CO2FootprintConfig {
     private String  summaryFile = "co2footprint_summary_${timestamp}.txt"
     private String  reportFile = "co2footprint_report_${timestamp}.html"
     private String  location = null
-    private def     ci = null               // CI: carbon intensity
-    private String  apiKey = null           // API key for electricityMaps
-    private Double  pue = null              // PUE: power usage effectiveness efficiency, coefficient of the data centre
-    private Double  powerdrawMem = 0.3725   // Power draw of memory [W per GB]
+    private def     ci = null                       // CI: carbon intensity
+    private def     ciMarket = null                 // Market based CI
+    private String  apiKey = null                   // API key for electricityMaps
+    private Double  pue = null                      // PUE: power usage effectiveness efficiency, coefficient of the data centre
+    private Double  powerdrawMem = 0.3725           // Power draw of memory [W per GB]
     private Boolean ignoreCpuModel = false
     private Double  powerdrawCpuDefault = null
     private String  customCpuTdpFile = null
-    private String  machineType = null      // Type of computer on which the workflow is run ['local', 'compute cluster', '']
+    private String  machineType = null              // Type of computer on which the workflow is run ['local', 'compute cluster', '']
 
     // Supported machine types
     private final List<String> supportedMachineTypes = ['local', 'compute cluster', 'cloud']
@@ -61,6 +62,14 @@ class CO2FootprintConfig {
      */
     Double getCi() {
         (ci instanceof Closure) ? (ci as Closure<Double>)() : ci
+    }
+
+    /**
+     * Returns the personal energy mix carbon intensity value.
+     * If set as a closure (in case user defined a function for it in the config), invokes it to get the current value.
+     */
+    Double getCiMarket() {
+        (ciMarket instanceof Closure) ? (ciMarket as Closure<Double>)() : ciMarket
     }
     Double getPue() { pue }
     Boolean getIgnoreCpuModel() { ignoreCpuModel }

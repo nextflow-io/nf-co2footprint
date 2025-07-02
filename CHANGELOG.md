@@ -6,6 +6,7 @@
 - Speedier Report generation through refactoring of Co2 aggregation
 - Merge provided custom TDP matrices into the old `TDPDataMatrix`, instead of fully replacing it
 - Added metric to indicate newly generated / non-cached CO2 emissions into report
+- Added `ciMarket` to account for differences to the local grid
 
 ## Bug Fixes:
 - Adjusted rendering of flights to deliver percentage < 1.0 flights and number of flights afterwards

@@ -23,10 +23,14 @@ class CO2Record extends TraceRecord {
     private final Double energy
     // CO2 equivalent emissions (g)
     private final Double co2e
+    // Personal energy mix CO2 equivalent emissions (g)
+    private final Double co2eMarket
     // Time spent on task (ms)
     private final Double time
     // Carbon intensity (gCO₂eq/kWh)
     private final Double ci
+    // Personal energy mix carbon intensity (gCO₂eq/kWh)
+    private final Double ciMarket
     // Number of CPU cores used
     private final Integer cpus
     // Power draw of CPU (W)
@@ -42,39 +46,47 @@ class CO2Record extends TraceRecord {
 
     // Properties of entries for JSON rendering
     final public static Map<String,String> FIELDS = [
-            energy:         'num',
-            co2e:           'num',
-            time:           'num',
-            ci:             'num',
-            cpus:           'num',
-            powerdrawCPU:   'num',
-            cpuUsage:       'num',
-            memory:         'num',
-            name:           'str',
-            cpu_model:      'str'
+            energy:                     'num',
+            co2e:                       'num',
+            co2eMarket:                 'num',
+            time:                       'num',
+            ci:                         'num',
+            ciMarket:                   'num',
+            cpus:                       'num',
+            powerdrawCPU:               'num',
+            cpuUsage:                   'num',
+            memory:                     'num',
+            name:                       'str',
+            cpu_model:                  'str'
     ]
 
     /**
-     * Constructs a CO2Record
-     *
-     * @param energy Energy used
-     * @param co2e CO2 equivalent emissions
-     * @param time Time spent on task
-     * @param cpus Number of CPU cores used
-     * @param powerdrawCPU TDP of CPU
-     * @param cpuUsage Usage of CPU
-     * @param memory Memory used
-     * @param name Name of Task
-     * @param cpu_model  CPU model name
-     */
+    * Constructs a CO2Record representing the resource usage and emissions for a single task.
+    *
+    * @param energy        Total energy consumed by the task (Wh)
+    * @param co2e          CO₂ equivalent emissions (g) based on location-based carbon intensity
+    * @param co2eMarket    CO₂ equivalent emissions (g) based on market-based (personal energy mix) carbon intensity
+    * @param time          Time spent on the task (ms)
+    * @param ci            Location-based carbon intensity used for calculation (gCO₂eq/kWh)
+    * @param ciMarket      Market-based carbon intensity used for calculation (gCO₂eq/kWh)
+    * @param cpus          Number of CPU cores used
+    * @param powerdrawCPU  Power draw (TDP) of the CPU (W)
+    * @param cpuUsage      CPU usage percentage during the task (%)
+    * @param memory        Memory used by the task (bytes)
+    * @param name          Name of the task
+    * @param cpu_model     CPU model name
+    */
     CO2Record(
-            Double energy=null, Double co2e=null, Double time=null, Double ci=null, Integer cpus=null, Double powerdrawCPU=null,
+            Double energy=null, Double co2e=null, Double co2eMarket=null, Double time=null,
+            Double ci=null, Double ciMarket=null, Integer cpus=null, Double powerdrawCPU=null,
             Double cpuUsage=null, Long memory=null, String name=null, String cpu_model=null
     ) {
         this.energy = energy
         this.co2e = co2e
+        this.co2eMarket = co2eMarket
         this.time = time
         this.ci = ci
+        this.ciMarket = ciMarket
         this.cpus = cpus
         this.powerdrawCPU = powerdrawCPU
         this.cpuUsage = cpuUsage
@@ -82,16 +94,18 @@ class CO2Record extends TraceRecord {
         this.name = name
         this.cpu_model = cpu_model
         Map<String, Object> store = new LinkedHashMap<>([
-                'energy':           energy,
-                'co2e':             co2e,
-                'time':             time,
-                'ci':               ci,
-                'cpus':             cpus,
-                'powerdrawCPU':     powerdrawCPU,
-                'cpuUsage':         cpuUsage,
-                'memory':           memory,
-                'name':             name,
-                'cpu_model':        cpu_model
+                'energy':                   energy,
+                'co2e':                     co2e,
+                'co2eMarket':               co2eMarket,
+                'time':                     time,
+                'ci':                       ci,
+                'ciMarket':                 ciMarket,
+                'cpus':                     cpus,
+                'powerdrawCPU':             powerdrawCPU,
+                'cpuUsage':                 cpuUsage,
+                'memory':                   memory,
+                'name':                     name,
+                'cpu_model':                cpu_model
         ])
         // Overload the store of the parent to ensure inherited methods can access the stored data
         super.store << store
@@ -104,10 +118,19 @@ class CO2Record extends TraceRecord {
     Double getCO2e() { co2e }
     String getCO2eReadable() { Converter.toReadableUnits(co2e,'m', 'g') }
 
+    Double getCO2eMarket() { co2eMarket }
+    String getCO2eMarketReadable() {
+        co2eMarket ? Converter.toReadableUnits(co2eMarket,'m', 'g') : null
+    }
+
     Double getTime() { time }
     String getTimeReadable() { Converter.toReadableTimeUnits(time, 'ms', 'ms', 'days', 0.0d) }
 
     String getCIReadable() { Converter.toReadableUnits(ci, '', 'gCO₂eq/kWh') }
+
+    String getCiMarketReadable() {
+        ciMarket ? Converter.toReadableUnits(ciMarket, '', 'gCO₂eq/kWh') : null
+    }
 
     Integer getCPUs() { cpus }
     String getCPUsReadable() { cpus as String }
@@ -133,9 +156,9 @@ class CO2Record extends TraceRecord {
      */
     List<String> getReadableEntries() {
         return [
-                this.getNameReadable(), this.getEnergyConsumptionReadable(), this.getCO2eReadable(),
-                this.getTimeReadable(), this.getCIReadable(), this.getCPUsReadable(), this.getPowerdrawCPUReadable(),
-                this.getCPUModelReadable(), this.getCPUUsageReadable(), this.getMemoryReadable()
+                this.getNameReadable(), this.getEnergyConsumptionReadable(), this.getCO2eReadable(), this.getCO2eMarketReadable(),
+                this.getTimeReadable(), this.getCIReadable(), this.getCiMarketReadable(), this.getCPUsReadable(),
+                this.getPowerdrawCPUReadable(), this.getCPUModelReadable(), this.getCPUUsageReadable(), this.getMemoryReadable()
         ]
     }
 
