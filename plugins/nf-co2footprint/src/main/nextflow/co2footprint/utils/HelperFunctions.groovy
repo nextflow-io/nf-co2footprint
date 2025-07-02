@@ -31,7 +31,7 @@ class HelperFunctions {
     static Object getTraceOrDefault(TraceRecord trace, TaskId taskID, String key, Object defaultValue) {
         def value = trace.get(key)
         if (value == null) {
-            log.warn("[WARN] Missing trace value '${key}' for task ${taskID}, using default: ${defaultValue}")
+            log.warn("Missing trace value '${key}' for task ${taskID}, using default: ${defaultValue}")
             return defaultValue
         }
         return value

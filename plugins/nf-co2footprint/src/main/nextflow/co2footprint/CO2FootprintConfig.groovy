@@ -151,6 +151,15 @@ class CO2FootprintConfig {
             cpuData.set(powerdrawCpuDefault, cpuData.fallbackModel, 'tdp (W)')
         }
 
+        // Throw error if both customCpuTdpFile and ignoreCpuModel are set
+        if (customCpuTdpFile && ignoreCpuModel) {
+            final String message = "You cannot set both 'customCpuTdpFile' and 'ignoreCpuModel=true'. " +
+                    "When 'ignoreCpuModel' is true, the custom TDP file will not be used. " +
+                    "Please choose only one option."
+            log.error(message)
+            throw new IllegalArgumentException(message)
+        }
+
         // Use custom CPU TDP file if provided
         if (customCpuTdpFile) {
             cpuData.update(

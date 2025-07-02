@@ -258,12 +258,17 @@ class TDPDataMatrix extends DataMatrix {
         dm = dm ?: this
         return dm.rowIndex.getKey(0) as String
     }
-
+    
     /**
-     * Replaces this instance with a new TDPDataMatrix.
+     * Updates the current TDPDataMatrix with entries from another TDPDataMatrix.
      *
-     * @param newTDPDataMatrix New TDP data matrix
-     * @param warnOnReplacements Boolean whether to issue a warning on replacing a value
+     * For each model in the provided newTDPDataMatrix, this method adds or replaces the corresponding row
+     * in the current matrix. If a model already exists, its data is overwritten and a warning is logged
+     * if warnOnReplacements is true and the data differs. The method ensures that the row structure matches
+     * the current matrix, filling missing columns with null values.
+     *
+     * @param newTDPDataMatrix      The TDPDataMatrix containing new or updated entries.
+     * @param warnOnReplacements    If true, logs an info message when an existing entry is overwritten.
      */
     void update(TDPDataMatrix newTDPDataMatrix, Boolean warnOnReplacements=true) {
         TDPDataMatrix oldEntry

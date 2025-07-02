@@ -75,17 +75,17 @@ $$
 
 ## Cloud computations
 
-While the CO2 footprint calculation should function on cloud instances, **nf-co2footprint** can currently not natively support cloud environments because cloud-specific values, such as specific CPU models or PUE values may be missing in our datasets. Therefore most calculations would likely rely on inexact fallback values.
+While the CO2 footprint calculation works on cloud instances, **nf-co2footprint** can currently not natively support all cloud environments, as cloud-specific values-such as certain CPU models or PUE values-may be missing in our datasets. As a result, calculations may often rely on fallback values.
+
+!!! info
+
+    For common cloud platforms, the plugin automatically applies provider-specific default PUE values where supported. However, not all cloud providers or platforms are currently covered, so you may need to supply some information manually. You can view the full list of supported providers and their corresponding PUEs in the [executor PUE mapping file](https://github.com/nextflow-io/nf-co2footprint/blob/master/plugins/nf-co2footprint/src/resources/executor_machine_pue_mapping.csv). For example, AWS uses a default PUE of **1.15**.
 
 To improve the estimate of your CO₂ footprint on the cloud, you are encouraged to manually provide:  
 
 - [The location of your instance](https://portal.electricitymaps.com/docs/getting-started#geographical-coverage) (e.g., zone code `'DE'` for AWS region `eu-central-1`)
 - The PUE of the data center (cloud providers often give global averages)
-- If the plugins TDP table does not include the CPU of your cloud compute instance and you know the per-core TDP for your instance, set `ignoreCpuModel = true` and specify `powerdrawCpuDefault`. You may also provide a `customCpuTdpFile` if there are multiple models. For more information have a look at [parameters.md](parameters.md).
-
-!!! info
-
-    For AWS Batch, the plugin uses a default PUE of **1.15**.
+- If the plugin’s TDP table does not include the CPU of your cloud compute instance and you know the per-core TDP for your instance, set `ignoreCpuModel = true` and specify `powerdrawCpuDefault`. Alternatively, you may provide a `customCpuTdpFile` if there are multiple models, but in this case, `ignoreCpuModel` should **not** be set to `true`, as this would prevent the custom TDP file from being used. For more information, see [parameters.md](parameters.md).
 
 If you still want to estimate your CO₂ footprint on the cloud, you can manually provide:
 
