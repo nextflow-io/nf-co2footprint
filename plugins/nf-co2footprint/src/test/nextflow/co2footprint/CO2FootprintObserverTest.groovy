@@ -247,8 +247,8 @@ class CO2FootprintObserverTest extends Specification{
         Files.isRegularFile(reportPath)
         List<String> reportLines = reportPath.readLines()
         int numLines = reportLines.size()
-        numLines == 1374
-        String optionsLine = reportLines[1137]
+        numLines == 1383
+        String optionsLine = reportLines[1142]
         optionsLine == "  window.options = [" +
                 '{"option":"ci","value":"480.0"},'+
                 '{"option":"customCpuTdpFile","value":null},' +
@@ -260,15 +260,15 @@ class CO2FootprintObserverTest extends Specification{
                 "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
                 "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
                 "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];"
-        String timeLine = reportLines[1186]
+        String timeLine = reportLines[1191]
         timeLine == "          " +
                 "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                 " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
-        // 1199 is the plugin version
+        // 1204 is the plugin version
         checksumChecker.compareChecksums(
                 reportPath,
-                'd23b302d97b9b34dbec2e208dc06b930',
-                [1137, 1186, 1199],
+                '0427de33ff3956479242bed0622630eb',
+                [1142, 1191, 1204],
                 this.class.getResource('/report_test.html').getPath() as Path
         )
     }
