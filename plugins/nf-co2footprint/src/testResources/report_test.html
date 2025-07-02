@@ -592,17 +592,24 @@
 
     // JavaScript used to power the Nextflow Report Template output.
 
+    //
+    // Selector methods
+    //
     /**
-     * Shift a Date by x hours
+     * Get property from the trace via a comparator
      *
-     * @param {*} timeString The Date in String format
-     * @param {*} shift The shift (e.g. +/-10)
-     * @returns The shifted date as a String
+     * @param {String} property Name of the property in the trace
+     * @param {function} comparison comparison function
+     * @returns
      */
-    function shiftHours(timeString, shift) {
-    const date = new Date(timeString);
-    date.setHours(date.getHours() + shift);
-    return date.toISOString().slice(0, 16);
+    function getTraceSelect(property, comparison) {
+      var val = null
+      for (let task of window.data.trace){
+        if (val == null || comparison(task[property], val) ) {
+          val = task[property]
+        }
+      }
+      return val
     }
 
     /**
@@ -742,78 +749,75 @@
   // Carbon intensity plot
   //
 
-  // CI is defined in an hourly context, therefore we can add one additional point at the end to indicate the continuation
-  if (window.timeCiRecords.size > 0) {
-    // Add main line of CI values
-    var timestamps = Array.from( window.timeCiRecords.keys() )
-    var ciValues = Array.from( window.timeCiRecords.values() )
+  // Set first and last ci as constant ci or equivalent to first & last recorded at starting and end time of traces
+  const startTime = getTraceSelect('start',   function (a,b) { return a < b })
+  const endTime = getTraceSelect('complete',  function (a,b) { return a > b })
 
-    var ci_plot_data = [
-      // Add timestamps + CI values to plot
-      {
-        name: "Carbon intensity",
-        x: timestamps, y: ciValues,
-        type: 'scatter', legendgroup: "Carbon intensity"
-      },
-
-      // Add 1 day to first and last point
-      {
-        name: "Carbon intensity prepend",
-        x: [shiftHours(timestamps[0], -24), timestamps[0]],
-        y: [ciValues[0], ciValues[0]],
-        type: 'scatter', legendgroup: "Carbon intensity", mode: "lines", line: {dash: 'dot'},
-      },
-       // Add 1 day to first and last point
-      {
-        name: "Carbon intensity append",
-        x: [shiftHours(timestamps[timestamps.length - 1], 24),timestamps[timestamps.length - 1]],
-        y: [ciValues[ciValues.length - 1], ciValues[ciValues.length - 1]],
-        type: 'scatter', legendgroup: "Carbon intensity", mode: "lines", line: {dash: 'dot'},
-      }
-    ];
-
-    // Add CPU load of tasks
-    var tasksStart = null;
-    var tasksEnd = null;
-    for (let task of window.data.trace) {
-      if(tasksStart == null || tasksStart > task['start']) { tasksStart = task['start'] };
-      if(tasksEnd == null ||tasksEnd < task['complete']) { tasksEnd = task['complete'] };
-      ci_plot_data.push(
-        {
-          name: "Task " + task["task_id"],
-          x: [task['start'], task['complete']], y: [task['%cpu'], task['%cpu']],
-          type: 'scatter',  fill: 'tozeroy', mode: 'none', yaxis: 'y2',
-        }
-      );
-    }
-
-    // Make layout
-    var ci_layout = {
-      title: 'Carbon intensity index',
-      legend: {
-        x: 1.1
-      },
-      xaxis: {
-        title: 'Time',
-        ticklabelstandoff: 10,
-        overlay: 'x2',
-        range: [tasksStart, tasksEnd],
-      },
-      yaxis: {
-        title: 'Carbon Intensity (g/kWh)',
-        rangemode: 'tozero',
-      },
-      yaxis2: {
-       title: 'CPU usage (%)',
-       rangemode: 'tozero',
-       gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
-       overlaying: 'y',
-       side: 'right',
-      }
-    };
-
-    Plotly.newPlot('ci-plot', ci_plot_data, ci_layout)
+  if (window.timeCiRecords.size == 0) {
+    window.timeCiRecords.set(startTime, window.data.trace[0]["ci"])
+    window.timeCiRecords.set(endTime, window.data.trace[0]["ci"])
   }
+  else {
+    const arr = Array.from( window.timeCiRecords.values() )
+    window.timeCiRecords.set(startTime, arr[0])
+    window.timeCiRecords.set(endTime, arr[arr.length - 1])
+  }
+
+  // Add main line of CI values
+  const timeCiRecords = new Map([...window.timeCiRecords].sort())
+  var timestamps = Array.from( timeCiRecords.keys() )
+  var ciValues = Array.from( timeCiRecords.values() )
+
+  var ci_plot_data = [
+    // Add timestamps + CI values to plot
+    {
+      name: "Carbon intensity",
+      x: timestamps, y: ciValues,
+      type: 'scatter', legendgroup: "Carbon intensity"
+    }
+  ];
+
+  // Add CPU load of tasks
+  var tasksStart = null;
+  var tasksEnd = null;
+  for (let task of window.data.trace) {
+    if(tasksStart == null || tasksStart > task['start']) { tasksStart = task['start'] };
+    if(tasksEnd == null ||tasksEnd < task['complete']) { tasksEnd = task['complete'] };
+    ci_plot_data.push(
+      {
+        name: "Task " + task["task_id"],
+        x: [task['start'], task['complete']], y: [task['%cpu'], task['%cpu']],
+        type: 'scatter',  fill: 'tozeroy', mode: 'none', yaxis: 'y2',
+      }
+    );
+  }
+
+  // Make layout
+  var ci_layout = {
+    title: 'Carbon intensity index',
+    legend: {
+      x: 1.1
+    },
+    xaxis: {
+      title: 'Time',
+      ticklabelstandoff: 10,
+      overlay: 'x2',
+      range: [tasksStart, tasksEnd],
+    },
+    yaxis: {
+      title: 'Carbon Intensity (g/kWh)',
+      rangemode: 'tozero',
+    },
+    yaxis2: {
+      title: 'CPU usage (%)',
+      rangemode: 'tozero',
+      gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
+      overlaying: 'y',
+      side: 'right',
+    }
+  }
+
+  Plotly.newPlot('ci-plot', ci_plot_data, ci_layout)
 
 
   //
@@ -1173,6 +1177,13 @@
       </div>
     </div>
   </div>
+
+  <div class="container">
+    <h2 id="ci-heading" style="padding-top: 40px;">Carbon intensity records</h2>
+    <div id="ci-plot"></div>
+    <p class="mt-3 mb-3">This plot shows the carbon intensity (CI) fluctuation during workflow computation. Additionally, the usage of the assigned CPU during task computation is displayed, to indicate the system load at the respective time.</p>
+  </div>
+
 
   <!-- References -->
   <div class="container my-5">
