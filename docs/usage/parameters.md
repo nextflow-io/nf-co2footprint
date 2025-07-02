@@ -44,7 +44,7 @@ The following parameters are currently available:
 ## Data Center & Machine Settings
 
 - **`pue`**  
-  Power usage effectiveness efficiency coefficient of the data centre. For local cluster you can usually find out your specific PUE at the system administrators or system managers. Also, the current [yearly worldwide average](https://www.statista.com/statistics/1229367/data-center-average-annual-pue-worldwide/) could be used. The plugin uses provider-specific default PUE values for supported cloud platforms if the respective executor is registered by Nextflow. You can find these values in the [executor PUE mapping file](https://github.com/nextflow-io/nf-co2footprint/blob/master/plugins/nf-co2footprint/src/resources/executor_machine_pue_mapping.csv).  
+  Power usage effectiveness (PUE) of the data centre. For local cluster you can usually find out your specific PUE at the system administrators or system managers. Also, the current [yearly worldwide average](https://www.statista.com/statistics/1229367/data-center-average-annual-pue-worldwide/) could be used. The plugin uses provider-specific default PUE values for supported cloud platforms if the respective executor is registered by Nextflow. You can find these values in the [executor PUE mapping file](https://github.com/nextflow-io/nf-co2footprint/blob/master/plugins/nf-co2footprint/src/resources/executor_machine_pue_mapping.csv).  
   **If specified, this value will override any PUE determined by `machineType`.**  
   **Default**: 1.00
 
