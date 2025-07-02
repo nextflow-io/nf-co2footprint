@@ -250,7 +250,7 @@ class CO2FootprintObserver implements TraceObserver {
 
         // Ensure the presence of a Trace Record
         if (!trace) {
-            log.warn("[WARN] Unable to find TraceRecord for task with id: ${taskId}")
+            log.warn("Unable to find TraceRecord for task with id: ${taskId}")
             return
         }
 

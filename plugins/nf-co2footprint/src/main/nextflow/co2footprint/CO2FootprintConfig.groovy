@@ -38,7 +38,7 @@ class CO2FootprintConfig {
     private String  location = null
     private def     ci = null                       // CI: carbon intensity
     private def     ciMarket = null                 // Market based CI
-    private String  apiKey = null                   // API key for electricityMaps
+    private String  emApiKey = null                   // API key for electricityMaps
     private Double  pue = null                      // PUE: power usage effectiveness efficiency, coefficient of the data centre
     private Double  powerdrawMem = 0.3725           // Power draw of memory [W per GB]
     private Boolean ignoreCpuModel = false
@@ -104,7 +104,7 @@ class CO2FootprintConfig {
         // Determine the carbon intensity (CI) value
         if (ci == null) {
 
-            CIValueComputer ciValueComputer = new CIValueComputer(apiKey, location, ciData)
+            CIValueComputer ciValueComputer = new CIValueComputer(emApiKey, location, ciData)
             // ci is either set to a Closure (in case the electricity maps API is used) or to a Double (in the other cases)
             // The closure is invoked each time the CO2 emissions are calculated (for each task) to make a new API call to update the real time ci value.
             ci = ciValueComputer.computeCI()
@@ -149,6 +149,11 @@ class CO2FootprintConfig {
         // Set default CPU power draw if given
         if (powerdrawCpuDefault) {
             cpuData.set(powerdrawCpuDefault, cpuData.fallbackModel, 'tdp (W)')
+        }
+
+        // Throw error if both customCpuTdpFile and ignoreCpuModel are set
+        if (customCpuTdpFile && ignoreCpuModel) {
+            log.warn("Both 'customCpuTdpFile' and 'ignoreCpuModel=true' are set. Note: When 'ignoreCpuModel' is true, the custom TDP file will be ignored.")
         }
 
         // Use custom CPU TDP file if provided

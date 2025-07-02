@@ -82,10 +82,10 @@ class CIValueComputerTest extends Specification {
 
     def "should retrieve real-time carbon intensity when API key is set and request succeeds"() {
         given:
-        def apiKey = "dummy_api_key"
+        def emApiKey = "dummy_api_key"
         def location = "US"
         def ciData = Mock(CIDataMatrix)
-        def computer = Spy(CIValueComputer, constructorArgs: [apiKey, location, ciData])
+        def computer = Spy(CIValueComputer, constructorArgs: [emApiKey, location, ciData])
 
         computer.getRealtimeCI() >> 123.45
 
