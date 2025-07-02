@@ -84,14 +84,13 @@ While the CO2 footprint calculation works on cloud instances, **nf-co2footprint*
 To improve the estimate of your CO₂ footprint on the cloud, you are encouraged to manually provide:  
 
 - [The location of your instance](https://portal.electricitymaps.com/docs/getting-started#geographical-coverage) (e.g., zone code `'DE'` for AWS region `eu-central-1`)
+- Set the `ciMarket` parameter if you know the ci of the energy mix used by the cloud instance
 - The PUE of the data center (cloud providers often give global averages)
-- If the plugin’s TDP table does not include the CPU of your cloud compute instance and you know the per-core TDP for your instance, set `ignoreCpuModel = true` and specify `powerdrawCpuDefault`. Alternatively, you may provide a `customCpuTdpFile` if there are multiple models, but in this case, `ignoreCpuModel` should **not** be set to `true`, as this would prevent the custom TDP file from being used. For more information, see [parameters.md](parameters.md).
+- If the plugin’s TDP table does not include the CPU models used by your cloud compute instance and you know the per-core TDP for those models, you have two options:  
+    - If you have multiple CPU models, provide a `customCpuTdpFile` containing their TDP values.
+    - If you have only one CPU model and do not want to provide a table, set `ignoreCpuModel = true` and specify `powerdrawCpuDefault`.  
 
-If you still want to estimate your CO₂ footprint on the cloud, you can manually provide:
-
-- The location of your instance (e.g., `'DE'` for AWS region `eu-central-1`)
-- The PUE of the data center
-- If the plugins TDP table does not include your cloud compute instance, and you know the per-core TDP for your instance, set `ignoreCpuModel = true` and specify `powerdrawCpuDefault`.
+For more information, see [parameters.md](parameters.md).
 
 **Example configuration:**
 

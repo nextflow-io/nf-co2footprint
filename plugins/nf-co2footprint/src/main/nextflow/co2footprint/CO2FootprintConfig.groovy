@@ -153,11 +153,7 @@ class CO2FootprintConfig {
 
         // Throw error if both customCpuTdpFile and ignoreCpuModel are set
         if (customCpuTdpFile && ignoreCpuModel) {
-            final String message = "You cannot set both 'customCpuTdpFile' and 'ignoreCpuModel=true'. " +
-                    "When 'ignoreCpuModel' is true, the custom TDP file will not be used. " +
-                    "Please choose only one option."
-            log.error(message)
-            throw new IllegalArgumentException(message)
+            log.warn("Both 'customCpuTdpFile' and 'ignoreCpuModel=true' are set. Note: When 'ignoreCpuModel' is true, the custom TDP file will be ignored.")
         }
 
         // Use custom CPU TDP file if provided
