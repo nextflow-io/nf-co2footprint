@@ -66,6 +66,7 @@ class LoggingTest extends Specification {
 
     // Setup method that executes once before each test
     def setup() {
+        logger.setLevel(ch.qos.logback.classic.Level.DEBUG)
         listAppender.start()
         logger.addAppender(listAppender)
     }
