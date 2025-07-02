@@ -43,7 +43,7 @@ repositories {
 
 configurations {
     // see https://docs.gradle.org/4.1/userguide/dependency_management.html#sub:exclude_transitive_dependencies
-    runtimeClasspath.exclude group: 'org.slf4j', module: 'slf4j-api'
+    //runtimeClasspath.exclude group: 'org.slf4j', module: 'slf4j-api'
 }
 
 sourceSets {
@@ -81,6 +81,7 @@ dependencies {
     testImplementation ("org.spockframework:spock-core:2.3-groovy-4.0") { exclude group: 'org.apache.groovy'; exclude group: 'net.bytebuddy' }
     testImplementation ('org.spockframework:spock-junit4:2.3-groovy-4.0') { exclude group: 'org.apache.groovy'; exclude group: 'net.bytebuddy' }
     testImplementation ('com.google.jimfs:jimfs:1.1')
+    implementation 'ch.qos.logback:logback-classic:1.2.12'
 
     testImplementation(testFixtures("io.nextflow:nextflow:$nextflowVersion"))
     testImplementation(testFixtures("io.nextflow:nf-commons:$nextflowVersion"))
