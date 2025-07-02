@@ -60,7 +60,7 @@ The `ciMarket` parameter can be used to provide a custom value to account for di
 -  A different market share through a contract with your energy provider, guaranteeing to provide a certain percentage of electricity from renewable sources  
 -  Direct contributions to the used electricity (e.g. via owned solar panels)
 
-You can calculate an approximation of your regional CI via the average of the [emission factors](https://github.com/electricitymaps/electricitymaps-contrib/wiki/Default-emission-factors) weighted by their respective share in your mix.
+You can calculate an approximation of your personal/marked-based CI via the average of the [emission factors](https://github.com/electricitymaps/electricitymaps-contrib/wiki/Default-emission-factors) weighted by their respective share in your mix.
 
 Example: If your institution would produce half of their energy themselves through 20% hydroelectric and 80% solar power generation:
 
