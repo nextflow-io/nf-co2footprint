@@ -1,6 +1,6 @@
 ## [Unreleased]
 
-# Version 1.0.0
+# Version 1.0.0-rc
 ## Features:
 - When a message is excluded from the log it is still sent to the `trace` level log
 - Speedier Report generation through refactoring of Co2 aggregation
