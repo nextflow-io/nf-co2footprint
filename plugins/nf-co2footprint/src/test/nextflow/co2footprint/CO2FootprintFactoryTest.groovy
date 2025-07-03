@@ -38,7 +38,7 @@ import java.nio.file.Path
  */
 class CO2FootprintFactoryTest extends Specification {
 
-    def 'create observer' () {
+    def 'create observer ' () {
         when:
         Session session = Mock(Session) { getConfig() >>  [:] }
         List<TraceObserver> observers = new CO2FootprintFactory().create(session)
@@ -46,5 +46,15 @@ class CO2FootprintFactoryTest extends Specification {
         then:
         observers[0] instanceof  CO2FootprintObserver
         observers.size() == 1
+    }
+
+    def 'check version' () {
+        when:
+        CO2FootprintFactory factory = new CO2FootprintFactory()
+        factory.setPluginVersion()
+        String pluginVersion = factory.getPluginVersion()
+
+        then:
+        pluginVersion == "1.0.0-beta1"
     }
 }
