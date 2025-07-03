@@ -21,14 +21,12 @@ import com.google.common.jimfs.Configuration
 import com.google.common.jimfs.Jimfs
 import org.opentest4j.AssertionFailedError
 
-import java.nio.file.CopyOption
 import java.nio.file.Files
 import java.nio.file.Path
-
-import groovy.json.JsonSlurper
-
 import java.nio.file.StandardCopyOption
+
 import java.security.MessageDigest
+import groovy.json.JsonSlurper
 
 /**
  *
