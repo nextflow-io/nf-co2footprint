@@ -19,15 +19,15 @@ package nextflow.co2footprint
 
 import com.google.common.jimfs.Configuration
 import com.google.common.jimfs.Jimfs
-import org.bouncycastle.util.test.TestFailedException
 import org.opentest4j.AssertionFailedError
 
+import java.nio.file.CopyOption
 import java.nio.file.Files
 import java.nio.file.Path
 
 import groovy.json.JsonSlurper
 
-import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
 import java.security.MessageDigest
 
 /**
@@ -77,6 +77,7 @@ class FileChecker {
 
     /**
      * Adds a new error if it should be collected, otherwise throws it
+     *
      * @param newError
      */
     void addError(Throwable newError) {
@@ -118,6 +119,19 @@ class FileChecker {
     }
 
     /**
+     * Asserts whether the path is a well formed file
+     *
+     * @param path Path to file
+     */
+    void checkIsFile(Path path) {
+        try {
+            assert Files.isRegularFile(path)
+        } catch (Exception exception) {
+            addError(exception)
+        }
+    }
+
+    /**
      * Compare the number of lines
      *
      * @param path Path to a file
@@ -132,6 +146,30 @@ class FileChecker {
         finally {
             return newNumLines
         }
+    }
+
+    /**
+     * Compare select lines against recorded lines
+     *
+     * @param path Path to file
+     * @param lineRecords Map of paired line positions and line content
+     * @return A list of the already checked lines
+     */
+    List<Integer> compareLines(Path path, Map<Integer, String> lineRecords) {
+        List<String> lines  = path.readLines()
+        try {
+            String line
+            lineRecords.each { Integer linePos, String lineRecord ->
+                // Change from 1 to 0-based
+                line = lines[linePos - 1]
+                assert line == lineRecord
+            }
+        }
+        catch (Exception exception){
+            addError(exception)
+        }
+
+        return lineRecords.keySet() as List<Integer>
     }
 
     /**
@@ -189,7 +227,7 @@ class FileChecker {
      * @param path Path to the file for the checksum calculation
      * @param recordedChecksum  The expected checksum to verify against. If null, the method will
      *                          attempt to retrieve it from the class checksum map.
-     * @param excludedLines Lines to be excluded in the checksum calculation
+     * @param excludedLines Lines to be excluded in the checksum calculation (1-based)
      * @param recordedPath Path with the complete file to compare to when the checksums don't match
      * @return New checksum and snapshot path
      */
@@ -200,6 +238,8 @@ class FileChecker {
             Path recordPath=null
     ) {
         Path snapPath = null
+        // Change from 1 based to 0-based numbers
+        excludedLines = excludedLines.collect {Integer line -> line - 1}
         String newChecksum = calculateMD5(path.toFile(), excludedLines)
 
         try {
@@ -221,9 +261,12 @@ class FileChecker {
         return [checksum: newChecksum, snapPath: snapPath]
     }
 
-    void runChecks(Path path, Path recordPath=null){
+    void runChecks(Path path, Map<Integer, String> explicitLines=[:], Path recordPath=null){
         // Set errors to collection
         this.collectErrors = true
+
+        // Check file property
+        checkIsFile(path)
 
         // Get Infos to check for
         recordPath ?= this.class.getResource("/${path.getFileName()}").getPath() as Path
@@ -233,8 +276,11 @@ class FileChecker {
         Map<String, ?> newCheckInfos = [:]
         Path snapPath = null
 
-        // Get excluded lines
-        List<Integer> excludedLines = checkInfos.remove('excluded_lines') as List<Integer>
+        // Check explicitly given lines
+        List<Integer> excludedLines = compareLines(path, explicitLines)
+
+        // Get other excluded lines
+        excludedLines.addAll(checkInfos.remove('excluded_lines') as List<Integer> ?: [])
 
         // Perform all checks
         checkInfos.each { String checkType, def value ->
@@ -260,16 +306,16 @@ class FileChecker {
             this.collectErrors = false
 
             // Copy snapshot
-            Files.copy(path, snapPath)
+            Files.copy(path, snapPath, StandardCopyOption.REPLACE_EXISTING)
 
-            // Print info to adapt to changes
+            // Print info to adopt the changes
             String message =
-                "ℹ️ If you want to adopt the changes, you may replace\n" +
-                "${recordPath.getFileName()} with:\n" +
-                "${snapPath}.\n" +
-                "💡Suggested new fileCheck configuration:\n" +
+                "🔎 The actual error message can be found below under 'Suppressed:'.\n\n" +
+                "ℹ️ If you want to adopt the changes, you may replace the file content in ${recordPath.getFileName()}\n" +
+                "with the new file content in: `${snapPath}`.\n" +
+                "💡 Suggested new fileCheck configuration (apply this in `nextflow.co2footprint/testResources/file_checks.json`):\n" +
                 "${newCheckInfos}" +
-                "\n⚠️ Pay attention to the excluded_lines, as they may differ from the suggested ones, depending on your changes.\n"
+                "\n⚠️ Pay attention to the excluded_lines, as they may differ from the suggested ones depending on your changes.\n"
 
             Exception checkFailedException = new Exception(message)
             checkFailedException.addSuppressed(error)
