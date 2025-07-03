@@ -215,7 +215,7 @@ class CO2FootprintObserverTest extends Specification{
         //
         // Check Trace File
         //
-        Files.isRegularFile(tracePath)
+        fileChecker.checkIsFile(tracePath)
         List<String> traceLines = tracePath.readLines()
         traceLines.size() == 2
 
@@ -228,47 +228,35 @@ class CO2FootprintObserverTest extends Specification{
         fileChecker.compareChecksums(tracePath, '12870c60ba2a982fd5b85ed0c3edf3ef')
 
 
-
-        //
         // Check Summary File
-        //
-        Files.isRegularFile(summaryPath)
-        List<String> summaryLines = summaryPath.readLines()
+        fileChecker.runChecks(
+                summaryPath,
+                [
+                        17: "reportFile: ${reportPath}",
+                        18: "summaryFile: ${summaryPath}",
+                        19: "traceFile: ${tracePath}"
+                ]
+        )
 
-        // Check special lines
-        summaryLines[16] == "reportFile: ${reportPath}"
-        summaryLines[17] == "summaryFile: ${summaryPath}"
-        summaryLines[18] == "traceFile: ${tracePath}"
-
-        // 12 is the plugin version (changes on Github CI to current version)
-        fileChecker.runChecks(summaryPath)
-
-
-        //
         // Check Report File
-        //
-        Files.isRegularFile(reportPath)
-        List<String> reportLines = reportPath.readLines()
-
-        // Check special lines
-        String timeLine = reportLines[233]
-        timeLine == "          " +
-                "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
-                " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
-        String optionsLine = reportLines[1292]
-        optionsLine == "  window.options = [" +
-                '{"option":"ci","value":"480.0"},'+
-                '{"option":"customCpuTdpFile","value":null},' +
-                '{"option":"ignoreCpuModel","value":"false"},' +
-                '{"option":"location","value":null},' +
-                '{"option":"powerdrawCpuDefault","value":null},' +
-                '{"option":"powerdrawMem","value":"0.3725"},' +
-                '{"option":"pue","value":"1.0"},' +
-                "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
-                "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
-                "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];"
-
-        // 246 is the plugin version
-        fileChecker.runChecks(reportPath)
+        fileChecker.runChecks(
+            reportPath,
+            [
+            234: '          ' +
+                    "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
+                    " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>",
+            1293: '  window.options = [' +
+                    '{"option":"ci","value":"480.0"},'+
+                    '{"option":"customCpuTdpFile","value":null},' +
+                    '{"option":"ignoreCpuModel","value":"false"},' +
+                    '{"option":"location","value":null},' +
+                    '{"option":"powerdrawCpuDefault","value":null},' +
+                    '{"option":"powerdrawMem","value":"0.3725"},' +
+                    '{"option":"pue","value":"1.0"},' +
+                    "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
+                    "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
+                    "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];"
+            ]
+        )
     }
 }
