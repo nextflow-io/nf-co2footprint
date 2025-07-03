@@ -184,18 +184,24 @@ class FileChecker {
         Path snapPath = parent.resolve("new_${recordPath.getFileName()}")
 
         int linePosition = 0
-        try {
             path.withReader { Reader readerNew ->
                 recordPath.withReader { Reader readerRecord ->
                     String lineNew, lineRecord
                     while ((lineNew = readerNew.readLine()) != null & (lineRecord = readerRecord.readLine()) != null) {
                         if (!excludedLines.contains(linePosition)) {
                             if (lineNew.size() < 10000 & lineRecord.size() < 10000){
-                                assert lineNew == lineRecord, "Mismatch in line ${linePosition}"
+                                try {
+                                    assert lineNew == lineRecord, "Mismatch in line ${linePosition}"
+                                }
+                                catch (Throwable error) {
+                                    addError(error)
+                                }
                             } else if (lineNew != lineRecord) {
-                                throw new AssertionFailedError(
-                                     "Mismatching new line: ${lineNew}\n" +
-                                     "Mismatch in line ${linePosition}. Output too long, omitting recorded line."
+                                addError(
+                                    new AssertionFailedError(
+                                        "Mismatching new line: ${lineNew}\n" +
+                                        "Mismatch in line ${linePosition}. Output too long, omitting recorded line."
+                                    )
                                 )
                             }
                         }
@@ -204,18 +210,15 @@ class FileChecker {
 
                     // Check for extra lines:
                     if (readerNew.readLine() != null) {
-                        throw new AssertionFailedError("New file has extra lines")
+                        addError( new AssertionFailedError("New file has extra lines") )
                     }
                     // Check for extra lines:
                     if (readerRecord.readLine() != null) {
-                        throw new AssertionFailedError("Recorded file has extra lines at the end.")
+                        addError( new AssertionFailedError("Recorded file has extra lines at the end.") )
                     }
                 }
             }
-        }
-        catch (Exception error) {
-           addError(error)
-        }
+
         return snapPath
     }
 
@@ -309,7 +312,7 @@ class FileChecker {
             // Print info to adopt the changes
             String message =
                 "🔎 The actual error message can be found below under 'Suppressed:'.\n\n" +
-                "ℹ️ If you want to adopt the changes, you may replace the file content in ${recordPath.getFileName()}\n" +
+                "ℹ️ If you want to adopt the changes, you may replace the file content in `nextflow.co2footprint/testResources/${recordPath.getFileName()}`\n" +
                 "with the new file content in: `${snapPath}`.\n" +
                 "💡 Suggested new fileCheck configuration (apply this in `nextflow.co2footprint/testResources/file_checks.json`):\n" +
                 "${newCheckInfos}" +
