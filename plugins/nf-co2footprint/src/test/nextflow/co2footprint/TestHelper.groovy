@@ -277,17 +277,16 @@ class FileChecker {
         Map<String, ?> newCheckInfos = [:]
         Path snapPath = null
 
-        // Check explicitly given lines
-        List<Integer> excludedLines = compareLines(path, explicitLines)
-
-        // Get other excluded lines
-        excludedLines.addAll(checkInfos.remove('excluded_lines') as List<Integer> ?: [])
+        // Check explicitly given or excluded lines
+        Set<Integer> excludedLines = compareLines(path, explicitLines)
+        Set<Integer> additionalExclusions = checkInfos.remove('excluded_lines') as Set<Integer> ?: []
+        excludedLines.addAll(additionalExclusions)
 
         // Perform all checks
         checkInfos.each { String checkType, def value ->
             switch (checkType) {
                 case 'checksum' -> {
-                    Map record = compareChecksums(path, value as String, excludedLines, recordPath)
+                    Map record = compareChecksums(path, value as String, excludedLines as List, recordPath)
                     newCheckInfos.put(checkType, record.get("checksum"))
                     snapPath = record.get("snapPath") as Path
                 }
@@ -295,8 +294,10 @@ class FileChecker {
                     value = value as Integer
                     Long newNumLines = compareNumLines(path, value) as Long
                     newCheckInfos.put(checkType, newNumLines)
-                    Long diffLines = newNumLines - value
-                    newCheckInfos.put('excluded_lines', excludedLines.collect { Integer line -> line + diffLines})
+                    if(additionalExclusions) {
+                        Long diffLines = newNumLines - value
+                        newCheckInfos.put('excluded_lines', additionalExclusions.collect { Integer line -> line + diffLines })
+                    }
                 }
             }
         }
