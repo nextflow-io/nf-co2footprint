@@ -44,15 +44,15 @@ class TimeCiRecordCollectorTest  extends Specification {
 
         when:
         timeCiRecordCollector.start(config, 0, 500) // execute every 0.5 second
-        Thread.sleep(2000)                  // wait 2 seconds
+        Thread.sleep(2001)                  // wait 2 seconds
         timeCiRecordCollector.stop()
-        Thread.sleep(1000)                  // wait 2 seconds
+        Thread.sleep(1000)                  // wait 1 second
 
         Map timeCis = timeCiRecordCollector.getTimeCIs()
 
         then:
         timeCis instanceof ConcurrentHashMap<LocalDateTime, Integer>
-        timeCis.size() == 5
+        timeCis.size() == 5 // This is not 100% guaranteed, if there is delay in the computation, this could be 4
 
         // Check whether the timestamps are roughly in the right distance to another (+/- 50ms)
         LocalDateTime  previous = timeCis.keySet().min()
