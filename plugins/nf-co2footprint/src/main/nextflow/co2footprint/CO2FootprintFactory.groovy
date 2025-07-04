@@ -49,14 +49,38 @@ class CO2FootprintFactory implements TraceObserverFactory {
     private String pluginVersion = null
 
     /**
-     * Set the current version of the plugin into the respective variable
+     * Set the current plugin version from the local /META-INF/MANIFEST.MF
+     *
+     * @param manifest URL to the manifest
+     * @param tryFallback Whether a fallback in the form of a search of all MANIFESTS from the class loader should be attempted
      */
-    protected void setPluginVersion() {
-        Enumeration<URL> resources = this.class.classLoader.getResources('META-INF/MANIFEST.MF')
-        URL manifest = resources.find { it.toString().endsWith('/plugins/nf-co2footprint/build/resources/main/META-INF/MANIFEST.MF') } as URL
-        List<String> lines = manifest.readLines()
-        String line = lines.find {it.startsWith('Plugin-Version: ') }
-        pluginVersion = line.split(': ')[1]
+    protected void setPluginVersion(
+            URL manifest=this.class.getResource('/META-INF/MANIFEST.MF'),
+            boolean tryFallback=true
+    ) {
+        log.trace("MANIFEST.MF path: ${manifest.toString()}")
+
+        try {
+            // Get version from manifest
+            List<String> lines = manifest.readLines()
+            String line = lines.find {it.startsWith('Plugin-Version: ') }
+            pluginVersion = line.split(': ')[1]
+        }
+        catch (NullPointerException nullPointerException) {
+            // Fallback to checking all classLoader Files
+            if (tryFallback) {
+                Enumeration<URL> manifests = this.class.classLoader.getResources('META-INF/MANIFEST.MF')
+                log.trace("MANIFESTS: ${manifests.toList()}")
+                setPluginVersion(
+                        manifests.find { it.toString().endsWith('/plugins/nf-co2footprint/build/resources/main/META-INF/MANIFEST.MF') } as URL,
+                        false
+                )
+            }
+            else {
+                log.error(nullPointerException.getMessage())
+                throw nullPointerException
+            }
+        }
     }
 
     /**
