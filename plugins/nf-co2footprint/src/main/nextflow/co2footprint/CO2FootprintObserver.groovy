@@ -10,6 +10,7 @@ import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.FileCreators.CO2FootprintReport
 import nextflow.co2footprint.FileCreators.CO2FootprintSummary
 import nextflow.co2footprint.FileCreators.CO2FootprintTrace
+import nextflow.co2footprint.Records.TimeCiRecordCollector
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskId
 import nextflow.processor.TaskProcessor
@@ -64,6 +65,10 @@ class CO2FootprintObserver implements TraceObserver {
     private CO2FootprintComputer co2FootprintComputer
     CO2FootprintComputer getCO2FootprintComputer() { co2FootprintComputer }
 
+    // Record for CI values during execution
+    TimeCiRecordCollector timeCiRecordCollector
+    TimeCiRecordCollector getTimeCiRecordCollector() { timeCiRecordCollector }
+
     // Holds the the start time for tasks started/submitted but not yet completed
     @PackageScope
     Map<TaskId, TraceRecord> current = new ConcurrentHashMap<>()
@@ -105,6 +110,8 @@ class CO2FootprintObserver implements TraceObserver {
         this.co2FootprintComputer = co2FootprintComputer
         this.overwrite = overwrite
         this.maxTasks = maxTasks
+
+        this.timeCiRecordCollector = new TimeCiRecordCollector(config)
     }
 
     /**
@@ -144,6 +151,9 @@ class CO2FootprintObserver implements TraceObserver {
         this.session = session
         this.aggregator = new CO2RecordAggregator()
 
+        // Start hourly CI updating
+        timeCiRecordCollector.start()
+
         // make sure parent paths exists
         paths.each {key, path ->
             final Path parent = path.normalize().getParent()
@@ -167,6 +177,9 @@ class CO2FootprintObserver implements TraceObserver {
     void onFlowComplete() {
         log.debug("Workflow completed -- rendering & saving files")
 
+        // Stop hourly CI updating
+        timeCiRecordCollector.stop()
+
         // Compute the statistics (total, mean, min, max, quantiles) on process level
         final Map<String, Map<String, Map<String, ?>>> processStats = aggregator.computeProcessStats()
 
@@ -182,7 +195,7 @@ class CO2FootprintObserver implements TraceObserver {
         // Write report and summary
         co2eSummaryFile.write(totalStats, co2FootprintComputer, config, version)
 
-        co2eReportFile.addEntries(processStats, totalStats, co2FootprintComputer, config, version, session, traceRecords, co2eRecords)
+        co2eReportFile.addEntries(processStats, totalStats, co2FootprintComputer, config, version, session, traceRecords, co2eRecords, timeCiRecordCollector)
         co2eReportFile.write()
 
         // Close all files (writes remaining tasks in the trace file)
@@ -258,7 +271,7 @@ class CO2FootprintObserver implements TraceObserver {
         current.remove(taskId)
 
         // Extract CO2e records
-        final CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace)
+        final CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace, timeCiRecordCollector)
 
         // Collect results
         co2eRecords[taskId] = co2Record
@@ -288,7 +301,7 @@ class CO2FootprintObserver implements TraceObserver {
         if (trace == null) { return }
 
         // Extract records
-        final CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace)
+        final CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace, timeCiRecordCollector)
 
         // Collect results
         co2eRecords[taskId] = co2Record

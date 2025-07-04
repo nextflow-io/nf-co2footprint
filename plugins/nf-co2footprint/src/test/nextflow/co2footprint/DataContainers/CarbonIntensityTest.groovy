@@ -4,6 +4,7 @@ package nextflow.co2footprint.DataContainers
 import spock.lang.Specification
 import java.nio.file.Path
 import java.nio.file.Files
+import java.time.LocalDateTime
 
 class CIDataMatrixTest extends Specification {
 
@@ -87,14 +88,15 @@ class CIValueComputerTest extends Specification {
         def ciData = Mock(CIDataMatrix)
         def computer = Spy(CIValueComputer, constructorArgs: [emApiKey, location, ciData])
 
-        computer.getRealtimeCI() >> 123.45
+        LocalDateTime now = LocalDateTime.now()
+        computer.getRealtimeCI() >> [(now): 123.45]
 
         when:
-        def ciClosure = computer.computeCI()
+        def ciClosure = computer.computeTimeCI()
         def ciValue = ciClosure()
 
         then:
-        ciValue == 123.45
+        ciValue == [(now): 123.45]
     }
     
     def "should fallback to CIDataMatrix if API key is missing"() {
@@ -106,7 +108,7 @@ class CIValueComputerTest extends Specification {
         ciData.findCiInMatrix(location) >> 50.0
 
         when:
-        def ciValue = computer.computeCI()
+        def ciValue = computer.computeTimeCI()
 
         then:
         ciValue == 50.0
@@ -122,7 +124,7 @@ class CIValueComputerTest extends Specification {
         ciData.findCiInMatrix('GLOBAL') >> 80.0
 
         when:
-        def ciValue = computer.computeCI()
+        def ciValue = computer.computeTimeCI()
 
         then:
         ciValue == 80.0
@@ -138,7 +140,7 @@ class CIValueComputerTest extends Specification {
         ciData.findCiInMatrix('GLOBAL') >> null
 
         when:
-        def ciValue = computer.computeCI()
+        def ciValue = computer.computeTimeCI()
 
         then:
         ciValue == null

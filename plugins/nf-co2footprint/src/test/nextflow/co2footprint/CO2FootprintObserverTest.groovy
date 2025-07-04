@@ -247,12 +247,8 @@ class CO2FootprintObserverTest extends Specification{
         Files.isRegularFile(reportPath)
         List<String> reportLines = reportPath.readLines()
         int numLines = reportLines.size()
-        numLines == 1298
-        String timeLine = reportLines[233]
-        timeLine == "          " +
-                "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
-                " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
-        String optionsLine = reportLines[1292]
+        numLines == 1419
+        String optionsLine = reportLines[1157]
         optionsLine == "  window.options = [" +
                 '{"option":"ci","value":"480.0"},'+
                 '{"option":"customCpuTdpFile","value":null},' +
@@ -264,11 +260,15 @@ class CO2FootprintObserverTest extends Specification{
                 "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
                 "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
                 "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];"
-        // 246 is the plugin version
+        String timeLine = reportLines[1206]
+        timeLine == "          " +
+                "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
+                " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
+        // 1204 is the plugin version
         checksumChecker.compareChecksums(
                 reportPath,
-                'e1299389272b334e2891dbb0190d2c16',
-                [233, 246, 1292],
+                'b0a9a8bb825ed56b6180d09b18048662',
+                [1157, 1206, 1219],
                 this.class.getResource('/report_test.html').getPath() as Path
         )
     }
