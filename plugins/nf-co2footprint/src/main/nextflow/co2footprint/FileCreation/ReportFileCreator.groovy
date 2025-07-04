@@ -3,6 +3,7 @@ package nextflow.co2footprint.FileCreation
 import groovy.json.JsonOutput
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
+import nextflow.co2footprint.CO2FootprintComputer
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Metrics.Converter
 import nextflow.co2footprint.Records.TimeCiRecordCollector
