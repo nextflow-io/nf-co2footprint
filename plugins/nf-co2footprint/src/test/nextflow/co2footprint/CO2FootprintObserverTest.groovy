@@ -247,7 +247,7 @@ class CO2FootprintObserverTest extends Specification{
         Files.isRegularFile(reportPath)
         List<String> reportLines = reportPath.readLines()
         int numLines = reportLines.size()
-        numLines == 1398
+        numLines == 1419
         String optionsLine = reportLines[1157]
         optionsLine == "  window.options = [" +
                 '{"option":"ci","value":"480.0"},'+
@@ -267,7 +267,7 @@ class CO2FootprintObserverTest extends Specification{
         // 1204 is the plugin version
         checksumChecker.compareChecksums(
                 reportPath,
-                '3ff3a348b2aebbe86604474abafac048',
+                'b0a9a8bb825ed56b6180d09b18048662',
                 [1157, 1206, 1219],
                 this.class.getResource('/report_test.html').getPath() as Path
         )
