@@ -47,4 +47,14 @@ class CO2FootprintFactoryTest extends Specification {
         observers[0] instanceof  CO2FootprintObserver
         observers.size() == 1
     }
+
+    def 'check version' () {
+        when:
+        CO2FootprintFactory factory = new CO2FootprintFactory()
+        factory.setPluginVersion()
+        String pluginVersion = factory.getPluginVersion()
+
+        then:
+        pluginVersion == "1.0.0-rc"
+    }
 }

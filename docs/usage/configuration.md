@@ -17,7 +17,7 @@ plugins {
 
 // Optional example config settings for CO₂ reporting:
 
-def co2_timestamp = new Date().format('yyyy-MM-dd_HH-mm-ss')
+def co2_timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
 
 co2footprint {
   traceFile = "${params.outdir}/pipeline_info/co2footprint_trace_${co2_timestamp}.txt"

@@ -33,6 +33,7 @@
 - Added warning when using 'cloud' `machineType`
 - Added CPUs from WikiChip to work around licensing issues
 - Added CPU TDP data from WikiChip
+- Adapting to changes of checked files is now easier through reporting and snapshot copying
 
 # Version 1.0.0-beta1
 ## Features:

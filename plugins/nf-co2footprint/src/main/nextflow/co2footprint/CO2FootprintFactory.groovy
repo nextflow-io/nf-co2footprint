@@ -33,8 +33,6 @@ import ch.qos.logback.classic.turbo.TurboFilter
 @PackageScope(PackageScopeTarget.FIELDS)
 class CO2FootprintFactory implements TraceObserverFactory {
 
-    private String version
-
     /**
      * Logging:
      * Removes duplicates in some warnings, to avoid cluttering the output with repeated information.
@@ -47,26 +45,54 @@ class CO2FootprintFactory implements TraceObserverFactory {
         lc.addTurboFilter(dmf)                                                  // Add filter to context
     }
 
-    protected void getPluginVersion() {
-        final InputStreamReader reader = new InputStreamReader(this.class.getResourceAsStream('/META-INF/MANIFEST.MF'))
-        String line
-        while ( (line = reader.readLine()) && !version ) {
-            def h = line.split(': ')
-            if ( h[0] == 'Plugin-Version' ) this.version = h[1]
+    // Plugin version
+    private String pluginVersion = null
+
+    /**
+     * Set the current plugin version from the local /META-INF/MANIFEST.MF
+     *
+     * @param manifest URL to the manifest
+     * @param tryFallback Whether a fallback in the form of a search of all MANIFESTS from the class loader should be attempted
+     */
+    protected void setPluginVersion(
+            URL manifest=this.class.getResource('/META-INF/MANIFEST.MF'),
+            boolean tryFallback=true
+    ) {
+        log.trace("MANIFEST.MF path: ${manifest.toString()}")
+
+        try {
+            // Get version from manifest
+            List<String> lines = manifest.readLines()
+            String line = lines.find {it.startsWith('Plugin-Version: ') }
+            pluginVersion = line.split(': ')[1]
         }
-        reader.close()
+        catch (NullPointerException nullPointerException) {
+            // Fallback to checking all classLoader Files
+            if (tryFallback) {
+                Enumeration<URL> manifests = this.class.classLoader.getResources('META-INF/MANIFEST.MF')
+                log.trace("MANIFESTS: ${manifests.toList()}")
+                setPluginVersion(
+                        manifests.find { it.toString().endsWith('/plugins/nf-co2footprint/build/resources/main/META-INF/MANIFEST.MF') } as URL,
+                        false
+                )
+            }
+            else {
+                log.error(nullPointerException.getMessage())
+                throw nullPointerException
+            }
+        }
     }
+
+    /**
+     * @return The plugin version
+     */
+    String getPluginVersion() { pluginVersion }
 
     /**
      * External Data integration of TDP (Thermal design power) and CI (Carbon intensity) values
      */
-    private final TDPDataMatrix tdpDataMatrix = TDPDataMatrix.fromCsv(
-            Paths.get(this.class.getResource('/cpu_tdp_data/CPU_TDP_wikichip.csv').toURI())
-    )
-
-    private final CIDataMatrix ciDataMatrix = CIDataMatrix.fromCsv(
-            Paths.get(this.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
-    )
+    private TDPDataMatrix tdpDataMatrix
+    private CIDataMatrix ciDataMatrix
     
     /**
      * Creates and returns the CO2Footprint trace observer.
@@ -77,9 +103,19 @@ class CO2FootprintFactory implements TraceObserverFactory {
      */
     @Override
     Collection<TraceObserver> create(Session session) {
-        getPluginVersion()
-        log.info("nf-co2footprint plugin  ~  version ${version}")
+        // Read the plugin version
+        setPluginVersion()
+        log.info("nf-co2footprint plugin  ~  version ${this.pluginVersion}")
 
+        // Read in matrices
+        this.tdpDataMatrix = TDPDataMatrix.fromCsv(
+                Paths.get(this.class.getResource('/cpu_tdp_data/CPU_TDP_wikichip.csv').toURI())
+        )
+        this.ciDataMatrix = CIDataMatrix.fromCsv(
+                Paths.get(this.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
+        )
+
+        // Define config
         CO2FootprintConfig config = new CO2FootprintConfig(
                 session.config.navigate('co2footprint') as Map,
                 this.tdpDataMatrix,
@@ -87,16 +123,15 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 session.config.navigate('process') as Map
         )
 
-        final ArrayList<TraceObserver> result = new ArrayList(1)
-
-        result.add(
-                new CO2FootprintObserver(
-                    session,
-                    version,
-                    config,
-                    new CO2FootprintComputer(tdpDataMatrix, config)
+        // Define list of observers
+        final ArrayList<TraceObserver> result = [
+            new CO2FootprintObserver(
+                session,
+                this.pluginVersion,
+                config,
+                new CO2FootprintComputer(this.tdpDataMatrix, config)
             )
-        )
+        ]
 
         return result
     }
