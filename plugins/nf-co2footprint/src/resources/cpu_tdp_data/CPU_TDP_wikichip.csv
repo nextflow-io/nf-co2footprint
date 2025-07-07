@@ -1421,6 +1421,7 @@ ampereone a144-24x,,https://amperecomputing.com/briefs/ampereone-family-product-
 ampereone a128-34x,,https://amperecomputing.com/briefs/ampereone-family-product-brief,,280.0,128,128.0,,
 ampereone a96-37x,,https://amperecomputing.com/briefs/ampereone-family-product-brief,,292.0,96,96.0,,
 default compute cluster,,,Artificial Intelligence; HPC; Server; Supercomputer; Workstation,11.23,1,1.91,,
+default cloud,,,Artificial Intelligence; HPC; Server; Supercomputer; Workstation,11.23,1,1.91,,
 default local,,,Desktop; Enthusiast; Mobile,12.34,1,1.67,,
 default embedded,,,Embedded,8.49,1,1.56,,
 default,,,Artificial Intelligence; Automotive; Desktop; Edge; Embedded; Enthusiast; HPC; IoT; Mobile; Networking; Server; Supercomputer; Workstation,11.45,1,1.73,,
