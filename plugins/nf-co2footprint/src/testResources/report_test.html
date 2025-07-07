@@ -1155,11 +1155,11 @@ $(function() {
       }
 
       // Column titles
-      var energyConsumptionTitle = 'energy consumption (mWh)'; // Default column title
-      var co2EmissionsTitle = 'CO2e emissions (mg)';
+      var energyConsumptionTitle = 'Energy consumption (mWh)'; // Default column title
+      var co2EmissionsTitle = 'CO₂e emissions (mg)';
       if ($('#nf-table-humanreadable').val() == 'true') {
-        energyConsumptionTitle = 'energy consumption'; // Change the column title if the button is selected
-        co2EmissionsTitle = 'CO2e emissions';
+        energyConsumptionTitle = 'Energy consumption'; // Change the column title if the button is selected
+        co2EmissionsTitle = 'CO₂e emissions';
       }
 
       var table = $('#tasks_table').DataTable({
@@ -1198,7 +1198,7 @@ $(function() {
           { title: 'Time', data: 'time', type: 'num', render: make_time },
           { title: 'Carbon Intensity', data: 'ci', type: 'num', render: make_carbon_intensity },
           { title: 'Number of cores', data: 'cpus', type: 'num' },
-          { title: 'Power draw of a computing core', data: 'powerdrawCPU', type: 'num'},
+          { title: 'Power draw per core', data: 'powerdrawCPU', type: 'num'},
           { title: 'Core usage factor', data: 'cpuUsage', type: 'num', render: make_core_usage_factor },
           { title: 'Memory', data: 'memory', type: 'num', render: make_memory },
           { title: 'CPU model', data: 'cpu_model' },
