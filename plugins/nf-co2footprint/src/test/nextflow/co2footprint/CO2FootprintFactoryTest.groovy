@@ -38,7 +38,7 @@ import java.nio.file.Path
  */
 class CO2FootprintFactoryTest extends Specification {
 
-    def 'create observer ' () {
+    def 'create observer' () {
         when:
         Session session = Mock(Session) { getConfig() >>  [:] }
         List<TraceObserver> observers = new CO2FootprintFactory().create(session)
