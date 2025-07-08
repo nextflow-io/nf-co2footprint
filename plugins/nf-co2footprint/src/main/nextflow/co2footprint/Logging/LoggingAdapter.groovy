@@ -44,7 +44,7 @@ class LoggingAdapter {
      * @param scope Scope of the changes, the default only affects this plugin
      */
     void changePatternConsoleAppender(
-            String pattern="%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %logger - %msg%n",
+            String pattern="%d{HH:mm:ss} %highlight(%-5level) - %msg%n",
             String scope='nextflow.co2footprint'
     ) {
         // Define layout
