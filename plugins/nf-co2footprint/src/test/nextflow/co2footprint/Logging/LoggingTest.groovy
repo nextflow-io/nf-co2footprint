@@ -1,5 +1,6 @@
-package nextflow.co2footprint.utils
+package nextflow.co2footprint.Logging
 
+import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.turbo.TurboFilter
 import ch.qos.logback.classic.LoggerContext
 import ch.qos.logback.classic.spi.ILoggingEvent
@@ -66,7 +67,7 @@ class LoggingTest extends Specification {
 
     // Setup method that executes once before each test
     def setup() {
-        logger.setLevel(ch.qos.logback.classic.Level.DEBUG)
+        logger.setLevel(Level.DEBUG)
         listAppender.start()
         logger.addAppender(listAppender)
     }
