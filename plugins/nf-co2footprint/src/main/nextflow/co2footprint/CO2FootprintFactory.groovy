@@ -2,8 +2,9 @@ package nextflow.co2footprint
 
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
-import nextflow.co2footprint.utils.DeduplicateMarkerFilter
-import nextflow.co2footprint.utils.Markers
+import nextflow.co2footprint.Logging.DeduplicateMarkerFilter
+import nextflow.co2footprint.Logging.LoggingAdapter
+import nextflow.co2footprint.Logging.Markers
 
 import groovy.transform.PackageScope
 import groovy.transform.PackageScopeTarget
@@ -103,6 +104,11 @@ class CO2FootprintFactory implements TraceObserverFactory {
      */
     @Override
     Collection<TraceObserver> create(Session session) {
+        // Logging
+        LoggingAdapter loggingAdapter = new LoggingAdapter(session)
+        loggingAdapter.addUniqueMarkerFilter()
+        loggingAdapter.changePatternConsoleAppender()                   // Add highlights (colored level)
+
         // Read the plugin version
         setPluginVersion()
         log.info("nf-co2footprint plugin  ~  version ${this.pluginVersion}")
