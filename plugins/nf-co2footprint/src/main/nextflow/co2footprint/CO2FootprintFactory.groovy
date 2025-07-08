@@ -29,18 +29,6 @@ import groovy.util.logging.Slf4j
 @PackageScope(PackageScopeTarget.FIELDS)
 class CO2FootprintFactory implements TraceObserverFactory {
 
-    /**
-     * Logging:
-     * Removes duplicates in some warnings, to avoid cluttering the output with repeated information.
-     * Example: If the CPU model is not found it should only be warned once, that a fallback value is used.
-     */
-    static {
-        final LoggerContext lc = LoggerFactory.getILoggerFactory() as LoggerContext   // Get Logging Context
-        final TurboFilter dmf = new DeduplicateMarkerFilter([Markers.unique])         // Define DeduplicateMarkerFilter
-        dmf.start()
-        lc.addTurboFilter(dmf)                                                  // Add filter to context
-    }
-
     // Plugin version
     private String pluginVersion = null
 
