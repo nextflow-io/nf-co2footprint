@@ -2,9 +2,7 @@ package nextflow.co2footprint
 
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
-import nextflow.co2footprint.Logging.DeduplicateMarkerFilter
 import nextflow.co2footprint.Logging.LoggingAdapter
-import nextflow.co2footprint.Logging.Markers
 
 import groovy.transform.PackageScope
 import groovy.transform.PackageScopeTarget
@@ -17,9 +15,6 @@ import nextflow.trace.TraceObserver
 import nextflow.trace.TraceObserverFactory
 
 import groovy.util.logging.Slf4j
-import org.slf4j.LoggerFactory
-import ch.qos.logback.classic.LoggerContext
-import ch.qos.logback.classic.turbo.TurboFilter
 
 /**
  * Factory class for creating the CO2Footprint trace observer.
