@@ -1,8 +1,11 @@
 package nextflow.co2footprint.Logging
 
 import ch.qos.logback.classic.Level
+import ch.qos.logback.classic.spi.ILoggingEvent
+import ch.qos.logback.core.AppenderBase
 import groovy.util.logging.Slf4j
 import nextflow.Global
+import nextflow.cli.CliOptions
 import org.slf4j.LoggerFactory
 import ch.qos.logback.classic.turbo.TurboFilter
 import ch.qos.logback.core.ConsoleAppender
@@ -15,6 +18,7 @@ import ch.qos.logback.classic.PatternLayout
 import ch.qos.logback.core.Appender
 
 import nextflow.Session
+import nextflow.util.LoggerHelper
 
 import java.util.function.Supplier
 
@@ -25,6 +29,7 @@ import java.util.function.Supplier
 class LoggingAdapter {
     Session session
     LoggerContext loggerContext
+    final LoggerHelper loggerHelper = new LoggerHelper(new CliOptions())
 
     LoggingAdapter(
             Session session=Global.session as Session,
@@ -45,10 +50,29 @@ class LoggingAdapter {
     }
 
     /**
+     * Adds the ROOT appenders to the current scope
+     *
+     * @param scope Name of the scope, defaults to 'nextflow.co2footprint' Logger
+     */
+    void addRootAppendersToLogger(
+            Logger logger=loggerContext.getLogger('nextflow.co2footprint')
+    ) {
+        // Ensure appenders are present
+        Iterator<Appender> appenders = logger.iteratorForAppenders()
+        if (appenders.size() == 0) {
+            Iterator<Appender<ILoggingEvent>> rootAppenders = loggerContext.getLogger('ROOT').iteratorForAppenders()
+            for (Appender rootAppender : rootAppenders) {
+                logger.addAppender(rootAppender)
+            }
+            logger.setAdditive(false)
+        }
+    }
+
+    /**
      * Change the logback pattern of the console output
      *
      * @param pattern New pattern, the default only differs in the colored level (highlight)
-     * @param scope Scope of the changes, the default only affects this plugin
+     * @param scope Scope of the changes, the default only affects this plugin, if an extra logger is given at this level
      */
     void changePatternConsoleAppender(
             String pattern='%customHighlight(%-5level - %msg)',    // Changing colors doesn't combine well with Nextflow
@@ -64,12 +88,16 @@ class LoggingAdapter {
         // Define logger and add appender
         Logger co2FootprintLogger = loggerContext.getLogger(scope)
 
+        // Ensure appenders are given
+        addRootAppendersToLogger(co2FootprintLogger)
+
         // Modify console output
-        for (Appender appender : co2FootprintLogger.iteratorForAppenders()) {
+        Iterator<Appender<ILoggingEvent>> appenders = co2FootprintLogger.iteratorForAppenders()
+        for (Appender appender : appenders) {
 
             // CaptureAppender with chained ANSI Logger
             if (appender.getClass().getName() == 'nextflow.util.LoggerHelper$CaptureAppender') {
-                log.trace("Modifying ${appender.getName()} (${appender.getClass().getName()})\"")
+                log.trace("Modifying ${appender.getName()} (${appender.getClass().getName()})")
                 appender.stop()
 
                 // Replacing old logger
@@ -84,7 +112,7 @@ class LoggingAdapter {
 
             // Console appender (the easy case)
             else if (appender instanceof ConsoleAppender) {
-                log.trace("Modifying ${appender.getName()} (${appender.getClass().getName()})\"")
+                log.trace("Modifying ${appender.getName()} (${appender.getClass().getName()})")
                 appender.stop()
 
                 // Changing encoder to desired layout
