@@ -181,8 +181,8 @@ class CO2FootprintConfig {
         }
         else {
             log.warn(
-                    "Executor '${executor}' is not mapped. `machineType` set to null." +
-                    " To eliminate this warning you can set `machineType` in the config to one of ${supportedMachineTypes}.")
+                "Executor '${executor}' is not mapped. `machineType` set to null." +
+                " To eliminate this warning you can set `machineType` in the config to one of ${supportedMachineTypes}.")
         }
 }
 
