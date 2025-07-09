@@ -92,11 +92,15 @@ class CIValueComputer {
             // Check if the API key is set and retrieve real-time carbon intensity
             if (this.emApiKey && this.emApiKey instanceof String) {
 
-                log.info(Markers.unique, "API key is set. Attempting to retrieve real-time carbon intensity.")
+                log.info(Markers.unique, "Electricity Maps API key is set. Attempting to retrieve real-time carbon intensity.")
                 return { getRealtimeCI() }
 
             } else {
-                log.warn(Markers.unique, "API key is not set. Skipping real-time carbon intensity retrieval.")
+                log.info(
+                    Markers.unique,
+                    "Electricity Maps API key is not set. " +
+                    "To retrieve real-time carbon intensity values, please provide a key with the parameter `emApiKey`.\n" +
+                    "💡You can obtain a key for ElectricityMaps at https://portal.electricitymaps.com/auth/login.")
             }
             // Fallback to the location in the CSV
             ci = this.ciData.findCiInMatrix(this.location)
