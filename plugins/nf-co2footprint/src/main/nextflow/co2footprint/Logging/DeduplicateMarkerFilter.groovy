@@ -4,7 +4,6 @@ import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import ch.qos.logback.classic.turbo.TurboFilter
 import ch.qos.logback.core.spi.FilterReply
-import groovy.util.logging.Slf4j
 import org.slf4j.Marker
 import org.slf4j.MarkerFactory
 
@@ -16,7 +15,6 @@ import java.util.concurrent.atomic.AtomicInteger
  * Motivation: Removes duplicates in some warnings, to avoid cluttering the output with repeated information.
  * Example: If the CPU model is not found it should only be warned once, that a fallback value is used.
  */
-@Slf4j
 class DeduplicateMarkerFilter extends TurboFilter {
 
     // Markers to be Filtered

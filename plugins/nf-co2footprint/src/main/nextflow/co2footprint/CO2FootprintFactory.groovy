@@ -4,17 +4,20 @@ import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Logging.LoggingAdapter
 
+import java.nio.file.Paths
+
 import groovy.transform.PackageScope
 import groovy.transform.PackageScopeTarget
 import groovy.transform.CompileStatic
 
-import java.nio.file.Paths
+import groovy.util.logging.Slf4j
+import org.slf4j.LoggerFactory
+import ch.qos.logback.classic.LoggerContext
 
 import nextflow.Session
 import nextflow.trace.TraceObserver
 import nextflow.trace.TraceObserverFactory
 
-import groovy.util.logging.Slf4j
 
 /**
  * Factory class for creating the CO2Footprint trace observer.
@@ -88,7 +91,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
     @Override
     Collection<TraceObserver> create(Session session) {
         // Logging
-        LoggingAdapter loggingAdapter = new LoggingAdapter(session)
+        LoggingAdapter loggingAdapter = new LoggingAdapter(session, LoggerFactory.getILoggerFactory() as LoggerContext)
         loggingAdapter.addUniqueMarkerFilter()
         loggingAdapter.changePatternConsoleAppender()                   // Add highlights (colored level)
 
@@ -124,6 +127,4 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
         return result
     }
-
-
 }

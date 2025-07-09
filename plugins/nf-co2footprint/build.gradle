@@ -18,6 +18,7 @@ plugins {
     // Apply the groovy plugin to add support for Groovy
     id 'io.nextflow.groovy-library-conventions'
     id 'idea'
+    id 'groovy'
 }
 
 group = 'io.nextflow'

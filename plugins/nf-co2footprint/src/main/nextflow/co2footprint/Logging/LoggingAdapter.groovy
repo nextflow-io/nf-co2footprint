@@ -1,8 +1,8 @@
 package nextflow.co2footprint.Logging
 
-import ch.qos.logback.classic.turbo.TurboFilter
 import groovy.util.logging.Slf4j
 import org.slf4j.LoggerFactory
+import ch.qos.logback.classic.turbo.TurboFilter
 import ch.qos.logback.core.ConsoleAppender
 import ch.qos.logback.core.encoder.Encoder
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder
@@ -22,9 +22,12 @@ class LoggingAdapter {
     Session session
     LoggerContext loggerContext
 
-    LoggingAdapter(Session session) {
+    LoggingAdapter(
+            Session session,
+            LoggerContext loggerContext= LoggerFactory.getILoggerFactory() as LoggerContext
+    ) {
         this.session = session
-        loggerContext = LoggerFactory.getILoggerFactory() as LoggerContext
+        this.loggerContext = loggerContext
     }
 
     /**
