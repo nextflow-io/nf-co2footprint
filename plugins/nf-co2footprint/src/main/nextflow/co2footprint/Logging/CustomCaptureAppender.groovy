@@ -46,7 +46,7 @@ class CustomCaptureAppender extends AppenderBase<ILoggingEvent> {
             if( !renderer || !renderer.started || renderer.stopped ) {
                 System.out.println(message)
             }
-            else if( event.getMarkerList()[0] == LoggerHelper.STICKY ) {
+            else if( event.getMarkerList()?.get(0) == LoggerHelper.STICKY ) {
                 renderer.appendSticky(message)
             }
             else {
