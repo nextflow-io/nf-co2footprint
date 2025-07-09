@@ -1,6 +1,8 @@
 package nextflow.co2footprint.Logging
 
+import ch.qos.logback.classic.Level
 import groovy.util.logging.Slf4j
+import nextflow.Global
 import org.slf4j.LoggerFactory
 import ch.qos.logback.classic.turbo.TurboFilter
 import ch.qos.logback.core.ConsoleAppender
@@ -25,8 +27,8 @@ class LoggingAdapter {
     LoggerContext loggerContext
 
     LoggingAdapter(
-            Session session,
-            LoggerContext loggerContext= LoggerFactory.getILoggerFactory() as LoggerContext
+            Session session=Global.session as Session,
+            LoggerContext loggerContext=LoggerFactory.getILoggerFactory() as LoggerContext
     ) {
         this.session = session
         this.loggerContext = loggerContext
@@ -49,7 +51,7 @@ class LoggingAdapter {
      * @param scope Scope of the changes, the default only affects this plugin
      */
     void changePatternConsoleAppender(
-            String pattern='%d{HH:mm:ss} %customHighlight(%-5level - %msg)',    // Changing colors doesn't combine well with Nextflow
+            String pattern='%customHighlight(%-5level - %msg)',    // Changing colors doesn't combine well with Nextflow
             String scope='nextflow.co2footprint'
     ) {
         // Define layout
@@ -75,7 +77,7 @@ class LoggingAdapter {
                 for (Filter filter : appender.getCopyOfAttachedFiltersList()) {
                     customCaptureAppender.addFilter(filter)
                 }
-                appender.start()
+
                 customCaptureAppender.start()
                 co2FootprintLogger.addAppender(customCaptureAppender)
             }

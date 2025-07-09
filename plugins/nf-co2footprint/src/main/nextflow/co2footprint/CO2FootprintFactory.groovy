@@ -91,9 +91,9 @@ class CO2FootprintFactory implements TraceObserverFactory {
     @Override
     Collection<TraceObserver> create(Session session) {
         // Logging
-        LoggingAdapter loggingAdapter = new LoggingAdapter(session, LoggerFactory.getILoggerFactory() as LoggerContext)
+        LoggingAdapter loggingAdapter = new LoggingAdapter()
         loggingAdapter.addUniqueMarkerFilter()
-        loggingAdapter.changePatternConsoleAppender()                   // Add highlights (colored level)
+        loggingAdapter.changePatternConsoleAppender()
 
         // Read the plugin version
         setPluginVersion()
