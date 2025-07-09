@@ -63,6 +63,7 @@ ext {
 String groovyVersion = '4.0.27'
 String pf4jVersion = '3.13.0'
 String slf4jVersion = '2.0.17'
+String logbackVersion = '1.5.18'
 
 dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.
@@ -81,6 +82,7 @@ dependencies {
     testImplementation ('org.spockframework:spock-core:2.3-groovy-4.0') { exclude group: 'org.apache.groovy'; exclude group: 'net.bytebuddy' }
     testImplementation ('org.spockframework:spock-junit4:2.3-groovy-4.0') { exclude group: 'org.apache.groovy'; exclude group: 'net.bytebuddy' }
     testImplementation ('com.google.jimfs:jimfs:1.1')
+    testImplementation ('ch.qos.logback:logback-classic:1.5.18')
 
     testImplementation(testFixtures("io.nextflow:nextflow:$nextflowVersion"))
     testImplementation(testFixtures("io.nextflow:nf-commons:$nextflowVersion"))
@@ -88,6 +90,15 @@ dependencies {
     // see https://docs.gradle.org/4.1/userguide/dependency_management.html#sec:module_replacement
     modules {
         module('commons-logging:commons-logging') { replacedBy('org.slf4j:jcl-over-slf4j') }
+    }
+}
+
+// Ensures correct logback version during testing
+configurations.testRuntimeClasspath {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'ch.qos.logback') {
+            details.useVersion logbackVersion
+        }
     }
 }
 

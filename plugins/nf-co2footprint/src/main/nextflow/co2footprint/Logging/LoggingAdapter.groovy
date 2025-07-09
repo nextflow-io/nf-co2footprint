@@ -14,6 +14,8 @@ import ch.qos.logback.core.Appender
 
 import nextflow.Session
 
+import java.util.function.Supplier
+
 /**
  * An adaptor class for modifying logging
  */
@@ -47,12 +49,13 @@ class LoggingAdapter {
      * @param scope Scope of the changes, the default only affects this plugin
      */
     void changePatternConsoleAppender(
-            String pattern="%d{HH:mm:ss} %highlight(%-5level) - %msg%n",
+            String pattern='%d{HH:mm:ss} %customHighlight(%-5level - %msg)',    // Changing colors doesn't combine well with Nextflow
             String scope='nextflow.co2footprint'
     ) {
         // Define layout
         PatternLayout layout = new PatternLayout()
         layout.setContext(loggerContext)
+        layout.getInstanceConverterMap().put('customHighlight', { -> new CustomHighlightConverter() } as Supplier) // CustomHighlightConverter.getName()) doesn't work
         layout.setPattern(pattern)
         layout.start()
 
@@ -72,6 +75,7 @@ class LoggingAdapter {
                 for (Filter filter : appender.getCopyOfAttachedFiltersList()) {
                     customCaptureAppender.addFilter(filter)
                 }
+                appender.start()
                 customCaptureAppender.start()
                 co2FootprintLogger.addAppender(customCaptureAppender)
             }
