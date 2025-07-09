@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+# Version 1.0.0-rc1
+## Misc
+- Added a better help request for missing chips
+
 # Version 1.0.0-rc
 ## Features:
 - When a message is excluded from the log it is still sent to the `trace` level log
