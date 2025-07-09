@@ -1,11 +1,8 @@
 package nextflow.co2footprint.Logging
 
-import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.spi.ILoggingEvent
-import ch.qos.logback.core.AppenderBase
 import groovy.util.logging.Slf4j
-import nextflow.Global
-import nextflow.cli.CliOptions
+
 import org.slf4j.LoggerFactory
 import ch.qos.logback.classic.turbo.TurboFilter
 import ch.qos.logback.core.ConsoleAppender
@@ -17,8 +14,8 @@ import ch.qos.logback.classic.LoggerContext
 import ch.qos.logback.classic.PatternLayout
 import ch.qos.logback.core.Appender
 
+import nextflow.Global
 import nextflow.Session
-import nextflow.util.LoggerHelper
 
 import java.util.function.Supplier
 
@@ -29,7 +26,6 @@ import java.util.function.Supplier
 class LoggingAdapter {
     Session session
     LoggerContext loggerContext
-    final LoggerHelper loggerHelper = new LoggerHelper(new CliOptions())
 
     LoggingAdapter(
             Session session=Global.session as Session,
