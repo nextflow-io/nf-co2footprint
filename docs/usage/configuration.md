@@ -16,13 +16,9 @@ plugins {
 }
 
 // Optional example config settings for CO₂ reporting:
-
-def co2_timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
-
 co2footprint {
-  traceFile = "${params.outdir}/pipeline_info/co2footprint_trace_${co2_timestamp}.txt"
-  summaryFile = "${params.outdir}/pipeline_info/co2footprint_summary_${co2_timestamp}.txt"
-  reportFile = "${params.outdir}/pipeline_info/co2footprint_report_${co2_timestamp}.html"
+  outDirectory = "${params.outdir}/pipeline_info"
+  timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
   location = 'DE'                             // replace with your zone code
   emApiKey = secrets.EM_API_KEY               // set your API key as Nextflow secret with the name 'EM_API_KEY'
   pue = 1.3                                   // replace with PUE of your data center
@@ -86,7 +82,7 @@ To improve the estimate of your CO₂ footprint on the cloud, you are encouraged
 - [The location of your instance](https://portal.electricitymaps.com/docs/getting-started#geographical-coverage) (e.g., zone code `'DE'` for AWS region `eu-central-1`)
 - Set the `ciMarket` parameter if you know the CI of the energy mix used by the cloud instance
 - The PUE of the data center (cloud providers often give global averages)
-- If the plugin’s TDP table does not include the CPU models used by your cloud compute instance and you know the per-core TDP for those models, you have two options:  
+- If the plugin’s TDP table does not include the CPU models used by your cloud compute instance, and you know the per-core TDP for those models, you have two options:  
     - If you have multiple CPU models, provide a `customCpuTdpFile` containing their TDP values.
     - If you have only one CPU model and do not want to provide a table, set `ignoreCpuModel = true` and specify `powerdrawCpuDefault`.  
 
@@ -99,17 +95,14 @@ plugins {
   id 'nf-co2footprint@1.0.0-rc'
 }
 
-def co2_timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
-
 co2footprint {
-    traceFile           = "${params.outdir}/co2footprint/co2footprint_trace_${co2_timestamp}.txt"
-    summaryFile         = "${params.outdir}/co2footprint/co2footprint_summary_${co2_timestamp}.txt"
-    reportFile          = "${params.outdir}/co2footprint/co2footprint_report_${co2_timestamp}.html"
-    location            = 'DE'
-    emApiKey            = secrets.EM_API_KEY
-    pue                 = 1.3
-    ignoreCpuModel      = true
-    powerdrawCpuDefault = 8
+  outDirectory = "${params.outdir}/pipeline_info"
+  timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
+  location = 'DE'
+  emApiKey = secrets.EM_API_KEY
+  pue = 1.3
+  ignoreCpuModel = true
+  powerdrawCpuDefault = 8
 }
 ```
 

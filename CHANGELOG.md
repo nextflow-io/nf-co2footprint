@@ -1,6 +1,9 @@
 ## [Unreleased]
 
 # Version 1.0.0-rc1
+## Features:
+- Definition of `outDirectory`, `traceFileName`, `summaryFileName`, and `reportFileName` config parameters
+
 ## Bug Fixes:
 - Version is `null` in many cases (parsed the wrong MANIFEST)
 - Logging is overwritten by Nextflow (now integrated in Groovy code)

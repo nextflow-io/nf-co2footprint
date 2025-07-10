@@ -3,14 +3,26 @@ package nextflow.co2footprint
 import nextflow.co2footprint.DataContainers.DataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.DataContainers.CIDataMatrix
+import spock.lang.Shared
 import spock.lang.Specification
 import groovy.util.logging.Slf4j
+
+import java.nio.file.Paths
 import java.util.concurrent.ConcurrentHashMap
 
 @Slf4j
 class CO2FootprintConfigTest extends Specification {
     TDPDataMatrix tdp
     CIDataMatrix ci
+
+    @Shared
+    String now = new Date().format('yyyy-MM-dd_HH-mm-ss')
+
+    // Helper method to validate default properties
+    private static void validateDefaultProperties(CO2FootprintConfig config) {
+        assert config.powerdrawMem == 0.3725
+        assert config.pue == 1.0
+    }
 
     def setup() {
         tdp = new TDPDataMatrix(
@@ -96,8 +108,8 @@ class CO2FootprintConfigTest extends Specification {
 
     def 'should log warning and set machineType to null for unknown executor'() {
         given:
-        def configMap = [:]
-        def processMap = [executor: 'notarealexecutor']
+        Map<String, ?> configMap = [:]
+        def processMap = [executor: 'notARealExecutor']
 
         when:
         CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdp, ci, processMap)
@@ -119,9 +131,30 @@ class CO2FootprintConfigTest extends Specification {
         config.pue == 2.22
     }
 
-    // Helper method to validate default properties
-    private static void validateDefaultProperties(CO2FootprintConfig config) {
-        assert config.powerdrawMem == 0.3725
-        assert config.pue == 1.0
-    }
+    def 'Test file name setting'() {
+        when:
+        Map<String, ?> configMap = [:]
+        if(outDirectory != null) {  configMap.put('outDirectory', outDirectory) }
+        if(timestamp != null) {  configMap.put('timestamp', timestamp) }
+        if(traceFileName != null) {  configMap.put('traceFileName', traceFileName) }
+        if(summaryFileName != null) {  configMap.put('summaryFileName', summaryFileName) }
+        if(reportFileName != null) {  configMap.put('reportFileName', reportFileName) }
+
+        CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdp, ci, [:])
+        if (timestamp == null) {
+            traceFileExpected = traceFileExpected.formatted(config.getTimestamp())
+            summaryFileExpected = summaryFileExpected.formatted(config.getTimestamp())
+            reportFileExpected = reportFileExpected.formatted(config.getTimestamp())
+        }
+
+        then:
+        config.getTraceFile() == traceFileExpected
+        config.getSummaryFile() == summaryFileExpected
+        config.getReportFile() == reportFileExpected
+
+        where:
+        outDirectory    || timestamp    || traceFileName    || summaryFileName  || reportFileName   || traceFileExpected                                                    || summaryFileExpected                                                  || reportFileExpected
+        null            || null         || null             || null             || null             || Paths.get('pipeline_info', 'co2footprint_trace_%s.txt') as String    || Paths.get('pipeline_info', 'co2footprint_summary_%s.txt') as String  || Paths.get('pipeline_info', 'co2footprint_report_%s.html') as String
+        'dir'           || now          || 'trace'          || 'summary'        || 'report'         || Paths.get('dir', "trace_${now}.txt") as String                       || Paths.get('dir', "summary_${now}.txt") as String                     || Paths.get('dir', "report_${now}.html") as String
+   }
 }
