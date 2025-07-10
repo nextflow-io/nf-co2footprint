@@ -71,13 +71,13 @@ class LoggingAdapter {
      * @param scope Scope of the changes, the default only affects this plugin, if an extra logger is given at this level
      */
     void changePatternConsoleAppender(
-            String pattern='%customHighlight(%-5level - %msg)',    // Changing colors doesn't combine well with Nextflow
+            String pattern='%customHighlight(%-5level - %msg)',
             String scope='nextflow.co2footprint'
     ) {
         // Define layout
         PatternLayout layout = new PatternLayout()
         layout.setContext(loggerContext)
-        layout.getInstanceConverterMap().put('customHighlight', { -> new CustomHighlightConverter() } as Supplier) // CustomHighlightConverter.getName()) doesn't work
+        layout.getInstanceConverterMap().put('customHighlight', { -> new CustomHighlightConverter() } as Supplier)
         layout.setPattern(pattern)
         layout.start()
 
