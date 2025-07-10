@@ -14,7 +14,7 @@ import nextflow.script.ChannelOut
 import nextflow.script.ScriptRunner
 import nextflow.script.ScriptType
 
-import java.nio.file.Paths
+import java.nio.file.Path
 
 class MockScriptRunner extends ScriptRunner {
 
@@ -155,7 +155,7 @@ class MockTaskHandler extends TaskHandler {
     void submit() {
         log.info ">> launching mock task: ${task}"
         if( task.type == ScriptType.SCRIPTLET ) {
-            task.workDir = Paths.get('.').complete()
+            task.workDir = Path.of('.').complete()
             task.stdout = task.script
             task.exitStatus = 0
         }

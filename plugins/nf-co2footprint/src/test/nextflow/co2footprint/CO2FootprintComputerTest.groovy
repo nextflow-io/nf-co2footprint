@@ -9,7 +9,7 @@ import nextflow.trace.TraceRecord
 import spock.lang.Shared
 import spock.lang.Specification
 
-import java.nio.file.Paths
+import java.nio.file.Path
 
 import groovy.util.logging.Slf4j
 import nextflow.co2footprint.utils.HelperFunctions   
@@ -23,11 +23,11 @@ class CO2FootprintComputerTest extends Specification{
 
     @Shared
     TDPDataMatrix tdpDataMatrix = TDPDataMatrix.fromCsv(
-            Paths.get(this.class.getResource('/cpu_tdp_data/CPU_TDP_wikichip.csv').toURI())
+            Path.of(this.class.getResource('/cpu_tdp_data/CPU_TDP_wikichip.csv').toURI())
     )
     @Shared
     CIDataMatrix ciDataMatrix = CIDataMatrix.fromCsv(
-            Paths.get(this.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
+            Path.of(this.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
     )
 
     // ------ CO2 Calculation ------

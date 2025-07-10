@@ -7,7 +7,8 @@ import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.CIValueComputer
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.trace.TraceHelper
-import java.nio.file.Paths
+
+import java.nio.file.Path
 
 /**
  * Configuration class for CO₂ footprint calculations.
@@ -111,9 +112,9 @@ class CO2FootprintConfig {
         }
 
         // Define file paths
-        traceFile ?= Paths.get(getOutDirectory(), "${getTraceFileName()}_${getTimestamp()}.txt") as String
-        summaryFile ?= Paths.get(getOutDirectory(), "${getSummaryFileName()}_${getTimestamp()}.txt") as String
-        reportFile ?= Paths.get(getOutDirectory(), "${getReportFileName()}_${getTimestamp()}.html") as String
+        traceFile ?= Path.of(getOutDirectory(), "${getTraceFileName()}_${getTimestamp()}.txt") as String
+        summaryFile ?= Path.of(getOutDirectory(), "${getSummaryFileName()}_${getTimestamp()}.txt") as String
+        reportFile ?= Path.of(getOutDirectory(), "${getReportFileName()}_${getTimestamp()}.html") as String
 
         // Determine the carbon intensity (CI) value
         if (ci == null) {
@@ -172,7 +173,7 @@ class CO2FootprintConfig {
         // Use custom CPU TDP file if provided
         if (customCpuTdpFile) {
             cpuData.update(
-                    TDPDataMatrix.fromCsv(Paths.get(customCpuTdpFile as String))
+                    TDPDataMatrix.fromCsv(Path.of(customCpuTdpFile as String))
             )
         }
     }
@@ -187,7 +188,7 @@ class CO2FootprintConfig {
         if (executor) {
             // Read the CSV file as a DataMatrix - set RowIndex to 'executor'
             DataMatrix machineTypeMatrix = DataMatrix.fromCsv(
-                    Paths.get(this.class.getResource(
+                    Path.of(this.class.getResource(
                             '/executor_machine_pue_mapping.csv').toURI()),
                     ',', 0, null, 'executor'
             )

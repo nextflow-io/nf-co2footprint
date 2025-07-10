@@ -4,15 +4,13 @@ import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Logging.LoggingAdapter
 
-import java.nio.file.Paths
+import java.nio.file.Path
 
 import groovy.transform.PackageScope
 import groovy.transform.PackageScopeTarget
 import groovy.transform.CompileStatic
 
 import groovy.util.logging.Slf4j
-import org.slf4j.LoggerFactory
-import ch.qos.logback.classic.LoggerContext
 
 import nextflow.Session
 import nextflow.trace.TraceObserver
@@ -101,10 +99,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
         // Read in matrices
         this.tdpDataMatrix = TDPDataMatrix.fromCsv(
-                Paths.get(this.class.getResource('/cpu_tdp_data/CPU_TDP_wikichip.csv').toURI())
+                Path.of(this.class.getResource('/cpu_tdp_data/CPU_TDP_wikichip.csv').toURI())
         )
         this.ciDataMatrix = CIDataMatrix.fromCsv(
-                Paths.get(this.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
+                Path.of(this.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
         )
 
         // Define config

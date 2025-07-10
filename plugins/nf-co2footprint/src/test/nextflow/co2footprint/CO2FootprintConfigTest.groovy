@@ -7,7 +7,7 @@ import spock.lang.Shared
 import spock.lang.Specification
 import groovy.util.logging.Slf4j
 
-import java.nio.file.Paths
+import java.nio.file.Path
 import java.util.concurrent.ConcurrentHashMap
 
 @Slf4j
@@ -153,8 +153,8 @@ class CO2FootprintConfigTest extends Specification {
         config.getReportFile() == reportFileExpected
 
         where:
-        outDirectory    || timestamp    || traceFileName    || summaryFileName  || reportFileName   || traceFileExpected                                                    || summaryFileExpected                                                  || reportFileExpected
-        null            || null         || null             || null             || null             || Paths.get('pipeline_info', 'co2footprint_trace_%s.txt') as String    || Paths.get('pipeline_info', 'co2footprint_summary_%s.txt') as String  || Paths.get('pipeline_info', 'co2footprint_report_%s.html') as String
-        'dir'           || now          || 'trace'          || 'summary'        || 'report'         || Paths.get('dir', "trace_${now}.txt") as String                       || Paths.get('dir', "summary_${now}.txt") as String                     || Paths.get('dir', "report_${now}.html") as String
+        outDirectory    || timestamp    || traceFileName    || summaryFileName  || reportFileName   || traceFileExpected                                                || summaryFileExpected                                                  || reportFileExpected
+        null            || null         || null             || null             || null             || Path.of('pipeline_info', 'co2footprint_trace_%s.txt') as String  || Path.of('pipeline_info', 'co2footprint_summary_%s.txt') as String    || Path.of('pipeline_info', 'co2footprint_report_%s.html') as String
+        'dir'           || now          || 'trace'          || 'summary'        || 'report'         || Path.of('dir', "trace_${now}.txt") as String                     || Path.of('dir', "summary_${now}.txt") as String                       || Path.of('dir', "report_${now}.html") as String
    }
 }
