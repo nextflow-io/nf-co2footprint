@@ -9,6 +9,7 @@
 ## Misc
 - Added a different wording for EM API calls with hints to obtain API key
 - Added a better help request for missing chips
+- Cleanup of AWS TDP table & renaming of TDP table to standard name
 
 # Version 1.0.0-rc
 ## Features:
