@@ -1,7 +1,13 @@
 ## [Unreleased]
 
 # Version 1.0.0-rc1
+## Bug Fixes:
+- Version is `null` in many cases (parsed the wrong MANIFEST)
+- Logging is overwritten by Nextflow (now integrated in Groovy code)
+- Logging of simultaneous duplicated output now also unique
+
 ## Misc
+- Added a different wording for EM API calls with hints to obtain API key
 - Added a better help request for missing chips
 
 # Version 1.0.0-rc

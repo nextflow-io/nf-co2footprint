@@ -2,7 +2,7 @@ package nextflow.co2footprint.DataContainers
 
 import groovy.util.logging.Slf4j
 import nextflow.co2footprint.utils.HelperFunctions
-import nextflow.co2footprint.utils.Markers
+import nextflow.co2footprint.Logging.Markers
 
 import java.nio.file.Path
 

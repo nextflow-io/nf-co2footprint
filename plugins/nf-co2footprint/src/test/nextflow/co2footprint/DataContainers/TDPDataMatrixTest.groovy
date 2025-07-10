@@ -4,8 +4,8 @@ import ch.qos.logback.classic.LoggerContext
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.classic.turbo.TurboFilter
 import ch.qos.logback.core.read.ListAppender
-import nextflow.co2footprint.utils.DeduplicateMarkerFilter
-import nextflow.co2footprint.utils.Markers
+import nextflow.co2footprint.Logging.DeduplicateMarkerFilter
+import nextflow.co2footprint.Logging.Markers
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spock.lang.Shared

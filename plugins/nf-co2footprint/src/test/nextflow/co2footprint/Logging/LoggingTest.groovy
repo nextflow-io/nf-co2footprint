@@ -1,48 +1,17 @@
-package nextflow.co2footprint.utils
+package nextflow.co2footprint.Logging
 
+import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.turbo.TurboFilter
 import ch.qos.logback.classic.LoggerContext
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.read.ListAppender
 
-import groovy.util.logging.Slf4j
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
 
-@Slf4j
-class LoggerTestClass {
-
-    static trace() {
-        log.trace('Trace message')
-    }
-
-    static debug() {
-        log.debug('Debug message')
-    }
-
-    static info() {
-        log.info('Info message')
-    }
-
-    static warn() {
-        log.warn( Markers.unique, 'Warn message')
-    }
-
-    static error() {
-        log.error('Error message')
-    }
-
-    static void main(String[] args) {
-        trace()
-        debug()
-        info()
-        warn()
-        error()
-    }
-}
 
 /**
  * Test the Logging  (especially the definition of a Duplication TurboFilter in logback-test.xml)
@@ -66,7 +35,7 @@ class LoggingTest extends Specification {
 
     // Setup method that executes once before each test
     def setup() {
-        logger.setLevel(ch.qos.logback.classic.Level.DEBUG)
+        logger.setLevel(Level.DEBUG)
         listAppender.start()
         logger.addAppender(listAppender)
     }

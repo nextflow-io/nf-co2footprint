@@ -18,6 +18,7 @@ plugins {
     // Apply the groovy plugin to add support for Groovy
     id 'io.nextflow.groovy-library-conventions'
     id 'idea'
+    id 'groovy'
 }
 
 group = 'io.nextflow'
@@ -43,7 +44,7 @@ repositories {
 
 configurations {
     // see https://docs.gradle.org/4.1/userguide/dependency_management.html#sub:exclude_transitive_dependencies
-    //runtimeClasspath.exclude group: 'org.slf4j', module: 'slf4j-api'
+    runtimeClasspath.exclude group: 'org.slf4j', module: 'slf4j-api'
 }
 
 sourceSets {
@@ -56,13 +57,13 @@ sourceSets {
 }
 
 // Versioning of important packages
-ext{
-    nextflowVersion = '24.10.5'
+ext {
+    nextflowVersion = '24.10.6'
 }
-
-String groovyVersion = '4.0.26'
+String groovyVersion = '4.0.27'
 String pf4jVersion = '3.13.0'
 String slf4jVersion = '2.0.17'
+String logbackVersion = '1.5.18'
 
 dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.
@@ -76,19 +77,28 @@ dependencies {
     testImplementation "org.apache.groovy:groovy-nio:$groovyVersion"
     testImplementation "io.nextflow:nextflow:$nextflowVersion"
     testImplementation ("org.apache.groovy:groovy-test:$groovyVersion") { exclude group: 'org.apache.groovy' }
-    testImplementation ("cglib:cglib-nodep:3.3.0")
-    testImplementation ("org.objenesis:objenesis:3.1")
-    testImplementation ("org.spockframework:spock-core:2.3-groovy-4.0") { exclude group: 'org.apache.groovy'; exclude group: 'net.bytebuddy' }
+    testImplementation ('cglib:cglib-nodep:3.3.0')
+    testImplementation ('org.objenesis:objenesis:3.1')
+    testImplementation ('org.spockframework:spock-core:2.3-groovy-4.0') { exclude group: 'org.apache.groovy'; exclude group: 'net.bytebuddy' }
     testImplementation ('org.spockframework:spock-junit4:2.3-groovy-4.0') { exclude group: 'org.apache.groovy'; exclude group: 'net.bytebuddy' }
     testImplementation ('com.google.jimfs:jimfs:1.1')
-    implementation 'ch.qos.logback:logback-classic:1.2.12'
+    testImplementation ('ch.qos.logback:logback-classic:1.5.18')
 
     testImplementation(testFixtures("io.nextflow:nextflow:$nextflowVersion"))
     testImplementation(testFixtures("io.nextflow:nf-commons:$nextflowVersion"))
 
     // see https://docs.gradle.org/4.1/userguide/dependency_management.html#sec:module_replacement
     modules {
-        module("commons-logging:commons-logging") { replacedBy("org.slf4j:jcl-over-slf4j") }
+        module('commons-logging:commons-logging') { replacedBy('org.slf4j:jcl-over-slf4j') }
+    }
+}
+
+// Ensures correct logback version during testing
+configurations.testRuntimeClasspath {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'ch.qos.logback') {
+            details.useVersion logbackVersion
+        }
     }
 }
 

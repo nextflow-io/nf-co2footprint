@@ -1,25 +1,19 @@
-package nextflow.co2footprint.utils
-
-import org.slf4j.Marker
-import org.slf4j.MarkerFactory
+package nextflow.co2footprint.Logging
 
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import ch.qos.logback.classic.turbo.TurboFilter
 import ch.qos.logback.core.spi.FilterReply
+import org.slf4j.Marker
+import org.slf4j.MarkerFactory
 
 import java.util.concurrent.ConcurrentHashMap
-
-/**
- * A marker to indicate that this message should only be shown once
- */
-class Markers {
-    final static Marker unique = MarkerFactory.getMarker('unique')
-}
-
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * A logback TurboFilter for filtering the output according to markers.
+ * Motivation: Removes duplicates in some warnings, to avoid cluttering the output with repeated information.
+ * Example: If the CPU model is not found it should only be warned once, that a fallback value is used.
  */
 class DeduplicateMarkerFilter extends TurboFilter {
 
@@ -29,8 +23,11 @@ class DeduplicateMarkerFilter extends TurboFilter {
     // Number of allowed Repetitions of a message
     public int allowedOccurrences
 
-    //Cached messages with count
-    private ConcurrentHashMap<String, Integer> msgCache
+    // Cached messages with count
+    private ConcurrentHashMap<String, AtomicInteger> seenMessages
+
+    // Scheduled outputs
+    private Set<String> scheduledOut
 
     /**
      * Generate Filter which sends all duplicates to TRACE as [DUPLICATE]
@@ -50,7 +47,8 @@ class DeduplicateMarkerFilter extends TurboFilter {
     @Override
     void start() {
         if (filteredMarkers) {
-            msgCache = [] as ConcurrentHashMap<String, Integer>
+            seenMessages = [] as ConcurrentHashMap<String, AtomicInteger>
+            scheduledOut = ConcurrentHashMap.newKeySet() as Set<String>
             super.start()
         }
     }
@@ -60,8 +58,8 @@ class DeduplicateMarkerFilter extends TurboFilter {
      */
     @Override
     void stop() {
-        msgCache.clear()
-        msgCache = null
+        seenMessages.clear()
+        seenMessages = null
         super.stop()
     }
 
@@ -78,30 +76,27 @@ class DeduplicateMarkerFilter extends TurboFilter {
      */
     @Override
     FilterReply decide(Marker marker, Logger logger, Level level, String format, Object[] params, Throwable t) {
-            // Check whether the Filter started
-            if (!isStarted()) {
-                return FilterReply.NEUTRAL
+        // Check whether the Filter started
+        if (!isStarted()) {
+            return FilterReply.NEUTRAL
+        }
+
+        // Checks for the right markers
+        if (filteredMarkers.contains(marker)) {
+
+            // Counts the occurrences for the markers
+            AtomicInteger occurrences = seenMessages.computeIfAbsent(format, k -> new AtomicInteger(0))
+            int currentOccurrences = occurrences.incrementAndGet()
+
+            if (currentOccurrences <= allowedOccurrences) {
+                return FilterReply.ACCEPT
             }
-
-            // Checks for the right markers
-            if (filteredMarkers.contains(marker)) {
-
-                // Counts the occurrences for the markers
-                final Integer count = msgCache.putIfAbsent(format, 0) ?: 0
-
-                // Increments the occurrences by 1
-                msgCache[format] = count + 1
-
-                if (count < allowedOccurrences) {
-                    return FilterReply.ACCEPT
-                } else {
-                    // Send a TRACE message when the message was not accepted
-                    logger.trace('[DUPLICATE] ' + format, params)
-                    return FilterReply.DENY
-                }
-            } else {
-                return FilterReply.NEUTRAL
-            }
+            // Send a TRACE message when the message was not accepted
+            logger.trace('[DUPLICATE] ' + format, params)
+            return FilterReply.DENY
+        } else {
+            return FilterReply.NEUTRAL
+        }
     }
 
     // --- Getters and setters ---

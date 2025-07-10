@@ -2,23 +2,22 @@ package nextflow.co2footprint
 
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
-import nextflow.co2footprint.utils.DeduplicateMarkerFilter
-import nextflow.co2footprint.utils.Markers
+import nextflow.co2footprint.Logging.LoggingAdapter
+
+import java.nio.file.Paths
 
 import groovy.transform.PackageScope
 import groovy.transform.PackageScopeTarget
 import groovy.transform.CompileStatic
 
-import java.nio.file.Paths
+import groovy.util.logging.Slf4j
+import org.slf4j.LoggerFactory
+import ch.qos.logback.classic.LoggerContext
 
 import nextflow.Session
 import nextflow.trace.TraceObserver
 import nextflow.trace.TraceObserverFactory
 
-import groovy.util.logging.Slf4j
-import org.slf4j.LoggerFactory
-import ch.qos.logback.classic.LoggerContext
-import ch.qos.logback.classic.turbo.TurboFilter
 
 /**
  * Factory class for creating the CO2Footprint trace observer.
@@ -32,18 +31,6 @@ import ch.qos.logback.classic.turbo.TurboFilter
 @CompileStatic
 @PackageScope(PackageScopeTarget.FIELDS)
 class CO2FootprintFactory implements TraceObserverFactory {
-
-    /**
-     * Logging:
-     * Removes duplicates in some warnings, to avoid cluttering the output with repeated information.
-     * Example: If the CPU model is not found it should only be warned once, that a fallback value is used.
-     */
-    static {
-        final LoggerContext lc = LoggerFactory.getILoggerFactory() as LoggerContext   // Get Logging Context
-        final TurboFilter dmf = new DeduplicateMarkerFilter([Markers.unique])         // Define DeduplicateMarkerFilter
-        dmf.start()
-        lc.addTurboFilter(dmf)                                                  // Add filter to context
-    }
 
     // Plugin version
     private String pluginVersion = null
@@ -103,6 +90,11 @@ class CO2FootprintFactory implements TraceObserverFactory {
      */
     @Override
     Collection<TraceObserver> create(Session session) {
+        // Logging
+        LoggingAdapter loggingAdapter = new LoggingAdapter()
+        loggingAdapter.addUniqueMarkerFilter()
+        loggingAdapter.changePatternConsoleAppender()
+
         // Read the plugin version
         setPluginVersion()
         log.info("nf-co2footprint plugin  ~  version ${this.pluginVersion}")
@@ -135,6 +127,4 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
         return result
     }
-
-
 }
