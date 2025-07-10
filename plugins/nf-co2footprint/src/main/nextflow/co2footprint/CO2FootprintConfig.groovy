@@ -171,20 +171,30 @@ class CO2FootprintConfig {
      * @param executor The executor name (e.g., 'awsbatch', 'local', etc.)
      */
     private void setMachineTypeAndPueFromExecutor(String executor) {
-        // Read the CSV file as a DataMatrix - set RowIndex to 'executor'
-        DataMatrix machineTypeMatrix = DataMatrix.fromCsv(Paths.get(this.class.getResource('/executor_machine_pue_mapping.csv').toURI()), ',', 0, null, 'executor')
-        // Check if matrix contains the required columns
-        machineTypeMatrix.checkRequiredColumns(['machineType', 'pue'])
-        if (machineTypeMatrix.rowIndex.containsKey(executor)) {
-            this.machineType = machineTypeMatrix.get(executor, 'machineType') as String
-            this.pue ?= machineTypeMatrix.get(executor, 'pue') as Double // assign pue only if not already set
+        if (executor) {
+            // Read the CSV file as a DataMatrix - set RowIndex to 'executor'
+            DataMatrix machineTypeMatrix = DataMatrix.fromCsv(
+                    Paths.get(this.class.getResource(
+                            '/executor_machine_pue_mapping.csv').toURI()),
+                    ',', 0, null, 'executor'
+            )
+            // Check if matrix contains the required columns
+            machineTypeMatrix.checkRequiredColumns(['machineType', 'pue'])
+            if (machineTypeMatrix.rowIndex.containsKey(executor)) {
+                this.machineType = machineTypeMatrix.get(executor, 'machineType') as String
+                this.pue ?= machineTypeMatrix.get(executor, 'pue') as Double // assign pue only if not already set
+            }
+            else {
+                log.warn(
+                    "Executor '${executor}' is not mapped to a machine type / power usage effectiveness (PUE). " +
+                    "=> `machineType` <- null, `pue` <- 1.0. " +
+                    "To eliminate this warning you can set `machineType` in the config to one of ${supportedMachineTypes}.")
+            }
         }
         else {
-            log.warn(
-                    "Executor '${executor}' is not mapped. `machineType` set to null." +
-                    " To eliminate this warning you can set `machineType` in the config to one of ${supportedMachineTypes}.")
+            log.debug('No executor found in config under process.executor.')
         }
-}
+    }
 
     /**
      * Collects input file options for reporting.
