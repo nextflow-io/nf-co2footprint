@@ -7,17 +7,37 @@ The following parameters are currently available:
 
 ## Output Files
 
-- **`traceFile`**  
+- **`outDirectory`**  
+  The directory where all output files are collected.
+  **Default**: `pipeline_info`
+
+- **`traceFileName`**  
   Name of the `.txt` carbon footprint report containing the energy consumption, estimated CO₂ emission, and other relevant metrics for each task.  
-  **Default**: `co2footprint_trace_<timestamp>.txt`
+  **Default**: `co2footprint_trace`
+
+- **`summaryFileName`**  
+  Name of the `.txt` carbon footprint summary file containing the total energy consumption and total estimated CO₂ emission of the pipeline run.  
+  **Default**: `co2footprint_summary`
+
+- **`reportFileName`**  
+  Name of the HTML report containing information about the entire carbon footprint, overview plots, and more detailed task-specific metrics.  
+  **Default**: `co2footprint_report`
+
+- **`timestamp`**  
+  A timestamp in String format for output files.
+- **Default**: `'yyyyMMdd-A' at runtime`
+
+- **`traceFile`**  
+  Path to the carbon footprint report containing the energy consumption, estimated CO₂ emission, and other relevant metrics for each task. This parameter overwrites `outDirectory`, `timestamp` and `traceFileName`, allowing a complete control of the file path and name, including the ending, connectors, and individual output directories.
+  **Default**: `<outDirectory>/<traceFileName>_<timestamp>.txt`
 
 - **`summaryFile`**  
-  Name of the `.txt` carbon footprint summary file containing the total energy consumption and total estimated CO₂ emission of the pipeline run.  
-  **Default**: `co2footprint_summary_<timestamp>.txt`
+  Path to the carbon footprint summary file containing the total energy consumption and total estimated CO₂ emission of the pipeline run. This parameter overwrites `outDirectory`, `timestamp` and `summaryFileName`, allowing a complete control of the file path and name, including the ending, connectors, and individual output directories.
+  **Default**: `<outDirectory>/<summaryFileName>_<timestamp>.txt`
 
 - **`reportFile`**  
-  Name of the HTML report containing information about the entire carbon footprint, overview plots, and more detailed task-specific metrics.  
-  **Default**: `co2footprint_report_<timestamp>.html`
+  Path to the HTML report containing information about the entire carbon footprint, overview plots, and more detailed task-specific metrics. This parameter overwrites `outDirectory`, `timestamp` and `reportFileName`, allowing a complete control of the file path and name, including the ending, connectors, and individual output directories.
+  **Default**: `<outDirectory>/<reportFileName>_<timestamp>.html`
 
 ## Location & Carbon Intensity
 

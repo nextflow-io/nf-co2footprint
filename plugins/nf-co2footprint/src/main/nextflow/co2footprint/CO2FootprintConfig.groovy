@@ -31,10 +31,14 @@ import java.nio.file.Paths
 class CO2FootprintConfig {
 
     // Configuration parameters (can be set in Nextflow config)
+    private String  outDirectory = 'pipeline_info'
+    private String  traceFileName = 'co2footprint_trace'
+    private String  summaryFileName = 'co2footprint_summary'
+    private String  reportFileName = 'co2footprint_report'
     private String  timestamp = TraceHelper.launchTimestampFmt()
-    private String  traceFile = "co2footprint_trace_${timestamp}.txt"
-    private String  summaryFile = "co2footprint_summary_${timestamp}.txt"
-    private String  reportFile = "co2footprint_report_${timestamp}.html"
+    private String  traceFile = null
+    private String  summaryFile = null
+    private String  reportFile = null
     private String  location = null
     private def     ci = null                       // CI: carbon intensity
     private def     ciMarket = null                 // Market based CI
@@ -50,6 +54,10 @@ class CO2FootprintConfig {
     private final List<String> supportedMachineTypes = ['local', 'compute cluster', 'cloud']
 
     // Getter methods for config values
+    String getOutDirectory() { outDirectory }
+    String getTraceFileName() { traceFileName }
+    String getSummaryFileName() { summaryFileName }
+    String getReportFileName() { reportFileName }
     String getTimestamp() { timestamp }
     String getTraceFile() { traceFile }
     String getSummaryFile() { summaryFile }
@@ -71,6 +79,7 @@ class CO2FootprintConfig {
     Double getCiMarket() {
         (ciMarket instanceof Closure) ? (ciMarket as Closure<Double>)() : ciMarket
     }
+
     Double getPue() { pue }
     Boolean getIgnoreCpuModel() { ignoreCpuModel }
     Double getPowerdrawCpuDefault() { powerdrawCpuDefault }
@@ -101,9 +110,13 @@ class CO2FootprintConfig {
             }
         }
 
+        // Define file paths
+        traceFile ?= Paths.get(getOutDirectory(), "${getTraceFileName()}_${getTimestamp()}.txt") as String
+        summaryFile ?= Paths.get(getOutDirectory(), "${getSummaryFileName()}_${getTimestamp()}.txt") as String
+        reportFile ?= Paths.get(getOutDirectory(), "${getReportFileName()}_${getTimestamp()}.html") as String
+
         // Determine the carbon intensity (CI) value
         if (ci == null) {
-
             CIValueComputer ciValueComputer = new CIValueComputer(emApiKey, location, ciData)
             // ci is either set to a Closure (in case the electricity maps API is used) or to a Double (in the other cases)
             // The closure is invoked each time the CO2 emissions are calculated (for each task) to make a new API call to update the real time ci value.
@@ -178,11 +191,14 @@ class CO2FootprintConfig {
                             '/executor_machine_pue_mapping.csv').toURI()),
                     ',', 0, null, 'executor'
             )
+
             // Check if matrix contains the required columns
             machineTypeMatrix.checkRequiredColumns(['machineType', 'pue'])
+
+            // Extract info from executor
             if (machineTypeMatrix.rowIndex.containsKey(executor)) {
-                this.machineType = machineTypeMatrix.get(executor, 'machineType') as String
                 this.pue ?= machineTypeMatrix.get(executor, 'pue') as Double // assign pue only if not already set
+                this.machineType = machineTypeMatrix.get(executor, 'machineType') as String
             }
             else {
                 log.warn(
