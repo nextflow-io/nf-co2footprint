@@ -98,8 +98,10 @@ plugins {
 }
 
 co2footprint {
-  outDirectory = "${params.outdir}/pipeline_info"
-  timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
+  // Uses nf-core's `outdir` parameter, if present, otherwise uses 'pipeline_info'
+  outDirectory = params.containsKey('outdir') ? "${params.get('outdir')}/pipeline_info" : 'pipeline_info'
+  // Uses nf-core's `trace_report_suffix` or `trace_timestamp` parameter, if present, otherwise uses current Date & Time
+  timestamp = params.get('trace_report_suffix') ?: (this.hasProperty('trace_timestamp') ? this.trace_timestamp : new java.util.Date().format('yyyy-MM-dd_HH-mm-ss'))
   location = 'DE'
   emApiKey = secrets.EM_API_KEY
   pue = 1.3
