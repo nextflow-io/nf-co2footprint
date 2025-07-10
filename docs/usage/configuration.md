@@ -17,9 +17,9 @@ plugins {
 
 // Optional example config settings for CO₂ reporting:
 co2footprint {
-  // Uses nf-core `outdir` parameter, if present, otherwise uses 'pipeline_info'
+  // Uses nf-core's `outdir` parameter, if present, otherwise uses 'pipeline_info'
   outDirectory = params.containsKey('outdir') ? "${params.get('outdir')}/pipeline_info" : 'pipeline_info'
-  // Uses nf-core `trace_report_suffix` or `trace_timestamp` parameter, if present, otherwise uses current Date & Time
+  // Uses nf-core's `trace_report_suffix` or `trace_timestamp` parameter, if present, otherwise uses current Date & Time
   timestamp = params.get('trace_report_suffix') ?: (this.hasProperty('trace_timestamp') ? this.trace_timestamp : new java.util.Date().format('yyyy-MM-dd_HH-mm-ss'))
   location = 'DE'                             // replace with your zone code
   emApiKey = secrets.EM_API_KEY               // set your API key as Nextflow secret with the name 'EM_API_KEY'
