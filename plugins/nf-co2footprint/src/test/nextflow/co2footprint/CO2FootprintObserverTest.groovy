@@ -247,10 +247,10 @@ class CO2FootprintObserverTest extends Specification{
         fileChecker.runChecks(
             reportPath,
             [
-            234: '          ' +
+            260: '          ' +
                     "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                     " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>",
-            1303: '  window.options = [' +
+            1371: '  window.options = [' +
                     '{"option":"ci","value":"480.0"},'+
                     '{"option":"customCpuTdpFile","value":null},' +
                     '{"option":"ignoreCpuModel","value":"false"},' +

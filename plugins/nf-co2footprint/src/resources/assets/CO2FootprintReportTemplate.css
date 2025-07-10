@@ -32,6 +32,19 @@ body {
   padding: 1rem 2rem;
 }
 
+.card-wrap {
+  gap: 1.5rem;
+  margin-left: -0.75rem;
+  margin-right: -0.75rem;
+}
+
+.metric-card {
+  width: 18%;
+  text-align: center;
+  flex: 1 1 200px;
+  min-width: 200px;
+}
+
 .metric-card svg {
   margin: 0.5rem auto;
   height:50px;
@@ -122,4 +135,18 @@ footer a {
   height: auto;
   z-index: 1;
   opacity: 1;
+}
+
+.expandable-label {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 2px solid #badbcc;
+  background-color: #d1e7dd;
+  font-weight: bold;
+  color: #0f5132;
+  display: inline-block;
+}
+
+summary {
+  cursor: pointer;
 }

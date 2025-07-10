@@ -155,16 +155,16 @@ class FileChecker {
      */
     List<Integer> compareLines(Path path, Map<Integer, String> lineRecords) {
         List<String> lines  = path.readLines()
-        try {
-            String line
-            lineRecords.each { Integer linePos, String lineRecord ->
-                // Change from 1 to 0-based
-                line = lines[linePos - 1]
+        String line
+        lineRecords.each { Integer linePos, String lineRecord ->
+            // Change from 1 to 0-based
+            line = lines[linePos - 1]
+            try {
                 assert line == lineRecord
             }
-        }
-        catch (Exception exception){
-            addError(exception)
+            catch (Throwable throwable) {
+                addError(throwable)
+            }
         }
 
         return lineRecords.keySet() as List<Integer>

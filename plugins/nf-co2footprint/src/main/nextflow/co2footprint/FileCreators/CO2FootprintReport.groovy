@@ -190,25 +190,18 @@ class CO2FootprintReport extends CO2FootprintFile{
     */
     private Map<String, String> makeCO2Total(suffix) {
         // Retrieve total CO₂ emissions and energy consumption for the given suffix
-        Double co2e = totalStats["co2e${suffix}" as String]
-        Double energy = totalStats["energy${suffix}" as String]
+        Double co2e = totalStats["co2e${suffix}" as String] ?: 0.0d
+        Double energy = totalStats["energy${suffix}" as String] ?: 0.0d
 
-        if (co2e) {
-            CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(co2e)
-            return [
-                ("co2e${suffix}" as String): Converter.toReadableUnits(co2e,'m', 'g'),
-                ("energy${suffix}" as String):Converter.toReadableUnits(energy,'m','Wh'),
-                ("car${suffix}" as String): equivalences.getCarKilometersReadable(),
-                ("tree${suffix}" as String): equivalences.getTreeMonthsReadable(),
-                ("plane_percent${suffix}" as String): equivalences.getPlanePercent() < 100.0 ? equivalences.getPlanePercentReadable() : null,
-                ("plane_flights${suffix}" as String): equivalences.getPlaneFlights() >= 1 ? equivalences.getPlaneFlightsReadable() : null,
-            ]
-        }
-        else {
-            return [:]
-        }
-
-
+        CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(co2e)
+        return [
+            ("co2e${suffix}" as String): Converter.toReadableUnits(co2e,'m', 'g'),
+            ("energy${suffix}" as String):Converter.toReadableUnits(energy,'m','Wh'),
+            ("car${suffix}" as String): equivalences.getCarKilometersReadable(),
+            ("tree${suffix}" as String): equivalences.getTreeMonthsReadable(),
+            ("plane_percent${suffix}" as String): equivalences.getPlanePercent() < 100.0 ? equivalences.getPlanePercentReadable() : null,
+            ("plane_flights${suffix}" as String): equivalences.getPlaneFlights() >= 1 ? equivalences.getPlaneFlightsReadable() : null,
+        ]
     }
 
     /**
