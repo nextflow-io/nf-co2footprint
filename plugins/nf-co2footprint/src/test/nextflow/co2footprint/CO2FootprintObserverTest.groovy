@@ -220,12 +220,12 @@ class CO2FootprintObserverTest extends Specification{
         traceLines.size() == 2
 
         traceLines[0].split('\t') as List<String> == [
-                'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'time', 'carbon_intensity', 'cpus', 'powerdraw_cpu', 'cpu_model', 'cpu_usage', 'requested_memory'
+                'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'time', 'carbon_intensity', 'carbon_intensity_market', 'cpus', 'powerdraw_cpu', 'cpu_model', 'cpu_usage', 'requested_memory'
         ]
         traceLines[1].split('\t') as List<String> == [
             '111', 'COMPLETED', 'null', '13.61 Wh', '6.53 g', 'null', '1ms', '480.0 gCO₂eq/kWh', 'null', '1', '11.0', 'Unknown model', '100.0', '7.0 B'
         ] // GA: CO2e is 6.94g with CI of 475 gCO2eq/kWh
-        fileChecker.compareChecksums(tracePath, '12870c60ba2a982fd5b85ed0c3edf3ef')
+        fileChecker.compareChecksums(tracePath, '804c1c8c9d8921a8d270b86a0479644e')
 
 
         // Check Summary File
