@@ -1,10 +1,11 @@
 ## [Unreleased]
 
-# Version 1.0.0-rc1
+# Version 1.0.0-rc.1
 ## Bug Fixes:
 - Version is `null` in many cases (parsed the wrong MANIFEST)
 - Logging is overwritten by Nextflow (now integrated in Groovy code)
 - Logging of simultaneous duplicated output now also unique
+- Trace report now contains all headers to produce a correct TSV file
 
 ## Misc
 - Added a different wording for EM API calls with hints to obtain API key
