@@ -186,14 +186,14 @@ class CO2FootprintReportTest extends Specification{
         then:
         totalsJson ==
             [
-                "co2e": "10.0 mg",
-                "energy":  "100.0 mWh",
-                "car": "5.71E-5",
-                "tree": "28.69s",
-                "plane_percent": "2.00E-5 %",
-                "plane_flights": null,
-                "co2e_non_cached": "10.0 mg",
-                "energy_non_cached":  "100.0 mWh",
+                co2e: "10.0 mg",
+                energy:  "100.0 mWh",
+                car: "5.71E-5",
+                tree: "28.69s",
+                plane_percent: "2.00E-5 %",
+                plane_flights: null,
+                co2e_non_cached: "10.0 mg",
+                energy_non_cached:  "100.0 mWh",
                 car_non_cached: "5.71E-5",
                 tree_non_cached: "28.69s",
                 plane_percent_non_cached: '2.00E-5 %',

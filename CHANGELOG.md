@@ -6,11 +6,13 @@
 - Logging is overwritten by Nextflow (now integrated in Groovy code)
 - Logging of simultaneous duplicated output now also unique
 - Trace report now contains all headers to produce a correct TSV file
+- Fixed premature test exit on file checking
 
 ## Misc
 - Added a different wording for EM API calls with hints to obtain API key
 - Added a better help request for missing chips
 - Cleanup of AWS TDP table & renaming of TDP table to standard name
+- Aligned style of expandable elements
 
 # Version 1.0.0-rc
 ## Features:

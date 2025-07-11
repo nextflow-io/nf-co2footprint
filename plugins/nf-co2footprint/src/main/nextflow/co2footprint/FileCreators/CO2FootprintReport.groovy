@@ -193,7 +193,7 @@ class CO2FootprintReport extends CO2FootprintFile{
         Double co2e = totalStats["co2e${suffix}" as String]
         Double energy = totalStats["energy${suffix}" as String]
 
-        if (co2e) {
+        if (co2e != null) {
             CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(co2e)
             return [
                 ("co2e${suffix}" as String): Converter.toReadableUnits(co2e,'m', 'g'),
@@ -207,8 +207,6 @@ class CO2FootprintReport extends CO2FootprintFile{
         else {
             return [:]
         }
-
-
     }
 
     /**

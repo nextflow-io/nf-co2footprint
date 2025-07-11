@@ -175,7 +175,9 @@ class CO2FootprintObserver implements TraceObserver {
         processStats.each { String processName, Map<String, Map<String, ?>> processMetrics ->
             processMetrics.each { String metricName, Map<String, ?> metricValue ->
                 // Add up the different metrics (co2e, energy, ...)
-                totalStats[metricName] = (metricValue['total'] as Double ?: 0d) + (totalStats.get(metricName) as Double ?: 0d)
+                if (metricValue['total']) {
+                    totalStats[metricName] = metricValue['total'] as Double + (totalStats.get(metricName) as Double ?: 0d)
+                }
             }
         }
 
