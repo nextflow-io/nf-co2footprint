@@ -1,6 +1,7 @@
 package nextflow.co2footprint.Logging
 
 import ch.qos.logback.classic.spi.ILoggingEvent
+import ch.qos.logback.core.Layout
 import groovy.util.logging.Slf4j
 
 import org.slf4j.LoggerFactory
@@ -33,6 +34,30 @@ class LoggingAdapter {
     ) {
         this.session = session
         this.loggerContext = loggerContext
+    }
+
+    /**
+     * Defines a layout
+     *
+     * @param pattern Patter of the PattenLayout
+     * @return A configured layout
+     */
+    Layout defineLayout(String pattern) {
+        String version = LoggerContext.package.implementationVersion
+        // Define layout
+        PatternLayout layout = new PatternLayout()
+        layout.setContext(loggerContext)
+        layout.setPattern(pattern)
+        if (version >= '1.5') {
+            layout.getInstanceConverterMap().put('customHighlight', { -> new CustomHighlightConverter() } as Supplier)
+        }
+        // For backwards compatibility to logback v1.4.X
+        else {
+            layout.getInstanceConverterMap().put('customHighlight', CustomHighlightConverter.getName())
+        }
+        layout.start()
+
+        return layout
     }
 
     /**
@@ -74,19 +99,8 @@ class LoggingAdapter {
             String pattern='%customHighlight(%-5level - %msg)',
             String scope='nextflow.co2footprint'
     ) {
-        // Define layout
-        PatternLayout layout = new PatternLayout()
-        layout.setContext(loggerContext)
-        layout.setPattern(pattern)
-        try {
-            layout.getInstanceConverterMap().put('customHighlight', { -> new CustomHighlightConverter() } as Supplier)
-            layout.start()
-        }
-        // For backwards compatibility to logback v1.4.X
-        catch (ClassCastException ignore) {
-            layout.getInstanceConverterMap().put('customHighlight', 'CustomHighlightConverter')
-            layout.start()
-        }
+        // Logback implementation
+        Layout layout = defineLayout(pattern)
 
         // Define logger and add appender
         Logger co2FootprintLogger = loggerContext.getLogger(scope)

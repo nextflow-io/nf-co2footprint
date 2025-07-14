@@ -6,6 +6,7 @@ import ch.qos.logback.classic.PatternLayout
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.classic.spi.LoggingEvent
 import ch.qos.logback.classic.turbo.TurboFilter
+import ch.qos.logback.core.Layout
 import ch.qos.logback.core.read.ListAppender
 
 import org.slf4j.Logger
@@ -54,13 +55,10 @@ class CustomHighlightConverterTest extends Specification {
     def 'Should change coloring' () {
         setup:
         String pattern = '%customHighlight(%-5level - %msg)'
+        LoggingAdapter loggingAdapter = new LoggingAdapter()
 
         // Define layout
-        PatternLayout layout = new PatternLayout()
-        layout.setContext(lc)
-        layout.getInstanceConverterMap().put('customHighlight', { -> new CustomHighlightConverter()} as Supplier)
-        layout.setPattern(pattern)
-        layout.start()
+        Layout layout = loggingAdapter.defineLayout(pattern)
 
         // Define Event
         ILoggingEvent event = new LoggingEvent(
