@@ -10,7 +10,7 @@ Which equals:
 The calculation of these values is based on the carbon footprint computation method developed in the Green Algorithms project.
 Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation. Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707
 
-nf-co2footprint plugin version: 1.0.0-rc
+nf-co2footprint plugin version: 1.0.0-rc.1
 
 nf-co2footprint options:
 customCpuTdpFile: null
