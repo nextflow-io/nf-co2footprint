@@ -77,9 +77,16 @@ class LoggingAdapter {
         // Define layout
         PatternLayout layout = new PatternLayout()
         layout.setContext(loggerContext)
-        layout.getInstanceConverterMap().put('customHighlight', { -> new CustomHighlightConverter() } as Supplier)
         layout.setPattern(pattern)
-        layout.start()
+        try {
+            layout.getInstanceConverterMap().put('customHighlight', { -> new CustomHighlightConverter() } as Supplier)
+            layout.start()
+        }
+        // For backwards compatibility to logback v1.4.X
+        catch (ClassCastException ignore) {
+            layout.getInstanceConverterMap().put('customHighlight', 'CustomHighlightConverter')
+            layout.start()
+        }
 
         // Define logger and add appender
         Logger co2FootprintLogger = loggerContext.getLogger(scope)
