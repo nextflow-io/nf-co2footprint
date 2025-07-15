@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+# Version 1.0.0-rc.2
+## Features:
+- Added visual distinction of nf-co2footprint logging messages
+
 # Version 1.0.0-rc.1
 ## Bug Fixes:
 - Version is `null` in many cases (parsed the wrong MANIFEST)
