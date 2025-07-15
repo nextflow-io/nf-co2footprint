@@ -18,7 +18,6 @@ import ch.qos.logback.core.Appender
 import nextflow.Global
 import nextflow.Session
 
-import java.lang.module.ModuleDescriptor.Version
 import java.util.function.Supplier
 
 /**
@@ -44,19 +43,19 @@ class LoggingAdapter {
      * @return A configured layout
      */
     Layout defineLayout(String pattern) {
-        Version implementationVersion = Version.parse(LoggerContext.package.implementationVersion)
         // Define layout
         PatternLayout layout = new PatternLayout()
         layout.setContext(loggerContext)
         layout.setPattern(pattern)
-        if (implementationVersion >= Version.parse('1.5')) {
+        try {
             layout.getInstanceConverterMap().put('customHighlight', { -> new CustomHighlightConverter() } as Supplier)
+            layout.start()
         }
         // For backwards compatibility to logback v1.4.X
-        else {
+        catch (ClassCastException ignore) {
             layout.getInstanceConverterMap().put('customHighlight', CustomHighlightConverter.getName())
+            layout.start()
         }
-        layout.start()
 
         return layout
     }
