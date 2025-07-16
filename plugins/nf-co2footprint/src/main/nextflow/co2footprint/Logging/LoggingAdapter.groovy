@@ -74,7 +74,7 @@ class LoggingAdapter {
         catch (ClassCastException ignore) {
             log.debug("Logback version < 1.5. Fallback to Logback's standard highlighting.")
             layout.stop()
-            layout.setPattern('%level - [nf-co2footprint] %msg%n')
+            layout.setPattern('%level - [nf-co2footprint] %msg')
             layout.start()
         }
 
