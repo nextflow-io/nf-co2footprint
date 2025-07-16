@@ -88,7 +88,7 @@ class LoggingAdapter {
      * @param scope Scope of the changes, the default only affects this plugin, if an extra logger is given at this level
      */
     void changePatternConsoleAppender(
-            String pattern='%customHighlight(%-5level - %msg)',
+            String pattern='%customHighlight(%-level - [nf-co2footprint] %msg)',
             String scope='nextflow.co2footprint'
     ) {
         // Logback implementation
