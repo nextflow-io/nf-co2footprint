@@ -4,12 +4,12 @@ import groovy.util.logging.Slf4j
 
 @Slf4j
 class ConfigParameters {
-    final private HashMap<String, ConfigParameter> vault
+    final private HashMap<String, ConfigEntry> vault
 
-    ConfigParameters(Set<ConfigParameter> configurationParameters=[]) {
-        this.vault = configurationParameters.collectEntries { ConfigParameter configParameter ->
+    ConfigParameters(Set<ConfigEntry> configurationParameters=[]) {
+        this.vault = configurationParameters.collectEntries { ConfigEntry configParameter ->
             [configParameter.name, configParameter]
-        } as HashMap<String, ConfigParameter>
+        } as HashMap<String, ConfigEntry>
     }
 
     /**
@@ -17,7 +17,7 @@ class ConfigParameters {
      *
      * @param parameter Constructed parameter that is added
      */
-    void add(ConfigParameter parameter) {
+    void add(ConfigEntry parameter) {
         this.vault.put(parameter.getName(), parameter)
     }
 
@@ -34,7 +34,7 @@ class ConfigParameters {
                         { String argName -> keywordArgs.get(argName) }
                 )
         )
-        add(new ConfigParameter(*args))
+        add(new ConfigEntry(*args))
     }
 
     /**
@@ -58,7 +58,7 @@ class ConfigParameters {
      */
     void configure(String name, def value) {
         if (has(name)) {
-            ConfigParameter parameter = vault.get(name)
+            ConfigEntry parameter = vault.get(name)
             parameter.configure(value)
         } else {
             // Log warning and skip the key
@@ -73,7 +73,7 @@ class ConfigParameters {
      * @param value Value of the parameter
      */
     void initialize() {
-        vault.each { String name, ConfigParameter parameter -> parameter.initialize() }
+        vault.each { String name, ConfigEntry parameter -> parameter.initialize() }
     }
 
     /**
@@ -104,7 +104,7 @@ class ConfigParameters {
      * @param value Value to be set to
      */
     void set(String name, def value) {
-        ConfigParameter parameter = vault.get(name)
+        ConfigEntry parameter = vault.get(name)
         parameter.set(value)
     }
     /**
@@ -114,7 +114,7 @@ class ConfigParameters {
      * @param value Value to be set to
      */
     void setEmpty(String name, def value) {
-        ConfigParameter parameter = vault.get(name)
+        ConfigEntry parameter = vault.get(name)
         if (parameter.get() == null) {
             parameter.set(value)
         }
@@ -136,7 +136,7 @@ class ConfigParameters {
      * @return The entries as a Map
      */
     Map<String, Object> getEntries() {
-        return vault.collectEntries { String name, ConfigParameter configParameter ->
+        return vault.collectEntries { String name, ConfigEntry configParameter ->
             [name, configParameter.get()]
         }
     }

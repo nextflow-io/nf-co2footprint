@@ -3,7 +3,7 @@ package nextflow.co2footprint.Config
 /**
  * A holder class for parameters in a config.
  */
-class ConfigParameter {
+class ConfigEntry {
     private final String name
     private final defaultValue
     private final SequencedCollection<Class> allowedTypes
@@ -12,7 +12,7 @@ class ConfigParameter {
     private def value
     private boolean initialized = false
 
-    ConfigParameter(
+    ConfigEntry(
         String name,
         def defaultValue=null,
         SequencedCollection<Class> allowedTypes=null,

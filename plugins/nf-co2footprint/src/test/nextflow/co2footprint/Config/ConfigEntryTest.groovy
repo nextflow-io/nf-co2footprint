@@ -2,10 +2,10 @@ package nextflow.co2footprint.Config
 
 import spock.lang.Specification
 
-class ConfigParameterTest extends Specification {
+class ConfigEntryTest extends Specification {
     def 'Initialize ConfigParameter correctly' () {
         when:
-        ConfigParameter parameter = new ConfigParameter(name, defaultValue, allowedTypes, returnType, description)
+        ConfigEntry parameter = new ConfigEntry(name, defaultValue, allowedTypes, returnType, description)
 
         then:
         parameter.toMap() == [name: name, value: null, allowedTypes: expAllowedTypes, returnType: expReturnType, description: description]
@@ -26,7 +26,7 @@ class ConfigParameterTest extends Specification {
 
     def 'Evaluate function values correctly'() {
         when:
-        ConfigParameter parameter = new ConfigParameter('a', 1, [Integer, Closure<Integer>])
+        ConfigEntry parameter = new ConfigEntry('a', 1, [Integer, Closure<Integer>])
         parameter.set({ -> 4})
 
         then:
