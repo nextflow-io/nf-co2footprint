@@ -10,6 +10,7 @@ class ConfigParameter {
     private final Class returnType
     private final String description
     private def value
+    private boolean initialized = false
 
     ConfigParameter(
         String name,
@@ -45,15 +46,21 @@ class ConfigParameter {
 
     /**
      * Initialize the value with the given default (function).
+     * Calling the default function will not initialize functions.
+     * To initialize defaultValue functions without arguments, args needs to be set to [].
      *
      * @param args Arguments for the default function
      */
-    void initialize(List<?> args=[]) {
-        if (defaultValue instanceof Runnable) {
-            this.value = defaultValue(*args)
-        }
-        else{
-            this.value = defaultValue
+    void initialize(List<?> args=null, boolean initialized=this.initialized) {
+        if(!initialized) {
+            if (args != null && defaultValue instanceof Runnable) {
+                set(defaultValue(*args))
+                this.initialized = true
+            }
+            else{
+                set(defaultValue)
+                this.initialized = true
+            }
         }
     }
 
@@ -64,8 +71,8 @@ class ConfigParameter {
      * @return Whether an allowed type was found
      */
     void checkType(def value) {
-        if(!allowedTypes.collect({value in it}).any()) {
-            throw new InvalidClassException("Value `${value}` (${value.getClass()}) not in allowed Classes ${allowedTypes}.")
+        if(value != null && !allowedTypes.collect({value in it}).any()) {
+            throw new InvalidClassException("Value `${value}` (${value.getClass()}) not in allowed Classes ${allowedTypes} for `${name}`.")
         }
     }
 
@@ -77,6 +84,17 @@ class ConfigParameter {
     void set(def value) {
         checkType(value)
         this.value = value
+    }
+
+    /**
+     * Set the value.
+     *
+     * @param value
+     */
+    void configure(def value) {
+        checkType(value)
+        this.value = value
+        this.initialized = true
     }
 
     /**
@@ -97,10 +115,10 @@ class ConfigParameter {
      */
     <T> T evaluate(Class<T> type=returnType) {
         if (value instanceof Runnable) {
-            return type.cast(value.call())
+            return value.call().asType(type)
         }
         else {
-            return type.cast(value)
+            return value.asType(type)
         }
     }
 

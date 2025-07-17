@@ -96,8 +96,8 @@ class CO2FootprintConfigTest extends Specification {
 
     def 'should log warning and set machineType to null for unknown executor'() {
         given:
-        def configMap = [:]
-        def processMap = [executor: 'notarealexecutor']
+        Map<String, Object> configMap = [:]
+        Map<String, Object> processMap = [executor: 'notarealexecutor']
 
         when:
         CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdp, ci, processMap)
