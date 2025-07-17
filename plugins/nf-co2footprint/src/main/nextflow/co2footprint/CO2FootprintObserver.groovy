@@ -4,12 +4,11 @@ import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
 
 import nextflow.Session
-import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordAggregator
-import nextflow.co2footprint.FileCreators.CO2FootprintReport
-import nextflow.co2footprint.FileCreators.CO2FootprintSummary
-import nextflow.co2footprint.FileCreators.CO2FootprintTrace
+import nextflow.co2footprint.FileCreators.ReportFile
+import nextflow.co2footprint.FileCreators.SummaryFile
+import nextflow.co2footprint.FileCreators.TraceFile
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskId
 import nextflow.processor.TaskProcessor
@@ -44,9 +43,9 @@ class CO2FootprintObserver implements TraceObserver {
     private Map<String, Path> paths = [:]
 
     // Output file objects
-    private CO2FootprintTrace co2eTraceFile
-    private CO2FootprintSummary co2eSummaryFile
-    private CO2FootprintReport co2eReportFile
+    private TraceFile co2eTraceFile
+    private SummaryFile co2eSummaryFile
+    private ReportFile co2eReportFile
 
     // Overwrite existing files if true
     private boolean overwrite
@@ -153,12 +152,12 @@ class CO2FootprintObserver implements TraceObserver {
             }
         }
 
-        co2eTraceFile = new CO2FootprintTrace(paths['co2eTrace'], overwrite)
+        co2eTraceFile = new TraceFile(paths['co2eTrace'], overwrite)
         co2eTraceFile.create()
 
-        co2eSummaryFile = new CO2FootprintSummary(paths['co2eSummary'], overwrite)
+        co2eSummaryFile = new SummaryFile(paths['co2eSummary'], overwrite)
 
-        co2eReportFile = new CO2FootprintReport(paths['co2eReport'], overwrite, maxTasks)
+        co2eReportFile = new ReportFile(paths['co2eReport'], overwrite, maxTasks)
     }
 
     /**
