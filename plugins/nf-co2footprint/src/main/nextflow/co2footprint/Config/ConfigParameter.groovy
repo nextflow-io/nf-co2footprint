@@ -1,0 +1,122 @@
+package nextflow.co2footprint.Config
+
+/**
+ * A holder class for parameters in a config.
+ */
+class ConfigParameter {
+    private final String name
+    private final defaultValue
+    private final SequencedCollection<Class> allowedTypes
+    private final Class returnType
+    private final String description
+    private def value
+
+    ConfigParameter(
+        String name,
+        def defaultValue=null,
+        SequencedCollection<Class> allowedTypes=null,
+        Class returnType=null,
+        String description=null
+    ) {
+        this.name = name
+        this.defaultValue = defaultValue
+
+        this.allowedTypes = {
+            if (allowedTypes) {
+                allowedTypes
+            } else if (returnType != null) {
+                [returnType]
+            } else if (defaultValue != null && !(defaultValue instanceof Runnable)) {
+                [defaultValue.getClass()]
+            } else {
+                [Object]
+            }
+        }()
+
+        this.returnType = returnType ?: this.allowedTypes.getFirst()
+
+        this.description = description
+    }
+
+    String getName() { name }
+    String getDescription() { description }
+    String getAllowedTypes() { allowedTypes }
+    String getReturnType() { returnType }
+
+    /**
+     * Initialize the value with the given default (function).
+     *
+     * @param args Arguments for the default function
+     */
+    void initialize(List<?> args=[]) {
+        if (defaultValue instanceof Runnable) {
+            this.value = defaultValue(*args)
+        }
+        else{
+            this.value = defaultValue
+        }
+    }
+
+    /**
+     * Check whether the value is of an allowed type.
+     *
+     * @param value Value to be checked
+     * @return Whether an allowed type was found
+     */
+    void checkType(def value) {
+        if(!allowedTypes.collect({value in it}).any()) {
+            throw new InvalidClassException("Value `${value}` (${value.getClass()}) not in allowed Classes ${allowedTypes}.")
+        }
+    }
+
+    /**
+     * Set the value.
+     *
+     * @param value
+     */
+    void set(def value) {
+        checkType(value)
+        this.value = value
+    }
+
+    /**
+     * Get the current value.
+     *
+     * @param name
+     * @return value
+     */
+    def get() {
+        return value
+    }
+
+    /**
+     * Get the current evaluated value with the correct return type.
+     *
+     * @param name
+     * @return value
+     */
+    <T> T evaluate(Class<T> type=returnType) {
+        if (value instanceof Runnable) {
+            return type.cast(value.call())
+        }
+        else {
+            return type.cast(value)
+        }
+    }
+
+    /**
+     * A String representation of the parameter.
+     * @return String representation
+     */
+    String toString() {
+        return "${name}: ${value} (${allowedTypes} -> ${returnType})${description ? '\n' + description: ''}"
+    }
+
+    /**
+     * A Map representation of the parameter.
+     * @return Map representation
+     */
+    Map<String, ?> toMap() {
+        return [name: name, value:value, allowedTypes: allowedTypes, returnType: returnType, description: description]
+    }
+}

@@ -2,6 +2,7 @@ package nextflow.co2footprint
 
 
 import groovy.util.logging.Slf4j
+import nextflow.co2footprint.Config.BaseConfig
 import nextflow.co2footprint.DataContainers.DataMatrix
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.CIValueComputer
