@@ -38,6 +38,7 @@ class ConfigParameters {
     }
 
     /**
+     * Fill the vault with the entries of the map, if the parameter is given
      *
      * @param configMap
      */
@@ -47,7 +48,6 @@ class ConfigParameters {
 
         // Assign values from map to config
         configMap.each { name, value -> configure(name, value)}
-        initialize()
     }
 
     /**
@@ -69,11 +69,21 @@ class ConfigParameters {
     /**
      * Initialize the vault.
      *
+     * @param overwrite Whether to overwrite the previously set value
+     */
+    void setDefaults(List<Object> args=null, boolean overwrite=false) {
+        vault.each { String name, ConfigEntry parameter -> parameter.setDefault(args, overwrite) }
+    }
+
+    /**
+     * Initialize the vault.
+     *
      * @param name Name of the parameter
      * @param value Value of the parameter
+     * @param overwrite Whether to overwrite the previously set value
      */
-    void initialize() {
-        vault.each { String name, ConfigEntry parameter -> parameter.initialize() }
+    void setDefault(String name, List<Object> args=null, boolean overwrite=false) {
+        vault.get(name).setDefault(args, overwrite)
     }
 
     /**
@@ -129,6 +139,13 @@ class ConfigParameters {
     Boolean has(String name) {
         return vault.containsKey(name)
     }
+
+    /**
+     * Return the size of the vault.
+     *
+     * @return Current size of the vault
+     */
+    Integer getSize() { return vault.size() }
 
     /**
      * Get the current parameter entries.

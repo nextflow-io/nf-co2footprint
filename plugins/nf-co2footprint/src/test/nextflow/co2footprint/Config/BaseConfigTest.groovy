@@ -11,10 +11,10 @@ class BaseConfigTest extends Specification{
         config.parameters.getEntries() == expectedConfigMap
 
         where:
-        parameters                  || configMap    || expectedConfigMap
-        [new ConfigEntry('a')] || [a: 1] || [a: 1]
-        [new ConfigEntry('a')] || [b: 1] || [a: null]
-        []                          || [a: 1]       || [:]
+        parameters             || configMap || expectedConfigMap
+        [new ConfigEntry('a')] || [a: 1]    || [a: 1]
+        [new ConfigEntry('a')] || [b: 1]    || [a: null]
+        []                     || [a: 1]    || [:]
     }
 
     def 'Test evaluation'() {

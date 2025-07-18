@@ -11,11 +11,15 @@ class BaseConfig {
     final private ConfigParameters parameters
 
     BaseConfig(def parameters=[], Map<String, Object> configMap=null) {
+        // Initializes parameters
         if (parameters instanceof ConfigParameters) { this.parameters = parameters  }
         else { this.parameters = new ConfigParameters(parameters as Set) }
 
-        if (configMap != null) { this.parameters.fill(configMap) }
-        initialize()
+        // Adds mapped entries to config
+        if (configMap != null) { fill(configMap) }
+
+        // Sets defaults if not set by configure / fill
+        setDefaults()
     }
 
     ConfigParameters getParameters() { parameters }
@@ -31,12 +35,34 @@ class BaseConfig {
     }
 
     /**
+     * Fills the parameters with the mapped entries
+     *
+     * @param configMap Map with entries for the config
+     */
+    void fill(Map<String, Object> configMap) {
+        parameters.fill(configMap)
+    }
+
+    /**
+     * Initialize the parameters.
+     *
+     * @param args Arguments for default function, default `null` skips function initialization
+     * @param overwrite Whether to overwrite the previously set value
+     */
+    void setDefaults(List<Object> args=null, boolean overwrite=false) {
+        parameters.setDefaults(args, overwrite)
+    }
+
+    /**
      * Initialize the parameters.
      *
      * @param name Name of the parameter
      * @param value Value of the parameter
+     * @param overwrite Whether to overwrite the previously set value
      */
-    void initialize() { parameters.initialize() }
+    void setDefault(String name, List<Object> args, boolean overwrite=false) {
+        parameters.setDefault(name, args, overwrite)
+    }
 
     /**
      * Get value of the parameter.

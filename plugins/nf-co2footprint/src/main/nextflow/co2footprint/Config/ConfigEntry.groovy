@@ -45,26 +45,6 @@ class ConfigEntry {
     String getReturnType() { returnType }
 
     /**
-     * Initialize the value with the given default (function).
-     * Calling the default function will not initialize functions.
-     * To initialize defaultValue functions without arguments, args needs to be set to [].
-     *
-     * @param args Arguments for the default function
-     */
-    void initialize(List<?> args=null, boolean initialized=this.initialized) {
-        if(!initialized) {
-            if (args != null && defaultValue instanceof Runnable) {
-                set(defaultValue(*args))
-                this.initialized = true
-            }
-            else{
-                set(defaultValue)
-                this.initialized = true
-            }
-        }
-    }
-
-    /**
      * Check whether the value is of an allowed type.
      *
      * @param value Value to be checked
@@ -77,6 +57,38 @@ class ConfigEntry {
     }
 
     /**
+     * Initialize the value with the given default (function).
+     * Calling the default function will not initialize functions.
+     * To initialize defaultValue functions without arguments, args needs to be set to [].
+     *
+     * @param args Arguments for the default function
+     * @param overwrite Whether to overwrite the previously set value
+     */
+    void setDefault(List<Object> args=null, boolean overwrite=false) {
+        boolean doSet = !initialized ||overwrite
+        if(doSet) {
+            if (args != null && defaultValue instanceof Runnable) {
+                set(defaultValue(*args))
+            }
+            else{
+                set(defaultValue)
+            }
+            this.initialized = true
+        }
+    }
+
+    /**
+     * Configure the value for the first time. Sets initialized = true to avoid double initialization.
+     *
+     * @param value Sets this value
+     */
+    void configure(def value) {
+        checkType(value)
+        this.value = value
+        this.initialized = true
+    }
+
+    /**
      * Set the value.
      *
      * @param value
@@ -85,18 +97,6 @@ class ConfigEntry {
         checkType(value)
         this.value = value
     }
-
-    /**
-     * Set the value.
-     *
-     * @param value
-     */
-    void configure(def value) {
-        checkType(value)
-        this.value = value
-        this.initialized = true
-    }
-
     /**
      * Get the current value.
      *

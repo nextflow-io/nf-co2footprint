@@ -9,7 +9,7 @@ class ConfigEntryTest extends Specification {
 
         then:
         parameter.toMap() == [name: name, value: null, allowedTypes: expAllowedTypes, returnType: expReturnType, description: description]
-        parameter.initialize(initializationArgs)
+        parameter.setDefault(initializationArgs)
         parameter.toMap() == [name: name, value: expValue, allowedTypes: expAllowedTypes, returnType: expReturnType, description: description]
         def evaluated = parameter.evaluate()
         if (evaluated != null) { evaluated in expReturnType }

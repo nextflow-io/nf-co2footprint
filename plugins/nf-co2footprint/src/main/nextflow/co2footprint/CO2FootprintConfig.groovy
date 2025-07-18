@@ -39,10 +39,12 @@ class CO2FootprintConfig extends BaseConfig {
     void initializeParameters() {
         addParameter(
                 ['traceFile', { -> "co2footprint_trace_${timestamp}.txt"}],
-                [returnType: String, allowedTypes: [String, Closure<GString>, GString, Path], description: 'trace file'])
+                [returnType: String, allowedTypes: [String, Closure<GString>, GString, Path], description: 'trace file']
+        )
         addParameter(
                 ['summaryFile', { -> "co2footprint_summary_${timestamp}.txt"}],
-                [returnType: String, allowedTypes: [String, Closure<GString>, GString, Path], description: 'summary file'])
+                [returnType: String, allowedTypes: [String, Closure<GString>, GString, Path], description: 'summary file']
+        )
         addParameter(
                 ['reportFile', { -> "co2footprint_report_${timestamp}.html"}],
                 [returnType: String, allowedTypes: [String, Closure<GString>, GString, Path], description: 'report file']
@@ -114,11 +116,11 @@ class CO2FootprintConfig extends BaseConfig {
      * @param processMap  Map with process/executor info
      */
     CO2FootprintConfig(Map<String, Object> configMap, TDPDataMatrix cpuData, CIDataMatrix ciData, Map<String, Object> processMap) {
-        // Initialization of the Configuration in order: Methods & Constants through super(), Parameters, Mapping, Initializing rest to default with mapping
-        super()
-        initializeParameters()
-        this.parameters.fill(configMap)
-        initialize()
+        // Initialization of the Configuration in order:
+        super()                     // - Methods & Constants through super()
+        initializeParameters()      // - Parameters
+        fill(configMap)             // - Mapping
+        setDefaults([], false)  // - Initializing rest with default (function)
 
 
         // Determine the carbon intensity (CI) value

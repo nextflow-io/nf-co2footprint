@@ -10,7 +10,7 @@ class ConfigParametersTest extends Specification{
 
         then:
         parameters.getEntries() == [a: null]
-        parameters.initialize()
+        parameters.setDefaults()
         parameters.getEntries() == [a: 1]
     }
 }
