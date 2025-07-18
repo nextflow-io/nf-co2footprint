@@ -6,7 +6,7 @@ package nextflow.co2footprint.Config
 class ConfigEntry {
     private final String name
     private final defaultValue
-    private final SequencedCollection<Class> allowedTypes
+    private final List<Class> allowedTypes
     private final Class returnType
     private final String description
     private def value
@@ -15,7 +15,7 @@ class ConfigEntry {
     ConfigEntry(
         String name,
         def defaultValue=null,
-        SequencedCollection<Class> allowedTypes=null,
+        List<Class> allowedTypes=null,
         Class returnType=null,
         String description=null
     ) {
@@ -33,8 +33,7 @@ class ConfigEntry {
                 [Object]
             }
         }()
-
-        this.returnType = returnType ?: this.allowedTypes.getFirst()
+        this.returnType = returnType ?: this.allowedTypes[0]
 
         this.description = description
     }
