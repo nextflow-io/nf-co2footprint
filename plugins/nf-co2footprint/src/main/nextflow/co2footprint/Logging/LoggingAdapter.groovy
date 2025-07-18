@@ -36,16 +36,6 @@ class LoggingAdapter {
     }
 
     /**
-     * Adds a DeduplicateMarkerFilter to filter out all Markers.unique markers
-     */
-    void addUniqueMarkerFilter() {
-        final TurboFilter deduplicateMarkerFilter = new DeduplicateMarkerFilter([Markers.unique])   // Define DeduplicateMarkerFilter
-        deduplicateMarkerFilter.start()
-
-        loggerContext.addTurboFilter(deduplicateMarkerFilter)                                       // Add filter to context
-    }
-
-    /**
      * Adds the ROOT appenders to the current scope
      *
      * @param scope Name of the scope, defaults to 'nextflow.co2footprint' Logger
@@ -65,21 +55,44 @@ class LoggingAdapter {
     }
 
     /**
+     * Defines a layout
+     *
+     * @param pattern Patter of the PattenLayout
+     * @return A configured layout
+     */
+    PatternLayout defineLayout(String pattern) {
+        // Define layout
+        PatternLayout layout = new PatternLayout()
+        layout.setContext(loggerContext)
+        layout.setPattern(pattern)
+        try {
+            log.trace("Trying with Supplier in ConverterMap.")
+            layout.getInstanceConverterMap().put('customHighlight', { -> new CustomHighlightConverter() } as Supplier)
+            layout.start()
+        }
+        // For backwards compatibility to logback v1.4.X
+        catch (ClassCastException ignore) {
+            log.debug("Logback version < 1.5. Fallback to Logback's standard highlighting.")
+            layout.stop()
+            layout.setPattern('%level - [nf-co2footprint] %msg')
+            layout.start()
+        }
+
+        return layout
+    }
+
+    /**
      * Change the logback pattern of the console output
      *
      * @param pattern New pattern, the default only differs in the colored level (highlight)
      * @param scope Scope of the changes, the default only affects this plugin, if an extra logger is given at this level
      */
     void changePatternConsoleAppender(
-            String pattern='%customHighlight(%-5level - %msg)',
+            String pattern='%customHighlight(%level - [nf-co2footprint] %msg)',
             String scope='nextflow.co2footprint'
     ) {
-        // Define layout
-        PatternLayout layout = new PatternLayout()
-        layout.setContext(loggerContext)
-        layout.getInstanceConverterMap().put('customHighlight', { -> new CustomHighlightConverter() } as Supplier)
-        layout.setPattern(pattern)
-        layout.start()
+        // Logback implementation
+        PatternLayout layout = defineLayout(pattern)
 
         // Define logger and add appender
         Logger co2FootprintLogger = loggerContext.getLogger(scope)
@@ -121,5 +134,15 @@ class LoggingAdapter {
                 appender.start()
             }
         }
+    }
+
+    /**
+     * Adds a DeduplicateMarkerFilter to filter out all Markers.unique markers
+     */
+    void addUniqueMarkerFilter() {
+        final TurboFilter deduplicateMarkerFilter = new DeduplicateMarkerFilter([Markers.unique])   // Define DeduplicateMarkerFilter
+        deduplicateMarkerFilter.start()
+
+        loggerContext.addTurboFilter(deduplicateMarkerFilter)                                       // Add filter to context
     }
 }

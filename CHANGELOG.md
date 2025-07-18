@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+# Version 1.0.0-rc.2
+## Bug Fixes:
+- Catched exception
+
 # Version 1.0.0-rc.1
 ## Bug Fixes:
 - Version is `null` in many cases (parsed the wrong MANIFEST)
