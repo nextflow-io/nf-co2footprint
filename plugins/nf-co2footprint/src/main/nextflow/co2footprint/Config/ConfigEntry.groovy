@@ -83,8 +83,7 @@ class ConfigEntry {
      * @param value Sets this value
      */
     void configure(def value) {
-        checkType(value)
-        this.value = value
+        set(value)
         this.initialized = true
     }
 
@@ -94,6 +93,9 @@ class ConfigEntry {
      * @param value
      */
     void set(def value) {
+        if (returnType in BaseConfig && !(value in BaseConfig)) {
+            value = returnType.newInstance(value)
+        }
         checkType(value)
         this.value = value
     }

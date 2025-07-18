@@ -44,9 +44,9 @@ class ReportFileTest extends Specification{
         Session session = Mock(Session) {
             getConfig() >> [
                     co2footprint: [
-                            'traceFile': tempPath,
-                            'summaryFile': tempPath,
-                            'reportFile': reportPath,
+                            'trace': [file: tempPath],
+                            'summary': [file: tempPath],
+                            'report': [file: reportPath],
                             'ci': 475.0
                     ]
             ]

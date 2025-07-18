@@ -24,8 +24,8 @@ import java.nio.file.Paths
  *
  * Example usage in config:
  * co2footprint {
- *     traceFile = "co2footprint_trace.txt"
- *     summaryFile = "co2footprint_summary.txt"
+ *     trace = [file: "co2footprint_trace.txt"]
+ *     summary = [file: "co2footprint_summary.txt"]
  *     ci = 300
  *     pue = 1.4
  *     powerdrawMem = 0.67

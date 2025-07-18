@@ -308,8 +308,11 @@ class FileChecker {
             this.collectErrors = false
 
             // Copy snapshot
-            Files.copy(path, snapPath, StandardCopyOption.REPLACE_EXISTING)
-
+            try {
+                Files.copy(path, snapPath, StandardCopyOption.REPLACE_EXISTING)
+            } catch (Throwable ignore) {
+                println('No file copied.')
+            }
             // Print info to adopt the changes
             String message =
                 "🔎 The actual error message can be found below under 'Suppressed:'.\n\n" +

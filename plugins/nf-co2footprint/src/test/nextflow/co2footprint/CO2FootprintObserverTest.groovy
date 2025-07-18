@@ -59,9 +59,9 @@ class CO2FootprintObserverTest extends Specification{
         return Mock(Session) {
             getConfig() >> [
                 co2footprint: [
-                    'traceFile': tracePath,
-                    'summaryFile': summaryPath,
-                    'reportFile': reportPath,
+                    'trace': [file: tracePath as String],
+                    'summary': [file: summaryPath as String],
+                    'report': [file: reportPath as String],
                     'ci': ciValue
                 ]
             ]
@@ -182,12 +182,12 @@ class CO2FootprintObserverTest extends Specification{
         // Mock Session
         Session session = Mock(Session)
         session.getConfig() >> [
-                co2footprint:
-                        [
-                                'traceFile': tracePath,
-                                'summaryFile': summaryPath,
-                                'reportFile': reportPath
-                        ]
+            co2footprint:
+                [
+                    'trace': [file: tracePath as String],
+                    'summary': [file: summaryPath as String],
+                    'report': [file: reportPath as String],
+                ]
         ]
         session.getExecService() >> Executors.newFixedThreadPool(1)
         WorkflowMetadata meta = Mock(WorkflowMetadata)
@@ -237,9 +237,9 @@ class CO2FootprintObserverTest extends Specification{
         fileChecker.runChecks(
                 summaryPath,
                 [
-                        17: "reportFile: ${reportPath}",
-                        18: "summaryFile: ${summaryPath}",
-                        19: "traceFile: ${tracePath}"
+                        17: "report: [enabled:true, file:${reportPath}, overwrite:false, maxTasks:10000]",
+                        18: "summary: [enabled:true, file:${summaryPath}, overwrite:false]",
+                        19: "trace: [enabled:true, file:${tracePath}, overwrite:false]"
                 ]
         )
 
@@ -251,16 +251,16 @@ class CO2FootprintObserverTest extends Specification{
                     "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                     " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>",
             1321: '  window.options = [' +
-                    '{"option":"ci","value":"480.0"},'+
+                    '{"option":"ci","value":480.0},'+
                     '{"option":"customCpuTdpFile","value":null},' +
-                    '{"option":"ignoreCpuModel","value":"false"},' +
+                    '{"option":"ignoreCpuModel","value":false},' +
                     '{"option":"location","value":null},' +
                     '{"option":"powerdrawCpuDefault","value":null},' +
-                    '{"option":"powerdrawMem","value":"0.3725"},' +
-                    '{"option":"pue","value":"1.0"},' +
-                    "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
-                    "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
-                    "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];"
+                    '{"option":"powerdrawMem","value":0.3725},' +
+                    '{"option":"pue","value":1.0},' +
+                    "{\"option\":\"report\",\"value\":{\"enabled\":true,\"file\":\"${reportPath}\",\"overwrite\":false,\"maxTasks\":10000}}," +
+                    "{\"option\":\"summary\",\"value\":{\"enabled\":true,\"file\":\"${summaryPath}\",\"overwrite\":false}}," +
+                    "{\"option\":\"trace\",\"value\":{\"enabled\":true,\"file\":\"${tracePath}\",\"overwrite\":false}}];"
             ]
         )
     }
