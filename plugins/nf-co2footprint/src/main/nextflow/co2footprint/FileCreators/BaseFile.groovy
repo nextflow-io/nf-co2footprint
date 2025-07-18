@@ -1,5 +1,7 @@
 package nextflow.co2footprint.FileCreators
 
+import nextflow.co2footprint.Config.BaseConfig
+
 import java.nio.file.Files
 import java.nio.file.Path
 
@@ -21,10 +23,10 @@ class BaseFile {
     // The actual file object (writer)
     protected PrintWriter file
 
-    static initialize(BaseFileConfig fileConfig){
+    static <T> T initialize(BaseFileConfig fileConfig, Class<T> type=this.class){
         // Break initialization if not enabled
         if(!fileConfig.getEnabled()) { return null }
-        else { return  new BaseFile(fileConfig)}
+        else { return type.newInstance(fileConfig)}
     }
 
     /**
