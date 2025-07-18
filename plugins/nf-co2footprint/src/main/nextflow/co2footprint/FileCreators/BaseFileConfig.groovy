@@ -30,12 +30,12 @@ class BaseFileConfig extends BaseConfig {
     }
 
     Boolean getEnabled() { get('enabled') }
-    String getFile() { get('enabled') }
-    Path getPath() { Path.of(get('enabled') as String) }
+    String getFile() { get('file') }
+    Path getPath() { Path.of(get('file') as String) }
 
-    BaseFileConfig(Map<String, Object> fileConfigMap) {
+    BaseFileConfig() {
         super()
         initializeParameters()
-        parameters.fill(fileConfigMap)
+        setDefaults([outDirectory, name, suffix, ending], false)
     }
 }

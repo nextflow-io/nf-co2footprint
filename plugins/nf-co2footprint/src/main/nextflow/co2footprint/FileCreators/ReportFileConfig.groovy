@@ -7,7 +7,8 @@ class ReportFileConfig extends BaseFileConfig {
     private final String ending = '.html'
 
     ReportFileConfig(Map<String, Object> reportConfigMap) {
-        super(reportConfigMap)
-        setDefault('file', [outDirectory, name, suffix, ending], false)
+        super()
+        setDefault('file', [outDirectory, name, suffix, ending], true)
+        parameters.fill(reportConfigMap)
     }
 }

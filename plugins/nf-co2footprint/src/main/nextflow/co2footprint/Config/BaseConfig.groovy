@@ -105,4 +105,13 @@ class BaseConfig {
      * @return Whether the property exists in the config instance
      */
     Boolean has(String name) { return parameters.has(name) }
+
+    /**
+     * Get the current parameter entries.
+     *
+     * @return The entries as a Map
+     */
+    Map<String, Object> getEntries() {
+        return parameters.getEntries()
+    }
 }
