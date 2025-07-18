@@ -115,16 +115,20 @@ class CO2FootprintFactory implements TraceObserverFactory {
                 session.config.navigate('process') as Map
         )
 
-        // Define list of observers
-        final ArrayList<TraceObserver> result = [
-            new CO2FootprintObserver(
-                session,
-                this.pluginVersion,
-                config,
-                new CO2FootprintComputer(this.tdpDataMatrix, config)
-            )
-        ]
+        // Define observer
+        CO2FootprintObserver observer = CO2FootprintObserver.initialize(
+            session,
+            this.pluginVersion,
+            config,
+            new CO2FootprintComputer(this.tdpDataMatrix, config)
+        )
 
-        return result
+        // Define list of observers
+        if (observer) {
+            return [observer] as ArrayList<TraceObserver>
+        } else {
+            log.error('No trace observer defined. Exiting plugin.')
+            return []
+        }
     }
 }

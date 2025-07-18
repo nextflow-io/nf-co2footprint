@@ -23,10 +23,12 @@ class BaseFile {
     // The actual file object (writer)
     protected PrintWriter file
 
-    static <T> T initialize(BaseFileConfig fileConfig, Class<T> type=this.class){
+
+    static <T> T initialize(BaseFileConfig fileConfig, Class<T> type=BaseFile){
         // Break initialization if not enabled
+        def meta = getMetaClass()
         if(!fileConfig.getEnabled()) { return null }
-        else { return type.newInstance(fileConfig)}
+        else { return type.newInstance(fileConfig) }
     }
 
     /**

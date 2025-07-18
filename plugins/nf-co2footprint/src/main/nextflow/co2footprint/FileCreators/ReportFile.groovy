@@ -42,7 +42,17 @@ class ReportFile extends BaseFile {
     private Map<TaskId, CO2Record> co2eRecords
 
     // Writer for the HTML file
-    private BufferedWriter writer = TraceHelper.newFileWriter(path, overwrite, 'Report')
+    private BufferedWriter writer
+
+    /**
+     * Initializes a Report File, dependent on whether it is enabled.
+     *
+     * @param reportFileConfig Configuration of the summary
+     * @return A report file.
+     */
+    static ReportFile initialize(ReportFileConfig reportFileConfig) {
+        return initialize(reportFileConfig, ReportFile)
+    }
 
     /**
      * Constructor for the HTML report file.
@@ -54,6 +64,15 @@ class ReportFile extends BaseFile {
     ReportFile(ReportFileConfig reportFileConfig) {
         super(reportFileConfig)
         this.maxTasks = reportFileConfig.getMaxTasks()
+    }
+
+    /**
+     * Create the report file.
+     * If file already exists, it is overwritten or rolled depending on settings.
+     */
+    void create() {
+        super.create()
+        writer = TraceHelper.newFileWriter(path, overwrite, 'Report')
     }
 
     /**

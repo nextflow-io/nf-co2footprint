@@ -6,6 +6,7 @@ import nextflow.co2footprint.Records.CO2Record
 import nextflow.processor.TaskId
 import nextflow.trace.TraceHelper
 import nextflow.trace.TraceRecord
+import org.jsoup.Connection
 
 import java.nio.file.Path
 
@@ -20,6 +21,16 @@ class TraceFile extends BaseFile {
 
     // Agent for thread-safe writing to the trace file
     private Agent<PrintWriter> traceWriter
+
+    /**
+     * Initializes a Trace File, dependent on whether it is enabled.
+     *
+     * @param traceFileConfig Configuration of the summary
+     * @return A trace file.
+     */
+    static TraceFile initialize(TraceFileConfig traceFileConfig) {
+        return initialize(traceFileConfig, TraceFile)
+    }
 
     /**
      * Constructor for the trace file.
@@ -79,14 +90,10 @@ class TraceFile extends BaseFile {
      *
      * @param current Map of TaskId to TraceRecord for unfinished tasks
      */
-    void close(Map<TaskId, TraceRecord> current) {
+    void close() {
         // Wait for agent to finish and flush content
         traceWriter.await()
 
-        // Write remaining records for unfinished tasks
-        current.values().each { record ->
-            file.println("${record.taskId}\t-")
-        }
         file.flush()
         file.close()
     }

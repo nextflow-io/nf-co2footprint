@@ -64,14 +64,39 @@ class CO2FootprintObserver implements TraceObserver {
     final private Map<TaskId, TraceRecord> traceRecords = new ConcurrentHashMap<>()
 
     /**
+     * Initialize a CO2FootprintObserver. Skips initialization, when all files are disabled.
+     *
+     * @param session Nextflow session
+     * @param version Plugin version
+     * @param config Plugin configuration
+     * @param co2FootprintComputer CO₂ computation instance
+     * @return null, or a CO2FootprintObserver instance
+     */
+    static CO2FootprintObserver initialize(
+            Session session,
+            String version,
+            CO2FootprintConfig config,
+            CO2FootprintComputer co2FootprintComputer
+    ){
+        // See if any file is enabled
+        List<String> fileNames = ['trace', 'summary', 'report']
+        Boolean makeObserver = fileNames.collect({ String fileName -> config.get(fileName).getEnabled() }).any()
+
+        if (makeObserver) {
+            return new CO2FootprintObserver(session, version, config, co2FootprintComputer)
+        } else {
+            log.error('All output files are disabled (`enabled=false`). Observer not created.')
+            return null
+        }
+    }
+
+    /**
      * Constructor for the observer.
      *
      * @param session Nextflow session
      * @param version Plugin version
      * @param config Plugin configuration
      * @param co2FootprintComputer CO₂ computation instance
-     * @param overwrite Whether to overwrite existing documents
-     * @param maxTasks The maximum number of tasks until the table in the report is dropped
      */
     CO2FootprintObserver(
             Session session,
@@ -137,7 +162,7 @@ class CO2FootprintObserver implements TraceObserver {
         aggregator.add(trace, co2Record)
 
         // Save to the files
-        this.traceFile.write(trace.taskId, trace, co2Record)
+        this.traceFile?.write(trace.taskId, trace, co2Record)
     }
 
     // ------ OBSERVER METHODS ------
@@ -158,9 +183,9 @@ class CO2FootprintObserver implements TraceObserver {
         this.aggregator = new CO2RecordAggregator()
 
         // Create files & parent directories
-        this.traceFile.create()
-        this.summaryFile.create()
-        this.reportFile.create()
+        this.traceFile?.create()
+        this.summaryFile?.create()
+        this.reportFile?.create()
     }
 
     /**
@@ -188,14 +213,14 @@ class CO2FootprintObserver implements TraceObserver {
         submittedTasks.each { TaskId taskId, TraceRecord traceRecord -> aggregateRecords(traceRecord) }
 
         // Write report and summary
-        this.summaryFile.write(totalStats, co2FootprintComputer, config, version)
-        this.reportFile.addEntries(processStats, totalStats, co2FootprintComputer, config, version, session, traceRecords, co2eRecords)
-        this.reportFile.write()
+        this.summaryFile?.write(totalStats, co2FootprintComputer, config, version)
+        this.reportFile?.addEntries(processStats, totalStats, co2FootprintComputer, config, version, session, traceRecords, co2eRecords)
+        this.reportFile?.write()
 
         // Close all files (writes remaining tasks in the trace file)
-        this.traceFile.close()
-        this.summaryFile.close()
-        this.reportFile.close()
+        this.traceFile?.close()
+        this.summaryFile?.close()
+        this.reportFile?.close()
     }
 
 

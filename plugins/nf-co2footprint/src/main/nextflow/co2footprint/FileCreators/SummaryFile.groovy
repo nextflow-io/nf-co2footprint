@@ -27,6 +27,16 @@ class SummaryFile extends BaseFile {
     Agent<PrintWriter> summaryWriter
 
     /**
+     * Initializes a Summary File, dependent on whether it is enabled.
+     *
+     * @param summaryFileConfig Configuration of the summary
+     * @return A summary file.
+     */
+    static SummaryFile initialize(SummaryFileConfig summaryFileConfig) {
+        return initialize(summaryFileConfig, SummaryFile)
+    }
+
+    /**
      * Constructor for summary file.
      *
      * @param path      Path to the summary file
