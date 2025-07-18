@@ -8,6 +8,8 @@ import java.nio.file.Path
  * Handles file path and overwrite logic for output files (trace, summary, report).
  */
 class BaseFile {
+    // Whether to produce a file at all
+    protected  boolean enabled
 
     // Whether to overwrite existing files with the same path
     protected boolean overwrite
@@ -24,8 +26,17 @@ class BaseFile {
      * @param path Path to the file, or where it is targeted to be written
      * @param overwrite Whether to overwrite existing files with the same path
      */
-    BaseFile(Path path, boolean overwrite) {
+    BaseFile(boolean enabled, Path path, boolean overwrite) {
+        this.enabled = enabled
         this.path = path
         this.overwrite = overwrite
+    }
+
+    BaseFile(BaseFileConfig fileConfig) {
+        this(
+            fileConfig.getEnabled(),
+            fileConfig.getPath(),
+            fileConfig.getOverwrite()
+        )
     }
 }

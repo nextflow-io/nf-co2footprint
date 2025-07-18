@@ -26,7 +26,7 @@ import java.nio.file.Path
  * and writes the final report to disk.
  */
 @Slf4j
-class ReportFile extends BaseFile{
+class ReportFile extends BaseFile {
 
     // Maximum number of tasks to include in the report table
     private int maxTasks
@@ -51,9 +51,9 @@ class ReportFile extends BaseFile{
      * @param overwrite Whether to overwrite existing files
      * @param maxTasks  Maximum number of tasks to include in the report table
      */
-    ReportFile(Path path, boolean overwrite=false, int maxTasks=10_000) {
-        super(path, overwrite)
-        this.maxTasks = maxTasks
+    ReportFile(ReportFileConfig reportFileConfig) {
+        super(reportFileConfig)
+        this.maxTasks = reportFileConfig.getMaxTasks()
     }
 
     /**
@@ -168,8 +168,8 @@ class ReportFile extends BaseFile{
         Map<String,?> all_options = config.collectInputFileOptions() + config.collectOutputFileOptions() + config.collectCO2CalcOptions()
 
         // Render JSON
-        List<Map<String, String>> options = all_options.collect { String name, value ->
-            [option: name, value: (value instanceof Closure) ? '"dynamic"' : value as String]
+        List<Map<String, ?>> options = all_options.collect { String name, value ->
+            [option: name, value: (value instanceof Closure) ? '"dynamic"' : value]
         }
 
         return JsonOutput.toJson(options)

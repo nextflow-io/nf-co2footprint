@@ -7,6 +7,9 @@ import nextflow.co2footprint.DataContainers.DataMatrix
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.CIValueComputer
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
+import nextflow.co2footprint.FileCreators.ReportFileConfig
+import nextflow.co2footprint.FileCreators.SummaryFileConfig
+import nextflow.co2footprint.FileCreators.TraceFileConfig
 import nextflow.trace.TraceHelper
 
 import java.nio.file.Path
@@ -33,21 +36,21 @@ import java.nio.file.Paths
 @Slf4j
 class CO2FootprintConfig extends BaseConfig {
     // Helper variables
-    private final String timestamp = TraceHelper.launchTimestampFmt()
+    private final String suffix = "_${TraceHelper.launchTimestampFmt()}"
     private final List<String> supportedMachineTypes = ['local', 'compute cluster', 'cloud']
 
     void initializeParameters() {
         addParameter(
-                ['traceFile', { -> "co2footprint_trace_${timestamp}.txt"}],
-                [returnType: String, allowedTypes: [String, Closure<GString>, GString, Path], description: 'trace file']
+                ['trace', new TraceFileConfig([:], suffix)],
+                [returnType: TraceFileConfig, allowedTypes: [TraceFileConfig], description: 'trace file']
         )
         addParameter(
-                ['summaryFile', { -> "co2footprint_summary_${timestamp}.txt"}],
-                [returnType: String, allowedTypes: [String, Closure<GString>, GString, Path], description: 'summary file']
+                ['summary', new SummaryFileConfig([:], suffix)],
+                [returnType: SummaryFileConfig, allowedTypes: [SummaryFileConfig], description: 'summary file']
         )
         addParameter(
-                ['reportFile', { -> "co2footprint_report_${timestamp}.html"}],
-                [returnType: String, allowedTypes: [String, Closure<GString>, GString, Path], description: 'report file']
+                ['report', new ReportFileConfig([:], suffix)],
+                [returnType: ReportFileConfig, allowedTypes: [ReportFileConfig], description: 'report file']
         )
         addParameter(
                 ['location'],
@@ -92,9 +95,9 @@ class CO2FootprintConfig extends BaseConfig {
     }
 
     // Getter methods for config values
-    String getTraceFile() { get('traceFile') }
-    String getSummaryFile() { get('summaryFile') }
-    String getReportFile() { get('reportFile') }
+    TraceFileConfig getTrace() { get('trace') as TraceFileConfig }
+    SummaryFileConfig getSummary() { get('summary') as SummaryFileConfig }
+    ReportFileConfig getReport() { get('report') as ReportFileConfig }
     String getLocation() { get('location') }
     Double getCi() { evaluate('ci') }
     Double getCiMarket() { evaluate('ciMarket') }
@@ -234,9 +237,9 @@ class CO2FootprintConfig extends BaseConfig {
      */
     SortedMap<String, Object> collectOutputFileOptions() {
         return [
-                "traceFile": traceFile,
-                "summaryFile": summaryFile,
-                "reportFile": reportFile
+                "trace": trace.getEntries(),
+                "summary": summary.getEntries(),
+                "report": report.getEntries()
         ].sort() as SortedMap
     }
 

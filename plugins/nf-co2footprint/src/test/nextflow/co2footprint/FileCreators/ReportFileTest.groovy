@@ -55,9 +55,9 @@ class ReportFileTest extends Specification{
 
         CO2FootprintConfig config = new CO2FootprintConfig(
                 [
-                    'traceFile': tempPath,
-                    'summaryFile': tempPath,
-                    'reportFile': reportPath,
+                    'trace': new TraceFileConfig([file: tempPath]),
+                    'summary': new SummaryFileConfig([file: tempPath]),
+                    'report': new ReportFileConfig([file: reportPath]),
                     'ci': 475.0
                 ],
                 Mock(TDPDataMatrix),
@@ -72,7 +72,8 @@ class ReportFileTest extends Specification{
         CO2RecordAggregator aggregator = new CO2RecordAggregator()
         aggregator.add(traceRecord, co2Record)
 
-        co2FootprintReport = new ReportFile(reportPath, false, 10_000)
+        ReportFileConfig reportFileConfig = new ReportFileConfig([file: reportPath])
+        co2FootprintReport = new ReportFile(reportFileConfig)
         co2FootprintReport.addEntries(
                 aggregator.computeProcessStats(),
                 [co2e: 10.0d, energy: 100.0d, co2e_non_cached: 10.0d, energy_non_cached: 100.0d],
@@ -84,9 +85,8 @@ class ReportFileTest extends Specification{
     def 'Test correct value rendering for totalsJson' () {
         given:
         Path tempPath = Files.createTempDirectory('tmpdir')
-        ReportFile co2FootprintReport = new ReportFile(
-                tempPath.resolve('report_test.html')
-        )
+        ReportFileConfig reportFileConfig = new ReportFileConfig([file: tempPath.resolve('report_test.html')])
+        ReportFile co2FootprintReport = new ReportFile(reportFileConfig)
 
         when:
         co2FootprintReport.addEntries(
@@ -165,16 +165,16 @@ class ReportFileTest extends Specification{
         then:
         optionsJson ==
                 '[' +
-                    '{"option":"ci","value":"475.0"},'+
+                    '{"option":"ci","value":475.0},'+
                     '{"option":"customCpuTdpFile","value":null},' +
-                    '{"option":"ignoreCpuModel","value":"false"},' +
+                    '{"option":"ignoreCpuModel","value":false},' +
                     '{"option":"location","value":null},' +
                     '{"option":"powerdrawCpuDefault","value":null},' +
-                    '{"option":"powerdrawMem","value":"0.3725"},' +
-                    '{"option":"pue","value":"1.0"},' +
-                    "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
-                    "{\"option\":\"summaryFile\",\"value\":\"${tempPath}\"}," +
-                    "{\"option\":\"traceFile\",\"value\":\"${tempPath}\"}" +
+                    '{"option":"powerdrawMem","value":0.3725},' +
+                    '{"option":"pue","value":1.0},' +
+                    "{\"option\":\"report\",\"value\":{\"enabled\":true,\"file\":\"${reportPath}\",\"overwrite\":false,\"maxTasks\":10000}}," +
+                    "{\"option\":\"summary\",\"value\":{\"enabled\":true,\"file\":\"${tempPath}\",\"overwrite\":false}}," +
+                    "{\"option\":\"trace\",\"value\":{\"enabled\":true,\"file\":\"${tempPath}\",\"overwrite\":false}}" +
                 ']'
     }
 

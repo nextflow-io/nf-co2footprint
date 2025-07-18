@@ -2,6 +2,8 @@ package nextflow.co2footprint.Config
 
 import groovy.util.logging.Slf4j
 
+import javax.naming.NameNotFoundException
+
 @Slf4j
 class ConfigParameters {
     final private HashMap<String, ConfigEntry> vault
@@ -93,7 +95,13 @@ class ConfigParameters {
      * @return The value to the key
      */
     def get(String name) {
-        return vault.get(name).get()
+        if (has(name)){
+            return vault.get(name).get()
+        } else {
+            String message = "`${name}` is not in configuration."
+            log.error(message)
+            throw new NameNotFoundException(message)
+        }
     }
 
     /**
@@ -154,7 +162,7 @@ class ConfigParameters {
      */
     Map<String, Object> getEntries() {
         return vault.collectEntries { String name, ConfigEntry configParameter ->
-            [name, configParameter.get()]
+            [name, configParameter.evaluate()]
         }
     }
 }

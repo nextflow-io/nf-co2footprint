@@ -97,6 +97,7 @@ class ConfigEntry {
         checkType(value)
         this.value = value
     }
+
     /**
      * Get the current value.
      *

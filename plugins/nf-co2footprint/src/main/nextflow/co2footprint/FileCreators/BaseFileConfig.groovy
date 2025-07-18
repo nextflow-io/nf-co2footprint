@@ -6,6 +6,9 @@ import nextflow.trace.TraceHelper
 
 import java.nio.file.Path
 
+/**
+ * A base class for file configurations
+ */
 @Slf4j
 class BaseFileConfig extends BaseConfig {
     // Helper variables
@@ -27,11 +30,16 @@ class BaseFileConfig extends BaseConfig {
                 ['file', makeFile],
                 [returnType: String, allowedTypes: [String, Closure<String>, GString, Path], description: 'Path to file']
         )
+        addParameter(
+                ['overwrite', false],
+                [returnType: Boolean, description: 'Whether to overwrite existing reports']
+        )
     }
 
     Boolean getEnabled() { get('enabled') }
     String getFile() { get('file') }
     Path getPath() { Path.of(get('file') as String) }
+    Boolean getOverwrite() { get('overwrite') }
 
     BaseFileConfig() {
         super()

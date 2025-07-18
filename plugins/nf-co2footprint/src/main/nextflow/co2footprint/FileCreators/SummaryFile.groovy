@@ -32,9 +32,16 @@ class SummaryFile extends BaseFile {
      * @param path      Path to the summary file
      * @param overwrite Whether to overwrite existing files
      */
-    SummaryFile(Path path, boolean overwrite) {
-        super(path, overwrite)
-        this.co2eSummaryFile = new PrintWriter(TraceHelper.newFileWriter(path, overwrite, 'co2footprintsummary'))
+    SummaryFile(SummaryFileConfig summaryFileConfig) {
+        super(summaryFileConfig)
+    }
+
+    /**
+     * Create the summary file.
+     * If file already exists, it is overwritten or rolled depending on settings.
+     */
+    void create() {
+        co2eSummaryFile = new PrintWriter(TraceHelper.newFileWriter(path, overwrite, 'co2footprintsummary'))
     }
 
     /**

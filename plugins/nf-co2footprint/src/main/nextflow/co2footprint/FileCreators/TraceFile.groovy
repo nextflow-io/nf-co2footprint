@@ -27,8 +27,8 @@ class TraceFile extends BaseFile {
      * @param path      Path to the trace file
      * @param overwrite Whether to overwrite existing files
      */
-    TraceFile(Path path, boolean overwrite) {
-        super(path, overwrite)
+    TraceFile(TraceFileConfig traceFileConfig) {
+        super(traceFileConfig)
     }
 
     /**
