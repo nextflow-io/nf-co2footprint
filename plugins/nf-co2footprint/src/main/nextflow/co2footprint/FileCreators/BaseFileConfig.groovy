@@ -37,6 +37,5 @@ class BaseFileConfig extends BaseConfig {
         super()
         initializeParameters()
         parameters.fill(fileConfigMap)
-        initialize()
     }
 }

@@ -119,8 +119,8 @@ class CO2FootprintConfig extends BaseConfig {
         // Initialization of the Configuration in order:
         super()                     // - Methods & Constants through super()
         initializeParameters()      // - Parameters
+        setDefaults([], false)  // - Initializing the default (function)
         fill(configMap)             // - Mapping
-        setDefaults([], false)  // - Initializing rest with default (function)
 
 
         // Determine the carbon intensity (CI) value

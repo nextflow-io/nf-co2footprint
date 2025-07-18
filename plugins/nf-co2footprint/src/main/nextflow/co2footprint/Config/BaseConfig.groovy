@@ -15,11 +15,11 @@ class BaseConfig {
         if (parameters instanceof ConfigParameters) { this.parameters = parameters  }
         else { this.parameters = new ConfigParameters(parameters as Set) }
 
-        // Adds mapped entries to config
-        if (configMap != null) { fill(configMap) }
-
         // Sets defaults if not set by configure / fill
         setDefaults()
+
+        // Adds mapped entries to config
+        if (configMap != null) { fill(configMap) }
     }
 
     ConfigParameters getParameters() { parameters }
