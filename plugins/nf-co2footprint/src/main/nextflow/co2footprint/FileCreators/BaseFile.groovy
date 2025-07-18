@@ -1,5 +1,6 @@
 package nextflow.co2footprint.FileCreators
 
+import java.nio.file.Files
 import java.nio.file.Path
 
 /**
@@ -20,6 +21,12 @@ class BaseFile {
     // The actual file object (writer)
     protected PrintWriter file
 
+    static initialize(BaseFileConfig fileConfig){
+        // Break initialization if not enabled
+        if(!fileConfig.getEnabled()) { return null }
+        else { return  new BaseFile(fileConfig)}
+    }
+
     /**
      * Constructor for generic file class.
      *
@@ -39,4 +46,16 @@ class BaseFile {
             fileConfig.getOverwrite()
         )
     }
+
+    /**
+     * Ensures that the directory of the file exists
+     */
+    void ensureParentDirectory() {
+        final Path parent = path.normalize().getParent()
+        if (parent) {
+            Files.createDirectories(parent)
+        }
+    }
+
+    void create() { ensureParentDirectory() }
 }

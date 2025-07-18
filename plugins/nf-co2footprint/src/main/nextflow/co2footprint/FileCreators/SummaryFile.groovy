@@ -41,6 +41,7 @@ class SummaryFile extends BaseFile {
      * If file already exists, it is overwritten or rolled depending on settings.
      */
     void create() {
+        super.create()
         co2eSummaryFile = new PrintWriter(TraceHelper.newFileWriter(path, overwrite, 'co2footprintsummary'))
     }
 

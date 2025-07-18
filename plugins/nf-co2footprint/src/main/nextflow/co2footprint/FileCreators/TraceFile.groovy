@@ -36,6 +36,7 @@ class TraceFile extends BaseFile {
      * If file already exists, it is overwritten or rolled depending on settings.
      */
     void create() {
+        super.create()
         // Create a new trace file writer
         file = new PrintWriter(TraceHelper.newFileWriter(path, overwrite, 'co2footprint'))
 
