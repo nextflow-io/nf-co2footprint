@@ -7,17 +7,43 @@ The following parameters are currently available:
 
 ## Output Files
 
-- **`traceFile`**  
-  Name of the `.txt` carbon footprint report containing the energy consumption, estimated CO₂ emission, and other relevant metrics for each task.  
-  **Default**: `co2footprint_trace_<timestamp>.txt`
+- **`trace`:**
+  A`.txt` carbon footprint report containing the energy consumption, estimated CO₂ emission, and other relevant metrics for each task.
+  - **`file`:**
+    Path & name of the trace file.
+    **Default**: `co2footprint_trace_<timestamp>.txt`
+  - **`enabled`:**
+    Whether the trace file should be constructed.
+    **Default**: `true`
+  - **`overwrite`:**
+    Whether a file with the same path should be overwritten.
+    **Default:** `false`
 
-- **`summaryFile`**  
-  Name of the `.txt` carbon footprint summary file containing the total energy consumption and total estimated CO₂ emission of the pipeline run.  
-  **Default**: `co2footprint_summary_<timestamp>.txt`
+- **`summary`:**
+  A `.txt` carbon footprint summary file containing the total energy consumption and total estimated CO₂ emission of the pipeline run.
+  - **`file`:**
+    Path & name of the summary file.  
+    **Default**: `co2footprint_summary_<timestamp>.txt`
+  - **`enabled`:** 
+    Whether the summary file should be constructed.
+    **Default**: `true`
+  - **`overwrite`:**
+    Whether a file with the same path should be overwritten.
+    **Default:** `false`
 
-- **`reportFile`**  
-  Name of the HTML report containing information about the entire carbon footprint, overview plots, and more detailed task-specific metrics.  
-  **Default**: `co2footprint_report_<timestamp>.html`
+- **`report`:**
+  A HTML report containing information about the entire carbon footprint, overview plots, and more detailed task-specific metrics.
+  - **`file`:**
+    Path & name of the report file.
+    **Default**: `co2footprint_report_<timestamp>.html`
+  - **`enabled`:** Whether the report file should be constructed.
+    **Default**: `true`
+  - **`overwrite`:**
+    Whether a file with the same path should be overwritten.
+    **Default:** `false`
+  - **`maxTasks`:**
+    Maximum number of reported tasks in the respective table. The table mirrors the trace file, which is not affected by this upper limit. Note: A larger number may lead to a larger and slower report document.
+    **Default**: `10_000`
 
 ## Location & Carbon Intensity
 
