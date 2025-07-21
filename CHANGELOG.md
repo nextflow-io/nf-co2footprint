@@ -2,7 +2,8 @@
 
 # Version 1.0.0-rc.2
 ## Bug Fixes:
-- Catched exception
+- Logging with Logback < 1.5 (Nextflow < 25) now possible
+- Removed faulty error messages on `customTDPTable` loading
 
 # Version 1.0.0-rc.1
 ## Bug Fixes:
