@@ -24,4 +24,19 @@ class BaseConfigTest extends Specification{
         then:
         config.evaluate('a') == 1
     }
+
+    def 'Nested config' () {
+        when:
+        BaseConfig nestedConfig = new BaseConfig(
+                [new ConfigEntry('a', 0)] as Set,
+                [:]
+        )
+        BaseConfig config = new BaseConfig(
+                [new ConfigEntry('nested', nestedConfig)] as Set,
+                [nested: [a: 1]]
+        )
+
+        then:
+        config.get('nested').get('a') == 1
+    }
 }

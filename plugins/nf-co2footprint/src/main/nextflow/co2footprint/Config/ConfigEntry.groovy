@@ -93,10 +93,17 @@ class ConfigEntry {
      */
     void set(def value) {
         if (returnType in BaseConfig && !(value in BaseConfig)) {
-            value = returnType.newInstance(value)
+            if (this.value in BaseConfig) {
+                this.value.fill(value)
+            }
+            else {
+                value = returnType.newInstance(value)
+            }
         }
-        checkType(value)
-        this.value = value
+        else {
+            checkType(value)
+            this.value = value
+        }
     }
 
     /**
