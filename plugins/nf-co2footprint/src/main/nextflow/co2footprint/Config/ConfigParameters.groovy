@@ -8,6 +8,11 @@ import javax.naming.NameNotFoundException
 class ConfigParameters {
     final private HashMap<String, ConfigEntry> vault
 
+    /**
+    * Constructs the parameter store from a set of ConfigEntry instances. 
+    *
+    * @param configurationParameters Optional set of parameters to preload
+    */
     ConfigParameters(Set<ConfigEntry> configurationParameters=[]) {
         this.vault = configurationParameters.collectEntries { ConfigEntry configParameter ->
             [configParameter.name, configParameter]
@@ -53,7 +58,7 @@ class ConfigParameters {
     }
 
     /**
-     * Configure a parameter of the configuration.
+     * Configure the value of a specific parameter.
      *
      * @param name Name of the parameter
      * @param value Value of the parameter
@@ -139,19 +144,19 @@ class ConfigParameters {
     }
 
     /**
-     * Does the config have this parameter?
+     * Check if a parameter exists by name.
      *
-     * @param name Name of the parameter
-     * @return Whether the property exists in the config instance
+     * @param name Parameter name
+     * @return true if the parameter is defined, false otherwise
      */
     Boolean has(String name) {
         return vault.containsKey(name)
     }
 
     /**
-     * Return the size of the vault.
+     * Returns the number of registered parameters.
      *
-     * @return Current size of the vault
+     * @return Number of entries in the store
      */
     Integer getSize() { return vault.size() }
 
