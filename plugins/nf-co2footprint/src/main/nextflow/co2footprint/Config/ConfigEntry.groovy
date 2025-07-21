@@ -1,11 +1,11 @@
 package nextflow.co2footprint.Config
 
 /**
- * A holder class for parameters in a config.
+ * Represents a single configurable entry (parameter) in the plugin's configuration system.
  */
 class ConfigEntry {
     private final String name
-    private final defaultValue
+    private final def defaultValue
     private final List<Class> allowedTypes
     private final Class returnType
     private final String description
@@ -47,7 +47,7 @@ class ConfigEntry {
      * Check whether the value is of an allowed type.
      *
      * @param value Value to be checked
-     * @return Whether an allowed type was found
+     * @throws InvalidClassException if the value's type is not allowed
      */
     void checkType(def value) {
         if(value != null && !allowedTypes.collect({value in it}).any()) {
@@ -56,12 +56,13 @@ class ConfigEntry {
     }
 
     /**
-     * Initialize the value with the given default (function).
-     * Calling the default function will not initialize functions.
-     * To initialize defaultValue functions without arguments, args needs to be set to [].
+     * Initializes the parameter value using the default.
      *
-     * @param args Arguments for the default function
-     * @param overwrite Whether to overwrite the previously set value
+     * If defaultValue is a closure and `args` are provided, the closure is invoked with those arguments.
+     * If overwrite is true, existing values will be replaced.
+     *
+     * @param args Optional arguments for the default closure
+     * @param overwrite Whether to overwrite an existing value
      */
     void setDefault(List<Object> args=null, boolean overwrite=false) {
         boolean doSet = !initialized ||overwrite
@@ -79,7 +80,7 @@ class ConfigEntry {
     /**
      * Configure the value for the first time. Sets initialized = true to avoid double initialization.
      *
-     * @param value Sets this value
+     * @param value The value to assign
      */
     void configure(def value) {
         set(value)
@@ -87,9 +88,12 @@ class ConfigEntry {
     }
 
     /**
-     * Set the value.
+     * Assigns a value to this parameter.
      *
-     * @param value
+     * If the expected return type is a subclass of BaseConfig, this will instantiate or fill it.
+     * Otherwise, it validates and assigns the value directly.
+     *
+     * @param value The value to assign
      */
     void set(def value) {
         if (returnType in BaseConfig && !(value in BaseConfig)) {
@@ -119,8 +123,8 @@ class ConfigEntry {
     /**
      * Get the current evaluated value with the correct return type.
      *
-     * @param name
-     * @return value
+     * @param type Optional type to cast to (default: returnType)
+     * @return The evaluated and cast value
      */
     <T> T evaluate(Class<T> type=returnType) {
         if (value instanceof Runnable) {

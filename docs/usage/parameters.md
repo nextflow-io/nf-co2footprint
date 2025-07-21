@@ -7,42 +7,45 @@ The following parameters are currently available:
 
 ## Output Files
 
-- **`trace`:**
-  A`.txt` carbon footprint report containing the energy consumption, estimated CO₂ emission, and other relevant metrics for each task.
-  - **`file`:**
-    Path & name of the trace file.
-    **Default**: `co2footprint_trace_<timestamp>.txt`
-  - **`enabled`:**
-    Whether the trace file should be constructed.
-    **Default**: `true`
-  - **`overwrite`:**
-    Whether a file with the same path should be overwritten.
+**`trace`:**  
+A .txt carbon footprint report with per-task energy use, CO₂ estimates, and other key metrics, similar to a standard Nextflow trace file.
+
+  - **`file`**  
+    Path & name of the trace file.  
+    **Default:** `co2footprint_trace_<timestamp>.txt`
+  - **`enabled`**  
+    Whether the trace file should be constructed.  
+    **Default:** `true`
+  - **`overwrite`**  
+    Whether a file with the same path should be overwritten.  
     **Default:** `false`
 
-- **`summary`:**
-  A `.txt` carbon footprint summary file containing the total energy consumption and total estimated CO₂ emission of the pipeline run.
-  - **`file`:**
+**`summary`:**  
+  A .txt carbon footprint summary file containing the total energy consumption and total estimated CO₂ emission of the pipeline run as well as illustrative equivalence metrics.
+  
+  - **`file`:**  
     Path & name of the summary file.  
     **Default**: `co2footprint_summary_<timestamp>.txt`
-  - **`enabled`:** 
-    Whether the summary file should be constructed.
+  - **`enabled`:**  
+    Whether the summary file should be constructed.  
     **Default**: `true`
-  - **`overwrite`:**
-    Whether a file with the same path should be overwritten.
+  - **`overwrite`:**  
+    Whether a file with the same path should be overwritten.  
     **Default:** `false`
 
-- **`report`:**
-  A HTML report containing information about the entire carbon footprint, overview plots, and more detailed task-specific metrics.
+**`report`:**  
+  A HTML report summarizing the overall carbon footprint of the pipeline run, including equivalence metrics, visual overview plots, and detailed per-task metrics.
+  
   - **`file`:**
-    Path & name of the report file.
+    Path & name of the report file.  
     **Default**: `co2footprint_report_<timestamp>.html`
-  - **`enabled`:** Whether the report file should be constructed.
+  - **`enabled`:** Whether the report file should be constructed.  
     **Default**: `true`
   - **`overwrite`:**
-    Whether a file with the same path should be overwritten.
+    Whether a file with the same path should be overwritten.  
     **Default:** `false`
   - **`maxTasks`:**
-    Maximum number of reported tasks in the respective table. The table mirrors the trace file, which is not affected by this upper limit. Note: A larger number may lead to a larger and slower report document.
+    Maximum number of reported tasks in the respective table. The table mirrors the trace file, which is not affected by this upper limit. Note: A larger number may lead to a larger and slower report document.  
     **Default**: `10_000`
 
 ## Location & Carbon Intensity

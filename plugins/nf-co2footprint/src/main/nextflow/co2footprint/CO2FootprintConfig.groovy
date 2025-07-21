@@ -24,8 +24,8 @@ import java.nio.file.Paths
  *
  * Example usage in config:
  * co2footprint {
- *     trace = [file: "co2footprint_trace.txt"]
- *     summary = [file: "co2footprint_summary.txt"]
+ *     trace = {file = "co2footprint_trace.txt"}
+ *     summary = {file = "co2footprint_trace.txt"}
  *     ci = 300
  *     pue = 1.4
  *     powerdrawMem = 0.67
@@ -39,6 +39,10 @@ class CO2FootprintConfig extends BaseConfig {
     private final String suffix = "_${TraceHelper.launchTimestampFmt()}"
     private final List<String> supportedMachineTypes = ['local', 'compute cluster', 'cloud']
 
+    /**
+     * Define all configurable parameters used in CO₂ footprint tracking.
+     * Called once during construction.
+     */
     void initializeParameters() {
         addParameter(
                 ['trace', new TraceFileConfig([:], suffix)],

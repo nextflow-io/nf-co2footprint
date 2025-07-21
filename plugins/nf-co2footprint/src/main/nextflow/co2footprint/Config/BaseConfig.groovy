@@ -8,8 +8,15 @@ import groovy.util.logging.Slf4j
  */
 @Slf4j
 class BaseConfig {
+    // The internal ConfigParameters object that holds all configuration data.
     final private ConfigParameters parameters
 
+    /**
+     * Constructor for BaseConfig.
+     *
+     * @param parameters Either an existing ConfigParameters object or a list/set of parameter names.
+     * @param configMap Optional map of parameter names and values to initialize immediately.
+     */
     BaseConfig(def parameters=[], Map<String, Object> configMap=null) {
         // Initializes parameters
         if (parameters instanceof ConfigParameters) { this.parameters = parameters  }
@@ -18,14 +25,14 @@ class BaseConfig {
         // Sets defaults if not set by configure / fill
         setDefaults()
 
-        // Adds mapped entries to config
+        // Add values from provided config map, if any
         if (configMap != null) { fill(configMap) }
     }
 
     ConfigParameters getParameters() { parameters }
 
     /**
-     * Add a Config Parameter with args and kwArgs.
+     * Adds a new configuration parameter using positional and keyword arguments.
      *
      * @param args Argument list to be considered first
      * @param keywordArgs Keyword arguments to complement the argument list.
@@ -44,7 +51,7 @@ class BaseConfig {
     }
 
     /**
-     * Initialize the parameters.
+     * Initializes all registered parameters with their default values.
      *
      * @param args Arguments for default function, default `null` skips function initialization
      * @param overwrite Whether to overwrite the previously set value
@@ -54,7 +61,7 @@ class BaseConfig {
     }
 
     /**
-     * Initialize the parameters.
+     * Initializes a specific parameter with a default value.
      *
      * @param name Name of the parameter
      * @param value Value of the parameter
@@ -73,7 +80,7 @@ class BaseConfig {
     def get(String name) { return parameters.get(name) }
 
     /**
-     * Evaluate the parameter if it is a function.
+     * Evaluate the parameter if it is a function or closure..
      *
      * @param name Name of the parameter
      * @return The evaluated value of the key
@@ -99,10 +106,10 @@ class BaseConfig {
     }
 
     /**
-     * Does the config have this parameter?
+     * Checks if a parameter with the given name exists in the configuration.
      *
-     * @param name Name of the parameter
-     * @return Whether the property exists in the config instance
+     * @param name Name of the parameter.
+     * @return true if the parameter exists, false otherwise.
      */
     Boolean has(String name) { return parameters.has(name) }
 
