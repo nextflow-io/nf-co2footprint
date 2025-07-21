@@ -4,6 +4,9 @@
 ## Bug Fixes:
 - Catched exception
 
+## Feature
+- Better matching of CPU names by core-specific specification strings like '32-core' optional
+
 # Version 1.0.0-rc.1
 ## Bug Fixes:
 - Version is `null` in many cases (parsed the wrong MANIFEST)
