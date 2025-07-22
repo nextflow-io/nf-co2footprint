@@ -112,16 +112,17 @@ class TDPDataMatrix extends DataMatrix {
         model = model ?: ''
 
         // Construct regular expression to address potential differences in exact name matching
-        String modelRegex = toASCII(model, Matcher.quoteReplacement('\\s?'))                          // Convert to ASCII
-                .toLowerCase()                                                        // Convert to lower case
-                .replaceAll('\\(r\\)|\\(tm\\)|\\(c\\)', Matcher.quoteReplacement('\\s?'))      // Replace ASCII surrogates
-                .replaceAll(' ?(processor|cpu)s? ?', '')                  // make 'processor/cpu(s)' optional
-                .replaceAll('\\s(?!\\?)', Matcher.quoteReplacement('\\s*'))                     // make whitespaces optional
+        String modelRegex = toASCII(model, Matcher.quoteReplacement('\\s?'))                // Convert to ASCII
+                .toLowerCase()                                                              // Convert to lower case
+                .replaceAll('\\(r\\)|\\(tm\\)|\\(c\\)', Matcher.quoteReplacement('\\s?'))   // Replace ASCII surrogates
+                .replaceAll(' ?(processor|cpu)s? ?', ' ?')                                    // make 'processor/cpu(s)' optional
+                .replaceAll(' ?\\d+-cores? ?', ' ?')                                          // make '#-core(s)' optional
+                .replaceAll('\\s(?!\\?)', Matcher.quoteReplacement('\\s*'))                // make whitespaces optional
 
         // Find matches against index
         final List matches = this.rowIndex.filterKeys { String str ->
-                str = str.toLowerCase()                                               // Convert to lower case
-                    .replaceAll(' ?(processor|cpu)s? ?', '')        // make 'processor(s)/cpu' optional
+                str = str.toLowerCase()                         // Convert to lower case
+                    .replaceAll(' ?(processor|cpu)s? ?', '')    // make 'processor(s)/cpu' optional
                 str.matches(modelRegex)
         }
 

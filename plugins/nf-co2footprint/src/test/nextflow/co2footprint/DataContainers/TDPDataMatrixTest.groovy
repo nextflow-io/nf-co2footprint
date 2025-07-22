@@ -173,7 +173,7 @@ class TDPDataMatrixTest extends Specification {
         df.matchModel('Indel® i3-Fantasy(TM) @ 10Trillion GW @ 0.00001MHz').getData() == [[13, 1, 1]]
     }
 
-    def 'Should match the processor/CPU containing model names correctly' () {
+    def 'Should match the processor/CPU/X-core(s) containing model names correctly' () {
         expect:
         // match against extra 'Processor'
         df.matchModel('Indel® Processor i3-Fantasy(TM)').getData() == [[13, 1, 1]]
@@ -186,6 +186,12 @@ class TDPDataMatrixTest extends Specification {
 
         // match against missing 'processor'
         df.matchModel('ambere ultraefficient').getData() == [[13, 2, 2]]
+
+        // match against ' 32-core'
+        df.matchModel('ambere ultraefficient 32-core').getData() == [[13, 2, 2]]
+
+        // match against '64-cores'
+        df.matchModel('ambere 64-cores ultraefficient').getData() == [[13, 2, 2]]
     }
 
     def 'Should match the differing case model names correctly' () {
