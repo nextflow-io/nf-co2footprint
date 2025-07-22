@@ -272,17 +272,26 @@ class DataMatrix implements Matrix {
         return this.columnIndex.valueSet().sort().collect {i -> this.columnIndex.getKey(i)}
     }
 
-    Integer getIdx(Object id, String orientation, boolean checkOccurrence=true) {
+    /**
+     * Searched for the integer index in the 'data' table of a row or column ID.
+     *
+     * @param rowOrColumnID ID of the row or column
+     * @param orientation Orientation of the search, Must be either 'row' or 'column'
+     * @param checkOccurrence Whether to throw an error, when the ID is not found
+     * @return The integer index, or null if none was found and no error was thrown
+     * @throws IllegalArgumentException when no match was found and the occurrence is checked
+     */
+    Integer getIdx(Object rowOrColumnID, String orientation, boolean checkOccurrence=true) throws IllegalArgumentException {
         BiMap<Object, Integer> index = switch (orientation) {
             case 'row' -> this.rowIndex
             case 'column' -> this.columnIndex
             default -> null
         }
 
-        Integer idx = index?.getValue(id)
+        Integer idx = index?.getValue(rowOrColumnID)
 
         if (checkOccurrence && idx == null) {
-            final String message = "${orientation.capitalize()} ID `${id}` not found in the ${orientation}-index `${index}`."
+            final String message = "${orientation.capitalize()} ID `${rowOrColumnID}` not found in the ${orientation}-index `${index}`."
             log.error(message)
             throw new IllegalArgumentException(message)
         }
