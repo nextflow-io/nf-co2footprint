@@ -26,14 +26,14 @@ class BaseFile {
 
     static <T> T initialize(BaseFileConfig fileConfig, Class<T> type=BaseFile){
         // Break initialization if not enabled
-        def meta = getMetaClass()
         if(!fileConfig.getEnabled()) { return null }
         else { return type.newInstance(fileConfig) }
     }
 
     /**
-     * Constructor for generic file class.
+     * Constructs a BaseFile instance with the specified file path and settings.
      *
+     * @param enabled    Whether the file should be generated or skipped entirely
      * @param path Path to the file, or where it is targeted to be written
      * @param overwrite Whether to overwrite existing files with the same path
      */
@@ -43,6 +43,11 @@ class BaseFile {
         this.overwrite = overwrite
     }
 
+    /**
+     * Constructor for generic file class.
+     *
+     * @param fileConfig Configuration of the file
+     */
     BaseFile(BaseFileConfig fileConfig) {
         this(
             fileConfig.getEnabled(),

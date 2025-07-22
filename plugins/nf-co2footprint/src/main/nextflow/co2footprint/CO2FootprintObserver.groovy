@@ -79,10 +79,7 @@ class CO2FootprintObserver implements TraceObserver {
             CO2FootprintComputer co2FootprintComputer
     ){
         // See if any file is enabled
-        List<String> fileNames = ['trace', 'summary', 'report']
-        Boolean makeObserver = fileNames.collect({ String fileName -> config.get(fileName).getEnabled() }).any()
-
-        if (makeObserver) {
+        if (['trace', 'summary', 'report'].any { String fileEntry -> config.get(fileEntry).getEnabled() }) {
             return new CO2FootprintObserver(session, version, config, co2FootprintComputer)
         } else {
             log.error('All output files are disabled (`enabled=false`). Observer not created.')

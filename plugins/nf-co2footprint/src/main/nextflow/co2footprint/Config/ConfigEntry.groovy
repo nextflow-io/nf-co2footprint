@@ -22,17 +22,22 @@ class ConfigEntry {
         this.name = name
         this.defaultValue = defaultValue
 
-        this.allowedTypes = {
-            if (allowedTypes) {
-                allowedTypes
-            } else if (returnType != null) {
-                [returnType]
-            } else if (defaultValue != null && !(defaultValue instanceof Runnable)) {
-                [defaultValue.getClass()]
-            } else {
-                [Object]
-            }
-        }()
+        // Determine allowedTypes based on priority:
+        if (allowedTypes != null) {
+            // 1. Use explicitly provided allowedTypes
+            this.allowedTypes = allowedTypes
+        } else if (returnType != null) {
+            // 2. If returnType is provided, use it as the only allowed type
+            this.allowedTypes = [returnType]
+        } else if (defaultValue != null && !(defaultValue instanceof Runnable)) {
+            // 3. If defaultValue exists and is not a Runnable, infer its type
+            this.allowedTypes = [defaultValue.getClass()]
+        } else {
+            // 4. Fallback: allow any type
+            this.allowedTypes = [Object]
+        }
+
+        // Fall back to the first allowed type, if no return type is explicitly given
         this.returnType = returnType ?: this.allowedTypes[0]
 
         this.description = description
