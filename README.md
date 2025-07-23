@@ -1,6 +1,9 @@
 # nf-co2footprint plugin [WIP]
-
 A Nextflow plugin to estimate the CO₂ footprint of pipeline runs.
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16363577.svg)](https://doi.org/10.5281/zenodo.16363577)
+[![Get help on Slack](https://img.shields.io/badge/slack-nextflow%20%23nf--co2footprint-4A154B?labelColor=000000&logo=slack)](https://nextflow.slack.com/channels/nf-co2footprint)
+
 
 ## 📚 Docs 👉🏻 <https://nextflow-io.github.io/nf-co2footprint>
 

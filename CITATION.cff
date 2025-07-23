@@ -1,5 +1,6 @@
 cff-version: 1.2.0
 message: "If you use or reference this software, please cite it as below"
+type: "software"
 authors:
   - family-names: Carl
     given-names: Josua
@@ -23,14 +24,14 @@ authors:
     given-names: Sabrina
     orcid: https://orcid.org/0000-0003-0603-7907
 title: "nf-co2footprint - A nextflow plugin to track CO2e emissions"
-version: 1.0.0
+version: 1.0.0-rc.2
 identifiers:
   - type: doi
     value: 10.5281/zenodo.14622304
 doi: 10.5281/zenodo.14622304
-date-released: 2024-06-10
+date-released: 2025-07-23
 repository-code: "https://github.com/nextflow-io/nf-co2footprint/"
-license: Apache License 2.0
+license: "Apache-2.0"
 keywords:
   - "co2footprint"
   - "co2 footprint"
