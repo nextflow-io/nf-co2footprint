@@ -27,7 +27,6 @@ version: 1.0.0-rc
 identifiers:
   - type: doi
     value: 10.5281/zenodo.14622304
-doi: 10.5281/zenodo.14622304
 date-released: 2025-07-02
 repository-code: "https://github.com/nextflow-io/nf-co2footprint/"
 license: Apache License 2.0
