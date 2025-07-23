@@ -273,39 +273,53 @@ class DataMatrix implements Matrix {
     }
 
     /**
+     * Searched for the integer index in the 'data' table of a row or column ID.
+     *
+     * @param rowOrColumnID ID of the row or column
+     * @param orientation Orientation of the search, Must be either 'row' or 'column'
+     * @param checkOccurrence Whether to throw an error, when the ID is not found
+     * @return The integer index, or null if none was found and no error was thrown
+     * @throws IllegalArgumentException when no match was found and the occurrence is checked
+     */
+    Integer getIdx(Object rowOrColumnID, String orientation, boolean checkOccurrence=true) throws IllegalArgumentException {
+        BiMap<Object, Integer> index = switch (orientation) {
+            case 'row' -> this.rowIndex
+            case 'column' -> this.columnIndex
+            default -> null
+        }
+
+        Integer idx = index?.getValue(rowOrColumnID)
+
+        if (checkOccurrence && idx == null) {
+            final String message = "${orientation.capitalize()} ID `${rowOrColumnID}` not found in the ${orientation}-index `${index}`."
+            log.error(message)
+            throw new IllegalArgumentException(message)
+        }
+
+        return  idx
+    }
+
+    /**
      * Get a value from the matrix by row and column.
      * Row and column can be names or integer indices, controlled by rowRawIndex/columnRawIndex.
      */
-    Object get(Object row, Object column, boolean rowRawIndex=false, boolean columnRawIndex=false) {
-        // Resolve row index
-        row = rowRawIndex ? row as Integer : this.rowIndex.getValue(row)
-        if (row == null) {
-            final String message = "Row '${rowRawIndex ? row : row as String}' not found in the row index."
-            log.error(message)
-            throw new IllegalArgumentException(message)
-        }
-
-        // Resolve column index
-        column = columnRawIndex ? column as Integer : this.columnIndex.getValue(column)
-        if (column == null) {
-            final String message = "Column '${columnRawIndex ? column : column as String}' not found in the column index."
-            log.error(message)
-            throw new IllegalArgumentException(message)
-        }
+    Object get(Object rowID, Object columnID, boolean rowRawIndex=false, boolean columnRawIndex=false) {
+        Integer rowIdx = rowRawIndex ? rowID as Integer : getIdx(rowID, 'row')
+        Integer columnIdx = columnRawIndex ? columnID as Integer : getIdx(columnID, 'column')
 
         // Return the data at the resolved row and column
-        return this.data[row][column]
+        return this.data[rowIdx][columnIdx]
     }
 
     /**
      * Set a value in the matrix at the specified row and column.
      * Row and column can be names or integer indices, controlled by rowRawIndex/columnRawIndex.
      */
-    void set(Object value, Object row, Object column, boolean rowRawIndex=false, boolean columnRawIndex=false) {
-        row = rowRawIndex ? row as Integer : this.rowIndex.getValue(row)
-        column = columnRawIndex ? column as Integer : this.columnIndex.getValue(column)
+    void set(Object value, Object rowID, Object columnID, boolean rowRawIndex=false, boolean columnRawIndex=false) {
+        Integer rowIdx = rowRawIndex ? rowID as Integer : getIdx(rowID, 'row')
+        Integer columnIdx = columnRawIndex ? columnID as Integer : getIdx(columnID, 'column')
 
-        data[row][column] = value
+        data[rowIdx][columnIdx] = value
     }
 
     /**
@@ -316,7 +330,7 @@ class DataMatrix implements Matrix {
      */
     void putRow(List<Object> row, Object rowId) {
         assert row.size() == this.data[0].size()
-        Integer rowIdx = this.rowIndex.getValue(rowId)
+        Integer rowIdx = getIdx(rowId, 'row', false)
 
         if (rowIdx != null) {
             data[rowIdx] = row

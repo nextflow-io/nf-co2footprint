@@ -296,11 +296,10 @@ class TDPDataMatrix extends DataMatrix {
 
             // Ensure matching row structure (Replaces mismatches with null)
             row = this.getColumnIndex().keySet().collect { Object columnID ->
-                try {
-                    newEntry.get(0, columnID, true)
-                }
-                catch (IllegalArgumentException ignore) {
-                    null
+                if(newEntry.getColumnIndex().containsKey(columnID)) {
+                    return newEntry.get(0, columnID, true)
+                } else {
+                    return null
                 }
             }
 
