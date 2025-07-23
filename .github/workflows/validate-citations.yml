@@ -3,6 +3,9 @@ on:
   push:
     paths:
       - CITATION.cff
+  pull_request:
+    paths:
+      - CITATION.cff
   workflow_dispatch:
 
 jobs:
