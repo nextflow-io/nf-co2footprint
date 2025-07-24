@@ -6,7 +6,7 @@
 - Removed faulty error messages on `customTDPTable` loading
 - Failed uploads to Zenodo
 
-## Feature
+## Features:
 - Better matching of CPU names by core-specific specification strings like '32-core' optional
 
 # Version 1.0.0-rc.1
