@@ -49,7 +49,7 @@ The plugin can be tested without using a local Nextflow build using the followin
 2. Run nextflow with this command, specifying the plugin version:
 
    ```bash
-   nextflow run -plugins nf-co2footprint@1.0.0-rc.1 <script/pipeline name> [pipeline params]
+   nextflow run -plugins nf-co2footprint@1.0.0-rc.2 <script/pipeline name> [pipeline params]
    ```
 
 
