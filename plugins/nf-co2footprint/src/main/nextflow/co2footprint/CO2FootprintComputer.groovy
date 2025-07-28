@@ -1,9 +1,11 @@
 package nextflow.co2footprint
 
+import nextflow.co2footprint.Logging.Markers
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.utils.HelperFunctions
+import nextflow.co2footprint.utils.LoggingUtils
 import groovy.util.logging.Slf4j
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
@@ -79,7 +81,11 @@ class CO2FootprintComputer {
         BigDecimal cpuUsage = HelperFunctions.getTraceOrDefault(trace, taskID, '%cpu', numberOfCores * 100) as BigDecimal
 
         if ( cpuUsage == 0.0 ) {
-            log.warn("The reported CPU usage is 0.0 for task ${taskID}.")
+            LoggingUtils.logDeduplicatedWarning(
+                Markers.unique,
+                "The reported CPU usage is 0.0 for task ${taskID}.",
+                [ / for task \d+/ ]
+            )
         }
 
         final BigDecimal coreUsage = cpuUsage / (100.0 * numberOfCores)
@@ -95,7 +101,13 @@ class CO2FootprintComputer {
             // If missing, get the available system memory
             Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
             // Warn that requested memory was null and fallback is used
-            log.warn("Requested memory is null for task ${taskID}. Setting to available memory (${availableMemory/(1024**3)} GB).")
+            
+            // Use a deduplicated warning to avoid flooding the log with the same message
+            LoggingUtils.logDeduplicatedWarning(
+                Markers.unique,
+                "Requested memory is null for task ${taskID}. Setting to available memory (${availableMemory/(1024**3)} GB).",
+                [ / for task \d+/ ]
+            )
             // Use available system memory as the requested memory
             requestedMemory = availableMemory
         }
@@ -104,10 +116,13 @@ class CO2FootprintComputer {
             // Get the available system memory
             Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
             // Warn that required memory exceeded requested, so fallback is used
-            log.warn(
-                "The required memory (${requiredMemory/(1024**3)} GB) for the task exceeds the requested memory (${requestedMemory/(1024**3)} GB). " +
-                "Setting requested to maximum available memory (${availableMemory/(1024**3)} GB)."
+            LoggingUtils.logDeduplicatedWarning(
+                Markers.unique,
+                "The required memory (${requiredMemory/(1024**3)} GB) for task ${taskID} exceeds the requested memory (${requestedMemory/(1024**3)} GB). " +
+                "Setting requested to maximum available memory (${availableMemory/(1024**3)} GB).",
+                [ / for task \d+/ ]
             )
+   
             // Use available system memory as the requested memory
             requestedMemory = availableMemory
         }

@@ -69,13 +69,13 @@ class DeduplicateMarkerFilter extends TurboFilter {
      * @param marker Marker of the log message
      * @param logger The logger the received the message
      * @param level Level of the log
-     * @param format Message as a formatted string
+     * @param logMessage Message as a formatted string
      * @param params Parameters passed to the log to be filled into the message string
-     * @param t Throwable exception
+     * @param throwable Throwable exception
      * @return NEUTRAL, DENY, and ACCEPT command for the Logger
      */
     @Override
-    FilterReply decide(Marker marker, Logger logger, Level level, String format, Object[] params, Throwable t) {
+    FilterReply decide(Marker marker, Logger logger, Level level, String logMessage, Object[] params, Throwable throwable) {
         // Check whether the Filter started
         if (!isStarted()) {
             return FilterReply.NEUTRAL
@@ -83,16 +83,20 @@ class DeduplicateMarkerFilter extends TurboFilter {
 
         // Checks for the right markers
         if (filteredMarkers.contains(marker)) {
+            // Get deduplication key from params[0] if present, else use logMessage
+            String dedupKey = (params != null && params.length > 0 && params[0] instanceof String) ? params[0] : logMessage
+            // Optionally use a custom trace message from params[1], else use logMessage
+            String traceMessage = (params != null && params.length > 1 && params[1] instanceof String) ? params[1] : logMessage
 
-            // Counts the occurrences for the markers
-            AtomicInteger occurrences = seenMessages.computeIfAbsent(format, k -> new AtomicInteger(0))
+            // Track how many times this dedupKey has been seen
+            AtomicInteger occurrences = seenMessages.computeIfAbsent(dedupKey, k -> new AtomicInteger(0))
             int currentOccurrences = occurrences.incrementAndGet()
 
+            // Allow up to allowedOccurrences, then log further as TRACE
             if (currentOccurrences <= allowedOccurrences) {
                 return FilterReply.ACCEPT
             }
-            // Send a TRACE message when the message was not accepted
-            logger.trace('[DUPLICATE] ' + format, params)
+            logger.trace('[DUPLICATE] ' + traceMessage, params)
             return FilterReply.DENY
         } else {
             return FilterReply.NEUTRAL

@@ -1,6 +1,8 @@
 package nextflow.co2footprint.utils
 
 import nextflow.co2footprint.Logging.Markers
+import nextflow.co2footprint.utils.LoggingUtils
+
 
 import groovy.util.logging.Slf4j
 import com.sun.management.OperatingSystemMXBean
@@ -19,6 +21,20 @@ class HelperFunctions {
         return "\033[1m${text}\033[0m"
     }
 
+    /**
+    * Removes all occurrences of the specified patterns from the input string.
+    *
+    * @param input    The original string
+    * @param patterns A list of regex patterns to remove from the string
+    * @return         The string with all patterns removed
+    */
+    static String removePatterns(String input, List<String> patterns) {
+        String result = input
+        patterns.each { pattern ->
+            result = result.replaceAll(pattern, '')
+        }
+        return result.trim()
+    }
 
     /**
      * Returns the value for a given key from a TraceRecord, or a default if missing.
@@ -34,16 +50,19 @@ class HelperFunctions {
     static Object getTraceOrDefault(TraceRecord trace, TaskId taskID, String key, Object defaultValue) {
         def value = trace.get(key)
         if (value == null) {
-            String message
+            String debugMessage
             if (key == '%cpu') {
                 def numCores = (defaultValue instanceof Number) ? defaultValue / 100 : defaultValue
-                message = "Missing trace value '${key}' for task ${taskID}, using default: 100% for all ${numCores} cores."
+                debugMessage = "Missing trace value '${key}' for task ${taskID}, using default: 100% for all ${numCores} cores."
             } else {
-                message = "Missing trace value '${key}' for task ${taskID}, using default: ${defaultValue}."
+                debugMessage = "Missing trace value '${key}' for task ${taskID}, using default: ${defaultValue}."
             }
-            log.warn(Markers.unique, message)
-            message += " For subsequent tasks missing '${key}', this will only be reported in the Nextflow log file."
-            log.debug(message)
+            LoggingUtils.logDeduplicatedWarning(
+                Markers.unique,
+                debugMessage,
+                [ / for task [^,]+/ ],
+                " For subsequent tasks missing '${key}', this will only be reported in the Nextflow log file."
+            )
             return defaultValue
         }
         return value

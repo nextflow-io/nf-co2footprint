@@ -78,5 +78,23 @@ class LoggingTest extends Specification {
         listAppender.list.collect({it as String}) as Set ==
                 ['[DEBUG] Debug', '[INFO] Info', '[ERROR] Error'].collect({"${it} message" as String}) as Set
     }
+
+    def 'Should deduplicate based on dedupKey and allow custom trace message' () {
+        given:
+        String dedupKey = "General warning without task id"
+        String warnMessage = "Warning for task 123"
+        String traceMessage = "Duplicate warning for task 123"
+
+        when:
+        // Log with dedupKey and custom trace message
+        logger.warn(Markers.unique, warnMessage, dedupKey, traceMessage)
+        logger.warn(Markers.unique, warnMessage, dedupKey, traceMessage)
+        logger.warn(Markers.unique, warnMessage, dedupKey, traceMessage)
+
+        then:
+        // Only the first warning should be logged
+        listAppender.list.size() == 1
+        listAppender.list[0].getFormattedMessage() == warnMessage
+    }
 }
 
