@@ -1,5 +1,7 @@
 package nextflow.co2footprint.utils
 
+import nextflow.co2footprint.Logging.Markers
+
 import groovy.util.logging.Slf4j
 import com.sun.management.OperatingSystemMXBean
 import java.lang.management.ManagementFactory
@@ -19,8 +21,9 @@ class HelperFunctions {
 
 
     /**
-     * Safely get a value from a TraceRecord by key, or return a default if missing.
-     * Logs a warning if the key is not found in the trace.
+     * Returns the value for a given key from a TraceRecord, or a default if missing.
+     * Logs a warning to stdout and log file the first time a key is missing,
+     * and only to the log file for subsequent occurrences.
      *
      * @param trace        The TraceRecord to query
      * @param taskID       The TaskId for logging context
@@ -31,7 +34,16 @@ class HelperFunctions {
     static Object getTraceOrDefault(TraceRecord trace, TaskId taskID, String key, Object defaultValue) {
         def value = trace.get(key)
         if (value == null) {
-            log.warn("Missing trace value '${key}' for task ${taskID}, using default: ${defaultValue}")
+            String message
+            if (key == '%cpu') {
+                def numCores = (defaultValue instanceof Number) ? defaultValue / 100 : defaultValue
+                message = "Missing trace value '${key}' for task ${taskID}, using default: 100% for all ${numCores} cores."
+            } else {
+                message = "Missing trace value '${key}' for task ${taskID}, using default: ${defaultValue}."
+            }
+            log.warn(Markers.unique, message)
+            message += " For subsequent tasks missing '${key}', this will only be reported in the Nextflow log file."
+            log.debug(message)
             return defaultValue
         }
         return value
