@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+# Version 1.0.0-rc.3
+## Bug Fixes:
+- Core logging no longer hidden after plugin invocation
+
 # Version 1.0.0-rc.2
 ## Bug Fixes:
 - Logging with Logback < 1.5 (Nextflow < 25) now possible
