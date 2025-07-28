@@ -107,9 +107,13 @@ class LoggingAdapter {
             // CaptureAppender with chained ANSI Logger
             if (appender.getClass().getName() == 'nextflow.util.LoggerHelper$CaptureAppender') {
                 log.trace("Modifying ${appender.getName()} (${appender.getClass().getName()})")
-                appender.stop()
 
-                // Replacing old logger
+                // Remove old logger
+                appender.stop()
+                co2FootprintLogger.detachAppender(appender)
+                appender.start()
+
+                // Replace with custom logger
                 CustomCaptureAppender customCaptureAppender = new CustomCaptureAppender(session, layout)
                 for (Filter filter : appender.getCopyOfAttachedFiltersList()) {
                     customCaptureAppender.addFilter(filter)
