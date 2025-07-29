@@ -100,7 +100,7 @@ class CIValueComputer {
                     Markers.unique,
                     "Electricity Maps API key is not set. " +
                     "To retrieve real-time carbon intensity values, please provide a key with the parameter `emApiKey`.\n" +
-                    "💡You can obtain a key for ElectricityMaps at https://portal.electricitymaps.com/auth/login.")
+                    "\t💡 You can obtain a key for ElectricityMaps at https://portal.electricitymaps.com/auth/login.")
             }
             // Fallback to the location in the CSV
             ci = this.ciData.findCiInMatrix(this.location)

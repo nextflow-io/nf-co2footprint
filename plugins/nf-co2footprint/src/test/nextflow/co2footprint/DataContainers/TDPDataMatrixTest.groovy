@@ -133,7 +133,7 @@ class TDPDataMatrixTest extends Specification {
         df2TDPPerThread == 5.0
         listAppender.list[0] as String ==  '[WARN] Could not find CPU model "Non-existent" in given TDP data table. ' +
                 'Using default CPU power draw value (100.0 W).\n' +
-                '🔖 You can help by reporting this warning and your `.nextflow.log` file to ' +
+                '\t🔖 You can help by reporting this warning and your `.nextflow.log` file to ' +
                 'https://github.com/nextflow-io/nf-co2footprint/issues/new?template=missing_chip.yaml. Thanks.'
         // Second instance should be filtered
         listAppender.list.size() == 1
@@ -212,14 +212,14 @@ class TDPDataMatrixTest extends Specification {
         df.matchModel('Non-existent2').getData() == [[100, 4, 8]]
         listAppender.list[0] as String == '[WARN] Could not find CPU model "Non-existent2" in given TDP data table. ' +
                 'Using default CPU power draw value (100.0 W).\n' +
-                '🔖 You can help by reporting this warning and your `.nextflow.log` file to ' +
+                '\t🔖 You can help by reporting this warning and your `.nextflow.log` file to ' +
                 'https://github.com/nextflow-io/nf-co2footprint/issues/new?template=missing_chip.yaml. Thanks.'
 
         // match against unaccounted variance of model
         df.matchModel('Indel® i3-Fantasy(TM) 10Trillion GW').getData() == [[100, 4, 8]]
         listAppender.list[1] as String == '[WARN] Could not find CPU model "Indel® i3-Fantasy(TM) 10Trillion GW" in given TDP data table. ' +
                 'Using default CPU power draw value (100.0 W).\n' +
-                '🔖 You can help by reporting this warning and your `.nextflow.log` file to ' +
+                '\t🔖 You can help by reporting this warning and your `.nextflow.log` file to ' +
                 'https://github.com/nextflow-io/nf-co2footprint/issues/new?template=missing_chip.yaml. Thanks.'
     }
 

@@ -93,11 +93,7 @@ class DeduplicateMarkerFilter extends TurboFilter {
             int currentOccurrences = occurrences.incrementAndGet()
 
             // Allow up to allowedOccurrences, then log further as TRACE
-            if (currentOccurrences < allowedOccurrences) {
-                return FilterReply.ACCEPT
-
-            } else if ( currentOccurrences == allowedOccurrences) {
-                log.info("For subsequent occurences, '${deduplicationKey}' will be logged at the TRACE level.")
+            if (currentOccurrences <= allowedOccurrences) {
                 return FilterReply.ACCEPT
             }
 

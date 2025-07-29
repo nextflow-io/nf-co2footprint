@@ -98,6 +98,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         // Read the plugin version
         setPluginVersion()
         log.info("nf-co2footprint plugin  ~  version ${this.pluginVersion}")
+        log.info('🔕 Repeated logging messages for different tasks are shown only once in the console; further occurrences are written to the nextflow.log file.')
 
         // Read in matrices
         this.tdpDataMatrix = TDPDataMatrix.fromCsv(

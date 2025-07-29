@@ -147,7 +147,7 @@ class TDPDataMatrix extends DataMatrix {
                     Markers.unique,
                     "Could not find CPU model \"${originalModel}\" in given TDP data table. " +
                     "Using ${this.fallbackModel} CPU power draw value (${getTDP(modelData)} W).\n" +
-                    '🔖 You can help by reporting this warning and your `.nextflow.log` file to ' +
+                    '\t🔖 You can help by reporting this warning and your `.nextflow.log` file to ' +
                     'https://github.com/nextflow-io/nf-co2footprint/issues/new?template=missing_chip.yaml. Thanks.'
             )
         }
