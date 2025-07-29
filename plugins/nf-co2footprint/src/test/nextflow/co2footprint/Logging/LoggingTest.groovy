@@ -81,15 +81,14 @@ class LoggingTest extends Specification {
 
     def 'Should deduplicate based on dedupKey and allow custom trace message' () {
         given:
-        String dedupKey = "General warning without task id"
-        String warnMessage = "Warning for task 123"
-        String traceMessage = "Duplicate warning for task 123"
+        String dedupKey = "memory_is_null"
+        String warnMessage = "Requested memory is null for task 123."
 
         when:
-        // Log with dedupKey and custom trace message
-        logger.warn(Markers.unique, warnMessage, dedupKey, traceMessage)
-        logger.warn(Markers.unique, warnMessage, dedupKey, traceMessage)
-        logger.warn(Markers.unique, warnMessage, dedupKey, traceMessage)
+        // Log with dedupKey 
+        logger.warn(Markers.unique, warnMessage, dedupKey)
+        logger.warn(Markers.unique, warnMessage, dedupKey)
+        logger.warn(Markers.unique, warnMessage, dedupKey)
 
         then:
         // Only the first warning should be logged

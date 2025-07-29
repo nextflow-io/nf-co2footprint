@@ -6,6 +6,7 @@ import ch.qos.logback.classic.turbo.TurboFilter
 import ch.qos.logback.core.spi.FilterReply
 import org.slf4j.Marker
 import org.slf4j.MarkerFactory
+import groovy.util.logging.Slf4j
 
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
@@ -15,6 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * Motivation: Removes duplicates in some warnings, to avoid cluttering the output with repeated information.
  * Example: If the CPU model is not found it should only be warned once, that a fallback value is used.
  */
+@Slf4j
 class DeduplicateMarkerFilter extends TurboFilter {
 
     // Markers to be Filtered
@@ -84,20 +86,24 @@ class DeduplicateMarkerFilter extends TurboFilter {
         // Checks for the right markers
         if (filteredMarkers.contains(marker)) {
             // Get deduplication key from params[0] if present, else use logMessage
-            String dedupKey = (params != null && params.length > 0 && params[0] instanceof String) ? params[0] : logMessage
-            // Optionally use a custom trace message from params[1], else use logMessage
-            String traceMessage = (params != null && params.length > 1 && params[1] instanceof String) ? params[1] : logMessage
+            String deduplicationKey = params ? params[0] : logMessage
 
             // Track how many times this dedupKey has been seen
-            AtomicInteger occurrences = seenMessages.computeIfAbsent(dedupKey, k -> new AtomicInteger(0))
+            AtomicInteger occurrences = seenMessages.computeIfAbsent(deduplicationKey, k -> new AtomicInteger(0))
             int currentOccurrences = occurrences.incrementAndGet()
 
             // Allow up to allowedOccurrences, then log further as TRACE
-            if (currentOccurrences <= allowedOccurrences) {
+            if (currentOccurrences < allowedOccurrences) {
+                return FilterReply.ACCEPT
+
+            } else if ( currentOccurrences == allowedOccurrences) {
+                log.info("For subsequent occurences, '${deduplicationKey}' will be logged at the TRACE level.")
                 return FilterReply.ACCEPT
             }
-            logger.trace('[DUPLICATE] ' + traceMessage, params)
+
+            logger.trace('[DUPLICATE] ' + logMessage, params)
             return FilterReply.DENY
+
         } else {
             return FilterReply.NEUTRAL
         }

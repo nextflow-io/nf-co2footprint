@@ -95,12 +95,9 @@ class CO2FootprintConfig {
         configMap.each { name, value ->
             if (this.hasProperty(name)) {
                 this.setProperty(name, value)
-            } else if (name == 'params') {
-                // Skip 'params' silently
-            } else {
-                // Log warning and skip the key
+            } else if (name != 'params') {
                 log.debug("Skipping unknown configuration key: '${name}'")
-            }
+            } 
         }
 
         // Determine the carbon intensity (CI) value

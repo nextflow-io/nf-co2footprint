@@ -5,7 +5,6 @@ import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.utils.HelperFunctions
-import nextflow.co2footprint.utils.LoggingUtils
 import groovy.util.logging.Slf4j
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
@@ -69,22 +68,22 @@ class CO2FootprintComputer {
         /**
          * Realtime of computation
          */
-        final BigDecimal runtime_h = (HelperFunctions.getTraceOrDefault(trace, taskID, 'realtime', 0) as BigDecimal) / (1000*60*60) // [h]
+        final BigDecimal runtime_h = (HelperFunctions.getTraceOrDefault(trace, taskID, 'realtime', 0, 'missing-realtime') as BigDecimal).divide(1000 * 60 * 60) // [h]
 
         /**
          * Factors of core power usage
          */
-        final Integer numberOfCores = HelperFunctions.getTraceOrDefault(trace, taskID, 'cpus', 1) as Integer           // [#]
+        final Integer numberOfCores = (HelperFunctions.getTraceOrDefault(trace, taskID, 'cpus', 1, 'missing-cpus') as Integer) // [#]
         final BigDecimal powerdrawPerCore = tdpDataMatrix.matchModel(cpuModel).getCoreTDP()            // [W/core]
 
         // uc: core usage factor (between 0 and 1)
-        BigDecimal cpuUsage = HelperFunctions.getTraceOrDefault(trace, taskID, '%cpu', numberOfCores * 100) as BigDecimal
+        BigDecimal cpuUsage = (HelperFunctions.getTraceOrDefault(trace, taskID, '%cpu', numberOfCores * 100, 'missing-%cpu') as BigDecimal)
 
         if ( cpuUsage == 0.0 ) {
-            LoggingUtils.logDeduplicatedWarning(
+            log.warn(
                 Markers.unique,
                 "The reported CPU usage is 0.0 for task ${taskID}.",
-                [ / for task \d+/ ]
+                'zero_cpu_usage'
             )
         }
 
@@ -103,26 +102,28 @@ class CO2FootprintComputer {
             // Warn that requested memory was null and fallback is used
             
             // Use a deduplicated warning to avoid flooding the log with the same message
-            LoggingUtils.logDeduplicatedWarning(
+            log.warn(
                 Markers.unique,
                 "Requested memory is null for task ${taskID}. Setting to available memory (${availableMemory/(1024**3)} GB).",
-                [ / for task \d+/ ]
+                'memory_is_null'
             )
             // Use available system memory as the requested memory
             requestedMemory = availableMemory
         }
         // If peak memory usage (requiredMemory) is known and exceeds the requested memory
         else if (requiredMemory != null && requiredMemory > requestedMemory) {
+            
             // Get the available system memory
             Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
+
             // Warn that required memory exceeded requested, so fallback is used
-            LoggingUtils.logDeduplicatedWarning(
+            log.warn(
                 Markers.unique,
                 "The required memory (${requiredMemory/(1024**3)} GB) for task ${taskID} exceeds the requested memory (${requestedMemory/(1024**3)} GB). " +
                 "Setting requested to maximum available memory (${availableMemory/(1024**3)} GB).",
-                [ / for task \d+/ ]
+                'memory_exceeded'
             )
-   
+
             // Use available system memory as the requested memory
             requestedMemory = availableMemory
         }
