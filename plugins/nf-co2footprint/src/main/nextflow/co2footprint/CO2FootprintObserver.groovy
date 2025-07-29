@@ -169,18 +169,22 @@ class CO2FootprintObserver implements TraceObserver {
 
         // Compute the statistics (total, mean, min, max, quantiles) on process level
         final Map<String, Map<String, Map<String, ?>>> processStats = aggregator.computeProcessStats()
-
+        log.info("CO2e process stats: ${processStats}")
         // Collect the total sums of all metrics
         final Map<String, Double> totalStats = [:]
+        // Iterate over each process and its metrics
         processStats.each { String processName, Map<String, Map<String, ?>> processMetrics ->
+            // Iterate over each metric for the current process (e.g., co2e, energy, etc.)
             processMetrics.each { String metricName, Map<String, ?> metricValue ->
-                // Add up the different metrics (co2e, energy, ...)
-                if (metricValue['total']) {
-                    totalStats[metricName] = metricValue['total'] as Double + (totalStats.get(metricName) as Double ?: 0d)
+                // Extract the 'total' value for the current metric
+                def totalValue = metricValue['total'] as Double
+                // If the total value exists, add it to the running sum for this metric
+                if (totalValue != null) {
+                    // Accumulate the total for each metric across all processes
+                    totalStats[metricName] = (totalStats.get(metricName) ?: 0d) + totalValue
                 }
             }
         }
-
         // Write report and summary
         co2eSummaryFile.write(totalStats, co2FootprintComputer, config, version)
 
