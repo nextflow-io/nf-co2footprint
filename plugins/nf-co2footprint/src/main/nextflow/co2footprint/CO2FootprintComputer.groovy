@@ -9,7 +9,6 @@ import groovy.util.logging.Slf4j
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
 
-
 /**
  * Class for computation of energy usage, CO2 emission, and equivalence metrics.
  */
@@ -68,16 +67,16 @@ class CO2FootprintComputer {
         /**
          * Realtime of computation
          */
-        final BigDecimal runtime_h = (HelperFunctions.getTraceOrDefault(trace, taskID, 'realtime', 0, 'missing-realtime') as BigDecimal).divide(1000 * 60 * 60) // [h]
+        final BigDecimal runtime_h = (HelperFunctions.getTraceOrDefault(trace, taskID, 'realtime', 0, 'missing-realtime') as BigDecimal) / (1000 * 60 * 60) // [h]
 
         /**
          * Factors of core power usage
          */
-        final Integer numberOfCores = (HelperFunctions.getTraceOrDefault(trace, taskID, 'cpus', 1, 'missing-cpus') as Integer) // [#]
+        final Integer numberOfCores = HelperFunctions.getTraceOrDefault(trace, taskID, 'cpus', 1, 'missing-cpus') as Integer // [#]
         final BigDecimal powerdrawPerCore = tdpDataMatrix.matchModel(cpuModel).getCoreTDP()            // [W/core]
 
         // uc: core usage factor (between 0 and 1)
-        BigDecimal cpuUsage = (HelperFunctions.getTraceOrDefault(trace, taskID, '%cpu', numberOfCores * 100, 'missing-%cpu') as BigDecimal)
+        BigDecimal cpuUsage = HelperFunctions.getTraceOrDefault(trace, taskID, '%cpu', numberOfCores * 100, 'missing-%cpu') as BigDecimal
 
         if ( cpuUsage == 0.0 ) {
             log.warn(
@@ -188,7 +187,7 @@ class CO2FootprintComputer {
      * @return CO2EquivalencesRecord with estimations for sensible comparisons
      */
     static CO2EquivalencesRecord computeCO2footprintEquivalences(Double totalCO2) {
-        final BigDecimal gCO2 = totalCO2 as BigDecimal / 1000 as BigDecimal       // Conversion to [g] CO2
+        final BigDecimal gCO2 = totalCO2 as BigDecimal / 1000 as BigDecimal // Convert to gCO2
 
         final BigDecimal carKilometers = gCO2 / 175
         final BigDecimal treeMonths = gCO2 / 917
