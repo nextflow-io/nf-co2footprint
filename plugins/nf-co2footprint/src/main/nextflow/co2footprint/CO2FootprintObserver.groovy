@@ -176,7 +176,7 @@ class CO2FootprintObserver implements TraceObserver {
             // Iterate over each metric for the current process (e.g., co2e, energy, etc.)
             processMetrics.each { String metricName, Map<String, ?> metricValue ->
                 // Extract the 'total' value for the current metric
-                def totalValue = metricValue['total'] as Double
+                Double totalValue = metricValue['total'] as Double
                 // If the total value exists, add it to the running sum for this metric
                 if (totalValue != null) {
                     // Accumulate the total for each metric across all processes
