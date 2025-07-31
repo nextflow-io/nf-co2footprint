@@ -31,7 +31,7 @@ class CO2FootprintConfigTest extends Specification {
 
         then:
         keys.each({property ->
-            config.getProperty(property) == input.get(property)
+            config.value(property) == input.get(property)
         }).every()
 
         where:
@@ -47,10 +47,10 @@ class CO2FootprintConfigTest extends Specification {
 
         then:
         keys.each({property ->
-            config.getProperty(property) == pluginConfig.get(property)
+            config.value(property) == pluginConfig.get(property)
         }).every()
-        tdp.fallbackModel == "default ${config.getProperty('machineType')}"
-        config.getPue() == pue
+        tdp.fallbackModel == "default ${config.value('machineType')}"
+        config.value('pue') == pue
 
         where:
         pluginConfig                            || processConfig                || keys                     || pue
@@ -62,12 +62,13 @@ class CO2FootprintConfigTest extends Specification {
         ['machineType': 'local', 'pue': 2.0]    || [:]                          || ['machineType', 'pue']   || 2.0
         ['pue': 2.0]                            || ['executor': 'awsbatch']     || ['machineType', 'pue']   || 2.0
     }
+
     def 'test dynamic ci computation with GLOBAL fallback'() {
         expect:
         CO2FootprintConfig config = new CO2FootprintConfig(['location': location], tdp, ci, [:])
-        assert config.getCi() instanceof Double
-        assert config.getCi() == expectedCi
-        assert config.location == location
+        assert config.value('ci') instanceof Double
+        assert config.value('ci') == expectedCi
+        assert config.value('location') == location
         validateDefaultProperties(config)
 
         where:
@@ -96,14 +97,14 @@ class CO2FootprintConfigTest extends Specification {
 
     def 'should log warning and set machineType to null for unknown executor'() {
         given:
-        def configMap = [:]
-        def processMap = [executor: 'notarealexecutor']
+        Map<String, Object> configMap = [:]
+        Map<String, Object> processMap = [executor: 'notarealexecutor']
 
         when:
         CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdp, ci, processMap)
 
         then:
-        config.machineType == null
+        config.value('machineType') == null
         // Optionally: check logs for warning if your framework supports it
     }
 
@@ -116,12 +117,12 @@ class CO2FootprintConfigTest extends Specification {
         CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdp, ci, processMap)
 
         then:
-        config.pue == 2.22
+        config.value('pue') == 2.22
     }
 
     // Helper method to validate default properties
     private static void validateDefaultProperties(CO2FootprintConfig config) {
-        assert config.powerdrawMem == 0.3725
-        assert config.pue == 1.0
+        assert config.value('powerdrawMem') == 0.3725
+        assert config.value('pue') == 1.0
     }
 }
