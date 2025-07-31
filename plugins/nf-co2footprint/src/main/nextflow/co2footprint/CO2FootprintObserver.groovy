@@ -93,9 +93,9 @@ class CO2FootprintObserver implements TraceObserver {
         this.config = config
 
         // Make file instances
-        this.co2eTraceFile = new TraceFileCreator((config.getTraceFile() as Path).complete(), overwrite)
-        this.co2eSummaryFile = new SummaryFileCreator((config.getSummaryFile() as Path).complete(), overwrite)
-        this.co2eReportFile = new ReportFileCreator((config.getReportFile() as Path).complete(), overwrite, maxTasks)
+        this.co2eTraceFile = new TraceFileCreator((config.value('traceFile') as Path).complete(), overwrite)
+        this.co2eSummaryFile = new SummaryFileCreator((config.value('summaryFile') as Path).complete(), overwrite)
+        this.co2eReportFile = new ReportFileCreator((config.value('reportFile') as Path).complete(), overwrite, maxTasks)
 
         this.co2FootprintComputer = co2FootprintComputer
         this.overwrite = overwrite
