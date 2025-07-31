@@ -52,14 +52,16 @@ class CIValueComputer {
             // Parse the successful API response
             json = new JsonSlurper().parse(connection.inputStream) as Map
             ci = json['carbonIntensity'] as Double
-
-            log.info(Markers.unique,"API call successful. Response code: ${connection.responseCode} (${connection.responseMessage})")
+            log.info(Markers.unique,
+                     "🔁 API call successful. Response code: ${connection.responseCode} (${connection.responseMessage})",
+                     'api-call-successful-info')
         } else {
             // Handle API error response
             String errorResponse = connection.errorStream.text
             String errorMessage = new JsonSlurper().parseText(errorResponse).message
-
-            log.warn(Markers.unique, "API call failed. Response code: ${connection.responseCode} (${errorMessage})")
+            log.warn(Markers.unique, 
+                    "🔁 API call failed. Response code: ${connection.responseCode} (${errorMessage})",
+                    'api-call-failed-warning')
 
             // Fallback to the location in the CSV
             ci = this.ciData.findCiInMatrix(this.location)
@@ -100,7 +102,7 @@ class CIValueComputer {
                     Markers.unique,
                     "Electricity Maps API key is not set. " +
                     "To retrieve real-time carbon intensity values, please provide a key with the parameter `emApiKey`.\n" +
-                    "💡You can obtain a key for ElectricityMaps at https://portal.electricitymaps.com/auth/login.")
+                    "\t💡 You can obtain a key for ElectricityMaps at https://portal.electricitymaps.com/auth/login.")
             }
             // Fallback to the location in the CSV
             ci = this.ciData.findCiInMatrix(this.location)

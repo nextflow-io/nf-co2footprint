@@ -69,13 +69,13 @@ class DeduplicateMarkerFilter extends TurboFilter {
      * @param marker Marker of the log message
      * @param logger The logger the received the message
      * @param level Level of the log
-     * @param format Message as a formatted string
+     * @param logMessage Message as a formatted string
      * @param params Parameters passed to the log to be filled into the message string
-     * @param t Throwable exception
+     * @param throwable Throwable exception
      * @return NEUTRAL, DENY, and ACCEPT command for the Logger
      */
     @Override
-    FilterReply decide(Marker marker, Logger logger, Level level, String format, Object[] params, Throwable t) {
+    FilterReply decide(Marker marker, Logger logger, Level level, String logMessage, Object[] params, Throwable throwable) {
         // Check whether the Filter started
         if (!isStarted()) {
             return FilterReply.NEUTRAL
@@ -83,17 +83,21 @@ class DeduplicateMarkerFilter extends TurboFilter {
 
         // Checks for the right markers
         if (filteredMarkers.contains(marker)) {
+            // Get deduplication key from params[0] if present, else use logMessage
+            String deduplicationKey = params ? params[0] : logMessage
 
-            // Counts the occurrences for the markers
-            AtomicInteger occurrences = seenMessages.computeIfAbsent(format, k -> new AtomicInteger(0))
+            // Track how many times this dedupKey has been seen
+            AtomicInteger occurrences = seenMessages.computeIfAbsent(deduplicationKey, k -> new AtomicInteger(0))
             int currentOccurrences = occurrences.incrementAndGet()
 
+            // Allow up to allowedOccurrences, then log further as TRACE
             if (currentOccurrences <= allowedOccurrences) {
                 return FilterReply.ACCEPT
             }
-            // Send a TRACE message when the message was not accepted
-            logger.trace('[DUPLICATE] ' + format, params)
+
+            logger.debug('[DUPLICATE] ' + logMessage, params)
             return FilterReply.DENY
+
         } else {
             return FilterReply.NEUTRAL
         }

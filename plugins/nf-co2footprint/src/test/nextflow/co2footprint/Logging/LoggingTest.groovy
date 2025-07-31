@@ -11,6 +11,9 @@ import org.slf4j.LoggerFactory
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
+import groovy.util.logging.Slf4j
+
+@Slf4j
 
 
 /**
@@ -35,7 +38,7 @@ class LoggingTest extends Specification {
 
     // Setup method that executes once before each test
     def setup() {
-        logger.setLevel(Level.DEBUG)
+        logger.setLevel(Level.INFO)
         listAppender.start()
         logger.addAppender(listAppender)
     }
@@ -74,9 +77,26 @@ class LoggingTest extends Specification {
 
         then:
         // Warnings are still blocked & Messages with level below Info (Debug & Trace) are ignored
-        listAppender.list.size() == 3
+        listAppender.list.size() == 2
         listAppender.list.collect({it as String}) as Set ==
-                ['[DEBUG] Debug', '[INFO] Info', '[ERROR] Error'].collect({"${it} message" as String}) as Set
+                ['[INFO] Info', '[ERROR] Error'].collect({"${it} message" as String}) as Set
+    }
+
+    def 'Should deduplicate based on dedupKey and allow custom trace message' () {
+        given:
+        String dedupKey = "memory_is_null"
+        String warnMessage = "Requested memory is null for task 123."
+
+        when:
+        // Log with dedupKey 
+        logger.warn(Markers.unique, warnMessage, dedupKey)
+        logger.warn(Markers.unique, warnMessage, dedupKey)
+        logger.warn(Markers.unique, warnMessage, dedupKey)
+
+        then:
+        // Only the first warning should be logged
+        listAppender.list.size() == 1
+        listAppender.list[0].getFormattedMessage() == warnMessage
     }
 }
 

@@ -1,5 +1,6 @@
 package nextflow.co2footprint
 
+import nextflow.co2footprint.Logging.Markers
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
@@ -7,7 +8,6 @@ import nextflow.co2footprint.utils.HelperFunctions
 import groovy.util.logging.Slf4j
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
-
 
 /**
  * Class for computation of energy usage, CO2 emission, and equivalence metrics.
@@ -67,19 +67,23 @@ class CO2FootprintComputer {
         /**
          * Realtime of computation
          */
-        final BigDecimal runtime_h = (HelperFunctions.getTraceOrDefault(trace, taskID, 'realtime', 0) as BigDecimal) / (1000*60*60) // [h]
+        final BigDecimal runtime_h = (HelperFunctions.getTraceOrDefault(trace, taskID, 'realtime', 0, 'missing-realtime') as BigDecimal) / (1000 * 60 * 60) // [h]
 
         /**
          * Factors of core power usage
          */
-        final Integer numberOfCores = HelperFunctions.getTraceOrDefault(trace, taskID, 'cpus', 1) as Integer           // [#]
+        final Integer numberOfCores = HelperFunctions.getTraceOrDefault(trace, taskID, 'cpus', 1, 'missing-cpus') as Integer // [#]
         final BigDecimal powerdrawPerCore = tdpDataMatrix.matchModel(cpuModel).getCoreTDP()            // [W/core]
 
         // uc: core usage factor (between 0 and 1)
-        BigDecimal cpuUsage = HelperFunctions.getTraceOrDefault(trace, taskID, '%cpu', numberOfCores * 100) as BigDecimal
-
+        BigDecimal cpuUsage = HelperFunctions.getTraceOrDefault(trace, taskID, '%cpu', numberOfCores * 100, 'missing-%cpu') as BigDecimal
+        
         if ( cpuUsage == 0.0 ) {
-            log.warn("The reported CPU usage is 0.0 for task ${taskID}.")
+            log.warn(
+                Markers.unique,
+                "🔁 The reported CPU usage is 0.0 for task ${taskID}.",
+                'zero-cpu-usage-warning'
+            )
         }
 
         final BigDecimal coreUsage = cpuUsage / (100.0 * numberOfCores)
@@ -95,19 +99,28 @@ class CO2FootprintComputer {
             // If missing, get the available system memory
             Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
             // Warn that requested memory was null and fallback is used
-            log.warn("Requested memory is null for task ${taskID}. Setting to available memory (${availableMemory/(1024**3)} GB).")
+            log.warn(
+                Markers.unique,
+                "🔁 Requested memory is null for task ${taskID}. Setting to available memory (${availableMemory/(1024**3)} GB).",
+                'memory-is-null-warning'
+            )
             // Use available system memory as the requested memory
             requestedMemory = availableMemory
         }
         // If peak memory usage (requiredMemory) is known and exceeds the requested memory
         else if (requiredMemory != null && requiredMemory > requestedMemory) {
+            
             // Get the available system memory
             Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
+
             // Warn that required memory exceeded requested, so fallback is used
             log.warn(
-                "The required memory (${requiredMemory/(1024**3)} GB) for the task exceeds the requested memory (${requestedMemory/(1024**3)} GB). " +
-                "Setting requested to maximum available memory (${availableMemory/(1024**3)} GB)."
+                Markers.unique,
+                "🔁 The required memory (${requiredMemory/(1024**3)} GB) exceeds the requested memory (${requestedMemory/(1024**3)} GB) for task ${taskID}. " +
+                "Setting requested to maximum available memory (${availableMemory/(1024**3)} GB).",
+                'memory-exceeded-warning'
             )
+
             // Use available system memory as the requested memory
             requestedMemory = availableMemory
         }
@@ -172,7 +185,7 @@ class CO2FootprintComputer {
      * @return CO2EquivalencesRecord with estimations for sensible comparisons
      */
     static CO2EquivalencesRecord computeCO2footprintEquivalences(Double totalCO2) {
-        final BigDecimal gCO2 = totalCO2 as BigDecimal / 1000 as BigDecimal       // Conversion to [g] CO2
+        final BigDecimal gCO2 = totalCO2 as BigDecimal / 1000 as BigDecimal // [gCO2]
 
         final BigDecimal carKilometers = gCO2 / 175
         final BigDecimal treeMonths = gCO2 / 917
