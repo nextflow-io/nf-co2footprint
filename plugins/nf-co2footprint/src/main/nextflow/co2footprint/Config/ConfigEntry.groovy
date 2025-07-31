@@ -127,13 +127,6 @@ class ConfigEntry {
     }
 
     /**
-     * Make comparisons with value of ConfigEntry instance.
-     *
-     * @param obj Object to compare the value to
-     */
-    boolean equals(Object obj) { return evaluate() == obj }
-
-    /**
      * A String representation of the parameter.
      * @return String representation
      */
