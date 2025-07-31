@@ -6,7 +6,6 @@ import ch.qos.logback.classic.turbo.TurboFilter
 import ch.qos.logback.core.spi.FilterReply
 import org.slf4j.Marker
 import org.slf4j.MarkerFactory
-import groovy.util.logging.Slf4j
 
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
@@ -16,7 +15,6 @@ import java.util.concurrent.atomic.AtomicInteger
  * Motivation: Removes duplicates in some warnings, to avoid cluttering the output with repeated information.
  * Example: If the CPU model is not found it should only be warned once, that a fallback value is used.
  */
-@Slf4j
 class DeduplicateMarkerFilter extends TurboFilter {
 
     // Markers to be Filtered
@@ -97,7 +95,9 @@ class DeduplicateMarkerFilter extends TurboFilter {
                 return FilterReply.ACCEPT
             }
 
-            logger.trace('[DUPLICATE] ' + logMessage, params)
+            // Use base message for duplicates if provided
+            String duplicateMessage = (params && params.length > 1) ? params[1] : logMessage
+            logger.debug('[DUPLICATE] ' + duplicateMessage, params)
             return FilterReply.DENY
 
         } else {

@@ -78,11 +78,16 @@ class CO2FootprintComputer {
         // uc: core usage factor (between 0 and 1)
         BigDecimal cpuUsage = HelperFunctions.getTraceOrDefault(trace, taskID, '%cpu', numberOfCores * 100, 'missing-%cpu') as BigDecimal
 
+        // Logging extra information 
+        final String EXTRA_LOG_INFO = "\n\tThis message may also appear for other tasks—see `.nextflow.log` for all occurrences."
+        
         if ( cpuUsage == 0.0 ) {
+            String warnMessage = "The reported CPU usage is 0.0 for task ${taskID}."
             log.warn(
                 Markers.unique,
-                "The reported CPU usage is 0.0 for task ${taskID}.",
-                'zero_cpu_usage'
+                warnMessage + EXTRA_LOG_INFO,
+                'zero-cpu-usage-warning',
+                warnMessage
             )
         }
 
@@ -99,12 +104,12 @@ class CO2FootprintComputer {
             // If missing, get the available system memory
             Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
             // Warn that requested memory was null and fallback is used
-            
-            // Use a deduplicated warning to avoid flooding the log with the same message
+            String warnMessage = "Requested memory is null for task ${taskID}. Setting to available memory (${availableMemory/(1024**3)} GB)."
             log.warn(
                 Markers.unique,
-                "Requested memory is null for task ${taskID}. Setting to available memory (${availableMemory/(1024**3)} GB).",
-                'memory_is_null'
+                warnMessage + EXTRA_LOG_INFO,
+                'memory-is-null-warning',
+                warnMessage
             )
             // Use available system memory as the requested memory
             requestedMemory = availableMemory
@@ -116,11 +121,13 @@ class CO2FootprintComputer {
             Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
 
             // Warn that required memory exceeded requested, so fallback is used
+            String warnMessage = "The required memory (${requiredMemory/(1024**3)} GB) exceeds the requested memory (${requestedMemory/(1024**3)} GB) for task ${taskID}. " +
+                "Setting requested to maximum available memory (${availableMemory/(1024**3)} GB)."            
             log.warn(
                 Markers.unique,
-                "The required memory (${requiredMemory/(1024**3)} GB) for task ${taskID} exceeds the requested memory (${requestedMemory/(1024**3)} GB). " +
-                "Setting requested to maximum available memory (${availableMemory/(1024**3)} GB).",
-                'memory_exceeded'
+                warnMessage + EXTRA_LOG_INFO,
+                'memory-exceeded-warning',
+                warnMessage
             )
 
             // Use available system memory as the requested memory
@@ -187,7 +194,7 @@ class CO2FootprintComputer {
      * @return CO2EquivalencesRecord with estimations for sensible comparisons
      */
     static CO2EquivalencesRecord computeCO2footprintEquivalences(Double totalCO2) {
-        final BigDecimal gCO2 = totalCO2 as BigDecimal / 1000 as BigDecimal // Convert to gCO2
+        final BigDecimal gCO2 = totalCO2 as BigDecimal / 1000 as BigDecimal // [gCO2]
 
         final BigDecimal carKilometers = gCO2 / 175
         final BigDecimal treeMonths = gCO2 / 917

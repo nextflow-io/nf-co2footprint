@@ -40,10 +40,12 @@ class HelperFunctions {
             } else {
                 warnMessage = "Missing trace value '${key}' for task ${taskID}, using default: ${defaultValue}."
             }
+            String extraInfo = "\n\tThis message may also appear for other tasks — see `.nextflow.log` for all occurrences."
             log.warn(
                 Markers.unique,
-                warnMessage,
-                dedupKey
+                warnMessage + extraInfo,
+                dedupKey,
+                warnMessage
             )
         }
         return value ?: defaultValue

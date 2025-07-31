@@ -4,6 +4,7 @@ import ch.qos.logback.classic.LoggerContext
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.classic.turbo.TurboFilter
 import ch.qos.logback.core.read.ListAppender
+import ch.qos.logback.classic.Level
 import nextflow.co2footprint.Logging.DeduplicateMarkerFilter
 import nextflow.co2footprint.Logging.Markers
 import org.slf4j.Logger
@@ -45,6 +46,7 @@ class TDPDataMatrixTest extends Specification {
     }
 
     def setup() {
+        logger.setLevel(Level.WARN) // Ensure WARN level
         listAppender.start()
         logger.addAppender(listAppender)
     }
