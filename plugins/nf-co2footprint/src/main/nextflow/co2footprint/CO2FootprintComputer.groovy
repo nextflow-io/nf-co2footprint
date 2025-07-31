@@ -77,17 +77,12 @@ class CO2FootprintComputer {
 
         // uc: core usage factor (between 0 and 1)
         BigDecimal cpuUsage = HelperFunctions.getTraceOrDefault(trace, taskID, '%cpu', numberOfCores * 100, 'missing-%cpu') as BigDecimal
-
-        // Logging extra information 
-        final String EXTRA_LOG_INFO = "\n\tThis message may also appear for other tasks—see `.nextflow.log` for all occurrences."
         
         if ( cpuUsage == 0.0 ) {
-            String warnMessage = "The reported CPU usage is 0.0 for task ${taskID}."
             log.warn(
                 Markers.unique,
-                warnMessage + EXTRA_LOG_INFO,
-                'zero-cpu-usage-warning',
-                warnMessage
+                "🔁 The reported CPU usage is 0.0 for task ${taskID}.",
+                'zero-cpu-usage-warning'
             )
         }
 
@@ -104,10 +99,9 @@ class CO2FootprintComputer {
             // If missing, get the available system memory
             Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
             // Warn that requested memory was null and fallback is used
-            String warnMessage = "🔁 Requested memory is null for task ${taskID}. Setting to available memory (${availableMemory/(1024**3)} GB)."
             log.warn(
                 Markers.unique,
-                warnMessage,
+                "🔁 Requested memory is null for task ${taskID}. Setting to available memory (${availableMemory/(1024**3)} GB).",
                 'memory-is-null-warning'
             )
             // Use available system memory as the requested memory
@@ -120,13 +114,11 @@ class CO2FootprintComputer {
             Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
 
             // Warn that required memory exceeded requested, so fallback is used
-            String warnMessage = "The required memory (${requiredMemory/(1024**3)} GB) exceeds the requested memory (${requestedMemory/(1024**3)} GB) for task ${taskID}. " +
-                "Setting requested to maximum available memory (${availableMemory/(1024**3)} GB)."            
             log.warn(
                 Markers.unique,
-                warnMessage + EXTRA_LOG_INFO,
-                'memory-exceeded-warning',
-                warnMessage
+                "🔁 The required memory (${requiredMemory/(1024**3)} GB) exceeds the requested memory (${requestedMemory/(1024**3)} GB) for task ${taskID}. " +
+                "Setting requested to maximum available memory (${availableMemory/(1024**3)} GB).",
+                'memory-exceeded-warning'
             )
 
             // Use available system memory as the requested memory

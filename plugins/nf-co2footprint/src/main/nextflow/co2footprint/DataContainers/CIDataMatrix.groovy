@@ -63,16 +63,13 @@ class CIDataMatrix extends DataMatrix {
      */
     protected Double findCiInMatrix(String targetZone) {
         def ci
-        String logMessage
-        String extraLogInfo = "See `.nextflow.log` for additional occurrences of this message."
 
         try {
             ci = this.get(targetZone, this.ciColumn)
-            logMessage = "Using carbon intensity for ${HelperFunctions.bold(targetZone)} from fallback table: ${HelperFunctions.bold(ci.toString())} gCO₂eq/kWh."
             log.info(Markers.unique, 
-                    logMessage + extraLogInfo,
-                    'using-ci-from-table-info',
-                    logMessage)
+                    "🔁 Using carbon intensity for ${HelperFunctions.bold(targetZone)} from fallback table: ${HelperFunctions.bold(ci.toString())} gCO₂eq/kWh.",
+                    'using-ci-from-table-info'
+                    )
         } catch (IllegalArgumentException e) {
             if (targetZone == 'GLOBAL') {
                 Exception err = new IllegalStateException("Could not retrieve ${HelperFunctions.bold('GLOBAL')} carbon intensity value from fallback table.")
