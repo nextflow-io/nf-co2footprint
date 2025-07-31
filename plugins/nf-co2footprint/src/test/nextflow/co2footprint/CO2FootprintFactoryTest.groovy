@@ -55,6 +55,6 @@ class CO2FootprintFactoryTest extends Specification {
         String pluginVersion = factory.getPluginVersion()
 
         then:
-        pluginVersion == "1.0.0-rc.2"
+        pluginVersion == "1.0.0-rc.3"
     }
 }
