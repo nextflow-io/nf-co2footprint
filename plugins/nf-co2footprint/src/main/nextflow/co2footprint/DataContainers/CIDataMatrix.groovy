@@ -80,11 +80,9 @@ class CIDataMatrix extends DataMatrix {
                 throw err  // <-- will stop execution
             }
             else {
-                logMessage =  "Could not find carbon intensity for zone ${HelperFunctions.bold(targetZone)}: ${e.message}"
                 log.warn(Markers.unique, 
-                        logMessage + extraLogInfo,
-                        'missing-ci-in-table-warning',
-                        logMessage
+                        "🔁 Could not find carbon intensity for zone ${HelperFunctions.bold(targetZone)}: ${e.message}",
+                        'missing-ci-in-table-warning'
                 ) 
             }
             return null

@@ -104,12 +104,11 @@ class CO2FootprintComputer {
             // If missing, get the available system memory
             Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
             // Warn that requested memory was null and fallback is used
-            String warnMessage = "Requested memory is null for task ${taskID}. Setting to available memory (${availableMemory/(1024**3)} GB)."
+            String warnMessage = "🔁 Requested memory is null for task ${taskID}. Setting to available memory (${availableMemory/(1024**3)} GB)."
             log.warn(
                 Markers.unique,
-                warnMessage + EXTRA_LOG_INFO,
-                'memory-is-null-warning',
-                warnMessage
+                warnMessage,
+                'memory-is-null-warning'
             )
             // Use available system memory as the requested memory
             requestedMemory = availableMemory

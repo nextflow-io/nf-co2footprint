@@ -95,9 +95,7 @@ class DeduplicateMarkerFilter extends TurboFilter {
                 return FilterReply.ACCEPT
             }
 
-            // Use base message for duplicates if provided
-            String duplicateMessage = (params && params.length > 1) ? params[1] : logMessage
-            logger.debug('[DUPLICATE] ' + duplicateMessage, params)
+            logger.debug('[DUPLICATE] ' + logMessage, params)
             return FilterReply.DENY
 
         } else {

@@ -47,27 +47,21 @@ class CIValueComputer {
 
         Map json
         Double ci
-        String logMessage  
-        String extraLogInfo = "See `.nextflow.log` for additional occurrences of this message."
 
         if (connection.responseCode == 200) {
             // Parse the successful API response
             json = new JsonSlurper().parse(connection.inputStream) as Map
             ci = json['carbonIntensity'] as Double
-            logMessage = "API call successful. Response code: ${connection.responseCode} (${connection.responseMessage})"
             log.info(Markers.unique,
-                     logMessage + extraLogInfo,
-                     'api-call-successful-info',
-                     logMessage)
+                     "🔁 API call successful. Response code: ${connection.responseCode} (${connection.responseMessage})",
+                     'api-call-successful-info')
         } else {
             // Handle API error response
             String errorResponse = connection.errorStream.text
             String errorMessage = new JsonSlurper().parseText(errorResponse).message
-            logMessage = "API call failed. Response code: ${connection.responseCode} (${errorMessage})"
             log.warn(Markers.unique, 
-                    logMessage + extraLogInfo,
-                    'api-call-failed-warning',
-                    logMessage)
+                    "🔁 API call failed. Response code: ${connection.responseCode} (${errorMessage})",
+                    'api-call-failed-warning')
 
             // Fallback to the location in the CSV
             ci = this.ciData.findCiInMatrix(this.location)
