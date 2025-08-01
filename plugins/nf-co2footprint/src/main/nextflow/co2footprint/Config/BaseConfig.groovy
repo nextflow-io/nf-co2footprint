@@ -18,7 +18,6 @@ class BaseConfig extends LinkedHashMap<String, ConfigEntry> implements GroovyObj
         super()
 
         // Ensure ConfigEntry as Entries by converting Objects if necessary
-        boolean x = configMap.values().any( { Object val -> !(val instanceof ConfigEntry)} )
         if (configMap.values().any( { Object val -> !(val instanceof ConfigEntry)} )) {
             configMap = configMap.collectEntries(
                     { String name, Object value -> [name, new ConfigEntry(name, null, value)] }
@@ -61,7 +60,6 @@ class BaseConfig extends LinkedHashMap<String, ConfigEntry> implements GroovyObj
      */
     void set(String key, Object value) { get(key).set(value) }
 
-
     /**
      * Fill a config entry with a new value, if it is not null.
      *
@@ -70,33 +68,12 @@ class BaseConfig extends LinkedHashMap<String, ConfigEntry> implements GroovyObj
      */
     void fill(String key, Object value) { get(key).fill(value) }
 
-
     /**
      * Get the correctly cast and executed result of a value.
      *
      * @param key Name of the entry
      */
     <T> T value(String key) { return get(key).evaluate() }
-
-    /**
-     * Enable dot ('.') access to parameters.
-     * Example: this.myEntry gets the value of the ConfigEntry behind the 'myEntry' key.
-     *
-     * @param name the name of the property of interest
-     * @return
-     */
-    @Override
-    Object getProperty(String name) { value(name) }
-
-    /**
-     * Enable dot ('.') access to parameters.
-     * Example: this.myEntry = 1 sets the value of the ConfigEntry behind the 'myEntry' key to 1.
-     *
-     * @param name the name of the property of interest
-     * @param value     the new value for the property
-     */
-    @Override
-    void setProperty(String name, Object value) { set(name, value) }
 
     /**
      * The value map of a list of keys.
