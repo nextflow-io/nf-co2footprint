@@ -3,7 +3,6 @@ package nextflow.co2footprint.FileCreators
 import nextflow.Session
 import nextflow.co2footprint.CO2FootprintComputer
 import nextflow.co2footprint.DataContainers.CIDataMatrix
-import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.Records.CO2Record
@@ -17,14 +16,14 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.util.concurrent.Executors
 
-class CO2FootprintReportTest extends Specification{
+class ReportFileCreatorTest extends Specification{
     @Shared
     Path tempPath = Files.createTempDirectory('tmpdir')
 
     @Shared
     Path reportPath = tempPath.resolve('report_test.html')
 
-    static CO2FootprintReport co2FootprintReport
+    static ReportFileCreator co2FootprintReport
 
     def setupSpec() {
         TaskId taskId = new TaskId(111)
@@ -75,7 +74,7 @@ class CO2FootprintReportTest extends Specification{
         CO2RecordAggregator aggregator = new CO2RecordAggregator()
         aggregator.add(traceRecord, co2Record)
 
-        co2FootprintReport = new CO2FootprintReport(reportPath, false, 10_000)
+        co2FootprintReport = new ReportFileCreator(reportPath, false, 10_000)
         co2FootprintReport.addEntries(
                 aggregator.computeProcessStats(),
                 [co2e: 10.0d, energy: 100.0d, co2e_non_cached: 10.0d, energy_non_cached: 100.0d],
@@ -87,7 +86,7 @@ class CO2FootprintReportTest extends Specification{
     def 'Test correct value rendering for totalsJson' () {
         given:
         Path tempPath = Files.createTempDirectory('tmpdir')
-        CO2FootprintReport co2FootprintReport = new CO2FootprintReport(
+        ReportFileCreator co2FootprintReport = new ReportFileCreator(
                 tempPath.resolve('report_test.html')
         )
 

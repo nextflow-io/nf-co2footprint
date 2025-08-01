@@ -18,7 +18,7 @@ import java.nio.file.Path
  * to a human-readable summary file at the end of the workflow.
  */
 @Slf4j
-class CO2FootprintSummary extends CO2FootprintFile {
+class SummaryFileCreator extends BaseFileCreator {
 
     // Writer for the summary file
     PrintWriter co2eSummaryFile
@@ -32,7 +32,7 @@ class CO2FootprintSummary extends CO2FootprintFile {
      * @param path      Path to the summary file
      * @param overwrite Whether to overwrite existing files
      */
-    CO2FootprintSummary(Path path, boolean overwrite) {
+    SummaryFileCreator(Path path, boolean overwrite) {
         super(path, overwrite)
         this.co2eSummaryFile = new PrintWriter(TraceHelper.newFileWriter(path, overwrite, 'co2footprintsummary'))
     }
