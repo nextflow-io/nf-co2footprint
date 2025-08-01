@@ -5,45 +5,32 @@ import groovy.util.logging.Slf4j
 /**
  * Base class for configurations, which extends LinkedHashMap.
  * The map is made unmodifiable by overriding modification methods.
- * Entries can be changed by calling a set method on the respective {@link ConfigEntry}.
+ * Entries can be changed by calling the `set` method on the respective {@link ConfigEntry}.
  */
 @Slf4j
-class BaseConfig extends LinkedHashMap<String, ConfigEntry> {
-
+class BaseConfig extends LinkedHashMap<String, ConfigEntry> implements GroovyObject {
     /**
      * Add all elements in the map to the BaseConfig instance.
      *
      * @param configMap Map with all entries that are used to instantiate the configuration.
      */
-    BaseConfig(Map<String, ConfigEntry> configMap=[:]) {
-        super(configMap)
+    BaseConfig(Map<String, Object> configMap=[:]) {
+        super()
+
+        // Ensure ConfigEntry as Entries by converting Objects if necessary
+        boolean x = configMap.values().any( { Object val -> !(val instanceof ConfigEntry)} )
+        if (configMap.values().any( { Object val -> !(val instanceof ConfigEntry)} )) {
+            configMap = configMap.collectEntries(
+                    { String name, Object value -> [name, new ConfigEntry(name, null, value)] }
+            ) as Map<String, ConfigEntry>
+        }
+        super.putAll(configMap)
+
+        // Set values to default as a start
+        setDefaults()
     }
 
-    /**
-     * Throws an error upon modification attempts.
-     *
-     * @param message Message that is reported in the error.
-     * @throws UnsupportedOperationException
-     */
-    static void throwModificationException(String message) throws UnsupportedOperationException {
-        message = "Configuration not modifieable. ${message}."
-        log.error(message)
-        throw new UnsupportedOperationException(message)
-    }
-
-    // Make entries only modifiable via value.set()
-    @Override
-    ConfigEntry put(String key, ConfigEntry value) { throwModificationException("Can't add entry: ${key}, ${value}") }
-
-    @Override
-    ConfigEntry remove(Object key) { throwModificationException("Can't remove entry: ${key}") }
-
-    @Override
-    void clear() { throwModificationException("Can't clear config") }
-
-    @Override
-    void putAll(Map<? extends String, ? extends ConfigEntry> map) { throwModificationException("Can't add new entries: ${map}") }
-
+    // ##### Initialization methods #####
     /**
      *  Define a new parameter in the configuration. Overwrites parameters that were previously set.
      *
@@ -60,10 +47,12 @@ class BaseConfig extends LinkedHashMap<String, ConfigEntry> {
         super.put(name, new ConfigEntry(name, description, defaultValue, returnType, additionalTypes))
     }
 
-    //
-    // Syntactic sugar
-    //
+    /**
+     * Sets the entries to their default values.
+     */
+    void setDefaults(Map<String, ConfigEntry> map=this) { map.each { String name, ConfigEntry entry -> entry.setDefault() } }
 
+    //  ###### Accessor methods ######
     /**
      * Set a new value into the config entry.
      *
@@ -90,6 +79,26 @@ class BaseConfig extends LinkedHashMap<String, ConfigEntry> {
     <T> T value(String key) { return get(key).evaluate() }
 
     /**
+     * Enable dot ('.') access to parameters.
+     * Example: this.myEntry gets the value of the ConfigEntry behind the 'myEntry' key.
+     *
+     * @param name the name of the property of interest
+     * @return
+     */
+    @Override
+    Object getProperty(String name) { value(name) }
+
+    /**
+     * Enable dot ('.') access to parameters.
+     * Example: this.myEntry = 1 sets the value of the ConfigEntry behind the 'myEntry' key to 1.
+     *
+     * @param name the name of the property of interest
+     * @param value     the new value for the property
+     */
+    @Override
+    void setProperty(String name, Object value) { set(name, value) }
+
+    /**
      * The value map of a list of keys.
      *
      * @param keys Names of the entries
@@ -100,4 +109,28 @@ class BaseConfig extends LinkedHashMap<String, ConfigEntry> {
         keys.each { String key -> valueMap.put(key, value(key)) }
         return  valueMap
     }
+
+    // ##### Disable removal/adding of new entries with normal Map methods #####
+    /**
+     * Throw an exception upon modification attempts.
+     *
+     * @throws UnsupportedOperationException
+     */
+    static void throwModificationException() throws UnsupportedOperationException {
+        String message = 'Config instance entries can not be removed or added after initialization.'
+        log.error(message)
+        throw new UnsupportedOperationException(message)
+    }
+
+    @Override
+    ConfigEntry put(String key, ConfigEntry value) { throwModificationException() }
+
+    @Override
+    ConfigEntry remove(Object key) { throwModificationException() }
+
+    @Override
+    void clear() { throwModificationException() }
+
+    @Override
+    void putAll(Map<? extends String, ? extends ConfigEntry> map) { throwModificationException() }
 }
