@@ -2,7 +2,6 @@ package nextflow.co2footprint
 
 import groovy.util.logging.Slf4j
 import nextflow.co2footprint.Config.BaseConfig
-import nextflow.co2footprint.Config.ConfigEntry
 import nextflow.co2footprint.DataContainers.DataMatrix
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.CIValueComputer
@@ -107,7 +106,7 @@ class CO2FootprintConfig extends BaseConfig {
         defineParameters()
 
         // Initialize defaults
-        this.each { String name, ConfigEntry entry -> entry.setDefault() }
+        setDefaults()
 
         // Ensure configMap is not null
         configMap ?= [:]
@@ -223,9 +222,8 @@ class CO2FootprintConfig extends BaseConfig {
      * @return SortedMap of input file options
      */
     SortedMap<String, Object> collectInputFileOptions() {
-        return getValueMap(
-                Set.of('customCpuTdpFile')
-        ).sort() as SortedMap
+        Set<String> inputFileOptions = Set.of('customCpuTdpFile')
+        return getValueMap(inputFileOptions).sort() as SortedMap
     }
 
     /**
@@ -234,9 +232,8 @@ class CO2FootprintConfig extends BaseConfig {
      * @return SortedMap of output file options
      */
     SortedMap<String, Object> collectOutputFileOptions() {
-        return getValueMap(
-            Set.of('traceFile', 'summaryFile', 'reportFile')
-        ).sort() as SortedMap
+        Set<String> outputFileOptions = Set.of('traceFile', 'summaryFile', 'reportFile')
+        return getValueMap(outputFileOptions).sort() as SortedMap
     }
 
     /**
