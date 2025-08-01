@@ -1,4 +1,4 @@
-package nextflow.co2footprint.FileCreators
+package nextflow.co2footprint.FileCreation
 
 import groovy.util.logging.Slf4j
 import groovyx.gpars.agent.Agent

@@ -6,9 +6,9 @@ import groovy.util.logging.Slf4j
 import nextflow.Session
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordAggregator
-import nextflow.co2footprint.FileCreators.ReportFileCreator
-import nextflow.co2footprint.FileCreators.SummaryFileCreator
-import nextflow.co2footprint.FileCreators.TraceFileCreator
+import nextflow.co2footprint.FileCreation.ReportFileCreator
+import nextflow.co2footprint.FileCreation.SummaryFileCreator
+import nextflow.co2footprint.FileCreation.TraceFileCreator
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskId
 import nextflow.processor.TaskProcessor
