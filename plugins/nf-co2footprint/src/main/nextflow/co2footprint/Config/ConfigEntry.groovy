@@ -1,5 +1,7 @@
 package nextflow.co2footprint.Config
 
+import org.apache.commons.lang.SerializationUtils
+
 /**
  * Represents a single configurable entry (parameter) in the plugin's configuration system.
  */
@@ -30,7 +32,7 @@ class ConfigEntry {
 
         // Set allowed types to return type + all additional types
         this.allowedTypes = [this.returnType]
-        this.allowedTypes.addAll(additionalTypes)
+        if (additionalTypes) { this.allowedTypes.addAll(additionalTypes) }
     }
 
     String getName() { name }
@@ -128,9 +130,22 @@ class ConfigEntry {
 
     /**
      * A String representation of the parameter.
+     *
      * @return String representation
      */
     String toString() {
         return "${name}: ${value} (${allowedTypes} -> ${returnType})${description ? '\n' + description: ''}"
+    }
+
+    /**
+     * A map representation of the parameter.
+     * Allows the export of raw values for testing purposes, while not exposing the values for modification.
+     *
+     * @return Map representation
+     */
+    Map<String, ?> toMap() {
+        return SerializationUtils.clone(
+                [name: name, description: description, value: value, returnType: returnType, allowedTypes: allowedTypes]
+        ) as Map<String, Object>
     }
 }
