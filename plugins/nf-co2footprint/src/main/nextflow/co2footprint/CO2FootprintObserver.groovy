@@ -98,9 +98,9 @@ class CO2FootprintObserver implements TraceObserver {
         this.config = config
 
         // Generate CO2 footprint output files (trace, summary, HTML report)
-        this.paths['co2eTrace'] = (config.getTraceFile() as Path).complete()
-        this.paths['co2eSummary'] = (config.getSummaryFile() as Path).complete()
-        this.paths['co2eReport'] = (config.getReportFile() as Path).complete()
+        this.paths['co2eTrace'] = (config.value('traceFile') as Path).complete()
+        this.paths['co2eSummary'] = (config.value('summaryFile') as Path).complete()
+        this.paths['co2eReport'] = (config.value('reportFile') as Path).complete()
 
         this.co2FootprintComputer = co2FootprintComputer
         this.overwrite = overwrite
