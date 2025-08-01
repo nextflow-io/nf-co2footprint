@@ -35,7 +35,9 @@ class CO2FootprintConfig extends BaseConfig {
     private String  timestamp = TraceHelper.launchTimestampFmt()
     private final List<String> supportedMachineTypes = ['local', 'compute cluster', 'cloud']
 
-    // Configuration parameters (can be set in Nextflow config)
+    /**
+     * Defines the parameters of the configuration.
+     */
     private void defineParameters() {
         // Name, description, default value or function, return type, additional allowed types
         defineParameter(
