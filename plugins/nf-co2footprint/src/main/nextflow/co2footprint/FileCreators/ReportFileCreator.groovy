@@ -26,7 +26,7 @@ import java.nio.file.Path
  * and writes the final report to disk.
  */
 @Slf4j
-class CO2FootprintReport extends CO2FootprintFile{
+class ReportFileCreator extends BaseFileCreator{
 
     // Maximum number of tasks to include in the report table
     private int maxTasks
@@ -51,7 +51,7 @@ class CO2FootprintReport extends CO2FootprintFile{
      * @param overwrite Whether to overwrite existing files
      * @param maxTasks  Maximum number of tasks to include in the report table
      */
-    CO2FootprintReport(Path path, boolean overwrite=false, int maxTasks=10_000) {
+    ReportFileCreator(Path path, boolean overwrite=false, int maxTasks=10_000) {
         super(path, overwrite)
         this.maxTasks = maxTasks
     }

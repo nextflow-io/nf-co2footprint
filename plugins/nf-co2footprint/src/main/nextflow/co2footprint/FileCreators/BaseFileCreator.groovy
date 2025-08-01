@@ -7,7 +7,7 @@ import java.nio.file.Path
  *
  * Handles file path and overwrite logic for output files (trace, summary, report).
  */
-class CO2FootprintFile {
+class BaseFileCreator {
 
     // Whether to overwrite existing files with the same path
     protected boolean overwrite
@@ -24,7 +24,7 @@ class CO2FootprintFile {
      * @param path Path to the file, or where it is targeted to be written
      * @param overwrite Whether to overwrite existing files with the same path
      */
-    CO2FootprintFile(Path path, boolean overwrite) {
+    BaseFileCreator(Path path, boolean overwrite) {
         this.path = path
         this.overwrite = overwrite
     }
