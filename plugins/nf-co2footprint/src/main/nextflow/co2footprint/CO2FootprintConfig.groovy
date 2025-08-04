@@ -61,7 +61,7 @@ class CO2FootprintConfig extends BaseConfig {
                 null, Double, Set.of(Closure<Double>, BigDecimal)
         )
         defineParameter(
-                'ciMarket', 'market-based carbon intensity (CI)',
+                'ciMarket', 'Market-based carbon intensity (CI)',
                 null, Double, Set.of(Closure<Double>, BigDecimal)
         )
         defineParameter(
