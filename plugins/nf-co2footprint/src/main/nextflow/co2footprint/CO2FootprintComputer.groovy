@@ -81,7 +81,7 @@ class CO2FootprintComputer {
         if ( cpuUsage == 0.0 ) {
             log.warn(
                 Markers.unique,
-                "🔁 The reported CPU usage is 0.0 for task ${taskID}.",
+                "The reported CPU usage is 0.0 for task ${taskID}.",
                 'zero-cpu-usage-warning'
             )
         }
@@ -101,7 +101,7 @@ class CO2FootprintComputer {
             // Warn that requested memory was null and fallback is used
             log.warn(
                 Markers.unique,
-                "🔁 Requested memory is null for task ${taskID}. Setting to available memory (${availableMemory/(1024**3)} GB).",
+                "Requested memory is null for task ${taskID}. Setting to available memory (${availableMemory/(1024**3)} GB).",
                 'memory-is-null-warning'
             )
             // Use available system memory as the requested memory
@@ -116,7 +116,7 @@ class CO2FootprintComputer {
             // Warn that required memory exceeded requested, so fallback is used
             log.warn(
                 Markers.unique,
-                "🔁 The required memory (${requiredMemory/(1024**3)} GB) exceeds the requested memory (${requestedMemory/(1024**3)} GB) for task ${taskID}. " +
+                "The required memory (${requiredMemory/(1024**3)} GB) exceeds the requested memory (${requestedMemory/(1024**3)} GB) for task ${taskID}. " +
                 "Setting requested to maximum available memory (${availableMemory/(1024**3)} GB).",
                 'memory-exceeded-warning'
             )

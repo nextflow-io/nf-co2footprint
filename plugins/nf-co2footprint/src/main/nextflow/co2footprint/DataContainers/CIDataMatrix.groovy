@@ -67,7 +67,7 @@ class CIDataMatrix extends DataMatrix {
         try {
             ci = this.get(targetZone, this.ciColumn)
             log.info(Markers.unique, 
-                    "🔁 Using carbon intensity for ${HelperFunctions.bold(targetZone)} from fallback table: ${HelperFunctions.bold(ci.toString())} gCO₂eq/kWh.",
+                    "Using carbon intensity for ${HelperFunctions.bold(targetZone)} from fallback table: ${HelperFunctions.bold(ci.toString())} gCO₂eq/kWh.",
                     'using-ci-from-table-info'
                     )
         } catch (IllegalArgumentException e) {
@@ -78,7 +78,7 @@ class CIDataMatrix extends DataMatrix {
             }
             else {
                 log.warn(Markers.unique, 
-                        "🔁 Could not find carbon intensity for zone ${HelperFunctions.bold(targetZone)}: ${e.message}",
+                        "Could not find carbon intensity for zone ${HelperFunctions.bold(targetZone)}: ${e.message}",
                         'missing-ci-in-table-warning'
                 ) 
             }
