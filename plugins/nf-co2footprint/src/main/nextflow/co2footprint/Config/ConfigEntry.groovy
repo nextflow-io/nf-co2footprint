@@ -53,13 +53,14 @@ class ConfigEntry {
     }
 
     /**
-     * Initializes the parameter value using the default.
-     *
-     * If defaultValue is a closure and `args` are provided, the closure is invoked with those arguments.
-     * If overwrite is true, existing values will be replaced.
-     *
-     * @param args Optional arguments for the default closure
-     */
+    * Sets the value of this entry to the default.
+    *
+    * If the defaultValue is a Closure and arguments are provided,
+    * the closure is invoked with those arguments and the result is used.
+    * Otherwise, the defaultValue is used directly.
+    *
+    * @param args Optional arguments passed to the default closure if applicable.
+    */
     void setDefault(List<Object> args=null) {
         if (args != null && defaultValue instanceof Runnable) {
             set(defaultValue(*args))
@@ -72,24 +73,11 @@ class ConfigEntry {
     /**
      * Assigns a value to this parameter.
      *
-     * If the expected return type is a subclass of BaseConfig, this will instantiate or fill it.
-     * Otherwise, it validates and assigns the value directly.
-     *
      * @param value The value to assign
      */
     void set(def value) {
-        if (returnType in BaseConfig && !(value in BaseConfig)) {
-            if (this.value in BaseConfig) {
-                this.value.fill(value)
-            }
-            else {
-                value = returnType.newInstance(value)
-            }
-        }
-        else {
-            checkType(value)
-            this.value = value
-        }
+        checkType(value)
+        this.value = value
     }
 
     /**
