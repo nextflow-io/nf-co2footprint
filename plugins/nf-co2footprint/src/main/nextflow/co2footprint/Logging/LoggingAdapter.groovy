@@ -24,14 +24,10 @@ import java.util.function.Supplier
  */
 @Slf4j
 class LoggingAdapter {
-    Session session
     LoggerContext loggerContext
 
-    LoggingAdapter(
-            Session session=Global.session as Session,
-            LoggerContext loggerContext=LoggerFactory.getILoggerFactory() as LoggerContext
+    LoggingAdapter(LoggerContext loggerContext=LoggerFactory.getILoggerFactory() as LoggerContext
     ) {
-        this.session = session
         this.loggerContext = loggerContext
     }
 
@@ -114,7 +110,7 @@ class LoggingAdapter {
                 appender.start()
 
                 // Replace with custom logger
-                CustomCaptureAppender customCaptureAppender = new CustomCaptureAppender(session, layout)
+                CustomCaptureAppender customCaptureAppender = new CustomCaptureAppender(layout)
                 for (Filter filter : appender.getCopyOfAttachedFiltersList()) {
                     customCaptureAppender.addFilter(filter)
                 }
