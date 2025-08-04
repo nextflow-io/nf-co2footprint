@@ -1,5 +1,9 @@
 ## [Unreleased]
 
+# Version 1.0.0-rc.4
+## Misc:
+- "🔁" now prepended for every `Markers.unique` message
+
 # Version 1.0.0-rc.3
 ## Bug Fixes:
 - Core logging no longer hidden after plugin invocation
