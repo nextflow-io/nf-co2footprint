@@ -85,7 +85,7 @@ class LoggingTest extends Specification {
     def 'Should deduplicate based on dedupKey and allow custom trace message' () {
         given:
         String dedupKey = "memory_is_null"
-        String warnMessage = "Requested memory is null for task 123."
+        String warnMessage = "🔁 Requested memory is null for task 123."
 
         when:
         // Log with dedupKey 
