@@ -92,10 +92,9 @@ class ConfigEntry {
     }
 
     /**
-     * Get the current value.
+     * Returns the current value of the entry.
      *
-     * @param name
-     * @return value
+     * @return The current value
      */
     def get() {
         return value
