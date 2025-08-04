@@ -96,7 +96,7 @@ class BaseConfig extends LinkedHashMap<String, ConfigEntry> implements GroovyObj
      *
      * @throws UnsupportedOperationException
      */
-    static void throwModificationException() throws UnsupportedOperationException {
+    static ConfigEntry throwModificationException() throws UnsupportedOperationException {
         String message = 'Config instance entries can not be removed or added after initialization.'
         log.error(message)
         throw new UnsupportedOperationException(message)
