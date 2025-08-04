@@ -28,9 +28,10 @@ class BaseConfigTest extends Specification{
         when:
         BaseConfig nestedConfig = new BaseConfig(['a': 0])
         BaseConfig config = new BaseConfig([nested: nestedConfig])
+        config.value('nested').set('a', 1)
 
         then:
-        config.value('nested').value('a') == 0
+        config.value('nested').value('a') == 1
     }
 
     def 'Removal or adding of entries -> error' () {

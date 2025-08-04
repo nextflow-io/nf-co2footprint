@@ -17,7 +17,7 @@ class BaseConfig extends LinkedHashMap<String, ConfigEntry> implements GroovyObj
     BaseConfig(Map<String, Object> configMap=[:]) {
         super()
 
-        // Ensure ConfigEntry as Entries by converting Objects if necessary
+        // Ensures that all entries in configMap are ConfigEntry objects
         if (configMap.values().any( { Object val -> !(val instanceof ConfigEntry)} )) {
             configMap = configMap.collectEntries(
                     { String name, Object value -> [name, new ConfigEntry(name, null, value)] }
@@ -33,11 +33,11 @@ class BaseConfig extends LinkedHashMap<String, ConfigEntry> implements GroovyObj
     /**
      *  Define a new parameter in the configuration. Overwrites parameters that were previously set.
      *
-     * @param name Parameter name and key
+     * @param name Parameter name
      * @param description Short description
      * @param defaultValue Default value or function
      * @param returnType Type of the return during evaluation
-     * @param additionalTypes Additional types that should be allowed as intermediaries
+     * @param additionalTypes Set of additional acceptable types 
      */
     void defineParameter(
             String name, String description=null, def defaultValue=null,
@@ -47,13 +47,16 @@ class BaseConfig extends LinkedHashMap<String, ConfigEntry> implements GroovyObj
     }
 
     /**
-     * Sets the entries to their default values.
+     *  Applies default values to all ConfigEntry objects in the given map.
+     *
+     * @param map Map of configuration entries (defaults to 'this').
+     *            The map must have String keys and ConfigEntry values.
      */
     void setDefaults(Map<String, ConfigEntry> map=this) { map.each { String name, ConfigEntry entry -> entry.setDefault() } }
 
     //  ###### Accessor methods ######
     /**
-     * Set a new value into the config entry.
+     * Set the value of a config entry.
      *
      * @param key Name of the entry
      * @param value Value to be set to the entry
@@ -61,7 +64,7 @@ class BaseConfig extends LinkedHashMap<String, ConfigEntry> implements GroovyObj
     void set(String key, Object value) { get(key).set(value) }
 
     /**
-     * Fill a config entry with a new value, if it is not null.
+     * Fill a config entry with a new value, if it is null.
      *
      * @param key Name of the entry
      * @param value Value to be set to the entry
