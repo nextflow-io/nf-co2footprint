@@ -81,7 +81,7 @@ class CO2FootprintComputer {
         if ( cpuUsage == 0.0 ) {
             log.warn(
                 Markers.unique,
-                "🔁 The reported CPU usage is 0.0 for task ${taskID}.",
+                "The reported CPU usage is 0.0 for task ${taskID}.",
                 'zero-cpu-usage-warning'
             )
         }
@@ -93,15 +93,15 @@ class CO2FootprintComputer {
          */
         Long requestedMemory = trace.get('memory') as Long        // [bytes]
         final Long requiredMemory = trace.get('peak_rss') as Long // [bytes]
-    
+
         // Check if requested memory is missing
         if (requestedMemory == null) {
-            String warnMessage = "🔁 Requested memory is null for task ${taskID}."
+            String warnMessage = "Requested memory is null for task ${taskID}."
             requestedMemory = logAndSetAvailableMemory(taskID, warnMessage, 'memory-is-null-warning')
         }
         // If peak memory usage (requiredMemory) is known and exceeds the requested memory
         else if (requiredMemory != null && requiredMemory > requestedMemory) {
-            String warnMessage = "🔁 The required memory (${(requiredMemory/(1024**3)).round(2)} GB) exceeds the requested memory (${(requestedMemory/(1024**3)).round(2)} GB) for task ${taskID}."
+            String warnMessage = "The required memory (${(requiredMemory/(1024**3)).round(2)} GB) exceeds the requested memory (${(requestedMemory/(1024**3)).round(2)} GB) for task ${taskID}."
             requestedMemory = logAndSetAvailableMemory(taskID, warnMessage, 'memory-exceeded-warning')
         }
 
@@ -163,7 +163,7 @@ class CO2FootprintComputer {
      * @param warnKey     A unique key for deduplication of this warning.
      * @return            The available system memory in bytes.
      */
-    private Long logAndSetAvailableMemory(TaskId taskID, String warnMessage, String warnKey) {
+    private static Long logAndSetAvailableMemory(TaskId taskID, String warnMessage, String warnKey) {
         Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
         BigDecimal availableMemoryInGB = (availableMemory / (1024 ** 3)) as BigDecimal
         BigDecimal roundedMemoryInGB = availableMemoryInGB.round(2)
