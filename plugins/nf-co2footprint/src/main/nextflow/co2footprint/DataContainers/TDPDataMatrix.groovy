@@ -143,9 +143,10 @@ class TDPDataMatrix extends DataMatrix {
         }
         else if (fallbackToDefault) {
             modelData = select([this.fallbackModel] as LinkedHashSet)
+            String modelMatch = originalModel == null ? "No CPU model detected." : "Could not find CPU model \"${originalModel}\" in given TDP data table."
             log.warn(
                     Markers.unique,
-                    "Could not find CPU model \"${originalModel}\" in given TDP data table. " +
+                    modelMatch + " " +
                     "Using ${this.fallbackModel} CPU power draw value (${getTDP(modelData)} W).\n" +
                     '\t🔖 You can help by reporting this warning and your `.nextflow.log` file to ' +
                     'https://github.com/nextflow-io/nf-co2footprint/issues/new?template=missing_chip.yaml. Thanks.'
