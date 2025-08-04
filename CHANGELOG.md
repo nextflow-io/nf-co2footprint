@@ -3,6 +3,7 @@
 # Version 1.0.0-rc.3
 ## Bug Fixes:
 - Core logging no longer hidden after plugin invocation
+- Correct ANSI line reset
 
 ## Features:
 - Deduplication of task-specific messages
