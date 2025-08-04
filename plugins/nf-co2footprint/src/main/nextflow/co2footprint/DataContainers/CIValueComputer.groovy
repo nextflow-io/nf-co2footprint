@@ -53,14 +53,14 @@ class CIValueComputer {
             json = new JsonSlurper().parse(connection.inputStream) as Map
             ci = json['carbonIntensity'] as Double
             log.info(Markers.unique,
-                     "🔁 API call successful. Response code: ${connection.responseCode} (${connection.responseMessage})",
+                     "API call successful. Response code: ${connection.responseCode} (${connection.responseMessage})",
                      'api-call-successful-info')
         } else {
             // Handle API error response
             String errorResponse = connection.errorStream.text
             String errorMessage = new JsonSlurper().parseText(errorResponse).message
             log.warn(Markers.unique, 
-                    "🔁 API call failed. Response code: ${connection.responseCode} (${errorMessage})",
+                    "API call failed. Response code: ${connection.responseCode} (${errorMessage})",
                     'api-call-failed-warning')
 
             // Fallback to the location in the CSV

@@ -30,9 +30,9 @@ class LoggingTest extends Specification {
 
     // Setup method for the class
     def setupSpec() {
-        TurboFilter dmf = new DeduplicateMarkerFilter([Markers.unique])
-        dmf.start()
-        lc.addTurboFilter(dmf)
+        LoggingAdapter loggingAdapter = new LoggingAdapter(lc)
+        loggingAdapter.addUniqueMarkerFilter()
+        loggingAdapter.changePatternConsoleAppender()
         logger = lc.getLogger(LoggerTestClass)
     }
 
@@ -96,7 +96,7 @@ class LoggingTest extends Specification {
         then:
         // Only the first warning should be logged
         listAppender.list.size() == 1
-        listAppender.list[0].getFormattedMessage() == warnMessage
+        listAppender.list[0].getFormattedMessage() == "🔁 ${warnMessage}" as String
     }
 }
 

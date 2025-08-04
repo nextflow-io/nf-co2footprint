@@ -42,7 +42,7 @@ class HelperFunctions {
             }
             log.warn(
                 Markers.unique,
-                "🔁 " + warnMessage,
+                warnMessage,
                 dedupKey
             )
         }

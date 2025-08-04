@@ -1,6 +1,7 @@
 package nextflow.co2footprint.Logging
 
 import ch.qos.logback.classic.spi.ILoggingEvent
+import ch.qos.logback.core.pattern.CompositeConverter
 import groovy.util.logging.Slf4j
 
 import org.slf4j.LoggerFactory
@@ -28,8 +29,8 @@ class LoggingAdapter {
     LoggerContext loggerContext
 
     LoggingAdapter(
-            Session session=Global.session as Session,
-            LoggerContext loggerContext=LoggerFactory.getILoggerFactory() as LoggerContext
+            LoggerContext loggerContext=LoggerFactory.getILoggerFactory() as LoggerContext,
+            Session session=Global.session as Session
     ) {
         this.session = session
         this.loggerContext = loggerContext
@@ -62,9 +63,10 @@ class LoggingAdapter {
      */
     PatternLayout defineLayout(String pattern) {
         // Define layout
-        PatternLayout layout = new PatternLayout()
+        PatternLayout layout = new CustomPatternLayout()
         layout.setContext(loggerContext)
         layout.setPattern(pattern)
+
         try {
             log.trace("Trying with Supplier in ConverterMap.")
             layout.getInstanceConverterMap().put('customHighlight', { -> new CustomHighlightConverter() } as Supplier)
@@ -146,7 +148,7 @@ class LoggingAdapter {
     void addUniqueMarkerFilter() {
         final TurboFilter deduplicateMarkerFilter = new DeduplicateMarkerFilter([Markers.unique])   // Define DeduplicateMarkerFilter
         deduplicateMarkerFilter.start()
-
         loggerContext.addTurboFilter(deduplicateMarkerFilter)                                       // Add filter to context
+
     }
 }
