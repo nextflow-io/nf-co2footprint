@@ -107,7 +107,7 @@ class CIValueComputer {
             // Fallback to the location in the CSV
             ci = this.ciData.findCiInMatrix(this.location)
         } else {
-            log.warn(Markers.unique, "No location provided. Attempting to retrieve ${HelperFunctions.bold('GLOBAL')} carbon intensity value.")
+            log.warn(Markers.unique, "No location provided. Attempting to retrieve GLOBAL carbon intensity value.")
         }
         // Fallback to the global default value if no value is found for the location
         if (ci == null) {

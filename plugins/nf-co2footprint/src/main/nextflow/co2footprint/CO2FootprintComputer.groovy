@@ -93,36 +93,16 @@ class CO2FootprintComputer {
          */
         Long requestedMemory = trace.get('memory') as Long        // [bytes]
         final Long requiredMemory = trace.get('peak_rss') as Long // [bytes]
-
+    
         // Check if requested memory is missing
         if (requestedMemory == null) {
-            // If missing, get the available system memory
-            Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
-            // Warn that requested memory was null and fallback is used
-            log.warn(
-                Markers.unique,
-                "🔁 Requested memory is null for task ${taskID}. Setting to available memory (${availableMemory/(1024**3)} GB).",
-                'memory-is-null-warning'
-            )
-            // Use available system memory as the requested memory
-            requestedMemory = availableMemory
+            String warnMessage = "🔁 Requested memory is null for task ${taskID}."
+            requestedMemory = logAndSetAvailableMemory(taskID, warnMessage, 'memory-is-null-warning')
         }
         // If peak memory usage (requiredMemory) is known and exceeds the requested memory
         else if (requiredMemory != null && requiredMemory > requestedMemory) {
-            
-            // Get the available system memory
-            Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
-
-            // Warn that required memory exceeded requested, so fallback is used
-            log.warn(
-                Markers.unique,
-                "🔁 The required memory (${requiredMemory/(1024**3)} GB) exceeds the requested memory (${requestedMemory/(1024**3)} GB) for task ${taskID}. " +
-                "Setting requested to maximum available memory (${availableMemory/(1024**3)} GB).",
-                'memory-exceeded-warning'
-            )
-
-            // Use available system memory as the requested memory
-            requestedMemory = availableMemory
+            String warnMessage = "🔁 The required memory (${(requiredMemory/(1024**3)).round(2)} GB) exceeds the requested memory (${(requestedMemory/(1024**3)).round(2)} GB) for task ${taskID}."
+            requestedMemory = logAndSetAvailableMemory(taskID, warnMessage, 'memory-exceeded-warning')
         }
 
         final BigDecimal memory = requestedMemory / 1024**3 // conversion to [GB]
@@ -174,6 +154,27 @@ class CO2FootprintComputer {
                 config.getIgnoreCpuModel() ? 'Custom value' : cpuModel
         )
     }
+
+    /**
+     * Logs a warning about memory assignment and returns the available system memory.
+     *
+     * @param taskID      The TaskId for which memory is being assigned.
+     * @param warnMessage The warning message to log (should describe the memory issue).
+     * @param warnKey     A unique key for deduplication of this warning.
+     * @return            The available system memory in bytes.
+     */
+    private Long logAndSetAvailableMemory(TaskId taskID, String warnMessage, String warnKey) {
+        Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
+        BigDecimal availableMemoryInGB = (availableMemory / (1024 ** 3)) as BigDecimal
+        BigDecimal roundedMemoryInGB = availableMemoryInGB.round(2)
+        log.warn(
+            Markers.unique,
+            warnMessage + " Setting to available memory (${roundedMemoryInGB} GB).",
+            warnKey
+        )
+        return availableMemory
+    }
+
 
     /**
      * The following values were taken from the Green Algorithms publication (https://doi.org/10.1002/advs.202100707):
