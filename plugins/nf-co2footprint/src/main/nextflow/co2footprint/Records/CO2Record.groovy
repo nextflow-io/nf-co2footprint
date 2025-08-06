@@ -97,9 +97,9 @@ class CO2Record extends TraceRecord {
                 'energy':                   energy,
                 'co2e':                     co2e,
                 'co2eMarket':               co2eMarket,
-                'time':                     time,
                 'ci':                       ci,
                 'ciMarket':                 ciMarket,
+                'time':                     time,
                 'cpus':                     cpus,
                 'powerdrawCPU':             powerdrawCPU,
                 'cpuUsage':                 cpuUsage,
@@ -124,25 +124,25 @@ class CO2Record extends TraceRecord {
     }
 
     Double getTime() { time }
-    String getTimeReadable() { Converter.toReadableTimeUnits(time, 'ms', 'ms', 'days', 0.0d) }
+    String getTimeReadable() { Converter.toReadableTimeUnits(time, 'h', 'ms', 's', 0.0d) }
 
-    String getCIReadable() { Converter.toReadableUnits(ci, '', 'gCO₂eq/kWh') }
+    String getCIReadable() { Converter.toReadableUnits(ci, '', 'gCO₂e/kWh') }
 
     String getCiMarketReadable() {
-        ciMarket ? Converter.toReadableUnits(ciMarket, '', 'gCO₂eq/kWh') : null
+        ciMarket ? Converter.toReadableUnits(ciMarket, '', 'gCO₂e/kWh') : null
     }
 
     Integer getCPUs() { cpus }
     String getCPUsReadable() { cpus as String }
 
     Double getPowerdrawCPU() { powerdrawCPU }
-    String getPowerdrawCPUReadable() { powerdrawCPU as String  }
+    String getPowerdrawCPUReadable() { powerdrawCPU != null ? String.format('%.1f W', powerdrawCPU) : null  }
 
     Double getCPUUsage() { cpuUsage }
-    String getCPUUsageReadable() { cpuUsage as String  }
+    String getCPUUsageReadable() { cpuUsage != null ? String.format('%.1f%%', cpuUsage) : null }
 
     Long getMemory() { memory }
-    String getMemoryReadable() { Converter.toReadableByteUnits(memory) }
+    String getMemoryReadable() { Converter.toReadableByteUnits(memory, 'GB') }
 
     String getName() { name }
     String getNameReadable() { name }
@@ -157,7 +157,7 @@ class CO2Record extends TraceRecord {
     List<String> getReadableEntries() {
         return [
                 this.getNameReadable(), this.getEnergyConsumptionReadable(), this.getCO2eReadable(), this.getCO2eMarketReadable(),
-                this.getTimeReadable(), this.getCIReadable(), this.getCiMarketReadable(), this.getCPUsReadable(),
+                this.getCIReadable(), this.getCiMarketReadable(), this.getTimeReadable(), this.getCPUsReadable(),
                 this.getPowerdrawCPUReadable(), this.getCPUModelReadable(), this.getCPUUsageReadable(), this.getMemoryReadable()
         ]
     }

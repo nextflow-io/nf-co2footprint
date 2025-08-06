@@ -40,14 +40,15 @@ function toReadableUnits(value, scope = '', unit = '') {
 
 
 /**
- * Convert bytes to readable units
+ * Convert bytes to readable units, starting from a specified unit.
  *
- * @param {*} value Bytes to be converted to readable scope
+ * @param {*} value The value to be converted (e.g., 1, 1024, etc.)
+ * @param {string} currentUnit The unit of the input value (default: 'B')
  * @returns Bytes in a readable scope
  */
-function toReadableByteUnits(value){
-  units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']  // Units: Byte, Kilobyte, Megabyte, Gigabyte, Terabyte, Petabyte, Exabyte
-  unit_index=0
+function toReadableByteUnits(value, currentUnit = 'B') {
+  var units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']; // Units: Byte, Kilobyte, Megabyte, etc.
+  var unit_index = units.indexOf(currentUnit);
 
   while (value >= 1024 && unit_index < units.length - 1) {
     value /= 1024;
@@ -92,57 +93,56 @@ function convertTime(value, unit='ms', targetUnit='s') {
  * @param {*} smallestUnit The smallest unit to convert to
  * @param {*} largestUnit The largest unit to convert to
  * @param {*} threshold The minimum value for the conversion to be included in the output
- * @param {*} numSteps The maximum number of conversion steps to perform
- * @param {*} readableString The string to append the result to
  * @return A human-readable string representation of the time value
  */
-function toReadableTimeUnits(value, unit='ms', smallestUnit='s', largestUnit='years', threshold=0.0, numSteps=null, readableString='') {
-  // Ordered list of supported time units
-  var units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']
+function toReadableTimeUnits(value, unit = 'ms', smallestUnit = 's', largestUnit = 'years', threshold = null) {
+  const units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years'];
+  const steps = [1000, 1000, 1000, 60, 60, 24, 7, 4.35, 12];
 
-  // Calculate the number of conversion steps left
-  var smallestIdx = units.indexOf(smallestUnit)
-  var largestIdx = units.indexOf(largestUnit)
-  numSteps = (numSteps == null) ? (largestIdx - smallestIdx) : (numSteps - 1)
+  const smallestIdx = units.indexOf(smallestUnit);
+  const largestIdx = units.indexOf(largestUnit);
+  if (smallestIdx === -1 || largestIdx === -1) throw new Error("Unknown unit");
 
-  // Convert value to the current target unit
-  var targetUnit = largestUnit
-  var targetValue = convertTime(value, unit, targetUnit)
-  var targetValueFormatted = Math.floor(targetValue)
+  let remaining = convertTime(value, unit, units[largestIdx]);
+  let parts = [];
 
-  // Singularize unit if value is exactly 1 and unit is plural
-  if (targetValueFormatted == 1 && ['days', 'weeks', 'months', 'years'].includes(targetUnit)) {
-    targetUnit = targetUnit.slice(0, -1) // e.g. "days" -> "day"
+  for (let i = largestIdx; i >= smallestIdx; i--) {
+    let unitValue;
+    if (i > smallestIdx) {
+      unitValue = Math.floor(remaining);
+      remaining = (remaining - unitValue) * steps[i - 1];
+    } else {
+      // For the smallest unit, keep up to 2 decimals
+      unitValue = Math.round(remaining * 100) / 100;
+      remaining = 0;
+    }
+
+    if ((threshold === null && unitValue > 0) || (threshold !== null && unitValue > threshold)) {
+      let label = (unitValue === 1 && ['days', 'weeks', 'months', 'years'].includes(units[i]))
+        ? units[i].slice(0, -1)
+        : units[i];
+      let formatted = parseFloat(unitValue).toString();
+      parts.push(`${formatted}${label}`);
+    }
   }
 
-  // If this is the last step, use the remaining value as is
-  if (numSteps == 0) {
-    targetValueFormatted = targetValue
+  // Carry-over: if the last unit is exactly the conversion factor, increment previous unit
+  if (parts.length && smallestIdx > 0) {
+    let lastPart = parts[parts.length - 1];
+    let lastValue = parseFloat(lastPart.replace(/[^\d.]/g, ''));
+    let lastUnit = lastPart.replace(/[\d.]/g, '');
+    let conversionFactor = steps[smallestIdx - 1];
+    if (lastValue === conversionFactor) {
+      parts.pop();
+      let prevPart = parts[parts.length - 1];
+      let prevNum = parseFloat(prevPart.replace(/[^\d.]/g, ''));
+      let prevUnit = prevPart.replace(/[\d.]/g, '');
+      let newPrev = prevNum + 1;
+      parts[parts.length - 1] = `${parseFloat(newPrev).toString()}${prevUnit}`;
+    }
   }
 
-  // Only add to output if above threshold or no threshold set
-  if (threshold == null || targetValueFormatted > threshold) {
-    value = targetValue - targetValueFormatted
-    unit = largestUnit
-
-    // Format to 2 decimals, remove trailing zeros
-    var formattedValue = targetValueFormatted.toFixed(2)
-    readableString += readableString ? ' ' + formattedValue + targetUnit : formattedValue + targetUnit
-  }
-
-  // If we've reached the smallest unit or max steps, return the result
-  if (numSteps == 0) {
-    var result = readableString.trim()
-    return result ? result : '0' + smallestUnit
-  }
-
-  // Otherwise, continue with the next smaller unit
-  var nextLargestUnit = units[largestIdx - 1]
-  return toReadableTimeUnits(
-    value, unit,
-    smallestUnit, nextLargestUnit,
-    threshold, numSteps, readableString
-  )
+  return parts.length ? parts.join(' ') : `0${smallestUnit}`;
 }
 
 //
@@ -195,12 +195,12 @@ function make_energy(mWh, type){
 /**
  * Render time in desired output format
  *
- * @param {*} ms Time in milliseconds
+ * @param {*} h Time in hours
  * @param {*} type Type of the data
  * @returns The readable time
  */
-function make_time(ms, type){
-  return check_data(data, type, parseInt) ?? toReadableTimeUnits(parseFloat(ms), 'ms', 'ns');
+function make_time(h, type){
+  return check_data(data, type, parseFloat) ?? toReadableTimeUnits(parseFloat(h), 'h', 'ms', 'days', 0.0);
 }
 
 /**
@@ -211,18 +211,30 @@ function make_time(ms, type){
  * @returns Carbon intensity as a readable unit
  */
 function make_carbon_intensity(ci, type) {
-  return check_data(data, type, parseFloat) ?? toReadableUnits(ci, 'm', 'gCO<sub>2</sub>eq/kWh');
+  return check_data(data, type, parseFloat) ?? toReadableUnits(ci, 'm', 'gCO<sub>2</sub>e/kWh');
 }
 
 /**
  * Render memory size in desired output format
  *
- * @param {*} bytes Number of bytes
+ * @param {*} value Memory value to be rendered
  * @param {*} type Type of the data
- * @returns The bytes at a readable scale
+ * @param {string} unit The unit of the input value (default: 'B')
+ * @returns The memory at a readable scale
  */
-function make_memory(bytes, type){
-  return check_data(bytes, type, parseInt) ?? toReadableByteUnits(bytes);
+function make_memory(value, type) {
+  return check_data(value, type, parseFloat) ?? toReadableByteUnits(value, 'GB');
+}
+
+/**
+ * Render the per core power draw in desired output format
+ *
+ * @param {*} powerDrawCPU Power draw of the CPU in Watts
+ * @param {*} type Type of the data
+ * @returns Readable power draw in Watts
+ */
+function make_power_draw_cpu(powerDrawCPU, type) {
+  return check_data(powerDrawCPU, type, parseFloat) ?? `${powerDrawCPU}%`;
 }
 
 /**
@@ -230,12 +242,11 @@ function make_memory(bytes, type){
  *
  * @param {*} usageFactor Usage factor of CPU in percent
  * @param {*} type Type of the data
- * @returns A rounded usage factor
+ * @returns Readable usage factor
  */
 function make_core_usage_factor(usageFactor, type){
-  return check_data(usageFactor, type, parseFloat) ?? Math.round( usageFactor * 1000 ) / 1000;
+  return check_data(usageFactor, type, parseFloat) ?? `${usageFactor} W`;
 }
-
 
 // Map for collecting statistics by process
 window.statsByProcess = {};
@@ -409,13 +420,13 @@ $(function() {
           },
           { title: co2EmissionsTitle, data: 'co2e', type: 'num', render: make_co2e },
           { title: energyConsumptionTitle, data: 'energy', type: 'num', render: make_energy },
-          { title: 'Time', data: 'time', type: 'num', render: make_time },
           { title: 'Carbon Intensity', data: 'ci', type: 'num', render: make_carbon_intensity },
-          { title: 'Number of cores', data: 'cpus', type: 'num' },
-          { title: 'Power draw per core', data: 'powerdrawCPU', type: 'num'},
-          { title: 'Core usage factor', data: 'cpuUsage', type: 'num', render: make_core_usage_factor },
-          { title: 'Memory', data: 'memory', type: 'num', render: make_memory },
-          { title: 'CPU model', data: 'cpu_model' },
+          { title: 'realtime', data: 'time', type: 'num', render: make_time },
+          { title: 'allocated cpus', data: 'cpus', type: 'num' },
+          { title: 'power draw per core', data: 'powerdrawCPU', type: 'num', render: make_power_draw_cpu },
+          { title: '%cpu', data: 'cpuUsage', type: 'num', render: make_core_usage_factor },
+          { title: 'allocated memory', data: 'memory', type: 'num', render: make_memory },
+          { title: 'cpu model', data: 'cpu_model' },
         ],
         "deferRender": true,
         "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],

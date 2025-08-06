@@ -224,13 +224,13 @@ class CO2FootprintObserverTest extends Specification{
         headers.size() == values.size()
 
         headers == [
-                'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'time', 'carbon_intensity', 'carbon_intensity_market', 'cpus', 'powerdraw_cpu', 'cpu_model', 'cpu_usage', 'requested_memory'
+                'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'carbon_intensity', 'carbon_intensity_market', 'realtime', 'cpus', 'powerdraw_cpu', 'cpu_model', '%cpu', 'requested_memory'
         ]
         values == [
-            '111', 'COMPLETED', 'null', '13.61 Wh', '6.53 g', 'null', '1ms', '480.0 gCO₂eq/kWh', 'null', '1', '11.0', 'Unknown model', '100.0', '7.0 B'
+            '111', 'COMPLETED', 'null', '13.61 Wh', '6.53 g', 'null', '480.0 gCO₂e/kWh', 'null', '3600s', '1', '11.0 W', 'Unknown model', '100.0%', '7.0 GB'
         ] // GA: CO2e is 6.94g with CI of 475 gCO2eq/kWh
 
-        fileChecker.compareChecksums(tracePath, '804c1c8c9d8921a8d270b86a0479644e')
+        fileChecker.compareChecksums(tracePath, '1def538b8a5e468b260a5e7139908640')
 
 
         // Check Summary File
@@ -250,7 +250,7 @@ class CO2FootprintObserverTest extends Specification{
             260: '          ' +
                     "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                     " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>",
-            1321: '  window.options = [' +
+            1330: '  window.options = [' +
                     '{"option":"ci","value":"480.0"},'+
                     '{"option":"customCpuTdpFile","value":null},' +
                     '{"option":"ignoreCpuModel","value":"false"},' +
