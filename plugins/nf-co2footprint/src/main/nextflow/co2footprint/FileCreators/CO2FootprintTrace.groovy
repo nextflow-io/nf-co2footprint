@@ -45,8 +45,8 @@ class CO2FootprintTrace extends CO2FootprintFile {
         // Write the header line to the trace file
         List<String> headers = [
                 'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market',
-                'carbon_intensity', 'carbon_intensity_market', 'realtime', 'cpus', 'powerdraw_cpu',
-                'cpu_model', '%cpu', 'requested_memory'
+                'carbon_intensity', '%cpu', 'memory', 'realtime', 'cpus', 'powerdraw_cpu',
+                'cpu_model' 
         ]
 
         traceWriter.send {

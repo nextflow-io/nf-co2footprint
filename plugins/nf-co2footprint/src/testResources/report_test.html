@@ -257,7 +257,7 @@ summary {
       <dl>
         <dt>Run times</dt>
         <dd>
-          <span id="workflow_start">06-Aug-2025 11:39:06</span> - <span id="workflow_complete">06-Aug-2025 11:39:06</span>
+          <span id="workflow_start">07-Aug-2025 15:41:58</span> - <span id="workflow_complete">07-Aug-2025 15:41:58</span>
           (<span id="completed_fromnow"></span>duration: <strong>null</strong>)
         </dd>
 
@@ -985,12 +985,12 @@ function check_data(data, type, parseFunction) {
 /**
  * Render CO2 equivalents in desired output format
  *
- * @param {*} mg
+ * @param {*} value CO2 equivalents in milli-grams
  * @param {*} type Type of the data
  * @returns CO2 equivalents as a readable unit
  */
-function make_co2e(mg, type){
-  return toReadableUnits(mg, 'm', 'g');
+function make_co2e(value, type){
+  return check_data(value, type, parseFloat) ?? toReadableUnits(value, 'm', 'g');
 }
 
 /**
@@ -1046,7 +1046,7 @@ function make_memory(value, type) {
  * @returns Readable power draw in Watts
  */
 function make_power_draw_cpu(powerDrawCPU, type) {
-  return check_data(powerDrawCPU, type, parseFloat) ?? `${powerDrawCPU}%`;
+  return check_data(powerDrawCPU, type, parseFloat) ?? powerDrawCPU;
 }
 
 /**
@@ -1057,7 +1057,7 @@ function make_power_draw_cpu(powerDrawCPU, type) {
  * @returns Readable usage factor
  */
 function make_core_usage_factor(usageFactor, type){
-  return check_data(usageFactor, type, parseFloat) ?? `${usageFactor} W`;
+  return check_data(usageFactor, type, parseFloat) ?? usageFactor;
 }
 
 // Map for collecting statistics by process
@@ -1192,10 +1192,10 @@ $(function() {
       }
 
       // Column titles
-      var energyConsumptionTitle = 'Energy consumption (mWh)'; // Default column title
+      var energyConsumptionTitle = 'energy consumption (mWh)'; // Default column title
       var co2EmissionsTitle = 'CO₂e emissions (mg)';
       if ($('#nf-table-humanreadable').val() == 'true') {
-        energyConsumptionTitle = 'Energy consumption'; // Change the column title if the button is selected
+        energyConsumptionTitle = 'energy consumption'; // Change the column title if the button is selected
         co2EmissionsTitle = 'CO₂e emissions';
       }
 
@@ -1230,14 +1230,15 @@ $(function() {
               return '<code>'+script+'</code>';
             }
           },
-          { title: co2EmissionsTitle, data: 'co2e', type: 'num', render: make_co2e },
           { title: energyConsumptionTitle, data: 'energy', type: 'num', render: make_energy },
-          { title: 'Carbon Intensity', data: 'ci', type: 'num', render: make_carbon_intensity },
-          { title: 'realtime', data: 'time', type: 'num', render: make_time },
+          { title: co2EmissionsTitle, data: 'co2e', type: 'num', render: make_co2e },
+          { title: `${co2EmissionsTitle} (market)`, data: 'co2eMarket', type: 'num', render: make_co2e },
+          { title: 'carbon intensity', data: 'ci', type: 'num', render: make_carbon_intensity },
           { title: 'allocated cpus', data: 'cpus', type: 'num' },
-          { title: 'power draw per core', data: 'powerdrawCPU', type: 'num', render: make_power_draw_cpu },
           { title: '%cpu', data: 'cpuUsage', type: 'num', render: make_core_usage_factor },
           { title: 'allocated memory', data: 'memory', type: 'num', render: make_memory },
+          { title: 'realtime', data: 'time', type: 'num', render: make_time },
+          { title: 'power draw (in W/core)', data: 'powerdrawCPU', type: 'num', render: make_power_draw_cpu },
           { title: 'cpu model', data: 'cpu_model' },
         ],
         "deferRender": true,
@@ -1326,8 +1327,8 @@ $(function() {
 });
 
   // Nextflow report data
-  window.data = {"trace":[{"task_id":"111","hash":"-","native_id":"-","process":"observerTestProcess","module":"-","container":"-","tag":"-","name":"-","status":"COMPLETED","exit":"-","submit":"-","start":"-","complete":"-","duration":"-","realtime":"1h","%cpu":"100.0%","%mem":"-","rss":"-","vmem":"-","peak_rss":"-","peak_vmem":"-","rchar":"-","wchar":"-","syscr":"-","syscw":"-","read_bytes":"-","write_bytes":"-","attempt":"-","workdir":"-","script":"-","scratch":"-","queue":"-","cpus":"1","memory":"7 GB","disk":"-","time":"-","env":"-","error_action":"-","vol_ctxt":"-","inv_ctxt":"-","hostname":"-","cpu_model":"Unknown model","energy":"13607.5","co2e":"6531.6","co2eMarket":"-","time":"1.0","ci":"480.0","ciMarket":"-","cpus":"1","powerdrawCPU":"11.0","cpuUsage":"100.0","memory":"7","name":"-","cpu_model":"Unknown model"}],"summary":{"observerTestProcess":{"co2e":{"all":[6531.6],"total":6531.6,"mean":6531.6,"minLabel":null,"min":6531.6,"q1Label":null,"q1":6531.6,"q2Label":null,"q2":6531.6,"q3Label":null,"q3":6531.6,"maxLabel":null,"max":6531.6},"energy":{"all":[13607.5],"total":13607.5,"mean":13607.5,"minLabel":null,"min":13607.5,"q1Label":null,"q1":13607.5,"q2Label":null,"q2":13607.5,"q3Label":null,"q3":13607.5,"maxLabel":null,"max":13607.5},"co2e_non_cached":{"all":[6531.6],"total":6531.6,"mean":6531.6,"minLabel":null,"min":6531.6,"q1Label":null,"q1":6531.6,"q2Label":null,"q2":6531.6,"q3Label":null,"q3":6531.6,"maxLabel":null,"max":6531.6},"energy_non_cached":{"all":[13607.5],"total":13607.5,"mean":13607.5,"minLabel":null,"min":13607.5,"q1Label":null,"q1":13607.5,"q2Label":null,"q2":13607.5,"q3Label":null,"q3":13607.5,"maxLabel":null,"max":13607.5},"co2e_market":{},"energy_market":{"all":[13607.5],"total":13607.5,"mean":13607.5,"minLabel":null,"min":13607.5,"q1Label":null,"q1":13607.5,"q2Label":null,"q2":13607.5,"q3Label":null,"q3":13607.5,"maxLabel":null,"max":13607.5}}}};
-  window.options = [{"option":"ci","value":"480.0"},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir16206181382339314774/report_test.html"},{"option":"summaryFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir16206181382339314774/summary_test.txt"},{"option":"traceFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir16206181382339314774/trace_test.txt"}];
+  window.data = {"trace":[{"task_id":"111","hash":"-","native_id":"-","process":"observerTestProcess","module":"-","container":"-","tag":"-","name":"-","status":"COMPLETED","exit":"-","submit":"-","start":"-","complete":"-","duration":"-","realtime":"1h","%cpu":"100.0%","%mem":"-","rss":"-","vmem":"-","peak_rss":"-","peak_vmem":"-","rchar":"-","wchar":"-","syscr":"-","syscw":"-","read_bytes":"-","write_bytes":"-","attempt":"-","workdir":"-","script":"-","scratch":"-","queue":"-","cpus":"1","memory":"7 GB","disk":"-","time":"-","env":"-","error_action":"-","vol_ctxt":"-","inv_ctxt":"-","hostname":"-","cpu_model":"Unknown model","energy":"13607.5","co2e":"6531.6","co2eMarket":"-","time":"1.0","ci":"480.0","cpus":"1","powerdrawCPU":"11.0","cpuUsage":"100.0","memory":"7","name":"-","cpu_model":"Unknown model"}],"summary":{"observerTestProcess":{"co2e":{"all":[6531.6],"total":6531.6,"mean":6531.6,"minLabel":null,"min":6531.6,"q1Label":null,"q1":6531.6,"q2Label":null,"q2":6531.6,"q3Label":null,"q3":6531.6,"maxLabel":null,"max":6531.6},"energy":{"all":[13607.5],"total":13607.5,"mean":13607.5,"minLabel":null,"min":13607.5,"q1Label":null,"q1":13607.5,"q2Label":null,"q2":13607.5,"q3Label":null,"q3":13607.5,"maxLabel":null,"max":13607.5},"co2e_non_cached":{"all":[6531.6],"total":6531.6,"mean":6531.6,"minLabel":null,"min":6531.6,"q1Label":null,"q1":6531.6,"q2Label":null,"q2":6531.6,"q3Label":null,"q3":6531.6,"maxLabel":null,"max":6531.6},"energy_non_cached":{"all":[13607.5],"total":13607.5,"mean":13607.5,"minLabel":null,"min":13607.5,"q1Label":null,"q1":13607.5,"q2Label":null,"q2":13607.5,"q3Label":null,"q3":13607.5,"maxLabel":null,"max":13607.5},"co2e_market":{},"energy_market":{"all":[13607.5],"total":13607.5,"mean":13607.5,"minLabel":null,"min":13607.5,"q1Label":null,"q1":13607.5,"q2Label":null,"q2":13607.5,"q3Label":null,"q3":13607.5,"maxLabel":null,"max":13607.5}}}};
+  window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir15050221268627841661/report_test.html"},{"option":"summaryFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir15050221268627841661/summary_test.txt"},{"option":"traceFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir15050221268627841661/trace_test.txt"}];
 
   </script>
 

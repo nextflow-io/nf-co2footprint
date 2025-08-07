@@ -224,22 +224,22 @@ class CO2FootprintObserverTest extends Specification{
         headers.size() == values.size()
 
         headers == [
-                'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'carbon_intensity', 'carbon_intensity_market', 'realtime', 'cpus', 'powerdraw_cpu', 'cpu_model', '%cpu', 'requested_memory'
+                'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'carbon_intensity', '%cpu', 'memory', 'realtime', 'cpus', 'powerdraw_cpu', 'cpu_model' 
         ]
         values == [
-            '111', 'COMPLETED', 'null', '13.61 Wh', '6.53 g', 'null', '480.0 gCO₂e/kWh', 'null', '3600s', '1', '11.0 W', 'Unknown model', '100.0%', '7.0 GB'
+            '111', 'COMPLETED', 'null', '13.61 Wh', '6.53 g', 'null', '480.0 gCO₂e/kWh', '100.0%', '7.0 GB', '3600s', '1', '11.0 W', 'Unknown model'
         ] // GA: CO2e is 6.94g with CI of 475 gCO2eq/kWh
 
-        fileChecker.compareChecksums(tracePath, '1def538b8a5e468b260a5e7139908640')
+        fileChecker.compareChecksums(tracePath, '7f7a26754af582190ecaf8ca8b85adbe')
 
 
         // Check Summary File
         fileChecker.runChecks(
                 summaryPath,
                 [
-                        17: "reportFile: ${reportPath}",
-                        18: "summaryFile: ${summaryPath}",
-                        19: "traceFile: ${tracePath}"
+                        25: "reportFile: ${reportPath}",
+                        26: "summaryFile: ${summaryPath}",
+                        27: "traceFile: ${tracePath}"
                 ]
         )
 
@@ -250,11 +250,13 @@ class CO2FootprintObserverTest extends Specification{
             260: '          ' +
                     "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                     " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>",
-            1330: '  window.options = [' +
+            1331: '  window.options = [' +
                     '{"option":"ci","value":"480.0"},'+
+                    '{"option":"ciMarket","value":null},' +
                     '{"option":"customCpuTdpFile","value":null},' +
                     '{"option":"ignoreCpuModel","value":"false"},' +
                     '{"option":"location","value":null},' +
+                    '{"option":"machineType","value":null},' +
                     '{"option":"powerdrawCpuDefault","value":null},' +
                     '{"option":"powerdrawMem","value":"0.3725"},' +
                     '{"option":"pue","value":"1.0"},' +

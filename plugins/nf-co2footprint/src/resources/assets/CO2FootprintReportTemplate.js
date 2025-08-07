@@ -173,12 +173,12 @@ function check_data(data, type, parseFunction) {
 /**
  * Render CO2 equivalents in desired output format
  *
- * @param {*} mg
+ * @param {*} value CO2 equivalents in milli-grams
  * @param {*} type Type of the data
  * @returns CO2 equivalents as a readable unit
  */
-function make_co2e(mg, type){
-  return toReadableUnits(mg, 'm', 'g');
+function make_co2e(value, type){
+  return check_data(value, type, parseFloat) ?? toReadableUnits(value, 'm', 'g');
 }
 
 /**
@@ -234,7 +234,7 @@ function make_memory(value, type) {
  * @returns Readable power draw in Watts
  */
 function make_power_draw_cpu(powerDrawCPU, type) {
-  return check_data(powerDrawCPU, type, parseFloat) ?? `${powerDrawCPU}%`;
+  return check_data(powerDrawCPU, type, parseFloat) ?? powerDrawCPU;
 }
 
 /**
@@ -245,7 +245,7 @@ function make_power_draw_cpu(powerDrawCPU, type) {
  * @returns Readable usage factor
  */
 function make_core_usage_factor(usageFactor, type){
-  return check_data(usageFactor, type, parseFloat) ?? `${usageFactor} W`;
+  return check_data(usageFactor, type, parseFloat) ?? usageFactor;
 }
 
 // Map for collecting statistics by process
@@ -380,10 +380,10 @@ $(function() {
       }
 
       // Column titles
-      var energyConsumptionTitle = 'Energy consumption (mWh)'; // Default column title
+      var energyConsumptionTitle = 'energy consumption (mWh)'; // Default column title
       var co2EmissionsTitle = 'CO₂e emissions (mg)';
       if ($('#nf-table-humanreadable').val() == 'true') {
-        energyConsumptionTitle = 'Energy consumption'; // Change the column title if the button is selected
+        energyConsumptionTitle = 'energy consumption'; // Change the column title if the button is selected
         co2EmissionsTitle = 'CO₂e emissions';
       }
 
@@ -418,14 +418,15 @@ $(function() {
               return '<code>'+script+'</code>';
             }
           },
-          { title: co2EmissionsTitle, data: 'co2e', type: 'num', render: make_co2e },
           { title: energyConsumptionTitle, data: 'energy', type: 'num', render: make_energy },
-          { title: 'Carbon Intensity', data: 'ci', type: 'num', render: make_carbon_intensity },
-          { title: 'realtime', data: 'time', type: 'num', render: make_time },
+          { title: co2EmissionsTitle, data: 'co2e', type: 'num', render: make_co2e },
+          { title: `${co2EmissionsTitle} (market)`, data: 'co2eMarket', type: 'num', render: make_co2e },
+          { title: 'carbon intensity', data: 'ci', type: 'num', render: make_carbon_intensity },
           { title: 'allocated cpus', data: 'cpus', type: 'num' },
-          { title: 'power draw per core', data: 'powerdrawCPU', type: 'num', render: make_power_draw_cpu },
           { title: '%cpu', data: 'cpuUsage', type: 'num', render: make_core_usage_factor },
           { title: 'allocated memory', data: 'memory', type: 'num', render: make_memory },
+          { title: 'realtime', data: 'time', type: 'num', render: make_time },
+          { title: 'power draw (in W/core)', data: 'powerdrawCPU', type: 'num', render: make_power_draw_cpu },
           { title: 'cpu model', data: 'cpu_model' },
         ],
         "deferRender": true,

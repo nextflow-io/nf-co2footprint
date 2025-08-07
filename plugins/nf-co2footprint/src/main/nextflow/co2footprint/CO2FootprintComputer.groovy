@@ -165,7 +165,6 @@ class CO2FootprintComputer {
                 co2eMarket,
                 runtime_h,
                 ci,
-                ciMarket,
                 numberOfCores as Integer,
                 powerdrawPerCore,
                 cpuUsage,
