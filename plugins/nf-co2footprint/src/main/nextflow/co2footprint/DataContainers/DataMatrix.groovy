@@ -292,7 +292,6 @@ class DataMatrix implements Matrix {
 
         if (checkOccurrence && idx == null) {
             final String message = "${orientation.capitalize()} ID `${rowOrColumnID}` not found in the ${orientation}-index `${index}`."
-            log.error(message)
             throw new IllegalArgumentException(message)
         }
 

@@ -72,13 +72,13 @@ class CIDataMatrix extends DataMatrix {
                     )
         } catch (IllegalArgumentException e) {
             if (targetZone == 'GLOBAL') {
-                Exception err = new IllegalStateException("Could not retrieve ${HelperFunctions.bold('GLOBAL')} carbon intensity value from fallback table.")
+                Exception err = new IllegalStateException("Could not retrieve GLOBAL carbon intensity value from fallback table.")
                 log.error(err.getMessage(), err)
                 throw err  // <-- will stop execution
             }
             else {
                 log.warn(Markers.unique, 
-                        "🔁 Could not find carbon intensity for zone ${HelperFunctions.bold(targetZone)}: ${e.message}",
+                        "🔁 Could not find carbon intensity for zone ${targetZone.toUpperCase()}: ${e.message}",
                         'missing-ci-in-table-warning'
                 ) 
             }
