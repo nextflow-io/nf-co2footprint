@@ -1,4 +1,4 @@
-package nextflow.co2footprint.FileCreators
+package nextflow.co2footprint.FileCreation
 
 import groovy.util.logging.Slf4j
 import groovyx.gpars.agent.Agent
@@ -16,7 +16,7 @@ import java.nio.file.Path
  * Uses an agent for thread-safe writing.
  */
 @Slf4j
-class CO2FootprintTrace extends CO2FootprintFile {
+class TraceFileCreator extends BaseFileCreator {
 
     // Agent for thread-safe writing to the trace file
     private Agent<PrintWriter> traceWriter
@@ -27,7 +27,7 @@ class CO2FootprintTrace extends CO2FootprintFile {
      * @param path      Path to the trace file
      * @param overwrite Whether to overwrite existing files
      */
-    CO2FootprintTrace(Path path, boolean overwrite) {
+    TraceFileCreator(Path path, boolean overwrite) {
         super(path, overwrite)
     }
 
