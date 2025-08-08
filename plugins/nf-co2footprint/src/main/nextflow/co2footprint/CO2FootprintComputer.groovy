@@ -62,7 +62,7 @@ class CO2FootprintComputer {
         /**
          * CPU model information
          */
-        final String cpuModel = config.getIgnoreCpuModel() ? 'default' : trace.get('cpu_model') as String
+        final String cpuModel = config.value('ignoreCpuModel') ? 'default' : trace.get('cpu_model') as String
 
         /**
          * Realtime of computation
@@ -107,18 +107,18 @@ class CO2FootprintComputer {
 
         final BigDecimal memory = requestedMemory / 1024**3 // conversion to [GB]
 
-        final BigDecimal powerdrawMem  = config.getPowerdrawMem() // [W per GB]
+        final BigDecimal powerdrawMem  = config.value('powerdrawMem') // [W per GB]
 
         /**
          * Energy-related factors
          */
-        final BigDecimal pue = config.getPue()    // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
+        final BigDecimal pue = config.value('pue')    // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
 
         // CI: carbon intensity [gCO2e kWh−1]
-        final BigDecimal ci = config.getCi()
+        final BigDecimal ci = config.value('ci')
 
         // Personal energy mix based carbon intensity
-        final Double ciMarket = config.getCiMarket()
+        final Double ciMarket = config.value('ciMarket')
 
         /**
          * Calculate energy consumption [kWh]
@@ -151,7 +151,7 @@ class CO2FootprintComputer {
                 cpuUsage,
                 memory as Long,
                 trace.get('name') as String,
-                config.getIgnoreCpuModel() ? 'Custom value' : cpuModel
+                config.value('ignoreCpuModel') ? 'Custom value' : cpuModel
         )
     }
 
