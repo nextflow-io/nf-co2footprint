@@ -36,6 +36,10 @@ class ConverterTest extends Specification  {
         2.1     || 'days'   ||  'min'           ||  'days'      || null               || '2days 2h 24min'
         2.52    || 'days'   ||  'days'          ||  'days'      || null               || '2.52days'
         3600.0  || 's'      ||  's'             ||  'min'       || null               || '60min'
+        7000    || 'ms'     ||  'ms'            ||  's'         || null               || '7s'
+        7500    || 'ms'     ||  'ms'            ||  's'         || null               || '7s 500ms'
         3602.1  || 's'      ||  's'             ||  'min'       || null               || '60min 2.1s'
+        
     }
+
 }
