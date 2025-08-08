@@ -59,15 +59,17 @@ class Converter {
     }
 
     /**
-     * Converts a byte value to a human-readable string with binary prefixes.
-     * For example, 1048576 becomes '1 MB'.
-     *
-     * @param value Amount of bytes
-     * @return String of the value together with the appropriate unit
-     */
-    static String toReadableByteUnits(double value) {
+    * Converts a byte value to a human-readable string with binary prefixes,
+    * starting from a specified unit.
+    * For example, 1 with currentUnit='GB' becomes '1 GB'.
+    *
+    * @param value Amount of bytes (or KB, MB, etc. depending on currentUnit)
+    * @param currentUnit The unit of the input value (default: 'B')
+    * @return String of the value together with the appropriate unit
+    */
+    static String toReadableByteUnits(double value, String currentUnit = 'B') {
         final List<String> units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']  // Units: Byte, Kilobyte, Megabyte, Gigabyte, Terabyte, Petabyte, Exabyte
-        int unitIndex=0
+        int unitIndex = units.indexOf(currentUnit)
 
         while (value >= 1024 && unitIndex < units.size() - 1) {
             value /= 1024
@@ -79,99 +81,96 @@ class Converter {
 
 
     /**
-     * Converts a time value from one unit to another.
-     * For example, 120000 ms to minutes returns 2.
-     *
-     * @param value The time as a number in original given unit
-     * @param unit Given unit of time (e.g. 'ms')
-     * @param targetUnit Unit of time to be converted to (e.g. 'min')
-     * @return Number of converted time as BigDecimal
-     */
-    static BigDecimal convertTime(def value, String unit='ms', String targetUnit='s') {
+    * Converts a time value from one unit to another.
+    * E.g., 120000 ms to minutes returns 2.
+    *
+    * @param value      The time as a number in original given unit
+    * @param unit       Given unit of time (e.g. 'ms')
+    * @param targetUnit Unit of time to be converted to (e.g. 'min')
+    * @return           Number of converted time as BigDecimal
+    */
+    static BigDecimal convertTime(def value, String unit = 'ms', String targetUnit = 's') {
         value = value as BigDecimal
-        final List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']   // Units of time
-        final List<Double> steps = [1000.0, 1000.0, 1000.0, 60.0, 60.0, 24.0, 7.0, 4.35, 12.0]                // (Average) magnitude change between units
+        final units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']
+        final steps = [1000, 1000, 1000, 60, 60, 24, 7, 4.35, 12]
 
-        int givenUnitPos = units.indexOf(unit)
-        int targetUnitPos = units.indexOf(targetUnit)
+        int from = units.indexOf(unit)
+        int to = units.indexOf(targetUnit)
 
-        // Move up or down the units list, multiplying or dividing as needed
-        if (targetUnitPos > givenUnitPos) {
-            steps.subList(givenUnitPos, targetUnitPos).each { step -> value /= step }
+        if (from == -1 || to == -1) throw new IllegalArgumentException("Unknown unit")
+
+        if (to > from) {
+            steps.subList(from, to).each { value /= it }
+        } else if (to < from) {
+            steps.subList(to, from).each { value *= it }
         }
-        else if (targetUnitPos < givenUnitPos) {
-            steps.subList(targetUnitPos, givenUnitPos).each { step -> value *= step }
-        }
-
         return value
     }
 
     /**
-     * Converts a time value to a human-readable string, e.g. "2 days 3 h 4 min".
-     * Recursively breaks down the value into the largest possible units.
-     *
-     * @param value The time as a number in original given unit
-     * @param unit Given unit of time (default: 'ms')
-     * @param smallestUnit The smallest unit to convert to (default: 's')
-     * @param largestUnit The largest unit to convert to (default: 'years')
-     * @param threshold The minimum value for the conversion to be included in the output (optional)
-     * @param numSteps The maximum number of conversion steps to perform (optional)
-     * @param readableString The string to append the result to (for recursion, optional)
-     * @return A human-readable string representation of the time value
-     */
+    * Converts a time value to a human-readable string, e.g. "2 days 3 h 4 min".
+    * Breaks down the value into the largest possible units.
+    *
+    * @param value         The time as a number in original given unit
+    * @param unit          Given unit of time (default: 'ms')
+    * @param smallestUnit  The smallest unit to convert to (default: 's')
+    * @param largestUnit   The largest unit to convert to (default: 'years')
+    * @param threshold     The minimum value for the conversion to be included in the output (optional)
+    * @return              A human-readable string representation of the time value
+    */
     static String toReadableTimeUnits(
         def value,
         String unit = 'ms',
         String smallestUnit = 's',
         String largestUnit = 'years',
-        Double threshold = null,
-        Integer numSteps = null,
-        String readableString = ''
+        Double threshold = null
     ) {
-        // Ordered list of supported time units
-        final List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']
+        final units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']
+        final steps = [1000G, 1000G, 1000G, 60G, 60G, 24G, 7G, 4.35G, 12G] // Use BigDecimal
 
-        // Calculate the number of conversion steps left
-        final int smallestIdx = units.indexOf(smallestUnit)
-        final int largestIdx = units.indexOf(largestUnit)
-        numSteps = (numSteps == null) ? (largestIdx - smallestIdx) : (numSteps - 1)
+        int smallestIdx = units.indexOf(smallestUnit)
+        int largestIdx = units.indexOf(largestUnit)
+        if (smallestIdx == -1 || largestIdx == -1) throw new IllegalArgumentException("Unknown unit")
 
-        // Convert value to the current target unit
-        String targetUnit = largestUnit
-        final BigDecimal targetValue = convertTime(value as BigDecimal, unit, targetUnit)
-        def targetValueFormatted = Math.floor(targetValue)
+        BigDecimal remaining = convertTime(value, unit, units[largestIdx])
+        List<String> parts = []
 
-        // Singularize unit if value is exactly 1 and unit is plural
-        if (targetValueFormatted == 1 && ['days', 'weeks', 'months', 'years'].contains(targetUnit)) {
-            targetUnit = targetUnit.dropRight(1) // e.g. "days" -> "day"
+        for (int i = largestIdx; i >= smallestIdx; i--) {
+            BigDecimal unitValue
+            if (i > smallestIdx) {
+                unitValue = remaining.setScale(0, RoundingMode.DOWN)
+                remaining = (remaining - unitValue) * steps[i - 1]
+            } else {
+                // For the smallest unit, keep up to 2 decimals
+                unitValue = remaining.setScale(2, RoundingMode.HALF_UP)
+                remaining = 0
+            }
+
+            if ((threshold == null && unitValue > 0) || (threshold != null && unitValue > threshold)) {
+                String label = unitValue == 1 && ['days', 'weeks', 'months', 'years'].contains(units[i])
+                    ? units[i][0..-2] : units[i]
+                String formatted = unitValue.stripTrailingZeros().toPlainString()
+                parts << "${formatted}${label}"
+            }
+        }
+        
+        if (parts && smallestIdx > 0) {
+            // Check if the last unit (smallest) is exactly the conversion factor
+            BigDecimal lastValue = parts[-1].replaceAll(/[^\d.]/, '') as BigDecimal
+            String lastUnit = parts[-1].replaceAll(/[\d.]/, '')
+            BigDecimal conversionFactor = steps[smallestIdx - 1]
+            if (lastValue == conversionFactor) {
+                // Remove the last part (e.g., "1000ms")
+                parts.remove(parts.size() - 1)
+                // Increment the previous unit by 1
+                String prev = parts[-1]
+                String prevNum = prev.replaceAll(/[^\d.]/, '')
+                String prevUnit = prev.replaceAll(/[\d.]/, '')
+                BigDecimal newPrev = (prevNum as BigDecimal) + 1
+                parts[-1] = "${newPrev.stripTrailingZeros().toPlainString()}${prevUnit}"
+            }
         }
 
-        // If this is the last step, use the remaining value as is
-        if (numSteps == 0) {
-            targetValueFormatted = targetValue
-        }
-
-        // Only add to output if above threshold or no threshold set
-        if (threshold == null || targetValueFormatted > threshold) {
-            value = targetValue - targetValueFormatted
-            unit = largestUnit
-            // Format to 2 decimals, remove trailing zeros
-            final String formattedValue = (targetValueFormatted as BigDecimal).setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()
-            readableString += readableString ? " ${formattedValue}${targetUnit}" : "${formattedValue}${targetUnit}"
-        }
-
-        // If we've reached the smallest unit or max steps, return the result
-        if (numSteps == 0) {
-            final String result = readableString.trim()
-            return result ? result : "0${smallestUnit}"
-        }
-
-        // Otherwise, continue with the next smaller unit
-        final String nextLargestUnit = units[largestIdx - 1]
-        return toReadableTimeUnits(
-                value, unit,
-                smallestUnit, nextLargestUnit,
-                threshold, numSteps, readableString
-        )
+        return parts ? parts.join(' ') : "0${smallestUnit}"
     }
 }

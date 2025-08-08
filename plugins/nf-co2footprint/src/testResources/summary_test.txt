@@ -13,13 +13,15 @@ Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carb
 nf-co2footprint plugin version: 1.0.0-rc.3
 
 nf-co2footprint options:
-customCpuTdpFile: null
-reportFile: /var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir14244490045350207129/report_test.html
-summaryFile: /var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir14244490045350207129/summary_test.txt
-traceFile: /var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir14244490045350207129/trace_test.txt
 ci: 480.0
+ciMarket: null
 ignoreCpuModel: false
 location: null
+machineType: null
 powerdrawCpuDefault: null
 powerdrawMem: 0.3725
 pue: 1.0
+customCpuTdpFile: null
+reportFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir8371627739442831791/report_test.html
+summaryFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir8371627739442831791/summary_test.txt
+traceFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir8371627739442831791/trace_test.txt

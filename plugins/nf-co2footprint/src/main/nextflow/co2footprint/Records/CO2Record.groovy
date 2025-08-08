@@ -29,8 +29,6 @@ class CO2Record extends TraceRecord {
     private final Double time
     // Carbon intensity (gCO₂eq/kWh)
     private final Double ci
-    // Personal energy mix carbon intensity (gCO₂eq/kWh)
-    private final Double ciMarket
     // Number of CPU cores used
     private final Integer cpus
     // Power draw of CPU (W)
@@ -51,7 +49,6 @@ class CO2Record extends TraceRecord {
             co2eMarket:                 'num',
             time:                       'num',
             ci:                         'num',
-            ciMarket:                   'num',
             cpus:                       'num',
             powerdrawCPU:               'num',
             cpuUsage:                   'num',
@@ -68,7 +65,6 @@ class CO2Record extends TraceRecord {
     * @param co2eMarket    CO₂ equivalent emissions (g) based on market-based (personal energy mix) carbon intensity
     * @param time          Time spent on the task (ms)
     * @param ci            Location-based carbon intensity used for calculation (gCO₂eq/kWh)
-    * @param ciMarket      Market-based carbon intensity used for calculation (gCO₂eq/kWh)
     * @param cpus          Number of CPU cores used
     * @param powerdrawCPU  Power draw (TDP) of the CPU (W)
     * @param cpuUsage      CPU usage percentage during the task (%)
@@ -78,7 +74,7 @@ class CO2Record extends TraceRecord {
     */
     CO2Record(
             Double energy=null, Double co2e=null, Double co2eMarket=null, Double time=null,
-            Double ci=null, Double ciMarket=null, Integer cpus=null, Double powerdrawCPU=null,
+            Double ci=null, Integer cpus=null, Double powerdrawCPU=null,
             Double cpuUsage=null, Long memory=null, String name=null, String cpu_model=null
     ) {
         this.energy = energy
@@ -86,7 +82,6 @@ class CO2Record extends TraceRecord {
         this.co2eMarket = co2eMarket
         this.time = time
         this.ci = ci
-        this.ciMarket = ciMarket
         this.cpus = cpus
         this.powerdrawCPU = powerdrawCPU
         this.cpuUsage = cpuUsage
@@ -99,7 +94,6 @@ class CO2Record extends TraceRecord {
                 'co2eMarket':               co2eMarket,
                 'time':                     time,
                 'ci':                       ci,
-                'ciMarket':                 ciMarket,
                 'cpus':                     cpus,
                 'powerdrawCPU':             powerdrawCPU,
                 'cpuUsage':                 cpuUsage,
@@ -113,36 +107,32 @@ class CO2Record extends TraceRecord {
 
     // Getters for properties with readable formats
     Double getEnergyConsumption() { energy }
-    String getEnergyConsumptionReadable() { Converter.toReadableUnits(energy,'m', 'Wh') }
+    String getEnergyConsumptionReadable() { Converter.toReadableUnits(energy, 'm', 'Wh') }
 
     Double getCO2e() { co2e }
-    String getCO2eReadable() { Converter.toReadableUnits(co2e,'m', 'g') }
+    String getCO2eReadable() { Converter.toReadableUnits(co2e, 'm', 'g') }
 
     Double getCO2eMarket() { co2eMarket }
     String getCO2eMarketReadable() {
-        co2eMarket ? Converter.toReadableUnits(co2eMarket,'m', 'g') : null
+        co2eMarket ? Converter.toReadableUnits(co2eMarket, 'm', 'g') : null
     }
 
     Double getTime() { time }
-    String getTimeReadable() { Converter.toReadableTimeUnits(time, 'ms', 'ms', 'days', 0.0d) }
+    String getTimeReadable() { Converter.toReadableTimeUnits(time, 'h', 'ms', 's', 0.0d) }
 
-    String getCIReadable() { Converter.toReadableUnits(ci, '', 'gCO₂eq/kWh') }
-
-    String getCiMarketReadable() {
-        ciMarket ? Converter.toReadableUnits(ciMarket, '', 'gCO₂eq/kWh') : null
-    }
+    String getCIReadable() { Converter.toReadableUnits(ci, '', 'gCO₂e/kWh') }
 
     Integer getCPUs() { cpus }
     String getCPUsReadable() { cpus as String }
 
     Double getPowerdrawCPU() { powerdrawCPU }
-    String getPowerdrawCPUReadable() { powerdrawCPU as String  }
+    String getPowerdrawCPUReadable() { powerdrawCPU != null ? String.format('%.1f W', powerdrawCPU) : null  }
 
     Double getCPUUsage() { cpuUsage }
-    String getCPUUsageReadable() { cpuUsage as String  }
+    String getCPUUsageReadable() { cpuUsage != null ? String.format('%.1f%%', cpuUsage) : null }
 
     Long getMemory() { memory }
-    String getMemoryReadable() { Converter.toReadableByteUnits(memory) }
+    String getMemoryReadable() { Converter.toReadableByteUnits(memory, 'GB') }
 
     String getName() { name }
     String getNameReadable() { name }
@@ -157,8 +147,8 @@ class CO2Record extends TraceRecord {
     List<String> getReadableEntries() {
         return [
                 this.getNameReadable(), this.getEnergyConsumptionReadable(), this.getCO2eReadable(), this.getCO2eMarketReadable(),
-                this.getTimeReadable(), this.getCIReadable(), this.getCiMarketReadable(), this.getCPUsReadable(),
-                this.getPowerdrawCPUReadable(), this.getCPUModelReadable(), this.getCPUUsageReadable(), this.getMemoryReadable()
+                this.getCIReadable(), this.getCPUUsageReadable(), this.getMemoryReadable(), this.getTimeReadable(), this.getCPUsReadable(),
+                this.getPowerdrawCPUReadable(), this.getCPUModelReadable()
         ]
     }
 

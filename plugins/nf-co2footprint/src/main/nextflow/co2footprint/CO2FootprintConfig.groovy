@@ -228,10 +228,13 @@ class CO2FootprintConfig {
         return [
                 "location": location,
                 "ci": ci,
+                "ciMarket": ciMarket,
                 "pue": pue,
                 "powerdrawMem": powerdrawMem,
                 "powerdrawCpuDefault": powerdrawCpuDefault,
                 "ignoreCpuModel": ignoreCpuModel,
+                "machineType": machineType
         ].sort() as SortedMap
     }
 }
+
