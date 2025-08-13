@@ -227,7 +227,7 @@ class CO2FootprintConfig {
     SortedMap<String, Object> collectCO2CalcOptions() {
         return [
                 "location": location,
-                "ci": ci,
+                "ci": (ci instanceof Closure) ? "dynamic" : ci,
                 "pue": pue,
                 "powerdrawMem": powerdrawMem,
                 "powerdrawCpuDefault": powerdrawCpuDefault,
