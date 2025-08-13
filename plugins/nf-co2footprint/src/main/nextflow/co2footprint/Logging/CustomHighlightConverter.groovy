@@ -6,6 +6,12 @@ import ch.qos.logback.classic.Level
 
 class CustomHighlightConverter extends ForegroundCompositeConverterBase<ILoggingEvent> {
 
+    /**
+     * Changes the color of a message, depending on its level.
+     *
+     * @param event A logging event
+     * @return The appropriate color code for the message
+     */
     @Override
     protected String getForegroundColorCode(ILoggingEvent event) {
         return switch (event.level) {
