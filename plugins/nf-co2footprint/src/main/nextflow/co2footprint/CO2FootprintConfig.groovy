@@ -244,13 +244,9 @@ class CO2FootprintConfig extends BaseConfig {
      * @return SortedMap of calculation options
      */
     SortedMap<String, Object> collectCO2CalcOptions() {
-        return [
-                location: value('location'),
-                ci: (get('ci') instanceof Closure) ? 'dynamic' : value('ci'),
-                pue: value('pue'),
-                powerdrawMem: value('powerdrawMem'),
-                powerdrawCpuDefault: value('powerdrawCpuDefault'),
-                ignoreCpuModel: value('ignoreCpuModel'),
-        ].sort() as SortedMap
+        Set<String> outputFileOptions = Set.of('location', 'pue', 'powerdrawMem', 'powerdrawCpuDefault', 'ignoreCpuModel')
+        SortedMap<String, Object> outMap = getValueMap(outputFileOptions).sort() as SortedMap
+        outMap.put('ci', (get('ci') instanceof Closure) ? 'dynamic' : value('ci'))
+        return outMap
     }
 }
