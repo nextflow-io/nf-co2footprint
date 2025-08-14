@@ -2,7 +2,6 @@ package nextflow.co2footprint.utils
 
 import groovy.util.logging.Slf4j
 
-import java.math.RoundingMode
 import java.text.DecimalFormat
 
 /**
@@ -166,20 +165,23 @@ class Converter {
         for (String targetUnit : units.reversed()) {
             Quantity currentTime = scaleTime(value, unit, targetUnit)
 
+            // Handle the last unit differently
             if( targetUnit == smallestUnit ) {
-                currentTime.round()
+                currentTime.round()     // Keep last two decimals
+                
                 timeString += "${currentTime.getReadable()} "
-                break
             } else {
-                currentTime.floor()
-            }
+                currentTime.floor()     // Keep only round numbers
 
-            if ( (threshold == null || currentTime.value > threshold) ) {
-                value -= scaleTime(currentTime.value, targetUnit, unit).value
-                timeString += "${currentTime.getReadable()} "
-            }
+                // Add to string and remove added value, if the threshold is reached
+                if ( (threshold == null || currentTime.value > threshold) ) {
+                    value -= scaleTime(currentTime.value, targetUnit, unit).value
+                    timeString += "${currentTime.getReadable()} "
 
-            if (value == 0) { break }
+                    // Finish execution if value is 0
+                    if (value == 0) { break }
+                }
+            }
         }
 
        return timeString.trim()
