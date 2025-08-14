@@ -11,7 +11,15 @@ class Quantity {
     String scale
     String separator
 
-    Quantity(Number value, String scale='', String unit, String separator=' ') {
+    /**
+     * Creator of a Quantity, combining the tracking and reporting of a number, associated with a unit.
+     *
+     * @param value The numerical value, saved in the quantity
+     * @param scale The scale of the Quantity, defaults to ''
+     * @param unit The unit of the quantity
+     * @param separator The separator between value and scaled unit, defaults to ' '
+     */
+    Quantity(Number value, String scale='', String unit='', String separator=' ') {
         this.value = value as BigDecimal
         this.scale = scale
         this.unit = unit
@@ -37,7 +45,7 @@ class Quantity {
      * @param precision, default: 2
      */
     Quantity round(Integer precision=2, RoundingMode roundingMode=RoundingMode.HALF_UP) {
-        if (precision) {
+        if (precision != null) {
             this.value = this.value.setScale(precision, roundingMode)
         }
 

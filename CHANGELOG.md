@@ -3,6 +3,7 @@
 # Version 1.0.0-rc.4
 ## Bug Fixes:
 - Wrong memory fallback value (current machine maximum memory) now removed
+- Conversion of time leaving trailing full bigger units (e.g. 60s instead of 1min)
 
 ## Misc:
 - "🔁" now prepended for every `Markers.unique` message
