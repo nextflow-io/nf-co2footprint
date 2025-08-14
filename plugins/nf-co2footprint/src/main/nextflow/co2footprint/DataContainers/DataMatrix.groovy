@@ -68,9 +68,6 @@ class DataMatrix implements Matrix {
     ) throws IOException {
         List<String> lines = Files.readAllLines(path)
 
-        // Ensure separator is a single character
-        char sepChar = separator?.charAt(0) ?: ','
-
         // Extract column index from the specified line (keep as LinkedHashSet to preserve your behavior)
         LinkedHashSet<Object> columnIndex = columnIndexPos != null ? lines.remove(columnIndexPos).split(separator) : null
 
@@ -100,8 +97,6 @@ class DataMatrix implements Matrix {
 
         // Parse each line of the CSV, handling quoted fields and separators
         lines.each { line ->
-            assert escaped == false, "Unclosed quote in line: ${line}"
-            start = 0
             List<Object> row = []
 
             line.eachWithIndex { character, i ->
@@ -130,6 +125,8 @@ class DataMatrix implements Matrix {
 
             // Add row to data
             data.add(row)
+            assert escaped == false, "Unclosed quote in line: ${line}"
+            start = 0
         }
 
         return new DataMatrix(data, columnIndex, rowIndex)
