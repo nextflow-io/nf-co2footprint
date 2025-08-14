@@ -1,17 +1,36 @@
 package nextflow.co2footprint.utils
 
+import groovy.util.logging.Slf4j
+
 import java.math.RoundingMode
 import java.text.DecimalFormat
-import groovy.util.logging.Slf4j
 
 /**
  * Utility functions to convert and format values for reporting.
  *
  * Includes methods for scientific notation, readable units, byte units,
  * and human-readable time formatting.
- */ 
+ */
 @Slf4j
 class Converter {
+
+    /**
+     * Checks whether a unit was found and throws an error if not.
+     *
+     * @param unit Unit as a String
+     * @param units List of units that are available
+     */
+    static int matchUnit(String unit, List<String> units) {
+        int unitIndex = units.indexOf(unit)
+
+        if (unitIndex < 0) {
+            String message = "Unit `${unit}` not found in units `${units}`"
+            log.error(message)
+            throw new IllegalArgumentException(message)
+        }
+
+        return unitIndex
+    }
 
     /**
      * Converts a number into scientific notation (e.g., 1.23E3).
@@ -61,24 +80,50 @@ class Converter {
     }
 
     /**
-    * Converts a byte value to a human-readable string with binary prefixes,
-    * starting from a specified unit.
-    * For example, 1 with currentUnit='GB' becomes '1 GB'.
-    *
-    * @param value Amount of bytes (or KB, MB, etc. depending on currentUnit)
-    * @param currentUnit The unit of the input value (default: 'B')
-    * @return String of the value together with the appropriate unit
-    */
-    static String toReadableByteUnits(double value, String currentUnit = 'B') {
+     * Converts a byte value to another byte unit scale.
+     * For example, 1048576 becomes [value: 1.0, unit: 'MB'].
+     *
+     * @param value Amount of respective unit
+     * @param unit Starting unit, defaults to 'B'/bytes
+     * @param targetUnit Target unit, optional
+     * @return The value and the unit in a Map when converted to right scale.
+     */
+    static Quantity convertByteUnits(double value, String unit='B', String targetUnit=null) {
+        Quantity quantity = new Quantity(value, unit)
         final List<String> units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']  // Units: Byte, Kilobyte, Megabyte, Gigabyte, Terabyte, Petabyte, Exabyte
-        int unitIndex = units.indexOf(currentUnit)
+        int unitIndex = matchUnit(unit, units)
 
-        while (value >= 1024 && unitIndex < units.size() - 1) {
-            value /= 1024
-            unitIndex++
+        int targetUnitIndex
+        int difference
+        // Either choose custom target unit,
+        if (targetUnit) {
+            targetUnitIndex = matchUnit(targetUnit, units)
+            difference = targetUnitIndex - unitIndex
+        }
+        // or use $floor(log_{1024}(value))$ to determine the number of steps that are taken to return a number above 0
+        else {
+            difference = Math.floor(Math.log(value) / Math.log(1024)) as int
+            targetUnitIndex = unitIndex + difference
         }
 
-        return "${value} ${units[unitIndex]}"
+        // Adjust value to the target unit
+        quantity.set(value / 1024**difference,  units[targetUnitIndex])
+
+        return quantity
+    }
+
+    /**
+     * Converts a byte value to a human-readable string with binary prefixes,
+     * starting from a specified unit.
+     * For example, 1 with currentUnit='GB' becomes '1 GB'.
+     *
+     * @param value Amount of bytes
+     * @param unit Starting unit
+     * @param targetUnit Target unit
+     * @return String of the value together with the appropriate unit
+     */
+    static String toReadableByteUnits(double value, String unit='B', String targetUnit=null) {
+        return convertByteUnits(value, unit, targetUnit).getReadable()
     }
 
 
@@ -94,9 +139,9 @@ class Converter {
     static BigDecimal convertTime(def value, String unit='ms', String targetUnit='s') {
         value = value as BigDecimal
         // Supported time units
-        final List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years'] 
+        final List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']
         // Conversion factors between units (e.g., 1000 ms = 1 s, 60 s = 1 min, etc.)
-        final List<Double> steps = [1000.0, 1000.0, 1000.0, 60.0, 60.0, 24.0, 7.0, 4.35, 12.0] 
+        final List<Double> steps = [1000.0, 1000.0, 1000.0, 60.0, 60.0, 24.0, 7.0, 4.35, 12.0]
 
         int from = units.indexOf(unit)
         int to = units.indexOf(targetUnit)
@@ -108,104 +153,76 @@ class Converter {
         } else if (to < from) {
             steps.subList(to, from).each { value *= it }
         }
+
         return value
     }
 
     /**
-    * Converts a time value to a human-readable string, e.g. "2 days 3 h 4 min".
-    * Breaks down the value into the largest possible units.
-    *
-    * @param value         The time as a number in original given unit
-    * @param unit          Given unit of time (default: 'ms')
-    * @param smallestUnit  The smallest unit to convert to (default: 's')
-    * @param largestUnit   The largest unit to convert to (default: 'years')
-    * @param threshold     The minimum value for the conversion to be included in the output (optional)
-    * @return              A human-readable string representation of the time value
-    */
+     * Converts a time value to a human-readable string, e.g. "2 days 3 h 4 min".
+     * Recursively breaks down the value into the largest possible units.
+     *
+     * @param value The time as a number in original given unit
+     * @param unit Given unit of time (default: 'ms')
+     * @param smallestUnit The smallest unit to convert to (default: 's')
+     * @param largestUnit The largest unit to convert to (default: 'years')
+     * @param threshold The minimum value for the conversion to be included in the output (optional)
+     * @param numSteps The maximum number of conversion steps to perform (optional)
+     * @param readableString The string to append the result to (for recursion, optional)
+     * @return A human-readable string representation of the time value
+     */
     static String toReadableTimeUnits(
         def value,
         String unit = 'ms',
         String smallestUnit = 's',
         String largestUnit = 'years',
-        Double threshold = null
-    ) { 
+        Double threshold = null,
+        Integer numSteps = null,
+        String readableString = ''
+    ) {
         // Ordered list of supported time units
         final List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']
-        // Conversion factors between units (e.g., 1000 ms = 1 s, 60 s = 1 min, etc.)
-        final List<BigDecimal> steps = [1000G, 1000G, 1000G, 60G, 60G, 24G, 7G, 4.35G, 12G] 
 
-        // Get indices for smallest and largest units
-        int smallestIdx = getIdx(smallestUnit, units)
-        int largestIdx = getIdx(largestUnit, units)
+        // Calculate the number of conversion steps left
+        final int smallestIdx = units.indexOf(smallestUnit)
+        final int largestIdx = units.indexOf(largestUnit)
+        numSteps = (numSteps == null) ? (largestIdx - smallestIdx) : (numSteps - 1)
 
-        // Convert input value to the largest unit for breakdown
-        BigDecimal remaining = convertTime(value, unit, units[largestIdx]) // Convert to the largest unit
-        List<String> parts = [] // Collect formatted time units
+        // Convert value to the current target unit
+        String targetUnit = largestUnit
+        final BigDecimal targetValue = convertTime(value as BigDecimal, unit, targetUnit)
+        def targetValueFormatted = Math.floor(targetValue)
 
-        // Iterate from largest to smallest unit, extracting each unit's value
-        for (int i = largestIdx; i >= smallestIdx; i--) {
-            BigDecimal unitValue
-            if (i > smallestIdx) {
-                // For non-smallest units, use integer part only
-                unitValue = remaining.setScale(0, RoundingMode.DOWN)
-                // Update remaining value for next smaller unit
-                remaining = (remaining - unitValue) * steps[i - 1]
-            } else {
-                // For the smallest unit, keep up to 2 decimals
-                unitValue = remaining.setScale(2, RoundingMode.HALF_UP)
-                remaining = 0
-            }
-
-            // Only include units above threshold (if set) or non-zero units
-            if ((threshold == null && unitValue > 0) || (threshold != null && unitValue > threshold)) {
-                // Use singular label for units like "day", "week", etc. if value is 1
-                String label = unitValue == 1 && ['days', 'weeks', 'months', 'years'].contains(units[i])
-                    ? units[i][0..-2] : units[i]
-                // Format value, removing trailing zeros
-                String formatted = unitValue.stripTrailingZeros().toPlainString()
-                parts << "${formatted}${label}"
-            }
-        }
-        
-        // Special handling: if smallest unit is exactly the conversion factor, roll up to next unit
-        if (parts && smallestIdx > 0) {
-            // Check if the last unit (smallest) is exactly the conversion factor
-            BigDecimal lastValue = parts[-1].replaceAll(/[^\d.]/, '') as BigDecimal
-            String lastUnit = parts[-1].replaceAll(/[\d.]/, '')
-            BigDecimal conversionFactor = steps[smallestIdx - 1]
-            if (lastValue == conversionFactor) {
-                // Remove the last part (e.g., "1000ms")
-                parts.remove(parts.size() - 1)
-                // Increment the previous unit by 1
-                String prev = parts[-1]
-                String prevNum = prev.replaceAll(/[^\d.]/, '')
-                String prevUnit = prev.replaceAll(/[\d.]/, '')
-                BigDecimal newPrev = (prevNum as BigDecimal) + 1
-                parts[-1] = "${newPrev.stripTrailingZeros().toPlainString()}${prevUnit}"
-            }
+        // Singularize unit if value is exactly 1 and unit is plural
+        if (targetValueFormatted == 1 && ['days', 'weeks', 'months', 'years'].contains(targetUnit)) {
+            targetUnit = targetUnit.dropRight(1) // e.g. "days" -> "day"
         }
 
-        // Join all parts with spaces, or return "0" + smallestUnit if no parts
-        return parts ? parts.join(' ') : "0${smallestUnit}"
-    }
-
-    /**
-     * Gets the index of an element in a list.
-     * Throws an error if the element is not found.
-     *
-     * @param element The element to find
-     * @param list The list to search in
-     * @return The index of the element in the list
-     */
-    static int getIdx(Object element, List<Object> list) {
-        int idx = list.indexOf(element)
-
-        if (idx < 0) {
-            String message = "Unknown element `${element}` not found in `${list}`"
-            log.error(message)
-            throw new IllegalArgumentException(message)
+        // If this is the last step, use the remaining value as is
+        if (numSteps == 0) {
+            targetValueFormatted = targetValue
         }
 
-        return idx
+        // Only add to output if above threshold or no threshold set
+        if (threshold == null || targetValueFormatted > threshold) {
+            value = targetValue - targetValueFormatted
+            unit = largestUnit
+            // Format to 2 decimals, remove trailing zeros
+            final String formattedValue = (targetValueFormatted as BigDecimal).setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()
+            readableString += readableString ? " ${formattedValue}${targetUnit}" : "${formattedValue}${targetUnit}"
+        }
+
+        // If we've reached the smallest unit or max steps, return the result
+        if (numSteps == 0) {
+            final String result = readableString.trim()
+            return result ? result : "0${smallestUnit}"
+        }
+
+        // Otherwise, continue with the next smaller unit
+        final String nextLargestUnit = units[largestIdx - 1]
+        return toReadableTimeUnits(
+                value, unit,
+                smallestUnit, nextLargestUnit,
+                threshold, numSteps, readableString
+        )
     }
 }
