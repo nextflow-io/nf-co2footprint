@@ -125,6 +125,8 @@ class DataMatrix implements Matrix {
 
             // Add row to data
             data.add(row)
+            // Check if the line was properly closed
+            // If we are still escaped, it means the last quote was not closed
             assert escaped == false, "Unclosed quote in line: ${line}"
             start = 0
         }
