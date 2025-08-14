@@ -89,18 +89,23 @@ class Converter {
     * @param targetUnit Unit of time to be converted to (e.g. 'min')
     * @return           Number of converted time as BigDecimal
     */
-    static BigDecimal convertTime(def value, String unit = 'ms', String targetUnit = 's') {
+    static BigDecimal convertTime(def value, String unit='ms', String targetUnit='s') {
         value = value as BigDecimal
-        final units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']
-        final steps = [1000, 1000, 1000, 60, 60, 24, 7, 4.35, 12]
+        // Supported time units
+        final List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years'] 
+        // Conversion factors between units (e.g., 1000 ms = 1 s, 60 s = 1 min, etc.)
+        final List<Double> steps = [1000.0, 1000.0, 1000.0, 60.0, 60.0, 24.0, 7.0, 4.35, 12.0] 
 
         int from = units.indexOf(unit)
         int to = units.indexOf(targetUnit)
 
-        if (from == -1 || to == -1) throw new IllegalArgumentException("Unknown unit")
+        // Throw error if unit is not recognized
+        if (from < 0 || to < 0) throw new IllegalArgumentException("Unknown unit")
 
+        // Convert up (e.g., ms to min)
         if (to > from) {
             steps.subList(from, to).each { value /= it }
+        // Convert down (e.g., min to ms)
         } else if (to < from) {
             steps.subList(to, from).each { value *= it }
         }
@@ -124,21 +129,29 @@ class Converter {
         String smallestUnit = 's',
         String largestUnit = 'years',
         Double threshold = null
-    ) {
-        final units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']
-        final steps = [1000G, 1000G, 1000G, 60G, 60G, 24G, 7G, 4.35G, 12G] // Use BigDecimal
+    ) { 
+        // Ordered list of supported time units
+        final List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']
+        // Conversion factors between units (e.g., 1000 ms = 1 s, 60 s = 1 min, etc.)
+        final List<BigDecimal> steps = [1000G, 1000G, 1000G, 60G, 60G, 24G, 7G, 4.35G, 12G] 
 
+        // Get indices for smallest and largest units
         int smallestIdx = units.indexOf(smallestUnit)
+        if (smallestIdx < 0) throw new IllegalArgumentException("Unknown unit `${smallestUnit}`")
         int largestIdx = units.indexOf(largestUnit)
-        if (smallestIdx == -1 || largestIdx == -1) throw new IllegalArgumentException("Unknown unit")
+        if (largestIdx < 0) throw new IllegalArgumentException("Unknown unit `${largestUnit}`")
 
-        BigDecimal remaining = convertTime(value, unit, units[largestIdx])
-        List<String> parts = []
+        // Convert input value to the largest unit for breakdown
+        BigDecimal remaining = convertTime(value, unit, units[largestIdx]) // Convert to the largest unit
+        List<String> parts = [] // Collect formatted time units
 
+        // Iterate from largest to smallest unit, extracting each unit's value
         for (int i = largestIdx; i >= smallestIdx; i--) {
             BigDecimal unitValue
             if (i > smallestIdx) {
+                // For non-smallest units, use integer part only
                 unitValue = remaining.setScale(0, RoundingMode.DOWN)
+                // Update remaining value for next smaller unit
                 remaining = (remaining - unitValue) * steps[i - 1]
             } else {
                 // For the smallest unit, keep up to 2 decimals
@@ -146,14 +159,18 @@ class Converter {
                 remaining = 0
             }
 
+            // Only include units above threshold (if set) or non-zero units
             if ((threshold == null && unitValue > 0) || (threshold != null && unitValue > threshold)) {
+                // Use singular label for units like "day", "week", etc. if value is 1
                 String label = unitValue == 1 && ['days', 'weeks', 'months', 'years'].contains(units[i])
                     ? units[i][0..-2] : units[i]
+                // Format value, removing trailing zeros
                 String formatted = unitValue.stripTrailingZeros().toPlainString()
                 parts << "${formatted}${label}"
             }
         }
         
+        // Special handling: if smallest unit is exactly the conversion factor, roll up to next unit
         if (parts && smallestIdx > 0) {
             // Check if the last unit (smallest) is exactly the conversion factor
             BigDecimal lastValue = parts[-1].replaceAll(/[^\d.]/, '') as BigDecimal
@@ -171,6 +188,7 @@ class Converter {
             }
         }
 
+        // Join all parts with spaces, or return "0" + smallestUnit if no parts
         return parts ? parts.join(' ') : "0${smallestUnit}"
     }
 }
