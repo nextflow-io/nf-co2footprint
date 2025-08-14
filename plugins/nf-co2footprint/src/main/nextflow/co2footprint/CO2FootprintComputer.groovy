@@ -6,6 +6,7 @@ import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.utils.HelperFunctions
 import groovy.util.logging.Slf4j
+import nextflow.exception.MissingValueException
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
 
@@ -89,23 +90,29 @@ class CO2FootprintComputer {
         final BigDecimal coreUsage = cpuUsage / (100.0 * numberOfCores)
 
         /**
-         * Factors of memory power usage
+         * Factors of memory power usage´
          */
-        Long requestedMemory = trace.get('memory') as Long        // [bytes]
-        final Long requiredMemory = trace.get('peak_rss') as Long // [bytes]
+        final Long requestedMemory = trace.get('memory') as Long        // [bytes]
+        final Long maxRequiredMemory = trace.get('peak_rss') as Long    // [bytes]
 
-        // Check if requested memory is missing
+        // Assign the final memory value
+        final BigDecimal memory
         if (requestedMemory == null) {
-            String warnMessage = "Requested memory is null for task ${taskID}."
-            requestedMemory = logAndSetAvailableMemory(taskID, warnMessage, 'memory-is-null-warning')
+            if (maxRequiredMemory == null) {
+                String message = "No requested memory and maximum consumed memory found for task ${taskID}."
+                log.error(message)
+                throw new MissingValueException(message)
+            } else {
+                memory = maxRequiredMemory / 1024**3
+                log.warn(
+                    Markers.unique,
+                    "Requested memory is null for task ${taskID}. Setting to maximum cosumed memory/`peak_rss` (${memory} GB).",
+                    'memory-is-null-warning'
+                )
+            }
+        } else {
+            memory = requestedMemory / 1024**3
         }
-        // If peak memory usage (requiredMemory) is known and exceeds the requested memory
-        else if (requiredMemory != null && requiredMemory > requestedMemory) {
-            String warnMessage = "The required memory (${(requiredMemory/(1024**3)).round(2)} GB) exceeds the requested memory (${(requestedMemory/(1024**3)).round(2)} GB) for task ${taskID}."
-            requestedMemory = logAndSetAvailableMemory(taskID, warnMessage, 'memory-exceeded-warning')
-        }
-
-        final BigDecimal memory = requestedMemory / 1024**3 // conversion to [GB]
 
         final BigDecimal powerdrawMem  = config.getPowerdrawMem() // [W per GB]
 
@@ -154,27 +161,6 @@ class CO2FootprintComputer {
                 config.getIgnoreCpuModel() ? 'Custom value' : cpuModel
         )
     }
-
-    /**
-     * Logs a warning about memory assignment and returns the available system memory.
-     *
-     * @param taskID      The TaskId for which memory is being assigned.
-     * @param warnMessage The warning message to log (should describe the memory issue).
-     * @param warnKey     A unique key for deduplication of this warning.
-     * @return            The available system memory in bytes.
-     */
-    private static Long logAndSetAvailableMemory(TaskId taskID, String warnMessage, String warnKey) {
-        Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
-        BigDecimal availableMemoryInGB = (availableMemory / (1024 ** 3)) as BigDecimal
-        BigDecimal roundedMemoryInGB = availableMemoryInGB.round(2)
-        log.warn(
-            Markers.unique,
-            warnMessage + " Setting to available memory (${roundedMemoryInGB} GB).",
-            warnKey
-        )
-        return availableMemory
-    }
-
 
     /**
      * The following values were taken from the Green Algorithms publication (https://doi.org/10.1002/advs.202100707):
