@@ -2,13 +2,15 @@ package nextflow.co2footprint.utils
 
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import groovy.util.logging.Slf4j
 
 /**
  * Utility functions to convert and format values for reporting.
  *
  * Includes methods for scientific notation, readable units, byte units,
  * and human-readable time formatting.
- */
+ */ 
+@Slf4j
 class Converter {
 
     /**
@@ -99,9 +101,6 @@ class Converter {
         int from = units.indexOf(unit)
         int to = units.indexOf(targetUnit)
 
-        // Throw error if unit is not recognized
-        if (from < 0 || to < 0) throw new IllegalArgumentException("Unknown unit")
-
         // Convert up (e.g., ms to min)
         if (to > from) {
             steps.subList(from, to).each { value /= it }
@@ -136,10 +135,8 @@ class Converter {
         final List<BigDecimal> steps = [1000G, 1000G, 1000G, 60G, 60G, 24G, 7G, 4.35G, 12G] 
 
         // Get indices for smallest and largest units
-        int smallestIdx = units.indexOf(smallestUnit)
-        if (smallestIdx < 0) throw new IllegalArgumentException("Unknown unit `${smallestUnit}`")
-        int largestIdx = units.indexOf(largestUnit)
-        if (largestIdx < 0) throw new IllegalArgumentException("Unknown unit `${largestUnit}`")
+        int smallestIdx = getIdx(smallestUnit, units)
+        int largestIdx = getIdx(largestUnit, units)
 
         // Convert input value to the largest unit for breakdown
         BigDecimal remaining = convertTime(value, unit, units[largestIdx]) // Convert to the largest unit
@@ -190,5 +187,25 @@ class Converter {
 
         // Join all parts with spaces, or return "0" + smallestUnit if no parts
         return parts ? parts.join(' ') : "0${smallestUnit}"
+    }
+
+    /**
+     * Gets the index of an element in a list.
+     * Throws an error if the element is not found.
+     *
+     * @param element The element to find
+     * @param list The list to search in
+     * @return The index of the element in the list
+     */
+    static int getIdx(Object element, List<Object> list) {
+        int idx = list.indexOf(element)
+
+        if (idx < 0) {
+            String message = "Unknown element `${element}` not found in `${list}`"
+            log.error(message)
+            throw new IllegalArgumentException(message)
+        }
+
+        return idx
     }
 }
