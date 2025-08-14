@@ -132,7 +132,7 @@ class CO2Record extends TraceRecord {
     String getCPUUsageReadable() { cpuUsage != null ? String.format('%.1f%%', cpuUsage) : null }
 
     Long getMemory() { memory }
-    String getMemoryReadable() { Converter.toReadableByteUnits(memory, 'GB') }
+    String getMemoryReadable() { Converter.toReadableUnits(memory, '', 'B', null, 1024) }
 
     String getName() { name }
     String getNameReadable() { name }
