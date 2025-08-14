@@ -1,17 +1,21 @@
 package nextflow.co2footprint.utils
 
+import java.math.RoundingMode
+
 /**
  * A number associated with a unit.
  */
 class Quantity {
-    Number value
+    BigDecimal value
     String unit
     String scale
+    String separator
 
-    Quantity(Number value, String unit, String scale='') {
-        this.value = value
+    Quantity(Number value, String scale='', String unit, String separator=' ') {
+        this.value = value as BigDecimal
+        this.scale = scale
         this.unit = unit
-
+        this.separator = separator
     }
 
     /**
@@ -22,29 +26,51 @@ class Quantity {
      * @param scale Scale of the unit
      */
     void set(Number value, String unit=this.unit, String scale=this.scale) {
-        this.value = value
+        this.value = value as BigDecimal
         this.unit = unit
         this.scale = scale
     }
 
     /**
-     * Return the value.
+     * Round the value to a certain precision.
      *
-     * @return Number value
+     * @param precision, default: 2
      */
-    Number get() { return this.value }
+    Quantity round(Integer precision=2, RoundingMode roundingMode=RoundingMode.HALF_UP) {
+        if (precision) {
+            this.value = this.value.setScale(precision, roundingMode)
+        }
+
+        return this
+    }
+
+    /**
+     * Round the value to a certain precision.
+     *
+     * @param precision, default: 0
+     */
+    Quantity floor(Integer precision=0) {
+        if (precision != null) {
+            this.value = this.value.setScale(precision, RoundingMode.FLOOR)
+        }
+
+        return this
+    }
 
     /**
      * Get the readable representation of this quantity.
      * Example: '1 GB' for value = 1, scale = 'G', unit = 'B'
      *
-     * @return String '<value> <scale><unit>'
+     * @return String 'value scale+unit'
      */
-    String getReadable() {
-        String readable = this.value as String
+    String getReadable(boolean keepDecimal=false) {
+        String readable = this.value.stripTrailingZeros().toPlainString()
+        if (keepDecimal && !readable.contains('.')) {
+            readable += '.0'
+        }
 
-        String scaledUnit = this.scale ?: '' + this.unit ?: ''
-        if (scaledUnit) { readable += ' ' + scaledUnit }
+        String scaledUnit = (this.scale ?: '') + (this.unit ?: '')
+        if (scaledUnit) { readable += this.separator + scaledUnit }
 
         return readable
     }
