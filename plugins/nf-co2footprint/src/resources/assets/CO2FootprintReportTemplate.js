@@ -226,7 +226,7 @@ function make_carbon_intensity(ci, type) {
  * @returns The memory at a readable scale
  */
 function make_memory(value, type) {
-  return check_data(value, type, parseFloat) ?? toReadableByteUnits(value, 'GB');
+  return toRawValue(value, type, parseFloat) ?? toReadableByteUnits(value, 'GB');
 }
 
 /**
@@ -236,8 +236,8 @@ function make_memory(value, type) {
  * @param {*} type Type of the data
  * @returns Readable power draw in Watts
  */
-function make_memory(bytes, type){
-  return toRawValue(bytes, type, parseFloat) ?? toReadableByteUnits(bytes);
+function make_power_draw_cpu(value, type){
+  return toRawValue(value, type, parseFloat) ?? toReadableUnits(value, '', 'W/Core');
 }
 
 /**
