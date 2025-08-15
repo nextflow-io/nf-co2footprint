@@ -30,19 +30,20 @@ class Quantity {
      * Set the contents of a Quantity.
      *
      * @param value Number of the quantity
-     * @param unit Unit string
      * @param scale Scale of the unit
+     * @param unit Unit string
      */
-    void set(Number value, String unit=this.unit, String scale=this.scale) {
+    void set(Number value, String scale=this.scale, String unit=this.unit) {
         this.value = value as BigDecimal
-        this.unit = unit
         this.scale = scale
+        this.unit = unit
     }
 
     /**
      * Round the value to a certain precision.
      *
      * @param precision, default: 2
+     * @param roundingMode, How to round the number, default: RoundingMode.HALF_UP
      */
     Quantity round(Integer precision=2, RoundingMode roundingMode=RoundingMode.HALF_UP) {
         if (precision != null) {
@@ -71,12 +72,11 @@ class Quantity {
      *
      * @return String 'value scale+unit'
      */
-    String getReadable(boolean keepDecimal=false) {
+    String getReadable() {
+        // Remove trailing Zeros and convert to readable String
         String readable = this.value.stripTrailingZeros().toPlainString()
-        if (keepDecimal && !readable.contains('.')) {
-            readable += '.0'
-        }
 
+        // Add scale and unit with separator only if one of them is given
         String scaledUnit = (this.scale ?: '') + (this.unit ?: '')
         if (scaledUnit) { readable += this.separator + scaledUnit }
 

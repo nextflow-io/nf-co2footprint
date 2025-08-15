@@ -104,7 +104,7 @@ class CO2FootprintComputer {
                 log.error(message)
                 throw new MissingValueException(message)
             } else {
-                memory = Converter.scaleUnits(maxRequiredMemory, '', 'B', 'G', 1024).value
+                memory = Converter.scaleUnits(maxRequiredMemory, '', 'B', 'G').value
                 log.warn(
                     Markers.unique,
                     "Requested memory is null for task ${taskID}. Using maximum consumed memory/`peak_rss` (${memory} GB) for CO₂e footprint computation.",
@@ -112,7 +112,7 @@ class CO2FootprintComputer {
                 )
             }
         } else {
-            memory = Converter.scaleUnits(requestedMemory, '', 'B', 'G', 1024).value
+            memory = Converter.scaleUnits(requestedMemory, '', 'B', 'G',).value
         }
 
         final BigDecimal powerdrawMem  = config.value('powerdrawMem') // [W per GB]

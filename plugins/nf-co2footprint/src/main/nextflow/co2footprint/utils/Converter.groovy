@@ -2,6 +2,7 @@ package nextflow.co2footprint.utils
 
 import groovy.util.logging.Slf4j
 
+import java.math.RoundingMode
 import java.text.DecimalFormat
 
 /**
@@ -37,11 +38,12 @@ class Converter {
      * @param value The number to convert
      * @return String in scientific notation or rounded if in [0.001, 999]
      */
-    static String toScientificNotation(Double value) {
+    static String toScientificNotation(Number value) {
+        value = value as BigDecimal
         if (value == 0) {
             return value.toString()
         } else if (value <= 999 && value >= 0.001) {
-            return value.round(3).toString()
+            return value.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()
         } else if (value == null) {
             return value
         } else {
@@ -52,17 +54,19 @@ class Converter {
 
     /**
      * Converts a numeric value to a human-readable string with SI prefixes.
-     * For example, 1200 with unit 'Wh' becomes '1.2 kWh'.
      * Scales the value up or down by a given factor and adjusts the scale prefix accordingly.
+     * The method is structured to take the quantity as in writing e.g. scaleUnits(1200, 'k', 'Wh', 'M'), with
+     * the last argument denoting the target to which the quantity is to be scaled.
+     * In this example, 1200 kWh is scaled to '1.2 MWh'.
      *
      * @param value Value that should be converted (e.g. 10.1)
-     * @param scope Symbol for scope of the unit (e.g. kilo = k), default ''
+     * @param scale Symbol for the scale of the unit (e.g. kilo = k), default ''
      * @param unit Name / symbol for the unit (e.g. B), default ''
      * @param targetScale The scale that should be converted to (e.g. G)
-     * @param scalingFactor The factor with which to scale (e.g. 1024), default 1000
      * @return Converted quantity with appropriate scale
      */
-    static Quantity scaleUnits(double value, String scale='', String unit='', String targetScale=null, int scalingFactor=1000) {
+    static Quantity scaleUnits(double value, String scale='', String unit='', String targetScale=null) {
+        int scalingFactor = unit == 'B' ? 1024 : 1000
         final List<String> scales = ['p', 'n', 'u', 'm', '', 'k', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
         int scaleIndex = getIdx(scale, scales)
 
@@ -91,14 +95,14 @@ class Converter {
      * @param scope Symbol for scope of the unit (e.g. kilo = k)
      * @param unit Name / symbol for the unit
      * @param targetScale Target scale to convert to
-     * @param scalingFactor Factor by which to scale
      * @param precision Precision to round the value(s) to
      * @return Converted String with appropriate scale and rounding
      */
-    static String toReadableUnits(double value, String scale='', String unit='', String targetScale=null, int scalingFactor=1000, Integer precision=2) {
-        Quantity converted = scaleUnits(value, scale, unit, targetScale, scalingFactor)
+    static String toReadableUnits(Double value, String scale='', String unit='', String targetScale=null, Integer precision=2) {
+        if (value == null) { return value }
+        Quantity converted = scaleUnits(value, scale, unit, targetScale)
 
-        return converted.round(precision).getReadable(true)
+        return converted.round(precision).getReadable()
     }
 
     /**
