@@ -1,6 +1,9 @@
 ## [Unreleased]
 
 # Version 1.0.0-rc.4
+## Bug Fixes:
+- Wrong memory fallback value (current machine maximum memory) now removed
+
 ## Misc:
 - "🔁" now prepended for every `Markers.unique` message
 

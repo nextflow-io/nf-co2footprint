@@ -3,8 +3,6 @@ package nextflow.co2footprint.utils
 import nextflow.co2footprint.Logging.Markers
 
 import groovy.util.logging.Slf4j
-import com.sun.management.OperatingSystemMXBean
-import java.lang.management.ManagementFactory
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
 
@@ -14,7 +12,12 @@ import nextflow.trace.TraceRecord
 @Slf4j
 class HelperFunctions {
 
-    // Helper function to return bold text
+    /**
+     * Helper function to return bold text
+     *
+     * @param text String to be displayed in bold
+     * @return Emboldened text
+     */
     static String bold(String text) {
         return "\033[1m${text}\033[0m"
     }
@@ -48,27 +51,4 @@ class HelperFunctions {
         }
         return value ?: defaultValue
     }
-
-    /**
-     * Get the available system memory in bytes using the OperatingSystemMXBean.
-     * Throws an exception if the value cannot be determined.
-     *
-     * @param taskID The TaskId for logging context
-     * @return       Available system memory in bytes
-     */
-    static Long getAvailableSystemMemory(TaskId taskID) {
-        try {
-            final OperatingSystemMXBean OS = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean()
-            Long availableMemory = OS.getTotalMemorySize() as Long
-            if (availableMemory == null || availableMemory == 0) {
-                log.error("Could not determine available system memory for task ${taskID}.")
-                throw new IllegalStateException("Available memory is null or zero for task ${taskID}. Cannot proceed.")
-            }
-            return availableMemory
-        } catch (Exception e) {
-            log.error("Error while retrieving available system memory for task ${taskID}: ${e.message}", e)
-            throw new IllegalStateException("Error retrieving available memory for task ${taskID}.", e)
-        }
-    }
-
 }
