@@ -66,9 +66,11 @@ class CO2FootprintReportTest extends Specification{
                 [:]
         )
         CO2Record co2Record = new CO2Record(
-                1.0d, 1.0d, null, 1.0d, 475.0, null,
+                1.0d, 1.0d, null, 1.0d, 475.0,
                 1, 12, 100.0, 1024**3, 'testTask', 'Unknown model'
         )
+
+        
 
         CO2RecordAggregator aggregator = new CO2RecordAggregator()
         aggregator.add(traceRecord, co2Record)
@@ -124,7 +126,7 @@ class CO2FootprintReportTest extends Specification{
                             '"wchar":"-","syscr":"-","syscw":"-","read_bytes":"-","write_bytes":"-","attempt":"-","workdir":"-","script":"-",' +
                             '"scratch":"-","queue":"-","cpus":"1","memory":"7 GB","disk":"-","time":"-","env":"-","error_action":"-",' +
                             '"vol_ctxt":"-","inv_ctxt":"-","hostname":"-","cpu_model":"Unknown model","energy":"1.0","co2e":"1.0",' +
-                            '"co2eMarket":"-","time":"1.0","ci":"475.0","ciMarket":"-","cpus":"1",' +
+                            '"co2eMarket":"-","time":"1.0","ci":"475.0","cpus":"1",' +
                             '"powerdrawCPU":"12.0","cpuUsage":"100.0","memory":"1073741824","name":"testTask","cpu_model":"Unknown model"' +
                         '}' +
                     '],' +
@@ -167,9 +169,11 @@ class CO2FootprintReportTest extends Specification{
         optionsJson ==
                 '[' +
                     '{"option":"ci","value":"475.0"},'+
+                    '{"option":"ciMarket","value":null},' +
                     '{"option":"customCpuTdpFile","value":null},' +
                     '{"option":"ignoreCpuModel","value":"false"},' +
                     '{"option":"location","value":null},' +
+                    '{"option":"machineType","value":null},' +
                     '{"option":"powerdrawCpuDefault","value":null},' +
                     '{"option":"powerdrawMem","value":"0.3725"},' +
                     '{"option":"pue","value":"1.0"},' +
@@ -178,6 +182,8 @@ class CO2FootprintReportTest extends Specification{
                     "{\"option\":\"traceFile\",\"value\":\"${tempPath}\"}" +
                 ']'
     }
+
+    
 
     def 'Test totals JSON generation' () {
         when:

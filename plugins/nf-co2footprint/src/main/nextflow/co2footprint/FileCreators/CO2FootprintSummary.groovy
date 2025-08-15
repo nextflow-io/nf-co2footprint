@@ -73,9 +73,9 @@ class CO2FootprintSummary extends CO2FootprintFile {
 
         nf-co2footprint options:
         """.stripIndent()
+        config.collectCO2CalcOptions().each { key, value -> outText += "${key}: ${value}\n" }
         config.collectInputFileOptions().each { key, value -> outText += "${key}: ${value}\n" }
         config.collectOutputFileOptions().each { key, value -> outText += "${key}: ${value}\n" }
-        config.collectCO2CalcOptions().each { key, value -> outText += "${key}: ${value}\n" }
 
         co2eSummaryFile.print(outText)
         co2eSummaryFile.flush()
