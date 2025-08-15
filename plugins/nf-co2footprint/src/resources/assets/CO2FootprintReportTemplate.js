@@ -36,8 +36,7 @@ function getIdx(symbol, list) {
  */
 function toReadable([value, unit], separator = ' ') {
     if (value == null) return '';
-    const strValue = (Number.isInteger(value) ? value : value.toString())
-        .replace(/(\.\d*?[1-9])0+$|\.0+$/, '$1');
+    const strValue = Number.isInteger(value) ? value : value.toString().replace(/(\.\d*?[1-9])0+$|\.0+$/, '$1');
     return unit ? `${strValue}${separator}${unit}` : strValue;
 }
 
