@@ -4,6 +4,7 @@ import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
+import nextflow.exception.MissingValueException
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
 import spock.lang.Shared
@@ -113,7 +114,7 @@ class CO2FootprintComputerTest extends Specification{
         then:
         // If we expect an exception, assert it was thrown
         if (expectException) {
-            assert caught instanceof IllegalStateException
+            assert caught instanceof MissingValueException
         } else {
             // Otherwise, check that the computed memory matches the expected value (in GB)
             assert result.memory == expectedMemory
@@ -124,12 +125,10 @@ class CO2FootprintComputerTest extends Specification{
         GroovySystem.metaClassRegistry.removeMetaClass(HelperFunctions)
 
         where:
-        memory             | peak_rss           | availableMemory     | throwError | expectException | expectedMemory
-        8L*1024**3         | 4L*1024**3         | 64L*1024**3         | false      | false           | 8L              // requested used
-        null               | 4L*1024**3         | 64L*1024**3         | false      | false           | 64L             // available used (requested null)
-        4L*1024**3         | 8L*1024**3         | 64L*1024**3         | false      | false           | 64L             // available used (required > requested)
-        null               | null               | 32L*1024**3         | false      | false           | 32L             // available used (both null)
-        4L*1024**3         | null               | 64L*1024**3         | false      | false           | 4L              // requested used (required null)
-        null               | 4L*1024**3         | null                | true       | true            | null            // error thrown (available memory error)
+        memory             | peak_rss           | expectException | expectedMemory
+        8L*1024**3         | 4L*1024**3         | false           | 8L              // requested memory used
+        null               | 4L*1024**3         | false           | 4L              // peak_rss used (requested null)
+        4L*1024**3         | null               | false           | 4L              // requested used (required null)
+        null               | null               | true            | null            // throws error (both null)
     }
 }

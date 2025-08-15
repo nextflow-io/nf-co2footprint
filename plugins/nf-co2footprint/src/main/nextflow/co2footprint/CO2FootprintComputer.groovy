@@ -6,6 +6,7 @@ import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.utils.HelperFunctions
 import groovy.util.logging.Slf4j
+import nextflow.exception.MissingValueException
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
 
@@ -81,7 +82,7 @@ class CO2FootprintComputer {
         if ( cpuUsage == 0.0 ) {
             log.warn(
                 Markers.unique,
-                "🔁 The reported CPU usage is 0.0 for task ${taskID}.",
+                "The reported CPU usage is 0.0 for task ${taskID}.",
                 'zero-cpu-usage-warning'
             )
         }
@@ -89,43 +90,29 @@ class CO2FootprintComputer {
         final BigDecimal coreUsage = cpuUsage / (100.0 * numberOfCores)
 
         /**
-         * Factors of memory power usage
+         * Factors of memory power usage´
          */
-        Long requestedMemory = trace.get('memory') as Long        // [bytes]
-        final Long requiredMemory = trace.get('peak_rss') as Long // [bytes]
+        final Long requestedMemory = trace.get('memory') as Long        // [bytes]
+        final Long maxRequiredMemory = trace.get('peak_rss') as Long    // [bytes]
 
-        // Check if requested memory is missing
+        // Assign the final memory value
+        final BigDecimal memory
         if (requestedMemory == null) {
-            // If missing, get the available system memory
-            Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
-            // Warn that requested memory was null and fallback is used
-            log.warn(
-                Markers.unique,
-                "🔁 Requested memory is null for task ${taskID}. Setting to available memory (${availableMemory/(1024**3)} GB).",
-                'memory-is-null-warning'
-            )
-            // Use available system memory as the requested memory
-            requestedMemory = availableMemory
+            if (maxRequiredMemory == null) {
+                String message = "No requested memory and maximum consumed memory found for task ${taskID}."
+                log.error(message)
+                throw new MissingValueException(message)
+            } else {
+                memory = maxRequiredMemory / 1024**3
+                log.warn(
+                    Markers.unique,
+                    "Requested memory is null for task ${taskID}. Using maximum consumed memory/`peak_rss` (${memory} GB) for CO₂e footprint computation.",
+                    'memory-is-null-warning'
+                )
+            }
+        } else {
+            memory = requestedMemory / 1024**3
         }
-        // If peak memory usage (requiredMemory) is known and exceeds the requested memory
-        else if (requiredMemory != null && requiredMemory > requestedMemory) {
-            
-            // Get the available system memory
-            Long availableMemory = HelperFunctions.getAvailableSystemMemory(taskID)
-
-            // Warn that required memory exceeded requested, so fallback is used
-            log.warn(
-                Markers.unique,
-                "🔁 The required memory (${requiredMemory/(1024**3)} GB) exceeds the requested memory (${requestedMemory/(1024**3)} GB) for task ${taskID}. " +
-                "Setting requested to maximum available memory (${availableMemory/(1024**3)} GB).",
-                'memory-exceeded-warning'
-            )
-
-            // Use available system memory as the requested memory
-            requestedMemory = availableMemory
-        }
-
-        final BigDecimal memory = requestedMemory / 1024**3 // conversion to [GB]
 
         final BigDecimal powerdrawMem  = config.getPowerdrawMem() // [W per GB]
 

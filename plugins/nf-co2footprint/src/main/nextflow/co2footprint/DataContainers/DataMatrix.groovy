@@ -63,34 +63,42 @@ class DataMatrix implements Matrix {
      * @return                A DataMatrix object containing the data from the CSV file.
      */
     static DataMatrix fromCsv(
-            Path path, String separator = ',', Integer columnIndexPos = 0, Integer rowIndexPos = null,
-            Object rowIndexColumn = null
+        Path path, String separator = ',', Integer columnIndexPos = 0, Integer rowIndexPos = null,
+        Object rowIndexColumn = null
     ) throws IOException {
         List<String> lines = Files.readAllLines(path)
 
-        // Extract column index from the specified line
+        // Extract column index from the specified line (keep as LinkedHashSet to preserve your behavior)
         LinkedHashSet<Object> columnIndex = columnIndexPos != null ? lines.remove(columnIndexPos).split(separator) : null
 
-        // Handle row index column if specified
+        // Handle row index column if specified by position
         if (rowIndexPos != null) {
             rowIndexColumn = columnIndex[rowIndexPos]
         }
 
+        // If rowIndexColumn is specified (either directly or derived), resolve its index and remove from header
         if (rowIndexColumn != null) {
             rowIndexPos = columnIndex.findIndexOf { it == rowIndexColumn } as Integer
+            if (rowIndexPos < 0) {
+                throw new IllegalArgumentException("Row index column '${rowIndexColumn}' not found in header ${columnIndex}")
+            }
+            // Remove by value (Set has no removeAt) — keeps your original semantics
             columnIndex.remove(rowIndexColumn)
         }
 
-        // Initialize row index and data
+        // Initialize row index and data (keep as LinkedHashSet for your behavior)
         LinkedHashSet<Object> rowIndex = []
         List<List<Object>> data = []
-        boolean escaped = false
+
         int start = 0
         int end = 0
-        
+
+        boolean escaped = false // Track if we are inside a quoted field
+
         // Parse each line of the CSV, handling quoted fields and separators
         lines.each { line ->
             List<Object> row = []
+
             line.eachWithIndex { character, i ->
                 end = i
                 if (character == separator && !escaped) {
@@ -101,12 +109,14 @@ class DataMatrix implements Matrix {
                 }
             }
             row.add(inferTypeOfString(line.substring(start, end + 1)))
-            start = 0
 
             // Extract row index if specified
             if (rowIndexPos != null) {
+                if (rowIndexPos < 0 || rowIndexPos >= row.size()) {
+                    throw new IllegalArgumentException("rowIndexPos ${rowIndexPos} out of bounds for row ${row}")
+                }
                 Object rowIdx = row[rowIndexPos]
-                row.remove(rowIdx)
+                row.removeAt(rowIndexPos)   // ✅ this is a List, so removeAt is correct
                 if (rowIndex.contains(rowIdx)) {
                     log.warn("Duplicate row index detected: ${rowIdx}. Only the first occurrence will be used in the row index.")
                 }
@@ -115,10 +125,13 @@ class DataMatrix implements Matrix {
 
             // Add row to data
             data.add(row)
+            // Check if the line was properly closed
+            // If we are still escaped, it means the last quote was not closed
+            assert escaped == false, "Unclosed quote in line: ${line}"
+            start = 0
         }
 
         return new DataMatrix(data, columnIndex, rowIndex)
-
     }
 
      // --- Integrity checks ---
@@ -292,7 +305,6 @@ class DataMatrix implements Matrix {
 
         if (checkOccurrence && idx == null) {
             final String message = "${orientation.capitalize()} ID `${rowOrColumnID}` not found in the ${orientation}-index `${index}`."
-            log.error(message)
             throw new IllegalArgumentException(message)
         }
 

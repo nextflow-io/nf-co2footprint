@@ -86,7 +86,7 @@ class DeduplicateMarkerFilter extends TurboFilter {
             // Get deduplication key from params[0] if present, else use logMessage
             String deduplicationKey = params ? params[0] : logMessage
 
-            // Track how many times this dedupKey has been seen
+            // Track how many times this deduplication key has been seen
             AtomicInteger occurrences = seenMessages.computeIfAbsent(deduplicationKey, k -> new AtomicInteger(0))
             int currentOccurrences = occurrences.incrementAndGet()
 
