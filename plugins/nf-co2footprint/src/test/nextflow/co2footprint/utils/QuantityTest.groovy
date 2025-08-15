@@ -9,17 +9,14 @@ class QuantityTest  extends Specification {
         Quantity quantity = new Quantity(value, scale, unit, separator)
 
         then:
-        quantity.getReadable(keepDecimal) == expectedReadable
+        quantity.getReadable() == expectedReadable
 
         where:
-        value   || scale    || unit     || separator|| keepDecimal  || expectedReadable
-        0       || ''       || ''       || ' '      || false        || '0'
-        0       || ''       || ''       || ' '      || true         || '0.0'
-        1.0     || ''       || ''       || ' '      || false        || '1'
-        1.0     || ''       || ''       || ' '      || true         || '1.0'
-        60.0    || 'm'      || 'W'      || ' '      || false        || '60 mW'
-        60.0    || 'm'      || 'W'      || ' '      || true         || '60.0 mW'
-        60.0    || 'm'      || 'W'      || ''       || true         || '60.0mW'
+        value   || scale    || unit     || separator|| expectedReadable
+        0       || ''       || ''       || ' '      || '0'
+        1.0     || ''       || ''       || ' '      || '1'
+        60.0    || 'm'      || 'W'      || ' '      || '60 mW'
+        1.1     || ''       || 'W'      || ''       || '1.1W'
     }
 
     def 'test flooring' () {

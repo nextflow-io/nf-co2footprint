@@ -75,8 +75,8 @@ class CO2FootprintComputerTest extends Specification{
 
         where:
         co2e                || carKm        || treeMonths       || planePercent || planeFlights
-        10**8 + 500000.0    || 574.2857d    ||  109.5965d       || 201.000000d  || '2.0'
-        11587.399           || 6.62e-02d    ||  1.26e-02        || 2.317480E-2d || '0.0'
+        10**8 + 500000.0    || 574.2857d    ||  109.5965d       || 201.000000d  || '2'
+        11587.399           || 6.62e-02d    ||  1.26e-02        || 2.317480E-2d || '0'
     }
 
     // ------ Test Missing/Null Value Handling ------
