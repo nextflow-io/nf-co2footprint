@@ -106,7 +106,7 @@ class CO2FootprintComputer {
                 memory = maxRequiredMemory / 1024**3
                 log.warn(
                     Markers.unique,
-                    "Requested memory is null for task ${taskID}. Setting to maximum cosumed memory/`peak_rss` (${memory} GB).",
+                    "Requested memory is null for task ${taskID}. Using maximum consumed memory/`peak_rss` (${memory} GB) for CO₂e footprint computation.",
                     'memory-is-null-warning'
                 )
             }
