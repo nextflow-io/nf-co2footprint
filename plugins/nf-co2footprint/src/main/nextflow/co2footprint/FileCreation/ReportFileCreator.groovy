@@ -122,7 +122,7 @@ class ReportFileCreator extends BaseFileCreator{
     protected String renderHtml() {
         Map co2Options = config.collectCO2CalcOptions()
         // render HTML report template
-        final tpl_fields = [
+        final templateFields = [
                 workflow : session.getWorkflowMetadata(),
                 payload : renderPayloadJson(),
                 co2_totals: renderCO2TotalsJson(),
@@ -148,7 +148,7 @@ class ReportFileCreator extends BaseFileCreator{
         final GStringTemplateEngine engine = new GStringTemplateEngine()
         final Template htmlTemplate = engine.createTemplate(template)
 
-        return htmlTemplate.make(tpl_fields) as String
+        return htmlTemplate.make(templateFields) as String
     }
 
     /**

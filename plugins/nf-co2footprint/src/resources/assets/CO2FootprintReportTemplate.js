@@ -147,6 +147,9 @@ function toReadableTimeUnits(value, unit = 'ms', smallestUnit = 's', largestUnit
 
 //
 // Render functions
+// These functions are required for rendering in the table. In particular they ensure that:
+// 1. Raw values are used, when necessary (e.g. for sorting)
+// 2. Render the values together with units, when it should be human readable
 //
 
 /**
@@ -157,7 +160,7 @@ function toReadableTimeUnits(value, unit = 'ms', smallestUnit = 's', largestUnit
  * @param {function} parseFunction Function to parse the data
  * @returns
  */
-function check_data(data, type, parseFunction) {
+function toRawValue(data, type, parseFunction) {
   if (type === 'sort') {
     return parseFunction(data);
   }
@@ -177,8 +180,8 @@ function check_data(data, type, parseFunction) {
  * @param {*} type Type of the data
  * @returns CO2 equivalents as a readable unit
  */
-function make_co2e(value, type){
-  return check_data(value, type, parseFloat) ?? toReadableUnits(value, 'm', 'g');
+function make_co2e(mg, type){
+  return toRawValue(mg, type, parseFloat) ?? toReadableUnits(mg, 'm', 'g');
 }
 
 /**
@@ -189,7 +192,7 @@ function make_co2e(value, type){
  * @returns Energy as a readable unit
  */
 function make_energy(mWh, type){
-  return check_data(mWh, type, parseFloat) ?? toReadableUnits(mWh, 'm', 'Wh');
+  return toRawValue(mWh, type, parseFloat) ?? toReadableUnits(mWh, 'm', 'Wh');
 }
 
 /**
@@ -200,7 +203,7 @@ function make_energy(mWh, type){
  * @returns The readable time
  */
 function make_time(h, type){
-  return check_data(data, type, parseFloat) ?? toReadableTimeUnits(parseFloat(h), 'h', 'ms', 'days', 0.0);
+  return toRawValue(h, type, parseFloat) ?? toReadableTimeUnits(parseFloat(h), 'h', 'ms', 'days', 0.0);
 }
 
 /**
@@ -211,7 +214,7 @@ function make_time(h, type){
  * @returns Carbon intensity as a readable unit
  */
 function make_carbon_intensity(ci, type) {
-  return check_data(data, type, parseFloat) ?? toReadableUnits(ci, 'm', 'gCO<sub>2</sub>e/kWh');
+  return toRawValue(data, type, parseFloat) ?? toReadableUnits(ci, 'm', 'gCO<sub>2</sub>e/kWh');
 }
 
 /**
@@ -233,8 +236,8 @@ function make_memory(value, type) {
  * @param {*} type Type of the data
  * @returns Readable power draw in Watts
  */
-function make_power_draw_cpu(powerDrawCPU, type) {
-  return check_data(powerDrawCPU, type, parseFloat) ?? powerDrawCPU;
+function make_memory(bytes, type){
+  return toRawValue(bytes, type, parseFloat) ?? toReadableByteUnits(bytes);
 }
 
 /**
@@ -245,7 +248,7 @@ function make_power_draw_cpu(powerDrawCPU, type) {
  * @returns Readable usage factor
  */
 function make_core_usage_factor(usageFactor, type){
-  return check_data(usageFactor, type, parseFloat) ?? usageFactor;
+  return toRawValue(usageFactor, type, parseFloat) ?? usageFactor;
 }
 
 // Map for collecting statistics by process

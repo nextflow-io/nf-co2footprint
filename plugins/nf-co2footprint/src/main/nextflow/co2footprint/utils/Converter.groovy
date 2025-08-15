@@ -161,12 +161,12 @@ class Converter {
         // Ordered list of supported time units
         List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']
 
-        // Filter out excluded time scales
-        units = units.subList(getIdx(smallestUnit, units), getIdx(largestUnit, units) + 1)
+        // Filter out excluded time scales and sort form largest to smallest
+        units = units.subList(getIdx(smallestUnit, units), getIdx(largestUnit, units) + 1).reverse()
 
         // Iterate from largest to smallest unit and begin including those that meet the threshold size to be included
         String timeString = ''
-        for (String targetUnit : units.reversed()) {
+        for (String targetUnit : units) {
             Quantity currentTime = scaleTime(value, unit, targetUnit)
 
             // Handle the last unit differently
