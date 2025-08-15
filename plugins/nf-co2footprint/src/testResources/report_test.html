@@ -257,7 +257,7 @@ summary {
       <dl>
         <dt>Run times</dt>
         <dd>
-          <span id="workflow_start">07-Aug-2025 15:41:58</span> - <span id="workflow_complete">07-Aug-2025 15:41:58</span>
+          <span id="workflow_start">15-Aug-2025 14:24:55</span> - <span id="workflow_complete">15-Aug-2025 14:24:55</span>
           (<span id="completed_fromnow"></span>duration: <strong>null</strong>)
         </dd>
 
@@ -959,6 +959,9 @@ function toReadableTimeUnits(value, unit = 'ms', smallestUnit = 's', largestUnit
 
 //
 // Render functions
+// These functions are required for rendering in the table. In particular they ensure that:
+// 1. Raw values are used, when necessary (e.g. for sorting)
+// 2. Render the values together with units, when it should be human readable
 //
 
 /**
@@ -969,7 +972,7 @@ function toReadableTimeUnits(value, unit = 'ms', smallestUnit = 's', largestUnit
  * @param {function} parseFunction Function to parse the data
  * @returns
  */
-function check_data(data, type, parseFunction) {
+function toRawValue(data, type, parseFunction) {
   if (type === 'sort') {
     return parseFunction(data);
   }
@@ -989,8 +992,8 @@ function check_data(data, type, parseFunction) {
  * @param {*} type Type of the data
  * @returns CO2 equivalents as a readable unit
  */
-function make_co2e(value, type){
-  return check_data(value, type, parseFloat) ?? toReadableUnits(value, 'm', 'g');
+function make_co2e(mg, type){
+  return toRawValue(mg, type, parseFloat) ?? toReadableUnits(mg, 'm', 'g');
 }
 
 /**
@@ -1001,7 +1004,7 @@ function make_co2e(value, type){
  * @returns Energy as a readable unit
  */
 function make_energy(mWh, type){
-  return check_data(mWh, type, parseFloat) ?? toReadableUnits(mWh, 'm', 'Wh');
+  return toRawValue(mWh, type, parseFloat) ?? toReadableUnits(mWh, 'm', 'Wh');
 }
 
 /**
@@ -1012,7 +1015,7 @@ function make_energy(mWh, type){
  * @returns The readable time
  */
 function make_time(h, type){
-  return check_data(data, type, parseFloat) ?? toReadableTimeUnits(parseFloat(h), 'h', 'ms', 'days', 0.0);
+  return toRawValue(h, type, parseFloat) ?? toReadableTimeUnits(parseFloat(h), 'h', 'ms', 'days', 0.0);
 }
 
 /**
@@ -1023,7 +1026,7 @@ function make_time(h, type){
  * @returns Carbon intensity as a readable unit
  */
 function make_carbon_intensity(ci, type) {
-  return check_data(data, type, parseFloat) ?? toReadableUnits(ci, 'm', 'gCO<sub>2</sub>e/kWh');
+  return toRawValue(data, type, parseFloat) ?? toReadableUnits(ci, 'm', 'gCO<sub>2</sub>e/kWh');
 }
 
 /**
@@ -1035,7 +1038,7 @@ function make_carbon_intensity(ci, type) {
  * @returns The memory at a readable scale
  */
 function make_memory(value, type) {
-  return check_data(value, type, parseFloat) ?? toReadableByteUnits(value, 'GB');
+  return toRawValue(value, type, parseFloat) ?? toReadableByteUnits(value, 'GB');
 }
 
 /**
@@ -1045,8 +1048,8 @@ function make_memory(value, type) {
  * @param {*} type Type of the data
  * @returns Readable power draw in Watts
  */
-function make_power_draw_cpu(powerDrawCPU, type) {
-  return check_data(powerDrawCPU, type, parseFloat) ?? powerDrawCPU;
+function make_power_draw_cpu(value, type){
+  return toRawValue(value, type, parseFloat) ?? toReadableUnits(value, '', 'W/Core');
 }
 
 /**
@@ -1057,7 +1060,7 @@ function make_power_draw_cpu(powerDrawCPU, type) {
  * @returns Readable usage factor
  */
 function make_core_usage_factor(usageFactor, type){
-  return check_data(usageFactor, type, parseFloat) ?? usageFactor;
+  return toRawValue(usageFactor, type, parseFloat) ?? usageFactor;
 }
 
 // Map for collecting statistics by process
@@ -1328,7 +1331,7 @@ $(function() {
 
   // Nextflow report data
   window.data = {"trace":[{"task_id":"111","hash":"-","native_id":"-","process":"observerTestProcess","module":"-","container":"-","tag":"-","name":"-","status":"COMPLETED","exit":"-","submit":"-","start":"-","complete":"-","duration":"-","realtime":"1h","%cpu":"100.0%","%mem":"-","rss":"-","vmem":"-","peak_rss":"-","peak_vmem":"-","rchar":"-","wchar":"-","syscr":"-","syscw":"-","read_bytes":"-","write_bytes":"-","attempt":"-","workdir":"-","script":"-","scratch":"-","queue":"-","cpus":"1","memory":"7 GB","disk":"-","time":"-","env":"-","error_action":"-","vol_ctxt":"-","inv_ctxt":"-","hostname":"-","cpu_model":"Unknown model","energy":"13607.5","co2e":"6531.6","co2eMarket":"-","time":"1.0","ci":"480.0","cpus":"1","powerdrawCPU":"11.0","cpuUsage":"100.0","memory":"7","name":"-","cpu_model":"Unknown model"}],"summary":{"observerTestProcess":{"co2e":{"all":[6531.6],"total":6531.6,"mean":6531.6,"minLabel":null,"min":6531.6,"q1Label":null,"q1":6531.6,"q2Label":null,"q2":6531.6,"q3Label":null,"q3":6531.6,"maxLabel":null,"max":6531.6},"energy":{"all":[13607.5],"total":13607.5,"mean":13607.5,"minLabel":null,"min":13607.5,"q1Label":null,"q1":13607.5,"q2Label":null,"q2":13607.5,"q3Label":null,"q3":13607.5,"maxLabel":null,"max":13607.5},"co2e_non_cached":{"all":[6531.6],"total":6531.6,"mean":6531.6,"minLabel":null,"min":6531.6,"q1Label":null,"q1":6531.6,"q2Label":null,"q2":6531.6,"q3Label":null,"q3":6531.6,"maxLabel":null,"max":6531.6},"energy_non_cached":{"all":[13607.5],"total":13607.5,"mean":13607.5,"minLabel":null,"min":13607.5,"q1Label":null,"q1":13607.5,"q2Label":null,"q2":13607.5,"q3Label":null,"q3":13607.5,"maxLabel":null,"max":13607.5},"co2e_market":{},"energy_market":{"all":[13607.5],"total":13607.5,"mean":13607.5,"minLabel":null,"min":13607.5,"q1Label":null,"q1":13607.5,"q2Label":null,"q2":13607.5,"q3Label":null,"q3":13607.5,"maxLabel":null,"max":13607.5}}}};
-  window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir15050221268627841661/report_test.html"},{"option":"summaryFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir15050221268627841661/summary_test.txt"},{"option":"traceFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir15050221268627841661/trace_test.txt"}];
+  window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir10877446733038757211/report_test.html"},{"option":"summaryFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir10877446733038757211/summary_test.txt"},{"option":"traceFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir10877446733038757211/trace_test.txt"}];
 
   </script>
 
