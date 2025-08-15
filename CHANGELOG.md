@@ -1,4 +1,7 @@
 ## [Unreleased]
+# Version 1.0.0-rc.4
+## Features:
+- Base config class with more control over parameters
 
 # Version 1.0.0-rc.4
 ## Bug Fixes:
