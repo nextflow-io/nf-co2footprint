@@ -1,9 +1,5 @@
 // JavaScript used to power the Nextflow Report Template output.
 
-//
-// Converter methods
-//
-
 /**
  * Converts a list of numbers in milli-units (mWh, mg,...) to base units (Wh, g)
  * @param {ArrayLike} list An array with numbers
@@ -14,264 +10,24 @@ function norm_units( list ) {
 }
 
 /**
- * Finds the index of a unit symbol in the given list
- *
- * @param {string} symbol The unit symbol to find
- * @param {string[]} list The list of valid unit symbols
- * @returns {number} Index of the symbol in the list
- * @throws {Error} If the symbol is not found
- */
-function getIdx(symbol, list) {
-    const idx = list.indexOf(symbol);
-    if (idx === -1) throw new Error(`Invalid symbol: "${symbol}"`);
-    return idx;
-}
-
-/**
- * Formats a numeric value and unit into a readable string
- * Strips unnecessary trailing zeros, except when it would result in an integer
- *
- * @param {[number, string]} tuple A tuple containing [value, unit]
- * @returns {string} Formatted value and unit
- */
-function toReadable([value, unit], separator = ' ') {
-    if (value == null) return '';
-    const strValue = Number.isInteger(value) ? value : value.toString().replace(/(\.\d*?[1-9])0+$|\.0+$/, '$1');
-    return unit ? `${strValue}${separator}${unit}` : strValue;
-}
-
-/**
- * Scales a numeric value between units using fixed step factors
- *
- * @param {number} value The value to scale
- * @param {number} fromIndex Starting unit index
- * @param {number} toIndex Target unit index
- * @param {number[]} steps Array of step factors between consecutive units
- * @returns {number} The scaled value
- */
-function scaleLinear(value, fromIndex, toIndex, steps) {
-    if (toIndex > fromIndex) {
-        for (const step of steps.slice(fromIndex, toIndex)) value /= step;
-    } else if (toIndex < fromIndex) {
-        for (const step of steps.slice(toIndex, fromIndex)) value *= step;
-    }
-    return value;
-}
-
-/**
- * Scales numeric values with units (e.g., B, kB, MB) using either a specified target scale
- * or automatic logarithmic scaling
- *
- * @param {number} value Numeric value to scale
- * @param {string} scale The current scale prefix (e.g., '', 'k', 'M')
- * @param {string} unit The unit suffix (e.g., 'B', 'Wh')
- * @param {string|null} targetScale Optional target scale prefix
- * @returns {[number, string]} Tuple of scaled value and scaled unit
- */
-function scaleUnits(value, scale = '', unit = '', targetScale = null) {
-    const scalingFactor = unit === 'B' ? 1024 : 1000;
-    const scales = ['p', 'n', 'u', 'm', '', 'k', 'M', 'G', 'T', 'P', 'E'];
-
-    const scaleIndex = getIdx(scale, scales);
-    let targetScaleIndex, difference;
-
-    if (targetScale != null) {
-        targetScaleIndex = getIdx(targetScale, scales);
-        difference = targetScaleIndex - scaleIndex;
-    } else {
-        difference = Math.floor(Math.log(value) / Math.log(scalingFactor));
-        targetScaleIndex = scaleIndex + difference;
-    }
-
-    const newValue = value / Math.pow(scalingFactor, difference);
-    const scaledUnit = (scales[targetScaleIndex] || '') + (unit || '');
-    return [newValue, scaledUnit];
-}
-
-/**
- * Converts numeric values with units to a readable string
- *
- * @param {number} value Numeric value to scale
- * @param {string} scale Current scale prefix
- * @param {string} unit Unit suffix
- * @param {string|null} targetScale Optional target scale prefix
- * @param {number} precision Number of decimal places to keep
- * @returns {string} Readable string (e.g., "1.23 MB")
- */
-function toReadableUnits(value, scale = '', unit = '', targetScale = null, precision = 2) {
-    if (value == null) return '';
-    let [newValue, scaledUnit] = scaleUnits(value, scale, unit, targetScale);
-    newValue = Number(newValue.toFixed(precision));
-    return toReadable([newValue, scaledUnit]);
-}
-
-/**
- * Converts the given time to another unit of time
- *
- * @param {number} value The time as a number in original given unit
- * @param {string} unit Given unit of time
- * @param {string} targetUnit Unit of time to be converted to
- * @returns {[number, string]} Number of converted time and its unit
- */
-function scaleTime(value, unit = 'ms', targetUnit = 's') {
-    const units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years'];
-    const steps = [1000, 1000, 1000, 60, 60, 24, 7, 4.35, 12];
-
-    const from = getIdx(unit, units);
-    const to = getIdx(targetUnit, units);
-
-    let newValue = scaleLinear(value, from, to, steps);
-
-    if (newValue === 1 && ['days', 'weeks', 'months', 'years'].includes(targetUnit)) {
-        targetUnit = targetUnit.slice(0, -1);
-    }
-    return [newValue, targetUnit];
-}
-
-/**
- * Converts a time value into a human-readable multi-unit string
- *
- * @param {number} value Numeric value of the time
- * @param {string} unit Current unit of time
- * @param {string} smallestUnit The smallest unit to include
- * @param {string} largestUnit The largest unit to include
- * @param {number} threshold Minimum value before a unit is displayed
- * @returns {string} Readable string (e.g., "1 days 2 h 3 min")
- */
-function toReadableTimeUnits(value, unit = 'ms', smallestUnit = 's', largestUnit = 'years', threshold = 0.0) {
-    let units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years'];
-    units = units.slice(getIdx(smallestUnit, units), getIdx(largestUnit, units) + 1).reverse();
-
-    const parts = [];
-    for (const targetUnit of units) {
-        let [numeric, tu] = scaleTime(value, unit, targetUnit);
-
-        if (targetUnit === smallestUnit) {
-            numeric = Number(numeric.toFixed(2));
-            parts.push(toReadable([numeric, tu]));
-        } else {
-            numeric = Math.floor(numeric);
-            if (threshold == null || numeric > threshold) {
-                value -= scaleTime(numeric, targetUnit, unit)[0];
-                parts.push(toReadable([numeric, tu], ''));
-                if (value === 0) break;
-            }
-        }
-    }
-    return parts.join(' ');
-}
-
-//
-// Render functions
-// These functions are required for rendering in the table. In particular they ensure that:
-// 1. Raw values are used, when necessary (e.g. for sorting)
-// 2. Render the values together with units, when it should be human readable
-//
-
-/**
- * Perform checks on the data before using other methods to process
+ * Decides whether raw or readable values are to be displayed
  *
  * @param {*} data The data (number/string/...)
  * @param {*} type Type of the data
- * @param {function} parseFunction Function to parse the data
  * @returns
  */
-function toRawValue(data, type, parseFunction) {
-  if (type === 'sort') {
-    return parseFunction(data);
+function rawOrReadable(data, type) {
+  if (type === 'sort' || $('#nf-table-humanreadable').val() == 'false') {
+    return data['raw'];
   }
-  if($('#nf-table-humanreadable').val() == 'false'){
-    return data;
-  }
-  if (data == '-' || data == 0){
-    return data;
-  }
-  return null
-}
-
-/**
- * Render CO2 equivalents in desired output format
- *
- * @param {*} value CO2 equivalents in milli-grams
- * @param {*} type Type of the data
- * @returns CO2 equivalents as a readable unit
- */
-function make_co2e(mg, type){
-  return toRawValue(mg, type, parseFloat) ?? toReadableUnits(mg, 'm', 'g');
-}
-
-/**
- * Render energy in desired output format
- *
- * @param {*} mWh Energy in milli-Watt-hours
- * @param {*} type Type of the data
- * @returns Energy as a readable unit
- */
-function make_energy(mWh, type){
-  return toRawValue(mWh, type, parseFloat) ?? toReadableUnits(mWh, 'm', 'Wh');
-}
-
-/**
- * Render time in desired output format
- *
- * @param {*} h Time in hours
- * @param {*} type Type of the data
- * @returns The readable time
- */
-function make_time(h, type){
-  return toRawValue(h, type, parseFloat) ?? toReadableTimeUnits(parseFloat(h), 'h', 'ms', 'days', 0.0);
-}
-
-/**
- * Render carbon intensity in desired output format
- *
- * @param {*} ci Carbon intensity value
- * @param {*} type Type of the data
- * @returns Carbon intensity as a readable unit
- */
-function make_carbon_intensity(ci, type) {
-  return toRawValue(data, type, parseFloat) ?? toReadableUnits(ci, 'm', 'gCO<sub>2</sub>e/kWh');
-}
-
-/**
- * Render memory size in desired output format
- *
- * @param {*} value Memory value to be rendered
- * @param {*} type Type of the data
- * @param {string} unit The unit of the input value (default: 'B')
- * @returns The memory at a readable scale
- */
-function make_memory(value, type) {
-  return toRawValue(value, type, parseFloat) ?? toReadableByteUnits(value, 'GB');
-}
-
-/**
- * Render the per core power draw in desired output format
- *
- * @param {*} powerDrawCPU Power draw of the CPU in Watts
- * @param {*} type Type of the data
- * @returns Readable power draw in Watts
- */
-function make_power_draw_cpu(value, type){
-  return toRawValue(value, type, parseFloat) ?? toReadableUnits(value, '', 'W/Core');
-}
-
-/**
- * Render usage factor in desired output format
- *
- * @param {*} usageFactor Usage factor of CPU in percent
- * @param {*} type Type of the data
- * @returns Readable usage factor
- */
-function make_core_usage_factor(usageFactor, type){
-  return toRawValue(usageFactor, type, parseFloat) ?? usageFactor;
+  return data['readable']
 }
 
 // Map for collecting statistics by process
 window.statsByProcess = {};
 
 //
-// This block is only executed after the page is fully loaded
+// MAIN BLOCK: This block is only executed after the page is fully loaded
 //
 $(function() {
   // Script block clicked
@@ -412,40 +168,17 @@ $(function() {
           { title: 'task_id', data: 'task_id' },
           { title: 'process', data: 'process' },
           { title: 'tag', data: 'tag' },
-          { title: 'status', data: 'status', render: function(data, type, row){
-              var s = {
-                COMPLETED: 'success',
-                CACHED: 'secondary',
-                ABORTED: 'danger',
-                FAILED: 'danger'
-              }
-              return '<span class="badge badge-'+s[data]+'">'+data+'</span>';
-            }
-          },
-          { title: 'hash', data: 'hash', render:  function(data, type, row){
-              var script = '';
-              var lines = data.split("\n");
-              var ws_re = /^(\s+)/g;
-              var flws_match = ws_re.exec(lines[1]);
-              if(flws_match == null){
-                script = data;
-              } else {
-                for(var j=0; j<lines.length; j++){
-                  script += lines[j].replace(new RegExp('^'+flws_match[1]), '').replace(/\s+$/,'') + "\n";
-                }
-              }
-              return '<code>'+script+'</code>';
-            }
-          },
-          { title: energyConsumptionTitle, data: 'energy', type: 'num', render: make_energy },
-          { title: co2EmissionsTitle, data: 'co2e', type: 'num', render: make_co2e },
-          { title: `${co2EmissionsTitle} (market)`, data: 'co2eMarket', type: 'num', render: make_co2e },
-          { title: 'carbon intensity', data: 'ci', type: 'num', render: make_carbon_intensity },
-          { title: 'allocated cpus', data: 'cpus', type: 'num' },
-          { title: '%cpu', data: 'cpuUsage', type: 'num', render: make_core_usage_factor },
-          { title: 'allocated memory', data: 'memory', type: 'num', render: make_memory },
-          { title: 'realtime', data: 'time', type: 'num', render: make_time },
-          { title: 'power draw (in W/core)', data: 'powerdrawCPU', type: 'num', render: make_power_draw_cpu },
+          { title: 'status', data: 'status' },
+          { title: 'hash', data: 'hash' },
+          { title: energyConsumptionTitle, data: 'energy' },
+          { title: co2EmissionsTitle, data: 'co2e' },
+          { title: `${co2EmissionsTitle} (market)`, data: 'co2eMarket' },
+          { title: 'carbon intensity', data: 'ci' },
+          { title: 'allocated cpus', data: 'cpus' },
+          { title: '%cpu', data: 'cpuUsage' },
+          { title: 'allocated memory', data: 'memory' },
+          { title: 'realtime', data: 'time' },
+          { title: 'power draw (in W/core)', data: 'powerdrawCPU' },
           { title: 'cpu model', data: 'cpu_model' },
         ],
         "deferRender": true,
@@ -453,6 +186,7 @@ $(function() {
         "scrollX": true,
         "colReorder": true,
         "columnDefs": [
+          { targets: '_all', render: rawOrReadable },
           { className: "id", "targets": [ 0,1,2,3 ] },
           { className: "meta", "targets": [ 4,7,8,9,10,11 ] },
           { className: "metrics", "targets": [ 5,6 ] }

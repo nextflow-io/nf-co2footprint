@@ -47,8 +47,8 @@ class CO2FootprintComputerTest extends Specification{
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord)
 
         expect:
-        round(co2Record.getEnergyConsumption()/1000) == expectedEnergy
-        round(co2Record.getCO2e()/1000) == expectedCO2
+        round(co2Record.energy/1000) == expectedEnergy
+        round(co2Record.co2e/1000) == expectedCO2
 
         where:
         cpuModel           | configMap                        || expectedEnergy | expectedCO2

@@ -68,7 +68,9 @@ class TraceFileCreator extends BaseFileCreator {
     void write(TaskId taskId, TraceRecord trace, CO2Record co2Record){
         if (!created) { return }
 
-        List<String> records = co2Record.getReadableEntries()
+        List<String> records = co2Record.getReadableEntries(
+                ['name', 'energy', 'co2e', 'co2eMarket', 'ci', 'cpuUsage', 'memory', 'time', 'cpus', 'powerdrawCPU', 'cpu_model']
+        )
 
         records = [taskId as String, trace.get('status') as String] + records
 

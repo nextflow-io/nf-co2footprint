@@ -50,7 +50,7 @@ class CO2RecordAggregatorTest extends Specification{
             co2RecordAggregator.getQuantile(
                     records,
                     q,
-                    { TraceRecord traceRecord, CO2Record co2Record -> co2Record.getCO2e() }
+                    { TraceRecord traceRecord, CO2Record co2Record -> co2Record.co2e }
             )
         }
 
