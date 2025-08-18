@@ -53,29 +53,31 @@ class CO2FootprintSummary extends CO2FootprintFile {
 
         String outText = """\
         Total CO2e footprint measures of this workflow run (including cached tasks):
-        CO2e emissions: ${Converter.toReadableUnits(totalStats['co2e'],'m', 'g')}
-        Energy consumption: ${Converter.toReadableUnits(totalStats['energy'],'m', 'Wh')}
+          CO2e emissions:          ${Converter.toReadableUnits(totalStats['co2e'],'m', 'g')}
+          Energy consumption:      ${Converter.toReadableUnits(totalStats['energy'],'m', 'Wh')}
+          CO2e emissions (market): ${totalStats['co2eMarket'] ? Converter.toReadableUnits(totalStats['co2eMarket'], 'm', 'g') : "-"}
 
         """.stripIndent()
-
+        
         List<String> readableEquivalences = equivalences.getReadableEquivalences()
         if (readableEquivalences.any()) {
-            outText += 'Which equals:\n'
-            outText += String.join('\n', readableEquivalences)
+            outText += 'Which equals:\n  '
+            outText += String.join('\n  ', readableEquivalences)
         }
 
         outText += """\
         \n
-        The calculation of these values is based on the carbon footprint computation method developed in the Green Algorithms project.
-        Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation. Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707
+        The calculation of these values is based on the carbon footprint computation method developed in the Green Algorithms project:
+            Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation.
+            Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707
 
         nf-co2footprint plugin version: ${version}
 
         nf-co2footprint options:
         """.stripIndent()
-        config.collectCO2CalcOptions().each { key, value -> outText += "${key}: ${value}\n" }
-        config.collectInputFileOptions().each { key, value -> outText += "${key}: ${value}\n" }
-        config.collectOutputFileOptions().each { key, value -> outText += "${key}: ${value}\n" }
+        config.collectCO2CalcOptions().each { key, value -> outText += "  ${key}: ${value}\n" }
+        config.collectInputFileOptions().each { key, value -> outText += "  ${key}: ${value}\n" }
+        config.collectOutputFileOptions().each { key, value -> outText += "  ${key}: ${value}\n" }
 
         co2eSummaryFile.print(outText)
         co2eSummaryFile.flush()
@@ -88,4 +90,3 @@ class CO2FootprintSummary extends CO2FootprintFile {
         co2eSummaryFile.close()
     }
 }
-
