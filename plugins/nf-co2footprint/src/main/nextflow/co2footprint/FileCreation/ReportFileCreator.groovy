@@ -42,7 +42,7 @@ class ReportFileCreator extends BaseFileCreator{
     private Map<TaskId, CO2Record> co2eRecords
 
     // Writer for the HTML file
-    private BufferedWriter writer = TraceHelper.newFileWriter(path, overwrite, 'Report')
+    private BufferedWriter writer
 
     /**
      * Constructor for the HTML report file.
@@ -89,9 +89,20 @@ class ReportFileCreator extends BaseFileCreator{
     }
 
     /**
+     * Create the report file.
+     */
+    void create() {
+        super.create()
+
+        writer = TraceHelper.newFileWriter(path, overwrite, 'Report')
+    }
+
+    /**
      * Write the HTML report to disk.
      */
     void write() {
+        if (!created) { return }
+
         try {
             final String html_output = renderHtml()
             writer.withWriter { w -> w << html_output }
@@ -99,13 +110,6 @@ class ReportFileCreator extends BaseFileCreator{
         catch (Exception e) {
             log.warn("Failed to render CO2e footprint report -- see the log file for details", e)
         }
-    }
-
-    /**
-     * Close the report file writer.
-     */
-    void close() {
-        writer.close()
     }
 
     // ---- RENDERING METHODS -----
