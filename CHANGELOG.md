@@ -6,6 +6,7 @@
 # Version 1.0.0
 ## Bug Fixes:
 - Wrong memory fallback value (current machine maximum memory) now removed
+- Creation of report and summary file only at end of run
 
 ## Misc:
 - "🔁" now prepended for every `Markers.unique` message
