@@ -114,18 +114,6 @@ class CO2FootprintObserver implements TraceObserver {
     @Override
     boolean enableMetrics() { return true }
 
-    /**
-     * Set the maximum number of tasks to include in the report table.
-     * If exceeded, the table is cut off after the maximum number.
-     *
-     * @param value Maximum number of tasks to include in the report
-     * @return This observer instance
-     */
-    CO2FootprintObserver setMaxTasks(int value) {
-        this.maxTasks = value
-        return this
-    }
-
     // ------ OBSERVER METHODS ------
 
     // ---- WORKFLOW LEVEL ----
@@ -154,10 +142,6 @@ class CO2FootprintObserver implements TraceObserver {
 
         co2eTraceFile = new TraceFileCreator(paths['co2eTrace'], overwrite)
         co2eTraceFile.create()
-
-        co2eSummaryFile = new SummaryFileCreator(paths['co2eSummary'], overwrite)
-
-        co2eReportFile = new ReportFileCreator(paths['co2eReport'], overwrite, maxTasks)
     }
 
     /**
@@ -183,6 +167,11 @@ class CO2FootprintObserver implements TraceObserver {
                 }
             }
         }
+
+        // Make summary and Report File
+        co2eSummaryFile = new SummaryFileCreator(paths['co2eSummary'], overwrite)
+        co2eReportFile = new ReportFileCreator(paths['co2eReport'], overwrite, maxTasks)
+
         // Write report and summary
         co2eSummaryFile.write(totalStats, co2FootprintComputer, config, version)
 
