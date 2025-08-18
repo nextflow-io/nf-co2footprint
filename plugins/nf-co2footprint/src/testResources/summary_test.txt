@@ -1,10 +1,10 @@
 Total CO2e footprint measures of this workflow run (including cached tasks):
-CO2e emissions: 6.53 g
-Energy consumption: 13.61 Wh
+CO2e emissions: 6.75 g
+Energy consumption: 14.06 Wh
 
 Which equals:
-- 0.037 km travelled by car
-- It takes one tree 5h 12min 19.21s to sequester the equivalent amount of CO2 from the atmosphere
+- 0.039 km travelled by car
+- It takes one tree 5h 22min 38.92s to sequester the equivalent amount of CO2 from the atmosphere
 - 0.013 % of a flight from Paris to London
 
 The calculation of these values is based on the carbon footprint computation method developed in the Green Algorithms project.
@@ -22,6 +22,6 @@ powerdrawCpuDefault: null
 powerdrawMem: 0.3725
 pue: 1.0
 customCpuTdpFile: null
-reportFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir8371627739442831791/report_test.html
-summaryFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir8371627739442831791/summary_test.txt
-traceFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir8371627739442831791/trace_test.txt
+reportFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir14363274412106827386/report_test.html
+summaryFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir14363274412106827386/summary_test.txt
+traceFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir14363274412106827386/trace_test.txt
