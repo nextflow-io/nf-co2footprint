@@ -592,26 +592,6 @@
 
     // JavaScript used to power the Nextflow Report Template output.
 
-    //
-    // Selector methods
-    //
-    /**
-     * Get property from the trace via a comparator
-     *
-     * @param {String} property Name of the property in the trace
-     * @param {function} comparison comparison function
-     * @returns
-     */
-    function getTraceSelect(property, comparison) {
-      var val = null
-      for (let task of window.data.trace){
-        if (val == null || comparison(task[property], val) ) {
-          val = task[property]
-        }
-      }
-      return val
-    }
-
     /**
      * Decides whether raw or readable values are to be displayed
      *
@@ -743,81 +723,6 @@
 
       Plotly.newPlot('co2e-total-plot', plot_data_total, layout);
       Plotly.newPlot('co2e-non-cached-plot', plot_data_non_cached, layout);
-
-
-  //
-  // Carbon intensity plot
-  //
-
-  // Set first and last ci as constant ci or equivalent to first & last recorded at starting and end time of traces
-  const startTime = getTraceSelect('start',   function (a,b) { return a < b })
-  const endTime = getTraceSelect('complete',  function (a,b) { return a > b })
-
-  if (window.timeCiRecords.size == 0) {
-    window.timeCiRecords.set(startTime, window.data.trace[0]["ci"])
-    window.timeCiRecords.set(endTime, window.data.trace[0]["ci"])
-  }
-  else {
-    const arr = Array.from( window.timeCiRecords.values() )
-    window.timeCiRecords.set(startTime, arr[0])
-    window.timeCiRecords.set(endTime, arr[arr.length - 1])
-  }
-
-  // Add main line of CI values
-  const timeCiRecords = new Map([...window.timeCiRecords].sort())
-  var timestamps = Array.from( timeCiRecords.keys() )
-  var ciValues = Array.from( timeCiRecords.values() )
-
-  var ci_plot_data = [
-    // Add timestamps + CI values to plot
-    {
-      name: "Carbon intensity",
-      x: timestamps, y: ciValues,
-      type: 'scatter', legendgroup: "Carbon intensity"
-    }
-  ];
-
-  // Add CPU load of tasks
-  var tasksStart = null;
-  var tasksEnd = null;
-  for (let task of window.data.trace) {
-    if(tasksStart == null || tasksStart > task['start']) { tasksStart = task['start'] };
-    if(tasksEnd == null ||tasksEnd < task['complete']) { tasksEnd = task['complete'] };
-    ci_plot_data.push(
-      {
-        name: "Task " + task["task_id"],
-        x: [task['start'], task['complete']], y: [task['%cpu'], task['%cpu']],
-        type: 'scatter',  fill: 'tozeroy', mode: 'none', yaxis: 'y2',
-      }
-    );
-  }
-
-  // Make layout
-  var ci_layout = {
-    title: 'Carbon intensity index',
-    legend: {
-      x: 1.1
-    },
-    xaxis: {
-      title: 'Time',
-      ticklabelstandoff: 10,
-      overlay: 'x2',
-      range: [tasksStart, tasksEnd],
-    },
-    yaxis: {
-      title: 'Carbon Intensity (g/kWh)',
-      rangemode: 'tozero',
-    },
-    yaxis2: {
-      title: 'CPU usage (%)',
-      rangemode: 'tozero',
-      gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
-      overlaying: 'y',
-      side: 'right',
-    }
-  }
-
-  Plotly.newPlot('ci-plot', ci_plot_data, ci_layout)
 
 
   //
