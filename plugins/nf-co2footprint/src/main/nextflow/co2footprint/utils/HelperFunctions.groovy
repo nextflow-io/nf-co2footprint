@@ -13,16 +13,6 @@ import nextflow.trace.TraceRecord
 class HelperFunctions {
 
     /**
-     * Helper function to return bold text
-     *
-     * @param text String to be displayed in bold
-     * @return Emboldened text
-     */
-    static String bold(String text) {
-        return "\033[1m${text}\033[0m"
-    }
-
-    /**
      * Retrieves a value from the trace record by key, or returns a default if the value is missing.
      * If the value is `null`, a warning is logged (once per unique dedupKey).
      *
