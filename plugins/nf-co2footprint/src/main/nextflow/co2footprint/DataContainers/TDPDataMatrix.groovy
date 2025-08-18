@@ -143,7 +143,6 @@ class TDPDataMatrix extends DataMatrix {
         }
         else if (fallbackToDefault) {
             modelData = select([this.fallbackModel] as LinkedHashSet)
-            log.info("modelData is: ${modelData.getData()}")
             String modelMatch = originalModel == null ? "No CPU model detected." : "Could not find CPU model \"${originalModel}\" in given TDP data table."
             log.warn(
                     Markers.unique,
