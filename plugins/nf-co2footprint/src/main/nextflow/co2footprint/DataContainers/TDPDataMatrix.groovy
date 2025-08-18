@@ -28,7 +28,7 @@ class TDPDataMatrix extends DataMatrix {
     Object fallbackModel = 'default'
 
     // Optional override values
-    Integer tdp = null
+    Double tdp = null
     Integer cores = null
     Integer threads = null
     
@@ -46,7 +46,7 @@ class TDPDataMatrix extends DataMatrix {
     TDPDataMatrix(
             List<List> data = [], LinkedHashSet<String> columnIndex = [], LinkedHashSet<String> rowIndex = [],
             Object fallbackModel='default',
-            Integer tdp=null, Integer cores=null, Integer threads=null
+            Double tdp=null, Integer cores=null, Integer threads=null
     ) {
         // Initialize DataMatrix without non-ASCII characters in indices
         super(
@@ -73,7 +73,7 @@ class TDPDataMatrix extends DataMatrix {
      */
     TDPDataMatrix(
             DataMatrix dataMatrix, Object fallbackModel='default',
-            Integer tdp=null, Integer cores=null, Integer threads=null
+            Double tdp=null, Integer cores=null, Integer threads=null
     ) {
         // Initialize DataMatrix without non-ASCII characters in indices
         super(
@@ -178,9 +178,9 @@ class TDPDataMatrix extends DataMatrix {
         if (this.tdp) {
             return this.tdp
         } else if (rowID) {
-            return dm.get(rowID, this.tdpID) as Integer
+            return dm.get(rowID, this.tdpID) as Double
         } else {
-            return dm.get(rowIdx, this.tdpID, true) as Integer
+            return dm.get(rowIdx, this.tdpID, true) as Double
         }
     }
 

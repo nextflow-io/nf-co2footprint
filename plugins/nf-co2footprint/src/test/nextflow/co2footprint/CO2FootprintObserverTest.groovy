@@ -122,9 +122,9 @@ class CO2FootprintObserverTest extends Specification{
             total_co2 += co2Record.getCO2e()
         }
         // Energy consumption converted to Wh
-        round(total_energy / 1000) == 13.61
+        round(total_energy / 1000) == 14.06
         // Total CO2 in g (should reflect the CI value you set)
-        round(total_co2 / 1000) == 6.46
+        round(total_co2 / 1000) == 6.68
     }
 
     def 'test full run with co2e equivalences calculation and specific CI' () {
@@ -162,9 +162,9 @@ class CO2FootprintObserverTest extends Specification{
 
         expect:
         // Values compared to result from www.green-algorithms.org
-        co2EquivalencesRecord.getCarKilometers().round(7) == 0.0369314 as Double
-        co2EquivalencesRecord.getTreeMonths().round(7) == 0.007048 as Double
-        co2EquivalencesRecord.getPlanePercent().round(7) == 0.012926 as Double
+        co2EquivalencesRecord.getCarKilometers().round(7) == 0.0381543 as Double
+        co2EquivalencesRecord.getTreeMonths().round(7) == 0.0072814 as Double
+        co2EquivalencesRecord.getPlanePercent().round(7) == 0.013354 as Double
     }
 
 
@@ -227,10 +227,10 @@ class CO2FootprintObserverTest extends Specification{
                 'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'carbon_intensity', '%cpu', 'memory', 'realtime', 'cpus', 'powerdraw_cpu', 'cpu_model' 
         ]
         values == [
-            '111', 'COMPLETED', 'null', '13.61 Wh', '6.53 g', 'null', '480.0 gCO₂e/kWh', '100.0%', '7.0 GB', '3600s', '1', '11.0 W', 'Unknown model'
+            '111', 'COMPLETED', 'null', '14.06 Wh', '6.75 g', 'null', '480.0 gCO₂e/kWh', '100.0%', '7.0 GB', '3600s', '1', '11.5 W', 'Unknown model'
         ] // GA: CO2e is 6.94g with CI of 475 gCO2eq/kWh
 
-        fileChecker.compareChecksums(tracePath, '7f7a26754af582190ecaf8ca8b85adbe')
+        fileChecker.compareChecksums(tracePath, '9094fca46d20c9e9432221f60022718c')
 
 
         // Check Summary File
