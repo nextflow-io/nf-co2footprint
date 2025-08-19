@@ -3,6 +3,9 @@
 - Renamed FileCreator and its classes
 - Added `Markers.silentUnique` to deduplicate messages without prepending a prefix
 
+## Features:
+- Base config class with more control over parameters
+
 # Version 1.0.0
 ## Bug Fixes:
 - Wrong memory fallback value (current machine maximum memory) now removed
