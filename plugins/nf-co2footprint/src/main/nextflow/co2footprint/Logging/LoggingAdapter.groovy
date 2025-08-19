@@ -146,7 +146,9 @@ class LoggingAdapter {
      * Adds a DeduplicateMarkerFilter to filter out all Markers.unique markers
      */
     void addUniqueMarkerFilter() {
-        final TurboFilter deduplicateMarkerFilter = new DeduplicateMarkerFilter([Markers.unique])   // Define DeduplicateMarkerFilter
+        final TurboFilter deduplicateMarkerFilter = new DeduplicateMarkerFilter(
+                [Markers.unique, Markers.silentUnique]
+        )   // Define DeduplicateMarkerFilter
         deduplicateMarkerFilter.start()
         loggerContext.addTurboFilter(deduplicateMarkerFilter)                                       // Add filter to context
 

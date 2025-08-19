@@ -145,7 +145,7 @@ class TDPDataMatrix extends DataMatrix {
             modelData = select([this.fallbackModel] as LinkedHashSet)
             String modelMatch = originalModel == null ? "No CPU model detected." : "Could not find CPU model \"${originalModel}\" in given TDP data table."
             log.warn(
-                    Markers.unique,
+                    Markers.silentUnique,
                     modelMatch +
                     " Using ${this.fallbackModel} CPU power draw value (${getTDP(modelData)} W).\n" +
                     '\t🔖 You can help by reporting this warning and your `.nextflow.log` file to ' +

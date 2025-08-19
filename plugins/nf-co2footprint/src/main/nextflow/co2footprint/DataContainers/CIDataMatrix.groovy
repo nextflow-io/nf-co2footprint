@@ -77,7 +77,7 @@ class CIDataMatrix extends DataMatrix {
                 throw err  // <-- will stop execution
             }
             else {
-                log.warn(Markers.unique, 
+                log.warn(Markers.silentUnique,
                         "Could not find carbon intensity for zone ${targetZone.toUpperCase()}: ${e.message}",
                         'missing-ci-in-table-warning'
                 ) 
