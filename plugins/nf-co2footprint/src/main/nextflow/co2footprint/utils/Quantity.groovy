@@ -7,8 +7,8 @@ import java.math.RoundingMode
  */
 class Quantity {
     BigDecimal value
-    String unit
     String scale
+    String unit
     String separator
 
     /**

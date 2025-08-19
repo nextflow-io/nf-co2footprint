@@ -92,7 +92,7 @@ class Converter {
      * Scales the value up or down by factors of 1000 and adjusts the prefix accordingly.
      *
      * @param value Value that should be converted
-     * @param scope Symbol for scope of the unit (e.g. kilo = k)
+     * @param scale Symbol for scale of the unit (e.g. kilo = k)
      * @param unit Name / symbol for the unit
      * @param targetScale Target scale to convert to
      * @param precision Precision to round the value(s) to
