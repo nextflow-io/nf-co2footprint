@@ -1,4 +1,4 @@
-# nf-co2footprint plugin [WIP]
+# nf-co2footprint plugin
 A Nextflow plugin to estimate the CO₂ footprint of pipeline runs.
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16363577.svg)](https://doi.org/10.5281/zenodo.16363577)
@@ -27,7 +27,7 @@ Declare the plugin in your Nextflow pipeline configuration file:
 
 ```groovy title="nextflow.config"
 plugins {
-  id 'nf-co2footprint@1.0.0-rc.3'
+  id 'nf-co2footprint@1.0.0'
 }
 ```
 
