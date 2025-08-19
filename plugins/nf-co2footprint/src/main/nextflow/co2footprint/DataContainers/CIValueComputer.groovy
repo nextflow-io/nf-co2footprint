@@ -52,16 +52,18 @@ class CIValueComputer {
             // Parse the successful API response
             json = new JsonSlurper().parse(connection.inputStream) as Map
             ci = json['carbonIntensity'] as Double
-            log.info(Markers.unique,
-                     "API call successful. Response code: ${connection.responseCode} (${connection.responseMessage})",
-                     'api-call-successful-info')
+            log.info(
+                Markers.unique,
+                "API call successful. Response code: ${connection.responseCode} (${connection.responseMessage})"
+            )
         } else {
             // Handle API error response
             String errorResponse = connection.errorStream.text
             String errorMessage = new JsonSlurper().parseText(errorResponse).message
-            log.warn(Markers.unique, 
-                    "API call failed. Response code: ${connection.responseCode} (${errorMessage})",
-                    'api-call-failed-warning')
+            log.warn(
+                Markers.unique,
+                "API call failed. Response code: ${connection.responseCode} (${errorMessage})"
+            )
 
             // Fallback to the location in the CSV
             ci = this.ciData.findCiInMatrix(this.location)
@@ -94,12 +96,15 @@ class CIValueComputer {
             // Check if the API key is set and retrieve real-time carbon intensity
             if (this.emApiKey && this.emApiKey instanceof String) {
 
-                log.info(Markers.unique, "Electricity Maps API key is set. Attempting to retrieve real-time carbon intensity.")
+                log.info(
+                    Markers.silentUnique,
+                    "Electricity Maps API key is set. Attempting to retrieve real-time carbon intensity."
+                )
                 return { getRealtimeCI() }
 
             } else {
                 log.info(
-                    Markers.unique,
+                    Markers.silentUnique,
                     "Electricity Maps API key is not set. " +
                     "To retrieve real-time carbon intensity values, please provide a key with the parameter `emApiKey`.\n" +
                     "\t💡 You can obtain a key for ElectricityMaps at https://portal.electricitymaps.com/auth/login.")
@@ -107,7 +112,10 @@ class CIValueComputer {
             // Fallback to the location in the CSV
             ci = this.ciData.findCiInMatrix(this.location)
         } else {
-            log.warn(Markers.unique, "No location provided. Attempting to retrieve GLOBAL carbon intensity value.")
+            log.warn(
+                Markers.silentUnique,
+                "No location provided. Attempting to retrieve GLOBAL carbon intensity value."
+            )
         }
         // Fallback to the global default value if no value is found for the location
         if (ci == null) {
