@@ -1,27 +1,29 @@
 Total CO2e footprint measures of this workflow run (including cached tasks):
-CO2e emissions: 6.75 g
-Energy consumption: 14.06 Wh
+  CO2e emissions:          6.75 g
+  Energy consumption:      14.06 Wh
+  CO2e emissions (market): -
 
 Which equals:
-- 0.039 km travelled by car
-- It takes one tree 5h 22min 38.92s to sequester the equivalent amount of CO2 from the atmosphere
-- 0.013 % of a flight from Paris to London
+  - 0.039 km travelled by car
+  - It takes one tree 5h 22min 38.92s to sequester the equivalent amount of CO2 from the atmosphere
+  - 0.013 % of a flight from Paris to London
 
-The calculation of these values is based on the carbon footprint computation method developed in the Green Algorithms project.
-Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation. Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707
+The calculation of these values is based on the carbon footprint computation method developed in the Green Algorithms project:
+    Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation.
+    Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707
 
 nf-co2footprint plugin version: 1.0.0-rc.3
 
 nf-co2footprint options:
-ci: 480.0
-ciMarket: null
-ignoreCpuModel: false
-location: null
-machineType: null
-powerdrawCpuDefault: null
-powerdrawMem: 0.3725
-pue: 1.0
-customCpuTdpFile: null
-reportFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir14363274412106827386/report_test.html
-summaryFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir14363274412106827386/summary_test.txt
-traceFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir14363274412106827386/trace_test.txt
+  ci: 480.0
+  ciMarket: null
+  ignoreCpuModel: false
+  location: null
+  machineType: null
+  powerdrawCpuDefault: null
+  powerdrawMem: 0.3725
+  pue: 1.0
+  customCpuTdpFile: null
+  reportFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir15414627366587620970/report_test.html
+  summaryFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir15414627366587620970/summary_test.txt
+  traceFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir15414627366587620970/trace_test.txt

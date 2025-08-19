@@ -237,9 +237,9 @@ class CO2FootprintObserverTest extends Specification{
         fileChecker.runChecks(
                 summaryPath,
                 [
-                        25: "reportFile: ${reportPath}",
-                        26: "summaryFile: ${summaryPath}",
-                        27: "traceFile: ${tracePath}"
+                        27: "  reportFile: ${reportPath}",
+                        28: "  summaryFile: ${summaryPath}",
+                        29: "  traceFile: ${tracePath}"
                 ]
         )
 
