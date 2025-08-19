@@ -66,7 +66,7 @@ class CIDataMatrix extends DataMatrix {
 
         try {
             ci = this.get(targetZone, this.ciColumn)
-            log.info(Markers.unique, 
+            log.info(Markers.silentUnique,
                     "Using carbon intensity for ${targetZone} from fallback table: ${ci.toString()} gCO₂eq/kWh.",
                     'using-ci-from-table-info'
                     )

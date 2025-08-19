@@ -1,6 +1,7 @@
 # New
 ## Misc:
 - Renamed FileCreator and its classes
+- Added `Markers.silentUnique` to deduplicate messages without prepending a prefix
 
 # Version 1.0.0
 ## Bug Fixes:
