@@ -24,12 +24,12 @@ authors:
     given-names: Sabrina
     orcid: https://orcid.org/0000-0003-0603-7907
 title: "nf-co2footprint - A nextflow plugin to track CO2e emissions"
-version: 1.0.0-rc.3
+version: 1.0.0
 identifiers:
   - type: doi
     value: 10.5281/zenodo.14622304
 doi: 10.5281/zenodo.14622304
-date-released: 2025-07-31
+date-released: 2025-08-19
 repository-code: "https://github.com/nextflow-io/nf-co2footprint/"
 license: "Apache-2.0"
 keywords:
