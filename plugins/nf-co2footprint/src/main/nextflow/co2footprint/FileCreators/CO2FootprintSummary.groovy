@@ -58,7 +58,6 @@ class CO2FootprintSummary extends CO2FootprintFile {
           CO2e emissions (market): ${totalStats['co2eMarket'] ? Converter.toReadableUnits(totalStats['co2eMarket'], 'm', 'g') : "-"}
 
         """.stripIndent()
-        
         List<String> readableEquivalences = equivalences.getReadableEquivalences()
         if (readableEquivalences.any()) {
             outText += 'Which equals:\n  '
