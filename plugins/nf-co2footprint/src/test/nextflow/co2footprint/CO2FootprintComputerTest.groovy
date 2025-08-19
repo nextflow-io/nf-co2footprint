@@ -4,6 +4,7 @@ import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
+import nextflow.co2footprint.Records.TimeCiRecordCollector
 import nextflow.exception.MissingValueException
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
@@ -44,7 +45,8 @@ class CO2FootprintComputerTest extends Specification{
 
         CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdpDataMatrix, ciDataMatrix, [:])
         CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
-        CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord)
+        TimeCiRecordCollector timeCiRecordCollector = new TimeCiRecordCollector(config)
+        CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord, timeCiRecordCollector)
 
         expect:
         round(co2Record.getEnergyConsumption()/1000) == expectedEnergy
@@ -53,7 +55,7 @@ class CO2FootprintComputerTest extends Specification{
         where:
         cpuModel           | configMap                        || expectedEnergy | expectedCO2
         "Unknown model"    | [:]                              || 14.06          | 6.75
-        "AMD EPYC 7251"    | [:]                              || 17.61          | 8.45  
+        "AMD EPYC 7251"    | [:]                              || 17.61          | 8.45
         "Unknown model"    | [pue: 1.4]                       || 19.68          | 9.45
         "Unknown model"    | [location: 'DE']                 || 14.06          | 4.69
         "Unknown model"    | [ci: 338.66]                     || 14.06          | 4.76
@@ -100,13 +102,14 @@ class CO2FootprintComputerTest extends Specification{
         // Create config and the CO2FootprintComputer under test
         CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, ciDataMatrix, [:])
         CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
+        TimeCiRecordCollector timeCiRecordCollector = new TimeCiRecordCollector(config)
 
         when:
         // Try to compute the CO2 footprint, catching any exceptions
         def result = null
         def caught = null
         try {
-            result = co2FootprintComputer.computeTaskCO2footprint(new TaskId(1), traceRecord)
+            result = co2FootprintComputer.computeTaskCO2footprint(new TaskId(1), traceRecord, timeCiRecordCollector)
         } catch (Exception e) {
             caught = e
         }

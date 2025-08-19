@@ -8,6 +8,7 @@ import nextflow.co2footprint.DataContainers.CIValueComputer
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.trace.TraceHelper
 import java.nio.file.Paths
+import java.time.LocalDateTime
 
 /**
  * Configuration class for CO₂ footprint calculations.
@@ -57,11 +58,30 @@ class CO2FootprintConfig {
     String getLocation() { location }
 
     /**
-     * Returns the carbon intensity value.
-     * If set as a closure (for real-time API), invokes it to get the current value.
+     * Returns whether or not the API is used for CI
      */
+    boolean isCiAPICalled() { ci instanceof  Closure }
+
+    /**
+    * Returns the current carbon intensity (CI) value.
+    * If `ci` is a closure (for real-time API usage), calls the closure and returns the value under the key 'ci' from the resulting map.
+    * If `ci` is not a closure, returns the CI value as set in the config.
+    *
+    * @return The current carbon intensity value (gCO₂e/kWh)
+    */
     Double getCi() {
-        (ci instanceof Closure) ? (ci as Closure<Double>)() : ci
+        isCiAPICalled() ? (ci as Closure<Map<String, Double>>)()['ci'] : ci
+    }
+
+    /**
+    * Returns the map of timestamped carbon intensity (CI) values.
+    * If `ci` is a closure (for real-time API usage), calls the closure and returns the resulting map (timestamps as keys, CI values as values).
+    * If `ci` is not a closure, returns the static CI value as set in the config.
+    *
+    * @return Map of timestamps to carbon intensity values, or the static CI value if not time-resolved
+    */
+    def getTimeCi() {
+        isCiAPICalled() ? (ci as Closure<Map<String, ?>>)() : ci
     }
 
     /**
@@ -102,11 +122,10 @@ class CO2FootprintConfig {
 
         // Determine the carbon intensity (CI) value
         if (ci == null) {
-
             CIValueComputer ciValueComputer = new CIValueComputer(emApiKey, location, ciData)
             // ci is either set to a Closure (in case the electricity maps API is used) or to a Double (in the other cases)
             // The closure is invoked each time the CO2 emissions are calculated (for each task) to make a new API call to update the real time ci value.
-            ci = ciValueComputer.computeCI()
+            ci = ciValueComputer.computeTimeCI()
         }
 
         // Sets machineType and pue based on the executor if machineType is not already set

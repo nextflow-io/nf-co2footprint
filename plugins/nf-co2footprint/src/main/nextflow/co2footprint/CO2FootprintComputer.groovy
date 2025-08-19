@@ -4,6 +4,7 @@ import nextflow.co2footprint.Logging.Markers
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
+import nextflow.co2footprint.Records.TimeCiRecordCollector
 import nextflow.co2footprint.utils.HelperFunctions
 import groovy.util.logging.Slf4j
 import nextflow.exception.MissingValueException
@@ -32,7 +33,6 @@ class CO2FootprintComputer {
         this.config = config
     }
 
-
     /**
     * Computes the CO2 emissions and energy usage for a given Nextflow task.
     *
@@ -56,9 +56,10 @@ class CO2FootprintComputer {
     *
     * @param taskID  The Nextflow TaskId for this task.
     * @param trace   The TraceRecord containing task resource usage.
+    * @param timeCiRecords Collector for carbon intensity records.
     * @return        CO2Record with energy consumption, CO2 emissions, and task/resource details.
     */
-    CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace) {
+    CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace, TimeCiRecordCollector timeCiRecords) {
 
         /**
          * CPU model information
@@ -78,7 +79,7 @@ class CO2FootprintComputer {
 
         // uc: core usage factor (between 0 and 1)
         BigDecimal cpuUsage = HelperFunctions.getTraceOrDefault(trace, taskID, '%cpu', numberOfCores * 100, 'missing-%cpu') as BigDecimal
-        
+
         if ( cpuUsage == 0.0 ) {
             log.warn(
                 Markers.unique,
@@ -122,7 +123,7 @@ class CO2FootprintComputer {
         final BigDecimal pue = config.getPue()    // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
 
         // CI: carbon intensity [gCO2e kWh−1]
-        final BigDecimal ci = config.getCi()
+        final BigDecimal ci = timeCiRecords.getCI(trace)
 
         // Personal energy mix based carbon intensity
         final Double ciMarket = config.getCiMarket()

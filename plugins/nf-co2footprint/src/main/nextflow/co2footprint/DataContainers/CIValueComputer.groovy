@@ -5,7 +5,8 @@ import nextflow.co2footprint.utils.HelperFunctions
 import groovy.util.logging.Slf4j
 import nextflow.co2footprint.Logging.Markers
 import groovy.json.JsonSlurper
-
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
 
 /**
  * Class to compute carbon intensity (CI) values.
@@ -34,10 +35,9 @@ class CIValueComputer {
      * If no value is found for the location, falls back to the 'GLOBAL' CI value.
      * If 'GLOBAL' is also not found, an exception will be thrown by findCiInMatrix.
      *
-     * @param processName (Optional) The process name for logging/marker purposes.
-     * @return The carbon intensity value as a Double, or null if not found.
+     * @return A map containing the time of the CI value and the CI value itself.
      */
-    protected Double getRealtimeCI() {
+    protected Map<String, ?> getRealtimeCI() {
         // Build the API URL
         URL url = new URI("https://api.electricitymap.org/v3/carbon-intensity/latest?zone=${this.location}").toURL()
 
@@ -47,10 +47,13 @@ class CIValueComputer {
 
         Map json
         Double ci
+        LocalDateTime time
 
         if (connection.responseCode == 200) {
             // Parse the successful API response
             json = new JsonSlurper().parse(connection.inputStream) as Map
+
+            time = OffsetDateTime.parse(json['datetime'] as String).toLocalDateTime()
             ci = json['carbonIntensity'] as Double
             log.info(Markers.unique,
                      "API call successful. Response code: ${connection.responseCode} (${connection.responseMessage})",
@@ -59,10 +62,11 @@ class CIValueComputer {
             // Handle API error response
             String errorResponse = connection.errorStream.text
             String errorMessage = new JsonSlurper().parseText(errorResponse).message
-            log.warn(Markers.unique, 
+            log.warn(Markers.unique,
                     "API call failed. Response code: ${connection.responseCode} (${errorMessage})",
                     'api-call-failed-warning')
 
+            time = LocalDateTime.now()
             // Fallback to the location in the CSV
             ci = this.ciData.findCiInMatrix(this.location)
             // Fallback to the global default value if no value is found for the location
@@ -70,7 +74,7 @@ class CIValueComputer {
                 ci = this.ciData.findCiInMatrix('GLOBAL')
             }
         }
-        return ci
+        return [time: time, ci: ci]
     }
 
     /**
@@ -85,8 +89,8 @@ class CIValueComputer {
      * @return A closure for real-time CI retrieval if the API key is set, or a Double value from the matrix.
      *         Returns null if no value is found.
      */
-    def computeCI() {
-        def ci
+    def computeTimeCI() {
+        Double ci
 
         if (this.location) {
             this.location = this.location.toUpperCase() // Ensure location is always uppercase
