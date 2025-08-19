@@ -234,13 +234,18 @@ class ReportFileCreator extends BaseFileCreator{
         return totalsMap
     }
 
-    /**
-     * Get the readable from of a traceRecord entry.
+     /**
+     * Formats a trace entry into a human-readable string.
+     * Returns {@link nextflow.trace.TraceRecord#NA} if value is null.
      *
-     * @param key The name of the entry
-     * @param value The value of the entry
-     * @param traceRecord The trace record of origin
-     * @return The entry as a readable String
+     * @param key   Trace entry key
+     * @param value Entry value
+     * @param traceRecord Provides fallback formatting
+     * @return Human-readable string
+     *
+     * @example getReadableTraceEntry("realtime", 125.5, tr) → "2m 5s"
+     * @example getReadableTraceEntry("memory", 1073741824, tr) → "1 GB"
+     * @example getReadableTraceEntry("status", "COMPLETED", tr) → "<span class=\"badge badge-success\">COMPLETED</span>"
      */
     protected static String getReadableTraceEntry(String key, Object value, TraceRecord traceRecord) {
         if (value == null) { return traceRecord.NA}
@@ -264,9 +269,14 @@ class ReportFileCreator extends BaseFileCreator{
     /**
      * Render the executed tasks as a JSON list.
      *
-     * @param data A Map of {@link nextflow.processor.TaskId}s and {@link nextflow.trace.TraceRecord}s representing the tasks executed
-     * @param dataCO2 A Map of {@link nextflow.processor.TaskId}s and {@link CO2Record}s representing the co2Record traces
-     * @return The collected List of JSON entries
+     * Each list item is a merged map of trace- and CO2-fields:
+     *   <fieldName> -> [ raw: <original>, readable: <formatted> ]
+     * Missing trace fields are included with [raw: null, readable: "-"].
+     * The number of tasks is limited by `maxTasks`.
+     *
+     * @param traceRecords Map of {@link nextflow.processor.TaskId} -> {@link nextflow.trace.TraceRecord}
+     * @param co2Records   Map of {@link nextflow.processor.TaskId} -> {@link CO2Record}
+     * @return             List of per-task maps combining trace and CO2 entries
      */
     protected List<Map<String, Map<String, Object>>> renderTasksJson(
             Map<TaskId, TraceRecord> traceRecords, Map<TaskId, CO2Record> co2Records
@@ -276,21 +286,24 @@ class ReportFileCreator extends BaseFileCreator{
 
         final List<Map<String, Map<String, Object>>> results = []
         traceRecords.each { TaskId taskId, TraceRecord traceRecord ->
-            // Collect trace record values
+            // Build trace entry map: key -> [raw, readable]
             Map<String, Map<String, Object>> traceRecordMap = traceRecord.store.collectEntries { String key, Object value ->
                 [key, [raw: value, readable: getReadableTraceEntry(key, value, traceRecord)]]
             }
+
+            // Ensure all declared trace fields are present (fill gaps with a placeholder)
             traceRecord.FIELDS.each { String key, String _ ->
-                if (!traceRecordMap.containsKey(key)) { traceRecordMap.put(key, [raw: null, readable: '-']) }
+                if (!traceRecordMap.containsKey(key)) { traceRecordMap.put(key, [raw: null, readable: TraceRecord.NA]) }
                 return
             }
 
-            // Collect CO2 record values
+            // Build CO2 entry map: key -> [raw, readable]
             CO2Record co2Record = co2Records[taskId]
             Map<String, Map<String, Object>> co2RecordMap = co2Record.store.collectEntries { String key, Object value ->
                 [key, [raw: value, readable: co2Record.getReadable(key, value)]]
             }
 
+            // Merge trace and CO2 maps for this task
             results.add( traceRecordMap + co2RecordMap )
         }
 

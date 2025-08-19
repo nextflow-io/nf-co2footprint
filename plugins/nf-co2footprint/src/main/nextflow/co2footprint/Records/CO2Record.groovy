@@ -105,12 +105,16 @@ class CO2Record extends TraceRecord {
         super.store << store
     }
 
-    /**
-     * Converts the entry to a readable string by scaling numerical entries.
+     /**
+     * Converts a CO₂ record entry into a human-readable string.
      *
-     * @param key The key of the entry
-     * @param value The value which is to be converted, defaults to the entry of the key in the storage
-     * @return A readable entry
+     * Numerical values are scaled and formatted with appropriate units
+     * (e.g. Wh, g, %, GB). Non-numerical values are returned as strings.
+     * If no value is provided, the method falls back to the stored entry for the given key.
+     *
+     * @param key   The entry key (e.g. "energy", "co2e", "time", "cpuUsage")
+     * @param value Optional value to convert; defaults to the stored value for the key
+     * @return      A human-readable string, or null if no conversion is possible
      */
     String getReadable(String key, Object value=store[key]) {
         return switch (key) {
