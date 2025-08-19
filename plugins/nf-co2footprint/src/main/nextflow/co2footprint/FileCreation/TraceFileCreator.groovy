@@ -36,8 +36,11 @@ class TraceFileCreator extends BaseFileCreator {
      * If file already exists, it is overwritten or rolled depending on settings.
      */
     void create() {
+        super.create()
+
         // Create a new trace file writer
-        file = new PrintWriter(TraceHelper.newFileWriter(path, overwrite, 'co2footprint'))
+        writer = TraceHelper.newFileWriter(path, overwrite, 'co2footprint')
+        file = new PrintWriter(this.writer)
 
         // Launch the agent for thread-safe writing
         traceWriter = new Agent<PrintWriter>(file)
@@ -63,6 +66,8 @@ class TraceFileCreator extends BaseFileCreator {
      * @param co2Record CO2Record for the task
      */
     void write(TaskId taskId, TraceRecord trace, CO2Record co2Record){
+        if (!created) { return }
+
         List<String> records = co2Record.getReadableEntries()
 
         records = [taskId as String, trace.get('status') as String] + records
@@ -79,6 +84,8 @@ class TraceFileCreator extends BaseFileCreator {
      * @param current Map of TaskId to TraceRecord for unfinished tasks
      */
     void close(Map<TaskId, TraceRecord> current) {
+        if (!created) { return }
+
         // Wait for agent to finish and flush content
         traceWriter.await()
 
@@ -87,6 +94,8 @@ class TraceFileCreator extends BaseFileCreator {
             file.println("${record.taskId}\t-")
         }
         file.flush()
+
         file.close()
+        writer.close()
     }
 }

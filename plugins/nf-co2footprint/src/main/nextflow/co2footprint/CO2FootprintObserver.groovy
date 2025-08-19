@@ -15,7 +15,6 @@ import nextflow.processor.TaskProcessor
 import nextflow.trace.TraceObserver
 import nextflow.trace.TraceRecord
 
-import java.nio.file.Files
 import java.nio.file.Path
 import java.util.concurrent.ConcurrentHashMap
 
@@ -38,9 +37,6 @@ class CO2FootprintObserver implements TraceObserver {
 
     // Holds workflow session
     private Session session
-
-    // Output file paths
-    private Map<String, Path> paths = [:]
 
     // Output file objects
     private TraceFileCreator co2eTraceFile
@@ -96,10 +92,10 @@ class CO2FootprintObserver implements TraceObserver {
         this.version = version
         this.config = config
 
-        // Generate CO2 footprint output files (trace, summary, HTML report)
-        this.paths['co2eTrace'] = (config.getTraceFile() as Path).complete()
-        this.paths['co2eSummary'] = (config.getSummaryFile() as Path).complete()
-        this.paths['co2eReport'] = (config.getReportFile() as Path).complete()
+        // Make file instances
+        this.co2eTraceFile = new TraceFileCreator((config.getTraceFile() as Path).complete(), overwrite)
+        this.co2eSummaryFile = new SummaryFileCreator((config.getSummaryFile() as Path).complete(), overwrite)
+        this.co2eReportFile = new ReportFileCreator((config.getReportFile() as Path).complete(), overwrite, maxTasks)
 
         this.co2FootprintComputer = co2FootprintComputer
         this.overwrite = overwrite
@@ -114,18 +110,6 @@ class CO2FootprintObserver implements TraceObserver {
     @Override
     boolean enableMetrics() { return true }
 
-    /**
-     * Set the maximum number of tasks to include in the report table.
-     * If exceeded, the table is cut off after the maximum number.
-     *
-     * @param value Maximum number of tasks to include in the report
-     * @return This observer instance
-     */
-    CO2FootprintObserver setMaxTasks(int value) {
-        this.maxTasks = value
-        return this
-    }
-
     // ------ OBSERVER METHODS ------
 
     // ---- WORKFLOW LEVEL ----
@@ -137,27 +121,14 @@ class CO2FootprintObserver implements TraceObserver {
      */
     @Override
     void onFlowCreate(Session session) {
-        log.debug("Workflow started -- co2e outputs: ${paths}")
+        log.debug("Workflow started -- CO2Footprint file instantiated")
 
         // Construct session and aggregator
         this.session = session
         this.aggregator = new CO2RecordAggregator()
 
-        // make sure parent paths exists
-        paths.each {key, path ->
-            final Path parent = path.normalize().getParent()
-            if (parent) {
-                Files.createDirectories(parent)
-                return
-            }
-        }
-
-        co2eTraceFile = new TraceFileCreator(paths['co2eTrace'], overwrite)
+        // Create trace file
         co2eTraceFile.create()
-
-        co2eSummaryFile = new SummaryFileCreator(paths['co2eSummary'], overwrite)
-
-        co2eReportFile = new ReportFileCreator(paths['co2eReport'], overwrite, maxTasks)
     }
 
     /**
@@ -183,6 +154,13 @@ class CO2FootprintObserver implements TraceObserver {
                 }
             }
         }
+
+        // Create report and summary if any content exists to write to the file
+        if (totalStats) {
+            co2eSummaryFile.create()
+            co2eReportFile.create()
+        }
+
         // Write report and summary
         co2eSummaryFile.write(totalStats, co2FootprintComputer, config, version)
 

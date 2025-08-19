@@ -19,10 +19,6 @@ import java.nio.file.Path
  */
 @Slf4j
 class SummaryFileCreator extends BaseFileCreator {
-
-    // Writer for the summary file
-    PrintWriter co2eSummaryFile
-
     // Agent for thread-safe writing (not strictly needed for single write)
     Agent<PrintWriter> summaryWriter
 
@@ -34,7 +30,16 @@ class SummaryFileCreator extends BaseFileCreator {
      */
     SummaryFileCreator(Path path, boolean overwrite) {
         super(path, overwrite)
-        this.co2eSummaryFile = new PrintWriter(TraceHelper.newFileWriter(path, overwrite, 'co2footprintsummary'))
+    }
+
+    /**
+     * Create the summary file.
+     */
+    void create() {
+        super.create()
+
+        writer = TraceHelper.newFileWriter(path, overwrite, 'co2footprintsummary')
+        file = new PrintWriter(writer)
     }
 
     /**
@@ -46,8 +51,10 @@ class SummaryFileCreator extends BaseFileCreator {
      * @param version                Plugin version string.
      */
     void write(Map<String, Double> totalStats, CO2FootprintComputer co2FootprintComputer, CO2FootprintConfig config, String version) {
+        if (!created) { return }
+
         // Launch the agent (for thread safety, though only one write is performed)
-        summaryWriter = new Agent<PrintWriter>(co2eSummaryFile)
+        summaryWriter = new Agent<PrintWriter>(file)
 
         CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(totalStats['co2e'])
 
@@ -78,14 +85,7 @@ class SummaryFileCreator extends BaseFileCreator {
         config.collectInputFileOptions().each { key, value -> outText += "  ${key}: ${value}\n" }
         config.collectOutputFileOptions().each { key, value -> outText += "  ${key}: ${value}\n" }
 
-        co2eSummaryFile.print(outText)
-        co2eSummaryFile.flush()
-    }
-
-    /**
-     * Close the summary file writer.
-     */
-    void close() {
-        co2eSummaryFile.close()
+        file.print(outText)
+        file.flush()
     }
 }
