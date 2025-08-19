@@ -1,5 +1,3 @@
-## [Unreleased]
-
 # Version 1.0.0
 ## Bug Fixes:
 - Wrong memory fallback value (current machine maximum memory) now removed
