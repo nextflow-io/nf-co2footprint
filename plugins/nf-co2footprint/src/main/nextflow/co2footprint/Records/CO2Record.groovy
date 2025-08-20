@@ -133,7 +133,8 @@ class CO2Record extends TraceRecord {
     /**
      * Get the Entries in a readable format for the summary
      *
-     * @param order The order of the readable entries
+     * @param order List of keys that defines both which entries are included
+     *              and the order in which they appear (defaults to all keys in the order of this.store).
      * @return List of readable Entries
      */
     List<String> getReadableEntries(List<String> order=store.keySet() as List) {
