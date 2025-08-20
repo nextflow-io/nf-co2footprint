@@ -17,8 +17,9 @@ class Converter {
     /**
      * Checks whether a element was found in a list and throws an error if not.
      *
-     * @param unit Unit as a String
-     * @param units List of units that are available
+     * @param element The element to search for
+     * @param list The list in which to search
+     * @return The index of the element in the list
      */
     static int getIdx(Object element, List<Object> list) {
         int idx = list.indexOf(element)
