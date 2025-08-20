@@ -5,6 +5,7 @@ import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.utils.HelperFunctions
+import nextflow.co2footprint.utils.Converter
 import groovy.util.logging.Slf4j
 import nextflow.exception.MissingValueException
 import nextflow.processor.TaskId
@@ -90,7 +91,7 @@ class CO2FootprintComputer {
         final BigDecimal coreUsage = cpuUsage / (100.0 * numberOfCores)
 
         /**
-         * Factors of memory power usage´
+         * Factors of memory power usage
          */
         final Long requestedMemory = trace.get('memory') as Long        // [bytes]
         final Long maxRequiredMemory = trace.get('peak_rss') as Long    // [bytes]
@@ -103,7 +104,7 @@ class CO2FootprintComputer {
                 log.error(message)
                 throw new MissingValueException(message)
             } else {
-                memory = maxRequiredMemory / 1024**3
+                memory = Converter.scaleUnits(maxRequiredMemory, '', 'B', 'G').value
                 log.warn(
                     Markers.unique,
                     "Requested memory is null for task ${taskID}. Using maximum consumed memory/`peak_rss` (${memory} GB) for CO₂e footprint computation.",
@@ -111,7 +112,7 @@ class CO2FootprintComputer {
                 )
             }
         } else {
-            memory = requestedMemory / 1024**3
+            memory = Converter.scaleUnits(requestedMemory, '', 'B', 'G',).value
         }
 
         final BigDecimal powerdrawMem  = config.value('powerdrawMem') // [W per GB]

@@ -113,9 +113,7 @@ class CO2Record extends TraceRecord {
     String getCO2eReadable() { Converter.toReadableUnits(co2e, 'm', 'g') }
 
     Double getCO2eMarket() { co2eMarket }
-    String getCO2eMarketReadable() {
-        co2eMarket ? Converter.toReadableUnits(co2eMarket, 'm', 'g') : null
-    }
+    String getCO2eMarketReadable() { Converter.toReadableUnits(co2eMarket, 'm', 'g') }
 
     Double getTime() { time }
     String getTimeReadable() { Converter.toReadableTimeUnits(time, 'h', 'ms', 's', 0.0d) }
@@ -126,13 +124,13 @@ class CO2Record extends TraceRecord {
     String getCPUsReadable() { cpus as String }
 
     Double getPowerdrawCPU() { powerdrawCPU }
-    String getPowerdrawCPUReadable() { powerdrawCPU != null ? String.format('%.1f W', powerdrawCPU) : null  }
+    String getPowerdrawCPUReadable() { Converter.toReadableUnits(powerdrawCPU, '', 'W', '') }
 
     Double getCPUUsage() { cpuUsage }
-    String getCPUUsageReadable() { cpuUsage != null ? String.format('%.1f%%', cpuUsage) : null }
+    String getCPUUsageReadable() { Converter.toReadableUnits(cpuUsage, '', '%', '') }
 
     Long getMemory() { memory }
-    String getMemoryReadable() { Converter.toReadableByteUnits(memory, 'GB') }
+    String getMemoryReadable() { Converter.toReadableUnits(memory, 'G', 'B') }
 
     String getName() { name }
     String getNameReadable() { name }

@@ -826,139 +826,158 @@ function norm_units( list ) {
 }
 
 /**
- * Convert to readable units, optionally with a starting scope and a unit label
+ * Finds the index of a unit symbol in the given list
  *
- * @param {*} value The value to be converted
- * @param {*} scope The current scope of the value
- * @param {*} unit The unit of the value
- * @returns Decimally shifted value
+ * @param {string} symbol The unit symbol to find
+ * @param {string[]} list The list of valid unit symbols
+ * @returns {number} Index of the symbol in the list
+ * @throws {Error} If the symbol is not found
  */
-function toReadableUnits(value, scope = '', unit = '') {
-  var scopes = ['p', 'n', 'u', 'm', '', 'K', 'M', 'G', 'T', 'P', 'E']; // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
-  var scopeIndex = scopes.indexOf(scope);
-
-  while (value >= 1000 && scopeIndex < scopes.length - 1) {
-    value /= 1000;
-    scopeIndex++;
-  }
-  while (value <= 1 && scopeIndex > 0) {
-    value *= 1000;
-    scopeIndex--;
-  }
-
-  value = Math.round(value * 100) / 100;
-  return value + ' ' + scopes[scopeIndex] + unit;
+function getIdx(symbol, list) {
+    const idx = list.indexOf(symbol);
+    if (idx === -1) throw new Error(`Invalid symbol: "${symbol}"`);
+    return idx;
 }
 
+/**
+ * Formats a numeric value and unit into a readable string
+ * Strips unnecessary trailing zeros, except when it would result in an integer
+ *
+ * @param {[number, string]} tuple A tuple containing [value, unit]
+ * @returns {string} Formatted value and unit
+ */
+function toReadable([value, unit], separator = ' ') {
+    if (value == null) return '';
+    const strValue = Number.isInteger(value) ? value : value.toString().replace(/(\.\d*?[1-9])0+$|\.0+$/, '$1');
+    return unit ? `${strValue}${separator}${unit}` : strValue;
+}
 
 /**
- * Convert bytes to readable units, starting from a specified unit.
+ * Scales a numeric value between units using fixed step factors
  *
- * @param {*} value The value to be converted (e.g., 1, 1024, etc.)
- * @param {string} currentUnit The unit of the input value (default: 'B')
- * @returns Bytes in a readable scope
+ * @param {number} value The value to scale
+ * @param {number} fromIndex Starting unit index
+ * @param {number} toIndex Target unit index
+ * @param {number[]} steps Array of step factors between consecutive units
+ * @returns {number} The scaled value
  */
-function toReadableByteUnits(value, currentUnit = 'B') {
-  var units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']; // Units: Byte, Kilobyte, Megabyte, etc.
-  var unit_index = units.indexOf(currentUnit);
+function scaleLinear(value, fromIndex, toIndex, steps) {
+    if (toIndex > fromIndex) {
+        for (const step of steps.slice(fromIndex, toIndex)) value /= step;
+    } else if (toIndex < fromIndex) {
+        for (const step of steps.slice(toIndex, fromIndex)) value *= step;
+    }
+    return value;
+}
 
-  while (value >= 1024 && unit_index < units.length - 1) {
-    value /= 1024;
-    unit_index++;
-  }
+/**
+ * Scales numeric values with units (e.g., B, kB, MB) using either a specified target scale
+ * or automatic logarithmic scaling
+ *
+ * @param {number} value Numeric value to scale
+ * @param {string} scale The current scale prefix (e.g., '', 'k', 'M')
+ * @param {string} unit The unit suffix (e.g., 'B', 'Wh')
+ * @param {string|null} targetScale Optional target scale prefix
+ * @returns {[number, string]} Tuple of scaled value and scaled unit
+ */
+function scaleUnits(value, scale = '', unit = '', targetScale = null) {
+    const scalingFactor = unit === 'B' ? 1024 : 1000;
+    const scales = ['p', 'n', 'u', 'm', '', 'k', 'M', 'G', 'T', 'P', 'E'];
 
-  return value + ' ' + units[unit_index];
+    const scaleIndex = getIdx(scale, scales);
+    let targetScaleIndex, difference;
+
+    if (targetScale != null) {
+        targetScaleIndex = getIdx(targetScale, scales);
+        difference = targetScaleIndex - scaleIndex;
+    } else {
+        difference = Math.floor(Math.log(value) / Math.log(scalingFactor));
+        targetScaleIndex = scaleIndex + difference;
+    }
+
+    const newValue = value / Math.pow(scalingFactor, difference);
+    const scaledUnit = (scales[targetScaleIndex] || '') + (unit || '');
+    return [newValue, scaledUnit];
+}
+
+/**
+ * Converts numeric values with units to a readable string
+ *
+ * @param {number} value Numeric value to scale
+ * @param {string} scale Current scale prefix
+ * @param {string} unit Unit suffix
+ * @param {string|null} targetScale Optional target scale prefix
+ * @param {number} precision Number of decimal places to keep
+ * @returns {string} Readable string (e.g., "1.23 MB")
+ */
+function toReadableUnits(value, scale = '', unit = '', targetScale = null, precision = 2) {
+    if (value == null) return '';
+    let [newValue, scaledUnit] = scaleUnits(value, scale, unit, targetScale);
+    newValue = Number(newValue.toFixed(precision));
+    return toReadable([newValue, scaledUnit]);
 }
 
 /**
  * Converts the given time to another unit of time
  *
- * @param {*} value The time as a number in original given unit
- * @param {*} unit Given unit of time
- * @param {*} targetUnit Unit of time to be converted to
- * @return Number of converted time
+ * @param {number} value The time as a number in original given unit
+ * @param {string} unit Given unit of time
+ * @param {string} targetUnit Unit of time to be converted to
+ * @returns {[number, string]} Number of converted time and its unit
  */
-function convertTime(value, unit='ms', targetUnit='s') {
-    var units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']   // Units of time
-    var steps = [1000.0, 1000.0, 1000.0, 60.0, 60.0, 24.0, 7.0, 4.35, 12.0]                // (Average) magnitude change between units
+function scaleTime(value, unit = 'ms', targetUnit = 's') {
+    const units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years'];
+    const steps = [1000, 1000, 1000, 60, 60, 24, 7, 4.35, 12];
 
-    var givenUnitPos = units.indexOf(unit)
-    var targetUnitPos = units.indexOf(targetUnit)
+    const from = getIdx(unit, units);
+    const to = getIdx(targetUnit, units);
 
+    let newValue = scaleLinear(value, from, to, steps);
 
-    // Obtain conversion rates in the given range
-    if (targetUnitPos > givenUnitPos) {
-      steps.slice(givenUnitPos, targetUnitPos).forEach( function(it) { value /= it} )
+    if (newValue === 1 && ['days', 'weeks', 'months', 'years'].includes(targetUnit)) {
+        targetUnit = targetUnit.slice(0, -1);
     }
-    else if (targetUnitPos < givenUnitPos) {
-      steps.slice(targetUnitPos, givenUnitPos).forEach( function(it) { value *= it} )
-    }
-
-    return value
+    return [newValue, targetUnit];
 }
 
 /**
- * Converts a time value to a human-readable string
+ * Converts a time value into a human-readable multi-unit string
  *
- * @param {*} value The time as a number in original given unit
- * @param {*} unit Given unit of time
- * @param {*} smallestUnit The smallest unit to convert to
- * @param {*} largestUnit The largest unit to convert to
- * @param {*} threshold The minimum value for the conversion to be included in the output
- * @return A human-readable string representation of the time value
+ * @param {number} value Numeric value of the time
+ * @param {string} unit Current unit of time
+ * @param {string} smallestUnit The smallest unit to include
+ * @param {string} largestUnit The largest unit to include
+ * @param {number} threshold Minimum value before a unit is displayed
+ * @returns {string} Readable string (e.g., "1 days 2 h 3 min")
  */
-function toReadableTimeUnits(value, unit = 'ms', smallestUnit = 's', largestUnit = 'years', threshold = null) {
-  const units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years'];
-  const steps = [1000, 1000, 1000, 60, 60, 24, 7, 4.35, 12];
+function toReadableTimeUnits(value, unit = 'ms', smallestUnit = 's', largestUnit = 'years', threshold = 0.0) {
+    let units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years'];
+    units = units.slice(getIdx(smallestUnit, units), getIdx(largestUnit, units) + 1).reverse();
 
-  const smallestIdx = units.indexOf(smallestUnit);
-  const largestIdx = units.indexOf(largestUnit);
-  if (smallestIdx === -1 || largestIdx === -1) throw new Error("Unknown unit");
+    const parts = [];
+    for (const targetUnit of units) {
+        let [numeric, tu] = scaleTime(value, unit, targetUnit);
 
-  let remaining = convertTime(value, unit, units[largestIdx]);
-  let parts = [];
-
-  for (let i = largestIdx; i >= smallestIdx; i--) {
-    let unitValue;
-    if (i > smallestIdx) {
-      unitValue = Math.floor(remaining);
-      remaining = (remaining - unitValue) * steps[i - 1];
-    } else {
-      // For the smallest unit, keep up to 2 decimals
-      unitValue = Math.round(remaining * 100) / 100;
-      remaining = 0;
+        if (targetUnit === smallestUnit) {
+            numeric = Number(numeric.toFixed(2));
+            parts.push(toReadable([numeric, tu]));
+        } else {
+            numeric = Math.floor(numeric);
+            if (threshold == null || numeric > threshold) {
+                value -= scaleTime(numeric, targetUnit, unit)[0];
+                parts.push(toReadable([numeric, tu], ''));
+                if (value === 0) break;
+            }
+        }
     }
-
-    if ((threshold === null && unitValue > 0) || (threshold !== null && unitValue > threshold)) {
-      let label = (unitValue === 1 && ['days', 'weeks', 'months', 'years'].includes(units[i]))
-        ? units[i].slice(0, -1)
-        : units[i];
-      let formatted = parseFloat(unitValue).toString();
-      parts.push(`${formatted}${label}`);
-    }
-  }
-
-  // Carry-over: if the last unit is exactly the conversion factor, increment previous unit
-  if (parts.length && smallestIdx > 0) {
-    let lastPart = parts[parts.length - 1];
-    let lastValue = parseFloat(lastPart.replace(/[^\d.]/g, ''));
-    let lastUnit = lastPart.replace(/[\d.]/g, '');
-    let conversionFactor = steps[smallestIdx - 1];
-    if (lastValue === conversionFactor) {
-      parts.pop();
-      let prevPart = parts[parts.length - 1];
-      let prevNum = parseFloat(prevPart.replace(/[^\d.]/g, ''));
-      let prevUnit = prevPart.replace(/[\d.]/g, '');
-      let newPrev = prevNum + 1;
-      parts[parts.length - 1] = `${parseFloat(newPrev).toString()}${prevUnit}`;
-    }
-  }
-
-  return parts.length ? parts.join(' ') : `0${smallestUnit}`;
+    return parts.join(' ');
 }
 
 //
 // Render functions
+// These functions are required for rendering in the table. In particular they ensure that:
+// 1. Raw values are used, when necessary (e.g. for sorting)
+// 2. Render the values together with units, when it should be human readable
 //
 
 /**
@@ -969,7 +988,7 @@ function toReadableTimeUnits(value, unit = 'ms', smallestUnit = 's', largestUnit
  * @param {function} parseFunction Function to parse the data
  * @returns
  */
-function check_data(data, type, parseFunction) {
+function toRawValue(data, type, parseFunction) {
   if (type === 'sort') {
     return parseFunction(data);
   }
@@ -989,8 +1008,8 @@ function check_data(data, type, parseFunction) {
  * @param {*} type Type of the data
  * @returns CO2 equivalents as a readable unit
  */
-function make_co2e(value, type){
-  return check_data(value, type, parseFloat) ?? toReadableUnits(value, 'm', 'g');
+function make_co2e(mg, type){
+  return toRawValue(mg, type, parseFloat) ?? toReadableUnits(mg, 'm', 'g');
 }
 
 /**
@@ -1001,7 +1020,7 @@ function make_co2e(value, type){
  * @returns Energy as a readable unit
  */
 function make_energy(mWh, type){
-  return check_data(mWh, type, parseFloat) ?? toReadableUnits(mWh, 'm', 'Wh');
+  return toRawValue(mWh, type, parseFloat) ?? toReadableUnits(mWh, 'm', 'Wh');
 }
 
 /**
@@ -1012,7 +1031,7 @@ function make_energy(mWh, type){
  * @returns The readable time
  */
 function make_time(h, type){
-  return check_data(data, type, parseFloat) ?? toReadableTimeUnits(parseFloat(h), 'h', 'ms', 'days', 0.0);
+  return toRawValue(h, type, parseFloat) ?? toReadableTimeUnits(parseFloat(h), 'h', 'ms', 'days', 0.0);
 }
 
 /**
@@ -1023,7 +1042,7 @@ function make_time(h, type){
  * @returns Carbon intensity as a readable unit
  */
 function make_carbon_intensity(ci, type) {
-  return check_data(data, type, parseFloat) ?? toReadableUnits(ci, 'm', 'gCO<sub>2</sub>e/kWh');
+  return toRawValue(data, type, parseFloat) ?? toReadableUnits(ci, 'm', 'gCO<sub>2</sub>e/kWh');
 }
 
 /**
@@ -1035,7 +1054,7 @@ function make_carbon_intensity(ci, type) {
  * @returns The memory at a readable scale
  */
 function make_memory(value, type) {
-  return check_data(value, type, parseFloat) ?? toReadableByteUnits(value, 'GB');
+  return toRawValue(value, type, parseFloat) ?? toReadableByteUnits(value, 'GB');
 }
 
 /**
@@ -1045,8 +1064,8 @@ function make_memory(value, type) {
  * @param {*} type Type of the data
  * @returns Readable power draw in Watts
  */
-function make_power_draw_cpu(powerDrawCPU, type) {
-  return check_data(powerDrawCPU, type, parseFloat) ?? powerDrawCPU;
+function make_power_draw_cpu(value, type){
+  return toRawValue(value, type, parseFloat) ?? toReadableUnits(value, '', 'W/Core');
 }
 
 /**
@@ -1057,7 +1076,7 @@ function make_power_draw_cpu(powerDrawCPU, type) {
  * @returns Readable usage factor
  */
 function make_core_usage_factor(usageFactor, type){
-  return check_data(usageFactor, type, parseFloat) ?? usageFactor;
+  return toRawValue(usageFactor, type, parseFloat) ?? usageFactor;
 }
 
 // Map for collecting statistics by process

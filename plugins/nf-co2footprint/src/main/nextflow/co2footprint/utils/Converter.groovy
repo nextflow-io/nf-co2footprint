@@ -1,17 +1,37 @@
 package nextflow.co2footprint.utils
 
+import groovy.util.logging.Slf4j
+
 import java.math.RoundingMode
 import java.text.DecimalFormat
-import groovy.util.logging.Slf4j
 
 /**
  * Utility functions to convert and format values for reporting.
  *
  * Includes methods for scientific notation, readable units, byte units,
  * and human-readable time formatting.
- */ 
+ */
 @Slf4j
 class Converter {
+
+    /**
+     * Checks whether a element was found in a list and throws an error if not.
+     *
+     * @param element The element to search for
+     * @param list The list in which to search
+     * @return The index of the element in the list
+     */
+    static int getIdx(Object element, List<Object> list) {
+        int idx = list.indexOf(element)
+
+        if (idx < 0) {
+            String message = "Element `${element}` not found in list `${list}`"
+            log.error(message)
+            throw new IllegalArgumentException(message)
+        }
+
+        return idx
+    }
 
     /**
      * Converts a number into scientific notation (e.g., 1.23E3).
@@ -19,11 +39,12 @@ class Converter {
      * @param value The number to convert
      * @return String in scientific notation or rounded if in [0.001, 999]
      */
-    static String toScientificNotation(Double value) {
+    static String toScientificNotation(Number value) {
+        value = value as BigDecimal
         if (value == 0) {
             return value.toString()
         } else if (value <= 999 && value >= 0.001) {
-            return value.round(3).toString()
+            return value.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()
         } else if (value == null) {
             return value
         } else {
@@ -33,70 +54,75 @@ class Converter {
     }
 
     /**
-     * Converts a numeric value to a human-readable string with SI prefixes.
-     * For example, 1200 with unit 'Wh' becomes '1.2 KWh'.
-     * Scales the value up or down by factors of 1000 and adjusts the prefix accordingly.
+     * Converts a numeric value to the closest or given scale with SI prefixes.
+     * Scales the value up or down by a given factor and adjusts the scale prefix accordingly.
+     * The method is structured to take the quantity as in writing e.g. scaleUnits(2048, 'k', 'B', 'M'), with
+     * the last argument denoting the target to which the quantity is to be scaled.
+     * In this example, 2048 kB is scaled to 2 MB, which is reported as a {@Link Quantity} Object
+     * with the number 2.0, the scale 'M' and the unit 'Wh'.
      *
-     * @param value Value that should be converted
-     * @param scope Symbol for scope of the unit (e.g. kilo = k)
-     * @param unit Name / symbol for the unit
-     * @return Converted String with appropriate scale
+     * @param value Value that should be converted (e.g. 10.1)
+     * @param scale Symbol for the scale of the unit (e.g. kilo = k), default of ''
+     * @param unit Name / symbol for the unit (e.g. B), default of ''
+     * @param targetScale The scale that should be converted to (e.g. G), default of null (optional)
+     * @return Converted quantity with appropriate scale
      */
-    static String toReadableUnits(double value, String scope='', String unit='') {
-        final List<String> scopes = ['p', 'n', 'u', 'm', '', 'K', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
-        int scopeIndex = scopes.indexOf(scope)
+    static Quantity scaleUnits(double value, String scale='', String unit='', String targetScale=null) {
+        int scalingFactor = unit == 'B' ? 1024 : 1000
+        final List<String> scales = ['p', 'n', 'u', 'm', '', 'k', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
+        int scaleIndex = getIdx(scale, scales)
 
-        // Scale up if value is large
-        while (value >= 1000 && scopeIndex < scopes.size() - 1) {
-            value /= 1000
-            scopeIndex++
+        int targetScaleIndex
+        int difference
+        // Either choose custom target scale,
+        if (targetScale != null) {
+            targetScaleIndex = getIdx(targetScale, scales)
+            difference = targetScaleIndex - scaleIndex
         }
-        // Scale down if value is small
-        while (value <= 1 && scopeIndex > 0) {
-            value *= 1000
-            scopeIndex--
+        // or use $floor(log_{1024}(value))$ to determine the number of steps that are taken to return a number above 0
+        else {
+            difference = Math.floor(Math.log(value) / Math.log(scalingFactor)) as int
+            targetScaleIndex = scaleIndex + difference
         }
-        value = Math.round( value * 100 ) / 100
-        return "${value} ${scopes[scopeIndex]}${unit}"
+
+        return new Quantity(value / scalingFactor**difference, scales[targetScaleIndex], unit)
     }
 
     /**
-    * Converts a byte value to a human-readable string with binary prefixes,
-    * starting from a specified unit.
-    * For example, 1 with currentUnit='GB' becomes '1 GB'.
-    *
-    * @param value Amount of bytes (or KB, MB, etc. depending on currentUnit)
-    * @param currentUnit The unit of the input value (default: 'B')
-    * @return String of the value together with the appropriate unit
-    */
-    static String toReadableByteUnits(double value, String currentUnit = 'B') {
-        final List<String> units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB']  // Units: Byte, Kilobyte, Megabyte, Gigabyte, Terabyte, Petabyte, Exabyte
-        int unitIndex = units.indexOf(currentUnit)
+     * Converts a numeric value to a human-readable string with SI prefixes.
+     * Uses {@link #scaleUnits} to scale the unit to a readable format, which is
+     * subsequently rounded and combined to a String.
+     * For example, 1200 with unit 'Wh' becomes '1.2 kWh'.
+     *
+     * @param value Value to convert
+     * @param scale Symbol for scale of the unit (e.g. kilo = k), default of ''
+     * @param unit Name / symbol for the unit (e.g. Watt-hours/Wh), default of ''
+     * @param targetScale Target scale to convert to, default of null (optional)
+     * @param precision Decimal places to round to, default of 2
+     * @return Scaled value as a formatted String with appropriate scale and rounding
+     */
+    static String toReadableUnits(Double value, String scale='', String unit='', String targetScale=null, Integer precision=2) {
+        if (value == null) { return value }
+        Quantity converted = scaleUnits(value, scale, unit, targetScale)
 
-        while (value >= 1024 && unitIndex < units.size() - 1) {
-            value /= 1024
-            unitIndex++
-        }
-
-        return "${value} ${units[unitIndex]}"
+        return converted.round(precision).getReadable()
     }
 
-
     /**
-    * Converts a time value from one unit to another.
-    * E.g., 120000 ms to minutes returns 2.
-    *
-    * @param value      The time as a number in original given unit
-    * @param unit       Given unit of time (e.g. 'ms')
-    * @param targetUnit Unit of time to be converted to (e.g. 'min')
-    * @return           Number of converted time as BigDecimal
-    */
-    static BigDecimal convertTime(def value, String unit='ms', String targetUnit='s') {
+     * Converts a time value from one unit to another.
+     * E.g., 120000 ms to minutes returns 2.
+     *
+     * @param value      The time as a number in original given unit
+     * @param unit       Given unit of time (e.g. 'ms')
+     * @param targetUnit Unit of time to be converted to (e.g. 'min')
+     * @return           Number of converted time as BigDecimal
+     */
+    static Quantity scaleTime(Number value, String unit='ms', String targetUnit='s') {
         value = value as BigDecimal
         // Supported time units
-        final List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years'] 
+        final List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']
         // Conversion factors between units (e.g., 1000 ms = 1 s, 60 s = 1 min, etc.)
-        final List<Double> steps = [1000.0, 1000.0, 1000.0, 60.0, 60.0, 24.0, 7.0, 4.35, 12.0] 
+        final List<Double> steps = [1000.0, 1000.0, 1000.0, 60.0, 60.0, 24.0, 7.0, 4.35, 12.0]
 
         int from = units.indexOf(unit)
         int to = units.indexOf(targetUnit)
@@ -108,104 +134,63 @@ class Converter {
         } else if (to < from) {
             steps.subList(to, from).each { value *= it }
         }
-        return value
+
+        // Remove 's' for single time units
+        if (value == 1 && ['days', 'weeks', 'months', 'years'].contains(targetUnit)) {
+            targetUnit = targetUnit.dropRight(1)
+        }
+
+        return new Quantity(value, targetUnit, '', '')
     }
 
     /**
-    * Converts a time value to a human-readable string, e.g. "2 days 3 h 4 min".
-    * Breaks down the value into the largest possible units.
-    *
-    * @param value         The time as a number in original given unit
-    * @param unit          Given unit of time (default: 'ms')
-    * @param smallestUnit  The smallest unit to convert to (default: 's')
-    * @param largestUnit   The largest unit to convert to (default: 'years')
-    * @param threshold     The minimum value for the conversion to be included in the output (optional)
-    * @return              A human-readable string representation of the time value
-    */
+     * Converts a time value to a human-readable string, e.g. "2 days 3 h 4 min".
+     * Recursively breaks down the value into the largest possible units.
+     *
+     * @param value The time as a number in original given unit
+     * @param unit Given unit of time (default: 'ms')
+     * @param smallestUnit The smallest unit to convert to (default: 's')
+     * @param largestUnit The largest unit to convert to (default: 'years')
+     * @param threshold The minimum value for the conversion to be included in the output (optional)
+     * @return A human-readable string representation of the time value
+     */
     static String toReadableTimeUnits(
-        def value,
+        Number value,
         String unit = 'ms',
         String smallestUnit = 's',
         String largestUnit = 'years',
-        Double threshold = null
-    ) { 
+        Double threshold = 0.0
+    ) {
         // Ordered list of supported time units
-        final List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']
-        // Conversion factors between units (e.g., 1000 ms = 1 s, 60 s = 1 min, etc.)
-        final List<BigDecimal> steps = [1000G, 1000G, 1000G, 60G, 60G, 24G, 7G, 4.35G, 12G] 
+        List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']
 
-        // Get indices for smallest and largest units
-        int smallestIdx = getIdx(smallestUnit, units)
-        int largestIdx = getIdx(largestUnit, units)
+        // Filter out excluded time scales and sort form largest to smallest
+        units = units.subList(getIdx(smallestUnit, units), getIdx(largestUnit, units) + 1).reverse()
 
-        // Convert input value to the largest unit for breakdown
-        BigDecimal remaining = convertTime(value, unit, units[largestIdx]) // Convert to the largest unit
-        List<String> parts = [] // Collect formatted time units
+        // Iterate from largest to smallest unit and begin including those that meet the threshold size to be included
+        String timeString = ''
+        for (String targetUnit : units) {
+            Quantity currentTime = scaleTime(value, unit, targetUnit)
 
-        // Iterate from largest to smallest unit, extracting each unit's value
-        for (int i = largestIdx; i >= smallestIdx; i--) {
-            BigDecimal unitValue
-            if (i > smallestIdx) {
-                // For non-smallest units, use integer part only
-                unitValue = remaining.setScale(0, RoundingMode.DOWN)
-                // Update remaining value for next smaller unit
-                remaining = (remaining - unitValue) * steps[i - 1]
+            // Handle the last unit differently
+            if( targetUnit == smallestUnit ) {
+                currentTime.round()     // Keep last two decimals
+                
+                timeString += "${currentTime.getReadable()} "
             } else {
-                // For the smallest unit, keep up to 2 decimals
-                unitValue = remaining.setScale(2, RoundingMode.HALF_UP)
-                remaining = 0
-            }
+                currentTime.floor()     // Keep only round numbers
 
-            // Only include units above threshold (if set) or non-zero units
-            if ((threshold == null && unitValue > 0) || (threshold != null && unitValue > threshold)) {
-                // Use singular label for units like "day", "week", etc. if value is 1
-                String label = unitValue == 1 && ['days', 'weeks', 'months', 'years'].contains(units[i])
-                    ? units[i][0..-2] : units[i]
-                // Format value, removing trailing zeros
-                String formatted = unitValue.stripTrailingZeros().toPlainString()
-                parts << "${formatted}${label}"
-            }
-        }
-        
-        // Special handling: if smallest unit is exactly the conversion factor, roll up to next unit
-        if (parts && smallestIdx > 0) {
-            // Check if the last unit (smallest) is exactly the conversion factor
-            BigDecimal lastValue = parts[-1].replaceAll(/[^\d.]/, '') as BigDecimal
-            String lastUnit = parts[-1].replaceAll(/[\d.]/, '')
-            BigDecimal conversionFactor = steps[smallestIdx - 1]
-            if (lastValue == conversionFactor) {
-                // Remove the last part (e.g., "1000ms")
-                parts.remove(parts.size() - 1)
-                // Increment the previous unit by 1
-                String prev = parts[-1]
-                String prevNum = prev.replaceAll(/[^\d.]/, '')
-                String prevUnit = prev.replaceAll(/[\d.]/, '')
-                BigDecimal newPrev = (prevNum as BigDecimal) + 1
-                parts[-1] = "${newPrev.stripTrailingZeros().toPlainString()}${prevUnit}"
+                // Add to string and remove added value, if the threshold is reached
+                if ( (threshold == null || currentTime.value > threshold) ) {
+                    value -= scaleTime(currentTime.value, targetUnit, unit).value
+                    timeString += "${currentTime.getReadable()} "
+
+                    // Finish execution if value is 0
+                    if (value == 0) { break }
+                }
             }
         }
 
-        // Join all parts with spaces, or return "0" + smallestUnit if no parts
-        return parts ? parts.join(' ') : "0${smallestUnit}"
-    }
-
-    /**
-     * Gets the index of an element in a list.
-     * Throws an error if the element is not found.
-     *
-     * @param element The element to find
-     * @param list The list to search in
-     * @return The index of the element in the list
-     */
-    static int getIdx(Object element, List<Object> list) {
-        int idx = list.indexOf(element)
-
-        if (idx < 0) {
-            String message = "Unknown element `${element}` not found in `${list}`"
-            log.error(message)
-            throw new IllegalArgumentException(message)
-        }
-
-        return idx
+       return timeString.trim()
     }
 }

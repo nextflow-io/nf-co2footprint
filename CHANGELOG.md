@@ -1,4 +1,7 @@
 # New
+## Bug Fixes:
+- Conversion of time leaving trailing full bigger units (e.g. 60s instead of 1min)
+
 ## Misc:
 - Renamed FileCreator and its classes
 - Added `Markers.silentUnique` to deduplicate messages without prepending a prefix
