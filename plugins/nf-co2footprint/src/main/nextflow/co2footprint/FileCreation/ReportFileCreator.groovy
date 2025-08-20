@@ -153,8 +153,9 @@ class ReportFileCreator extends BaseFileCreator{
         final String template = readTemplate('assets/CO2FootprintReportTemplate.html')
         final GStringTemplateEngine engine = new GStringTemplateEngine()
         final Template htmlTemplate = engine.createTemplate(template)
+        final String htmlFile = htmlTemplate.make(templateFields) as String
 
-        return htmlTemplate.make(templateFields) as String
+        return htmlFile
     }
 
     /**
@@ -260,7 +261,7 @@ class ReportFileCreator extends BaseFileCreator{
                 String script = ''
                 (value as String).eachLine { String line -> script += "${line.trim()}\n" }
                 script = script.dropRight(1)
-                "<code>${script}</code>"
+                "<div class=\"script_block short\"><code>${script}</code></div>"
             }
             default -> traceRecord.getFmtStr(key)
         }

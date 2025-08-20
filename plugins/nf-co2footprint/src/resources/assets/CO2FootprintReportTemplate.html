@@ -16,26 +16,37 @@
   -->
 <html lang="en">
 <head>
+  <!-- Metadata & Icons -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="Nextflow workflow report for run id [${workflow.runName}]">
   <meta name="author" content="Sabrina Krakau">
   <link rel="icon" type="image/png" href="https://www.nextflow.io/img/favicon.png" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
   <title>[${workflow.runName}] Nextflow CO₂e Footprint Report</title>
 
+  <!-- Combined CSS-styles -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
-  ${ assets_css.join("\n\n\n\n") }
+${ assets_css.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
   </style>
+
+  <!-- Combined JavaScripts -->
+  <script type="text/javascript">
+${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
+
+    // Nextflow report data
+    window.data = ${data};
+    window.options = ${options};
+  </script>
 
 </head>
 <body>
+  <!-- Navigation bar -->
   <nav id="nf-report-navbar" class="navbar navbar-expand-md navbar-light fixed-top bg-white">
     <div class="container">
       <a class="navbar-brand" href="#">
         <img src="data:image/png;base64,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" alt="Nextflow logo (green lanes that are crossing in the middle)">
-      Nextflow CO<sub>2</sub>e Report
+      Nextflow CO₂e Report
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -43,8 +54,9 @@
     <div class="navbar-collapse" id="navbarCollapse">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item"><a class="nav-link" href="#">Summary</a></li>
-        <li class="nav-item"><a class="nav-link" href="#resources">Resources</a></li>
+        <li class="nav-item"><a class="nav-link" href="#measures">Measures</a></li>
         <li class="nav-item"><a class="nav-link" href="#tasks">Tasks</a></li>
+        <li class="nav-item"><a class="nav-link" href="#options">Options</a></li>
       </ul>
     </div>
     <code class="d-none d-md-inline navbar-text">
@@ -53,10 +65,12 @@
     </div>
   </nav>
 
-  <div class="jumbotron mb-0">
-    <div class="container">
+  <!-- Background container -->
+  <div class="jumbotron">
 
-      <h1 class="display-3">Nextflow CO<sub>2</sub>e Footprint Report</h1>
+    <!-- Execution report -->
+    <div class="container">
+      <h1 class="display-3">Nextflow CO₂e Footprint Report</h1>
       <h2 class="text-muted mb-4"><samp>[${workflow.runName}]</samp> ${workflow.resume ? '<em>(resumed run)</em>' : ''}</h2>
 
       <% if ( workflow.success && workflow.stats.ignoredCount ){ %>
@@ -94,46 +108,71 @@
         <dt>nf-co2footprint plugin version</dt>
         <dd>version ${plugin_version}</dd>
       </dl>
+    </div>
 
-      <h3 class="mt-5">Total CO<sub>2</sub>e Footprint Measures</h3>
-      <div class="card-wrap d-flex flex-wrap mt-4 mb-5">
-        <div class="metric-card card p-1">
-          <span class="metric">${co2_totals.co2e}</span>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m19.21 12.04l-1.53-.11l-.3-1.5A5.484 5.484 0 0 0 12 6C9.94 6 8.08 7.14 7.12 8.96l-.5.95l-1.07.11A3.99 3.99 0 0 0 2 14c0 2.21 1.79 4 4 4h13c1.65 0 3-1.35 3-3c0-1.55-1.22-2.86-2.79-2.96z" opacity=".3"/><path fill="currentColor" d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5c0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4c0-2.05 1.53-3.76 3.56-3.97l1.07-.11l.5-.95A5.469 5.469 0 0 1 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5l1.53.11A2.98 2.98 0 0 1 22 15c0 1.65-1.35 3-3 3z"/></svg>
-          <span class="metric-title">CO<sub>2</sub>e emissions</span>
-        </div>
+    <!-- TOTAL CO2 cards -->
+    <div class="container">
+      <h2 id="measures" class="section">CO₂e Footprint Measures</h2>
+      <h3 id="measures-total">Total</h3>
+      <ul class="nav nav-tabs" id="co2e-card_tabs" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="co2e-total-card_tablink" data-toggle="tab" href="#co2e-total-card_tabpanel" role="tab" aria-controls="co2e-total-card_tabpanel" aria-expanded="false">
+            All tasks
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="co2e-non-cached-card_tablink" data-toggle="tab" href="#co2e-non-cached-card_tabpanel" role="tab" aria-controls="co2e-non-cached-card_tabpanel" aria-expanded="false">
+            Without cached tasks
+          </a>
+        </li>
+        <% if (co2_totals['co2e_market']) { %>
+          <li class="nav-item">
+            <a class="nav-link" id="co2e-marked-based-card_tablink" data-toggle="tab" href="#co2e-market-based-card_tabpanel" role="tab" aria-controls="co2e-market-based-card_tabpanel" aria-expanded="false">
+              With market-based energy mix
+            </a>
+          </li>
+        <% } %>
+      </ul>
 
-        <div class="metric-card card p-1">
-          <span class="metric">${co2_totals.energy}</span>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSEnergySocket0"><g stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20Zm4-23v-5m-8 5v-5"/><path fill="#fff" d="M24 32a8 8 0 0 0 8-8v-3H16v3a8 8 0 0 0 8 8Z"/><path d="M24 44V32"/></g></mask><path fill="currentColor" d="M0 0h48v48H0z" mask="url(#ipSEnergySocket0)"/></svg>
-          <span class="metric-title">Energy consumption</span>
-        </div>
+      <div class="tab-content" id="co2e-card_tabcontent">
 
-        <div class="metric-card card p-1">
-          <span class="metric">${co2_totals.tree}</span>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M378.31 378.49L298.42 288h30.63c9.01 0 16.98-5 20.78-13.06c3.8-8.04 2.55-17.26-3.28-24.05L268.42 160h28.89c9.1 0 17.3-5.35 20.86-13.61c3.52-8.13 1.86-17.59-4.24-24.08L203.66 4.83c-6.03-6.45-17.28-6.45-23.32 0L70.06 122.31c-6.1 6.49-7.75 15.95-4.24 24.08C69.38 154.65 77.59 160 86.69 160h28.89l-78.14 90.91c-5.81 6.78-7.06 15.99-3.27 24.04C37.97 283 45.93 288 54.95 288h30.63L5.69 378.49c-6 6.79-7.36 16.09-3.56 24.26c3.75 8.05 12 13.25 21.01 13.25H160v24.45l-30.29 48.4c-5.32 10.64 2.42 23.16 14.31 23.16h95.96c11.89 0 19.63-12.52 14.31-23.16L224 440.45V416h136.86c9.01 0 17.26-5.2 21.01-13.25c3.8-8.17 2.44-17.47-3.56-24.26z"/></svg>
-          <span class="metric-title">Tree sequestration time</span>
-        </div>
+      <!-- All tasks - location-based value cards -->
+      <div class="tab-pane fade show active" id="co2e-total-card_tabpanel" role="tabpanel">
+        <div class="card-wrap d-flex flex-wrap mt-4 mb-5">
+          <div class="metric-card card p-1">
+            <span class="metric">${co2_totals.co2e}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m19.21 12.04l-1.53-.11l-.3-1.5A5.484 5.484 0 0 0 12 6C9.94 6 8.08 7.14 7.12 8.96l-.5.95l-1.07.11A3.99 3.99 0 0 0 2 14c0 2.21 1.79 4 4 4h13c1.65 0 3-1.35 3-3c0-1.55-1.22-2.86-2.79-2.96z" opacity=".3"/><path fill="currentColor" d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5c0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4c0-2.05 1.53-3.76 3.56-3.97l1.07-.11l.5-.95A5.469 5.469 0 0 1 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5l1.53.11A2.98 2.98 0 0 1 22 15c0 1.65-1.35 3-3 3z"/></svg>
+            <span class="metric-title">CO<sub>2</sub>e emissions</span>
+          </div>
 
-        <div class="metric-card card p-1">
-          <span class="metric">${co2_totals.car}</span>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m5 11l1.5-4.5h11L19 11m-1.5 5a1.5 1.5 0 0 1-1.5-1.5a1.5 1.5 0 0 1 1.5-1.5a1.5 1.5 0 0 1 1.5 1.5a1.5 1.5 0 0 1-1.5 1.5m-11 0A1.5 1.5 0 0 1 5 14.5A1.5 1.5 0 0 1 6.5 13A1.5 1.5 0 0 1 8 14.5A1.5 1.5 0 0 1 6.5 16M18.92 6c-.2-.58-.76-1-1.42-1h-11c-.66 0-1.22.42-1.42 1L3 12v8a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h12v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-8l-2.08-6Z"/></svg>
-          <span class="metric-title">km by car</span>
-        </div>
+          <div class="metric-card card p-1">
+            <span class="metric">${co2_totals.energy}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSEnergySocket0-tab1"><g stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20Zm4-23v-5m-8 5v-5"/><path fill="#fff" d="M24 32a8 8 0 0 0 8-8v-3H16v3a8 8 0 0 0 8 8Z"/><path d="M24 44V32"/></g></mask><path fill="currentColor" d="M0 0h48v48H0z" mask="url(#ipSEnergySocket0-tab1)"/></svg>
+            <span class="metric-title">Energy consumption</span>
+          </div>
 
-        <div class="metric-card card p-1">
-          <span class="metric">${co2_totals.plane_flights ?: co2_totals.plane_percent ?: '0.0 %'}</span>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M20.56 3.91c.59.59.59 1.54 0 2.12l-3.89 3.89l2.12 9.19l-1.41 1.42l-3.88-7.43L9.6 17l.36 2.47l-1.07 1.06l-1.76-3.18l-3.19-1.77L5 14.5l2.5.37L11.37 11L3.94 7.09l1.42-1.41l9.19 2.12l3.89-3.89c.56-.58 1.56-.58 2.12 0Z"/></svg>
-          <span class="metric-title">Flight Paris - London</span>
+          <div class="metric-card card p-1">
+            <span class="metric">${co2_totals.tree}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M378.31 378.49L298.42 288h30.63c9.01 0 16.98-5 20.78-13.06c3.8-8.04 2.55-17.26-3.28-24.05L268.42 160h28.89c9.1 0 17.3-5.35 20.86-13.61c3.52-8.13 1.86-17.59-4.24-24.08L203.66 4.83c-6.03-6.45-17.28-6.45-23.32 0L70.06 122.31c-6.1 6.49-7.75 15.95-4.24 24.08C69.38 154.65 77.59 160 86.69 160h28.89l-78.14 90.91c-5.81 6.78-7.06 15.99-3.27 24.04C37.97 283 45.93 288 54.95 288h30.63L5.69 378.49c-6 6.79-7.36 16.09-3.56 24.26c3.75 8.05 12 13.25 21.01 13.25H160v24.45l-30.29 48.4c-5.32 10.64 2.42 23.16 14.31 23.16h95.96c11.89 0 19.63-12.52 14.31-23.16L224 440.45V416h136.86c9.01 0 17.26-5.2 21.01-13.25c3.8-8.17 2.44-17.47-3.56-24.26z"/></svg>
+            <span class="metric-title">Tree sequestration time</span>
+          </div>
+
+          <div class="metric-card card p-1">
+            <span class="metric">${co2_totals.car}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m5 11l1.5-4.5h11L19 11m-1.5 5a1.5 1.5 0 0 1-1.5-1.5a1.5 1.5 0 0 1 1.5-1.5a1.5 1.5 0 0 1 1.5 1.5a1.5 1.5 0 0 1-1.5 1.5m-11 0A1.5 1.5 0 0 1 5 14.5A1.5 1.5 0 0 1 6.5 13A1.5 1.5 0 0 1 8 14.5A1.5 1.5 0 0 1 6.5 16M18.92 6c-.2-.58-.76-1-1.42-1h-11c-.66 0-1.22.42-1.42 1L3 12v8a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h12v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-8l-2.08-6Z"/></svg>
+            <span class="metric-title">km by car</span>
+          </div>
+
+          <div class="metric-card card p-1">
+            <span class="metric">${co2_totals.plane_flights ?: co2_totals.plane_percent ?: '0.0 %'}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M20.56 3.91c.59.59.59 1.54 0 2.12l-3.89 3.89l2.12 9.19l-1.41 1.42l-3.88-7.43L9.6 17l.36 2.47l-1.07 1.06l-1.76-3.18l-3.19-1.77L5 14.5l2.5.37L11.37 11L3.94 7.09l1.42-1.41l9.19 2.12l3.89-3.89c.56-.58 1.56-.58 2.12 0Z"/></svg>
+            <span class="metric-title">Flight Paris - London</span>
+          </div>
         </div>
       </div>
 
-      <details class="mt-5">
-        <summary>
-          <span class="expandable-label">
-            Without cached tasks:
-          </span>
-        </summary>
+      <!-- Non cached cards -->
+      <div class="tab-pane fade" id="co2e-non-cached-card_tabpanel" role="tabpanel">
         <div class="card-wrap d-flex flex-wrap mt-4 mb-5" >
           <div class="metric-card card p-1">
             <span class="metric">${co2_totals.co2e_non_cached}</span>
@@ -143,7 +182,7 @@
 
           <div class="metric-card card p-1">
             <span class="metric">${co2_totals.energy_non_cached}</span>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSEnergySocket0"><g stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20Zm4-23v-5m-8 5v-5"/><path fill="#fff" d="M24 32a8 8 0 0 0 8-8v-3H16v3a8 8 0 0 0 8 8Z"/><path d="M24 44V32"/></g></mask><path fill="currentColor" d="M0 0h48v48H0z" mask="url(#ipSEnergySocket0)"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSEnergySocket0-tab2"><g stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20Zm4-23v-5m-8 5v-5"/><path fill="#fff" d="M24 32a8 8 0 0 0 8-8v-3H16v3a8 8 0 0 0 8 8Z"/><path d="M24 44V32"/></g></mask><path fill="currentColor" d="M0 0h48v48H0z" mask="url(#ipSEnergySocket0-tab2)"/></svg>
             <span class="metric-title">Energy consumption</span>
           </div>
 
@@ -165,13 +204,11 @@
             <span class="metric-title">Flight Paris - London</span>
           </div>
         </div>
-      </details>
+      </div>
 
+      <!-- Market-based cards -->
       <% if (co2_totals['co2e_market']) { %>
-        <details class="mt-5">
-          <summary>
-            <span class="expandable-label">With market-based energy mix:</span>
-          </summary>
+        <div class="tab-pane fade" id="co2e-market-based-card_tabpanel" role="tabpanel">
           <div class="card-wrap d-flex flex-wrap mt-4 mb-5" >
             <div class="metric-card card p-1">
               <span class="metric">${co2_totals.co2e_market}</span>
@@ -181,7 +218,7 @@
 
             <div class="metric-card card p-1">
               <span class="metric" style="color:#808080">${co2_totals.energy_market}</span>
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSEnergySocket0"><g stroke="#D3D3D3" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20Zm4-23v-5m-8 5v-5"/><path fill="#D3D3D3" d="M24 32a8 8 0 0 0 8-8v-3H16v3a8 8 0 0 0 8 8Z"/><path d="M24 44V32"/></g></mask><path fill="#D3D3D3" d="M0 0h48v48H0z" mask="url(#ipSEnergySocket0)"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSEnergySocket0-tab3"><g stroke="#D3D3D3" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20Zm4-23v-5m-8 5v-5"/><path fill="#D3D3D3" d="M24 32a8 8 0 0 0 8-8v-3H16v3a8 8 0 0 0 8 8Z"/><path d="M24 44V32"/></g></mask><path fill="#D3D3D3" d="M0 0h48v48H0z" mask="url(#ipSEnergySocket0-tab3)"/></svg>
               <span class="metric-title" style="color:#808080">Energy consumption</span>
             </div>
 
@@ -203,163 +240,156 @@
               <span class="metric-title">Flight Paris - London</span>
             </div>
           </div>
-
-          <div class="container my-5">
-            <div class="alert alert-info">
-              <div class="mb-2"><strong>ℹ️ Info</strong></div>
-              <div>
-                We encourage the reporting of emission values by location instead of market-based carbon intensities.
-                The energy is still drawn from a finite pool of renewables currently available to your grid.
-                It would likely be utilized for another buyer, regardless of the contract.
-                This is not to say that these contracts are without merit, but the short-term differences are limited.
-              </div>
+          <div class="alert alert-info">
+            <div class="mb-2"><strong>ℹ️ Info</strong></div>
+            <div>
+              We encourage the reporting of emission values by location instead of market-based carbon intensities.
+              The energy is still drawn from a finite pool of renewables currently available to your grid.
+              It would likely be utilized for another buyer, regardless of the contract.
+              This is not to say that these contracts are without merit, but the short-term differences are limited.
             </div>
           </div>
 
-        </details>
+        </div>
       <% } %>
 
     </div>
-  </div>
+    </div>
 
-  <div class="container">
-    <h2 id="resources" style="padding-top: 20px;" class="mb-3">CO<sub>2</sub>e Footprint Measures</h2>
-    <ul class="nav nav-tabs mb-3" id="co2eplot_tabs" role="tablist">
-      <li class="nav-item">
-        <a class="nav-link active" id="co2e-total-plot_tablink" data-toggle="tab" href="#co2e-total-plot_tabpanel" role="tab" aria-controls="co2e-total-plot_tabpanel" aria-expanded="false">
-          All tasks
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" id="co2e-non-cached-plot_tablink" data-toggle="tab" href="#co2e-non-cached-plot_tabpanel" role="tab" aria-controls="co2e-non-cached-plot_tabpanel" aria-expanded="false">
-          Without cached tasks
-        </a>
-      </li>
-    </ul>
-    <div class="tab-content" id="co2eplot_tabcontent">
-      <div class="tab-pane fade show active" id="co2e-total-plot_tabpanel" role="tabpanel">
-        <div id="co2e-total-plot"></div>
+    <!-- CO2 footprint measures plot -->
+    <div class="container">
+      <h3 id="measures-plot">Per process</h3>
+      <ul class="nav nav-tabs mb-3" id="co2eplot_tabs" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="co2e-total-plot_tablink" data-toggle="tab" href="#co2e-total-plot_tabpanel" role="tab" aria-controls="co2e-total-plot_tabpanel" aria-expanded="false">
+            All tasks
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="co2e-non-cached-plot_tablink" data-toggle="tab" href="#co2e-non-cached-plot_tabpanel" role="tab" aria-controls="co2e-non-cached-plot_tabpanel" aria-expanded="false">
+            Without cached tasks
+          </a>
+        </li>
+      </ul>
+      <div class="tab-content" id="co2eplot_tabcontent">
+        <div class="tab-pane fade show active" id="co2e-total-plot_tabpanel" role="tabpanel">
+          <div id="co2e-total-plot"></div>
+        </div>
+        <div class="tab-pane fade" id="co2e-non-cached-plot_tabpanel" role="tabpanel">
+          <div id="co2e-non-cached-plot"></div>
+        </div>
       </div>
-      <div class="tab-pane fade" id="co2e-non-cached-plot_tabpanel" role="tabpanel">
-        <div id="co2e-non-cached-plot"></div>
+      <p class="mt-3">The plot shows the distribution of CO₂e emissions and corresponding energy consumptions for each workflow process. The values that are displayed when hovering over the plot refer to the CO<sub>2</sub>e emissions.</p>
+    </div>
+
+    <!-- Tasks table -->
+    <div class="container">
+      <h2 id="tasks" class="section">Tasks</h2>
+      <div id="tasks-present-table" class="mb-3">
+        <form class="form-inline" id="nf-form-humanreadable">
+          <label class="mr-sm-2" for="nf-table-humanreadable">Values shown as:</label>
+          <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="nf-table-humanreadable">
+            <option value="true">Human readable</option>
+            <option value="false">Raw values</option>
+          </select>
+        </form>
       </div>
+      <div class="container-fluid">
+        <table class="table small table-striped" id="tasks_table"></table>
+      </div>
+      <div id="tasks-omitted-table">
+        (tasks table omitted because the dataset is too big)
+      </div>
+      <p class="mt-3">This table shows information about each task in the workflow. Use the search box on the right
+        to filter rows for specific values. Clicking headers will sort the table by that value and
+        scrolling side to side will reveal more columns.</p>
     </div>
-    <p class="mt-3">The plot shows the distribution of CO<sub>2</sub>e emissions and corresponding energy consumptions for each workflow process. The values that are displayed when hovering over the plot refer to the CO<sub>2</sub>e emissions.</p>
-  </div>
 
-  <div class="container">
-    <h2 id="tasks" style="padding-top: 20px;">Tasks</h2>
-    <div id="tasks-present-table" class="mb-3">
-      <form class="form-inline" id="nf-form-humanreadable">
-        <label class="mr-sm-2" for="nf-table-humanreadable">Values shown as:</label>
-        <select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="nf-table-humanreadable">
-          <option value="true">Human readable</option>
-          <option value="false">Raw values</option>
-        </select>
-      </form>
-    </div>
-    <div class="container-fluid">
-      <table class="table small table-striped" id="tasks_table"></table>
-    </div>
-    <div id="tasks-omitted-table">
-      (tasks table omitted because the dataset is too big)
-    </div>
-    <p class="mt-3">This table shows information about each task in the workflow. Use the search box on the right
-      to filter rows for specific values. Clicking headers will sort the table by that value and
-      scrolling side to side will reveal more columns.</p>
-  </div>
-
-  <div class="container my-5">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h2 id="attribution-and-references" style="padding-top: 20px;">Data Attribution &amp; References</h2>
-        <ul class="pl-3 mb-0">
-          <li class="mb-3">
-            The calculation of these values is based on the carbon footprint computation method
-            developed in the
-            <a href="https://www.green-algorithms.org/" target="_blank" rel="noopener" style="color: #28a745">Green Algorithms</a> project.<br>
-            <span class="font-italic small">
-              Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation.
-              Adv. Sci. 2021, 2100707.
-              <a href="https://doi.org/10.1002/advs.202100707" target="_blank" rel="noopener">
-                https://doi.org/10.1002/advs.202100707
-              </a>
-            </span>
-          </li>
-          <li class="mb-3">
-            <% if (used_EM_api) { %>
-              The carbon intensity (CI) values used in the calculation are based on real-time data from
-              <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener" style="color: #17a2b8">Electricity Maps</a>
-              accessed via their API, under the
-              <a href="https://opendatacommons.org/licenses/odbl/1-0/" target="_blank" rel="noopener">Open Database License (ODbL)</a>.
-              In the event that real-time data was unavailable, fallback values from the 2024 yearly historical data were used.<br>
+    <!-- References -->
+    <div class="container my-5">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 id="attribution-and-references" class="section">Data Attribution &amp; References</h2>
+          <ul class="pl-3 mb-0">
+            <li class="mb-3">
+              The calculation of these values is based on the carbon footprint computation method
+              developed in the
+              <a href="https://www.green-algorithms.org/" target="_blank" rel="noopener" style="color: #28a745">Green Algorithms</a> project.<br>
               <span class="font-italic small">
-                Electricity Maps (2025). Real-time Carbon Intensity Data accessed via API
-                (<% if (workflow.start.format('MMM dd, yyyy') != workflow.complete.format('MMM dd, yyyy')) { %>
-                  for the period ${workflow.start.format('MMM dd, yyyy')} to ${workflow.complete.format('MMM dd, yyyy')}
-                <% } else { %>
-                  retrieved: ${workflow.start.format('MMM dd, yyyy')}
-                <% } %>).
-                Electricity Maps.
-                <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">
-                  https://www.electricitymaps.com
+                Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation.
+                Adv. Sci. 2021, 2100707.
+                <a href="https://doi.org/10.1002/advs.202100707" target="_blank" rel="noopener">
+                  https://doi.org/10.1002/advs.202100707
                 </a>
               </span>
-            <% } else { %>
-              The carbon intensity (CI) values used in the calculation originate from
-              <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">Electricity Maps</a>
+            </li>
+            <li class="mb-3">
+              <% if (used_EM_api) { %>
+                The carbon intensity (CI) values used in the calculation are based on real-time data from
+                <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener" style="color: #17a2b8">Electricity Maps</a>
+                accessed via their API, under the
+                <a href="https://opendatacommons.org/licenses/odbl/1-0/" target="_blank" rel="noopener">Open Database License (ODbL)</a>.
+                In the event that real-time data was unavailable, fallback values from the 2024 yearly historical data were used.<br>
+                <span class="font-italic small">
+                  Electricity Maps (2025). Real-time Carbon Intensity Data accessed via API
+                  (<% if (workflow.start.format('MMM dd, yyyy') != workflow.complete.format('MMM dd, yyyy')) { %>
+                    for the period ${workflow.start.format('MMM dd, yyyy')} to ${workflow.complete.format('MMM dd, yyyy')}
+                  <% } else { %>
+                    retrieved: ${workflow.start.format('MMM dd, yyyy')}
+                  <% } %>).
+                  Electricity Maps.
+                  <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">
+                    https://www.electricitymaps.com
+                  </a>
+                </span>
+              <% } else { %>
+                The carbon intensity (CI) values used in the calculation originate from
+                <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">Electricity Maps</a>
+                under the
+                <a href="https://opendatacommons.org/licenses/odbl/1-0/" target="_blank" rel="noopener">Open Database License (ODbL)</a>.<br>
+                <span class="font-italic small">
+                  Electricity Maps (2025). 2024 Yearly Carbon Intensity Data (Version January 27, 2025). Electricity Maps.
+                  <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">
+                    https://www.electricitymaps.com
+                  </a>
+                </span>
+              <% } %>
+            </li>
+            <li class="mb-3">
+              The processors thermal design power (TDP) values used in the calculation originate from
+              <a href="https://en.wikichip.org/wiki/WikiChip" target="_blank" rel="noopener">WikiChip</a>
               under the
-              <a href="https://opendatacommons.org/licenses/odbl/1-0/" target="_blank" rel="noopener">Open Database License (ODbL)</a>.<br>
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> license.<br>
               <span class="font-italic small">
-                Electricity Maps (2025). 2024 Yearly Carbon Intensity Data (Version January 27, 2025). Electricity Maps.
-                <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">
-                  https://www.electricitymaps.com
+                WikiChip LLC (2025). CPU Data including Thermal Design Power (TDP) (Version June 20, 2025).
+                WikiChip.
+                <a href="https://en.wikichip.org/wiki/WikiChip" target="_blank" rel="noopener">
+                  https://en.wikichip.org/wiki/WikiChip
                 </a>
               </span>
-            <% } %>
-          </li>
-          <li class="mb-3">
-            The processors thermal design power (TDP) values used in the calculation originate from
-            <a href="https://en.wikichip.org/wiki/WikiChip" target="_blank" rel="noopener">WikiChip</a>
-            under the
-            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> license.<br>
-            <span class="font-italic small">
-              WikiChip LLC (2025). CPU Data including Thermal Design Power (TDP) (Version June 20, 2025).
-              WikiChip.
-              <a href="https://en.wikichip.org/wiki/WikiChip" target="_blank" rel="noopener">
-                https://en.wikichip.org/wiki/WikiChip
-              </a>
-            </span>
-          </li>
-        </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Execution options table -->
+    <div class="container">
+      <div id="options-table">
+        <h2 id="options" class="section">Options</h2>
+        <p class="mt-3 mb-3">This table shows the nf-co2footprint plugin options that were used to calculate the CO₂e footprint measures.</p>
+      </div>
+      <div class="container-fluid">
+        <table class="table small table-striped" id="options_table"></table>
       </div>
     </div>
   </div>
 
-  <div class="container">
-    <div id="options-table">
-      <h2 id="options" style="padding-top: 20px;">Options</h2>
-      <p class="mt-3 mb-3">This table shows the nf-co2footprint plugin options that were used to calculate the CO<sub>2</sub>e footprint measures.</p>
-    </div>
-    <div class="container-fluid">
-      <table class="table small table-striped" id="options_table"></table>
-    </div>
-  </div>
-
+  <!-- Footer -->
   <footer>
     <div class="container-fluid">
       Generated by <a href="https://www.nextflow.io" target="_blank">Nextflow</a>, version ${workflow.nextflow.version}
     </div>
   </footer>
-
-  <script type="text/javascript">
-  ${ assets_js.join("\n\n\n\n") }
-
-  // Nextflow report data
-  window.data = ${data};
-  window.options = ${options};
-
-  </script>
-
 </body>
 </html>

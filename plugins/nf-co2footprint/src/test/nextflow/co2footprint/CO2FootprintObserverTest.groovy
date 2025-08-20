@@ -247,22 +247,22 @@ class CO2FootprintObserverTest extends Specification{
         fileChecker.runChecks(
             reportPath,
             [
-            260: '          ' +
-                    "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
-                    " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>",
-            1084: '  window.options = [' +
-                    '{"option":"ci","value":"480.0"},'+
-                    '{"option":"ciMarket","value":null},' +
-                    '{"option":"customCpuTdpFile","value":null},' +
-                    '{"option":"ignoreCpuModel","value":"false"},' +
-                    '{"option":"location","value":null},' +
-                    '{"option":"machineType","value":null},' +
-                    '{"option":"powerdrawCpuDefault","value":null},' +
-                    '{"option":"powerdrawMem","value":"0.3725"},' +
-                    '{"option":"pue","value":"1.0"},' +
-                    "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
-                    "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
-                    "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];"
+                868: '    window.options = [' +
+                        '{"option":"ci","value":"480.0"},'+
+                        '{"option":"ciMarket","value":null},' +
+                        '{"option":"customCpuTdpFile","value":null},' +
+                        '{"option":"ignoreCpuModel","value":"false"},' +
+                        '{"option":"location","value":null},' +
+                        '{"option":"machineType","value":null},' +
+                        '{"option":"powerdrawCpuDefault","value":null},' +
+                        '{"option":"powerdrawMem","value":"0.3725"},' +
+                        '{"option":"pue","value":"1.0"},' +
+                        "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
+                        "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
+                        "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];",
+                917: '          ' +
+                        "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
+                        " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
             ]
         )
     }

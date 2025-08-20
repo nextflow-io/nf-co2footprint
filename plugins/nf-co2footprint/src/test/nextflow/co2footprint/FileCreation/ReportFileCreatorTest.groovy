@@ -127,7 +127,7 @@ class ReportFileCreatorTest extends Specification{
                             '"cpus":{"raw":1,"readable":"1"},' +
                             '"cpu_model":{"raw":"Unknown model","readable":"Unknown model"},' +
                             '"%cpu":{"raw":100.0,"readable":"100.0%"},' +
-                            '"hash":{"raw":"ca/372f78","readable":"<code>ca/372f78</code>"},' +
+                            '"hash":{"raw":"ca/372f78","readable":"<div class=\\"script_block short\\"><code>ca/372f78</code></div>"},' +
                             '"status":{"raw":"COMPLETED","readable":"<span class=\\"badge badge-success\\">COMPLETED</span>"},' +
                             '"memory":{"raw":7,"readable":"7 GB"},' +
                             '"native_id":{"raw":null,"readable":"-"},' +

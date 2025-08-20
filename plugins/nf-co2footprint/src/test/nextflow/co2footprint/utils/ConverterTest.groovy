@@ -3,6 +3,37 @@ package nextflow.co2footprint.utils
 import spock.lang.Specification
 
 class ConverterTest extends Specification  {
+    def 'Should convert correct between units'() {
+        when:
+        Quantity out = Converter.scaleUnits(value as Double, scale, unit, targetScale)
+
+        then:
+        out.value == expected
+        out.unit == unit
+
+        where:
+        value   || scale    || unit     || targetScale  || expected
+        1.0     || ''       || 'g'      || 'k'          ||  0.001
+        1.0     || 'M'      || 't'      || ''           ||  1000000.0
+        1024    || ''       || 'B'      || null         ||  1
+    }
+
+    def 'Should convert time to readable Strings'() {
+        when:
+        String out = Converter.toReadableUnits(value as Double, scale, unit, targetScale, precision)
+
+        then:
+        out == expected
+
+        where:
+        value   || scale    || unit     || targetScale  || precision    || expected
+        1.0     || ''       || 'g'      || 'k'          || 3            || '0.001 kg'
+        1.0     || 'M'      || 't'      || ''           || 2            || '1000000 t'
+        1.11    || ''       || ''       || 'k'          || 4            || '0.0011 k'
+        1024    || ''       || 'B'      || null         || 0            || '1 kB'
+        1024**3 || ''       || 'B'      || null         || 0            || '1 GB'
+    }
+
     def 'Should convert correct between times'() {
         when:
         Quantity out = Converter.scaleTime(value, unit, targetUnit)

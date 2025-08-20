@@ -181,17 +181,21 @@ $(function() {
           { title: 'power draw (in W/core)', data: 'powerdrawCPU' },
           { title: 'cpu model', data: 'cpu_model' },
         ],
-        "deferRender": true,
-        "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
-        "scrollX": true,
-        "colReorder": true,
-        "columnDefs": [
+        deferRender: true,
+        lengthMenu: [[25, 50, 100, -1], [25, 50, 100, "All"]],
+        scrollX: true,
+        colReorder: true,
+        columnDefs: [
           { targets: '_all', render: rawOrReadable },
           { className: "id", "targets": [ 0,1,2,3 ] },
           { className: "meta", "targets": [ 4,7,8,9,10,11 ] },
           { className: "metrics", "targets": [ 5,6 ] }
         ],
-        "buttons": [
+        dom:
+            "<'row'<'col-auto'l><'col text-center'B><'col-auto'f>>" +
+            "<'row'<'col-12'tr>>" +
+            "<'row'<'col'i><'col-auto'p>>",
+        buttons: [
           {
             extend: 'colvisGroup',
             text: 'Metrics',
