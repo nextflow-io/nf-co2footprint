@@ -261,7 +261,7 @@ class ReportFileCreator extends BaseFileCreator{
                 String script = ''
                 (value as String).eachLine { String line -> script += "${line.trim()}\n" }
                 script = script.dropRight(1)
-                "<code>${script}</code>"
+                "<div class=\"script_block short\"><code>${script}</code></div>"
             }
             default -> traceRecord.getFmtStr(key)
         }

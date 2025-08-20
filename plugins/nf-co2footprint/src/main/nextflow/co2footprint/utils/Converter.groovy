@@ -79,9 +79,12 @@ class Converter {
             targetScaleIndex = getIdx(targetScale, scales)
             difference = targetScaleIndex - scaleIndex
         }
-        // or use $floor(log_{1024}(value))$ to determine the number of steps that are taken to return a number above 0
+        // or use logarithm to determine the number of steps to return a number above 0
         else {
-            difference = Math.floor(Math.log(value) / Math.log(scalingFactor)) as int
+            // -scaleIndex <= floor( log_1000(|value|) ) <= maxIndex - scaleIndex
+            difference = Math.min( scales.size() - 1 - scaleIndex, Math.max( -1 * scaleIndex,
+                Math.floor(Math.log(Math.abs(value)) / Math.log(scalingFactor)) as int
+            ))
             targetScaleIndex = scaleIndex + difference
         }
 
