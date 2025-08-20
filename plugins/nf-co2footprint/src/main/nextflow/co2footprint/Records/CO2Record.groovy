@@ -125,7 +125,7 @@ class CO2Record extends TraceRecord {
             case 'ci' -> Converter.toReadableUnits(value as double, '', 'gCO₂e/kWh')
             case 'powerdrawCPU' ->  value != null ? String.format('%.1f W', value as double) : null
             case 'cpuUsage' ->  value != null ? String.format('%.1f%%', value as double) : null
-            case 'memory' ->  Converter.toReadableByteUnits(value as double, 'GB')
+            case 'memory' ->  Converter.toReadableUnits(value as double, 'G', 'B')
             default -> value as String
         }
     }
