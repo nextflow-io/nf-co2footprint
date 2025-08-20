@@ -153,8 +153,9 @@ class ReportFileCreator extends BaseFileCreator{
         final String template = readTemplate('assets/CO2FootprintReportTemplate.html')
         final GStringTemplateEngine engine = new GStringTemplateEngine()
         final Template htmlTemplate = engine.createTemplate(template)
+        final String htmlFile = htmlTemplate.make(templateFields) as String
 
-        return htmlTemplate.make(templateFields) as String
+        return htmlFile
     }
 
     /**
