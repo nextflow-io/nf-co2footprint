@@ -20,27 +20,27 @@ import nextflow.trace.TraceRecord
 class CO2Record extends TraceRecord {
 
     // Energy used (Wh)
-    private final Double energy
+    final Double energy
     // CO2 equivalent emissions (g)
-    private final Double co2e
+    final Double co2e
     // Personal energy mix CO2 equivalent emissions (g)
-    private final Double co2eMarket
+    final Double co2eMarket
     // Time spent on task (ms)
-    private final Double time
+    final Double time
     // Carbon intensity (gCO₂eq/kWh)
-    private final Double ci
+    final Double ci
     // Number of CPU cores used
-    private final Integer cpus
+    final Integer cpus
     // Power draw of CPU (W)
-    private final Double powerdrawCPU
+    final Double powerdrawCPU
     // CPU usage (%)
-    private final Double cpuUsage
+    final Double cpuUsage
     // Memory used (bytes)
-    private final Long memory
+    final Long memory
     // Name of Task
-    private final String name
+    final String name
     // CPU model name
-    private final String cpu_model
+    final String cpu_model
 
     // Properties of entries for JSON rendering
     final public static Map<String,String> FIELDS = [
@@ -105,49 +105,41 @@ class CO2Record extends TraceRecord {
         super.store << store
     }
 
-    // Getters for properties with readable formats
-    Double getEnergyConsumption() { energy }
-    String getEnergyConsumptionReadable() { Converter.toReadableUnits(energy, 'm', 'Wh') }
-
-    Double getCO2e() { co2e }
-    String getCO2eReadable() { Converter.toReadableUnits(co2e, 'm', 'g') }
-
-    Double getCO2eMarket() { co2eMarket }
-    String getCO2eMarketReadable() { Converter.toReadableUnits(co2eMarket, 'm', 'g') }
-
-    Double getTime() { time }
-    String getTimeReadable() { Converter.toReadableTimeUnits(time, 'h', 'ms', 's', 0.0d) }
-
-    String getCIReadable() { Converter.toReadableUnits(ci, '', 'gCO₂e/kWh') }
-
-    Integer getCPUs() { cpus }
-    String getCPUsReadable() { cpus as String }
-
-    Double getPowerdrawCPU() { powerdrawCPU }
-    String getPowerdrawCPUReadable() { Converter.toReadableUnits(powerdrawCPU, '', 'W', '') }
-
-    Double getCPUUsage() { cpuUsage }
-    String getCPUUsageReadable() { Converter.toReadableUnits(cpuUsage, '', '%', '') }
-
-    Long getMemory() { memory }
-    String getMemoryReadable() { Converter.toReadableUnits(memory, 'G', 'B') }
-
-    String getName() { name }
-    String getNameReadable() { name }
-
-    String getCPUModel() { cpu_model }
-    String getCPUModelReadable() { cpu_model }
+     /**
+     * Converts a CO₂ record entry into a human-readable string.
+     *
+     * Numerical values are scaled and formatted with appropriate units
+     * (e.g. Wh, g, %, GB). Non-numerical values are returned as strings.
+     * If no value is provided, the method falls back to the stored entry for the given key.
+     *
+     * @param key   The entry key (e.g. "energy", "co2e", "time", "cpuUsage")
+     * @param value Optional value to convert; defaults to the stored value for the key
+     * @return      A human-readable string, or null if no conversion is possible
+     */
+    String getReadable(String key, Object value=store[key]) {
+        if (value == null) { return NA }
+        return switch (key) {
+            case 'energy' ->  Converter.toReadableUnits(value as double, 'm', 'Wh')
+            case 'co2e' ->  Converter.toReadableUnits(value as double, 'm', 'g')
+            case 'co2eMarket' ->  Converter.toReadableUnits(value as double, 'm', 'g')
+            case 'time' ->  Converter.toReadableTimeUnits(value as double, 'h', 'ms', 's', 0.0d)
+            case 'ci' -> Converter.toReadableUnits(value as double, '', 'gCO₂e/kWh')
+            case 'powerdrawCPU' ->  Converter.toReadableUnits(value as double, '', 'W')
+            case 'cpuUsage' ->  Converter.toReadableUnits(value as double, '', '%', '')
+            case 'memory' ->  Converter.toReadableUnits(value as double, 'G', 'B')
+            default -> value as String
+        }
+    }
 
     /**
      * Get the Entries in a readable format for the summary
+     *
+     * @param order List of keys that defines both which entries are included
+     *              and the order in which they appear (defaults to all keys in the order of this.store).
      * @return List of readable Entries
      */
-    List<String> getReadableEntries() {
-        return [
-                this.getNameReadable(), this.getEnergyConsumptionReadable(), this.getCO2eReadable(), this.getCO2eMarketReadable(),
-                this.getCIReadable(), this.getCPUUsageReadable(), this.getMemoryReadable(), this.getTimeReadable(), this.getCPUsReadable(),
-                this.getPowerdrawCPUReadable(), this.getCPUModelReadable()
-        ]
+    List<String> getReadableEntries(List<String> order=store.keySet() as List) {
+        return order.collect { String key -> getReadable(key) }
     }
 
     /**

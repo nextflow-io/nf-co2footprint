@@ -26,19 +26,19 @@ class CO2RecordAggregator {
      */
     CO2RecordAggregator( Map<String, Closure<Double>> metricExtractionFunctions=null )  {
         this.metricExtractionFunctions ?= metricExtractionFunctions ?: [
-                co2e: { TraceRecord traceRecord, CO2Record co2Record -> co2Record.getCO2e() },
-                energy: { TraceRecord traceRecord, CO2Record co2Record -> co2Record.getEnergyConsumption() },
+                co2e: { TraceRecord traceRecord, CO2Record co2Record -> co2Record.co2e },
+                energy: { TraceRecord traceRecord, CO2Record co2Record -> co2Record.energy },
                 co2e_non_cached: { TraceRecord traceRecord, CO2Record co2Record ->
-                    traceRecord.getStore()['status'] != 'CACHED' ? co2Record.getCO2e() : null
+                    traceRecord.getStore()['status'] != 'CACHED' ? co2Record.co2e : null
                 },
                 energy_non_cached: { TraceRecord traceRecord, CO2Record co2Record ->
-                    traceRecord.getStore()['status'] != 'CACHED' ? co2Record.getEnergyConsumption() : null
+                    traceRecord.getStore()['status'] != 'CACHED' ? co2Record.energy : null
                 },
                 co2e_market: {
-                    TraceRecord traceRecord, CO2Record co2Record -> co2Record.getCO2eMarket()
+                    TraceRecord traceRecord, CO2Record co2Record -> co2Record.co2eMarket
                 },
                 energy_market: {
-                    TraceRecord traceRecord, CO2Record co2Record -> co2Record.getEnergyConsumption()
+                    TraceRecord traceRecord, CO2Record co2Record -> co2Record.energy
                 },
         ]
     }

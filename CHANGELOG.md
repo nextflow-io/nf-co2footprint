@@ -16,6 +16,7 @@
 
 ## Misc:
 - "🔁" now prepended for every `Markers.unique` message
+- Shortened JavaScript to make page more static and avoid code duplicates
 
 # Version 1.0.0-rc.3
 ## Bug Fixes:

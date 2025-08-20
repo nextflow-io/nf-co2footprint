@@ -123,10 +123,18 @@ class ReportFileCreator extends BaseFileCreator{
         Map co2Options = config.collectCO2CalcOptions()
         // render HTML report template
         final templateFields = [
-                workflow : session.getWorkflowMetadata(),
-                payload : renderPayloadJson(),
-                co2_totals: renderCO2TotalsJson(),
+                // Plugin information
+                // Metadata
                 plugin_version: version,
+                workflow : session.getWorkflowMetadata(),
+                options : renderOptionsJson(),
+
+                // Data
+                data : renderDataJson(),
+                co2_totals: renderCO2TotalsJson(),
+                used_EM_api: co2Options.ci instanceof Closure, // true if the CI value is calculated using the electricityMaps API
+
+                // Assets for rendering
                 assets_css : [
                         readTemplate('nextflow/trace/assets/bootstrap.min.css'),
                         readTemplate('nextflow/trace/assets/datatables.min.css'),
@@ -140,9 +148,7 @@ class ReportFileCreator extends BaseFileCreator{
                         readTemplate('nextflow/trace/assets/moment.min.js'),
                         readTemplate('nextflow/trace/assets/plotly.min.js'),
                         readTemplate('assets/CO2FootprintReportTemplate.js')
-                ],
-                options : renderOptionsJson(),
-                used_EM_api: co2Options.ci instanceof Closure // true if the CI value is calculated using the electricityMaps API
+                ]
         ]
         final String template = readTemplate('assets/CO2FootprintReportTemplate.html')
         final GStringTemplateEngine engine = new GStringTemplateEngine()
@@ -156,9 +162,9 @@ class ReportFileCreator extends BaseFileCreator{
      *
      * @return Rendered JSON as a String
      */
-    protected String renderPayloadJson() {
+    protected String renderDataJson() {
         return "{" +
-            "\"trace\":${renderTasksJson(traceRecords, co2eRecords)}," +
+            "\"trace\":${JsonOutput.toJson(renderTasksJson(traceRecords, co2eRecords))}," +
             "\"summary\":${JsonOutput.toJson(processStats)}" +
         "}"
     }
@@ -228,30 +234,77 @@ class ReportFileCreator extends BaseFileCreator{
         return totalsMap
     }
 
+     /**
+     * Formats a trace entry into a human-readable string.
+     * Returns {@link nextflow.trace.TraceRecord#NA} if value is null.
+     *
+     * @param key   Trace entry key
+     * @param value Entry value
+     * @param traceRecord Provides fallback formatting
+     * @return Human-readable string
+     *
+     * @example getReadableTraceEntry("realtime", 125.5, tr) → "2m 5s"
+     * @example getReadableTraceEntry("memory", 1073741824, tr) → "1 GB"
+     * @example getReadableTraceEntry("status", "COMPLETED", tr) → "<span class=\"badge badge-success\">COMPLETED</span>"
+     */
+    protected static String getReadableTraceEntry(String key, Object value, TraceRecord traceRecord) {
+        if (value == null) { return traceRecord.NA}
+        return switch (key) {
+            case 'realtime' -> Converter.toReadableTimeUnits(value as double)
+            case 'memory' -> Converter.toReadableUnits(value as double, '', 'B')
+            case 'status' -> {
+                Map<String, String> colors = [COMPLETED: 'success', CACHED: 'secondary', ABORTED: 'danger', FAILED: 'danger']
+                "<span class=\"badge badge-${colors[value]}\">${value}</span>"
+            }
+            case 'hash' -> {
+                String script = ''
+                (value as String).eachLine { String line -> script += "${line.trim()}\n" }
+                script = script.dropRight(1)
+                "<code>${script}</code>"
+            }
+            default -> traceRecord.getFmtStr(key)
+        }
+    }
+
     /**
      * Render the executed tasks as a JSON list.
      *
-     * @param data A Map of {@link nextflow.processor.TaskId}s and {@link nextflow.trace.TraceRecord}s representing the tasks executed
-     * @param dataCO2 A Map of {@link nextflow.processor.TaskId}s and {@link CO2Record}s representing the co2Record traces
-     * @return The collected List of JSON entries
+     * Each list item is a merged map of trace- and CO2-fields:
+     *   <fieldName> -> [ raw: <original>, readable: <formatted> ]
+     * Missing trace fields are included with [raw: null, readable: "-"].
+     * The number of tasks is limited by `maxTasks`.
+     *
+     * @param traceRecords Map of {@link nextflow.processor.TaskId} -> {@link nextflow.trace.TraceRecord}
+     * @param co2Records   Map of {@link nextflow.processor.TaskId} -> {@link CO2Record}
+     * @return             List of per-task maps combining trace and CO2 entries
      */
-    protected List<String> renderTasksJson(
+    protected List<Map<String, Map<String, Object>>> renderTasksJson(
             Map<TaskId, TraceRecord> traceRecords, Map<TaskId, CO2Record> co2Records
     ){
         // Limit to maxTasks
         traceRecords = traceRecords.take(maxTasks)
 
-        final List<String> results = []
-        traceRecords.each { TaskId taskId ,TraceRecord traceRecord ->
+        final List<Map<String, Map<String, Object>>> results = []
+        traceRecords.each { TaskId taskId, TraceRecord traceRecord ->
+            // Build trace entry map: key -> [raw, readable]
+            Map<String, Map<String, Object>> traceRecordMap = traceRecord.store.collectEntries { String key, Object value ->
+                [key, [raw: value, readable: getReadableTraceEntry(key, value, traceRecord)]]
+            }
 
-            CharSequence traceRecordJson = traceRecord.renderJson()
-            traceRecordJson = traceRecordJson.dropRight(1)
-            traceRecordJson = traceRecordJson + ','
+            // Ensure all declared trace fields are present (fill gaps with a placeholder)
+            traceRecord.FIELDS.each { String key, String _ ->
+                if (!traceRecordMap.containsKey(key)) { traceRecordMap.put(key, [raw: null, readable: TraceRecord.NA]) }
+                return
+            }
 
-            CharSequence co2RecordJson = co2Records[taskId].renderJson()
-            co2RecordJson = co2RecordJson.drop(1)
+            // Build CO2 entry map: key -> [raw, readable]
+            CO2Record co2Record = co2Records[taskId]
+            Map<String, Map<String, Object>> co2RecordMap = co2Record.store.collectEntries { String key, Object value ->
+                [key, [raw: value, readable: co2Record.getReadable(key, value)]]
+            }
 
-            results.add( (traceRecordJson + co2RecordJson).toString() )
+            // Merge trace and CO2 maps for this task
+            results.add( traceRecordMap + co2RecordMap )
         }
 
         return results

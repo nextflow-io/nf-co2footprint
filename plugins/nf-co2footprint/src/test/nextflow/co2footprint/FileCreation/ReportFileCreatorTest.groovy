@@ -37,6 +37,8 @@ class ReportFileCreatorTest extends Specification{
                         'cpus': 1,
                         'cpu_model': 'Unknown model',
                         '%cpu': 100.0,
+                        'hash': 'ca/372f78',
+                        'status': 'COMPLETED',
                         'memory': (7 as Long) * (1024**3 as Long) // 7 GB
                 ]
         )
@@ -66,7 +68,7 @@ class ReportFileCreatorTest extends Specification{
         )
         CO2Record co2Record = new CO2Record(
                 1.0d, 1.0d, null, 1.0d, 475.0,
-                1, 12, 100.0, 1024**3, 'testTask', 'Unknown model'
+                1, 12, 100.0, 7, 'testTask', 'Unknown model'
         )
 
         
@@ -109,9 +111,9 @@ class ReportFileCreatorTest extends Specification{
                                 co2e_non_cached:'10 Mg', energy_non_cached:'10 mWh', car_non_cached: '5.71E4', tree_non_cached: '908years 9months 3days 19h 38min 55.87s', plane_percent_non_cached: null, plane_flights_non_cached: '200']
     }
 
-    def 'Test payLoad JSON generation' () {
+    def 'Test data JSON generation' () {
         when:
-        String payloadJson = co2FootprintReport.renderPayloadJson()
+        String payloadJson = co2FootprintReport.renderDataJson()
 
         then:
         String expectedPayloadJson =
@@ -119,14 +121,54 @@ class ReportFileCreatorTest extends Specification{
                 '"trace":' +
                     '[' +
                         '{' +
-                            '"task_id":"111","hash":"-","native_id":"-","process":"reportTestProcess","module":"-","container":"-",' +
-                            '"tag":"-","name":"-","status":"-","exit":"-","submit":"-","start":"-","complete":"-","duration":"-",' +
-                            '"realtime":"1h","%cpu":"100.0%","%mem":"-","rss":"-","vmem":"-","peak_rss":"-","peak_vmem":"-","rchar":"-",' +
-                            '"wchar":"-","syscr":"-","syscw":"-","read_bytes":"-","write_bytes":"-","attempt":"-","workdir":"-","script":"-",' +
-                            '"scratch":"-","queue":"-","cpus":"1","memory":"7 GB","disk":"-","time":"-","env":"-","error_action":"-",' +
-                            '"vol_ctxt":"-","inv_ctxt":"-","hostname":"-","cpu_model":"Unknown model","energy":"1.0","co2e":"1.0",' +
-                            '"co2eMarket":"-","time":"1.0","ci":"475.0","cpus":"1",' +
-                            '"powerdrawCPU":"12.0","cpuUsage":"100.0","memory":"1073741824","name":"testTask","cpu_model":"Unknown model"' +
+                            '"task_id":{"raw":"111","readable":"111"},' +
+                            '"process":{"raw":"reportTestProcess","readable":"reportTestProcess"},' +
+                            '"realtime":{"raw":3600000,"readable":"1h"},' +
+                            '"cpus":{"raw":1,"readable":"1"},' +
+                            '"cpu_model":{"raw":"Unknown model","readable":"Unknown model"},' +
+                            '"%cpu":{"raw":100.0,"readable":"100.0%"},' +
+                            '"hash":{"raw":"ca/372f78","readable":"<code>ca/372f78</code>"},' +
+                            '"status":{"raw":"COMPLETED","readable":"<span class=\\"badge badge-success\\">COMPLETED</span>"},' +
+                            '"memory":{"raw":7,"readable":"7 GB"},' +
+                            '"native_id":{"raw":null,"readable":"-"},' +
+                            '"module":{"raw":null,"readable":"-"},' +
+                            '"container":{"raw":null,"readable":"-"},' +
+                            '"tag":{"raw":null,"readable":"-"},' +
+                            '"name":{"raw":"testTask","readable":"testTask"},' +
+                            '"exit":{"raw":null,"readable":"-"},' +
+                            '"submit":{"raw":null,"readable":"-"},' +
+                            '"start":{"raw":null,"readable":"-"},' +
+                            '"complete":{"raw":null,"readable":"-"},' +
+                            '"duration":{"raw":null,"readable":"-"},' +
+                            '"%mem":{"raw":null,"readable":"-"},' +
+                            '"rss":{"raw":null,"readable":"-"},' +
+                            '"vmem":{"raw":null,"readable":"-"},' +
+                            '"peak_rss":{"raw":null,"readable":"-"},' +
+                            '"peak_vmem":{"raw":null,"readable":"-"},' +
+                            '"rchar":{"raw":null,"readable":"-"},' +
+                            '"wchar":{"raw":null,"readable":"-"},' +
+                            '"syscr":{"raw":null,"readable":"-"},' +
+                            '"syscw":{"raw":null,"readable":"-"},' +
+                            '"read_bytes":{"raw":null,"readable":"-"},' +
+                            '"write_bytes":{"raw":null,"readable":"-"},' +
+                            '"attempt":{"raw":null,"readable":"-"},' +
+                            '"workdir":{"raw":null,"readable":"-"},' +
+                            '"script":{"raw":null,"readable":"-"},' +
+                            '"scratch":{"raw":null,"readable":"-"},' +
+                            '"queue":{"raw":null,"readable":"-"},' +
+                            '"disk":{"raw":null,"readable":"-"},' +
+                            '"time":{"raw":1.0,"readable":"3600s"},' +
+                            '"env":{"raw":null,"readable":"-"},' +
+                            '"error_action":{"raw":null,"readable":"-"},' +
+                            '"vol_ctxt":{"raw":null,"readable":"-"},' +
+                            '"inv_ctxt":{"raw":null,"readable":"-"},' +
+                            '"hostname":{"raw":null,"readable":"-"},' +
+                            '"energy":{"raw":1.0,"readable":"1 mWh"},' +
+                            '"co2e":{"raw":1.0,"readable":"1 mg"},' +
+                            '"co2eMarket":{"raw":null,"readable":"-"},' +
+                            '"ci":{"raw":475.0,"readable":"475 gCO\\u2082e/kWh"},' +
+                            '"powerdrawCPU":{"raw":12.0,"readable":"12 W"},' +
+                            '"cpuUsage":{"raw":100.0,"readable":"100 %"}' +
                         '}' +
                     '],' +
                 '"summary":' +

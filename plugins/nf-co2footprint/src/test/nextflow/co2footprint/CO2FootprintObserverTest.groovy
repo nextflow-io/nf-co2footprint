@@ -118,8 +118,8 @@ class CO2FootprintObserverTest extends Specification{
         Double total_co2 = 0d
         Double total_energy = 0d
         observer.getCO2eRecords().values().each { co2Record ->
-            total_energy += co2Record.getEnergyConsumption()
-            total_co2 += co2Record.getCO2e()
+            total_energy += co2Record.energy
+            total_co2 += co2Record.co2e
         }
         // Energy consumption converted to Wh
         round(total_energy / 1000) == 14.06
@@ -153,7 +153,7 @@ class CO2FootprintObserverTest extends Specification{
         // Accumulate CO2
         int total_co2 = 0d
         observer.getCO2eRecords().values().each { co2Record ->
-            total_co2 += co2Record.getCO2e()
+            total_co2 += co2Record.co2e
         }
 
         CO2EquivalencesRecord co2EquivalencesRecord = observer
@@ -227,10 +227,10 @@ class CO2FootprintObserverTest extends Specification{
                 'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'carbon_intensity', '%cpu', 'memory', 'realtime', 'cpus', 'powerdraw_cpu', 'cpu_model'
         ]
         values == [
-            '111', 'COMPLETED', 'null', '14.06 Wh', '6.75 g', 'null', '480 gCO₂e/kWh', '100 %', '7 GB', '3600s', '1', '11.45 W', 'Unknown model'
+            '111', 'COMPLETED', '-', '14.06 Wh', '6.75 g', '-', '480 gCO₂e/kWh', '100 %', '7 GB', '3600s', '1', '11.45 W', 'Unknown model'
         ] // GA: CO2e is 6.94g with CI of 475 gCO2eq/kWh
 
-        fileChecker.compareChecksums(tracePath, '23e65cc3e2e28bc9d9b1969cf1eaf2b0')
+        fileChecker.compareChecksums(tracePath, 'bf2f91768ca03a910e7751645f38cde0')
 
 
         // Check Summary File
@@ -250,7 +250,7 @@ class CO2FootprintObserverTest extends Specification{
             260: '          ' +
                     "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                     " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>",
-            1350: '  window.options = [' +
+            1084: '  window.options = [' +
                     '{"option":"ci","value":"480.0"},'+
                     '{"option":"ciMarket","value":null},' +
                     '{"option":"customCpuTdpFile","value":null},' +
