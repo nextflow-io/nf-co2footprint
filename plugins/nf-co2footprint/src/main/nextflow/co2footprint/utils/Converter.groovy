@@ -54,16 +54,17 @@ class Converter {
     }
 
     /**
-     * Converts a numeric value to a human-readable string with SI prefixes.
+     * Converts a numeric value to the closest or given scale with SI prefixes.
      * Scales the value up or down by a given factor and adjusts the scale prefix accordingly.
-     * The method is structured to take the quantity as in writing e.g. scaleUnits(1200, 'k', 'Wh', 'M'), with
+     * The method is structured to take the quantity as in writing e.g. scaleUnits(2048, 'k', 'B', 'M'), with
      * the last argument denoting the target to which the quantity is to be scaled.
-     * In this example, 1200 kWh is scaled to '1.2 MWh'.
+     * In this example, 2048 kB is scaled to 2 MB, which is reported as a {@Link Quantity} Object
+     * with the number 2.0, the scale 'M' and the unit 'Wh'.
      *
      * @param value Value that should be converted (e.g. 10.1)
-     * @param scale Symbol for the scale of the unit (e.g. kilo = k), default ''
-     * @param unit Name / symbol for the unit (e.g. B), default ''
-     * @param targetScale The scale that should be converted to (e.g. G)
+     * @param scale Symbol for the scale of the unit (e.g. kilo = k), default of ''
+     * @param unit Name / symbol for the unit (e.g. B), default of ''
+     * @param targetScale The scale that should be converted to (e.g. G), default of null (optional)
      * @return Converted quantity with appropriate scale
      */
     static Quantity scaleUnits(double value, String scale='', String unit='', String targetScale=null) {
@@ -89,15 +90,16 @@ class Converter {
 
     /**
      * Converts a numeric value to a human-readable string with SI prefixes.
+     * Uses {@link #scaleUnits} to scale the unit to a readable format, which is
+     * subsequently rounded and combined to a String.
      * For example, 1200 with unit 'Wh' becomes '1.2 kWh'.
-     * Scales the value up or down by factors of 1000 and adjusts the prefix accordingly.
      *
-     * @param value Value that should be converted
-     * @param scale Symbol for scale of the unit (e.g. kilo = k)
-     * @param unit Name / symbol for the unit
-     * @param targetScale Target scale to convert to
-     * @param precision Precision to round the value(s) to
-     * @return Converted String with appropriate scale and rounding
+     * @param value Value to convert
+     * @param scale Symbol for scale of the unit (e.g. kilo = k), default of ''
+     * @param unit Name / symbol for the unit (e.g. Watt-hours/Wh), default of ''
+     * @param targetScale Target scale to convert to, default of null (optional)
+     * @param precision Decimal places to round to, default of 2
+     * @return Scaled value as a formatted String with appropriate scale and rounding
      */
     static String toReadableUnits(Double value, String scale='', String unit='', String targetScale=null, Integer precision=2) {
         if (value == null) { return value }
