@@ -117,14 +117,15 @@ class CO2Record extends TraceRecord {
      * @return      A human-readable string, or null if no conversion is possible
      */
     String getReadable(String key, Object value=store[key]) {
+        if (value == null) { return NA }
         return switch (key) {
             case 'energy' ->  Converter.toReadableUnits(value as double, 'm', 'Wh')
             case 'co2e' ->  Converter.toReadableUnits(value as double, 'm', 'g')
-            case 'co2eMarket' ->  value ? Converter.toReadableUnits(value as double, 'm', 'g') : null
+            case 'co2eMarket' ->  Converter.toReadableUnits(value as double, 'm', 'g')
             case 'time' ->  Converter.toReadableTimeUnits(value as double, 'h', 'ms', 's', 0.0d)
             case 'ci' -> Converter.toReadableUnits(value as double, '', 'gCO₂e/kWh')
-            case 'powerdrawCPU' ->  value != null ? String.format('%.1f W', value as double) : null
-            case 'cpuUsage' ->  value != null ? String.format('%.1f%%', value as double) : null
+            case 'powerdrawCPU' ->  Converter.toReadableUnits(value as double, '', 'W')
+            case 'cpuUsage' ->  Converter.toReadableUnits(value as double, '', '%', '')
             case 'memory' ->  Converter.toReadableUnits(value as double, 'G', 'B')
             default -> value as String
         }

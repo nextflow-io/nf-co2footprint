@@ -129,7 +129,7 @@ class ReportFileCreatorTest extends Specification{
                             '"%cpu":{"raw":100.0,"readable":"100.0%"},' +
                             '"hash":{"raw":"ca/372f78","readable":"<code>ca/372f78</code>"},' +
                             '"status":{"raw":"COMPLETED","readable":"<span class=\\"badge badge-success\\">COMPLETED</span>"},' +
-                            '"memory":{"raw":7,"readable":"7.0 GB"},' +
+                            '"memory":{"raw":7,"readable":"7 GB"},' +
                             '"native_id":{"raw":null,"readable":"-"},' +
                             '"module":{"raw":null,"readable":"-"},' +
                             '"container":{"raw":null,"readable":"-"},' +
@@ -163,12 +163,12 @@ class ReportFileCreatorTest extends Specification{
                             '"vol_ctxt":{"raw":null,"readable":"-"},' +
                             '"inv_ctxt":{"raw":null,"readable":"-"},' +
                             '"hostname":{"raw":null,"readable":"-"},' +
-                            '"energy":{"raw":1.0,"readable":"1000.0 uWh"},' +
-                            '"co2e":{"raw":1.0,"readable":"1000.0 ug"},' +
-                            '"co2eMarket":{"raw":null,"readable":null},' +
-                            '"ci":{"raw":475.0,"readable":"475.0 gCO\\u2082e/kWh"},' +
-                            '"powerdrawCPU":{"raw":12.0,"readable":"12.0 W"},' +
-                            '"cpuUsage":{"raw":100.0,"readable":"100.0%"}' +
+                            '"energy":{"raw":1.0,"readable":"1 mWh"},' +
+                            '"co2e":{"raw":1.0,"readable":"1 mg"},' +
+                            '"co2eMarket":{"raw":null,"readable":"-"},' +
+                            '"ci":{"raw":475.0,"readable":"475 gCO\\u2082e/kWh"},' +
+                            '"powerdrawCPU":{"raw":12.0,"readable":"12 W"},' +
+                            '"cpuUsage":{"raw":100.0,"readable":"100 %"}' +
                         '}' +
                     '],' +
                 '"summary":' +
