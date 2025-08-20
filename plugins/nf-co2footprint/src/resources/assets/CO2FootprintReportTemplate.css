@@ -7,7 +7,7 @@ body {
   padding-top: 56px;
 }
 
-/* Top bar */
+/* Navigation bar at the top */
 .navbar {
   box-shadow: 0 .5rem 1rem #00000011;
 }
@@ -18,7 +18,8 @@ body {
   margin: 0 10px 5px 0;
 }
 
-/* Top part until 'CO2e Footprint Measures' */
+
+/* Background image with warming stripes */
 .jumbotron {
   background-repeat: no-repeat;
   background-size: 100% 100%;
@@ -32,91 +33,8 @@ body {
   padding: 1rem 2rem;
 }
 
-.card-wrap {
-  gap: 1.5rem;
-  margin-left: -0.75rem;
-  margin-right: -0.75rem;
-}
 
-.metric-card {
-  width: 18%;
-  text-align: center;
-  flex: 1 1 200px;
-  min-width: 200px;
-}
-
-.metric-card svg {
-  margin: 0.5rem auto;
-  height:50px;
-}
-.metric {
-  font-size: 2rem;
-  font-weight: 300;
-  line-height: 1.2;
-}
-.metric-title {
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-}
-
-pre {
-  margin-bottom: 0;
-}
-pre.nfcommand {
-  white-space: pre-wrap;
-  border: 1px solid #ccc;
-  padding: 10px 15px;
-  border-radius: 5px;
-  background-color: #F0F2F4;
-  font-size: 0.8rem;
-}
-
-table td {
-  max-width: 200px;
-  overflow-x: auto;
-}
-
-.script_block.short {
-  max-height: 30px;
-  overflow-y: hidden;
-  cursor: pointer;
-}
-
-footer {
-  background-color: #ededed;
-  margin: 50px 0 0;
-  padding: 20px 0;
-  border-top: 1px solid #cccccc;
-  color: #999999;
-  font-size: 0.8rem;
-}
-footer a {
-  color: #999999;
-  text-decoration: underline;
-}
-
-#nf-form-humanreadable {
-  margin-bottom: 1rem;
-}
-
-#tasks_table_filter {
-  display: flex;
-}
-#tasks_table_filter>.btn-group {
-  vertical-align: top;
-  margin-right: 1rem;
-  height: calc(1.8125rem + 3px);
-}
-#tasks_table_filter .buttons-colvisGroup {
-  padding: 0.2rem 0.75rem;
-}
-#tasks_table_filter .dt-buttons::before {
-  content: "Filter: ";
-  padding: 0.2rem 0.5rem;
-  font-size: 1.1rem;
-}
-
+/* Tabs options */
 .tab-pane {
   display: block !important;
   position: relative !important;
@@ -137,6 +55,8 @@ footer a {
   opacity: 1;
 }
 
+
+/* Expandable options */
 .expandable-label {
   padding: 6px 12px;
   border-radius: 8px;
@@ -147,6 +67,110 @@ footer a {
   display: inline-block;
 }
 
+/* Section headers */
+.section {
+  padding-top: 20px;
+}
+
+
+/* Summary section options */
 summary {
   cursor: pointer;
+}
+
+
+/* Cards in the 'Total' measures section */
+.card-wrap {
+  gap: 1.5rem;
+  margin-left: -0.75rem;
+  margin-right: -0.75rem;
+}
+
+.metric-card {
+  width: 18%;
+  text-align: center;
+  flex: 1 1 200px;
+  min-width: 200px;
+}
+
+.metric-card svg {
+  margin: 0.5rem auto;
+  height:50px;
+}
+
+.metric {
+  font-size: 2rem;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+.metric-title {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+
+/* Preformatted text, essentially code blocks that are passed via Groovy */
+pre {
+  margin-bottom: 0;
+}
+pre.nfcommand {
+  white-space: pre-wrap;
+  border: 1px solid #ccc;
+  padding: 10px 15px;
+  border-radius: 5px;
+  background-color: #F0F2F4;
+  font-size: 0.8rem;
+}
+
+/* Table options */
+table td {
+  max-width: 200px;
+  overflow-x: auto;
+}
+
+/* Tasks table */
+#tasks_table_filter {
+  display: flex;
+}
+#tasks_table_filter>.btn-group {
+  vertical-align: top;
+  margin-right: 1rem;
+  height: calc(1.8125rem + 3px);
+}
+#tasks_table_filter .buttons-colvisGroup {
+  padding: 0.2rem 0.75rem;
+}
+#tasks_table_filter .dt-buttons::before {
+  content: "Filter: ";
+  padding: 0.2rem 0.5rem;
+  font-size: 1.1rem;
+}
+
+/* Expands script block in table, essentially lengthens and shortens the hash */
+.script_block.short {
+  max-height: 30px;
+  overflow-y: hidden;
+  cursor: pointer;
+}
+
+/* Button for toggeling table to human-readable/raw */
+#nf-form-humanreadable {
+  margin-bottom: 1rem;
+}
+
+/* Footer options */
+footer {
+  background-color: #ededed;
+  margin: 50px 0 0;
+  padding: 20px 0;
+  border-top: 1px solid #cccccc;
+  color: #999999;
+  font-size: 0.8rem;
+}
+
+footer a {
+  color: #999999;
+  text-decoration: underline;
 }

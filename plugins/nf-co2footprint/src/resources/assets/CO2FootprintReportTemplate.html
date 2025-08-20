@@ -54,8 +54,9 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
     <div class="navbar-collapse" id="navbarCollapse">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item"><a class="nav-link" href="#">Summary</a></li>
-        <li class="nav-item"><a class="nav-link" href="#resources">Resources</a></li>
+        <li class="nav-item"><a class="nav-link" href="#measures">Measures</a></li>
         <li class="nav-item"><a class="nav-link" href="#tasks">Tasks</a></li>
+        <li class="nav-item"><a class="nav-link" href="#options">Options</a></li>
       </ul>
     </div>
     <code class="d-none d-md-inline navbar-text">
@@ -111,7 +112,8 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
 
     <!-- TOTAL CO2 cards -->
     <div class="container">
-      <h3 class="mt-5">Total CO₂e Footprint Measures</h3>
+      <h2 id="measures" class="section">CO₂e Footprint Measures</h2>
+      <h3 id="measures-total">Total</h3>
       <ul class="nav nav-tabs" id="co2e-card_tabs" role="tablist">
         <li class="nav-item">
           <a class="nav-link active" id="co2e-total-card_tablink" data-toggle="tab" href="#co2e-total-card_tabpanel" role="tab" aria-controls="co2e-total-card_tabpanel" aria-expanded="false">
@@ -256,7 +258,7 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
 
     <!-- CO2 footprint measures plot -->
     <div class="container">
-      <h2 id="resources" style="padding-top: 20px;" class="mb-3">CO₂e Footprint Measures</h2>
+      <h3 id="measures-plot">Per process</h3>
       <ul class="nav nav-tabs mb-3" id="co2eplot_tabs" role="tablist">
         <li class="nav-item">
           <a class="nav-link active" id="co2e-total-plot_tablink" data-toggle="tab" href="#co2e-total-plot_tabpanel" role="tab" aria-controls="co2e-total-plot_tabpanel" aria-expanded="false">
@@ -282,7 +284,7 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
 
     <!-- Tasks table -->
     <div class="container">
-      <h2 id="tasks" style="padding-top: 20px;">Tasks</h2>
+      <h2 id="tasks" class="section">Tasks</h2>
       <div id="tasks-present-table" class="mb-3">
         <form class="form-inline" id="nf-form-humanreadable">
           <label class="mr-sm-2" for="nf-table-humanreadable">Values shown as:</label>
@@ -307,7 +309,7 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
     <div class="container my-5">
       <div class="card shadow-sm">
         <div class="card-body">
-          <h2 id="attribution-and-references" style="padding-top: 20px;">Data Attribution &amp; References</h2>
+          <h2 id="attribution-and-references" class="section">Data Attribution &amp; References</h2>
           <ul class="pl-3 mb-0">
             <li class="mb-3">
               The calculation of these values is based on the carbon footprint computation method
@@ -374,7 +376,7 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
     <!-- Execution options table -->
     <div class="container">
       <div id="options-table">
-        <h2 id="options" style="padding-top: 20px;">Options</h2>
+        <h2 id="options" class="section">Options</h2>
         <p class="mt-3 mb-3">This table shows the nf-co2footprint plugin options that were used to calculate the CO₂e footprint measures.</p>
       </div>
       <div class="container-fluid">
