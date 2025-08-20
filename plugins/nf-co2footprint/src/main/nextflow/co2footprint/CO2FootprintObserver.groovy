@@ -39,9 +39,9 @@ class CO2FootprintObserver implements TraceObserver {
     private Session session
 
     // Output file objects
-    private TraceFileCreator co2eTraceFile
-    private SummaryFileCreator co2eSummaryFile
-    private ReportFileCreator co2eReportFile
+    private TraceFileCreator traceFile
+    private SummaryFileCreator summaryFile
+    private ReportFileCreator reportFile
 
     // Overwrite existing files if true
     private boolean overwrite
@@ -61,14 +61,14 @@ class CO2FootprintObserver implements TraceObserver {
 
     // Holds the the start time for tasks started/submitted but not yet completed
     @PackageScope
-    Map<TaskId, TraceRecord> current = new ConcurrentHashMap<>()
+    Map<TaskId, TraceRecord> runningTasks = new ConcurrentHashMap<>()
 
     // Stores CO₂ emission records by task ID
     final private Map<TaskId, CO2Record> co2eRecords = new ConcurrentHashMap<>()
     Map<TaskId,CO2Record> getCO2eRecords() { co2eRecords }
 
     // Stores all trace records by task ID
-    final private Map<TaskId, TraceRecord> traceRecords = new LinkedHashMap<>()
+    final private Map<TaskId, TraceRecord> traceRecords = new ConcurrentHashMap<>()
 
     /**
      * Constructor for the observer.
@@ -93,9 +93,9 @@ class CO2FootprintObserver implements TraceObserver {
         this.config = config
 
         // Make file instances
-        this.co2eTraceFile = new TraceFileCreator((config.value('traceFile') as Path).complete(), overwrite)
-        this.co2eSummaryFile = new SummaryFileCreator((config.value('summaryFile') as Path).complete(), overwrite)
-        this.co2eReportFile = new ReportFileCreator((config.value('reportFile') as Path).complete(), overwrite, maxTasks)
+        this.traceFile = new TraceFileCreator((config.value('traceFile') as Path).complete(), overwrite)
+        this.summaryFile = new SummaryFileCreator((config.value('summaryFile') as Path).complete(), overwrite)
+        this.reportFile = new ReportFileCreator((config.value('reportFile') as Path).complete(), overwrite, maxTasks)
 
         this.co2FootprintComputer = co2FootprintComputer
         this.overwrite = overwrite
@@ -110,6 +110,49 @@ class CO2FootprintObserver implements TraceObserver {
     @Override
     boolean enableMetrics() { return true }
 
+    // ------ HELPER METHODS ------
+
+    /**
+     * Start the recording of a trace
+     *
+     * @param trace Trace Record of started task
+     */
+    private synchronized void startRecord(TraceRecord trace) {
+        // Keep started tasks
+        runningTasks[trace.taskId] = trace
+
+        // Extend trace records
+        synchronized (traceRecords) {
+            traceRecords[ trace.taskId ] = trace
+        }
+    }
+
+    /**
+     * Aggregate the trace and CO2 records
+     *
+     * @param trace Trace Record of the task to derive all stats from
+     * @return co2Record derived from TraceRecord
+     */
+    private synchronized void aggregateRecords(TraceRecord trace) {
+        // Remove the record from the submittedTasks records
+        runningTasks.remove(trace.taskId)
+
+        // Record TraceRecord
+        traceRecords[ trace.taskId ] = trace
+
+        // Extract CO2 records
+        final CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(trace.taskId, trace)
+
+        // Collect results
+        co2eRecords[trace.taskId] = co2Record
+
+        // Aggregate stats
+        aggregator.add(trace, co2Record)
+
+        // Save to the files
+        this.traceFile?.write(trace.taskId, trace, co2Record)
+    }
+
     // ------ OBSERVER METHODS ------
 
     // ---- WORKFLOW LEVEL ----
@@ -121,21 +164,21 @@ class CO2FootprintObserver implements TraceObserver {
      */
     @Override
     void onFlowCreate(Session session) {
-        log.debug("Workflow started -- CO2Footprint file instantiated")
+        log.debug('Workflow started -- CO2Footprint file instantiated')
 
         // Construct session and aggregator
         this.session = session
         this.aggregator = new CO2RecordAggregator()
 
         // Create trace file
-        co2eTraceFile.create()
+        traceFile.create()
     }
 
     /**
      * Save the pending processes and close the files
      */
     void onFlowComplete() {
-        log.debug("Workflow completed -- rendering & saving files")
+        log.debug('Workflow completed -- rendering & saving files')
 
         // Compute the statistics (total, mean, min, max, quantiles) on process level
         final Map<String, Map<String, Map<String, ?>>> processStats = aggregator.computeProcessStats()
@@ -155,22 +198,25 @@ class CO2FootprintObserver implements TraceObserver {
             }
         }
 
+        // Catch unfinished tasks
+        runningTasks.each { TaskId taskId, TraceRecord traceRecord -> aggregateRecords(traceRecord) }
+
         // Create report and summary if any content exists to write to the file
         if (totalStats) {
-            co2eSummaryFile.create()
-            co2eReportFile.create()
+            summaryFile.create()
+            reportFile.create()
         }
 
         // Write report and summary
-        co2eSummaryFile.write(totalStats, co2FootprintComputer, config, version)
+        summaryFile.write(totalStats, co2FootprintComputer, config, version)
 
-        co2eReportFile.addEntries(processStats, totalStats, co2FootprintComputer, config, version, session, traceRecords, co2eRecords)
-        co2eReportFile.write()
+        reportFile.addEntries(processStats, totalStats, co2FootprintComputer, config, version, session, traceRecords, co2eRecords)
+        reportFile.write()
 
         // Close all files (writes remaining tasks in the trace file)
-        co2eTraceFile.close(current)
-        co2eSummaryFile.close()
-        co2eReportFile.close()
+        traceFile.close(runningTasks)
+        summaryFile.close()
+        reportFile.close()
     }
 
 
@@ -182,8 +228,7 @@ class CO2FootprintObserver implements TraceObserver {
      * @param process The process created ({@link nextflow.processor.TaskProcessor})
      */
     @Override
-    void onProcessCreate(TaskProcessor process) { 
-    }
+    void onProcessCreate(TaskProcessor process) {}
 
     /**
      * This method is invoked before a process run is going to be submitted.
@@ -193,13 +238,9 @@ class CO2FootprintObserver implements TraceObserver {
      */
     @Override
     void onProcessSubmit(TaskHandler handler, TraceRecord trace) {
-        log.trace("Trace report - submit process > $handler")
+        log.trace("Trace report - submit process > ${handler}")
 
-        current[trace.taskId] = trace
-
-        synchronized (traceRecords) {
-            traceRecords[ trace.taskId ] = trace
-        }
+        startRecord(trace)
     }
 
     /**
@@ -210,13 +251,9 @@ class CO2FootprintObserver implements TraceObserver {
      */
     @Override
     void onProcessStart(TaskHandler handler, TraceRecord trace) {
-        log.trace("Trace report - start process > $handler")
+        log.trace("Trace report - submit process > ${handler}")
 
-        current[trace.taskId] = trace
-
-        synchronized (traceRecords) {
-            traceRecords[ trace.taskId ] = trace
-        }
+        startRecord(trace)
     }
 
     /**
@@ -228,31 +265,14 @@ class CO2FootprintObserver implements TraceObserver {
     @Override
     void onProcessComplete(TaskHandler handler, TraceRecord trace) {
         log.trace("Trace report - complete process > $handler")
-        final TaskId taskId = handler.task.id
 
         // Ensure the presence of a Trace Record
         if (!trace) {
-            log.warn("Unable to find TraceRecord for task with id: ${taskId}")
+            log.warn("Unable to find TraceRecord for task with id: ${handler.task.id}")
             return
         }
 
-        // Remove the record from the current records
-        current.remove(taskId)
-
-        // Extract CO2e records
-        final CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace)
-
-        // Collect results
-        co2eRecords[taskId] = co2Record
-
-        // Aggregate results
-        synchronized (traceRecords) {
-            traceRecords[ trace.taskId ] = trace
-            aggregator.add(trace, co2Record)
-        }
-
-        // Save to files
-        co2eTraceFile.write(taskId, trace, co2Record)
+        aggregateRecords(trace)
     }
 
     /**
@@ -264,26 +284,11 @@ class CO2FootprintObserver implements TraceObserver {
     @Override
     void onProcessCached(TaskHandler handler, TraceRecord trace) {
         log.trace("Trace report - cached process > $handler")
-        final TaskId taskId = handler.task.id
 
         // Event was triggered by a stored task, ignore it
         if (trace == null) { return }
 
-        // Extract records
-        final CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(taskId, trace)
-
-        // Collect results
-        co2eRecords[taskId] = co2Record
-
-        // Aggregate results
-        synchronized (traceRecords) {
-            traceRecords[ trace.taskId ] = trace
-            aggregator.add(trace, co2Record)
-        }
-
-
-        // Save to the files
-        co2eTraceFile.write(taskId, trace, co2Record)
+        aggregateRecords(trace)
     }
 
 }
