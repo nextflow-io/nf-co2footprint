@@ -251,7 +251,7 @@ class CO2FootprintObserver implements TraceObserver {
      */
     @Override
     void onProcessStart(TaskHandler handler, TraceRecord trace) {
-        log.trace("Trace report - submit process > ${handler}")
+        log.trace("Trace report - start process > ${handler}")
 
         startRecord(trace)
     }
@@ -264,7 +264,7 @@ class CO2FootprintObserver implements TraceObserver {
      */
     @Override
     void onProcessComplete(TaskHandler handler, TraceRecord trace) {
-        log.trace("Trace report - complete process > $handler")
+        log.trace("Trace report - complete process > ${handler}")
 
         // Ensure the presence of a Trace Record
         if (!trace) {
@@ -283,7 +283,7 @@ class CO2FootprintObserver implements TraceObserver {
      */
     @Override
     void onProcessCached(TaskHandler handler, TraceRecord trace) {
-        log.trace("Trace report - cached process > $handler")
+        log.trace("Trace report - cached process > ${handler}")
 
         // Event was triggered by a stored task, ignore it
         if (trace == null) { return }
