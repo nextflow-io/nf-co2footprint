@@ -1,7 +1,6 @@
 package nextflow.co2footprint.DataContainers
 
 
-import nextflow.co2footprint.utils.HelperFunctions
 import groovy.util.logging.Slf4j
 import nextflow.co2footprint.Logging.Markers
 import groovy.json.JsonSlurper

@@ -4,8 +4,8 @@ import nextflow.co2footprint.Logging.Markers
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
-import nextflow.co2footprint.utils.HelperFunctions
-import nextflow.co2footprint.utils.Converter
+
+import nextflow.co2footprint.Metrics.Converter
 import groovy.util.logging.Slf4j
 import nextflow.exception.MissingValueException
 import nextflow.processor.TaskId
@@ -69,16 +69,16 @@ class CO2FootprintComputer {
         /**
          * Realtime of computation
          */
-        final BigDecimal runtime_h = (HelperFunctions.getTraceOrDefault(trace, taskID, 'realtime', 0, 'missing-realtime') as BigDecimal) / (1000 * 60 * 60) // [h]
+        final BigDecimal runtime_h = (getTraceOrDefault(trace, taskID, 'realtime', 0, 'missing-realtime') as BigDecimal) / (1000 * 60 * 60) // [h]
 
         /**
          * Factors of core power usage
          */
-        final Integer numberOfCores = HelperFunctions.getTraceOrDefault(trace, taskID, 'cpus', 1, 'missing-cpus') as Integer // [#]
+        final Integer numberOfCores = getTraceOrDefault(trace, taskID, 'cpus', 1, 'missing-cpus') as Integer // [#]
         final BigDecimal powerdrawPerCore = tdpDataMatrix.matchModel(cpuModel).getCoreTDP()            // [W/core]
 
         // uc: core usage factor (between 0 and 1)
-        BigDecimal cpuUsage = HelperFunctions.getTraceOrDefault(trace, taskID, '%cpu', numberOfCores * 100, 'missing-%cpu') as BigDecimal
+        BigDecimal cpuUsage = getTraceOrDefault(trace, taskID, '%cpu', numberOfCores * 100, 'missing-%cpu') as BigDecimal
         
         if ( cpuUsage == 0.0 ) {
             log.warn(
@@ -144,9 +144,6 @@ class CO2FootprintComputer {
         BigDecimal co2e = (energy * ci) // Emissions in CO2 equivalents [g] CO2e
         BigDecimal co2eMarket = ciMarket ? (energy * ciMarket) : null
 
-        energy = energy * 1000000       // Conversion to [mWh]
-        co2e = co2e * 1000              // Conversion to [mg] CO2e
-
         return new CO2Record(
                 energy,
                 co2e,
@@ -172,16 +169,44 @@ class CO2FootprintComputer {
      * @return CO2EquivalencesRecord with estimations for sensible comparisons
      */
     static CO2EquivalencesRecord computeCO2footprintEquivalences(Double totalCO2) {
-        final BigDecimal gCO2 = totalCO2 as BigDecimal / 1000 as BigDecimal // [gCO2]
-
-        final BigDecimal carKilometers = gCO2 / 175
-        final BigDecimal treeMonths = gCO2 / 917
-        final BigDecimal planePercent = gCO2 * 100 / 50000
+        final BigDecimal carKilometers = totalCO2 / 175
+        final BigDecimal treeMonths = totalCO2 / 917
+        final BigDecimal planePercent = totalCO2 * 100 / 50000
 
         return new CO2EquivalencesRecord(
                 carKilometers,
                 treeMonths,
                 planePercent
         )
+    }
+
+    /**
+     * Retrieves a value from the trace record by key, or returns a default if the value is missing.
+     * If the value is `null`, a warning is logged (once per unique dedupKey).
+     *
+     * @param trace        The TraceRecord containing task metrics.
+     * @param taskID       The ID of the current task (used for logging).
+     * @param key          The trace field key to retrieve (e.g. 'realtime', '%cpu', 'rss').
+     * @param defaultValue The fallback value to return if the key is missing or null.
+     * @param dedupKey     A unique identifier to deduplicate warning messages in the logs.
+     * @return             The value from the trace if present, otherwise the defaultValue.
+     */
+    static Object getTraceOrDefault(TraceRecord trace, TaskId taskID, String key, Object defaultValue, String dedupKey) {
+        def value = trace.get(key)
+        if (value == null) {
+            String warnMessage
+            if (key == '%cpu') {
+                def numCores = (defaultValue instanceof Number) ? defaultValue / 100 : defaultValue
+                warnMessage = "Missing trace value '${key}' for task ${taskID}, using default: 100% for all ${numCores} cores."
+            } else {
+                warnMessage = "Missing trace value '${key}' for task ${taskID}, using default: ${defaultValue}."
+            }
+            log.warn(
+                    Markers.unique,
+                    warnMessage,
+                    dedupKey
+            )
+        }
+        return value ?: defaultValue
     }
 }

@@ -13,7 +13,6 @@ import spock.lang.Specification
 import java.nio.file.Paths
 
 import groovy.util.logging.Slf4j
-import nextflow.co2footprint.utils.HelperFunctions   
 
 @Slf4j
 class CO2FootprintComputerTest extends Specification{
@@ -47,8 +46,8 @@ class CO2FootprintComputerTest extends Specification{
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord)
 
         expect:
-        round(co2Record.energy/1000) == expectedEnergy
-        round(co2Record.co2e/1000) == expectedCO2
+        round(co2Record.energy*1000) == expectedEnergy
+        round(co2Record.co2e) == expectedCO2
 
         where:
         cpuModel           | configMap                        || expectedEnergy | expectedCO2
@@ -75,8 +74,8 @@ class CO2FootprintComputerTest extends Specification{
 
         where:
         co2e                || carKm        || treeMonths       || planePercent || planeFlights
-        10**8 + 500000.0    || 574.2857d    ||  109.5965d       || 201.000000d  || '2'
-        11587.399           || 6.62e-02d    ||  1.26e-02        || 2.317480E-2d || '0'
+        10**5 + 500.0       || 574.2857d    ||  109.5965d       || 201.000000d  || '2'
+        11.587399           || 6.62e-02d    ||  1.26e-02        || 2.317480E-2d || '0'
     }
 
     // ------ Test Missing/Null Value Handling ------

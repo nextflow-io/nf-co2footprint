@@ -593,15 +593,6 @@
     // JavaScript used to power the Nextflow Report Template output.
     
     /**
-     * Converts a list of numbers in milli-units (mWh, mg,...) to base units (Wh, g)
-     * @param {ArrayLike} list An array with numbers
-     * @returns The array, with each value divided by 1000
-     */
-    function norm_units( list ) {
-      return list?.map(v => v / 1000) ?? null;
-    }
-    
-    /**
      * Decides whether raw or readable values are to be displayed
      *
      * @param {*} data The data (number/string/...)
@@ -676,7 +667,7 @@
         // Add CO2 Boxplot to plot
         plot_data_total.push(
           {
-            x:processName, y: norm_units(stats.co2e), name: processName,
+            x:processName, y: stats.co2e, name: processName,
             type:'box', boxmean: true, boxpoints: false
           }
         );
@@ -684,7 +675,7 @@
         // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
         plot_data_total.push(
           {
-            x:processName, y: norm_units(stats.energy), name: processName,
+            x:processName, y: stats.energy?.map(v => v * 1000) ?? null, name: processName,
             type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
             hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
           }
@@ -693,7 +684,7 @@
         // Add outline of CO2 emissions from non-cached processes to plot
         plot_data_non_cached.push(
           {
-            x:processName, y: norm_units(stats.co2e_non_cached), name: processName,
+            x:processName, y: stats.co2e_non_cached, name: processName,
             type:'box', boxmean: true, boxpoints: false,
           }
         );
@@ -701,7 +692,7 @@
         // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
         plot_data_non_cached.push(
           {
-            x:processName, y: norm_units(stats.energy_non_cached), name: processName,
+            x:processName, y: stats.energy_non_cached?.map(v => v * 1000) ?? null, name: processName,
             type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
             hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
           }
@@ -864,8 +855,8 @@
     });
 
     // Nextflow report data
-    window.data = {"trace":[{"task_id":{"raw":"111","readable":"111"},"process":{"raw":"observerTestProcess","readable":"observerTestProcess"},"realtime":{"raw":3600000,"readable":"1h"},"cpus":{"raw":1,"readable":"1"},"cpu_model":{"raw":"Unknown model","readable":"Unknown model"},"%cpu":{"raw":100.0,"readable":"100.0%"},"memory":{"raw":7,"readable":"7 GB"},"status":{"raw":"COMPLETED","readable":"<span class=\"badge badge-success\">COMPLETED</span>"},"hash":{"raw":null,"readable":"-"},"native_id":{"raw":null,"readable":"-"},"module":{"raw":null,"readable":"-"},"container":{"raw":null,"readable":"-"},"tag":{"raw":null,"readable":"-"},"name":{"raw":null,"readable":"-"},"exit":{"raw":null,"readable":"-"},"submit":{"raw":null,"readable":"-"},"start":{"raw":null,"readable":"-"},"complete":{"raw":null,"readable":"-"},"duration":{"raw":null,"readable":"-"},"%mem":{"raw":null,"readable":"-"},"rss":{"raw":null,"readable":"-"},"vmem":{"raw":null,"readable":"-"},"peak_rss":{"raw":null,"readable":"-"},"peak_vmem":{"raw":null,"readable":"-"},"rchar":{"raw":null,"readable":"-"},"wchar":{"raw":null,"readable":"-"},"syscr":{"raw":null,"readable":"-"},"syscw":{"raw":null,"readable":"-"},"read_bytes":{"raw":null,"readable":"-"},"write_bytes":{"raw":null,"readable":"-"},"attempt":{"raw":null,"readable":"-"},"workdir":{"raw":null,"readable":"-"},"script":{"raw":null,"readable":"-"},"scratch":{"raw":null,"readable":"-"},"queue":{"raw":null,"readable":"-"},"disk":{"raw":null,"readable":"-"},"time":{"raw":1.0,"readable":"3600s"},"env":{"raw":null,"readable":"-"},"error_action":{"raw":null,"readable":"-"},"vol_ctxt":{"raw":null,"readable":"-"},"inv_ctxt":{"raw":null,"readable":"-"},"hostname":{"raw":null,"readable":"-"},"energy":{"raw":14057.5,"readable":"14.06 Wh"},"co2e":{"raw":6747.6,"readable":"6.75 g"},"co2eMarket":{"raw":null,"readable":"-"},"ci":{"raw":480.0,"readable":"480 gCO\u2082e/kWh"},"powerdrawCPU":{"raw":11.45,"readable":"11.45 W"},"cpuUsage":{"raw":100.0,"readable":"100 %"}}],"summary":{"observerTestProcess":{"co2e":{"all":[6747.6],"total":6747.6,"mean":6747.6,"minLabel":null,"min":6747.6,"q1Label":null,"q1":6747.6,"q2Label":null,"q2":6747.6,"q3Label":null,"q3":6747.6,"maxLabel":null,"max":6747.6},"energy":{"all":[14057.5],"total":14057.5,"mean":14057.5,"minLabel":null,"min":14057.5,"q1Label":null,"q1":14057.5,"q2Label":null,"q2":14057.5,"q3Label":null,"q3":14057.5,"maxLabel":null,"max":14057.5},"co2e_non_cached":{"all":[6747.6],"total":6747.6,"mean":6747.6,"minLabel":null,"min":6747.6,"q1Label":null,"q1":6747.6,"q2Label":null,"q2":6747.6,"q3Label":null,"q3":6747.6,"maxLabel":null,"max":6747.6},"energy_non_cached":{"all":[14057.5],"total":14057.5,"mean":14057.5,"minLabel":null,"min":14057.5,"q1Label":null,"q1":14057.5,"q2Label":null,"q2":14057.5,"q3Label":null,"q3":14057.5,"maxLabel":null,"max":14057.5},"co2e_market":{},"energy_market":{"all":[14057.5],"total":14057.5,"mean":14057.5,"minLabel":null,"min":14057.5,"q1Label":null,"q1":14057.5,"q2Label":null,"q2":14057.5,"q3Label":null,"q3":14057.5,"maxLabel":null,"max":14057.5}}}};
-    window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir10701540534067813634/report_test.html"},{"option":"summaryFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir10701540534067813634/summary_test.txt"},{"option":"traceFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir10701540534067813634/trace_test.txt"}];
+    window.data = {"trace":[{"task_id":{"raw":"111","readable":"111"},"process":{"raw":"observerTestProcess","readable":"observerTestProcess"},"realtime":{"raw":3600000,"readable":"1h"},"cpus":{"raw":1,"readable":"1"},"cpu_model":{"raw":"Unknown model","readable":"Unknown model"},"%cpu":{"raw":100.0,"readable":"100.0%"},"memory":{"raw":7,"readable":"7 GB"},"status":{"raw":"COMPLETED","readable":"<span class=\"badge badge-success\">COMPLETED</span>"},"hash":{"raw":null,"readable":"-"},"native_id":{"raw":null,"readable":"-"},"module":{"raw":null,"readable":"-"},"container":{"raw":null,"readable":"-"},"tag":{"raw":null,"readable":"-"},"name":{"raw":null,"readable":"-"},"exit":{"raw":null,"readable":"-"},"submit":{"raw":null,"readable":"-"},"start":{"raw":null,"readable":"-"},"complete":{"raw":null,"readable":"-"},"duration":{"raw":null,"readable":"-"},"%mem":{"raw":null,"readable":"-"},"rss":{"raw":null,"readable":"-"},"vmem":{"raw":null,"readable":"-"},"peak_rss":{"raw":null,"readable":"-"},"peak_vmem":{"raw":null,"readable":"-"},"rchar":{"raw":null,"readable":"-"},"wchar":{"raw":null,"readable":"-"},"syscr":{"raw":null,"readable":"-"},"syscw":{"raw":null,"readable":"-"},"read_bytes":{"raw":null,"readable":"-"},"write_bytes":{"raw":null,"readable":"-"},"attempt":{"raw":null,"readable":"-"},"workdir":{"raw":null,"readable":"-"},"script":{"raw":null,"readable":"-"},"scratch":{"raw":null,"readable":"-"},"queue":{"raw":null,"readable":"-"},"disk":{"raw":null,"readable":"-"},"time":{"raw":1.0,"readable":"3600s"},"env":{"raw":null,"readable":"-"},"error_action":{"raw":null,"readable":"-"},"vol_ctxt":{"raw":null,"readable":"-"},"inv_ctxt":{"raw":null,"readable":"-"},"hostname":{"raw":null,"readable":"-"},"energy":{"raw":0.0140575,"readable":"14.06 Wh"},"co2e":{"raw":6.7476,"readable":"6.75 g"},"co2eMarket":{"raw":null,"readable":"-"},"ci":{"raw":480.0,"readable":"480 gCO\u2082e/kWh"},"powerdrawCPU":{"raw":11.45,"readable":"11.45 W"},"cpuUsage":{"raw":100.0,"readable":"100 %"}}],"summary":{"observerTestProcess":{"co2e":{"all":[6.7476],"total":6.7476,"mean":6.7476,"minLabel":null,"min":6.7476,"q1Label":null,"q1":6.7476,"q2Label":null,"q2":6.7476,"q3Label":null,"q3":6.7476,"maxLabel":null,"max":6.7476},"energy":{"all":[0.0140575],"total":0.0140575,"mean":0.0140575,"minLabel":null,"min":0.0140575,"q1Label":null,"q1":0.0140575,"q2Label":null,"q2":0.0140575,"q3Label":null,"q3":0.0140575,"maxLabel":null,"max":0.0140575},"co2e_non_cached":{"all":[6.7476],"total":6.7476,"mean":6.7476,"minLabel":null,"min":6.7476,"q1Label":null,"q1":6.7476,"q2Label":null,"q2":6.7476,"q3Label":null,"q3":6.7476,"maxLabel":null,"max":6.7476},"energy_non_cached":{"all":[0.0140575],"total":0.0140575,"mean":0.0140575,"minLabel":null,"min":0.0140575,"q1Label":null,"q1":0.0140575,"q2Label":null,"q2":0.0140575,"q3Label":null,"q3":0.0140575,"maxLabel":null,"max":0.0140575},"co2e_market":{},"energy_market":{"all":[0.0140575],"total":0.0140575,"mean":0.0140575,"minLabel":null,"min":0.0140575,"q1Label":null,"q1":0.0140575,"q2Label":null,"q2":0.0140575,"q3Label":null,"q3":0.0140575,"maxLabel":null,"max":0.0140575}}}};
+    window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir2637532584894475629/report_test.html"},{"option":"summaryFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir2637532584894475629/summary_test.txt"},{"option":"traceFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir2637532584894475629/trace_test.txt"}];
   </script>
 
 </head>
@@ -914,7 +905,7 @@
       <dl>
         <dt>Run times</dt>
         <dd>
-          <span id="workflow_start">20-Aug-2025 13:04:19</span> - <span id="workflow_complete">20-Aug-2025 13:04:19</span>
+          <span id="workflow_start">22-Aug-2025 12:50:09</span> - <span id="workflow_complete">22-Aug-2025 12:50:09</span>
           (<span id="completed_fromnow"></span>duration: <strong>null</strong>)
         </dd>
 

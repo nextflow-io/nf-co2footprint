@@ -1,6 +1,6 @@
 package nextflow.co2footprint.Records
 
-import nextflow.co2footprint.utils.Converter
+import nextflow.co2footprint.Metrics.Converter
 
 /**
  * Stores equivalence values for CO₂ emissions:
