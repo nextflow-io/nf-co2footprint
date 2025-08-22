@@ -8,6 +8,7 @@
 - Added `Markers.silentUnique` to deduplicate messages without prepending a prefix
 - Content of total CO2e metrics now in tabs instead of <details> block
 - HTML & CSS clarity improvements through comments and block separation
+- Removed some unnecessary conversions in the Computer, JavaScript and Tests
 
 ## Features:
 - Base config class with more control over parameters
