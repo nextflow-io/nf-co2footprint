@@ -113,9 +113,9 @@ class CO2FootprintObserver implements TraceObserver {
     // ------ HELPER METHODS ------
 
     /**
-     * Start the recording of a trace
+     * Records the start of a task by storing its {@link TraceRecord}.
      *
-     * @param trace Trace Record of started task
+     * @param trace the TraceRecord of the task that just started
      */
     private synchronized void startRecord(TraceRecord trace) {
         // Keep started tasks
@@ -128,28 +128,27 @@ class CO2FootprintObserver implements TraceObserver {
     }
 
     /**
-     * Aggregate the trace and CO2 records
+     * Aggregates the trace and CO₂ records of a finished task.
      *
-     * @param trace Trace Record of the task to derive all stats from
-     * @return co2Record derived from TraceRecord
+     * @param trace TraceRecord of the finished task
      */
     private synchronized void aggregateRecords(TraceRecord trace) {
-        // Remove the record from the submittedTasks records
+        // Remove task from set of running tasks
         runningTasks.remove(trace.taskId)
 
-        // Record TraceRecord
+        // Store final trace
         traceRecords[ trace.taskId ] = trace
 
-        // Extract CO2 records
+        // Compute CO₂ footprint for this task
         final CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(trace.taskId, trace)
 
-        // Collect results
+        // Save per-task CO₂ result
         co2eRecords[trace.taskId] = co2Record
 
-        // Aggregate stats
+        // Update overall aggregated stats
         aggregator.add(trace, co2Record)
 
-        // Save to the files
+        // Optionally write to trace file
         this.traceFile?.write(trace.taskId, trace, co2Record)
     }
 
