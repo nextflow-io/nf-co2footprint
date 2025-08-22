@@ -1,4 +1,4 @@
-package nextflow.co2footprint.utils
+package nextflow.co2footprint.Metrics
 
 import nextflow.co2footprint.DataContainers.BiMap
 import nextflow.co2footprint.DataContainers.DataMatrix

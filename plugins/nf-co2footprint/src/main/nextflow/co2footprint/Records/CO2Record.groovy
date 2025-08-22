@@ -1,6 +1,6 @@
 package nextflow.co2footprint.Records
 
-import nextflow.co2footprint.utils.Converter
+import nextflow.co2footprint.Metrics.Converter
 
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j

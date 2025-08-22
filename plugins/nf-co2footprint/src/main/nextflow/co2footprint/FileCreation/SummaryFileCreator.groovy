@@ -5,7 +5,7 @@ import groovyx.gpars.agent.Agent
 import nextflow.co2footprint.CO2FootprintComputer
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
-import nextflow.co2footprint.utils.Converter
+import nextflow.co2footprint.Metrics.Converter
 import nextflow.trace.TraceHelper
 
 import java.nio.file.Path
