@@ -207,8 +207,8 @@ class ReportFileCreator extends BaseFileCreator{
         if (co2e != null) {
             CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(co2e)
             return [
-                ("co2e${suffix}" as String): Converter.toReadableUnits(co2e,'m', 'g'),
-                ("energy${suffix}" as String):Converter.toReadableUnits(energy,'m','Wh'),
+                ("co2e${suffix}" as String): Converter.toReadableUnits(co2e,'', 'g'),
+                ("energy${suffix}" as String): Converter.toReadableUnits(energy,'k','Wh'),
                 ("car${suffix}" as String): equivalences.getCarKilometersReadable(),
                 ("tree${suffix}" as String): equivalences.getTreeMonthsReadable(),
                 ("plane_percent${suffix}" as String): equivalences.getPlanePercent() < 100.0 ? equivalences.getPlanePercentReadable() : null,

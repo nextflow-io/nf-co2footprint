@@ -105,10 +105,10 @@ class ReportFileCreatorTest extends Specification{
         totalsJson == totalsJsonResult
         where:
         co2e                || totalsJsonResult
-        10.0d               || [co2e: '10 mg', energy:'10 mWh', car: '5.71E-5', tree: '28.69s', plane_percent: '2.00E-5 %', plane_flights: null,
-                                co2e_non_cached:'10 mg', energy_non_cached:'10 mWh', car_non_cached: '5.71E-5', tree_non_cached: '28.69s', plane_percent_non_cached: '2.00E-5 %', plane_flights_non_cached: null]
-        10_000_000_000.0d   || [co2e: '10 Mg', energy:'10 mWh', car: '5.71E4', tree: '908years 9months 3days 19h 38min 55.87s', plane_percent: null, plane_flights: '200',
-                                co2e_non_cached:'10 Mg', energy_non_cached:'10 mWh', car_non_cached: '5.71E4', tree_non_cached: '908years 9months 3days 19h 38min 55.87s', plane_percent_non_cached: null, plane_flights_non_cached: '200']
+        0.01d               || [co2e: '10 mg', energy:'10 kWh', car: '5.71E-5', tree: '28.69s', plane_percent: '2.00E-5 %', plane_flights: null,
+                                co2e_non_cached:'10 mg', energy_non_cached:'10 kWh', car_non_cached: '5.71E-5', tree_non_cached: '28.69s', plane_percent_non_cached: '2.00E-5 %', plane_flights_non_cached: null]
+        10_000_000.0d       || [co2e: '10 Mg', energy:'10 kWh', car: '5.71E4', tree: '908years 9months 3days 19h 38min 55.88s', plane_percent: null, plane_flights: '200',
+                                co2e_non_cached:'10 Mg', energy_non_cached:'10 kWh', car_non_cached: '5.71E4', tree_non_cached: '908years 9months 3days 19h 38min 55.88s', plane_percent_non_cached: null, plane_flights_non_cached: '200']
     }
 
     def 'Test data JSON generation' () {
@@ -163,8 +163,8 @@ class ReportFileCreatorTest extends Specification{
                             '"vol_ctxt":{"raw":null,"readable":"-"},' +
                             '"inv_ctxt":{"raw":null,"readable":"-"},' +
                             '"hostname":{"raw":null,"readable":"-"},' +
-                            '"energy":{"raw":1.0,"readable":"1 mWh"},' +
-                            '"co2e":{"raw":1.0,"readable":"1 mg"},' +
+                            '"energy":{"raw":1.0,"readable":"1 kWh"},' +
+                            '"co2e":{"raw":1.0,"readable":"1 g"},' +
                             '"co2eMarket":{"raw":null,"readable":"-"},' +
                             '"ci":{"raw":475.0,"readable":"475 gCO\\u2082e/kWh"},' +
                             '"powerdrawCPU":{"raw":12.0,"readable":"12 W"},' +
@@ -233,17 +233,17 @@ class ReportFileCreatorTest extends Specification{
         then:
         totalsJson ==
             [
-                co2e: "10 mg",
-                energy:  "100 mWh",
-                car: "5.71E-5",
-                tree: "28.69s",
-                plane_percent: "2.00E-5 %",
+                co2e: "10 g",
+                energy:  "100 kWh",
+                car: "0.057",
+                tree: "7h 58min 10.08s",
+                plane_percent: "0.02 %",
                 plane_flights: null,
-                co2e_non_cached: "10 mg",
-                energy_non_cached:  "100 mWh",
-                car_non_cached: "5.71E-5",
-                tree_non_cached: "28.69s",
-                plane_percent_non_cached: '2.00E-5 %',
+                co2e_non_cached: "10 g",
+                energy_non_cached:  "100 kWh",
+                car_non_cached: "0.057",
+                tree_non_cached: "7h 58min 10.08s",
+                plane_percent_non_cached: '0.02 %',
                 plane_flights_non_cached: null
             ]
     }

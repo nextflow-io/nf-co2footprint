@@ -121,10 +121,11 @@ class CO2FootprintObserverTest extends Specification{
             total_energy += co2Record.energy
             total_co2 += co2Record.co2e
         }
+        // With TDP = 11.45 (default global)
         // Energy consumption converted to Wh
-        round(total_energy / 1000) == 14.06
+        round(total_energy*1000) == 14.06
         // Total CO2 in g (should reflect the CI value you set)
-        round(total_co2 / 1000) == 6.68
+        round(total_co2) == 6.68
     }
 
     def 'test full run with co2e equivalences calculation and specific CI' () {
@@ -151,7 +152,7 @@ class CO2FootprintObserverTest extends Specification{
         observer.onProcessComplete(handler, traceRecord)
 
         // Accumulate CO2
-        int total_co2 = 0d
+        Double total_co2 = 0d
         observer.getCO2eRecords().values().each { co2Record ->
             total_co2 += co2Record.co2e
         }
@@ -161,10 +162,10 @@ class CO2FootprintObserverTest extends Specification{
             .computeCO2footprintEquivalences(total_co2)
 
         expect:
-        // Values compared to result from www.green-algorithms.org
-        co2EquivalencesRecord.getCarKilometers().round(7) == 0.0381543 as Double
-        co2EquivalencesRecord.getTreeMonths().round(7) == 0.0072814 as Double
-        co2EquivalencesRecord.getPlanePercent().round(7) == 0.013354 as Double
+        // Values compared to result from www.green-algorithms.org (1h, 1core, TDP=11.45, CI:475)
+        co2EquivalencesRecord.getCarKilometers().round(7) == 0.0381561 as Double
+        co2EquivalencesRecord.getTreeMonths().round(7) == 0.0072817 as Double
+        co2EquivalencesRecord.getPlanePercent().round(7) == 0.0133546 as Double
     }
 
 
@@ -247,7 +248,7 @@ class CO2FootprintObserverTest extends Specification{
         fileChecker.runChecks(
             reportPath,
             [
-                868: '    window.options = [' +
+                859: '    window.options = [' +
                         '{"option":"ci","value":"480.0"},'+
                         '{"option":"ciMarket","value":null},' +
                         '{"option":"customCpuTdpFile","value":null},' +
@@ -260,7 +261,7 @@ class CO2FootprintObserverTest extends Specification{
                         "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
                         "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
                         "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];",
-                917: '          ' +
+                908: '          ' +
                         "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                         " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
             ]

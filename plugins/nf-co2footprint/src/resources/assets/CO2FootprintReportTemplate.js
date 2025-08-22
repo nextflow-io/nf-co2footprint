@@ -1,15 +1,6 @@
 // JavaScript used to power the Nextflow Report Template output.
 
 /**
- * Converts a list of numbers in milli-units (mWh, mg,...) to base units (Wh, g)
- * @param {ArrayLike} list An array with numbers
- * @returns The array, with each value divided by 1000
- */
-function norm_units( list ) {
-  return list?.map(v => v / 1000) ?? null;
-}
-
-/**
  * Decides whether raw or readable values are to be displayed
  *
  * @param {*} data The data (number/string/...)
@@ -84,7 +75,7 @@ $(function() {
     // Add CO2 Boxplot to plot
     plot_data_total.push(
       {
-        x:processName, y: norm_units(stats.co2e), name: processName,
+        x:processName, y: stats.co2e, name: processName,
         type:'box', boxmean: true, boxpoints: false
       }
     );
@@ -92,7 +83,7 @@ $(function() {
     // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
     plot_data_total.push(
       {
-        x:processName, y: norm_units(stats.energy), name: processName,
+        x:processName, y: stats.energy?.map(v => v * 1000) ?? null, name: processName,
         type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
         hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
       }
@@ -101,7 +92,7 @@ $(function() {
     // Add outline of CO2 emissions from non-cached processes to plot
     plot_data_non_cached.push(
       {
-        x:processName, y: norm_units(stats.co2e_non_cached), name: processName,
+        x:processName, y: stats.co2e_non_cached, name: processName,
         type:'box', boxmean: true, boxpoints: false,
       }
     );
@@ -109,7 +100,7 @@ $(function() {
     // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
     plot_data_non_cached.push(
       {
-        x:processName, y: norm_units(stats.energy_non_cached), name: processName,
+        x:processName, y: stats.energy_non_cached?.map(v => v * 1000) ?? null, name: processName,
         type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
         hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
       }

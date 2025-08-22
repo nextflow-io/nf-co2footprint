@@ -60,9 +60,9 @@ class SummaryFileCreator extends BaseFileCreator {
 
         String outText = """\
         Total CO2e footprint measures of this workflow run (including cached tasks):
-          CO2e emissions: ${Converter.toReadableUnits(totalStats['co2e'],'m', 'g')}
-          Energy consumption: ${Converter.toReadableUnits(totalStats['energy'],'m', 'Wh')}
-          CO2e emissions (market): ${totalStats['co2eMarket'] ? Converter.toReadableUnits(totalStats['co2eMarket'], 'm', 'g') : "-"}
+          CO2e emissions: ${Converter.toReadableUnits(totalStats['co2e'],'', 'g')}
+          Energy consumption: ${Converter.toReadableUnits(totalStats['energy'],'k', 'Wh')}
+          CO2e emissions (market): ${totalStats['co2eMarket'] ? Converter.toReadableUnits(totalStats['co2eMarket'], '', 'g') : "-"}
 
         """.stripIndent()
         List<String> readableEquivalences = equivalences.getReadableEquivalences()

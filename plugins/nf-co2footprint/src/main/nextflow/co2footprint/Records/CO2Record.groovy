@@ -119,8 +119,8 @@ class CO2Record extends TraceRecord {
     String getReadable(String key, Object value=store[key]) {
         if (value == null) { return NA }
         return switch (key) {
-            case 'energy' ->  Converter.toReadableUnits(value as double, 'm', 'Wh')
-            case 'co2e' ->  Converter.toReadableUnits(value as double, 'm', 'g')
+            case 'energy' ->  Converter.toReadableUnits(value as double, 'k', 'Wh')
+            case 'co2e' ->  Converter.toReadableUnits(value as double, '', 'g')
             case 'co2eMarket' ->  Converter.toReadableUnits(value as double, 'm', 'g')
             case 'time' ->  Converter.toReadableTimeUnits(value as double, 'h', 'ms', 's', 0.0d)
             case 'ci' -> Converter.toReadableUnits(value as double, '', 'gCO₂e/kWh')
