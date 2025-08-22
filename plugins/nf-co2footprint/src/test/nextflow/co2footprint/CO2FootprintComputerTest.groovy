@@ -13,7 +13,6 @@ import spock.lang.Specification
 import java.nio.file.Paths
 
 import groovy.util.logging.Slf4j
-import nextflow.co2footprint.utils.HelperFunctions   
 
 @Slf4j
 class CO2FootprintComputerTest extends Specification{
