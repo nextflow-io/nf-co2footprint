@@ -14,8 +14,8 @@
 build
 work
 out
-co2footprint_*.txt
-co2footprint_*.html
+./co2footprint_*.txt
+./co2footprint_*.html
 site
 
 # Ignore Python virtual environment

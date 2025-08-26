@@ -13,6 +13,7 @@
 
 ## Features:
 - Base config class with more control over parameters
+- Added sample outputs to documentation
 
 # Version 1.0.0
 ## Bug Fixes:
