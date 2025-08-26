@@ -92,6 +92,10 @@ class CO2FootprintConfig extends BaseConfig {
                 'machineType', 'Type of computer on which the workflow is run [\'local\', \'compute cluster\', \'\']',
                 null, String, Set.of(GString)
         )
+        defineParameter(
+                'cpuPowerModel', 'Polynomial coefficients for CPU power model (highest degree first)',
+                null, List, Set.of(Double, BigDecimal)
+        )
     }
 
     /**
@@ -122,7 +126,8 @@ class CO2FootprintConfig extends BaseConfig {
             } 
         }
 
-        // Determine the carbon intensity (CI) value
+        /* ===== Determine the Carbon Intensity (CI) value ===== */
+
         if (value('ci') == null) {
 
             CIValueComputer ciValueComputer = new CIValueComputer(value('emApiKey'), value('location'), ciData)
@@ -130,6 +135,8 @@ class CO2FootprintConfig extends BaseConfig {
             // The closure is invoked each time the CO2 emissions are calculated (for each task) to make a new API call to update the real time ci value.
             set('ci', ciValueComputer.computeCI())
         }
+
+        /* ===== Determine Machine Type and PUE ===== */
 
         // Sets machineType and pue based on the executor if machineType is not already set
         if (value('machineType') == null) {
@@ -156,34 +163,48 @@ class CO2FootprintConfig extends BaseConfig {
             }
         )
 
-        // Set fallback CPU model based on machine type
-        if (value('machineType')) {
-            if (supportedMachineTypes.contains(value('machineType'))) {
-                cpuData.fallbackModel = "default ${value('machineType')}" as String
-            }
-            else {
-                final String message = "machineType '${value('machineType')}' is not supported." +
-                        "Please chose one of ${supportedMachineTypes}."
+        /* ===== Determine CPU Power Model Parameters ===== */
+
+        // Use custom polynomial CPU power model if given
+        if (value('cpuPowerModel') != null) { 
+            if (value('cpuPowerModel').size() < 2) {
+                final String message = "cpuPowerModel must contain at least two coefficients (for a linear model)."
                 log.error(message)
                 throw new IllegalArgumentException(message)
             }
-        }
+            log.info("Using custom CPU power model with coefficients: ${value('cpuPowerModel')}")
+        
+        // Use TDP data if no custom model is given
+        } else {
+            // Set fallback CPU model based on machine type
+            if (value('machineType')) {
+                if (supportedMachineTypes.contains(value('machineType'))) {
+                    cpuData.fallbackModel = "default ${value('machineType')}" as String
+                }
+                else {
+                    final String message = "machineType '${value('machineType')}' is not supported." +
+                            "Please chose one of ${supportedMachineTypes}."
+                    log.error(message)
+                    throw new IllegalArgumentException(message)
+                }
+            }
 
-        // Set default CPU power draw if given
-        if (value('powerdrawCpuDefault')) {
-            cpuData.set(value('powerdrawCpuDefault'), cpuData.fallbackModel, 'tdp (W)')
-        }
+            // Set default CPU power draw if given
+            if (value('powerdrawCpuDefault')) {
+                cpuData.set(value('powerdrawCpuDefault'), cpuData.fallbackModel, 'tdp (W)')
+            }
 
-        // Throw error if both customCpuTdpFile and ignoreCpuModel are set
-        if (value('customCpuTdpFile') && value('ignoreCpuModel')) {
-            log.warn("Both 'customCpuTdpFile' and 'ignoreCpuModel=true' are set. Note: When 'ignoreCpuModel' is true, the custom TDP file will be ignored.")
-        }
+            // Throw error if both customCpuTdpFile and ignoreCpuModel are set
+            if (value('customCpuTdpFile') && value('ignoreCpuModel')) {
+                log.warn("Both 'customCpuTdpFile' and 'ignoreCpuModel=true' are set. Note: When 'ignoreCpuModel' is true, the custom TDP file will be ignored.")
+            }
 
-        // Use custom CPU TDP file if provided
-        if (value('customCpuTdpFile')) {
-            cpuData.update(
-                    TDPDataMatrix.fromCsv(Paths.get(value('customCpuTdpFile') as String))
-            )
+            // Use custom CPU TDP file if provided
+            if (value('customCpuTdpFile')) {
+                cpuData.update(
+                        TDPDataMatrix.fromCsv(Paths.get(value('customCpuTdpFile') as String))
+                )
+            }
         }
     }
 

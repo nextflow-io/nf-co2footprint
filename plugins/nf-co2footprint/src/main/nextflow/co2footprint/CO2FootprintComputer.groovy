@@ -38,48 +38,39 @@ class CO2FootprintComputer {
     * Computes the CO2 emissions and energy usage for a given Nextflow task.
     *
     * Calculation formula (from Green Algorithms, https://doi.org/10.1002/advs.202100707):
-    *   CO2e = t * (n_c * P_c * u_c + n_m * P_m) * PUE * CI * 0.001
+    *   CO₂e = t * (n_c * P_c * u_c + n_m * P_m) * PUE * CI * 0.001    
     *     where:
-    *       t   = runtime in hours
-    *       n_c = number of CPU cores
-    *       P_c = power draw per core (W)
-    *       u_c = CPU usage (fraction)
-    *       n_m = memory used (GB)
-    *       P_m = power draw per GB memory (W)
-    *       PUE = power usage effectiveness (datacenter efficiency)
-    *       CI  = carbon intensity (gCO2e/kWh)
-    *   The result is converted to mWh (energy) and mgCO2e (emissions).
+    *   - t   : runtime [h]
+    *   - n_c : number of CPU cores
+    *   - P_c : per-core power draw [W]
+    *   - u_c : average core utilization [0–1]
+    *   - n_m : memory usage [GB]
+    *   - P_m : per-GB memory power draw [W/GB]
+    *   - PUE : power usage effectiveness [ratio ≥ 1.0]
+    *   - CI  : carbon intensity [gCO₂e/kWh]
     *
-    * Memory assignment logic:
-    *   - Uses requested memory if available.
-    *   - If requested memory is null, uses available system memory.
-    *   - If peak memory (RSS) exceeds requested, uses available system memory.
+    * Results:
+    *   - Energy consumption in Wh
+    *   - CO₂ emissions in gCO₂e (location-based and optional market-based)
     *
     * @param taskID  The Nextflow TaskId for this task.
     * @param trace   The TraceRecord containing task resource usage.
     * @return        CO2Record with energy consumption, CO2 emissions, and task/resource details.
     */
     CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace) {
+        
+        /* ===== CPU Information ===== */
 
-        /**
-         * CPU model information
-         */
         final String cpuModel = config.value('ignoreCpuModel') ? 'default' : trace.get('cpu_model') as String
 
-        /**
-         * Realtime of computation
-         */
-        final BigDecimal runtime_h = (getTraceOrDefault(trace, taskID, 'realtime', 0, 'missing-realtime') as BigDecimal) / (1000 * 60 * 60) // [h]
+        // Runtime [h]
+        final BigDecimal runtime_h = (getTraceOrDefault(trace, taskID, 'realtime', 0, 'missing-realtime') as BigDecimal) / (1000 * 60 * 60) 
 
-        /**
-         * Factors of core power usage
-         */
-        final Integer numberOfCores = getTraceOrDefault(trace, taskID, 'cpus', 1, 'missing-cpus') as Integer // [#]
-        final BigDecimal powerdrawPerCore = tdpDataMatrix.matchModel(cpuModel).getCoreTDP()            // [W/core]
-
-        // uc: core usage factor (between 0 and 1)
-        BigDecimal cpuUsage = getTraceOrDefault(trace, taskID, '%cpu', numberOfCores * 100, 'missing-%cpu') as BigDecimal
+        // Number of CPU cores
+        final Integer numberOfCores = getTraceOrDefault(trace, taskID, 'cpus', 1, 'missing-cpus') as Integer 
         
+        // CPU usage: fraction of total requested cores
+        BigDecimal cpuUsage = getTraceOrDefault(trace, taskID, '%cpu', numberOfCores * 100, 'missing-%cpu') as BigDecimal
         if ( cpuUsage == 0.0 ) {
             log.warn(
                 Markers.unique,
@@ -87,40 +78,44 @@ class CO2FootprintComputer {
                 'zero-cpu-usage-warning'
             )
         }
-
         final BigDecimal coreUsage = cpuUsage / (100.0 * numberOfCores)
 
-        /**
-         * Factors of memory power usage
-         */
+        // Per-core power draw: either custom polynomial model or TDP lookup [W/core]        
+        final def cpuPowerModel = config.value('cpuPowerModel')
+        final BigDecimal powerdrawPerCore = cpuPowerModel ? getPowerDrawFromModel(cpuPowerModel, coreUsage) : tdpDataMatrix.matchModel(cpuModel).getCoreTDP()
+
+        /* ===== Memory Information ===== */
+
         final Long requestedMemory = trace.get('memory') as Long        // [bytes]
         final Long maxRequiredMemory = trace.get('peak_rss') as Long    // [bytes]
 
         // Assign the final memory value
         final BigDecimal memory
-        if (requestedMemory == null) {
-            if (maxRequiredMemory == null) {
-                String message = "No requested memory and maximum consumed memory found for task ${taskID}."
-                log.error(message)
-                throw new MissingValueException(message)
-            } else {
-                memory = Converter.scaleUnits(maxRequiredMemory, '', 'B', 'G').value
-                log.warn(
-                    Markers.unique,
-                    "Requested memory is null for task ${taskID}. Using maximum consumed memory/`peak_rss` (${memory} GB) for CO₂e footprint computation.",
-                    'memory-is-null-warning'
-                )
-            }
-        } else {
-            memory = Converter.scaleUnits(requestedMemory, '', 'B', 'G',).value
+
+        // 1. Use requested memory if available
+        if (requestedMemory != null) {
+            memory = Converter.scaleUnits(requestedMemory, '', 'B', 'G').value
+        }
+        // 2. If missing, fall back to peak_rss
+        else if (maxRequiredMemory != null) {
+            memory = Converter.scaleUnits(maxRequiredMemory, '', 'B', 'G').value
+            log.warn(Markers.unique,
+                "Requested memory is null for task ${taskID}. Using maximum consumed memory/`peak_rss` (${memory} GB) for CO₂e footprint computation.",
+                'memory-is-null-warning')
+        }
+        // 3. If both missing, throw an error
+        else {
+            String message = "No requested memory and maximum consumed memory found for task ${taskID}."
+            log.error(message)
+            throw new MissingValueException(message)
         }
 
         final BigDecimal powerdrawMem  = config.value('powerdrawMem') // [W per GB]
 
-        /**
-         * Energy-related factors
-         */
-        final BigDecimal pue = config.value('pue')    // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
+        /* ===== Data Center and Carbon Intensity ===== */
+
+         // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
+        final BigDecimal pue = config.value('pue')   
 
         // CI: carbon intensity [gCO2e kWh−1]
         final BigDecimal ci = config.value('ci')
@@ -128,9 +123,10 @@ class CO2FootprintComputer {
         // Personal energy mix based carbon intensity
         final Double ciMarket = config.value('ciMarket')
 
-        /**
-         * Calculate energy consumption [kWh]
-         */
+
+        /* ===== Energy & Emission Calculation ===== */
+
+        // Energy consumption
         BigDecimal energy = pue * (
                 runtime_h * (
                         numberOfCores * powerdrawPerCore * coreUsage +
@@ -138,9 +134,7 @@ class CO2FootprintComputer {
                 ) * 0.001
         )
 
-        /*
-         * Resulting CO2 emission
-         */
+        // Resulting CO2 emissions
         BigDecimal co2e = (energy * ci) // Emissions in CO2 equivalents [g] CO2e
         BigDecimal co2eMarket = ciMarket ? (energy * ciMarket) : null
 
@@ -209,4 +203,26 @@ class CO2FootprintComputer {
         }
         return value ?: defaultValue
     }
+
+    /**
+    * Computes CPU power draw using the configured polynomial model.
+    *
+    * @param coeffs List of polynomial coefficients (highest degree first), as Double or BigDecimal.
+    * @param coreUsage CPU usage in percent (0–100).
+    * @return Estimated power draw [W/core], or null if no model configured.
+    */
+    BigDecimal getPowerDrawFromModel(def coeffs, BigDecimal coreUsage) {
+        BigDecimal power = 0.0
+        int degree = coeffs.size() - 1
+
+        coeffs.eachWithIndex { c, i ->
+            power += (c as BigDecimal) * Math.pow(coreUsage.toDouble(), degree - i)
+        }
+
+        return power
+    }
+
+
+
+
 }
