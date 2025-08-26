@@ -85,3 +85,13 @@ The following parameters are currently available:
   This is only applied if the parameter `ignoreCpuModel` is set or if the retrieved `cpu_model` could not be found in the given CPU TDP data.  
   **Default**: 12.0.
   
+- **`cpuPowerModel`**  
+  Polynomial coefficients for a custom CPU power model (highest degree first).  
+  If specified, this overrides TDP-based power draw estimation for CPU cores.  
+  The coefficients should define a function that returns the **per-core power draw** (in Watts) as a function of core utilization (0–1).  
+  Example: `[0.5, 10.0]` defines the model `0.5 * coreUsage + 10`.  
+  **Default**: `null`.
+
+    Example custom CPU power model:
+
+    <img src="../assets/example_cpuPowerModel.png" alt="Example custom CPU power model" width="500"/>

@@ -112,7 +112,7 @@ class CO2FootprintComputer {
 
         final BigDecimal powerdrawMem  = config.value('powerdrawMem') // [W per GB]
 
-        /* ===== Data Center and Carbon Intensity ===== */
+        /* ===== Data Center Effectiveness and Carbon Intensity ===== */
 
          // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
         final BigDecimal pue = config.value('pue')   
@@ -126,7 +126,7 @@ class CO2FootprintComputer {
 
         /* ===== Energy & Emission Calculation ===== */
 
-        // Energy consumption
+        // Energy consumption [kWh]
         BigDecimal energy = pue * (
                 runtime_h * (
                         numberOfCores * powerdrawPerCore * coreUsage +
@@ -211,18 +211,15 @@ class CO2FootprintComputer {
     * @param coreUsage CPU usage in percent (0–100).
     * @return Estimated power draw [W/core], or null if no model configured.
     */
-    BigDecimal getPowerDrawFromModel(def coeffs, BigDecimal coreUsage) {
+    BigDecimal getPowerDrawFromModel(List<Number> coeffs, BigDecimal coreUsage) {
         BigDecimal power = 0.0
-        int degree = coeffs.size() - 1
+        Integer degree = coeffs.size() - 1
 
         coeffs.eachWithIndex { c, i ->
-            power += (c as BigDecimal) * Math.pow(coreUsage.toDouble(), degree - i)
+            power += c * coreUsage ** (degree - i)
         }
 
         return power
     }
-
-
-
 
 }

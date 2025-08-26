@@ -56,7 +56,7 @@ class CO2FootprintComputerTest extends Specification{
         "Unknown model"    | [pue: 1.4]                     || 19.68            | 9.45
         "Unknown model"    | [location: 'DE']               || 14.06            | 4.69
         "Unknown model"    | [ci: 338.66]                   || 14.06            | 4.76
-        "AMD EPYC 7251"    | [cpuPowerModel: [0.5d, 10.0d]] || 13.11            | 6.29  
+        "AMD EPYC 7251"    | [cpuPowerModel: [0.5d, 10.0d]]   || 13.11            | 6.29  
     }
 
     // ------ Equivalences Calculation ------

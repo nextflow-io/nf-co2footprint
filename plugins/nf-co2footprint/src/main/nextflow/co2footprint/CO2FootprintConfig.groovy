@@ -94,7 +94,7 @@ class CO2FootprintConfig extends BaseConfig {
         )
         defineParameter(
                 'cpuPowerModel', 'Polynomial coefficients for CPU power model (highest degree first)',
-                null, List, Set.of(Double, BigDecimal)
+                null, List<Number>
         )
     }
 
@@ -164,16 +164,16 @@ class CO2FootprintConfig extends BaseConfig {
         )
 
         /* ===== Determine CPU Power Model Parameters ===== */
+        List<Number> coeffs = value('cpuPowerModel')
 
         // Use custom polynomial CPU power model if given
-        if (value('cpuPowerModel') != null) { 
-            if (value('cpuPowerModel').size() < 2) {
-                final String message = "cpuPowerModel must contain at least two coefficients (for a linear model)."
-                log.error(message)
-                throw new IllegalArgumentException(message)
+        if (coeffs != null) {
+            Integer degree = coeffs.size() - 1
+            List<String> terms = []
+            coeffs.eachWithIndex { c, i ->
+                terms << "${c}*x^${degree - i}"
             }
-            log.info("Using custom CPU power model with coefficients: ${value('cpuPowerModel')}")
-        
+            log.info("Using custom CPU power model: f(x) = " + terms.join(" + "))
         // Use TDP data if no custom model is given
         } else {
             // Set fallback CPU model based on machine type
