@@ -30,7 +30,7 @@ class CO2FootprintComputerTest extends Specification{
             Paths.get(this.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
     )
 
-    // ------ CO2 Calculation ------
+    // ------ CO₂ Calculation ------
 
     def "CO2e calculation for various configurations"() {
         given:
