@@ -124,7 +124,7 @@ class CO2FootprintObserverTest extends Specification{
         // With TDP = 11.45 (default global)
         // Energy consumption converted to Wh
         round(total_energy*1000) == 14.06
-        // Total CO2 in g (should reflect the CI value you set)
+        // Total CO₂ in g (should reflect the CI value you set)
         round(total_co2) == 6.68
     }
 
@@ -229,7 +229,7 @@ class CO2FootprintObserverTest extends Specification{
         ]
         values == [
             '111', 'COMPLETED', '-', '14.06 Wh', '6.75 g', '-', '480 gCO₂e/kWh', '100 %', '7 GB', '3600s', '1', '11.45 W', 'Unknown model'
-        ] // GA: CO2e is 6.94g with CI of 475 gCO2eq/kWh
+        ] // GA: CO₂e is 6.94g with CI of 475 gCO₂eq/kWh
 
         fileChecker.compareChecksums(tracePath, 'bf2f91768ca03a910e7751645f38cde0')
 

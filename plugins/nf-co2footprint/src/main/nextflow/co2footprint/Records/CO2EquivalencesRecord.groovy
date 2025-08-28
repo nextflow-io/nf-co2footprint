@@ -15,7 +15,7 @@ class CO2EquivalencesRecord {
     private final Double planePercent
 
     /**
-     * Create a record of CO2 Equivalences
+     * Create a record of CO₂ Equivalences
      *
      * @param carKilometers  Distance in km
      * @param treeMonths     Months for a tree
@@ -52,7 +52,7 @@ class CO2EquivalencesRecord {
                 case 'carKilometers' ->
                     outStr = "- ${this.getCarKilometersReadable()} km travelled by car"
                 case 'treeMonths' ->
-                    outStr = "- It takes one tree ${this.getTreeMonthsReadable()} to sequester the equivalent amount of CO2 from the atmosphere"
+                    outStr = "- It takes one tree ${this.getTreeMonthsReadable()} to sequester the equivalent amount of CO₂ from the atmosphere"
                 case 'planePercent' ->
                     if (value < 100) {
                         outStr = "- ${this.getPlanePercentReadable()} of a flight from Paris to London"

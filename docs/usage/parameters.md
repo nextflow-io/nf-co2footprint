@@ -1,6 +1,6 @@
 ---
 title: Parameters
-description: Customising parameters for the CO2e calculation.
+description: Customising parameters for the CO₂e calculation.
 ---
 
 The following parameters are currently available:

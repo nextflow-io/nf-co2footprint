@@ -1,6 +1,6 @@
 ---
 title: nf-co2footprint
-description: Nextflow plugin for CO2 footprint estimations
+description: Nextflow plugin for CO₂ footprint estimations
 ---
 
 # nf-co2footprint

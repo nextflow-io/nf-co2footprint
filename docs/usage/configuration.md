@@ -75,7 +75,7 @@ $$
 
 ## Cloud computations
 
-While the CO2 footprint calculation works on cloud instances, **nf-co2footprint** can currently not natively support all cloud environments, as cloud-specific values (such as certain CPU models or PUE values) may be missing in our datasets. As a result, calculations may often rely on fallback values.
+While the CO₂ footprint calculation works on cloud instances, **nf-co2footprint** can currently not natively support all cloud environments, as cloud-specific values (such as certain CPU models or PUE values) may be missing in our datasets. As a result, calculations may often rely on fallback values.
 
 !!! info
 

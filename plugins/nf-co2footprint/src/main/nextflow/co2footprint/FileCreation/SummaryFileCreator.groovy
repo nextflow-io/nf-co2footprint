@@ -59,10 +59,10 @@ class SummaryFileCreator extends BaseFileCreator {
         CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(totalStats['co2e'])
 
         String outText = """\
-        Total CO2e footprint measures of this workflow run (including cached tasks):
-          CO2e emissions: ${Converter.toReadableUnits(totalStats['co2e'],'', 'g')}
+        Total CO₂e footprint measures of this workflow run (including cached tasks):
+          CO₂e emissions: ${Converter.toReadableUnits(totalStats['co2e'],'', 'g')}
           Energy consumption: ${Converter.toReadableUnits(totalStats['energy'],'k', 'Wh')}
-          CO2e emissions (market): ${totalStats['co2eMarket'] ? Converter.toReadableUnits(totalStats['co2eMarket'], '', 'g') : "-"}
+          CO₂e emissions (market): ${totalStats['co2eMarket'] ? Converter.toReadableUnits(totalStats['co2eMarket'], '', 'g') : "-"}
 
         """.stripIndent()
         List<String> readableEquivalences = equivalences.getReadableEquivalences()
