@@ -216,7 +216,7 @@ class CO2FootprintComputer {
         Integer degree = coeffs.size() - 1
 
         coeffs.eachWithIndex { c, i ->
-            power += c * coreUsage ** (degree - i)
+            power += (c as BigDecimal) * coreUsage ** (degree - i)
         }
 
         return power
