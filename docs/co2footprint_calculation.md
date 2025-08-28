@@ -1,6 +1,6 @@
 ---
 title: CO₂e calculation
-description: Definition of CO2 footprint
+description: Definition of CO₂ footprint
 hide:
   - toc
 ---

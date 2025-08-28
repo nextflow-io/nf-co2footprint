@@ -12,7 +12,7 @@ import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
 
 /**
- * Class for computation of energy usage, CO2 emission, and equivalence metrics.
+ * Class for computation of energy usage, CO₂ emission, and equivalence metrics.
  */
 @Slf4j
 class CO2FootprintComputer {
@@ -35,7 +35,7 @@ class CO2FootprintComputer {
 
 
     /**
-    * Computes the CO2 emissions and energy usage for a given Nextflow task.
+    * Computes the CO₂ emissions and energy usage for a given Nextflow task.
     *
     * Calculation formula (from Green Algorithms, https://doi.org/10.1002/advs.202100707):
     *   CO₂e = t * (n_c * P_c * u_c + n_m * P_m) * PUE * CI * 0.001    
@@ -55,7 +55,7 @@ class CO2FootprintComputer {
     *
     * @param taskID  The Nextflow TaskId for this task.
     * @param trace   The TraceRecord containing task resource usage.
-    * @return        CO2Record with energy consumption, CO2 emissions, and task/resource details.
+    * @return        CO2Record with energy consumption, CO₂ emissions, and task/resource details.
     */
     CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace) {
         
@@ -117,7 +117,7 @@ class CO2FootprintComputer {
          // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
         final BigDecimal pue = config.value('pue')   
 
-        // CI: carbon intensity [gCO2e kWh−1]
+        // CI: carbon intensity [gCO₂e kWh−1]
         final BigDecimal ci = config.value('ci')
 
         // Personal energy mix based carbon intensity
@@ -134,7 +134,7 @@ class CO2FootprintComputer {
                 ) * 0.001
         )
 
-        // Resulting CO2 emissions
+        // Resulting CO₂ emissions
         BigDecimal co2e = (energy * ci) // Emissions in CO2 equivalents [g] CO2e
         BigDecimal co2eMarket = ciMarket ? (energy * ciMarket) : null
 
@@ -155,11 +155,11 @@ class CO2FootprintComputer {
 
     /**
      * The following values were taken from the Green Algorithms publication (https://doi.org/10.1002/advs.202100707):
-     * The estimated emission of the average passenger car is 175 gCO2e/Km in Europe and 251 gCO2/Km in the US
-     * The estimated emission of flying on a jet aircraft in economy class is between 139 and 244 gCO2e/Km
-     * The estimated sequestered CO2 of a mature tree is ~1 Kg per month (917 g)
-     * A reference flight Paris to London spends 50000 gCO2
-     * @param totalCO2 Total CO2 equivalents that were emitted
+     * The estimated emission of the average passenger car is 175 gCO₂e/Km in Europe and 251 gCO₂/Km in the US
+     * The estimated emission of flying on a jet aircraft in economy class is between 139 and 244 gCO₂e/Km
+     * The estimated sequestered CO₂ of a mature tree is ~1 Kg per month (917 g)
+     * A reference flight Paris to London spends 50000 gCO₂
+     * @param totalCO2 Total CO₂ equivalents that were emitted
      * @return CO2EquivalencesRecord with estimations for sensible comparisons
      */
     static CO2EquivalencesRecord computeCO2footprintEquivalences(Double totalCO2) {

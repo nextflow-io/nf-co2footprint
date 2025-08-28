@@ -38,6 +38,10 @@ nextflow run <pipeline_name>.nf
 
 More details are available in the Nextflow [plugin documentation](https://www.nextflow.io/docs/latest/plugins.html#plugins) and the [configuration guide](https://www.nextflow.io/docs/latest/config.html). 
 
+## Output
+The plugin generates three files, a [detailed report](assets/co2footprint_report_sample.html), a [text summary](assets/co2footprint_report_sample.html), and a [trace file](assets/co2footprint_report_sample.html).  
+For more details, see the [output documentation](usage/output.md).
+
 ## Contributing
 Before contributing, please read the [contribution guidelines](contributing/guidelines.md) carefully. You may also find the recommended [testing setup](contributing/setup.md) helpful.
 

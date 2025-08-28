@@ -19,10 +19,10 @@
   <!-- Metadata & Icons -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Nextflow workflow report for run id [null]">
+  <meta name="description" content="Nextflow workflow report for run id [confident_pasteur]">
   <meta name="author" content="Sabrina Krakau">
   <link rel="icon" type="image/png" href="https://www.nextflow.io/img/favicon.png" />
-  <title>[null] Nextflow CO₂e Footprint Report</title>
+  <title>[confident_pasteur] Nextflow CO₂e Footprint Report</title>
 
   <!-- Combined CSS-styles -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -63,7 +63,7 @@
     
     
     /*
-     * Nextflow CO₂e Report Custom CSS
+     * Nextflow CO2e Report Custom CSS
      */
     
     /* General page style */
@@ -593,6 +593,15 @@
     // JavaScript used to power the Nextflow Report Template output.
     
     /**
+     * Converts a list of numbers in milli-units (mWh, mg,...) to base units (Wh, g)
+     * @param {ArrayLike} list An array with numbers
+     * @returns The array, with each value divided by 1000
+     */
+    function norm_units( list ) {
+      return list?.map(v => v / 1000) ?? null;
+    }
+    
+    /**
      * Decides whether raw or readable values are to be displayed
      *
      * @param {*} data The data (number/string/...)
@@ -664,10 +673,10 @@
         // Extract process statistics
         var stats = window.statsByProcess[processName];
     
-        // Add CO₂ Boxplot to plot
+        // Add CO2 Boxplot to plot
         plot_data_total.push(
           {
-            x:processName, y: stats.co2e, name: processName,
+            x:processName, y: norm_units(stats.co2e), name: processName,
             type:'box', boxmean: true, boxpoints: false
           }
         );
@@ -675,16 +684,16 @@
         // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
         plot_data_total.push(
           {
-            x:processName, y: stats.energy?.map(v => v * 1000) ?? null, name: processName,
+            x:processName, y: norm_units(stats.energy), name: processName,
             type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
             hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
           }
         );
     
-        // Add outline of CO₂ emissions from non-cached processes to plot
+        // Add outline of CO2 emissions from non-cached processes to plot
         plot_data_non_cached.push(
           {
-            x:processName, y: stats.co2e_non_cached, name: processName,
+            x:processName, y: norm_units(stats.co2e_non_cached), name: processName,
             type:'box', boxmean: true, boxpoints: false,
           }
         );
@@ -692,7 +701,7 @@
         // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
         plot_data_non_cached.push(
           {
-            x:processName, y: stats.energy_non_cached?.map(v => v * 1000) ?? null, name: processName,
+            x:processName, y: norm_units(stats.energy_non_cached), name: processName,
             type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
             hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
           }
@@ -708,7 +717,7 @@
           title: 'Processes',
         },
         yaxis: {
-          title: 'CO₂e emission (g)',
+          title: 'CO2e emission (g)',
           rangemode: 'tozero',
         },
         yaxis2: {
@@ -855,8 +864,8 @@
     });
 
     // Nextflow report data
-    window.data = {"trace":[{"task_id":{"raw":"111","readable":"111"},"process":{"raw":"observerTestProcess","readable":"observerTestProcess"},"realtime":{"raw":3600000,"readable":"1h"},"cpus":{"raw":1,"readable":"1"},"cpu_model":{"raw":"Unknown model","readable":"Unknown model"},"%cpu":{"raw":100.0,"readable":"100.0%"},"memory":{"raw":7,"readable":"7 GB"},"status":{"raw":"COMPLETED","readable":"<span class=\"badge badge-success\">COMPLETED</span>"},"hash":{"raw":null,"readable":"-"},"native_id":{"raw":null,"readable":"-"},"module":{"raw":null,"readable":"-"},"container":{"raw":null,"readable":"-"},"tag":{"raw":null,"readable":"-"},"name":{"raw":null,"readable":"-"},"exit":{"raw":null,"readable":"-"},"submit":{"raw":null,"readable":"-"},"start":{"raw":null,"readable":"-"},"complete":{"raw":null,"readable":"-"},"duration":{"raw":null,"readable":"-"},"%mem":{"raw":null,"readable":"-"},"rss":{"raw":null,"readable":"-"},"vmem":{"raw":null,"readable":"-"},"peak_rss":{"raw":null,"readable":"-"},"peak_vmem":{"raw":null,"readable":"-"},"rchar":{"raw":null,"readable":"-"},"wchar":{"raw":null,"readable":"-"},"syscr":{"raw":null,"readable":"-"},"syscw":{"raw":null,"readable":"-"},"read_bytes":{"raw":null,"readable":"-"},"write_bytes":{"raw":null,"readable":"-"},"attempt":{"raw":null,"readable":"-"},"workdir":{"raw":null,"readable":"-"},"script":{"raw":null,"readable":"-"},"scratch":{"raw":null,"readable":"-"},"queue":{"raw":null,"readable":"-"},"disk":{"raw":null,"readable":"-"},"time":{"raw":1.0,"readable":"3600s"},"env":{"raw":null,"readable":"-"},"error_action":{"raw":null,"readable":"-"},"vol_ctxt":{"raw":null,"readable":"-"},"inv_ctxt":{"raw":null,"readable":"-"},"hostname":{"raw":null,"readable":"-"},"energy":{"raw":0.0140575,"readable":"14.06 Wh"},"co2e":{"raw":6.7476,"readable":"6.75 g"},"co2eMarket":{"raw":null,"readable":"-"},"ci":{"raw":480.0,"readable":"480 gCO\u2082e/kWh"},"powerdrawCPU":{"raw":11.45,"readable":"11.45 W"},"cpuUsage":{"raw":100.0,"readable":"100 %"}}],"summary":{"observerTestProcess":{"co2e":{"all":[6.7476],"total":6.7476,"mean":6.7476,"minLabel":null,"min":6.7476,"q1Label":null,"q1":6.7476,"q2Label":null,"q2":6.7476,"q3Label":null,"q3":6.7476,"maxLabel":null,"max":6.7476},"energy":{"all":[0.0140575],"total":0.0140575,"mean":0.0140575,"minLabel":null,"min":0.0140575,"q1Label":null,"q1":0.0140575,"q2Label":null,"q2":0.0140575,"q3Label":null,"q3":0.0140575,"maxLabel":null,"max":0.0140575},"co2e_non_cached":{"all":[6.7476],"total":6.7476,"mean":6.7476,"minLabel":null,"min":6.7476,"q1Label":null,"q1":6.7476,"q2Label":null,"q2":6.7476,"q3Label":null,"q3":6.7476,"maxLabel":null,"max":6.7476},"energy_non_cached":{"all":[0.0140575],"total":0.0140575,"mean":0.0140575,"minLabel":null,"min":0.0140575,"q1Label":null,"q1":0.0140575,"q2Label":null,"q2":0.0140575,"q3Label":null,"q3":0.0140575,"maxLabel":null,"max":0.0140575},"co2e_market":{},"energy_market":{"all":[0.0140575],"total":0.0140575,"mean":0.0140575,"minLabel":null,"min":0.0140575,"q1Label":null,"q1":0.0140575,"q2Label":null,"q2":0.0140575,"q3Label":null,"q3":0.0140575,"maxLabel":null,"max":0.0140575}}}};
-    window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir3849670395256107564/report_test.html"},{"option":"summaryFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir3849670395256107564/summary_test.txt"},{"option":"traceFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir3849670395256107564/trace_test.txt"}];
+    window.data = {"trace":[{"task_id":{"raw":4,"readable":"4"},"status":{"raw":"COMPLETED","readable":"<span class=\"badge badge-success\">COMPLETED</span>"},"hash":{"raw":"4b/539106","readable":"<div class=\"script_block short\"><code>4b/539106</code></div>"},"name":{"raw":"sayHello (4)","readable":"sayHello (4)"},"exit":{"raw":0,"readable":"0"},"submit":{"raw":1755694792295,"readable":"2025-08-20 14:59:52.295"},"start":{"raw":1755694792350,"readable":"2025-08-20 14:59:52.350"},"process":{"raw":"sayHello","readable":"sayHello"},"tag":{"raw":null,"readable":"-"},"module":{"raw":[],"readable":"-"},"container":{"raw":"quay.io/nextflow/bash","readable":"quay.io/nextflow/bash"},"attempt":{"raw":1,"readable":"1"},"script":{"raw":"\n    echo 'Hola world!'\n    ","readable":"\n    echo 'Hola world!'\n    "},"scratch":{"raw":null,"readable":"-"},"workdir":{"raw":"/Users/josuacarl/Codespace/test/test_dir/work/4b/539106294ab948c47a791b4e8a9c23","readable":"/Users/josuacarl/Codespace/test/test_dir/work/4b/539106294ab948c47a791b4e8a9c23"},"queue":{"raw":null,"readable":"-"},"cpus":{"raw":1,"readable":"1"},"memory":{"raw":0,"readable":"0 pB"},"disk":{"raw":null,"readable":"-"},"time":{"raw":3.3333E-6,"readable":"12ms"},"env":{"raw":null,"readable":"-"},"error_action":{"raw":null,"readable":"-"},"complete":{"raw":1755694806805,"readable":"2025-08-20 15:00:06.805"},"duration":{"raw":14510,"readable":"14.5s"},"realtime":{"raw":12,"readable":"0.01s"},"%cpu":{"raw":61.5,"readable":"61.5%"},"cpu_model":{"raw":"Intel(R) Core(TM) i5-1038NG7 CPU @ 2.00GHz","readable":"Intel(R) Core(TM) i5-1038NG7 CPU @ 2.00GHz"},"rchar":{"raw":55561,"readable":"54.3 KB"},"wchar":{"raw":201,"readable":"201 B"},"syscr":{"raw":147,"readable":"147"},"syscw":{"raw":13,"readable":"13"},"read_bytes":{"raw":131072,"readable":"128 KB"},"write_bytes":{"raw":0,"readable":"0"},"%mem":{"raw":0.0,"readable":"0.0%"},"vmem":{"raw":0,"readable":"0"},"rss":{"raw":0,"readable":"0"},"peak_vmem":{"raw":0,"readable":"0"},"peak_rss":{"raw":0,"readable":"0"},"vol_ctxt":{"raw":0,"readable":"0"},"inv_ctxt":{"raw":0,"readable":"0"},"native_id":{"raw":81644,"readable":"81644"},"hostname":{"raw":null,"readable":"-"},"energy":{"raw":0.032885771139,"readable":"32.89 uWh"},"co2e":{"raw":0.01097628383306403,"readable":"10.98 ug"},"co2eMarket":{"raw":3.2885771139000005E-6,"readable":"3.29 ng"},"ci":{"raw":333.77,"readable":"333.77 gCO\u2082e/kWh"},"powerdrawCPU":{"raw":12.34,"readable":"12.34 W"},"cpuUsage":{"raw":61.5,"readable":"61.5 %"}},{"task_id":{"raw":2,"readable":"2"},"status":{"raw":"COMPLETED","readable":"<span class=\"badge badge-success\">COMPLETED</span>"},"hash":{"raw":"06/96cf96","readable":"<div class=\"script_block short\"><code>06/96cf96</code></div>"},"name":{"raw":"sayHello (2)","readable":"sayHello (2)"},"exit":{"raw":0,"readable":"0"},"submit":{"raw":1755694792347,"readable":"2025-08-20 14:59:52.347"},"start":{"raw":1755694792444,"readable":"2025-08-20 14:59:52.444"},"process":{"raw":"sayHello","readable":"sayHello"},"tag":{"raw":null,"readable":"-"},"module":{"raw":[],"readable":"-"},"container":{"raw":"quay.io/nextflow/bash","readable":"quay.io/nextflow/bash"},"attempt":{"raw":1,"readable":"1"},"script":{"raw":"\n    echo 'Ciao world!'\n    ","readable":"\n    echo 'Ciao world!'\n    "},"scratch":{"raw":null,"readable":"-"},"workdir":{"raw":"/Users/josuacarl/Codespace/test/test_dir/work/06/96cf96e7f34545e08befa3ee7c9bd0","readable":"/Users/josuacarl/Codespace/test/test_dir/work/06/96cf96e7f34545e08befa3ee7c9bd0"},"queue":{"raw":null,"readable":"-"},"cpus":{"raw":1,"readable":"1"},"memory":{"raw":0,"readable":"0 pB"},"disk":{"raw":null,"readable":"-"},"time":{"raw":3.8889E-6,"readable":"14ms"},"env":{"raw":null,"readable":"-"},"error_action":{"raw":null,"readable":"-"},"complete":{"raw":1755694806765,"readable":"2025-08-20 15:00:06.765"},"duration":{"raw":14418,"readable":"14.4s"},"realtime":{"raw":14,"readable":"0.01s"},"%cpu":{"raw":84.2,"readable":"84.2%"},"cpu_model":{"raw":"Intel(R) Core(TM) i5-1038NG7 CPU @ 2.00GHz","readable":"Intel(R) Core(TM) i5-1038NG7 CPU @ 2.00GHz"},"rchar":{"raw":55557,"readable":"54.3 KB"},"wchar":{"raw":198,"readable":"198 B"},"syscr":{"raw":147,"readable":"147"},"syscw":{"raw":13,"readable":"13"},"read_bytes":{"raw":638976,"readable":"624 KB"},"write_bytes":{"raw":0,"readable":"0"},"%mem":{"raw":0.0,"readable":"0.0%"},"vmem":{"raw":0,"readable":"0"},"rss":{"raw":0,"readable":"0"},"peak_vmem":{"raw":0,"readable":"0"},"peak_rss":{"raw":0,"readable":"0"},"vol_ctxt":{"raw":0,"readable":"0"},"inv_ctxt":{"raw":0,"readable":"0"},"native_id":{"raw":81650,"readable":"81650"},"hostname":{"raw":null,"readable":"-"},"energy":{"raw":0.0525287878596,"readable":"52.53 uWh"},"co2e":{"raw":0.01753253352389869,"readable":"17.53 ug"},"co2eMarket":{"raw":5.25287878596E-6,"readable":"5.25 ng"},"ci":{"raw":333.77,"readable":"333.77 gCO\u2082e/kWh"},"powerdrawCPU":{"raw":12.34,"readable":"12.34 W"},"cpuUsage":{"raw":84.2,"readable":"84.2 %"}},{"task_id":{"raw":3,"readable":"3"},"status":{"raw":"COMPLETED","readable":"<span class=\"badge badge-success\">COMPLETED</span>"},"hash":{"raw":"18/1fc027","readable":"<div class=\"script_block short\"><code>18/1fc027</code></div>"},"name":{"raw":"sayHello (3)","readable":"sayHello (3)"},"exit":{"raw":0,"readable":"0"},"submit":{"raw":1755694792369,"readable":"2025-08-20 14:59:52.369"},"start":{"raw":1755694792448,"readable":"2025-08-20 14:59:52.448"},"process":{"raw":"sayHello","readable":"sayHello"},"tag":{"raw":null,"readable":"-"},"module":{"raw":[],"readable":"-"},"container":{"raw":"quay.io/nextflow/bash","readable":"quay.io/nextflow/bash"},"attempt":{"raw":1,"readable":"1"},"script":{"raw":"\n    echo 'Hello world!'\n    ","readable":"\n    echo 'Hello world!'\n    "},"scratch":{"raw":null,"readable":"-"},"workdir":{"raw":"/Users/josuacarl/Codespace/test/test_dir/work/18/1fc0270f208fd7903c39ce0fd45414","readable":"/Users/josuacarl/Codespace/test/test_dir/work/18/1fc0270f208fd7903c39ce0fd45414"},"queue":{"raw":null,"readable":"-"},"cpus":{"raw":1,"readable":"1"},"memory":{"raw":0,"readable":"0 pB"},"disk":{"raw":null,"readable":"-"},"time":{"raw":4.1667E-6,"readable":"15ms"},"env":{"raw":null,"readable":"-"},"error_action":{"raw":null,"readable":"-"},"complete":{"raw":1755694806840,"readable":"2025-08-20 15:00:06.840"},"duration":{"raw":14471,"readable":"14.5s"},"realtime":{"raw":15,"readable":"0.02s"},"%cpu":{"raw":86.5,"readable":"86.5%"},"cpu_model":{"raw":"Intel(R) Core(TM) i5-1038NG7 CPU @ 2.00GHz","readable":"Intel(R) Core(TM) i5-1038NG7 CPU @ 2.00GHz"},"rchar":{"raw":55563,"readable":"54.3 KB"},"wchar":{"raw":202,"readable":"202 B"},"syscr":{"raw":147,"readable":"147"},"syscw":{"raw":13,"readable":"13"},"read_bytes":{"raw":16384,"readable":"16 KB"},"write_bytes":{"raw":0,"readable":"0"},"%mem":{"raw":0.0,"readable":"0.0%"},"vmem":{"raw":0,"readable":"0"},"rss":{"raw":0,"readable":"0"},"peak_vmem":{"raw":0,"readable":"0"},"peak_rss":{"raw":0,"readable":"0"},"vol_ctxt":{"raw":0,"readable":"0"},"inv_ctxt":{"raw":0,"readable":"0"},"native_id":{"raw":81651,"readable":"81651"},"hostname":{"raw":null,"readable":"-"},"energy":{"raw":0.057818504211,"readable":"57.82 uWh"},"co2e":{"raw":0.01929808215050547,"readable":"19.3 ug"},"co2eMarket":{"raw":5.7818504211E-6,"readable":"5.78 ng"},"ci":{"raw":333.77,"readable":"333.77 gCO\u2082e/kWh"},"powerdrawCPU":{"raw":12.34,"readable":"12.34 W"},"cpuUsage":{"raw":86.5,"readable":"86.5 %"}},{"task_id":{"raw":1,"readable":"1"},"status":{"raw":"COMPLETED","readable":"<span class=\"badge badge-success\">COMPLETED</span>"},"hash":{"raw":"c3/b6fa87","readable":"<div class=\"script_block short\"><code>c3/b6fa87</code></div>"},"name":{"raw":"sayHello (1)","readable":"sayHello (1)"},"exit":{"raw":0,"readable":"0"},"submit":{"raw":1755694792392,"readable":"2025-08-20 14:59:52.392"},"start":{"raw":1755694792452,"readable":"2025-08-20 14:59:52.452"},"process":{"raw":"sayHello","readable":"sayHello"},"tag":{"raw":null,"readable":"-"},"module":{"raw":[],"readable":"-"},"container":{"raw":"quay.io/nextflow/bash","readable":"quay.io/nextflow/bash"},"attempt":{"raw":1,"readable":"1"},"script":{"raw":"\n    echo 'Bonjour world!'\n    ","readable":"\n    echo 'Bonjour world!'\n    "},"scratch":{"raw":null,"readable":"-"},"workdir":{"raw":"/Users/josuacarl/Codespace/test/test_dir/work/c3/b6fa87dfb7316d5c8296bc2b5d7925","readable":"/Users/josuacarl/Codespace/test/test_dir/work/c3/b6fa87dfb7316d5c8296bc2b5d7925"},"queue":{"raw":null,"readable":"-"},"cpus":{"raw":1,"readable":"1"},"memory":{"raw":0,"readable":"0 pB"},"disk":{"raw":null,"readable":"-"},"time":{"raw":3.8889E-6,"readable":"14ms"},"env":{"raw":null,"readable":"-"},"error_action":{"raw":null,"readable":"-"},"complete":{"raw":1755694806837,"readable":"2025-08-20 15:00:06.837"},"duration":{"raw":14445,"readable":"14.4s"},"realtime":{"raw":14,"readable":"0.01s"},"%cpu":{"raw":77.4,"readable":"77.4%"},"cpu_model":{"raw":"Intel(R) Core(TM) i5-1038NG7 CPU @ 2.00GHz","readable":"Intel(R) Core(TM) i5-1038NG7 CPU @ 2.00GHz"},"rchar":{"raw":55568,"readable":"54.3 KB"},"wchar":{"raw":204,"readable":"204 B"},"syscr":{"raw":147,"readable":"147"},"syscw":{"raw":13,"readable":"13"},"read_bytes":{"raw":45056,"readable":"44 KB"},"write_bytes":{"raw":0,"readable":"0"},"%mem":{"raw":0.0,"readable":"0.0%"},"vmem":{"raw":0,"readable":"0"},"rss":{"raw":0,"readable":"0"},"peak_vmem":{"raw":0,"readable":"0"},"peak_rss":{"raw":0,"readable":"0"},"vol_ctxt":{"raw":0,"readable":"0"},"inv_ctxt":{"raw":0,"readable":"0"},"native_id":{"raw":81655,"readable":"81655"},"hostname":{"raw":null,"readable":"-"},"energy":{"raw":0.0482865579612,"readable":"48.29 uWh"},"co2e":{"raw":0.016116604450709723,"readable":"16.12 ug"},"co2eMarket":{"raw":4.82865579612E-6,"readable":"4.83 ng"},"ci":{"raw":333.77,"readable":"333.77 gCO\u2082e/kWh"},"powerdrawCPU":{"raw":12.34,"readable":"12.34 W"},"cpuUsage":{"raw":77.4,"readable":"77.4 %"}}],"summary":{"sayHello":{"co2e":{"all":[0.01097628383306403,0.016116604450709723,0.01753253352389869,0.01929808215050547],"total":0.06392350395817792,"mean":0.01598087598954448,"minLabel":"sayHello (4)","min":0.01097628383306403,"q1Label":"sayHello (4)","q1":0.014831524296298299,"q2Label":"sayHello (1)","q2":0.01682456898730421,"q3Label":"sayHello (2)","q3":0.017973920680550384,"maxLabel":"sayHello (3)","max":0.01929808215050547},"energy":{"all":[0.032885771139,0.0482865579612,0.0525287878596,0.057818504211],"total":0.19151962117080001,"mean":0.047879905292700004,"minLabel":"sayHello (4)","min":0.032885771139,"q1Label":"sayHello (4)","q1":0.044436361255649995,"q2Label":"sayHello (1)","q2":0.050407672910400006,"q3Label":"sayHello (2)","q3":0.05385121694745,"maxLabel":"sayHello (3)","max":0.057818504211},"co2e_non_cached":{"all":[0.01097628383306403,0.016116604450709723,0.01753253352389869,0.01929808215050547],"total":0.06392350395817792,"mean":0.01598087598954448,"minLabel":"sayHello (4)","min":0.01097628383306403,"q1Label":"sayHello (4)","q1":0.014831524296298299,"q2Label":"sayHello (1)","q2":0.01682456898730421,"q3Label":"sayHello (2)","q3":0.017973920680550384,"maxLabel":"sayHello (3)","max":0.01929808215050547},"energy_non_cached":{"all":[0.032885771139,0.0482865579612,0.0525287878596,0.057818504211],"total":0.19151962117080001,"mean":0.047879905292700004,"minLabel":"sayHello (4)","min":0.032885771139,"q1Label":"sayHello (4)","q1":0.044436361255649995,"q2Label":"sayHello (1)","q2":0.050407672910400006,"q3Label":"sayHello (2)","q3":0.05385121694745,"maxLabel":"sayHello (3)","max":0.057818504211},"co2e_market":{"all":[3.2885771139000005E-6,4.82865579612E-6,5.25287878596E-6,5.7818504211E-6],"total":1.9151962117080003E-5,"mean":4.787990529270001E-6,"minLabel":"sayHello (4)","min":3.2885771139000005E-6,"q1Label":"sayHello (4)","q1":4.443636125565E-6,"q2Label":"sayHello (1)","q2":5.0407672910399996E-6,"q3Label":"sayHello (2)","q3":5.385121694745E-6,"maxLabel":"sayHello (3)","max":5.7818504211E-6},"energy_market":{"all":[0.032885771139,0.0482865579612,0.0525287878596,0.057818504211],"total":0.19151962117080001,"mean":0.047879905292700004,"minLabel":"sayHello (4)","min":0.032885771139,"q1Label":"sayHello (4)","q1":0.044436361255649995,"q2Label":"sayHello (1)","q2":0.050407672910400006,"q3Label":"sayHello (2)","q3":0.05385121694745,"maxLabel":"sayHello (3)","max":0.057818504211}}}};
+    window.options = [{"option":"ci","value":"333.77"},{"option":"ciMarket","value":"100.0"},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":"DE"},{"option":"machineType","value":"local"},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.3"},{"option":"reportFile","value":"out/pipeline_info/co2footprint_report_2025-08-20_14-59-44.html"},{"option":"summaryFile","value":"out/pipeline_info/co2footprint_summary_2025-08-20_14-59-44.txt"},{"option":"traceFile","value":"out/pipeline_info/co2footprint_trace_2025-08-20_14-59-44.txt"}];
   </script>
 
 </head>
@@ -880,7 +889,7 @@
       </ul>
     </div>
     <code class="d-none d-md-inline navbar-text">
-        [null]
+        [confident_pasteur]
     </code>
     </div>
   </nav>
@@ -891,38 +900,35 @@
     <!-- Execution report -->
     <div class="container">
       <h1 class="display-3">Nextflow CO₂e Footprint Report</h1>
-      <h2 class="text-muted mb-4"><samp>[null]</samp> </h2>
+      <h2 class="text-muted mb-4"><samp>[confident_pasteur]</samp> </h2>
 
       
-          <div class="alert alert-danger mb-4">
-              <h4>Workflow execution completed unsuccessfully!</h4>
-              <p>The exit status of the task that caused the workflow execution to fail was: <code>null</code>.</p>
-              <p>The full error message was:</p>
-              <pre>null</pre>
+          <div class="alert alert-success mb-4">
+              Workflow execution completed successfully!
           </div>
       
 
       <dl>
         <dt>Run times</dt>
         <dd>
-          <span id="workflow_start">26-Aug-2025 16:48:27</span> - <span id="workflow_complete">26-Aug-2025 16:48:27</span>
-          (<span id="completed_fromnow"></span>duration: <strong>null</strong>)
+          <span id="workflow_start">20-Aug-2025 14:59:51</span> - <span id="workflow_complete">20-Aug-2025 15:00:07</span>
+          (<span id="completed_fromnow"></span>duration: <strong>16s</strong>)
         </dd>
 
         <dt>Nextflow command</dt>
-        <dd><pre class="nfcommand"><code>null</code></pre></dd>
+        <dd><pre class="nfcommand"><code>nextflow -trace nextflow run hello --outdir=out -c nextflow.config</code></pre></dd>
       </dl>
 
       <dl>
         <dt>Nextflow version</dt>
-        <dd>version 24.10.6, build 5937 (23-04-2025 16:53 UTC)</dd>
+        <dd>version 25.04.6, build 5954 (01-07-2025 11:27 UTC)</dd>
 
         <dt>nf-co2footprint plugin version</dt>
         <dd>version 1.0.0</dd>
       </dl>
     </div>
 
-    <!-- TOTAL CO₂ cards -->
+    <!-- TOTAL CO2 cards -->
     <div class="container">
       <h2 id="measures" class="section">CO₂e Footprint Measures</h2>
       <h3 id="measures-total">Total</h3>
@@ -938,6 +944,12 @@
           </a>
         </li>
         
+          <li class="nav-item">
+            <a class="nav-link" id="co2e-marked-based-card_tablink" data-toggle="tab" href="#co2e-market-based-card_tabpanel" role="tab" aria-controls="co2e-market-based-card_tabpanel" aria-expanded="false">
+              With market-based energy mix
+            </a>
+          </li>
+        
       </ul>
 
       <div class="tab-content" id="co2e-card_tabcontent">
@@ -946,31 +958,31 @@
       <div class="tab-pane fade show active" id="co2e-total-card_tabpanel" role="tabpanel">
         <div class="card-wrap d-flex flex-wrap mt-4 mb-5">
           <div class="metric-card card p-1">
-            <span class="metric">6.75 g</span>
+            <span class="metric">63.92 ug</span>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m19.21 12.04l-1.53-.11l-.3-1.5A5.484 5.484 0 0 0 12 6C9.94 6 8.08 7.14 7.12 8.96l-.5.95l-1.07.11A3.99 3.99 0 0 0 2 14c0 2.21 1.79 4 4 4h13c1.65 0 3-1.35 3-3c0-1.55-1.22-2.86-2.79-2.96z" opacity=".3"/><path fill="currentColor" d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5c0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4c0-2.05 1.53-3.76 3.56-3.97l1.07-.11l.5-.95A5.469 5.469 0 0 1 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5l1.53.11A2.98 2.98 0 0 1 22 15c0 1.65-1.35 3-3 3z"/></svg>
             <span class="metric-title">CO<sub>2</sub>e emissions</span>
           </div>
 
           <div class="metric-card card p-1">
-            <span class="metric">14.06 Wh</span>
+            <span class="metric">191.52 uWh</span>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSEnergySocket0-tab1"><g stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20Zm4-23v-5m-8 5v-5"/><path fill="#fff" d="M24 32a8 8 0 0 0 8-8v-3H16v3a8 8 0 0 0 8 8Z"/><path d="M24 44V32"/></g></mask><path fill="currentColor" d="M0 0h48v48H0z" mask="url(#ipSEnergySocket0-tab1)"/></svg>
             <span class="metric-title">Energy consumption</span>
           </div>
 
           <div class="metric-card card p-1">
-            <span class="metric">5h 22min 38.92s</span>
+            <span class="metric">0.18s</span>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M378.31 378.49L298.42 288h30.63c9.01 0 16.98-5 20.78-13.06c3.8-8.04 2.55-17.26-3.28-24.05L268.42 160h28.89c9.1 0 17.3-5.35 20.86-13.61c3.52-8.13 1.86-17.59-4.24-24.08L203.66 4.83c-6.03-6.45-17.28-6.45-23.32 0L70.06 122.31c-6.1 6.49-7.75 15.95-4.24 24.08C69.38 154.65 77.59 160 86.69 160h28.89l-78.14 90.91c-5.81 6.78-7.06 15.99-3.27 24.04C37.97 283 45.93 288 54.95 288h30.63L5.69 378.49c-6 6.79-7.36 16.09-3.56 24.26c3.75 8.05 12 13.25 21.01 13.25H160v24.45l-30.29 48.4c-5.32 10.64 2.42 23.16 14.31 23.16h95.96c11.89 0 19.63-12.52 14.31-23.16L224 440.45V416h136.86c9.01 0 17.26-5.2 21.01-13.25c3.8-8.17 2.44-17.47-3.56-24.26z"/></svg>
             <span class="metric-title">Tree sequestration time</span>
           </div>
 
           <div class="metric-card card p-1">
-            <span class="metric">0.039</span>
+            <span class="metric">3.65E-7</span>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m5 11l1.5-4.5h11L19 11m-1.5 5a1.5 1.5 0 0 1-1.5-1.5a1.5 1.5 0 0 1 1.5-1.5a1.5 1.5 0 0 1 1.5 1.5a1.5 1.5 0 0 1-1.5 1.5m-11 0A1.5 1.5 0 0 1 5 14.5A1.5 1.5 0 0 1 6.5 13A1.5 1.5 0 0 1 8 14.5A1.5 1.5 0 0 1 6.5 16M18.92 6c-.2-.58-.76-1-1.42-1h-11c-.66 0-1.22.42-1.42 1L3 12v8a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h12v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-8l-2.08-6Z"/></svg>
             <span class="metric-title">km by car</span>
           </div>
 
           <div class="metric-card card p-1">
-            <span class="metric">0.013 %</span>
+            <span class="metric">1.28E-7 %</span>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M20.56 3.91c.59.59.59 1.54 0 2.12l-3.89 3.89l2.12 9.19l-1.41 1.42l-3.88-7.43L9.6 17l.36 2.47l-1.07 1.06l-1.76-3.18l-3.19-1.77L5 14.5l2.5.37L11.37 11L3.94 7.09l1.42-1.41l9.19 2.12l3.89-3.89c.56-.58 1.56-.58 2.12 0Z"/></svg>
             <span class="metric-title">Flight Paris - London</span>
           </div>
@@ -981,31 +993,31 @@
       <div class="tab-pane fade" id="co2e-non-cached-card_tabpanel" role="tabpanel">
         <div class="card-wrap d-flex flex-wrap mt-4 mb-5" >
           <div class="metric-card card p-1">
-            <span class="metric">6.75 g</span>
+            <span class="metric">63.92 ug</span>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m19.21 12.04l-1.53-.11l-.3-1.5A5.484 5.484 0 0 0 12 6C9.94 6 8.08 7.14 7.12 8.96l-.5.95l-1.07.11A3.99 3.99 0 0 0 2 14c0 2.21 1.79 4 4 4h13c1.65 0 3-1.35 3-3c0-1.55-1.22-2.86-2.79-2.96z" opacity=".3"/><path fill="currentColor" d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5c0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4c0-2.05 1.53-3.76 3.56-3.97l1.07-.11l.5-.95A5.469 5.469 0 0 1 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5l1.53.11A2.98 2.98 0 0 1 22 15c0 1.65-1.35 3-3 3z"/></svg>
             <span class="metric-title">CO<sub>2</sub>e emissions</span>
           </div>
 
           <div class="metric-card card p-1">
-            <span class="metric">14.06 Wh</span>
+            <span class="metric">191.52 uWh</span>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSEnergySocket0-tab2"><g stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20Zm4-23v-5m-8 5v-5"/><path fill="#fff" d="M24 32a8 8 0 0 0 8-8v-3H16v3a8 8 0 0 0 8 8Z"/><path d="M24 44V32"/></g></mask><path fill="currentColor" d="M0 0h48v48H0z" mask="url(#ipSEnergySocket0-tab2)"/></svg>
             <span class="metric-title">Energy consumption</span>
           </div>
 
           <div class="metric-card card p-1">
-            <span class="metric">5h 22min 38.92s</span>
+            <span class="metric">0.18s</span>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M378.31 378.49L298.42 288h30.63c9.01 0 16.98-5 20.78-13.06c3.8-8.04 2.55-17.26-3.28-24.05L268.42 160h28.89c9.1 0 17.3-5.35 20.86-13.61c3.52-8.13 1.86-17.59-4.24-24.08L203.66 4.83c-6.03-6.45-17.28-6.45-23.32 0L70.06 122.31c-6.1 6.49-7.75 15.95-4.24 24.08C69.38 154.65 77.59 160 86.69 160h28.89l-78.14 90.91c-5.81 6.78-7.06 15.99-3.27 24.04C37.97 283 45.93 288 54.95 288h30.63L5.69 378.49c-6 6.79-7.36 16.09-3.56 24.26c3.75 8.05 12 13.25 21.01 13.25H160v24.45l-30.29 48.4c-5.32 10.64 2.42 23.16 14.31 23.16h95.96c11.89 0 19.63-12.52 14.31-23.16L224 440.45V416h136.86c9.01 0 17.26-5.2 21.01-13.25c3.8-8.17 2.44-17.47-3.56-24.26z"/></svg>
             <span class="metric-title">Tree sequestration time</span>
           </div>
 
           <div class="metric-card card p-1">
-            <span class="metric">0.039</span>
+            <span class="metric">3.65E-7</span>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m5 11l1.5-4.5h11L19 11m-1.5 5a1.5 1.5 0 0 1-1.5-1.5a1.5 1.5 0 0 1 1.5-1.5a1.5 1.5 0 0 1 1.5 1.5a1.5 1.5 0 0 1-1.5 1.5m-11 0A1.5 1.5 0 0 1 5 14.5A1.5 1.5 0 0 1 6.5 13A1.5 1.5 0 0 1 8 14.5A1.5 1.5 0 0 1 6.5 16M18.92 6c-.2-.58-.76-1-1.42-1h-11c-.66 0-1.22.42-1.42 1L3 12v8a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h12v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-8l-2.08-6Z"/></svg>
             <span class="metric-title">km by car</span>
           </div>
 
           <div class="metric-card card p-1">
-            <span class="metric">0.013 %</span>
+            <span class="metric">1.28E-7 %</span>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M20.56 3.91c.59.59.59 1.54 0 2.12l-3.89 3.89l2.12 9.19l-1.41 1.42l-3.88-7.43L9.6 17l.36 2.47l-1.07 1.06l-1.76-3.18l-3.19-1.77L5 14.5l2.5.37L11.37 11L3.94 7.09l1.42-1.41l9.19 2.12l3.89-3.89c.56-.58 1.56-.58 2.12 0Z"/></svg>
             <span class="metric-title">Flight Paris - London</span>
           </div>
@@ -1014,11 +1026,55 @@
 
       <!-- Market-based cards -->
       
+        <div class="tab-pane fade" id="co2e-market-based-card_tabpanel" role="tabpanel">
+          <div class="card-wrap d-flex flex-wrap mt-4 mb-5" >
+            <div class="metric-card card p-1">
+              <span class="metric">19.15 ng</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m19.21 12.04l-1.53-.11l-.3-1.5A5.484 5.484 0 0 0 12 6C9.94 6 8.08 7.14 7.12 8.96l-.5.95l-1.07.11A3.99 3.99 0 0 0 2 14c0 2.21 1.79 4 4 4h13c1.65 0 3-1.35 3-3c0-1.55-1.22-2.86-2.79-2.96z" opacity=".3"/><path fill="currentColor" d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5c0-2.64-2.05-4.78-4.65-4.96zM19 18H6c-2.21 0-4-1.79-4-4c0-2.05 1.53-3.76 3.56-3.97l1.07-.11l.5-.95A5.469 5.469 0 0 1 12 6c2.62 0 4.88 1.86 5.39 4.43l.3 1.5l1.53.11A2.98 2.98 0 0 1 22 15c0 1.65-1.35 3-3 3z"/></svg>
+              <span class="metric-title">CO<sub>2</sub>e emissions</span>
+            </div>
+
+            <div class="metric-card card p-1">
+              <span class="metric" style="color:#808080">191.52 uWh</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><mask id="ipSEnergySocket0-tab3"><g stroke="#D3D3D3" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path d="M24 44c11.046 0 20-8.954 20-20S35.046 4 24 4S4 12.954 4 24s8.954 20 20 20Zm4-23v-5m-8 5v-5"/><path fill="#D3D3D3" d="M24 32a8 8 0 0 0 8-8v-3H16v3a8 8 0 0 0 8 8Z"/><path d="M24 44V32"/></g></mask><path fill="#D3D3D3" d="M0 0h48v48H0z" mask="url(#ipSEnergySocket0-tab3)"/></svg>
+              <span class="metric-title" style="color:#808080">Energy consumption</span>
+            </div>
+
+            <div class="metric-card card p-1">
+              <span class="metric">0s</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M378.31 378.49L298.42 288h30.63c9.01 0 16.98-5 20.78-13.06c3.8-8.04 2.55-17.26-3.28-24.05L268.42 160h28.89c9.1 0 17.3-5.35 20.86-13.61c3.52-8.13 1.86-17.59-4.24-24.08L203.66 4.83c-6.03-6.45-17.28-6.45-23.32 0L70.06 122.31c-6.1 6.49-7.75 15.95-4.24 24.08C69.38 154.65 77.59 160 86.69 160h28.89l-78.14 90.91c-5.81 6.78-7.06 15.99-3.27 24.04C37.97 283 45.93 288 54.95 288h30.63L5.69 378.49c-6 6.79-7.36 16.09-3.56 24.26c3.75 8.05 12 13.25 21.01 13.25H160v24.45l-30.29 48.4c-5.32 10.64 2.42 23.16 14.31 23.16h95.96c11.89 0 19.63-12.52 14.31-23.16L224 440.45V416h136.86c9.01 0 17.26-5.2 21.01-13.25c3.8-8.17 2.44-17.47-3.56-24.26z"/></svg>
+              <span class="metric-title">Tree sequestration time</span>
+            </div>
+
+            <div class="metric-card card p-1">
+              <span class="metric">1.09E-10</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m5 11l1.5-4.5h11L19 11m-1.5 5a1.5 1.5 0 0 1-1.5-1.5a1.5 1.5 0 0 1 1.5-1.5a1.5 1.5 0 0 1 1.5 1.5a1.5 1.5 0 0 1-1.5 1.5m-11 0A1.5 1.5 0 0 1 5 14.5A1.5 1.5 0 0 1 6.5 13A1.5 1.5 0 0 1 8 14.5A1.5 1.5 0 0 1 6.5 16M18.92 6c-.2-.58-.76-1-1.42-1h-11c-.66 0-1.22.42-1.42 1L3 12v8a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h12v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-8l-2.08-6Z"/></svg>
+              <span class="metric-title">km by car</span>
+            </div>
+
+            <div class="metric-card card p-1">
+              <span class="metric">3.83E-11 %</span>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M20.56 3.91c.59.59.59 1.54 0 2.12l-3.89 3.89l2.12 9.19l-1.41 1.42l-3.88-7.43L9.6 17l.36 2.47l-1.07 1.06l-1.76-3.18l-3.19-1.77L5 14.5l2.5.37L11.37 11L3.94 7.09l1.42-1.41l9.19 2.12l3.89-3.89c.56-.58 1.56-.58 2.12 0Z"/></svg>
+              <span class="metric-title">Flight Paris - London</span>
+            </div>
+          </div>
+          <div class="alert alert-info">
+            <div class="mb-2"><strong>ℹ️ Info</strong></div>
+            <div>
+              We encourage the reporting of emission values by location instead of market-based carbon intensities.
+              The energy is still drawn from a finite pool of renewables currently available to your grid.
+              It would likely be utilized for another buyer, regardless of the contract.
+              This is not to say that these contracts are without merit, but the short-term differences are limited.
+            </div>
+          </div>
+
+        </div>
+      
 
     </div>
     </div>
 
-    <!-- CO₂ footprint measures plot -->
+    <!-- CO2 footprint measures plot -->
     <div class="container">
       <h3 id="measures-plot">Per process</h3>
       <ul class="nav nav-tabs mb-3" id="co2eplot_tabs" role="tablist">
@@ -1132,7 +1188,7 @@
   <!-- Footer -->
   <footer>
     <div class="container-fluid">
-      Generated by <a href="https://www.nextflow.io" target="_blank">Nextflow</a>, version 24.10.6
+      Generated by <a href="https://www.nextflow.io" target="_blank">Nextflow</a>, version 25.04.6
     </div>
   </footer>
 </body>

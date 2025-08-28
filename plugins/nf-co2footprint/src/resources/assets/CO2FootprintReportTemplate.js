@@ -72,7 +72,7 @@ $(function() {
     // Extract process statistics
     var stats = window.statsByProcess[processName];
 
-    // Add CO2 Boxplot to plot
+    // Add CO₂ Boxplot to plot
     plot_data_total.push(
       {
         x:processName, y: stats.co2e, name: processName,
@@ -89,7 +89,7 @@ $(function() {
       }
     );
 
-    // Add outline of CO2 emissions from non-cached processes to plot
+    // Add outline of CO₂ emissions from non-cached processes to plot
     plot_data_non_cached.push(
       {
         x:processName, y: stats.co2e_non_cached, name: processName,
@@ -116,7 +116,7 @@ $(function() {
       title: 'Processes',
     },
     yaxis: {
-      title: 'CO2e emission (g)',
+      title: 'CO₂e emission (g)',
       rangemode: 'tozero',
     },
     yaxis2: {
