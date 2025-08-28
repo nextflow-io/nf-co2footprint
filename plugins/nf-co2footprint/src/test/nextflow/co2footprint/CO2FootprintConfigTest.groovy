@@ -6,6 +6,10 @@ import nextflow.co2footprint.DataContainers.CIDataMatrix
 import spock.lang.Specification
 import groovy.util.logging.Slf4j
 import java.util.concurrent.ConcurrentHashMap
+import ch.qos.logback.classic.Logger
+import ch.qos.logback.classic.spi.ILoggingEvent
+import ch.qos.logback.core.read.ListAppender
+import org.slf4j.LoggerFactory
 
 @Slf4j
 class CO2FootprintConfigTest extends Specification {
@@ -118,6 +122,25 @@ class CO2FootprintConfigTest extends Specification {
 
         then:
         config.value('pue') == 2.22
+    }
+
+    def 'should log custom CPU power model as polynomial'() {
+        given:
+        def configMap = [cpuPowerModel: [2.5, 1.3, 0.7], machineType: 'local']
+        def processMap = [:]
+
+        // Set up log capturing
+        Logger logger = (Logger) LoggerFactory.getLogger(CO2FootprintConfig)
+        def listAppender = new ListAppender<ILoggingEvent>()
+        listAppender.start()
+        logger.addAppender(listAppender)
+
+        when:
+        new CO2FootprintConfig(configMap, tdp, ci, processMap)
+
+        then:
+        def logMessages = listAppender.list*.formattedMessage
+        logMessages.any { it.contains("Using custom CPU power model: f(x) = 2.5*x^2 + 1.3*x^1 + 0.7*x^0") }
     }
 
     // Helper method to validate default properties
