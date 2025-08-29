@@ -61,29 +61,26 @@ class CIDataMatrix extends DataMatrix {
      * @param targetZone The zone for which to retrieve the carbon intensity.
      * @return The carbon intensity value as a Double, or null if not found.
      */
-    protected Double findCiInMatrix(String targetZone) {
-        def ci
+    Double findCiInMatrix(String targetZone, String fallbackZone=null) {
+        Double ci
 
         try {
-            ci = this.get(targetZone, this.ciColumn)
-            log.info(Markers.silentUnique,
-                    "Using carbon intensity for ${targetZone} from fallback table: ${ci.toString()} gCO₂eq/kWh.",
-                    'using-ci-from-table-info'
-                    )
-        } catch (IllegalArgumentException e) {
-            if (targetZone == 'GLOBAL') {
-                Exception err = new IllegalStateException("Could not retrieve GLOBAL carbon intensity value from fallback table.")
-                log.error(err.getMessage(), err)
-                throw err  // <-- will stop execution
+            ci = this.get(targetZone, this.ciColumn) as Double
+            log.info(
+                Markers.silentUnique,
+                "Using fallback carbon intensity from ${targetZone} from CI table: ${ci} gCO₂eq/kWh.",
+                'using-ci-from-table-info'
+            )
+        } catch (IllegalArgumentException exception) {
+            if (fallbackZone) {
+                return findCiInMatrix(fallbackZone)
             }
             else {
-                log.warn(Markers.silentUnique,
-                        "Could not find carbon intensity for zone ${targetZone.toUpperCase()}: ${e.message}",
-                        'missing-ci-in-table-warning'
-                ) 
+                String message = "Could not retrieve ${targetZone} from CI table. Exception:\n${exception}"
+                log.error(message)
+                throw new IllegalStateException(message)  // <-- will stop execution
             }
-            return null
         }
-        return ci as Double
+        return ci
     }
 }

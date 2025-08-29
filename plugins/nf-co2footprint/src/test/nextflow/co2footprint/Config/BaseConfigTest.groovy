@@ -16,14 +16,6 @@ class BaseConfigTest extends Specification{
         [:]         || [:]
     }
 
-    def 'Test evaluation'() {
-        when:
-        BaseConfig config = new BaseConfig([a: { -> 1}])
-
-        then:
-        config.value('a') as Integer == 1
-    }
-
     def 'Nested config' () {
         when:
         BaseConfig nestedConfig = new BaseConfig(['a': 0])

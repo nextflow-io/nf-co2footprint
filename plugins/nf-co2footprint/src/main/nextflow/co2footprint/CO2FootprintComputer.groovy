@@ -4,9 +4,8 @@ import nextflow.co2footprint.Logging.Markers
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
-import nextflow.co2footprint.Records.TimeCiRecords
 import nextflow.co2footprint.Metrics.Converter
-import nextflow.co2footprint.Records.TimeCiRecordCollector
+import nextflow.co2footprint.Records.CiRecordCollector
 
 import groovy.util.logging.Slf4j
 import nextflow.exception.MissingValueException
@@ -59,7 +58,7 @@ class CO2FootprintComputer {
     * @param timeCiRecords Collector for carbon intensity records.
     * @return        CO2Record with energy consumption, CO₂ emissions, and task/resource details.
     */
-    CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace, TimeCiRecordCollector timeCiRecords) {
+    CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace, CiRecordCollector timeCiRecords) {
 
         /* ===== CPU Information ===== */
 
@@ -83,7 +82,7 @@ class CO2FootprintComputer {
         final BigDecimal coreUsage = cpuUsage / (100.0 * numberOfCores)
 
         // Per-core power draw: either custom polynomial model or TDP lookup [W/core]
-        final def cpuPowerModel = config.value('cpuPowerModel')
+        final List<Number> cpuPowerModel = config.value('cpuPowerModel')
         final BigDecimal powerdrawPerCore = cpuPowerModel ? getPowerDrawFromModel(cpuPowerModel, coreUsage) : tdpDataMatrix.matchModel(cpuModel).getCoreTDP()
 
         /* ===== Memory Information ===== */
@@ -120,7 +119,7 @@ class CO2FootprintComputer {
         final BigDecimal pue = config.value('pue')
 
         // CI: carbon intensity [gCO₂e kWh−1]
-        final BigDecimal ci = timeCiRecords.getCI(trace)
+        final BigDecimal ci = timeCiRecords.getCi(trace)
 
         // Personal energy mix based carbon intensity
         final Double ciMarket = config.value('ciMarket')

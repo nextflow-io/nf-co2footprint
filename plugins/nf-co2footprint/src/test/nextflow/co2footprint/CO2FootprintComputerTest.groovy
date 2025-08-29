@@ -4,7 +4,7 @@ import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
-import nextflow.co2footprint.Records.TimeCiRecordCollector
+import nextflow.co2footprint.Records.CiRecordCollector
 import nextflow.exception.MissingValueException
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
@@ -44,7 +44,7 @@ class CO2FootprintComputerTest extends Specification{
 
         CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdpDataMatrix, ciDataMatrix, [:])
         CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
-        TimeCiRecordCollector timeCiRecordCollector = new TimeCiRecordCollector(config)
+        CiRecordCollector timeCiRecordCollector = new CiRecordCollector(config)
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord, timeCiRecordCollector)
 
         expect:
@@ -96,7 +96,7 @@ class CO2FootprintComputerTest extends Specification{
         // Create config and the CO2FootprintComputer under test
         CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, ciDataMatrix, [:])
         CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
-        TimeCiRecordCollector timeCiRecordCollector = new TimeCiRecordCollector(config)
+        CiRecordCollector timeCiRecordCollector = new CiRecordCollector(config)
 
         when:
         // Try to compute the CO2 footprint, catching any exceptions

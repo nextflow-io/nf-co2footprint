@@ -2,7 +2,7 @@ package nextflow.co2footprint.Records
 
 import groovy.util.logging.Slf4j
 import nextflow.co2footprint.CO2FootprintConfig
-import nextflow.co2footprint.utils.Converter
+import nextflow.co2footprint.Metrics.Converter
 import nextflow.exception.MissingValueException
 import nextflow.trace.TraceRecord
 
@@ -15,30 +15,30 @@ import java.util.concurrent.ConcurrentHashMap
 /**
  * Collects and manages time-resolved carbon intensity (CI) values for workflow tasks.
  *
- * The TimeCiRecordCollector class:
+ * The CiRecordCollector class:
  *   - Periodically fetches and stores carbon intensity values (e.g., from an API) with timestamps.
  *   - Maintains a time-indexed map of CI values for use in carbon footprint calculations.
  *   - Provides methods to add new CI records, start/stop periodic updates, and retrieve CI values.
  *   - Calculates the weighted average CI for a given task based on its runtime and the recorded CI values.
  */
 @Slf4j
-class TimeCiRecordCollector {
+class CiRecordCollector {
     // Timer for cyclical tasks
     private Timer timer = new Timer(true) // true = daemon thread
 
     // CI values
-    private ConcurrentHashMap<LocalDateTime, Double> timeCIs
+    private ConcurrentHashMap<LocalDateTime, Number> timeCIs
 
     // Config
     private CO2FootprintConfig config
     
     /**
-     * Constructor for TimeCiRecordCollector.
+     * Constructor for CiRecordCollector.
      *
      * @param config Configuration instance with CI settings
      * @param timeCIs Optional initial time CI map (default: empty ConcurrentHashMap)
      */
-    TimeCiRecordCollector(CO2FootprintConfig config, ConcurrentHashMap<LocalDateTime, Double> timeCIs=[:] as ConcurrentHashMap) {
+    CiRecordCollector(CO2FootprintConfig config, ConcurrentHashMap<LocalDateTime, Number> timeCIs=[:] as ConcurrentHashMap) {
         this.config = config
         this.timeCIs = timeCIs as ConcurrentHashMap
     }
@@ -48,7 +48,7 @@ class TimeCiRecordCollector {
      *
      * @return ConcurrentHashMap of LocalDateTime to Double representing carbon intensity values
      */
-    ConcurrentHashMap<LocalDateTime, Double> getTimeCIs() { timeCIs }
+    ConcurrentHashMap<LocalDateTime, Number> getTimeCIs() { timeCIs }
 
     /**
      * Returns the carbon intensity (CI) for a given trace record.
@@ -58,15 +58,16 @@ class TimeCiRecordCollector {
      * @param traceRecord The trace record containing task start and end times
      * @return The carbon intensity value for the trace record
      */
-    Double getCI(TraceRecord traceRecord) { this.timeCIs ? getWeightedCI(traceRecord) : config.getCi() }
+    Number getCi(TraceRecord traceRecord) { this.timeCIs ? getWeightedCI(traceRecord) : config.value('ci') as Number }
 
     /**
      * Adds time CI pairs to CI record
      *
      * @param timeCi Map of LocalDateTime and Double that is added to the CI record
      */
-    protected void add(Map<String, ?> timeCi=this.config.getTimeCi()) {
-        this.timeCIs.putAll( [(timeCi['time'] as LocalDateTime): timeCi['ci'] as Double] )
+    protected void add(CiRecord ciRecord=this.config.get('ci').raw as CiRecord) {
+        ciRecord.update()
+        this.timeCIs.putAll( [(ciRecord.time): ciRecord.value] )
     }
 
     /**
@@ -77,11 +78,11 @@ class TimeCiRecordCollector {
      * @param period Period of scheduled repetition (default: 1 hour)
      */
     void start(CO2FootprintConfig config=this.config, Integer delay=0, Integer period=1000*60*60) {
-        if ( config.isCiAPICalled() ) {
+        if ( config.usesAPI() ) {
             log.trace("Started periodically fetching the CI every ${Converter.toReadableTimeUnits(period, 'ms')}")
             timer.scheduleAtFixedRate(new TimerTask() {
                 void run() {
-                    add(config.getTimeCi())
+                    add(config.get('ci').raw as CiRecord)
                 }
             }, delay, period)
         }
@@ -109,7 +110,7 @@ class TimeCiRecordCollector {
     * @return        The weighted average carbon intensity for the task's runtime
     * @throws        MissingValueException if no CI values are available for the task's time window
     */
-    Double getWeightedCI(TraceRecord trace, Map<LocalDateTime, Double> timeCIs=this.timeCIs) {
+    Double getWeightedCI(TraceRecord trace, Map<LocalDateTime, Number> timeCIs=this.timeCIs) {
 
         // Obtain recorded star, end, and duration
         LocalDateTime start = LocalDateTime.ofInstant(
