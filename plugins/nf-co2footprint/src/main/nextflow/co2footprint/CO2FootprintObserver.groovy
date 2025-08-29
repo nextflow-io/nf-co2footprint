@@ -9,7 +9,7 @@ import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.FileCreation.ReportFileCreator
 import nextflow.co2footprint.FileCreation.SummaryFileCreator
 import nextflow.co2footprint.FileCreation.TraceFileCreator
-import nextflow.co2footprint.Records.TimeCiRecordCollector
+import nextflow.co2footprint.Records.CiRecordCollector
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskId
 import nextflow.processor.TaskProcessor
@@ -61,8 +61,8 @@ class CO2FootprintObserver implements TraceObserver {
     CO2FootprintComputer getCO2FootprintComputer() { co2FootprintComputer }
 
     // Record for CI values during execution
-    TimeCiRecordCollector timeCiRecordCollector
-    TimeCiRecordCollector getTimeCiRecordCollector() { timeCiRecordCollector }
+    CiRecordCollector timeCiRecordCollector
+    CiRecordCollector getTimeCiRecordCollector() { timeCiRecordCollector }
 
     // Holds the the start time for tasks started/submitted but not yet completed
     @PackageScope
@@ -106,7 +106,7 @@ class CO2FootprintObserver implements TraceObserver {
         this.overwrite = overwrite
         this.maxTasks = maxTasks
 
-        this.timeCiRecordCollector = new TimeCiRecordCollector(config)
+        this.timeCiRecordCollector = new CiRecordCollector(config)
     }
 
     /**
@@ -147,7 +147,7 @@ class CO2FootprintObserver implements TraceObserver {
         traceRecords[ trace.taskId ] = trace
 
         // Compute CO₂ footprint for this task
-        final CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(trace.taskId, trace)
+        final CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(trace.taskId, trace, timeCiRecordCollector)
 
         // Save per-task CO₂ result
         co2eRecords[trace.taskId] = co2Record

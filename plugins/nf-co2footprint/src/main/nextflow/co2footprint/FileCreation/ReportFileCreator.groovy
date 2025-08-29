@@ -6,7 +6,7 @@ import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.CO2FootprintComputer
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Metrics.Converter
-import nextflow.co2footprint.Records.TimeCiRecordCollector
+import nextflow.co2footprint.Records.CiRecordCollector
 
 import groovy.text.GStringTemplateEngine
 import groovy.text.Template
@@ -41,7 +41,7 @@ class ReportFileCreator extends BaseFileCreator{
     private Session session
     private Map<TaskId, TraceRecord> traceRecords
     private Map<TaskId, CO2Record> co2eRecords
-    private TimeCiRecordCollector timeCiRecordCollector
+    private CiRecordCollector timeCiRecordCollector
 
     // Writer for the HTML file
     private BufferedWriter writer
@@ -80,7 +80,7 @@ class ReportFileCreator extends BaseFileCreator{
             Session session,
             Map<TaskId, TraceRecord> traceRecords,
             Map<TaskId, CO2Record> co2eRecords,
-            TimeCiRecordCollector timeCiRecordCollector
+            CiRecordCollector timeCiRecordCollector
     ) {
         this.processStats = processStats
         this.totalStats = totalStats
@@ -136,7 +136,7 @@ class ReportFileCreator extends BaseFileCreator{
                 // Data
                 data : renderDataJson(),
                 co2_totals: renderCO2TotalsJson(),
-                used_EM_api: config.isCiAPICalled(), // true if the CI value is calculated using the electricityMaps API
+                used_EM_api: config.usesAPI(),
                 timeCiRecords: JsonOutput.toJson(timeCiRecordCollector.getTimeCIs()),
 
                 // Assets for rendering

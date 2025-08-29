@@ -7,7 +7,7 @@ import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
-import nextflow.co2footprint.Records.TimeCiRecordCollector
+import nextflow.co2footprint.Records.CiRecordCollector
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
 import spock.lang.Shared
@@ -25,7 +25,7 @@ class ReportFileCreatorTest extends Specification{
     Path reportPath = tempPath.resolve('report_test.html')
 
     @Shared
-    TimeCiRecordCollector timeCiRecordCollector
+    CiRecordCollector timeCiRecordCollector
 
     static ReportFileCreator co2FootprintReport
 
@@ -71,7 +71,7 @@ class ReportFileCreatorTest extends Specification{
                 [:]
         )
 
-        timeCiRecordCollector = new TimeCiRecordCollector(config)
+        timeCiRecordCollector = new CiRecordCollector(config)
 
         CO2Record co2Record = new CO2Record(
                 1.0d, 1.0d, null, 1.0d, 475.0,
