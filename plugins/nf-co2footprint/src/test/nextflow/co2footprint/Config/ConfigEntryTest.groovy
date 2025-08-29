@@ -1,5 +1,6 @@
 package nextflow.co2footprint.Config
 
+import nextflow.co2footprint.Records.CiRecord
 import spock.lang.Specification
 
 class ConfigEntryTest extends Specification {
@@ -24,13 +25,15 @@ class ConfigEntryTest extends Specification {
         'f'     || {x, y -> "${x}${y}".toString()}  || null             || String       || 'd'          || [1, 3]               || '13'     || Set.of(String)   || String
     }
 
-    def 'Evaluate function values correctly'() {
+    def 'Evaluate calls values with evaluate'() {
         when:
-        ConfigEntry parameter = new ConfigEntry('a', null, 1, null, Set.of(Integer, Closure<Integer>))
-        parameter.set({ -> 4})
+        ConfigEntry parameter = new ConfigEntry('a', null, 1, null, Set.of(Integer, CiRecord))
+        CiRecord x = Mock(CiRecord)
+        x.evaluate() >> 4
+        parameter.set(x)
 
         then:
-        parameter.evaluate() == 4l
+        parameter.evaluate() == 4
     }
 
     def 'Ensure modification via map is not possible' () {

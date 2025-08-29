@@ -4,8 +4,8 @@ import groovy.util.logging.Slf4j
 import nextflow.co2footprint.Config.BaseConfig
 import nextflow.co2footprint.DataContainers.DataMatrix
 import nextflow.co2footprint.DataContainers.CIDataMatrix
-import nextflow.co2footprint.DataContainers.CIValueComputer
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
+import nextflow.co2footprint.Records.CiRecord
 import nextflow.trace.TraceHelper
 
 import java.nio.file.Path
@@ -58,11 +58,11 @@ class CO2FootprintConfig extends BaseConfig {
         )
         defineParameter(
                 'ci', 'Location-based carbon intensity (CI)',
-                null, Double, Set.of(Closure<Double>, BigDecimal)
+                null, Double, Set.of(CiRecord, BigDecimal)
         )
         defineParameter(
                 'ciMarket', 'Market-based carbon intensity (CI)',
-                null, Double, Set.of(Closure<Double>, BigDecimal)
+                null, Double, Set.of(CiRecord, BigDecimal)
         )
         defineParameter(
                 'emApiKey', 'Electricity-maps API token',
@@ -127,14 +127,7 @@ class CO2FootprintConfig extends BaseConfig {
         }
 
         /* ===== Determine the Carbon Intensity (CI) value ===== */
-
-        if (value('ci') == null) {
-
-            CIValueComputer ciValueComputer = new CIValueComputer(value('emApiKey'), value('location'), ciData)
-            // ci is either set to a Closure (in case the electricity maps API is used) or to a Double (in the other cases)
-            // The closure is invoked each time the CO2 emissions are calculated (for each task) to make a new API call to update the real time ci value.
-            set('ci', ciValueComputer.computeCI())
-        }
+        set('ci', new CiRecord(value('ci') as Number, ciData, value('location') as String, value('emApiKey') as String))
 
         /* ===== Determine Machine Type and PUE ===== */
 
@@ -164,15 +157,13 @@ class CO2FootprintConfig extends BaseConfig {
         )
 
         /* ===== Determine CPU Power Model Parameters ===== */
-        List<Number> coeffs = value('cpuPowerModel')
+        List<Number> coefficients = value('cpuPowerModel')
 
         // Use custom polynomial CPU power model if given
-        if (coeffs != null) {
-            Integer degree = coeffs.size() - 1
+        if (coefficients != null) {
+            Integer degree = coefficients.size() - 1
             List<String> terms = []
-            coeffs.eachWithIndex { c, i ->
-                terms << "${c}*x^${degree - i}"
-            }
+            coefficients.eachWithIndex { Number c, Integer i -> terms.add("${c}*x^${degree - i}") }
             log.info("Using custom CPU power model: f(x) = " + terms.join(" + "))
         // Use TDP data if no custom model is given
         } else {
@@ -240,6 +231,15 @@ class CO2FootprintConfig extends BaseConfig {
     }
 
     /**
+     * Checks whether the API is used for CI determination.
+     *
+     * @return Whether the em API key is set
+     */
+    boolean usesAPI() {
+        return value('emApiKey') != null
+    }
+
+    /**
      * Collects input file options for reporting.
      *
      * @return SortedMap of input file options
@@ -265,12 +265,11 @@ class CO2FootprintConfig extends BaseConfig {
      * @return SortedMap of calculation options
      */
     SortedMap<String, Object> collectCO2CalcOptions() {
-        Set<String> outputFileOptions = Set.of('location', 'pue', 'powerdrawMem', 'powerdrawCpuDefault', 'ignoreCpuModel', 'machineType')
+        Set<String> outputFileOptions = Set.of('location', 'pue', 'powerdrawMem', 'powerdrawCpuDefault', 'ignoreCpuModel', 'machineType', 'ciMarket')
         SortedMap<String, Object> outMap = getValueMap(outputFileOptions).sort() as SortedMap
         outMap.putAll(
             [
-                'ci': get('ci') instanceof Closure ? 'dynamic' : value('ci'),
-                'ciMarket': get('ciMarket') instanceof Closure ? 'dynamic' : value('ciMarket')
+                'ci': usesAPI() ? 'dynamic' : value('ci'),
             ]
         )
         return outMap
