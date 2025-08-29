@@ -272,8 +272,8 @@ $(function() {
     // Collect all time boundaries
     const timePoints = new Set()
     for (const task of window.data.trace) {
-      timePoints.add(task["start"])
-      timePoints.add(task["complete"])
+      timePoints.add(task["start"].readable)
+      timePoints.add(task["complete"].readable)
     }
     const sortedTimes = Array.from(timePoints).sort()
 
@@ -292,8 +292,8 @@ $(function() {
       // Sum energy of intervals active in [t0, t1)
       let total = 0
       for (const task of window.data.trace) {
-        if (task["start"] <= t0 && task["complete"] > t0) {
-          total += task["energy"]
+        if (task["start"].readable <= t0 && task["complete"].readable > t0) {
+          total += task["energy"].raw
         }
       }
 
@@ -306,8 +306,8 @@ $(function() {
 
     // CI values:
     if (window.timeCiRecords.size == 0) {
-          window.timeCiRecords.set(tasksStart, window.data.trace[0]["ci"])
-          window.timeCiRecords.set(tasksEnd, window.data.trace[0]["ci"])
+          window.timeCiRecords.set(tasksStart, window.data.trace[0]["ci"].raw)
+          window.timeCiRecords.set(tasksEnd, window.data.trace[0]["ci"].raw)
     }
     else {
       const arr = Array.from( window.timeCiRecords.values() )
