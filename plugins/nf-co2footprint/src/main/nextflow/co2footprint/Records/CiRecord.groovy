@@ -8,6 +8,7 @@ import nextflow.co2footprint.Logging.Markers
 
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 
 @Slf4j
 class CiRecord {
@@ -97,13 +98,15 @@ class CiRecord {
         if (ciApiConnection.responseCode == 200) {
             // Parse the successful API response
             Map json = jsonSlurper.parse(ciApiConnection.inputStream) as Map
-            log.info(
-                Markers.unique,
-                "API call successful. CI: ${json['datetime']}: ${json['carbonIntensity']}. Response code: ${ciApiConnection.responseCode} (${ciApiConnection.responseMessage})."
-            )
 
             this.time = OffsetDateTime.parse(json['datetime'] as String).toLocalDateTime()
             this.value = json['carbonIntensity'] as Double
+            log.info(
+                    Markers.unique,
+                    "API call successful." +
+                    "CI at ${this.time.format(DateTimeFormatter.ofPattern('dd.MM.yyyy HH:mm:ss'))}: ${this.value}." +
+                    "Response code: ${ciApiConnection.responseCode} (${ciApiConnection.responseMessage})."
+            )
         }
         // Throw a warning, while keeping the previous ci value
         else {
