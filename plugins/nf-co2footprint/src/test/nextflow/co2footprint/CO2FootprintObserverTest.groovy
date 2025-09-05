@@ -261,7 +261,7 @@ class CO2FootprintObserverTest extends Specification{
                         "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
                         "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
                         "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];",
-                1022: '          ' +
+                1021: '          ' +
                         "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                         " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
             ]
