@@ -96,7 +96,7 @@ class ConfigEntry {
      *
      * @return The current value
      */
-    def get() {
+    def getRaw() {
         return value
     }
 
@@ -107,8 +107,8 @@ class ConfigEntry {
      * @return The evaluated and cast value
      */
     <T> T evaluate(Class<T> type=returnType) {
-        if (value instanceof Runnable) {
-            return value.call().asType(type)
+        if (value.respondsTo('evaluate')) {
+            return value.evaluate().asType(type)
         }
         else {
             return value.asType(type)

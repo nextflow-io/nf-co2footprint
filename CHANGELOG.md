@@ -62,6 +62,7 @@
 - Merge provided custom TDP matrices into the old `TDPDataMatrix`, instead of fully replacing it
 - Added metric to indicate newly generated / non-cached CO2 emissions into report
 - Added `ciMarket` to account for differences to the local grid
+- Added plot to report, displaying the carbon intensity during the workflow execution & the CPU usage of the tasks
 
 ## Bug Fixes:
 - Adjusted rendering of flights to deliver percentage < 1.0 flights and number of flights afterwards
@@ -78,7 +79,7 @@
 - Removal of inherited methods in `CO2Record`
 - Adjusted folder structure of tests to main
 - Added a method to extend DataMatrix by rows
-- Added requests to report warnings as Github issues
+- Added requests to report warnings as GitHub issues
 - Added template to report missing chips
 - Changed Javascript method to use Converter methods
 - Modified Aggregator to include TraceRecords for tracking of CACHED processes

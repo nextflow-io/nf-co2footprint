@@ -7,6 +7,7 @@ import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
+import nextflow.co2footprint.Records.CiRecordCollector
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
 import spock.lang.Shared
@@ -22,6 +23,9 @@ class ReportFileCreatorTest extends Specification{
 
     @Shared
     Path reportPath = tempPath.resolve('report_test.html')
+
+    @Shared
+    CiRecordCollector timeCiRecordCollector
 
     static ReportFileCreator co2FootprintReport
 
@@ -66,6 +70,9 @@ class ReportFileCreatorTest extends Specification{
                 Mock(CIDataMatrix),
                 [:]
         )
+
+        timeCiRecordCollector = new CiRecordCollector(config)
+
         CO2Record co2Record = new CO2Record(
                 1.0d, 1.0d, null, 1.0d, 475.0,
                 1, 12, 100.0, 7, 'testTask', 'Unknown model'
@@ -81,7 +88,7 @@ class ReportFileCreatorTest extends Specification{
                 aggregator.computeProcessStats(),
                 [co2e: 10.0d, energy: 100.0d, co2e_non_cached: 10.0d, energy_non_cached: 100.0d],
                 new CO2FootprintComputer(Mock(TDPDataMatrix), config), config,
-                'test-version', session, [(taskId): traceRecord], [(taskId): co2Record]
+                'test-version', session, [(taskId): traceRecord], [(taskId): co2Record], timeCiRecordCollector
         )
     }
 
@@ -97,7 +104,7 @@ class ReportFileCreatorTest extends Specification{
                 null,
                 [co2e: co2e, energy: 10d, co2e_non_cached: co2e, energy_non_cached: 10d],
                 new CO2FootprintComputer(Mock(TDPDataMatrix), null),
-                null, null, null, null, null
+                null, null, null, null, null, timeCiRecordCollector
         )
         Map<String, String> totalsJson = co2FootprintReport.renderCO2TotalsJson()
 
