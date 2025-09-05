@@ -1,6 +1,7 @@
 package nextflow.co2footprint.Records
 
 import nextflow.co2footprint.DataContainers.CIDataMatrix
+import nextflow.co2footprint.DataContainers.CIMatch
 import spock.lang.Specification
 
 class CiRecordTest extends Specification {
@@ -13,7 +14,7 @@ class CiRecordTest extends Specification {
                 Set.of('Carbon intensity gCO₂eq/kWh (Life cycle)') as LinkedHashSet<Object>,
                 Set.of('DE') as LinkedHashSet<Object>
         )
-        ciData.findCiInMatrix(location) >> 50.0
+        ciData.findCiInMatrix(location) >> new CIMatch('DE', 50.0)
 
         when:
         CiRecord ci = new CiRecord(null, ciData, location, null)
@@ -40,9 +41,8 @@ class CiRecordTest extends Specification {
 
     def "should return null if real-time retrieval and fallback both fail"() {
         given:
-        String location = "UNKNOWN"
+        String location = 'UNKNOWN'
         CIDataMatrix ciData = Mock(CIDataMatrix)
-        ciData.findCiInMatrix('GLOBAL') >> null
 
         when:
         CiRecord ci = new CiRecord(null, ciData, location, null)
