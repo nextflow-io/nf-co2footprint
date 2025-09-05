@@ -3,6 +3,7 @@ package nextflow.co2footprint.Records
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 import nextflow.co2footprint.DataContainers.CIDataMatrix
+import nextflow.co2footprint.DataContainers.CIMatch
 import nextflow.co2footprint.Logging.Markers
 
 import java.time.LocalDateTime
@@ -36,46 +37,51 @@ class CiRecord {
         // Define time
         this.time = time
 
-        // Determine CI in the order: given value -> location from table -> GLOBAL from table
+        // Determine CI in the order: given value -> EM API -> location from table -> GLOBAL from table
         if (value == null) {
-            if(location != null) {
-                value = ciDataMatrix.findCiInMatrix(location, 'GLOBAL')
-            }
-            else {
-                log.warn(
-                    Markers.silentUnique,
-                    "No location provided. Attempting to retrieve GLOBAL carbon intensity value."
-                )
-                value = ciDataMatrix.findCiInMatrix('GLOBAL')
-            }
-        }
-        this.value = value
+            CIMatch ci = ciDataMatrix.findCiInMatrix(location, 'GLOBAL')
+            value = ci?.value
 
-        // Checks whether API key was given to open a connection to Electricity Maps
-        if (emApiKey) {
-            log.info(
+            // Checks whether API key was given to open a connection to Electricity Maps
+            if (emApiKey) {
+                log.info(
                     Markers.silentUnique,
                     "Electricity Maps API key is set. Attempting to retrieve real-time carbon intensity."
-            )
+                )
 
-            // Build the API URL
-            URL url = new URI("https://api.electricitymap.org/v3/carbon-intensity/latest?zone=${location}").toURL()
+                // Build the API URL
+                URL url = new URI("https://api.electricitymap.org/v3/carbon-intensity/latest?zone=${location}").toURL()
 
-            // Open the connection
-            this.ciApiConnection = url.openConnection() as HttpURLConnection
-            this.ciApiConnection.setRequestProperty("auth-token", emApiKey)
+                // Open the connection
+                this.ciApiConnection = url.openConnection() as HttpURLConnection
+                this.ciApiConnection.setRequestProperty("auth-token", emApiKey)
 
-            // Define the slurper
-            this.jsonSlurper = new JsonSlurper()
+                // Define the slurper
+                this.jsonSlurper = new JsonSlurper()
+            }
+            else {
+                log.info(
+                    Markers.silentUnique,
+                    "Electricity Maps API key is not set. " +
+                    "To retrieve real-time carbon intensity values, please provide a key with the parameter `emApiKey`.\n" +
+                    "\t💡 You can obtain a key for ElectricityMaps at https://portal.electricitymaps.com/auth/login."
+                )
+                log.info(
+                    Markers.silentUnique,
+                    "Using fallback carbon intensity from ${ci?.zone} from CI table: ${value} gCO₂eq/kWh.",
+                    'using-ci-from-table-info'
+                )
+            }
         }
         else {
             log.info(
                 Markers.silentUnique,
-                "Electricity Maps API key is not set. " +
-                "To retrieve real-time carbon intensity values, please provide a key with the parameter `emApiKey`.\n" +
-                "\t💡 You can obtain a key for ElectricityMaps at https://portal.electricitymaps.com/auth/login."
+                "Using given value: ${value} gCO₂eq/kWh.",
+                'using-given-ci'
             )
         }
+
+        this.value = value
     }
 
     /**
@@ -87,12 +93,13 @@ class CiRecord {
     void update() {
         if (!ciApiConnection) { return }
 
+        log.debug('Attempting update of CI value.')
         if (ciApiConnection.responseCode == 200) {
             // Parse the successful API response
             Map json = jsonSlurper.parse(ciApiConnection.inputStream) as Map
             log.info(
                 Markers.unique,
-                "API call successful. Response code: ${ciApiConnection.responseCode} (${ciApiConnection.responseMessage})"
+                "API call successful. CI: ${json['datetime']}: ${json['carbonIntensity']}. Response code: ${ciApiConnection.responseCode} (${ciApiConnection.responseMessage})."
             )
 
             this.time = OffsetDateTime.parse(json['datetime'] as String).toLocalDateTime()

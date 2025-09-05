@@ -55,9 +55,10 @@ class CIDataMatrixTest extends Specification {
         matrix.get('ZONE', 'Carbon intensity gCO₂eq/kWh (Life cycle)') >> "123.45"
 
         when:
-        Double ci = matrix.findCiInMatrix('ZONE')
+        CIMatch ci = matrix.findCiInMatrix('ZONE')
 
         then:
-        ci == 123.45d
+        ci.value == 123.45d
+        ci.zone == 'ZONE'
     }
 }
