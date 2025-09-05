@@ -55,10 +55,9 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
     <div class="navbar-collapse" id="navbarCollapse">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item"><a class="nav-link" href="#">Summary</a></li>
-        <li class="nav-item"><a class="nav-link" href="#measures">Measures</a></li>
+        <li class="nav-item"><a class="nav-link" href="#metrics">Metrics</a></li>
         <li class="nav-item"><a class="nav-link" href="#tasks">Tasks</a></li>
         <li class="nav-item"><a class="nav-link" href="#options">Options</a></li>
-        <li class="nav-item"><a class="nav-link" href="#ci-heading">Carbon intensity</a></li>
         <li class="nav-item"><a class="nav-link" href="#attribution-and-references">Attribution</a></li>
       </ul>
     </div>
@@ -115,8 +114,8 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
 
     <!-- TOTAL CO₂ cards -->
     <div class="container">
-      <h2 id="measures" class="section">CO₂e Footprint Measures</h2>
-      <h3 id="measures-total">Total</h3>
+      <h2 id="metrics" class="section">CO₂e Footprint Metrics</h2>
+      <h3 id="metrics-total">Total emissions</h3>
       <ul class="nav nav-tabs" id="co2e-card_tabs" role="tablist">
         <li class="nav-item">
           <a class="nav-link active" id="co2e-total-card_tablink" data-toggle="tab" href="#co2e-total-card_tabpanel" role="tab" aria-controls="co2e-total-card_tabpanel" aria-expanded="false">
@@ -259,9 +258,9 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
     </div>
     </div>
 
-    <!-- CO₂ footprint measures plot -->
+    <!-- CO₂ footprint metrics plot -->
     <div class="container">
-      <h3 id="measures-plot">Per process</h3>
+      <h3 id="metrics-plot">Per process emissions</h3>
       <ul class="nav nav-tabs mb-3" id="co2eplot_tabs" role="tablist">
         <li class="nav-item">
           <a class="nav-link active" id="co2e-total-plot_tablink" data-toggle="tab" href="#co2e-total-plot_tabpanel" role="tab" aria-controls="co2e-total-plot_tabpanel" aria-expanded="false">
@@ -283,6 +282,13 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
         </div>
       </div>
       <p class="mt-3">The plot shows the distribution of CO₂e emissions and corresponding energy consumptions for each workflow process. The values that are displayed when hovering over the plot refer to the CO<sub>2</sub>e emissions.</p>
+    </div>
+
+    <!-- CI records plot -->
+    <div class="container">
+      <h3 id="ci-records">Carbon intensity records</h3>
+      <div id="ci-plot"></div>
+      <p class="mt-3 mb-3">This plot shows the carbon intensity (CI) fluctuation during workflow computation and the energy consumption od individual tasks. Together these two factors form the emitted CO₂e.</p>
     </div>
 
     <!-- Tasks table -->
@@ -312,19 +318,12 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
     <div class="container">
       <div id="options-table">
         <h2 id="options" class="section">Options</h2>
-        <p class="mt-3 mb-3">This table shows the nf-co2footprint plugin options that were used to calculate the CO₂e footprint measures.</p>
+        <p class="mt-3 mb-3">This table shows the nf-co2footprint plugin options that were used to calculate the CO₂e footprint estimations.</p>
       </div>
       <div class="container-fluid">
         <table class="table small table-striped" id="options_table"></table>
       </div>
     </div>
-  </div>
-
-  <!-- CI records plot -->
-  <div class="container">
-    <h2 id="ci-heading" class="section">Carbon intensity records</h2>
-    <div id="ci-plot"></div>
-    <p class="mt-3 mb-3">This plot shows the carbon intensity (CI) fluctuation during workflow computation with an additional window of +/- 24h, representing the used CI. Additionally, the usage of the assigned CPU during task computation is displayed, to indicate the system load at the respective time.</p>
   </div>
 
   <!-- References -->

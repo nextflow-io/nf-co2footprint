@@ -967,7 +967,7 @@
 
     // Nextflow report data
     window.data = {"trace":[{"task_id":{"raw":"111","readable":"111"},"process":{"raw":"observerTestProcess","readable":"observerTestProcess"},"realtime":{"raw":3600000,"readable":"1h"},"cpus":{"raw":1,"readable":"1"},"cpu_model":{"raw":"Unknown model","readable":"Unknown model"},"%cpu":{"raw":100.0,"readable":"100.0%"},"memory":{"raw":7,"readable":"7 GB"},"status":{"raw":"COMPLETED","readable":"<span class=\"badge badge-success\">COMPLETED</span>"},"hash":{"raw":null,"readable":"-"},"native_id":{"raw":null,"readable":"-"},"module":{"raw":null,"readable":"-"},"container":{"raw":null,"readable":"-"},"tag":{"raw":null,"readable":"-"},"name":{"raw":null,"readable":"-"},"exit":{"raw":null,"readable":"-"},"submit":{"raw":null,"readable":"-"},"start":{"raw":null,"readable":"-"},"complete":{"raw":null,"readable":"-"},"duration":{"raw":null,"readable":"-"},"%mem":{"raw":null,"readable":"-"},"rss":{"raw":null,"readable":"-"},"vmem":{"raw":null,"readable":"-"},"peak_rss":{"raw":null,"readable":"-"},"peak_vmem":{"raw":null,"readable":"-"},"rchar":{"raw":null,"readable":"-"},"wchar":{"raw":null,"readable":"-"},"syscr":{"raw":null,"readable":"-"},"syscw":{"raw":null,"readable":"-"},"read_bytes":{"raw":null,"readable":"-"},"write_bytes":{"raw":null,"readable":"-"},"attempt":{"raw":null,"readable":"-"},"workdir":{"raw":null,"readable":"-"},"script":{"raw":null,"readable":"-"},"scratch":{"raw":null,"readable":"-"},"queue":{"raw":null,"readable":"-"},"disk":{"raw":null,"readable":"-"},"time":{"raw":1.0,"readable":"3600s"},"env":{"raw":null,"readable":"-"},"error_action":{"raw":null,"readable":"-"},"vol_ctxt":{"raw":null,"readable":"-"},"inv_ctxt":{"raw":null,"readable":"-"},"hostname":{"raw":null,"readable":"-"},"energy":{"raw":0.0140575,"readable":"14.06 Wh"},"co2e":{"raw":6.7476,"readable":"6.75 g"},"co2eMarket":{"raw":null,"readable":"-"},"ci":{"raw":480.0,"readable":"480 gCO\u2082e/kWh"},"powerdrawCPU":{"raw":11.45,"readable":"11.45 W"},"cpuUsage":{"raw":100.0,"readable":"100 %"}}],"summary":{"observerTestProcess":{"co2e":{"all":[6.7476],"total":6.7476,"mean":6.7476,"minLabel":null,"min":6.7476,"q1Label":null,"q1":6.7476,"q2Label":null,"q2":6.7476,"q3Label":null,"q3":6.7476,"maxLabel":null,"max":6.7476},"energy":{"all":[0.0140575],"total":0.0140575,"mean":0.0140575,"minLabel":null,"min":0.0140575,"q1Label":null,"q1":0.0140575,"q2Label":null,"q2":0.0140575,"q3Label":null,"q3":0.0140575,"maxLabel":null,"max":0.0140575},"co2e_non_cached":{"all":[6.7476],"total":6.7476,"mean":6.7476,"minLabel":null,"min":6.7476,"q1Label":null,"q1":6.7476,"q2Label":null,"q2":6.7476,"q3Label":null,"q3":6.7476,"maxLabel":null,"max":6.7476},"energy_non_cached":{"all":[0.0140575],"total":0.0140575,"mean":0.0140575,"minLabel":null,"min":0.0140575,"q1Label":null,"q1":0.0140575,"q2Label":null,"q2":0.0140575,"q3Label":null,"q3":0.0140575,"maxLabel":null,"max":0.0140575},"co2e_market":{},"energy_market":{"all":[0.0140575],"total":0.0140575,"mean":0.0140575,"minLabel":null,"min":0.0140575,"q1Label":null,"q1":0.0140575,"q2Label":null,"q2":0.0140575,"q3Label":null,"q3":0.0140575,"maxLabel":null,"max":0.0140575}}}};
-    window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir16694555579243292425/report_test.html"},{"option":"summaryFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir16694555579243292425/summary_test.txt"},{"option":"traceFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir16694555579243292425/trace_test.txt"}];
+    window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir4937038981035105727/report_test.html"},{"option":"summaryFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir4937038981035105727/summary_test.txt"},{"option":"traceFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir4937038981035105727/trace_test.txt"}];
     window.timeCiRecords = new Map(Object.entries({}));
   </script>
 
@@ -986,10 +986,9 @@
     <div class="navbar-collapse" id="navbarCollapse">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item"><a class="nav-link" href="#">Summary</a></li>
-        <li class="nav-item"><a class="nav-link" href="#measures">Measures</a></li>
+        <li class="nav-item"><a class="nav-link" href="#metrics">Metrics</a></li>
         <li class="nav-item"><a class="nav-link" href="#tasks">Tasks</a></li>
         <li class="nav-item"><a class="nav-link" href="#options">Options</a></li>
-        <li class="nav-item"><a class="nav-link" href="#ci-heading">Carbon intensity</a></li>
         <li class="nav-item"><a class="nav-link" href="#attribution-and-references">Attribution</a></li>
       </ul>
     </div>
@@ -1019,7 +1018,7 @@
       <dl>
         <dt>Run times</dt>
         <dd>
-          <span id="workflow_start">29-Aug-2025 15:49:23</span> - <span id="workflow_complete">29-Aug-2025 15:49:23</span>
+          <span id="workflow_start">05-Sep-2025 11:18:07</span> - <span id="workflow_complete">05-Sep-2025 11:18:07</span>
           (<span id="completed_fromnow"></span>duration: <strong>null</strong>)
         </dd>
 
@@ -1038,8 +1037,8 @@
 
     <!-- TOTAL CO₂ cards -->
     <div class="container">
-      <h2 id="measures" class="section">CO₂e Footprint Measures</h2>
-      <h3 id="measures-total">Total</h3>
+      <h2 id="metrics" class="section">CO₂e Footprint Metrics</h2>
+      <h3 id="metrics-total">Total emissions</h3>
       <ul class="nav nav-tabs" id="co2e-card_tabs" role="tablist">
         <li class="nav-item">
           <a class="nav-link active" id="co2e-total-card_tablink" data-toggle="tab" href="#co2e-total-card_tabpanel" role="tab" aria-controls="co2e-total-card_tabpanel" aria-expanded="false">
@@ -1132,9 +1131,9 @@
     </div>
     </div>
 
-    <!-- CO₂ footprint measures plot -->
+    <!-- CO₂ footprint metrics plot -->
     <div class="container">
-      <h3 id="measures-plot">Per process</h3>
+      <h3 id="metrics-plot">Per process emissions</h3>
       <ul class="nav nav-tabs mb-3" id="co2eplot_tabs" role="tablist">
         <li class="nav-item">
           <a class="nav-link active" id="co2e-total-plot_tablink" data-toggle="tab" href="#co2e-total-plot_tabpanel" role="tab" aria-controls="co2e-total-plot_tabpanel" aria-expanded="false">
@@ -1156,6 +1155,13 @@
         </div>
       </div>
       <p class="mt-3">The plot shows the distribution of CO₂e emissions and corresponding energy consumptions for each workflow process. The values that are displayed when hovering over the plot refer to the CO<sub>2</sub>e emissions.</p>
+    </div>
+
+    <!-- CI records plot -->
+    <div class="container">
+      <h3 id="ci-records">Carbon intensity records</h3>
+      <div id="ci-plot"></div>
+      <p class="mt-3 mb-3">This plot shows the carbon intensity (CI) fluctuation during workflow computation and the energy consumption od individual tasks. Together these two factors form the emitted CO₂e.</p>
     </div>
 
     <!-- Tasks table -->
@@ -1185,19 +1191,12 @@
     <div class="container">
       <div id="options-table">
         <h2 id="options" class="section">Options</h2>
-        <p class="mt-3 mb-3">This table shows the nf-co2footprint plugin options that were used to calculate the CO₂e footprint measures.</p>
+        <p class="mt-3 mb-3">This table shows the nf-co2footprint plugin options that were used to calculate the CO₂e footprint estimations.</p>
       </div>
       <div class="container-fluid">
         <table class="table small table-striped" id="options_table"></table>
       </div>
     </div>
-  </div>
-
-  <!-- CI records plot -->
-  <div class="container">
-    <h2 id="ci-heading" class="section">Carbon intensity records</h2>
-    <div id="ci-plot"></div>
-    <p class="mt-3 mb-3">This plot shows the carbon intensity (CI) fluctuation during workflow computation with an additional window of +/- 24h, representing the used CI. Additionally, the usage of the assigned CPU during task computation is displayed, to indicate the system load at the respective time.</p>
   </div>
 
   <!-- References -->
