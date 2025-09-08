@@ -64,73 +64,59 @@ $(function() {
   }
 
   // Plot histograms of resource usage
-  var plot_data_total = [];
-  var plot_data_non_cached = [];
-  for(var processName in window.statsByProcess){
+  function plot_resource_usage(){
+    var plot_data = {"total": [], "total_non_cached": []};
+    for(var processName in window.statsByProcess){
 
-    // Extract process statistics
-    var stats = window.statsByProcess[processName];
+      // Extract process statistics
+      var stats = window.statsByProcess[processName];
 
-    // Add CO₂ Boxplot to plot
-    plot_data_total.push(
-      {
-        x:processName, y: stats.co2e, name: processName,
-        type:'box', boxmean: true, boxpoints: false
+      // Add CO₂ Boxplot to plot
+        for (const [i, suffix] of ["", "_non_cached"].entries()){
+          plot_data[`total${suffix}`].push(
+            {
+              x:processName, y: stats[`co2e${suffix}`], name: processName,
+              type:'box', boxmean: true, boxpoints: false
+            }
+          );
+
+          // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
+          plot_data[`total${suffix}`].push(
+            {
+              x:processName, y: stats[`energy${suffix}`]?.map(v => v * 1000) ?? null, name: processName,
+              type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
+              hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
+            }
+          );
+        }
       }
-    );
 
-    // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
-    plot_data_total.push(
-      {
-        x:processName, y: stats.energy?.map(v => v * 1000) ?? null, name: processName,
-        type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
-        hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
-      }
-    );
+    var layout = {
+      title: 'CO<sub>2</sub> emission & energy consumption',
+      legend: {
+        x: 1.1
+      },
+      xaxis: {
+        title: 'Processes',
+      },
+      yaxis: {
+        title: 'CO₂e emission (g)',
+        rangemode: 'tozero',
+      },
+      yaxis2: {
+        title: 'Energy consumption (Wh)',
+        rangemode: 'tozero',
+        gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
+        overlaying: 'y',
+        side: 'right',
+      },
+      boxmode: 'group',
+    };
 
-    // Add outline of CO₂ emissions from non-cached processes to plot
-    plot_data_non_cached.push(
-      {
-        x:processName, y: stats.co2e_non_cached, name: processName,
-        type:'box', boxmean: true, boxpoints: false,
-      }
-    );
-
-    // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
-    plot_data_non_cached.push(
-      {
-        x:processName, y: stats.energy_non_cached?.map(v => v * 1000) ?? null, name: processName,
-        type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
-        hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
-      }
-    );
+    Plotly.newPlot('co2e-total-plot', plot_data.total, layout);
+    Plotly.newPlot('co2e-non-cached-plot', plot_data.total_non_cached, layout);
   }
-
-  var layout = {
-    title: 'CO<sub>2</sub> emission & energy consumption',
-    legend: {
-      x: 1.1
-    },
-    xaxis: {
-      title: 'Processes',
-    },
-    yaxis: {
-      title: 'CO₂e emission (g)',
-      rangemode: 'tozero',
-    },
-    yaxis2: {
-      title: 'Energy consumption (Wh)',
-      rangemode: 'tozero',
-      gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
-      overlaying: 'y',
-      side: 'right',
-    },
-    boxmode: 'group',
-  };
-
-  Plotly.newPlot('co2e-total-plot', plot_data_total, layout);
-  Plotly.newPlot('co2e-non-cached-plot', plot_data_non_cached, layout);
-
+  plot_resource_usage()
 
   //
   // Table creation functions
@@ -268,18 +254,23 @@ $(function() {
   function make_ci_plot() {
     var ci_plot_data = []
 
+    // Add Date() entry to start and end time of tasks
+    window.data.trace.forEach(task => {
+      task.start.time = new Date(task.start.raw)
+      task.complete.time = new Date(task.complete.raw)
+    })
+
     // Tasks:
     // Collect all time boundaries
     const timePoints = new Set()
     for (const task of window.data.trace) {
-      timePoints.add(task["start"].readable)
-      timePoints.add(task["complete"].readable)
+      timePoints.add(task.start.time)
+      timePoints.add(task.complete.time)
     }
-    const sortedTimes = Array.from(timePoints).sort()
+    const sortedTimes = Array.from(timePoints).sort((a,b) => a-b)
 
     // Define first and last point
-    var tasksStart = sortedTimes[0]
-    var tasksEnd = sortedTimes[sortedTimes.length - 1]
+    var [tasksStart, tasksEnd] = [sortedTimes[0], sortedTimes[sortedTimes.length - 1]]
 
     // For each subinterval, calculate the total energy from active intervals
     // Add first point to energy trace
@@ -292,8 +283,8 @@ $(function() {
       // Sum energy of intervals active in [t0, t1)
       let total = 0
       for (const task of window.data.trace) {
-        if (task["start"].readable <= t0 && task["complete"].readable > t0) {
-          total += task["energy"].raw
+        if (task.start.time <= t0 && task.complete.time >= t1) {
+          total += task.energy.raw
         }
       }
 
@@ -304,20 +295,33 @@ $(function() {
     timeSteps.push(tasksEnd)
     totalEnergy.push(0.0)
 
-    // CI values:
-    if (window.timeCiRecords.size == 0) {
-          window.timeCiRecords.set(tasksStart, window.data.trace[0]["ci"].raw)
-          window.timeCiRecords.set(tasksEnd, window.data.trace[0]["ci"].raw)
+    // CI Records:
+    var ciRecords = new Map()
+
+    // Change keys to Date() and sort
+    for (let [key, value] of Object.entries(window.ciRecords)) {
+      ciRecords.set(new Date(key), value)
+    }
+    ciRecords = new Map([...ciRecords.entries()].sort((a,b) => a[0]-b[0]))
+
+    if (ciRecords.size == 0) {
+      ciRecords.set(tasksStart, window.data.trace[0].ci.raw)
+      ciRecords.set(tasksEnd, window.data.trace[0].ci.raw)
     }
     else {
-      const arr = Array.from( window.timeCiRecords.values() )
-      window.timeCiRecords.set(tasksStart, arr[0])
-      window.timeCiRecords.set(tasksEnd, arr[arr.length - 1])
+      const times = [...ciRecords.keys()]
+      const cis = [...ciRecords.values()]
+      if (tasksStart < times[0]) {
+        ciRecords.set(tasksStart, cis[0])
+      }
+      if (tasksEnd > times[times.length - 1]) {
+        ciRecords.set(tasksEnd, cis[cis.length - 1])
+      }
     }
 
-    const timeCiRecords = new Map([...window.timeCiRecords].sort())
-    var timestamps = Array.from( timeCiRecords.keys() )
-    var ciValues = Array.from( timeCiRecords.values() )
+    ciRecords = new Map([...ciRecords.entries()].sort((a,b) => a[0]-b[0]))
+    var timestamps = [...ciRecords.keys()]
+    var ciValues = [...ciRecords.values()]
 
     // Add CI trace to plot
     ci_plot_data.push(
@@ -325,6 +329,7 @@ $(function() {
         name: "Carbon intensity",
         x: timestamps, y: ciValues,
         type: "scatter",
+        mode: "lines+markers",
         line: { color: "grey" },
         marker: { color: "grey" },
       }
@@ -335,8 +340,9 @@ $(function() {
       {
         name:"Energy consumption",
         x: timeSteps, y: totalEnergy,
-        type: "scatter", fill: "tozeroy", yaxis: "y2",
-        line: { color: "#FFCC00", shape: "hv"  },
+        type: "scatter",
+        fill: "tozeroy", yaxis: "y2",
+        line: { color: "#FFCC00", shape: "hv" },
       }
     )
 
@@ -350,7 +356,6 @@ $(function() {
         title: 'Time',
         ticklabelstandoff: 10,
         overlay: 'x2',
-        range: [tasksStart, tasksEnd],
       },
       yaxis: {
         title: 'Carbon Intensity (g/kWh)',
