@@ -106,7 +106,7 @@ class CiRecord {
             log.info(
                     Markers.unique,
                     "API call successful. " +
-                    "CI: ${this.value} (${this.time.format(DateTimeFormatter.ofPattern('dd.MM.yyyy HH:mm:ss'))}). " +
+                    "CI: ${this.value}gCO₂e/kWh (${this.time.format(DateTimeFormatter.ofPattern('dd.MM.yyyy HH:mm:ss'))}). " +
                     "Response code: ${ciApiConnection.responseCode} (${ciApiConnection.responseMessage})."
             )
         }
