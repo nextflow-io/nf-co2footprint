@@ -20,7 +20,7 @@ class CiRecord {
     Number value = null
 
     // Connection to Electricity Maps API
-    HttpURLConnection ciApiConnection = null
+    Closure<HttpURLConnection> connectAPI = null
 
     // JSON Parser
     JsonSlurper jsonSlurper = null
@@ -55,8 +55,11 @@ class CiRecord {
                 URL url = new URI("https://api.electricitymap.org/v3/carbon-intensity/latest?zone=${location}").toURL()
 
                 // Open the connection
-                this.ciApiConnection = url.openConnection() as HttpURLConnection
-                this.ciApiConnection.setRequestProperty("auth-token", emApiKey)
+                this.connectAPI = {
+                    HttpURLConnection ciApiConnection = url.openConnection() as HttpURLConnection
+                    ciApiConnection.setRequestProperty("auth-token", emApiKey)
+                    return ciApiConnection
+                }
 
                 // Define the slurper
                 this.jsonSlurper = new JsonSlurper()
@@ -93,30 +96,29 @@ class CiRecord {
      * Otherwise the previous CI value is used (fallback from table for location was defined during initialization).
      */
     void update() {
-        if (!ciApiConnection) { return }
-
+        if (!connectAPI) { return }
         log.debug('Attempting update of CI value.')
-        if (ciApiConnection.responseCode == 200) {
+
+        HttpURLConnection ciApiConnection = connectAPI()
+        if (ciApiConnection.responseCode == HttpURLConnection.HTTP_OK) {
             // Parse the successful API response
             Map json = jsonSlurper.parse(ciApiConnection.inputStream) as Map
-
 
             this.time = Instant.parse(json['datetime'] as String).atZone(ZoneId.systemDefault()).toLocalDateTime()
             this.value = json['carbonIntensity'] as Double
             log.info(
                     Markers.unique,
                     "API call successful. " +
-                    "CI: ${this.value}gCO₂e/kWh (${this.time.format(DateTimeFormatter.ofPattern('dd.MM.yyyy HH:mm:ss'))}). " +
+                    "CI: ${this.value} gCO₂e/kWh (${this.time.format(DateTimeFormatter.ofPattern('dd.MM.yyyy HH:mm:ss'))}). " +
                     "Response code: ${ciApiConnection.responseCode} (${ciApiConnection.responseMessage})."
             )
         }
         // Throw a warning, while keeping the previous ci value
         else {
             // Handle API error response
-            String errorMessage = (jsonSlurper.parseText(ciApiConnection.errorStream.text) as Map).get('message')
             log.warn(
                 Markers.unique,
-                "API call failed. Response code: ${ciApiConnection.responseCode} (${errorMessage})"
+                "API call failed. Response code: ${ciApiConnection.responseCode} -> ${ciApiConnection.errorStream.text}"
             )
         }
     }
