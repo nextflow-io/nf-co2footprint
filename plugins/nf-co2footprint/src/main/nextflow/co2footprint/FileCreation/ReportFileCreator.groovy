@@ -13,6 +13,7 @@ import groovy.text.Template
 import groovy.util.logging.Slf4j
 
 import nextflow.Session
+import nextflow.co2footprint.Records.CO2Record
 import nextflow.processor.TaskId
 import nextflow.trace.TraceHelper
 import nextflow.trace.TraceRecord
@@ -238,38 +239,6 @@ class ReportFileCreator extends BaseFileCreator{
         }
 
         return totalsMap
-    }
-
-     /**
-     * Formats a trace entry into a human-readable string.
-     * Returns {@link nextflow.trace.TraceRecord#NA} if value is null.
-     *
-     * @param key   Trace entry key
-     * @param value Entry value
-     * @param traceRecord Provides fallback formatting
-     * @return Human-readable string
-     *
-     * @example getReadableTraceEntry("realtime", 125.5, tr) → "2m 5s"
-     * @example getReadableTraceEntry("memory", 1073741824, tr) → "1 GB"
-     * @example getReadableTraceEntry("status", "COMPLETED", tr) → "<span class=\"badge badge-success\">COMPLETED</span>"
-     */
-    protected static String getReadableTraceEntry(String key, Object value, TraceRecord traceRecord) {
-        if (value == null) { return traceRecord.NA}
-        return switch (key) {
-            case 'realtime' -> Converter.toReadableTimeUnits(value as double)
-            case 'memory' -> Converter.toReadableUnits(value as double, '', 'B')
-            case 'status' -> {
-                Map<String, String> colors = [COMPLETED: 'success', CACHED: 'secondary', ABORTED: 'danger', FAILED: 'danger']
-                "<span class=\"badge badge-${colors[value]}\">${value}</span>"
-            }
-            case 'hash' -> {
-                String script = ''
-                (value as String).eachLine { String line -> script += "${line.trim()}\n" }
-                script = script.dropRight(1)
-                "<div class=\"script_block short\"><code>${script}</code></div>"
-            }
-            default -> traceRecord.getFmtStr(key)
-        }
     }
 
     /**

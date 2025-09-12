@@ -74,8 +74,8 @@ class ReportFileCreatorTest extends Specification{
         timeCiRecordCollector = new CiRecordCollector(config)
 
         CO2Record co2Record = new CO2Record(
-                1.0d, 1.0d, null, 1.0d, 475.0,
-                1, 12, 100.0, 7, 'testTask', 'Unknown model'
+                'testTask', 1.0d, 1.0d, null, 475.0, 100.0, 7,
+                1.0d, 1, 12, 'Unknown model'
         )
 
         
