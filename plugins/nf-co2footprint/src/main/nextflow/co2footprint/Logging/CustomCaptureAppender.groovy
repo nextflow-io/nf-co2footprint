@@ -52,9 +52,9 @@ class CustomCaptureAppender extends AppenderBase<ILoggingEvent> {
             }
             else {
                 // Choose appropriate level
-                switch (event.level) {
-                    case Level.ERROR -> renderer.appendError(message)
-                    case Level.WARN -> renderer.appendWarning(message)
+                switch (event.level.levelInt) {
+                    case Level.ERROR.levelInt -> renderer.appendError(message)
+                    case Level.WARN.levelInt -> renderer.appendWarning(message)
                     default -> renderer.appendInfo(message)
                 }
             }
