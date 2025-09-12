@@ -1,11 +1,13 @@
 package nextflow.co2footprint.Records
 
+import nextflow.co2footprint.Metrics.Calculator
 import nextflow.co2footprint.Metrics.Converter
 
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
+import nextflow.co2footprint.Metrics.Metric
+import nextflow.co2footprint.Metrics.Quantity
 import nextflow.trace.TraceRecord
-
 
 /**
  * Represents a single CO₂ record for a Nextflow task.
@@ -18,50 +20,7 @@ import nextflow.trace.TraceRecord
 @Slf4j
 @CompileStatic
 class CO2Record extends TraceRecord {
-
-    // Energy used (kWh)
-    final Double energy
-    // CO2 equivalent emissions (g)
-    final Double co2e
-    // Personal energy mix CO2 equivalent emissions (g)
-    final Double co2eMarket
-    // Time spent on task (ms)
-    final Double time
-    // Carbon intensity (gCO₂eq/kWh)
-    final Double ci
-    // Number of CPU cores used
-    final Integer cpus
-    // Power draw of CPU (W)
-    final Double powerdrawCPU
-    // CPU usage (%)
-    final Double cpuUsage
-    // Memory used (bytes)
-    final Long memory
-    // Name of Task
-    final String name
-    // CPU model name
-    final String cpu_model
-    // Raw energy used by CPU (kWh)
-    final Double rawEnergyProcessor
-    // Raw energy used by memory (kWh)
-    final Double rawEnergyMemory
-
-    // Properties of entries for JSON rendering
-    final public static Map<String,String> FIELDS = [
-            energy:             'num',
-            co2e:               'num',
-            co2eMarket:         'num',
-            time:               'num',
-            ci:                 'num',
-            cpus:               'num',
-            powerdrawCPU:       'num',
-            cpuUsage:           'num',
-            memory:             'num',
-            name:               'str',
-            cpu_model:          'str',
-            rawEnergyProcessor: 'num',
-            rawEnergyMemory:    'num',
-    ]
+    @Delegate final Map<String, Object> store
 
     /**
     * Constructs a CO2Record representing the resource usage and emissions for a single task.
@@ -81,41 +40,78 @@ class CO2Record extends TraceRecord {
     * @param rawEnergyMemory    Memory-specific energy consumed by the task (kWh)
     */
     CO2Record(
-            Double energy=null, Double co2e=null, Double co2eMarket=null, Double time=null,
-            Double ci=null, Integer cpus=null, Double powerdrawCPU=null,
-            Double cpuUsage=null, Long memory=null, String name=null, String cpu_model=null,
-            Double rawEnergyProcessor, Double rawEnergyMemory
+            String name=null, Double energy=null, Double co2e=null, Double co2eMarket=null, Double ci=null,
+            Double cpuUsage=null, Long memory=null, Double time=null,  Integer cpus=null, Double powerdrawCPU=null,
+            String cpu_model=null, Double rawEnergyProcessor, Double rawEnergyMemory
     ) {
-        this.energy = energy
-        this.co2e = co2e
-        this.co2eMarket = co2eMarket
-        this.time = time
-        this.ci = ci
-        this.cpus = cpus
-        this.powerdrawCPU = powerdrawCPU
-        this.cpuUsage = cpuUsage
-        this.memory = memory
-        this.name = name
-        this.cpu_model = cpu_model
-        this.rawEnergyProcessor = rawEnergyProcessor
-        this.rawEnergyMemory = rawEnergyMemory
-        Map<String, Object> store = new LinkedHashMap<>([
-                energy:             energy,
-                co2e:               co2e,
-                co2eMarket:         co2eMarket,
-                time:               time,
-                ci:                 ci,
-                cpus:               cpus,
-                powerdrawCPU:       powerdrawCPU,
-                cpuUsage:           cpuUsage,
-                memory:             memory,
-                name:               name,
-                cpu_model:          cpu_model,
-                rawEnergyProcessor: rawEnergyProcessor,
-                rawEnergyMemory:    rawEnergyMemory,
+        this.store = new LinkedHashMap<>([
+            'name':                     name,
+            'energy':                   energy,
+            'co2e':                     co2e,
+            'co2eMarket':               co2eMarket,
+            'ci':                       ci,
+            'cpuUsage':                 cpuUsage,
+            'memory':                   memory,
+            'time':                     time,
+            'cpus':                     cpus,
+            'powerdrawCPU':             powerdrawCPU,
+            'cpu_model':                cpu_model,
+            'rawEnergyProcessor':       rawEnergyProcessor,
+            'rawEnergyMemory':          rawEnergyMemory,
         ])
         // Overload the store of the parent to ensure inherited methods can access the stored data
         super.store << store
+    }
+
+    CO2Record(Map<String, Object> store) {
+        this.store = store
+        // Overload the store of the parent to ensure inherited methods can access the stored data
+        super.store << store
+    }
+
+    Object add(String key, CO2Record record) {
+        Object newValue=record.getStore()[key]
+        Object thisValue = this.store[key]
+        return switch (key) {
+            case 'ci' -> Calculator.weightedAverage([thisValue, newValue], [store.energy, record.energy])
+            case 'cpuUsage' -> Calculator.weightedAverage([thisValue, newValue], [store.time, record.time])
+            case 'memory' -> Calculator.max(thisValue, newValue)
+            case 'cpus' -> Calculator.max(thisValue, newValue)
+            case 'powerdrawCPU' -> Calculator.weightedAverage([thisValue, newValue], [store.energy, record.energy])
+            case 'cpu_model' -> thisValue instanceof Set ? thisValue.add(newValue) : Set.of(thisValue, newValue)
+            default -> thisValue + newValue
+        }
+    }
+
+    CO2Record add(CO2Record record) {
+        Map<String, Object> store = record.getStore().collectEntries { String key, Object value ->
+            [key, add(key, record)]
+        }
+        return new CO2Record(store)
+    }
+
+    /**
+     * Converts a CO₂ record entry into a raw unified value.
+     *
+     * Numerical values are scaled to their base units.
+     * If no value is provided, the method falls back to the stored entry for the given key.
+     *
+     * @param key   The entry key (e.g. "energy", "co2e", "time", "cpuUsage")
+     * @param value Optional value to convert; defaults to the stored value for the key
+     * @return      The raw metric with all information as a map
+     */
+    Map<String, ? extends Object> getRaw(String key, Object value=store[key]) {
+        return switch (key) {
+            case 'energy' ->  Converter.scaleUnits(value as double, 'k', 'Wh', '').toMap()
+            case 'co2e' ->  Converter.scaleUnits(value as double, '', 'g', '').toMap()
+            case 'co2eMarket' ->  Converter.scaleUnits(value as double, 'm', 'g', '').toMap()
+            case 'time' ->  Converter.scaleTime(value as double, 'h', 'ms').toMap()
+            case 'ci' -> Converter.scaleUnits(value as double, '', 'gCO₂e/kWh', '').toMap()
+            case 'powerdrawCPU' ->  Converter.scaleUnits(value as double, '', 'W', '').toMap()
+            case 'cpuUsage' ->  new Quantity(value as double, '%', '').toMap()
+            case 'memory' ->  Converter.scaleUnits(value as double, 'G', 'B', '').toMap()
+            default -> new Metric(value).toMap()
+        }
     }
 
      /**
@@ -147,13 +143,13 @@ class CO2Record extends TraceRecord {
     }
 
     /**
-     * Renders the JSON output of a CO2Record.
+     * Get the Entries in a readable format for the summary
      *
-     * @param stringBuilder A StringBuilder used to elongate the String
-     * @return JSON representation of the record
+     * @param order List of keys that defines both which entries are included
+     *              and the order in which they appear (defaults to all keys in the order of this.store).
+     * @return List of readable Entries
      */
-    @Override
-    CharSequence renderJson(StringBuilder stringBuilder=new StringBuilder()) {
-        return super.renderJson(stringBuilder, FIELDS.keySet() as List, FIELDS.values() as List)
+    List<String> getReadableEntries(List<String> order=store.keySet() as List) {
+        return order.collect { String key -> getReadable(key) }
     }
 }

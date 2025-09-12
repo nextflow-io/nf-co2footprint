@@ -12,54 +12,22 @@ import nextflow.trace.TraceRecord
 @CompileStatic
 class CO2RecordAggregator {
     // Transformation method to the desired metric
-    private final Map<String, Closure<Double>> metricExtractionFunctions
-
-    // Stores lists of trace/CO2 record maps for each process name
-    private final Map<String, List<Map<String, TraceRecord>>> processCO2Records = [:]
-
-    /**
-     * Constructs a CO2RecordAggregator with optional custom metric extraction functions.
-     *
-     * @param metricExtractionFunctions
-     *        Optional map of metric names to closures for extracting metric values.
-     *        If not provided, defaults for common CO₂ and energy metrics are used.
-     */
-    CO2RecordAggregator( Map<String, Closure<Double>> metricExtractionFunctions=null )  {
-        this.metricExtractionFunctions ?= metricExtractionFunctions ?: [
-                co2e: { TraceRecord traceRecord, CO2Record co2Record -> co2Record.co2e },
-                energy: { TraceRecord traceRecord, CO2Record co2Record -> co2Record.energy },
-                co2e_non_cached: { TraceRecord traceRecord, CO2Record co2Record ->
-                    traceRecord.getStore()['status'] != 'CACHED' ? co2Record.co2e : null
-                },
-                energy_non_cached: { TraceRecord traceRecord, CO2Record co2Record ->
-                    traceRecord.getStore()['status'] != 'CACHED' ? co2Record.energy : null
-                },
-                co2e_market: {
-                    TraceRecord traceRecord, CO2Record co2Record -> co2Record.co2eMarket
-                },
-                energy_market: {
-                    TraceRecord traceRecord, CO2Record co2Record -> co2Record.energy
-                },
-        ]
-    }
-
-    /**
-     * Adds a CO2Record to the list of records for the given process.
-     *
-     * @param traceRecord The TraceRecord to add
-     * @param co2record The CO2Record to add
-     */
-    void add( TraceRecord traceRecord, CO2Record co2Record) {
-        String processName = traceRecord.getSimpleName()
-        Map<String, TraceRecord> record = [ traceRecord: traceRecord, co2Record: co2Record ] as Map<String, TraceRecord>
-
-        if(processCO2Records.containsKey(processName)) {
-            processCO2Records[processName].add(record)
-        }
-        else {
-            processCO2Records[processName] = [record]
-        }
-    }
+    private final Map<String, Closure<Double>> metricExtractionFunctions = [
+        co2e: { TraceRecord traceRecord, CO2Record co2Record -> co2Record.co2e },
+        energy: { TraceRecord traceRecord, CO2Record co2Record -> co2Record.energy },
+        co2e_non_cached: { TraceRecord traceRecord, CO2Record co2Record ->
+                traceRecord.getStore()['status'] != 'CACHED' ? co2Record.co2e : null
+        },
+        energy_non_cached: { TraceRecord traceRecord, CO2Record co2Record ->
+                traceRecord.getStore()['status'] != 'CACHED' ? co2Record.energy : null
+        },
+        co2e_market: {
+            TraceRecord traceRecord, CO2Record co2Record -> co2Record.co2eMarket
+        },
+        energy_market: {
+            TraceRecord traceRecord, CO2Record co2Record -> co2Record.energy
+        },
+    ]
 
     /**
      * Class to store quantiles
@@ -171,37 +139,5 @@ class CO2RecordAggregator {
         }
 
         return result
-    }
-
-    /**
-     * Computes summary statistics for each metric defined in the metricExtractionFunctions map.
-     *
-     * @param items A list of mapped trace & CO2 records
-     * @return A map where each key is a metric name and each value is a map of summary statistics
-     *         as returned by {@link #computeStat}.
-     */
-    Map<String, Map<String, ?>> computeStats(List<Map<String, TraceRecord>> records) {
-        return this.metricExtractionFunctions.collectEntries {
-            String metricName, Closure<Double> metricExtractionFunction ->
-                [metricName, computeStat(records, metricExtractionFunction)]
-        }
-    }
-
-    /**
-     * Computes metric statistics for each individual process.
-     *
-     * For every process in processCO2Records, this method calculates summary stats (min, quartiles,
-     * mean, max, etc.) for each defined metric, and returns them along with the process name.
-     *
-     * @return A list of maps, each containing:
-     *         - 'process': the name of the process
-     *         - one entry per metric (e.g., 'energy', 'emissions'), each with its corresponding stats map
-     *         The format looks like this: [ [process: processName1:, metricName1: [entryKey1: value, ...],...],...]
-     */
-    Map<String, Map<String, Map<String, ?>>> computeProcessStats() {
-        return this.processCO2Records.collectEntries {
-            String processName, List<Map<String, TraceRecord>> records ->
-                [processName, computeStats(records)]
-        }
     }
 }

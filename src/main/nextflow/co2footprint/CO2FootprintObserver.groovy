@@ -71,10 +71,12 @@ class CO2FootprintObserver implements TraceObserver {
 
     // Stores CO₂ emission records by task ID
     final private Map<TaskId, CO2Record> co2eRecords = new ConcurrentHashMap<>()
-    Map<TaskId,CO2Record> getCO2eRecords() { co2eRecords }
+    Map<TaskId, CO2Record> getCO2eRecords() { co2eRecords }
 
     // Stores all trace records by task ID
     final private Map<TaskId, TraceRecord> traceRecords = new ConcurrentHashMap<>()
+
+    final private Node workflowStats
 
     /**
      * Constructor for the observer.
@@ -97,6 +99,9 @@ class CO2FootprintObserver implements TraceObserver {
         this.session = session
         this.version = version
         this.config = config
+
+        // Collect metrics in hierarchical node structure
+        this.workflowStats = new Node(null, session.runName)
 
         // Make file instances
         this.traceFile = new TraceFileCreator((config.value('traceFile') as Path).complete(), overwrite)
@@ -125,14 +130,11 @@ class CO2FootprintObserver implements TraceObserver {
      *
      * @param trace the TraceRecord of the task that just started
      */
-    private synchronized void startRecord(TraceRecord trace) {
+    private synchronized void recordStarted(TraceRecord traceRecord) {
         // Keep started tasks
-        runningTasks[trace.taskId] = trace
+        runningTasks[traceRecord.taskId] = traceRecord
 
-        // Extend trace records
-        synchronized (traceRecords) {
-            traceRecords[ trace.taskId ] = trace
-        }
+        workflowStats.appendNode(traceRecord.processName)
     }
 
     /**
@@ -140,24 +142,21 @@ class CO2FootprintObserver implements TraceObserver {
      *
      * @param trace TraceRecord of the finished task
      */
-    private synchronized void aggregateRecords(TraceRecord trace) {
+    private synchronized void aggregateRecords(TraceRecord traceRecord) {
         // Remove task from set of running tasks
-        runningTasks.remove(trace.taskId)
-
-        // Store final trace
-        traceRecords[ trace.taskId ] = trace
+        runningTasks.remove(traceRecord.taskId)
 
         // Compute CO₂ footprint for this task
-        final CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(trace.taskId, trace, timeCiRecordCollector)
-
-        // Save per-task CO₂ result
-        co2eRecords[trace.taskId] = co2Record
-
-        // Update overall aggregated stats
-        aggregator.add(trace, co2Record)
+        final CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(traceRecord, timeCiRecordCollector)
 
         // Optionally write to trace file
-        this.traceFile?.write(trace, co2Record)
+        this.traceFile?.write(traceRecord, co2Record)
+
+        // Insert records into Tree structure
+        Node processNode = workflowStats[traceRecord.processName][0] as Node
+        Node taskNode = processNode.appendNode(traceRecord.taskId)
+        taskNode.appendNode(NodeHelper.toNode(co2Record))
+        taskNode.appendNode(NodeHelper.toNode(traceRecord))
     }
 
     // ------ OBSERVER METHODS ------
@@ -258,7 +257,7 @@ class CO2FootprintObserver implements TraceObserver {
     void onProcessSubmit(TaskHandler handler, TraceRecord trace) {
         log.trace("Trace report - submit process > ${handler}")
 
-        startRecord(trace)
+        recordStarted(trace)
     }
 
     /**
@@ -271,7 +270,7 @@ class CO2FootprintObserver implements TraceObserver {
     void onProcessStart(TaskHandler handler, TraceRecord trace) {
         log.trace("Trace report - start process > ${handler}")
 
-        startRecord(trace)
+        recordStarted(trace)
     }
 
     /**
@@ -284,7 +283,7 @@ class CO2FootprintObserver implements TraceObserver {
     void onProcessComplete(TaskHandler handler, TraceRecord trace) {
         log.trace("Trace report - complete process > ${handler}")
 
-        // Ensure the presence of a Trace Record
+        // Ensure the presence of a Trace BaseRecord
         if (!trace) {
             log.warn("Unable to find TraceRecord for task with id: ${handler.task.id}")
             return
