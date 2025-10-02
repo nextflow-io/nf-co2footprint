@@ -3,6 +3,7 @@ package nextflow.co2footprint.FileCreation
 import groovy.util.logging.Slf4j
 import groovyx.gpars.agent.Agent
 import nextflow.co2footprint.Records.CO2Record
+
 import nextflow.processor.TaskId
 import nextflow.trace.TraceHelper
 import nextflow.trace.TraceRecord
@@ -65,14 +66,12 @@ class TraceFileCreator extends BaseFileCreator {
      * @param trace     TraceRecord for the task
      * @param co2Record CO2Record for the task
      */
-    void write(TaskId taskId, TraceRecord trace, CO2Record co2Record){
+    void write(TraceRecord traceRecord, CO2Record co2Record){
         if (!created) { return }
 
-        List<String> records = co2Record.getReadableEntries(
-                ['name', 'energy', 'co2e', 'co2eMarket', 'ci', 'cpuUsage', 'memory', 'time', 'cpus', 'powerdrawCPU', 'cpu_model']
-        )
+        List<String> records = co2Record.getReadableEntries()
 
-        records = [taskId as String, trace.get('status') as String] + records
+        records = [traceRecord.taskId.toString(), traceRecord.get('status') as String] + records
 
         traceWriter.send { PrintWriter writer ->
             writer.println( String.join('\t', records) )

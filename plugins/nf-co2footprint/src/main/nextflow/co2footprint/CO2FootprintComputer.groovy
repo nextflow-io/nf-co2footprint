@@ -3,10 +3,9 @@ package nextflow.co2footprint
 import nextflow.co2footprint.Logging.Markers
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
-import nextflow.co2footprint.Records.CO2Record
-
 import nextflow.co2footprint.Metrics.Converter
 import groovy.util.logging.Slf4j
+import nextflow.co2footprint.Records.CO2Record
 import nextflow.exception.MissingValueException
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
@@ -57,7 +56,7 @@ class CO2FootprintComputer {
     * @param trace   The TraceRecord containing task resource usage.
     * @return        CO2Record with energy consumption, CO₂ emissions, and task/resource details.
     */
-    CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace) {
+    CO2Record computeTaskCO2footprint(TraceRecord trace, TaskId taskID=trace.taskId) {
         
         /* ===== CPU Information ===== */
 
@@ -81,7 +80,7 @@ class CO2FootprintComputer {
         final BigDecimal coreUsage = cpuUsage / (100.0 * numberOfCores)
 
         // Per-core power draw: either custom polynomial model or TDP lookup [W/core]        
-        final def cpuPowerModel = config.value('cpuPowerModel')
+        final List<Number> cpuPowerModel = config.value('cpuPowerModel')
         final BigDecimal powerdrawPerCore = cpuPowerModel ? getPowerDrawFromModel(cpuPowerModel, coreUsage) : tdpDataMatrix.matchModel(cpuModel).getCoreTDP()
 
         /* ===== Memory Information ===== */
@@ -139,17 +138,17 @@ class CO2FootprintComputer {
         BigDecimal co2eMarket = ciMarket ? (energy * ciMarket) : null
 
         return new CO2Record(
-                energy,
-                co2e,
-                co2eMarket,
-                runtime_h,
-                ci,
-                numberOfCores as Integer,
-                powerdrawPerCore,
-                cpuUsage,
-                memory as Long,
-                trace.get('name') as String,
-                config.value('ignoreCpuModel') ? 'Custom value' : cpuModel
+            trace.get('name') as String,
+            energy,
+            co2e,
+            co2eMarket,
+            ci,
+            cpuUsage,
+            memory as Long,
+            runtime_h,
+            numberOfCores as Integer,
+            powerdrawPerCore,
+            config.value('ignoreCpuModel') ? 'Custom value' : cpuModel
         )
     }
 
@@ -207,15 +206,15 @@ class CO2FootprintComputer {
     /**
     * Computes CPU power draw using the configured polynomial model.
     *
-    * @param coeffs List of polynomial coefficients (highest degree first), as Double or BigDecimal.
+    * @param coefficients List of polynomial coefficients (highest degree first), as Double or BigDecimal.
     * @param coreUsage CPU usage in percent (0–100).
     * @return Estimated power draw [W/core], or null if no model configured.
     */
-    BigDecimal getPowerDrawFromModel(List<Number> coeffs, BigDecimal coreUsage) {
+    static BigDecimal getPowerDrawFromModel(List<Number> coefficients, BigDecimal coreUsage) {
         BigDecimal power = 0.0
-        Integer degree = coeffs.size() - 1
+        Integer degree = coefficients.size() - 1
 
-        coeffs.eachWithIndex { c, i ->
+        coefficients.eachWithIndex { c, i ->
             power += (c as BigDecimal) * coreUsage ** (degree - i)
         }
 
