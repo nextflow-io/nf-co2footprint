@@ -5,25 +5,51 @@ import nextflow.co2footprint.Metrics.Metric
 import nextflow.co2footprint.Metrics.Quantity
 import nextflow.trace.TraceRecord
 
-class TreeNode extends Node {
-    TreeNode(TreeNode parent, Object name, Map attributes = [:]) {
-        super(parent, name, attributes)
+class RecordTree {
+    protected final name
+    protected TraceRecord value
+    protected final Map attributes
+
+    protected RecordTree parent
+    protected final List<RecordTree> children
+
+    RecordTree(Object name, TraceRecord value = null, Map attributes = [:], RecordTree parent = null, List children = []) {
+        this.name = name
+        this.value = value
+        this.attributes = attributes
+
+        this.parent = parent
+        this.children = children
     }
 
-    // TODO: Extend Node summary
-    void summarize() {
-        List<Object> addableChildren = children().findAll( { it.respondsTo('add') } )
+    RecordTree addChild(RecordTree child) {
+        child.parent = this
+        children.add(child)
+        return child
+    }
 
-        Object summary
-        if (addableChildren) {
-            summary = addableChildren.sum()
+
+    RecordTree getChild(Object name) {
+        return children.find( { RecordTree child -> child.name == name })
+    }
+
+    /*
+     * Summarizes the content of a Node by adding the sum of the children as a Map representation to its attributes.
+     * This methods works recursively by calling the summarize method with the assumption that the bottom layer is additive.
+     *
+     * Example:
+     * X( Y1(a = 1, b = 1), Y2(a = 1, b = 2) ).summarize()
+     * => X( a = 2, b = 3; Y1(...), Y2(...) )
+     */
+    RecordTree summarize() {
+        List<RecordTree> addableChildren = children.findAll( { RecordTree child -> child.value?.respondsTo('plus') } )
+
+        if (!addableChildren) {
+            addableChildren = children.collect({ RecordTree child -> child.summarize() })
         }
-        else {
-            summary = children().collect({ summarize() }).sum()
-        }
-        // TODO: MEH...
-        attributes << summary.toMap()
-        return summary
+
+        value = addableChildren.collect( { RecordTree child -> child.value }).sum()
+        return this
     }
 
 
@@ -42,7 +68,7 @@ class TreeNode extends Node {
      */
     static String getReadable(String key, TraceRecord record, Object value=record.store[key]) {
         // Call upon implemented method first
-        if (record.respondsTo('getReadable', [String, Object])) {
+        if (record.respondsTo('getReadable')) {
             return record.getReadable(key, value)
         }
 
@@ -76,7 +102,7 @@ class TreeNode extends Node {
      */
     static Map<String, ? extends  Object> getRaw(String key, TraceRecord record, Object value=record.store[key]) {
         // Call upon implemented method first
-        if (record.respondsTo('getRaw', [String, Object])) {
+        if (record.respondsTo('getRaw')) {
             return record.getRaw(key, value)
         }
         return switch (record.FIELDS[key]) {
@@ -89,19 +115,17 @@ class TreeNode extends Node {
         }
     }
 
-    static TreeNode toNode(TraceRecord record) {
-        Map attributes = [:]
-        if (record.respondsTo('add', [TraceRecord])) {
-            attributes.put('summarize', { String key, TraceRecord newRecord -> record + newRecord})
+    Map<String, Object> toMap() {
+        Map<String, Map<String, Object>> traceMap = [:]
+        if (value) {
+            traceMap = value.store.collectEntries { String key, Object x ->
+                [key, [raw: getRaw(key, value, x), readable: getReadable(key, value, x)]]
+            }
         }
-
-        // TODO: dont add values as Nodes, but leave TraceRecords as bottom layer, which is summable
-        // TODO: make toMap() method that returns the [readable: x, raw: x] representation of each value
-        TreeNode recordNode = new TreeNode(null, record.class.name, attributes)
-
-        record.store.each { String key, Object value ->
-            recordNode.appendNode(key, [readable: getReadable(key, record, value), raw: getRaw(key, record, value)], value)
-        }
-        return recordNode
+        return [
+                name: name,
+                attributes: attributes,
+                children: children.collect({ RecordTree child -> child.toMap() })
+        ] + traceMap
     }
 }
