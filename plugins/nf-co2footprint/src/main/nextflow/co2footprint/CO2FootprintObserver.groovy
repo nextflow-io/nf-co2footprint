@@ -9,7 +9,7 @@ import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.FileCreation.ReportFileCreator
 import nextflow.co2footprint.FileCreation.SummaryFileCreator
 import nextflow.co2footprint.FileCreation.TraceFileCreator
-
+import nextflow.co2footprint.ResultsTree.RecordTree
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskId
 import nextflow.processor.TaskProcessor
@@ -71,7 +71,7 @@ class CO2FootprintObserver implements TraceObserver {
     // Stores all trace records by task ID
     final private Map<TaskId, TraceRecord> traceRecords = new ConcurrentHashMap<>()
 
-    final private Node workflowStats
+    final private RecordTree workflowStats
 
     /**
      * Constructor for the observer.
@@ -96,7 +96,7 @@ class CO2FootprintObserver implements TraceObserver {
         this.config = config
 
         // Collect metrics in hierarchical node structure
-        this.workflowStats = new Node(null, session.runName)
+        this.workflowStats = new RecordTree(session.runName)
 
         // Make file instances
         this.traceFile = new TraceFileCreator((config.value('traceFile') as Path).complete(), overwrite)
@@ -127,7 +127,7 @@ class CO2FootprintObserver implements TraceObserver {
         // Keep started tasks
         runningTasks[traceRecord.taskId] = traceRecord
 
-        workflowStats.appendNode(traceRecord.processName)
+        workflowStats.addChild(new RecordTree(traceRecord.processName))
     }
 
     /**
@@ -146,10 +146,10 @@ class CO2FootprintObserver implements TraceObserver {
         this.traceFile?.write(traceRecord, co2Record)
 
         // Insert records into Tree structure
-        Node processNode = workflowStats[traceRecord.processName][0] as Node
-        Node taskNode = processNode.appendNode(traceRecord.taskId)
-        taskNode.appendNode(NodeHelper.toNode(co2Record))
-        taskNode.appendNode(NodeHelper.toNode(traceRecord))
+        RecordTree processNode = workflowStats.getChild(traceRecord.processName)
+        RecordTree taskNode = processNode.addChild(new RecordTree(traceRecord.taskId))
+        taskNode.addChild(new RecordTree('co2', co2Record))
+        taskNode.addChild(new RecordTree('trace', traceRecord))
     }
 
     // ------ OBSERVER METHODS ------

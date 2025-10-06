@@ -10,7 +10,7 @@ class Metric {
      *
      * @param value The value, saved in the metric
      */
-    Metric(Object value, String type = value.class.name, String format = null) {
+    Metric(Object value, String type = value.class.getSimpleName(), String format = null) {
         this.value = value
         this.type = type
         this.format = format
@@ -21,6 +21,6 @@ class Metric {
     }
 
     Map<String, Object> toMap() {
-        return [value: value, type: type] + format ? [format: format] : [:]
+        return format ? [value: value, type: type, format: format] : [value: value, type: type]
     }
 }
