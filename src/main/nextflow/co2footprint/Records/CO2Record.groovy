@@ -1,9 +1,9 @@
 package nextflow.co2footprint.Records
 
+import groovy.transform.CompileStatic
 import nextflow.co2footprint.Metrics.Calculator
 import nextflow.co2footprint.Metrics.Converter
 
-import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import nextflow.co2footprint.Metrics.Metric
 import nextflow.co2footprint.Metrics.Quantity
@@ -20,7 +20,15 @@ import nextflow.trace.TraceRecord
 @Slf4j
 @CompileStatic
 class CO2Record extends TraceRecord {
-    @Delegate final Map<String, Object> store
+    /**
+     * Constructs a CO2Record representing the resource usage and emissions for a single task.
+     *
+     * @param store        Complete store map
+     */
+    CO2Record(Map<String, Object> store) {
+        // Overload the store of the parent to ensure inherited methods can access the stored data
+        super.store << store
+    }
 
     /**
     * Constructs a CO2Record representing the resource usage and emissions for a single task.
@@ -44,7 +52,7 @@ class CO2Record extends TraceRecord {
             Double cpuUsage=null, Long memory=null, Double time=null,  Integer cpus=null, Double powerdrawCPU=null,
             String cpu_model=null, Double rawEnergyProcessor, Double rawEnergyMemory
     ) {
-        this.store = new LinkedHashMap<>([
+        Map<String, Object> store = new LinkedHashMap<>([
             'name':                     name,
             'energy':                   energy,
             'co2e':                     co2e,
@@ -63,33 +71,6 @@ class CO2Record extends TraceRecord {
         super.store << store
     }
 
-    CO2Record(Map<String, Object> store) {
-        this.store = store
-        // Overload the store of the parent to ensure inherited methods can access the stored data
-        super.store << store
-    }
-
-    Object add(String key, CO2Record record) {
-        Object newValue=record.getStore()[key]
-        Object thisValue = this.store[key]
-        return switch (key) {
-            case 'ci' -> Calculator.weightedAverage([thisValue, newValue], [store.energy, record.energy])
-            case 'cpuUsage' -> Calculator.weightedAverage([thisValue, newValue], [store.time, record.time])
-            case 'memory' -> Calculator.max(thisValue, newValue)
-            case 'cpus' -> Calculator.max(thisValue, newValue)
-            case 'powerdrawCPU' -> Calculator.weightedAverage([thisValue, newValue], [store.energy, record.energy])
-            case 'cpu_model' -> thisValue instanceof Set ? thisValue.add(newValue) : Set.of(thisValue, newValue)
-            default -> thisValue + newValue
-        }
-    }
-
-    CO2Record add(CO2Record record) {
-        Map<String, Object> store = record.getStore().collectEntries { String key, Object value ->
-            [key, add(key, record)]
-        }
-        return new CO2Record(store)
-    }
-
     /**
      * Converts a CO₂ record entry into a raw unified value.
      *
@@ -102,14 +83,14 @@ class CO2Record extends TraceRecord {
      */
     Map<String, ? extends Object> getRaw(String key, Object value=store[key]) {
         return switch (key) {
-            case 'energy' ->  Converter.scaleUnits(value as double, 'k', 'Wh', '').toMap()
-            case 'co2e' ->  Converter.scaleUnits(value as double, '', 'g', '').toMap()
-            case 'co2eMarket' ->  Converter.scaleUnits(value as double, 'm', 'g', '').toMap()
-            case 'time' ->  Converter.scaleTime(value as double, 'h', 'ms').toMap()
-            case 'ci' -> Converter.scaleUnits(value as double, '', 'gCO₂e/kWh', '').toMap()
-            case 'powerdrawCPU' ->  Converter.scaleUnits(value as double, '', 'W', '').toMap()
-            case 'cpuUsage' ->  new Quantity(value as double, '%', '').toMap()
-            case 'memory' ->  Converter.scaleUnits(value as double, 'G', 'B', '').toMap()
+            case 'energy' ->  Converter.scaleUnits(value as Double, 'k', 'Wh', '').toMap()
+            case 'co2e' ->  Converter.scaleUnits(value as Double, '', 'g', '').toMap()
+            case 'co2eMarket' ->  Converter.scaleUnits(value as Double, 'm', 'g', '').toMap()
+            case 'time' ->  Converter.scaleTime(value as Double, 'h', 'ms').toMap()
+            case 'ci' -> Converter.scaleUnits(value as Double, '', 'gCO₂e/kWh', '').toMap()
+            case 'powerdrawCPU' ->  Converter.scaleUnits(value as Double, '', 'W', '').toMap()
+            case 'cpuUsage' ->  new Quantity(value as Double, '%', '').toMap()
+            case 'memory' ->  Converter.scaleUnits(value as Double, 'G', 'B', '').toMap()
             default -> new Metric(value).toMap()
         }
     }
@@ -128,16 +109,16 @@ class CO2Record extends TraceRecord {
     String getReadable(String key, Object value=store[key]) {
         if (value == null) { return NA }
         return switch (key) {
-            case 'energy' ->  Converter.toReadableUnits(value as double, 'k', 'Wh')
-            case 'co2e' ->  Converter.toReadableUnits(value as double, '', 'g')
-            case 'co2eMarket' ->  Converter.toReadableUnits(value as double, '', 'g')
-            case 'time' ->  Converter.toReadableTimeUnits(value as double, 'h', 'ms', 's', 0.0d)
-            case 'ci' -> Converter.toReadableUnits(value as double, '', 'gCO₂e/kWh')
-            case 'powerdrawCPU' ->  Converter.toReadableUnits(value as double, '', 'W')
-            case 'cpuUsage' ->  Converter.toReadableUnits(value as double, '', '%', '')
-            case 'memory' ->  Converter.toReadableUnits(value as double, 'G', 'B')
-            case 'rawEnergyProcessor' ->  Converter.toReadableUnits(value as double, 'k', 'Wh')
-            case 'rawEnergyMemory' ->  Converter.toReadableUnits(value as double, 'k', 'Wh')
+            case 'energy' ->  Converter.toReadableUnits(value as Double, 'k', 'Wh')
+            case 'co2e' ->  Converter.toReadableUnits(value as Double, '', 'g')
+            case 'co2eMarket' ->  Converter.toReadableUnits(value as Double, 'm', 'g')
+            case 'time' ->  Converter.toReadableTimeUnits(value as Double, 'h', 'ms', 's', 0.0d)
+            case 'ci' -> Converter.toReadableUnits(value as Double, '', 'gCO₂e/kWh')
+            case 'powerdrawCPU' ->  Converter.toReadableUnits(value as Double, '', 'W')
+            case 'cpuUsage' ->  Converter.toReadableUnits(value as Double, '', '%', '')
+            case 'memory' ->  Converter.toReadableUnits(value as Double, 'G', 'B')
+            case 'rawEnergyProcessor' ->  Converter.toReadableUnits(value as Double, 'k', 'Wh')
+            case 'rawEnergyMemory' ->  Converter.toReadableUnits(value as Double, 'k', 'Wh')
             default -> value as String
         }
     }
@@ -151,5 +132,27 @@ class CO2Record extends TraceRecord {
      */
     List<String> getReadableEntries(List<String> order=store.keySet() as List) {
         return order.collect { String key -> getReadable(key) }
+    }
+
+    Object plus(String key, CO2Record record) {
+        Object newValue = record.store[key]
+        Object thisValue = this.store[key]
+        return switch (key) {
+            case 'ci' -> Calculator.weightedAverage([thisValue, newValue], [store['energy'], record.store['energy']])
+            case 'cpuUsage' -> Calculator.weightedAverage([thisValue, newValue], [store['time'], record.store['time']])
+            case 'memory' -> Calculator.max(thisValue, newValue)
+            case 'cpus' -> Calculator.max(thisValue, newValue)
+            case 'powerdrawCPU' -> Calculator.weightedAverage([thisValue, newValue], [store['energy'], record.store['energy']])
+            case 'cpu_model' -> thisValue instanceof Set ? thisValue.add(newValue) : [thisValue, newValue] as Set
+            case 'name' -> thisValue instanceof Set ? thisValue.add(newValue) : [thisValue, newValue] as Set
+            default -> Calculator.add(thisValue, newValue)
+        }
+    }
+
+    CO2Record plus(CO2Record record) {
+        Map<String, Object> store = record.getStore().collectEntries { String key, Object value ->
+            [key, plus(key, record)]
+        }
+        return new CO2Record(store)
     }
 }

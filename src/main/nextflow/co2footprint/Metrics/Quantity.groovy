@@ -20,7 +20,7 @@ class Quantity extends Metric {
      * @param separator The separator between value and scaled unit, defaults to ' '
      */
     Quantity(Number value, String scale='', String unit='', String separator=' ') {
-        super(value, value.class.name ?: 'Number')
+        super(value, value?.class?.getSimpleName() ?: 'Number')
         this.value = value as BigDecimal
         this.scale = scale
         this.unit = unit

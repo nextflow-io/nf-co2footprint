@@ -13,19 +13,19 @@ import nextflow.trace.TraceRecord
 class CO2RecordAggregator {
     // Transformation method to the desired metric
     private final Map<String, Closure<Double>> metricExtractionFunctions = [
-        co2e: { TraceRecord traceRecord, CO2Record co2Record -> co2Record.co2e },
-        energy: { TraceRecord traceRecord, CO2Record co2Record -> co2Record.energy },
+        co2e: { TraceRecord traceRecord, CO2Record co2Record -> co2Record.store.co2e as Double },
+        energy: { TraceRecord traceRecord, CO2Record co2Record -> co2Record.store.energy as Double },
         co2e_non_cached: { TraceRecord traceRecord, CO2Record co2Record ->
-                traceRecord.getStore()['status'] != 'CACHED' ? co2Record.co2e : null
+                traceRecord.getStore()['status'] != 'CACHED' ? co2Record.store.co2e  as Double : null
         },
         energy_non_cached: { TraceRecord traceRecord, CO2Record co2Record ->
-                traceRecord.getStore()['status'] != 'CACHED' ? co2Record.energy : null
+                traceRecord.getStore()['status'] != 'CACHED' ? co2Record.store.energy  as Double : null
         },
         co2e_market: {
-            TraceRecord traceRecord, CO2Record co2Record -> co2Record.co2eMarket
+            TraceRecord traceRecord, CO2Record co2Record -> co2Record.store.co2eMarket as Double
         },
         energy_market: {
-            TraceRecord traceRecord, CO2Record co2Record -> co2Record.energy
+            TraceRecord traceRecord, CO2Record co2Record -> co2Record.store.energy as Double
         },
     ]
 
@@ -133,7 +133,7 @@ class CO2RecordAggregator {
             // Add quantiles
             ['min': 0d, 'q1': .25d, 'q2': .50d, 'q3': .75d, 'max': 1d].each { String key, double q ->
                 quantileItem = getQuantile(sortedRecords, q, metricExtractionFunction)
-                result.put("${key}Label" as String, (quantileItem.getRecord().get('co2Record') as CO2Record).getName())
+                result.put("${key}Label" as String, (quantileItem.getRecord().get('co2Record') as CO2Record).get('name') )
                 result.put(key, quantileItem.value)
             }
         }

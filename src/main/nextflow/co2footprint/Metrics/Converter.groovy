@@ -68,7 +68,8 @@ class Converter {
      * @param targetScale The scale that should be converted to (e.g. G), default of null (optional)
      * @return Converted quantity with appropriate scale
      */
-    static Quantity scaleUnits(double value, String scale='', String unit='', String targetScale=null) {
+    static Quantity scaleUnits(Double value, String scale='', String unit='', String targetScale=null) {
+        if (value == null) { return new Quantity(value, targetScale ?: scale, unit) }
         int scalingFactor = unit == 'B' ? 1024 : 1000
         final List<String> scales = ['p', 'n', 'u', 'm', '', 'k', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
         int scaleIndex = getIdx(scale, scales)
@@ -106,7 +107,6 @@ class Converter {
      * @return Scaled value as a formatted String with appropriate scale and rounding
      */
     static String toReadableUnits(Double value, String scale='', String unit='', String targetScale=null, Integer precision=2) {
-        if (value == null) { return value }
         Quantity converted = scaleUnits(value, scale, unit, targetScale)
 
         return converted.round(precision).getReadable()
