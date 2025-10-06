@@ -13,10 +13,10 @@ class RecordTree {
     protected RecordTree parent
     protected final List<RecordTree> children
 
-    RecordTree(Object name, TraceRecord value = null, Map attributes = [:], RecordTree parent = null, List children = []) {
+    RecordTree(Object name, Map attributes = [:], TraceRecord value = null, RecordTree parent = null, List children = []) {
         this.name = name
-        this.value = value
         this.attributes = attributes
+        this.value = value
 
         this.parent = parent
         this.children = children
@@ -48,7 +48,7 @@ class RecordTree {
             addableChildren = children.collect({ RecordTree child -> child.summarize() })
         }
 
-        value = addableChildren.collect( { RecordTree child -> child.value }).sum()
+        value = addableChildren.collect( { RecordTree child -> child.value }).sum() as TraceRecord
         return this
     }
 
@@ -125,7 +125,8 @@ class RecordTree {
         return [
                 name: name,
                 attributes: attributes,
-                children: children.collect({ RecordTree child -> child.toMap() })
-        ] + traceMap
+                values: traceMap,
+                children: children.collect({ RecordTree child -> child.toMap() }),
+        ]
     }
 }
