@@ -1,10 +1,12 @@
 package nextflow.co2footprint.Records
 
+import java.time.Duration
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
+import nextflow.co2footprint.ResultsTree.RecordTree
 import nextflow.trace.TraceRecord
 
-
+// TODO: Make accumulation from Tree
 /**
  * Compute summary statistics of the accumulated CO2Records of several tasks
  */
@@ -140,4 +142,57 @@ class CO2RecordAggregator {
 
         return result
     }
+
+
+    // Collect metrics by process
+    List<Object> collectValsChildren(RecordTree node, String valueKey) {
+        List<Object> values = []
+        if (!node.children) {
+            Object value = node.value.store[valueKey]
+            if (valueKey == 'time') {
+                values.add(
+                        Duration.ofMillis(value as Integer)
+                                .toMinutes().toBigDecimal()
+                                .setScale(1).stripTrailingZeros().toPlainString()
+                )
+            }
+            else if (valueKey.endsWith('_non_cached')) {
+                valueKey = valueKey.replace('_non_cached', '')
+                if (node.attributes?.status !== 'CACHED') { values.add(value) }
+            }
+            else {
+                values.add(value)
+            }
+
+        }
+        else {
+            node.children.forEach{ RecordTree child -> values += collectValsChildren(child, valueKey) }
+        }
+
+        return values
+    }
+
+    Map<String, Map<String, Object>> collectByLevel(RecordTree node, List<String> valueKeys, String level) {
+        if (node.attributes?.level === level) {
+            Map<String, Object> values = [:]
+            valueKeys.forEach { String valueKey ->
+                values[valueKey] = collectValsChildren(node, valueKey)
+            }
+
+            return [(node.name as String): values] as Map
+        }
+
+        // Recursion into deeper levels without collecting values
+        Map<String, Map<String, Object>> levelValues = [:]
+        node.children?.forEach{ RecordTree child ->
+            levelValues = levelValues + collectByLevel(child, valueKeys, level)
+        }
+
+        return levelValues
+    }
+
+    // Add an empty map if the process is not already present
+    Map statsByProcess = collectByLevel(
+        window.data.summary, ['co2e', 'energy', 'co2e_non_cached', 'energy_non_cached'], 'process'
+    )
 }
