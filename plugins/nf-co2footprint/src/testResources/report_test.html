@@ -591,7 +591,6 @@
     
     
     // JavaScript used to power the Nextflow Report Template output.
-    
     /**
      * Decides whether raw or readable values are to be displayed
      *
@@ -657,72 +656,59 @@
       }
     
       // Plot histograms of resource usage
-      var plot_data_total = [];
-      var plot_data_non_cached = [];
-      for(var processName in window.statsByProcess){
+      function plot_resource_usage(){
+        var plot_data = {"total": [], "total_non_cached": []};
+        for(var processName in window.statsByProcess){
     
-        // Extract process statistics
-        var stats = window.statsByProcess[processName];
+          // Extract process statistics
+          var stats = window.statsByProcess[processName];
     
-        // Add CO₂ Boxplot to plot
-        plot_data_total.push(
-          {
-            x:processName, y: stats.co2e, name: processName,
-            type:'box', boxmean: true, boxpoints: false
+          // Add CO₂ Boxplot to plot
+            for (const [i, suffix] of ["", "_non_cached"].entries()){
+              plot_data[`total${suffix}`].push(
+                {
+                  x:processName, y: stats[`co2e${suffix}`], name: processName,
+                  type:'box', boxmean: true, boxpoints: false
+                }
+              );
+    
+              // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
+              plot_data[`total${suffix}`].push(
+                {
+                  x:processName, y: stats[`energy${suffix}`]?.map(v => v * 1000) ?? null, name: processName,
+                  type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
+                  hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
+                }
+              );
+            }
           }
-        );
     
-        // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
-        plot_data_total.push(
-          {
-            x:processName, y: stats.energy?.map(v => v * 1000) ?? null, name: processName,
-            type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
-            hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
-          }
-        );
+        var layout = {
+          title: 'CO<sub>2</sub> emission & energy consumption',
+          legend: {
+            x: 1.1
+          },
+          xaxis: {
+            title: 'Processes',
+          },
+          yaxis: {
+            title: 'CO₂e emission (g)',
+            rangemode: 'tozero',
+          },
+          yaxis2: {
+            title: 'Energy consumption (Wh)',
+            rangemode: 'tozero',
+            gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
+            overlaying: 'y',
+            side: 'right',
+          },
+          boxmode: 'group',
+        };
     
-        // Add outline of CO₂ emissions from non-cached processes to plot
-        plot_data_non_cached.push(
-          {
-            x:processName, y: stats.co2e_non_cached, name: processName,
-            type:'box', boxmean: true, boxpoints: false,
-          }
-        );
-    
-        // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
-        plot_data_non_cached.push(
-          {
-            x:processName, y: stats.energy_non_cached?.map(v => v * 1000) ?? null, name: processName,
-            type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
-            hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
-          }
-        );
+        Plotly.newPlot('co2e-total-plot', plot_data.total, layout);
+        Plotly.newPlot('co2e-non-cached-plot', plot_data.total_non_cached, layout);
       }
-    
-      var layout = {
-        title: 'CO<sub>2</sub> emission & energy consumption',
-        legend: {
-          x: 1.1
-        },
-        xaxis: {
-          title: 'Processes',
-        },
-        yaxis: {
-          title: 'CO₂e emission (g)',
-          rangemode: 'tozero',
-        },
-        yaxis2: {
-          title: 'Energy consumption (Wh)',
-          rangemode: 'tozero',
-          gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
-          overlaying: 'y',
-          side: 'right',
-        },
-        boxmode: 'group',
-      };
-    
-      Plotly.newPlot('co2e-total-plot', plot_data_total, layout);
-      Plotly.newPlot('co2e-non-cached-plot', plot_data_non_cached, layout);
+      plot_resource_usage()
     
       //
       // Table creation functions
@@ -852,11 +838,142 @@
     
       // Executor for options table creation (on page load)
       make_options_table();
+    
+      //
+      // Carbon intensity plot
+      //
+    
+      function make_ci_plot() {
+        var ci_plot_data = []
+    
+        // Add Date() entry to start and end time of tasks
+        window.data.trace.forEach(task => {
+          task.start.time = new Date(task.start.raw)
+          task.complete.time = new Date(task.complete.raw)
+        })
+    
+        // Tasks:
+        // Collect all time boundaries
+        const timePoints = new Set()
+        for (const task of window.data.trace) {
+          timePoints.add(task.start.time)
+          timePoints.add(task.complete.time)
+        }
+        const sortedTimes = Array.from(timePoints).sort((a,b) => a-b)
+    
+        // Define first and last point
+        var [tasksStart, tasksEnd] = [sortedTimes[0], sortedTimes[sortedTimes.length - 1]]
+    
+        // For each subinterval, calculate the total energy from active intervals
+        // Add first point to energy trace
+        const timeSteps = [tasksStart], totalEnergy = [0.0]
+        // Add intermediate points to energy trace
+        for (let i = 0; i < sortedTimes.length - 1; i++) {
+          const t0 = sortedTimes[i]
+          const t1 = sortedTimes[i + 1]
+    
+          // Sum energy of intervals active in [t0, t1)
+          let total = 0
+          for (const task of window.data.trace) {
+            if (task.start.time <= t0 && task.complete.time >= t1) {
+              total += task.energy.raw
+            }
+          }
+    
+          timeSteps.push(t0, t1)
+          totalEnergy.push(total, total)
+        }
+        // Add last point to energy trace
+        timeSteps.push(tasksEnd)
+        totalEnergy.push(0.0)
+    
+        // CI Records:
+        var ciRecords = new Map()
+    
+        // Change keys to Date() and sort
+        for (let [key, value] of Object.entries(window.ciRecords)) {
+          ciRecords.set(new Date(key), value)
+        }
+        ciRecords = new Map([...ciRecords.entries()].sort((a,b) => a[0]-b[0]))
+    
+        if (ciRecords.size == 0) {
+          ciRecords.set(tasksStart, window.data.trace[0].ci.raw)
+          ciRecords.set(tasksEnd, window.data.trace[0].ci.raw)
+        }
+        else {
+          const times = [...ciRecords.keys()]
+          const cis = [...ciRecords.values()]
+          if (tasksStart < times[0]) {
+            ciRecords.set(tasksStart, cis[0])
+          }
+          if (tasksEnd > times[times.length - 1]) {
+            ciRecords.set(tasksEnd, cis[cis.length - 1])
+          }
+        }
+    
+        ciRecords = new Map([...ciRecords.entries()].sort((a,b) => a[0]-b[0]))
+        var timestamps = [...ciRecords.keys()]
+        var ciValues = [...ciRecords.values()]
+    
+        // Add CI trace to plot
+        ci_plot_data.push(
+          {
+            name: "Carbon intensity",
+            x: timestamps, y: ciValues,
+            type: "scatter",
+            mode: "lines+markers",
+            line: { color: "grey" },
+            marker: { color: "grey" },
+          }
+        )
+    
+        // Add energy trace to plot
+        ci_plot_data.push(
+          {
+            name:"Energy consumption",
+            x: timeSteps, y: totalEnergy,
+            type: "scatter",
+            fill: "tozeroy", yaxis: "y2",
+            line: { color: "#FFCC00", shape: "hv" },
+          }
+        )
+    
+        // Layout:
+        var ci_layout = {
+          title: 'Carbon intensity index',
+          legend: {
+            x: 1.1
+          },
+          xaxis: {
+            title: 'Time',
+            ticklabelstandoff: 10,
+            overlay: 'x2',
+          },
+          yaxis: {
+            title: 'Carbon Intensity (g/kWh)',
+            rangemode: 'tozero',
+          },
+          yaxis2: {
+            title: 'Energy consumption (kWh)',
+            rangemode: 'tozero',
+            gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
+            overlaying: 'y',
+            side: 'right',
+          }
+        }
+    
+        // Create plot:
+        Plotly.newPlot('ci-plot', ci_plot_data, ci_layout)
+      }
+    
+      // Executor for ci plot generation
+      make_ci_plot()
     });
 
     // Nextflow report data
     window.data = {"trace":[{"task_id":{"raw":"111","readable":"111"},"process":{"raw":"observerTestProcess","readable":"observerTestProcess"},"realtime":{"raw":3600000,"readable":"1h"},"cpus":{"raw":1,"readable":"1"},"cpu_model":{"raw":"Unknown model","readable":"Unknown model"},"%cpu":{"raw":100.0,"readable":"100.0%"},"memory":{"raw":7,"readable":"7 GB"},"status":{"raw":"COMPLETED","readable":"<span class=\"badge badge-success\">COMPLETED</span>"},"hash":{"raw":null,"readable":"-"},"native_id":{"raw":null,"readable":"-"},"module":{"raw":null,"readable":"-"},"container":{"raw":null,"readable":"-"},"tag":{"raw":null,"readable":"-"},"name":{"raw":null,"readable":"-"},"exit":{"raw":null,"readable":"-"},"submit":{"raw":null,"readable":"-"},"start":{"raw":null,"readable":"-"},"complete":{"raw":null,"readable":"-"},"duration":{"raw":null,"readable":"-"},"%mem":{"raw":null,"readable":"-"},"rss":{"raw":null,"readable":"-"},"vmem":{"raw":null,"readable":"-"},"peak_rss":{"raw":null,"readable":"-"},"peak_vmem":{"raw":null,"readable":"-"},"rchar":{"raw":null,"readable":"-"},"wchar":{"raw":null,"readable":"-"},"syscr":{"raw":null,"readable":"-"},"syscw":{"raw":null,"readable":"-"},"read_bytes":{"raw":null,"readable":"-"},"write_bytes":{"raw":null,"readable":"-"},"attempt":{"raw":null,"readable":"-"},"workdir":{"raw":null,"readable":"-"},"script":{"raw":null,"readable":"-"},"scratch":{"raw":null,"readable":"-"},"queue":{"raw":null,"readable":"-"},"disk":{"raw":null,"readable":"-"},"time":{"raw":1.0,"readable":"3600s"},"env":{"raw":null,"readable":"-"},"error_action":{"raw":null,"readable":"-"},"vol_ctxt":{"raw":null,"readable":"-"},"inv_ctxt":{"raw":null,"readable":"-"},"hostname":{"raw":null,"readable":"-"},"energy":{"raw":0.0140575,"readable":"14.06 Wh"},"co2e":{"raw":6.7476,"readable":"6.75 g"},"co2eMarket":{"raw":null,"readable":"-"},"ci":{"raw":480.0,"readable":"480 gCO\u2082e/kWh"},"powerdrawCPU":{"raw":11.45,"readable":"11.45 W"},"cpuUsage":{"raw":100.0,"readable":"100 %"}}],"summary":{"observerTestProcess":{"co2e":{"all":[6.7476],"total":6.7476,"mean":6.7476,"minLabel":null,"min":6.7476,"q1Label":null,"q1":6.7476,"q2Label":null,"q2":6.7476,"q3Label":null,"q3":6.7476,"maxLabel":null,"max":6.7476},"energy":{"all":[0.0140575],"total":0.0140575,"mean":0.0140575,"minLabel":null,"min":0.0140575,"q1Label":null,"q1":0.0140575,"q2Label":null,"q2":0.0140575,"q3Label":null,"q3":0.0140575,"maxLabel":null,"max":0.0140575},"co2e_non_cached":{"all":[6.7476],"total":6.7476,"mean":6.7476,"minLabel":null,"min":6.7476,"q1Label":null,"q1":6.7476,"q2Label":null,"q2":6.7476,"q3Label":null,"q3":6.7476,"maxLabel":null,"max":6.7476},"energy_non_cached":{"all":[0.0140575],"total":0.0140575,"mean":0.0140575,"minLabel":null,"min":0.0140575,"q1Label":null,"q1":0.0140575,"q2Label":null,"q2":0.0140575,"q3Label":null,"q3":0.0140575,"maxLabel":null,"max":0.0140575},"co2e_market":{},"energy_market":{"all":[0.0140575],"total":0.0140575,"mean":0.0140575,"minLabel":null,"min":0.0140575,"q1Label":null,"q1":0.0140575,"q2Label":null,"q2":0.0140575,"q3Label":null,"q3":0.0140575,"maxLabel":null,"max":0.0140575}}}};
-    window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir3849670395256107564/report_test.html"},{"option":"summaryFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir3849670395256107564/summary_test.txt"},{"option":"traceFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir3849670395256107564/trace_test.txt"}];
+    window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir7509210604364527126/report_test.html"},{"option":"summaryFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir7509210604364527126/summary_test.txt"},{"option":"traceFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir7509210604364527126/trace_test.txt"}];
+    window.ciRecords = {};
   </script>
 
 </head>
@@ -874,9 +991,10 @@
     <div class="navbar-collapse" id="navbarCollapse">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item"><a class="nav-link" href="#">Summary</a></li>
-        <li class="nav-item"><a class="nav-link" href="#measures">Measures</a></li>
+        <li class="nav-item"><a class="nav-link" href="#metrics">Metrics</a></li>
         <li class="nav-item"><a class="nav-link" href="#tasks">Tasks</a></li>
         <li class="nav-item"><a class="nav-link" href="#options">Options</a></li>
+        <li class="nav-item"><a class="nav-link" href="#attribution-and-references">Attribution</a></li>
       </ul>
     </div>
     <code class="d-none d-md-inline navbar-text">
@@ -905,7 +1023,7 @@
       <dl>
         <dt>Run times</dt>
         <dd>
-          <span id="workflow_start">26-Aug-2025 16:48:27</span> - <span id="workflow_complete">26-Aug-2025 16:48:27</span>
+          <span id="workflow_start">30-Sep-2025 10:23:17</span> - <span id="workflow_complete">30-Sep-2025 10:23:17</span>
           (<span id="completed_fromnow"></span>duration: <strong>null</strong>)
         </dd>
 
@@ -924,8 +1042,8 @@
 
     <!-- TOTAL CO₂ cards -->
     <div class="container">
-      <h2 id="measures" class="section">CO₂e Footprint Measures</h2>
-      <h3 id="measures-total">Total</h3>
+      <h2 id="metrics" class="section">CO₂e Footprint Metrics</h2>
+      <h3 id="metrics-total">Total emissions</h3>
       <ul class="nav nav-tabs" id="co2e-card_tabs" role="tablist">
         <li class="nav-item">
           <a class="nav-link active" id="co2e-total-card_tablink" data-toggle="tab" href="#co2e-total-card_tabpanel" role="tab" aria-controls="co2e-total-card_tabpanel" aria-expanded="false">
@@ -1018,9 +1136,9 @@
     </div>
     </div>
 
-    <!-- CO₂ footprint measures plot -->
+    <!-- CO₂ footprint metrics plot -->
     <div class="container">
-      <h3 id="measures-plot">Per process</h3>
+      <h3 id="metrics-plot">Per process emissions</h3>
       <ul class="nav nav-tabs mb-3" id="co2eplot_tabs" role="tablist">
         <li class="nav-item">
           <a class="nav-link active" id="co2e-total-plot_tablink" data-toggle="tab" href="#co2e-total-plot_tabpanel" role="tab" aria-controls="co2e-total-plot_tabpanel" aria-expanded="false">
@@ -1042,6 +1160,13 @@
         </div>
       </div>
       <p class="mt-3">The plot shows the distribution of CO₂e emissions and corresponding energy consumptions for each workflow process. The values that are displayed when hovering over the plot refer to the CO<sub>2</sub>e emissions.</p>
+    </div>
+
+    <!-- CI records plot -->
+    <div class="container">
+      <h3 id="ci-records">Carbon intensity records</h3>
+      <div id="ci-plot"></div>
+      <p class="mt-3 mb-3">This plot shows the fluctuation of carbon intensity (CI) during workflow computation and the energy consumption of individual tasks. Together, these two factors determine the emitted CO₂e.</p>
     </div>
 
     <!-- Tasks table -->
@@ -1067,66 +1192,66 @@
         scrolling side to side will reveal more columns.</p>
     </div>
 
-    <!-- References -->
-    <div class="container my-5">
+    <!-- Execution options table -->
+    <div class="container">
+      <div id="options-table">
+        <h2 id="options" class="section">Options</h2>
+        <p class="mt-3 mb-3">This table shows the nf-co2footprint plugin options that were used to calculate the CO₂e footprint estimations.</p>
+      </div>
+      <div class="container-fluid">
+        <table class="table small table-striped" id="options_table"></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- References -->
+  <div class="container my-5">
       <div class="card shadow-sm">
-        <div class="card-body">
-          <h2 id="attribution-and-references" class="section">Data Attribution &amp; References</h2>
-          <ul class="pl-3 mb-0">
-            <li class="mb-3">
-              The calculation of these values is based on the carbon footprint computation method
-              developed in the
-              <a href="https://www.green-algorithms.org/" target="_blank" rel="noopener" style="color: #28a745">Green Algorithms</a> project.<br>
-              <span class="font-italic small">
+          <div class="card-body">
+              <h2 id="attribution-and-references" class="section">Data Attribution &amp; References</h2>
+              <ul class="pl-3 mb-0">
+                  <li class="mb-3">
+                      The calculation of these values is based on the carbon footprint computation method
+                      developed in the
+                      <a href="https://www.green-algorithms.org/" target="_blank" rel="noopener" style="color: #28a745">Green Algorithms</a> project.<br>
+                      <span class="font-italic small">
                 Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation.
                 Adv. Sci. 2021, 2100707.
                 <a href="https://doi.org/10.1002/advs.202100707" target="_blank" rel="noopener">
                   https://doi.org/10.1002/advs.202100707
                 </a>
               </span>
-            </li>
-            <li class="mb-3">
-              
-                The carbon intensity (CI) values used in the calculation originate from
-                <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">Electricity Maps</a>
-                under the
-                <a href="https://opendatacommons.org/licenses/odbl/1-0/" target="_blank" rel="noopener">Open Database License (ODbL)</a>.<br>
-                <span class="font-italic small">
+                  </li>
+                  <li class="mb-3">
+                      
+                      The carbon intensity (CI) values used in the calculation originate from
+                      <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">Electricity Maps</a>
+                      under the
+                      <a href="https://opendatacommons.org/licenses/odbl/1-0/" target="_blank" rel="noopener">Open Database License (ODbL)</a>.<br>
+                      <span class="font-italic small">
                   Electricity Maps (2025). 2024 Yearly Carbon Intensity Data (Version January 27, 2025). Electricity Maps.
                   <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">
                     https://www.electricitymaps.com
                   </a>
                 </span>
-              
-            </li>
-            <li class="mb-3">
-              The processors thermal design power (TDP) values used in the calculation originate from
-              <a href="https://en.wikichip.org/wiki/WikiChip" target="_blank" rel="noopener">WikiChip</a>
-              under the
-              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> license.<br>
-              <span class="font-italic small">
+                      
+                  </li>
+                  <li class="mb-3">
+                      The processors thermal design power (TDP) values used in the calculation originate from
+                      <a href="https://en.wikichip.org/wiki/WikiChip" target="_blank" rel="noopener">WikiChip</a>
+                      under the
+                      <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a> license.<br>
+                      <span class="font-italic small">
                 WikiChip LLC (2025). CPU Data including Thermal Design Power (TDP) (Version June 20, 2025).
                 WikiChip.
                 <a href="https://en.wikichip.org/wiki/WikiChip" target="_blank" rel="noopener">
                   https://en.wikichip.org/wiki/WikiChip
                 </a>
               </span>
-            </li>
-          </ul>
-        </div>
+                  </li>
+              </ul>
+          </div>
       </div>
-    </div>
-
-    <!-- Execution options table -->
-    <div class="container">
-      <div id="options-table">
-        <h2 id="options" class="section">Options</h2>
-        <p class="mt-3 mb-3">This table shows the nf-co2footprint plugin options that were used to calculate the CO₂e footprint measures.</p>
-      </div>
-      <div class="container-fluid">
-        <table class="table small table-striped" id="options_table"></table>
-      </div>
-    </div>
   </div>
 
   <!-- Footer -->

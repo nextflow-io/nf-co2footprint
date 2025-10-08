@@ -1,10 +1,20 @@
 package nextflow.co2footprint.DataContainers
 
+import groovy.transform.Canonical
+import groovy.transform.TupleConstructor
 import groovy.util.logging.Slf4j
 
 import nextflow.co2footprint.Logging.Markers
 
 import java.nio.file.Path
+
+/**
+ * A match onto the CI matrix with associated zone and ci value.
+ */
+@Canonical class CIMatch {
+    String zone
+    Number value
+}
 
 /**
  * Structure for the carbon intensity (CI) values.
@@ -31,7 +41,6 @@ class CIDataMatrix extends DataMatrix {
         super(data, columnIndex, rowIndex)
     }
 
-
     /**
      * Create a CIDataMatrix from a CSV file.
      *
@@ -53,37 +62,30 @@ class CIDataMatrix extends DataMatrix {
         return ciMatrix
     }
 
-
-
     /**
      * Retrieves the carbon intensity value for a given zone from the matrix.
      *
-     * @param targetZone The zone for which to retrieve the carbon intensity.
-     * @return The carbon intensity value as a Double, or null if not found.
+     * @param targetZone The zone for which to retrieve the carbon intensity
+     * @param fallbackZone The zone for which to retrieve the carbon intensity if the targetZone is not in CI table
+     * @return The carbon intensity value as a Number matched with the zone it was found for in a {@link CIMatch}
+     * @throws IllegalStateException
      */
-    protected Double findCiInMatrix(String targetZone) {
-        def ci
-
-        try {
-            ci = this.get(targetZone, this.ciColumn)
-            log.info(Markers.silentUnique,
-                    "Using carbon intensity for ${targetZone} from fallback table: ${ci.toString()} gCO₂eq/kWh.",
-                    'using-ci-from-table-info'
-                    )
-        } catch (IllegalArgumentException e) {
-            if (targetZone == 'GLOBAL') {
-                Exception err = new IllegalStateException("Could not retrieve GLOBAL carbon intensity value from fallback table.")
-                log.error(err.getMessage(), err)
-                throw err  // <-- will stop execution
-            }
-            else {
-                log.warn(Markers.silentUnique,
-                        "Could not find carbon intensity for zone ${targetZone.toUpperCase()}: ${e.message}",
-                        'missing-ci-in-table-warning'
-                ) 
-            }
-            return null
+    CIMatch findCiInMatrix(String targetZone, String fallbackZone=null) throws IllegalStateException {
+        if (rowIndex.containsKey(targetZone)){
+            Number ci = get(targetZone, this.ciColumn) as Double
+            return new CIMatch(targetZone, ci)
         }
-        return ci as Double
+        else if (fallbackZone != null) {
+            log.warn(
+                Markers.silentUnique,
+                "Target zone ${targetZone} not found. Attempting to retrieve carbon intensity for fallback zone ${fallbackZone}."
+            )
+            return findCiInMatrix(fallbackZone)
+        }
+        else {
+            String message = "${targetZone} not in CI table."
+            log.error(message)
+            throw new IllegalStateException(message)  // <-- will stop execution
+        }
     }
 }

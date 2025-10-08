@@ -1,11 +1,12 @@
 package nextflow.co2footprint.FileCreation
 
 import groovy.json.JsonOutput
-import nextflow.co2footprint.CO2FootprintComputer
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
+import nextflow.co2footprint.CO2FootprintComputer
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Metrics.Converter
+import nextflow.co2footprint.Records.CiRecordCollector
 
 import groovy.text.GStringTemplateEngine
 import groovy.text.Template
@@ -40,6 +41,7 @@ class ReportFileCreator extends BaseFileCreator{
     private Session session
     private Map<TaskId, TraceRecord> traceRecords
     private Map<TaskId, CO2Record> co2eRecords
+    private CiRecordCollector timeCiRecordCollector
 
     // Writer for the HTML file
     private BufferedWriter writer
@@ -67,6 +69,7 @@ class ReportFileCreator extends BaseFileCreator{
      * @param session       Nextflow session
      * @param traceRecords  Map of TaskId to TraceRecord
      * @param co2eRecords   Map of TaskId to CO2Record
+     * @param timeCiRecordCollector   Time & CI Record collector that contains a map of all carbon intensities at different times
      */
     void addEntries(
             Map<String, Map<String, Map<String, ?>>> processStats,
@@ -76,7 +79,8 @@ class ReportFileCreator extends BaseFileCreator{
             String version,
             Session session,
             Map<TaskId, TraceRecord> traceRecords,
-            Map<TaskId, CO2Record> co2eRecords
+            Map<TaskId, CO2Record> co2eRecords,
+            CiRecordCollector timeCiRecordCollector
     ) {
         this.processStats = processStats
         this.totalStats = totalStats
@@ -86,6 +90,7 @@ class ReportFileCreator extends BaseFileCreator{
         this.session = session
         this.traceRecords = traceRecords
         this.co2eRecords = co2eRecords
+        this.timeCiRecordCollector = timeCiRecordCollector
     }
 
     /**
@@ -120,7 +125,6 @@ class ReportFileCreator extends BaseFileCreator{
      * @return Rendered HTML String
      */
     protected String renderHtml() {
-        Map co2Options = config.collectCO2CalcOptions()
         // render HTML report template
         final templateFields = [
                 // Plugin information
@@ -132,7 +136,8 @@ class ReportFileCreator extends BaseFileCreator{
                 // Data
                 data : renderDataJson(),
                 co2_totals: renderCO2TotalsJson(),
-                used_EM_api: co2Options.ci instanceof Closure, // true if the CI value is calculated using the electricityMaps API
+                used_EM_api: config.usesAPI(),
+                timeCiRecords: JsonOutput.toJson(timeCiRecordCollector.getTimeCIs()),
 
                 // Assets for rendering
                 assets_css : [
