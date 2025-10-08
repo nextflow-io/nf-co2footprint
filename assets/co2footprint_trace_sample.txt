@@ -1,0 +1,5 @@
+task_id	status	name	energy_consumption	CO2e	CO2e_market	carbon_intensity	%cpu	memory	realtime	cpus	powerdraw_cpu	cpu_model
+3	COMPLETED	sayHello (3)	57.82 uWh	19.3 ug	5.78 ng	333.77 gCO₂e/kWh	86.5 %	0 pB	15ms	1	12.34 W	Intel(R) Core(TM) i5-1038NG7 CPU @ 2.00GHz
+4	COMPLETED	sayHello (4)	32.89 uWh	10.98 ug	3.29 ng	333.77 gCO₂e/kWh	61.5 %	0 pB	12ms	1	12.34 W	Intel(R) Core(TM) i5-1038NG7 CPU @ 2.00GHz
+1	COMPLETED	sayHello (1)	48.29 uWh	16.12 ug	4.83 ng	333.77 gCO₂e/kWh	77.4 %	0 pB	14ms	1	12.34 W	Intel(R) Core(TM) i5-1038NG7 CPU @ 2.00GHz
+2	COMPLETED	sayHello (2)	52.53 uWh	17.53 ug	5.25 ng	333.77 gCO₂e/kWh	84.2 %	0 pB	14ms	1	12.34 W	Intel(R) Core(TM) i5-1038NG7 CPU @ 2.00GHz
