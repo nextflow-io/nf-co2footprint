@@ -5,13 +5,14 @@ import nextflow.co2footprint.Metrics.Metric
 import nextflow.co2footprint.Metrics.Quantity
 import nextflow.trace.TraceRecord
 
+// TODO: Docstrings
 class RecordTree {
-    protected final name
-    protected TraceRecord value
-    protected final Map attributes
+    final name
+    TraceRecord value
+    final Map attributes
 
-    protected RecordTree parent
-    protected final List<RecordTree> children
+    RecordTree parent
+    final List<RecordTree> children
 
     RecordTree(Object name, Map attributes = [:], TraceRecord value = null, RecordTree parent = null, List children = []) {
         this.name = name

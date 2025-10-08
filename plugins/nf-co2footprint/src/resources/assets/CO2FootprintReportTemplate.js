@@ -14,9 +14,6 @@ function rawOrReadable(data, type) {
   return data['readable']
 }
 
-// Map for collecting statistics by process
-window.statsByProcess = {};
-
 //
 // MAIN BLOCK: This block is only executed after the page is fully loaded
 //
@@ -37,33 +34,6 @@ $(function() {
     $('#completed_fromnow').html('completed ' + completed_date.fromNow() + ', ');
   }
 
-  // Collect metrics by process
-  for(let processName in window.data.summary){
-    let metrics = window.data.summary[processName];
-
-    // Add an empty map if the process is not already present
-    window.statsByProcess[processName] ??= {};
-
-    for (let metricName in metrics) {
-      // Skip if metric is not present
-      if (metrics[metricName] == null) { continue; }
-
-      if( metrics[metricName]['min'] == metrics[metricName]['max'] ) {
-        // min equals max ==> show just a value
-        window.statsByProcess[processName][metricName] = [ metrics[metricName]['min'] ];
-      }
-      else {
-          // otherwise show all values
-          window.statsByProcess[processName][metricName] = ['min', 'q1', 'q2', 'q3', 'max'].map(stat => metrics[metricName][stat])
-      }
-      if (metricName == "time") {
-        window.statsByProcess[processName][metricName] = window.statsByProcess[processName][metricName].map(function(d,i){
-          return moment.duration(d).asMinutes().toFixed(1);
-        });
-      }
-    }
-  }
-
   // Plot histograms of resource usage
   var plot_data_total = [];
   var plot_data_non_cached = [];
@@ -72,40 +42,35 @@ $(function() {
     // Extract process statistics
     var stats = window.statsByProcess[processName];
 
-    // Add CO₂ Boxplot to plot
-    plot_data_total.push(
-      {
-        x:processName, y: stats.co2e, name: processName,
-        type:'box', boxmean: true, boxpoints: false
+    // Put stats in plot
+    for (var metricsName in stats) {
+      // Add CO₂ Boxplot to plot
+      if (metricsName.startsWith('co2e')) {
+        plot_data_total.push(
+          {
+            x:processName, y: stats[metricsName], name: processName,
+            type:'box', boxmean: true, boxpoints: false,
+            hovertemplate:
+              'Min: ${Math.min(...stats.co2e)}'
+              'Q1: %{q1}<br>' +
+              'Median: %{median}<br>' +
+              'Mean: %{mean}<br>' +
+              'Q3: %{q3}<br>' +
+              'Max: ${max}<extra></extra>'
+          }
+        )
       }
-    );
-
-    // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
-    plot_data_total.push(
-      {
-        x:processName, y: stats.energy?.map(v => v * 1000) ?? null, name: processName,
-        type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
-        hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
+      else {
+        // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
+        plot_data_total.push(
+          {
+            x:processName, y:stats[metricsName]?.map(v => v * 1000) ?? null, name: processName,
+            type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
+            hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
+          }
+        )
       }
-    );
-
-    // Add outline of CO₂ emissions from non-cached processes to plot
-    plot_data_non_cached.push(
-      {
-        x:processName, y: stats.co2e_non_cached, name: processName,
-        type:'box', boxmean: true, boxpoints: false,
-      }
-    );
-
-    // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
-    plot_data_non_cached.push(
-      {
-        x:processName, y: stats.energy_non_cached?.map(v => v * 1000) ?? null, name: processName,
-        type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
-        hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
-      }
-    );
-  }
+    }
 
   var layout = {
     title: 'CO<sub>2</sub> emission & energy consumption',
