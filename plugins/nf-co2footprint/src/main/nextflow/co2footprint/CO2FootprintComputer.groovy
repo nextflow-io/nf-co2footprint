@@ -138,7 +138,7 @@ class CO2FootprintComputer {
         BigDecimal co2eMarket = ciMarket ? (energy * ciMarket) : null
 
         return new CO2Record(
-            trace.get('name') as String,
+            trace,
             energy,
             co2e,
             co2eMarket,
@@ -149,7 +149,6 @@ class CO2FootprintComputer {
             numberOfCores as Integer,
             powerdrawPerCore,
             config.value('ignoreCpuModel') ? 'Custom value' : cpuModel,
-            trace.get('status') as String
         )
     }
 

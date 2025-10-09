@@ -4,7 +4,6 @@ import java.time.Duration
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import nextflow.co2footprint.ResultsTree.RecordTree
-import nextflow.trace.TraceRecord
 
 // TODO: Make accumulation from Tree
 /**
@@ -37,10 +36,6 @@ class CO2RecordAggregator {
             }
             // Extract non_cached values if requested
             else if (suffix == '_non_cached' && (node.value.store?.status == 'CACHED')) {
-                // do nothing
-            }
-            // Catch values that are present in both Record types and only return the one from the CO2Record
-            else if(valueKey in ['cpus', 'memory', 'cpu_model', 'status'] && !(node.value instanceof CO2Record)) {
                 // do nothing
             }
             else {
