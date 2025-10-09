@@ -54,7 +54,7 @@ class CO2RecordAggregator {
         Set<String> keys = []
         if(node?.children) {
             node.children.each {
-                RecordTree child -> keys = keys + collectKeysChildren(child)
+                RecordTree child -> keys.addAll(collectKeysChildren(child))
             }
         } else {
             return node.value.store.keySet()
