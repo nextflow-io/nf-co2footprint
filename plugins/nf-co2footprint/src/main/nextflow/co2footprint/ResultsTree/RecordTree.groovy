@@ -46,7 +46,7 @@ class RecordTree {
             addableChildren = children.collect({ RecordTree child -> child.summarize() })
         }
 
-        value = addableChildren.sum( { RecordTree child -> child.value }) as CO2Record
+        value = addableChildren.collect( { RecordTree child -> child.value }).sum() as CO2Record
         return this
     }
 
@@ -63,12 +63,7 @@ class RecordTree {
     }
 
     Map<String, Object> toMap() {
-        Map<String, Map<String, Object>> traceMap = [:]
-        if (value) {
-            traceMap = value.store.collectEntries { String key, Object val ->
-                [key, [raw: value.getRaw(key, val), readable: value.getReadable(key, val)]]
-            }
-        }
+        Map<String, Map<String, Object>> traceMap = value ? value.toRawReadableMap() : [:]
         return [
             name: name,
             attributes: attributes,
