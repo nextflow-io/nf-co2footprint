@@ -70,6 +70,11 @@ class CO2Record extends TraceRecord {
         super.store.putAll(store)
     }
 
+    @Override
+    String getFmtStr(String name, String converter = null) {
+        return name in co2Keys ? store[name] as String : getFmtStr(name, converter)
+    }
+
     /**
      * Converts a CO₂ record entry into a raw unified value.
      *
@@ -81,15 +86,23 @@ class CO2Record extends TraceRecord {
      * @return      The raw metric with all information as a map
      */
     Map<String, ? extends Object> getRaw(String key, Object value=store[key]) {
-        return switch (key) {
-            case 'energy' ->  Converter.scaleUnits(value as Double, 'k', 'Wh', '').toMap()
-            case 'co2e' ->  Converter.scaleUnits(value as Double, '', 'g', '').toMap()
-            case 'co2eMarket' ->  Converter.scaleUnits(value as Double, 'm', 'g', '').toMap()
-            case 'time' ->  Converter.scaleTime(value as Double, 'h', 'ms').toMap()
-            case 'ci' -> Converter.scaleUnits(value as Double, '', 'gCO₂e/kWh', '').toMap()
-            case 'powerdrawCPU' ->  Converter.scaleUnits(value as Double, '', 'W', '').toMap()
-            case 'cpuUsage' ->  new Quantity(value as Double, '%', '').toMap()
-            case 'memory' ->  Converter.scaleUnits(value as Double, 'G', 'B', '').toMap()
+         Map<String, ? extends Object> rawValue = switch (key) {
+             case 'energy' -> Converter.scaleUnits(value as Double, 'k', 'Wh', '').toMap()
+             case 'co2e' -> Converter.scaleUnits(value as Double, '', 'g', '').toMap()
+             case 'co2eMarket' -> Converter.scaleUnits(value as Double, 'm', 'g', '').toMap()
+             case 'time' -> Converter.scaleTime(value as Double, 'h', 'ms').toMap()
+             case 'ci' -> Converter.scaleUnits(value as Double, '', 'gCO₂e/kWh', '').toMap()
+             case 'powerdrawCPU' -> Converter.scaleUnits(value as Double, '', 'W', '').toMap()
+             case 'cpuUsage' -> new Quantity(value as Double, '%', '').toMap()
+             case 'memory' -> Converter.scaleUnits(value as Double, 'G', 'B', '').toMap()
+             default -> null
+         }
+         if (rawValue) { return rawValue }
+         return switch (FIELDS.get(key)) {
+            case 'date' -> new Quantity(value as Number, '1970-01-01T00:00:00Z -> x', 'ms').toMap()
+            case 'perc' -> new Quantity(value as Number, '%', '').toMap()
+            case 'mem' -> new Quantity(value as Number, '', 'B').toMap()
+            case 'num' -> new Quantity(value as Number, '', '').toMap()
             default -> new Metric(value).toMap()
         }
     }
@@ -116,9 +129,21 @@ class CO2Record extends TraceRecord {
             case 'powerdrawCPU' ->  Converter.toReadableUnits(value as Double, '', 'W')
             case 'cpuUsage' ->  Converter.toReadableUnits(value as Double, '', '%', '')
             case 'memory' ->  Converter.toReadableUnits(value as Double, 'G', 'B')
+            case 'realtime' -> Converter.toReadableTimeUnits(value as double)
+            case 'status' -> {
+                Map<String, String> colors = [COMPLETED: 'success', CACHED: 'secondary', ABORTED: 'danger', FAILED: 'danger']
+                "<span class=\"badge badge-${colors[value]}\">${value}</span>"
+            }
+            case 'hash' -> {
+                String script = ''
+                (value as String).eachLine { String line -> script += "${line.trim()}\n" }
+                script = script.dropRight(1)
+                "<div class=\"script_block short\"><code>${script}</code></div>"
+            }
+
             case 'rawEnergyProcessor' ->  Converter.toReadableUnits(value as Double, 'k', 'Wh')
             case 'rawEnergyMemory' ->  Converter.toReadableUnits(value as Double, 'k', 'Wh')
-            default -> value as String
+            default -> getFmtStr(key)
         }
     }
 
@@ -137,16 +162,20 @@ class CO2Record extends TraceRecord {
     Object plus(String key, CO2Record record) {
         Object newValue = record.store[key]
         Object thisValue = this.store[key]
-        return switch (key) {
-            case 'ci' -> Calculator.weightedAverage([thisValue, newValue], [store['energy'], record.store['energy']])
-            case 'cpuUsage' -> Calculator.weightedAverage([thisValue, newValue], [store['time'], record.store['time']])
-            case 'memory' -> Calculator.max(thisValue, newValue)
-            case 'cpus' -> Calculator.max(thisValue, newValue)
-            case 'powerdrawCPU' -> Calculator.weightedAverage([thisValue, newValue], [store['energy'], record.store['energy']])
-            case 'cpu_model' -> thisValue instanceof Set ? thisValue.add(newValue) : [thisValue, newValue] as Set
-            case 'name' -> thisValue instanceof Set ? thisValue.add(newValue) : [thisValue, newValue] as Set
-            case 'status' -> thisValue instanceof Set ? thisValue.add(newValue) : [thisValue, newValue] as Set
-            default -> Calculator.add(thisValue, newValue)
+        if (key in ['ci', 'powerdrawCPU']) {
+            return Calculator.weightedAverage([thisValue, newValue], [store['energy'], record.store['energy']])
+        }
+        else if (key == 'cpuUsage') {
+            return Calculator.weightedAverage([thisValue, newValue], [store['time'], record.store['time']])
+        }
+        else if (key in ['memory', 'cpus']) {
+            Calculator.max(thisValue, newValue)
+        }
+        else if ((key in ['cpu_model', 'name', 'status']) || (key in FIELDS)) {
+            return thisValue instanceof Set ? thisValue.add(newValue) : [thisValue, newValue] as Set
+        }
+        else {
+            return Calculator.add(thisValue, newValue)
         }
     }
 
