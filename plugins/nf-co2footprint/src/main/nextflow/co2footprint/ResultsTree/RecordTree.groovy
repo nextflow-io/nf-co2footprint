@@ -49,7 +49,19 @@ class RecordTree {
             addableChildren = children.collect({ RecordTree child -> child.summarize() })
         }
 
-        value = addableChildren.collect( { RecordTree child -> child.value }).sum() as TraceRecord
+        value = addableChildren.sum( { RecordTree child -> child.value }) as TraceRecord
+        return this
+    }
+
+    RecordTree collectAttributes(Map<String, Closure> attributeTransformers) {
+        attributeTransformers.each{ String name, Closure transformer ->
+            List<Object> childAttributes = children.collect{ RecordTree child ->
+                child.collectAttributes(attributeTransformers)
+                child.attributes.get(name)
+            }
+            Object attribute = childAttributes ? childAttributes.sum() : transformer(value)
+            attributes.put(name , attribute)
+        }
         return this
     }
 

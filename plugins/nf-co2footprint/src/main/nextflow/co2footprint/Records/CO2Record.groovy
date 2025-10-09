@@ -20,15 +20,8 @@ import nextflow.trace.TraceRecord
 @Slf4j
 @CompileStatic
 class CO2Record extends TraceRecord {
-    /**
-     * Constructs a CO2Record representing the resource usage and emissions for a single task.
-     *
-     * @param store        Complete store map
-     */
-    CO2Record(Map<String, Object> store) {
-        // Overload the store of the parent to ensure inherited methods can access the stored data
-        super.store << store
-    }
+    final Set<String> co2Keys
+    final Set<String> traceKeys
 
     /**
     * Constructs a CO2Record representing the resource usage and emissions for a single task.
@@ -46,12 +39,16 @@ class CO2Record extends TraceRecord {
     * @param cpu_model     CPU model name
     */
     CO2Record(
-            String name=null, Double energy=null, Double co2e=null, Double co2eMarket=null, Double ci=null,
+            TraceRecord traceRecord=null, Double energy=null, Double co2e=null, Double co2eMarket=null, Double ci=null,
             Double cpuUsage=null, Long memory=null, Double time=null,  Integer cpus=null, Double powerdrawCPU=null,
-            String cpu_model=null, String status=null
+            String cpu_model=null
     ) {
+        // Add trace Record values
+        traceKeys = traceRecord.store.keySet()
+        super.store.putAll(traceRecord.store)
+
+        // Define CO2-specific storage
         Map<String, Object> store = new LinkedHashMap<>([
-            'name':                     name,
             'energy':                   energy,
             'co2e':                     co2e,
             'co2eMarket':               co2eMarket,
@@ -62,10 +59,11 @@ class CO2Record extends TraceRecord {
             'cpus':                     cpus,
             'powerdrawCPU':             powerdrawCPU,
             'cpu_model':                cpu_model,
-            'status':                   status
         ])
-        // Overload the store of the parent to ensure inherited methods can access the stored data
-        super.store << store
+
+        // Add additional values to TraceRecord's store + overwrite duplicate values
+        co2Keys = store.keySet()
+        super.store.putAll(store)
     }
 
     /**
@@ -150,6 +148,9 @@ class CO2Record extends TraceRecord {
         Map<String, Object> store = record.getStore().collectEntries { String key, Object value ->
             [key, plus(key, record)]
         }
-        return new CO2Record(store)
+        CO2Record co2Record = new CO2Record()
+        co2Record.store << store
+
+        return co2Record
     }
 }
