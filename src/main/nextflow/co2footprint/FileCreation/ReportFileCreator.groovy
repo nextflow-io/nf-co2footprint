@@ -16,9 +16,7 @@ import nextflow.Session
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.ResultsTree.RecordTree
-import nextflow.processor.TaskId
 import nextflow.trace.TraceHelper
-import nextflow.trace.TraceRecord
 
 import java.nio.file.Path
 
@@ -217,8 +215,8 @@ class ReportFileCreator extends BaseFileCreator{
     */
     private Map<String, String> makeCO2Total(suffix) {
         // Retrieve total CO₂ emissions and energy consumption for the given suffix
-        Double co2e = workflowStats.value.store["co2e${suffix}" as String] as Double
-        Double energy = workflowStats.value.store["energy${suffix}" as String] as Double
+        Double co2e = workflowStats.attributes["co2e${suffix}" as String] as Double
+        Double energy = workflowStats.attributes["energy${suffix}" as String] as Double
 
         if (co2e != null) {
             CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(co2e)
@@ -235,6 +233,7 @@ class ReportFileCreator extends BaseFileCreator{
             return [:]
         }
     }
+    //TODO: Make card writing from within Groovy (currently: written multiple times with same structure into HTML report)
 
     /**
      * Render the total CO₂ footprint values for the HTML report.

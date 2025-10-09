@@ -20,8 +20,13 @@ import nextflow.trace.TraceRecord
 @Slf4j
 @CompileStatic
 class CO2Record extends TraceRecord {
-    final Set<String> co2Keys
+    final Set<String> co2Keys = Set.of('energy', 'co2e', 'co2eMarket', 'ci', 'cpuUsage', 'memory', 'time', 'cpus', 'powerdrawCPU', 'cpu_model')
     final Set<String> traceKeys
+
+    CO2Record (Map<String, Object> store) {
+        this.traceKeys = store.keySet().findAll({ String key -> key !in co2Keys })
+        super.store.putAll(store)
+    }
 
     /**
     * Constructs a CO2Record representing the resource usage and emissions for a single task.
@@ -41,9 +46,9 @@ class CO2Record extends TraceRecord {
     * @param rawEnergyMemory    Memory-specific energy consumed by the task (kWh)
     */
     CO2Record(
-            TraceRecord traceRecord=null, Double energy=null, Double co2e=null, Double co2eMarket=null, Double ci=null,
-            Double cpuUsage=null, Long memory=null, Double time=null,  Integer cpus=null, Double powerdrawCPU=null,
-            String cpu_model=null, Double rawEnergyProcessor, Double rawEnergyMemory
+        TraceRecord traceRecord=null, Double energy=null, Double co2e=null, Double co2eMarket=null, Double ci=null,
+        Double cpuUsage=null, Long memory=null, Double time=null,  Integer cpus=null, Double powerdrawCPU=null,
+        String cpu_model=null, Double rawEnergyProcessor, Double rawEnergyMemory
     ) {
         // Add trace Record values
         traceKeys = traceRecord.store.keySet()
@@ -66,13 +71,12 @@ class CO2Record extends TraceRecord {
         ])
 
         // Add additional values to TraceRecord's store + overwrite duplicate values
-        co2Keys = store.keySet()
         super.store.putAll(store)
     }
 
     @Override
     String getFmtStr(String name, String converter = null) {
-        return name in co2Keys ? store[name] as String : getFmtStr(name, converter)
+        return name in co2Keys ? store[name] as String : super.getFmtStr(name, converter)
     }
 
     /**
@@ -129,7 +133,7 @@ class CO2Record extends TraceRecord {
             case 'powerdrawCPU' ->  Converter.toReadableUnits(value as Double, '', 'W')
             case 'cpuUsage' ->  Converter.toReadableUnits(value as Double, '', '%', '')
             case 'memory' ->  Converter.toReadableUnits(value as Double, 'G', 'B')
-            case 'realtime' -> Converter.toReadableTimeUnits(value as double)
+            case 'realtime' -> Converter.toReadableTimeUnits(value as Double)
             case 'status' -> {
                 Map<String, String> colors = [COMPLETED: 'success', CACHED: 'secondary', ABORTED: 'danger', FAILED: 'danger']
                 "<span class=\"badge badge-${colors[value]}\">${value}</span>"
@@ -169,9 +173,9 @@ class CO2Record extends TraceRecord {
             return Calculator.weightedAverage([thisValue, newValue], [store['time'], record.store['time']])
         }
         else if (key in ['memory', 'cpus']) {
-            Calculator.max(thisValue, newValue)
+            return Calculator.max(thisValue, newValue)
         }
-        else if ((key in ['cpu_model', 'name', 'status']) || (key in FIELDS)) {
+        else if ((key in ['cpu_model', 'name', 'status']) || (FIELDS.get(key) in ['str', 'date'])) {
             return thisValue instanceof Set ? thisValue.add(newValue) : [thisValue, newValue] as Set
         }
         else {
@@ -180,12 +184,15 @@ class CO2Record extends TraceRecord {
     }
 
     CO2Record plus(CO2Record record) {
-        Map<String, Object> store = record.getStore().collectEntries { String key, Object value ->
+        Map<String, Object> store = record.store.collectEntries { String key, Object value ->
             [key, plus(key, record)]
         }
-        CO2Record co2Record = new CO2Record()
-        co2Record.store << store
+        return new CO2Record(store)
+    }
 
-        return co2Record
+    Map<String, Map<String, Object>> toRawReadableMap() {
+        store.collectEntries { String key, Object val ->
+            [key, [raw: getRaw(key, val), readable: getReadable(key, val)]]
+        }
     }
 }
