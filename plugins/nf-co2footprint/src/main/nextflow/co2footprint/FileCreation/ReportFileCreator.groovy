@@ -12,6 +12,8 @@ import groovy.util.logging.Slf4j
 
 import nextflow.Session
 import nextflow.co2footprint.Records.CO2Record
+import nextflow.co2footprint.Records.CO2RecordAggregator
+import nextflow.co2footprint.ResultsTree.RecordTree
 import nextflow.processor.TaskId
 import nextflow.trace.TraceHelper
 import nextflow.trace.TraceRecord
@@ -32,14 +34,11 @@ class ReportFileCreator extends BaseFileCreator{
     private int maxTasks
 
     // Information for final report
-    private Map<String, Map<String, Map<String, ?>>> processStats
-    private Map<String, Double> totalStats
+    private RecordTree workflowStats
     private CO2FootprintComputer co2FootprintComputer
     private CO2FootprintConfig config
     private String version
     private Session session
-    private Map<TaskId, TraceRecord> traceRecords
-    private Map<TaskId, CO2Record> co2eRecords
 
     // Writer for the HTML file
     private BufferedWriter writer
@@ -69,23 +68,17 @@ class ReportFileCreator extends BaseFileCreator{
      * @param co2eRecords   Map of TaskId to CO2Record
      */
     void addEntries(
-            Map<String, Map<String, Map<String, ?>>> processStats,
-            Map<String, Double> totalStats,
+            RecordTree workflowStats,
             CO2FootprintComputer co2FootprintComputer,
             CO2FootprintConfig config,
             String version,
-            Session session,
-            Map<TaskId, TraceRecord> traceRecords,
-            Map<TaskId, CO2Record> co2eRecords
+            Session session
     ) {
-        this.processStats = processStats
-        this.totalStats = totalStats
+        this.workflowStats = workflowStats
         this.co2FootprintComputer = co2FootprintComputer
         this.config = config
         this.version = version
         this.session = session
-        this.traceRecords = traceRecords
-        this.co2eRecords = co2eRecords
     }
 
     /**
@@ -165,9 +158,28 @@ class ReportFileCreator extends BaseFileCreator{
      */
     protected String renderDataJson() {
         return "{" +
-            "\"trace\":${JsonOutput.toJson(renderTasksJson(traceRecords, co2eRecords))}," +
-            "\"summary\":${JsonOutput.toJson(processStats)}" +
+            "\"trace\":${JsonOutput.toJson(renderTasksJson(workflowStats))}," +
+            "\"summary\":${JsonOutput.toJson(collectSummary(workflowStats))}" +
         "}"
+    }
+
+    // TODO: Docstring
+    protected Map<String, Object> collectSummary(RecordTree workflowStats=this.workflowStats) {
+        // Add an empty map if the process is not already present
+        return CO2RecordAggregator.collectByLevel(
+                workflowStats,
+                'process',
+                ['co2e', 'energy', 'co2e_non_cached', 'energy_non_cached'],
+        )
+    }
+    // TODO: Docstring
+    protected Map<String, Object> collectTrace(RecordTree workflowStats=this.workflowStats) {
+        // Add an empty map if the process is not already present
+        return CO2RecordAggregator.collectByLevel(
+                workflowStats,
+                'process',
+                ['co2e', 'energy', 'co2e_non_cached', 'energy_non_cached'],
+        )
     }
 
     /**
@@ -247,9 +259,7 @@ class ReportFileCreator extends BaseFileCreator{
      * @param co2Records   Map of {@link nextflow.processor.TaskId} -> {@link CO2Record}
      * @return             List of per-task maps combining trace and CO2 entries
      */
-    protected List<Map<String, Map<String, Object>>> renderTasksJson(
-            Map<TaskId, TraceRecord> traceRecords, Map<TaskId, CO2Record> co2Records
-    ){
+    protected List<Map<String, Map<String, Object>>> renderTasksJson(RecordTree workflowStats=this.workflowStats){
         // Limit to maxTasks
         traceRecords = traceRecords.take(maxTasks)
 

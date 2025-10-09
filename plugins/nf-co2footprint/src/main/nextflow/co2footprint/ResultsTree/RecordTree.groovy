@@ -53,7 +53,6 @@ class RecordTree {
         return this
     }
 
-
     /**
      * Formats a trace entry into a human-readable string.
      * Returns {@link nextflow.trace.TraceRecord#NA} if value is null.
@@ -124,10 +123,10 @@ class RecordTree {
             }
         }
         return [
-                name: name,
-                attributes: attributes,
-                values: traceMap,
-                children: children.collect({ RecordTree child -> child.toMap() }),
+            name: name,
+            attributes: attributes,
+            values: traceMap,
+            children: children.collect({ RecordTree child -> child.toMap() }),
         ]
     }
 }
