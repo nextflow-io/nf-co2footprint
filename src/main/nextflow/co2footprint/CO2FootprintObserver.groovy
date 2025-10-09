@@ -145,13 +145,11 @@ class CO2FootprintObserver implements TraceObserver {
         final CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(traceRecord, timeCiRecordCollector)
 
         // Optionally write to trace file
-        this.traceFile?.write(traceRecord, co2Record)
+        this.traceFile?.write(co2Record)
 
         // Insert records into Tree structure
         RecordTree processNode = workflowStats.getChild(traceRecord.processName)
-        RecordTree taskNode = processNode.addChild(new RecordTree(traceRecord.taskId, [level: 'task']))
-        taskNode.addChild(new RecordTree('co2', [level: 'record'], co2Record))
-        taskNode.addChild(new RecordTree('trace', [level: 'record'], traceRecord))
+        processNode.addChild(new RecordTree(traceRecord.taskId, [level: 'task'], co2Record))
     }
 
     // ------ OBSERVER METHODS ------
@@ -191,6 +189,16 @@ class CO2FootprintObserver implements TraceObserver {
         runningTasks.each { TaskId taskId, TraceRecord traceRecord -> aggregateRecords(traceRecord) }
 
         workflowStats.summarize()
+        workflowStats.collectAttributes(
+            [
+                co2e: { CO2Record co2Record -> co2Record.store.co2e },
+                energy: { CO2Record co2Record -> co2Record.store.energy },
+                co2e_non_cached: { CO2Record co2Record -> co2Record.store['status'] != 'CACHED' ? co2Record.store.co2e : null },
+                energy_non_cached: { CO2Record co2Record -> co2Record.store['status'] != 'CACHED' ? co2Record.store.energy : null },
+                co2e_market: { CO2Record co2Record -> co2Record.store.co2eMarket },
+                energy_market: { CO2Record co2Record -> co2Record.store.energy },
+            ]
+        )
 
         // Create report and summary if any content exists to write to the file
         if (workflowStats) {

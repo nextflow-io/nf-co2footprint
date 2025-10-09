@@ -164,7 +164,7 @@ class ReportFileCreator extends BaseFileCreator{
      */
     protected String renderDataJson() {
         return "{" +
-            "\"trace\":${JsonOutput.toJson(renderTasksJson(workflowStats))}," +
+            "\"trace\":${JsonOutput.toJson(collectTasks(workflowStats))}," +
             "\"summary\":${JsonOutput.toJson(collectSummary(workflowStats))}" +
         "}"
     }
@@ -182,9 +182,7 @@ class ReportFileCreator extends BaseFileCreator{
     protected Map<String, Object> collectTrace(RecordTree workflowStats=this.workflowStats) {
         // Add an empty map if the process is not already present
         return CO2RecordAggregator.collectByLevel(
-                workflowStats,
-                'process',
-                ['co2e', 'energy', 'co2e_non_cached', 'energy_non_cached'],
+                workflowStats, 'process', ['co2e', 'energy', 'co2e_non_cached', 'energy_non_cached'],
         )
     }
 
@@ -219,8 +217,8 @@ class ReportFileCreator extends BaseFileCreator{
     */
     private Map<String, String> makeCO2Total(suffix) {
         // Retrieve total CO₂ emissions and energy consumption for the given suffix
-        Double co2e = totalStats["co2e${suffix}" as String]
-        Double energy = totalStats["energy${suffix}" as String]
+        Double co2e = workflowStats.value.store["co2e${suffix}" as String] as Double
+        Double energy = workflowStats.value.store["energy${suffix}" as String] as Double
 
         if (co2e != null) {
             CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(co2e)
@@ -265,31 +263,19 @@ class ReportFileCreator extends BaseFileCreator{
      * @param co2Records   Map of {@link nextflow.processor.TaskId} -> {@link CO2Record}
      * @return             List of per-task maps combining trace and CO2 entries
      */
-    protected List<Map<String, Map<String, Object>>> renderTasksJson(RecordTree workflowStats=this.workflowStats){
-        // Limit to maxTasks
-        traceRecords = traceRecords.take(maxTasks)
-
-        final List<Map<String, Map<String, Object>>> results = []
-        traceRecords.each { TaskId taskId, TraceRecord traceRecord ->
-            // Build trace entry map: key -> [raw, readable]
-            Map<String, Map<String, Object>> traceRecordMap = traceRecord.store.collectEntries { String key, Object value ->
-                [key, [raw: value, readable: getReadableTraceEntry(key, value, traceRecord)]]
+    protected List<Map<String, Map<String, Object>>> collectTasks(RecordTree workflowStats=this.workflowStats){
+        List<Map<String, Map<String, Object>>> results = []
+        for (RecordTree processes : workflowStats.children) {
+            for (RecordTree tasks : processes.children) {
+                for (RecordTree records : tasks.children) {
+                    if (results.size() < maxTasks) {
+                        results.add(records.toMap().get('values') as Map<String, Map<String, Object>>)
+                    }
+                    else {
+                        break
+                    }
+                }
             }
-
-            // Ensure all declared trace fields are present (fill gaps with a placeholder)
-            traceRecord.FIELDS.each { String key, String _ ->
-                if (!traceRecordMap.containsKey(key)) { traceRecordMap.put(key, [raw: null, readable: TraceRecord.NA]) }
-                return
-            }
-
-            // Build CO2 entry map: key -> [raw, readable]
-            CO2Record co2Record = co2Records[taskId]
-            Map<String, Map<String, Object>> co2RecordMap = co2Record.store.collectEntries { String key, Object value ->
-                [key, [raw: value, readable: co2Record.getReadable(key, value)]]
-            }
-
-            // Merge trace and CO2 maps for this task
-            results.add( traceRecordMap + co2RecordMap )
         }
 
         return results
