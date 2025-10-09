@@ -4,7 +4,6 @@ import nextflow.Session
 import nextflow.co2footprint.CO2FootprintComputer
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.CO2FootprintConfig
-import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CiRecordCollector
@@ -78,9 +77,6 @@ class ReportFileCreatorTest extends Specification{
                 1.0d, 1, 12, 'Unknown model', 'COMPLETED', 0.5d, 0.5d
         )
 
-        
-
-        CO2RecordAggregator aggregator = new CO2RecordAggregator()
         aggregator.add(traceRecord, co2Record)
 
         co2FootprintReport = new ReportFileCreator(reportPath, false, 10_000)

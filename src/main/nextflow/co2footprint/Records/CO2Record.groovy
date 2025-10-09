@@ -162,7 +162,7 @@ class CO2Record extends TraceRecord {
         return order.collect { String key -> getReadable(key) }
     }
 
-// TODO: Docstrings
+    // TODO: Docstrings
     Object plus(String key, CO2Record record) {
         Object newValue = record.store[key]
         Object thisValue = this.store[key]

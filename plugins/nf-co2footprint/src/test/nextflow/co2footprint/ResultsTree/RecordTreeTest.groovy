@@ -11,29 +11,85 @@ import java.util.stream.Stream
 class RecordTreeTest extends Specification {
     @Shared
     TraceRecord traceRecord = new TraceRecord()
+    @Shared
+    CO2Record co2Record
+
+    @Shared
+    RecordTree recordsTree = new RecordTree('workflow', [level: 'workflow'])
+
+    @Shared
+    Yaml yaml = new Yaml()
 
     def setupSpec() {
         traceRecord.putAll([
-                'task_id'  : '111',
-                'process'  : 'observerTestProcess',
-                'realtime' : (1 as Long) * (3600000 as Long), // 1 h
-                'cpus'     : 1,
-                'cpu_model': "Unknown model",
-                '%cpu'     : 100.0,
-                'memory'   : (7 as Long) * (1024**3 as Long), // 7 GB
-                'status'   : 'COMPLETED'
+            'task_id'  : '111',
+            'process'  : 'testProcess',
+            'realtime' : (1 as Long) * (3600000 as Long), // 1 h
+            'cpus'     : 1,
+            'cpu_model': "Unknown model",
+            '%cpu'     : 100.0,
+            'memory'   : (7 as Long) * (1024**3 as Long), // 7 GB
+            'status'   : 'COMPLETED'
         ])
-    }
 
-    def 'Should construct a valid tree node'() {
-        setup:
-        Yaml yaml = new Yaml()
-
-        CO2Record co2Record = new CO2Record(
+        co2Record = new CO2Record(
                 traceRecord, 2.0, 200.0, null, 100.0,
                 1.0, 10, 60*60*1000, 1, 7.0, 'Some model'
         )
 
+        RecordTree process1 = recordsTree.addChild(new RecordTree('process1', [level: 'process']))
+        RecordTree process2 = recordsTree.addChild(new RecordTree('process2', [level: 'process']))
+
+        int counter = 0
+        [[0.0d, 'COMPLETED'], [1.0d, 'COMPLETED'], [2.0d, 'CACHED']].each { Double value, String status ->
+            counter += 1
+            TraceRecord traceRecord2 = new TraceRecord()
+            traceRecord2.putAll(traceRecord.store)
+            traceRecord2.putAll([name: "task_${counter}", status: status])
+
+            RecordTree process = counter > 2 ? process2 : process1
+            process.addChild(new RecordTree("task_${counter}", [level: 'task'],
+                new CO2Record(
+                    traceRecord2, value, value, null, 475.0,
+                    100.0, 1024**3, 1.0d, 1, 12, 'Unknown model'
+                )
+            ))
+        }
+    }
+
+    def 'Test level collection'() {
+        when:
+        Map<String, Map<String, Object>> recordsMap = recordsTree.collectByLevel(level, valueKeys)
+
+        then:
+        recordsMap == expectedRecordsMap
+
+        where:
+        level       || valueKeys            || expectedRecordsMap
+        'workflow'  || ['co2e']             || [workflow: [co2e: [0.0, 1.0, 2.0]]]
+        'process'   || ['co2e']             || [process1: [co2e:[0.0, 1.0]], process2: [co2e:[2.0]]]
+        'process'   || ['co2e_non_cached']  || [process1: [co2e_non_cached:[0.0, 1.0]]]
+        'workflow'  || null                 || [workflow: [
+                task_id:['111', '111', '111'],
+                process:['testProcess', 'testProcess', 'testProcess'],
+                realtime:[3600000, 3600000, 3600000],
+                cpus:[1, 1, 1],
+                cpu_model:['Unknown model', 'Unknown model', 'Unknown model'],
+                '%cpu':[100.0, 100.0, 100.0],
+                memory:[1073741824, 1073741824, 1073741824],
+                status:['COMPLETED', 'COMPLETED', 'CACHED'],
+                name:['task_1', 'task_2', 'task_3'],
+                energy:[0.0, 1.0, 2.0],
+                co2e:[0.0, 1.0, 2.0],
+                co2eMarket:[null, null, null],
+                ci:[475.0, 475.0, 475.0],
+                cpuUsage:[100.0, 100.0, 100.0],
+                time:['0', '0', '0'],
+                powerdrawCPU:[12.0, 12.0, 12.0]
+        ]]
+    }
+
+    def 'Should construct a valid tree node'() {
         when:
         RecordTree parentNode = new RecordTree('parent', [level: 'parent'])
         parentNode.addChild(new RecordTree('child1', [level: 'child'], co2Record))
@@ -53,9 +109,9 @@ class RecordTreeTest extends Specification {
                 '    readable: \'[111]\'\n' +
                 '  process:\n' +
                 '    raw:\n' +
-                '      value: !!set {observerTestProcess: null}\n' +
+                '      value: !!set {testProcess: null}\n' +
                 '      type: LinkedHashSet\n' +
-                '    readable: \'[observerTestProcess]\'\n' +
+                '    readable: \'[testProcess]\'\n' +
                 '  realtime:\n' +
                 '    raw: {value: 7200000, type: Long}\n' +
                 '    readable: 2h\n' +
@@ -107,8 +163,8 @@ class RecordTreeTest extends Specification {
                 '      raw: {value: \'111\', type: String}\n' +
                 '      readable: \'111\'\n' +
                 '    process:\n' +
-                '      raw: {value: observerTestProcess, type: String}\n' +
-                '      readable: observerTestProcess\n' +
+                '      raw: {value: testProcess, type: String}\n' +
+                '      readable: testProcess\n' +
                 '    realtime:\n' +
                 '      raw: {value: 3600000, type: Long}\n' +
                 '      readable: 1h\n' +
@@ -156,8 +212,8 @@ class RecordTreeTest extends Specification {
                 '      raw: {value: \'111\', type: String}\n' +
                 '      readable: \'111\'\n' +
                 '    process:\n' +
-                '      raw: {value: observerTestProcess, type: String}\n' +
-                '      readable: observerTestProcess\n' +
+                '      raw: {value: testProcess, type: String}\n' +
+                '      readable: testProcess\n' +
                 '    realtime:\n' +
                 '      raw: {value: 3600000, type: Long}\n' +
                 '      readable: 1h\n' +

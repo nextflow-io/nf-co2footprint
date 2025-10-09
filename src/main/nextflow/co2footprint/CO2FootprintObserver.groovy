@@ -6,7 +6,6 @@ import groovy.util.logging.Slf4j
 import nextflow.Session
 import nextflow.co2footprint.Metrics.Converter
 import nextflow.co2footprint.Records.CO2Record
-import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.FileCreation.ReportFileCreator
 import nextflow.co2footprint.FileCreation.SummaryFileCreator
 import nextflow.co2footprint.FileCreation.TraceFileCreator
@@ -54,9 +53,6 @@ class CO2FootprintObserver implements TraceObserver {
 
     // Plugin configuration
     CO2FootprintConfig config
-
-    // Aggregator for resource usage stats
-    private CO2RecordAggregator aggregator
 
     // Calculator for CO₂ footprint
     private CO2FootprintComputer co2FootprintComputer
@@ -167,7 +163,6 @@ class CO2FootprintObserver implements TraceObserver {
 
         // Construct session and aggregator
         this.session = session
-        this.aggregator = new CO2RecordAggregator()
 
         // Start hourly CI updating
         timeCiRecordCollector.start()

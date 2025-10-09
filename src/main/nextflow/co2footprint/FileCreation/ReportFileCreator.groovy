@@ -14,7 +14,6 @@ import groovy.util.logging.Slf4j
 
 import nextflow.Session
 import nextflow.co2footprint.Records.CO2Record
-import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.ResultsTree.RecordTree
 import nextflow.trace.TraceHelper
 
@@ -155,34 +154,6 @@ class ReportFileCreator extends BaseFileCreator{
         return htmlFile
     }
 
-    /**
-     * Render the payload JSON for the report.
-     *
-     * @return Rendered JSON as a String
-     */
-    protected String renderDataJson() {
-        return "{" +
-            "\"trace\":${JsonOutput.toJson(collectTasks(workflowStats))}," +
-            "\"summary\":${JsonOutput.toJson(collectSummary(workflowStats))}" +
-        "}"
-    }
-
-    // TODO: Docstring
-    protected Map<String, Object> collectSummary(RecordTree workflowStats=this.workflowStats) {
-        // Add an empty map if the process is not already present
-        return CO2RecordAggregator.collectByLevel(
-                workflowStats,
-                'process',
-                ['co2e', 'energy', 'co2e_non_cached', 'energy_non_cached'],
-        )
-    }
-    // TODO: Docstring
-    protected Map<String, Object> collectTrace(RecordTree workflowStats=this.workflowStats) {
-        // Add an empty map if the process is not already present
-        return CO2RecordAggregator.collectByLevel(
-                workflowStats, 'process', ['co2e', 'energy', 'co2e_non_cached', 'energy_non_cached'],
-        )
-    }
 
     /**
      * Render the entered options / config as a JSON String.
@@ -238,17 +209,36 @@ class ReportFileCreator extends BaseFileCreator{
     /**
      * Render the total CO₂ footprint values for the HTML report.
      *
-     * @return The JSON map
+     * @return The totals JSON map as a String
      */
-    protected Map<String, String> renderCO2TotalsJson() {
+    protected String renderCO2TotalsJson() {
         Map<String, String> totalsMap = [:]
 
         ['', '_non_cached', '_market'].each { String suffix ->
             totalsMap.putAll(makeCO2Total(suffix))
         }
 
-        return totalsMap
+        return JsonOutput.toJson(totalsMap)
     }
+
+    /**
+     * Render the payload JSON for the report.
+     *
+     * @return Rendered JSON as a String
+     */
+    protected String renderDataJson() {
+        return "{" +
+                "\"trace\":${JsonOutput.toJson(collectTasks(workflowStats))}," +
+                "\"summary\":${JsonOutput.toJson(collectSummary(workflowStats))}" +
+                "}"
+    }
+
+    // TODO: Docstring
+    protected Map<String, Object> collectSummary(RecordTree workflowStats=this.workflowStats) {
+        // Add an empty map if the process is not already present
+        return workflowStats.collectByLevel('process', ['co2e', 'energy', 'co2e_non_cached', 'energy_non_cached'])
+    }
+
 
     /**
      * Render the executed tasks as a JSON list.
