@@ -2,6 +2,8 @@ package nextflow.co2footprint.ResultsTree
 
 import nextflow.co2footprint.Records.CO2Record
 
+import java.time.Duration
+
 // TODO: Docstrings
 class RecordTree {
     final name
@@ -60,6 +62,73 @@ class RecordTree {
             attributes.put(name , attribute)
         }
         return this
+    }
+
+    // Collect metrics by process
+    List<Object> collectValues(String key) {
+        List<Object> values = []
+
+        // Catch special suffixes
+        String suffix = '_' + key.split('_').drop(1).join('_')
+        String croppedKey = key
+        if (suffix == '_non_cached') {
+            croppedKey = key.replace(suffix, '')
+        }
+
+        // Extract information
+        if (!children && value?.store?.containsKey(croppedKey)) {
+            Object val = value.store[croppedKey]
+            if (suffix == '_non_cached' && (value?.store?.status == 'CACHED')) {
+                // do nothing
+            }
+            // Convert time to rounded minutes
+            else if (key == 'time') {
+                values.add(
+                    Duration.ofMillis(val as Integer)
+                            .toMinutes().toBigDecimal()
+                            .setScale(1).stripTrailingZeros().toPlainString()
+                )
+            }
+            else {
+                values.add(val)
+            }
+
+        }
+        else {
+            children.forEach{ RecordTree child -> values.addAll(child.collectValues(key)) }
+        }
+
+        return values
+    }
+
+    Set<String> collectKeys() {
+        Set<String> keys = children ?
+            children.collect({ RecordTree child -> child.collectKeys()}).sum() as Set<String> :
+            value.store.keySet()
+        return keys
+    }
+
+    Map<String, Map<String, Object>> collectByLevel(String level, List<String> valueKeys=null){
+        valueKeys ?= collectKeys().toList()
+
+        // Start value collection at specified level
+        if (attributes?.level === level) {
+            Map<String, Object> values = [:]
+            valueKeys.forEach { String valueKey ->
+                List<Object> vals = collectValues(valueKey)
+                if (vals) { values[valueKey] = vals }
+            }
+
+            return values ? [(name as String): values] as Map : [:]
+        }
+
+        // Recursion into deeper levels without collecting values
+        Map<String, Map<String, Object>> levelValues = [:]
+        children?.forEach{ RecordTree child ->
+            levelValues = levelValues + child.collectByLevel(level, valueKeys)
+        }
+
+        return levelValues
     }
 
     Map<String, Object> toMap() {
