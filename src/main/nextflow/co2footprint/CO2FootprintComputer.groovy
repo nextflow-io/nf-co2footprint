@@ -148,6 +148,7 @@ class CO2FootprintComputer {
             numberOfCores as Integer,
             powerdrawPerCore,
             config.value('ignoreCpuModel') ? 'Custom value' : cpuModel,
+            trace.get('status') as String,
             rawEnergyProcessor,
             rawEnergyMemory,
         )

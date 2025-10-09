@@ -6,6 +6,8 @@ import org.yaml.snakeyaml.Yaml
 import spock.lang.Shared
 import spock.lang.Specification
 
+import java.util.stream.Stream
+
 class RecordTreeTest extends Specification {
     @Shared
     TraceRecord traceRecord = new TraceRecord()
@@ -29,7 +31,7 @@ class RecordTreeTest extends Specification {
 
         CO2Record co2Record = new CO2Record(
                 'test co2', 2.0, 200.0, null, 100.0,
-                1.0, 10, 60*60*1000, 1, 7.0, 'Some model'
+                1.0, 10, 60*60*1000, 1, 7.0, 'Some model', 'COMPLETED'
         )
 
         when:
@@ -45,7 +47,7 @@ class RecordTreeTest extends Specification {
         then:
         Map parentMap = parentNode.toMap()
         String yamlString = yaml.dump(parentMap)
-        yamlString == 'name: parent\n' +
+        String expectedYamlString = 'name: parent\n' +
                 'attributes: {level: root}\n' +
                 'values:\n' +
                 '  name:\n' +
@@ -85,6 +87,11 @@ class RecordTreeTest extends Specification {
                 '      value: !!set {Some model: null}\n' +
                 '      type: LinkedHashSet\n' +
                 '    readable: \'[Some model]\'\n' +
+                '  status:\n' +
+                '    raw:\n' +
+                '      value: !!set {COMPLETED: null}\n' +
+                '      type: LinkedHashSet\n' +
+                '    readable: \'[COMPLETED]\'\n' +
                 'children:\n' +
                 '- name: child\n' +
                 '  attributes: {level: child}\n' +
@@ -122,6 +129,9 @@ class RecordTreeTest extends Specification {
                 '    cpu_model:\n' +
                 '      raw: {value: Some model, type: String}\n' +
                 '      readable: Some model\n' +
+                '    status:\n' +
+                '      raw: {value: COMPLETED, type: String}\n' +
+                '      readable: COMPLETED\n' +
                 '  children:\n' +
                 '  - name: co2\n' +
                 '    attributes: {level: record}\n' +
@@ -159,6 +169,9 @@ class RecordTreeTest extends Specification {
                 '      cpu_model:\n' +
                 '        raw: {value: Some model, type: String}\n' +
                 '        readable: Some model\n' +
+                '      status:\n' +
+                '        raw: {value: COMPLETED, type: String}\n' +
+                '        readable: COMPLETED\n' +
                 '    children: []\n' +
                 '  - name: trace\n' +
                 '    attributes: {level: record}\n' +
@@ -224,6 +237,9 @@ class RecordTreeTest extends Specification {
                 '    cpu_model:\n' +
                 '      raw: {value: Some model, type: String}\n' +
                 '      readable: Some model\n' +
+                '    status:\n' +
+                '      raw: {value: COMPLETED, type: String}\n' +
+                '      readable: COMPLETED\n' +
                 '  children:\n' +
                 '  - name: co2\n' +
                 '    attributes: {level: record}\n' +
@@ -261,6 +277,9 @@ class RecordTreeTest extends Specification {
                 '      cpu_model:\n' +
                 '        raw: {value: Some model, type: String}\n' +
                 '        readable: Some model\n' +
+                '      status:\n' +
+                '        raw: {value: COMPLETED, type: String}\n' +
+                '        readable: COMPLETED\n' +
                 '    children: []\n' +
                 '  - name: trace\n' +
                 '    attributes: {level: record}\n' +
@@ -290,5 +309,12 @@ class RecordTreeTest extends Specification {
                 '        raw: {value: COMPLETED, type: String}\n' +
                 '        readable: <span class="badge badge-success">COMPLETED</span>\n' +
                 '    children: []\n'
+        List<String> lines = yamlString.readLines()
+        List<String> expectedLines = expectedYamlString.readLines()
+        int lineCounter = 1
+        while (lines) {
+            assert lines.pop() == expectedLines.pop(), "Mismatch in line ${lineCounter}:\nActual  : ${lines.pop()}\nExpected: ${expectedLines.pop()}\n\nComplete:\n${yamlString}"
+            lineCounter += 1
+        }
     }
 }

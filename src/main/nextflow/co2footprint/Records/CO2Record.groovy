@@ -50,7 +50,7 @@ class CO2Record extends TraceRecord {
     CO2Record(
             String name=null, Double energy=null, Double co2e=null, Double co2eMarket=null, Double ci=null,
             Double cpuUsage=null, Long memory=null, Double time=null,  Integer cpus=null, Double powerdrawCPU=null,
-            String cpu_model=null, Double rawEnergyProcessor, Double rawEnergyMemory
+            String cpu_model=null, String status=null, Double rawEnergyProcessor, Double rawEnergyMemory
     ) {
         Map<String, Object> store = new LinkedHashMap<>([
             'name':                     name,
@@ -64,6 +64,7 @@ class CO2Record extends TraceRecord {
             'cpus':                     cpus,
             'powerdrawCPU':             powerdrawCPU,
             'cpu_model':                cpu_model,
+            'status':                   status,
             'rawEnergyProcessor':       rawEnergyProcessor,
             'rawEnergyMemory':          rawEnergyMemory,
         ])
@@ -146,6 +147,7 @@ class CO2Record extends TraceRecord {
             case 'powerdrawCPU' -> Calculator.weightedAverage([thisValue, newValue], [store['energy'], record.store['energy']])
             case 'cpu_model' -> thisValue instanceof Set ? thisValue.add(newValue) : [thisValue, newValue] as Set
             case 'name' -> thisValue instanceof Set ? thisValue.add(newValue) : [thisValue, newValue] as Set
+            case 'status' -> thisValue instanceof Set ? thisValue.add(newValue) : [thisValue, newValue] as Set
             default -> Calculator.add(thisValue, newValue)
         }
     }
