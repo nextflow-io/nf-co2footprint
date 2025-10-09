@@ -191,8 +191,12 @@ class CO2Record extends TraceRecord {
     }
 
     Map<String, Map<String, Object>> toRawReadableMap() {
-        store.collectEntries { String key, Object val ->
-            [key, [raw: getRaw(key, val), readable: getReadable(key, val)]]
+        Map<String, Map<String, Object>> rrMap = FIELDS.collectEntries { String key, String type ->
+            [key, [raw: [value: null, type: type], readable: NA]]
         }
+        rrMap.putAll(store.collectEntries { String key, Object val ->
+            [key, [raw: getRaw(key, val), readable: getReadable(key, val)]]
+        })
+        return rrMap
     }
 }

@@ -211,14 +211,14 @@ class ReportFileCreator extends BaseFileCreator{
      *
      * @return The totals JSON map as a String
      */
-    protected String renderCO2TotalsJson() {
+    protected Map<String, String> renderCO2TotalsJson() {
         Map<String, String> totalsMap = [:]
 
         ['', '_non_cached', '_market'].each { String suffix ->
             totalsMap.putAll(makeCO2Total(suffix))
         }
 
-        return JsonOutput.toJson(totalsMap)
+        return totalsMap
     }
 
     /**
@@ -228,9 +228,9 @@ class ReportFileCreator extends BaseFileCreator{
      */
     protected String renderDataJson() {
         return "{" +
-                "\"trace\":${JsonOutput.toJson(collectTasks(workflowStats))}," +
-                "\"summary\":${JsonOutput.toJson(collectSummary(workflowStats))}" +
-                "}"
+            "\"trace\":${JsonOutput.toJson(collectTasks(workflowStats))}," +
+            "\"summary\":${JsonOutput.toJson(collectSummary(workflowStats))}" +
+        "}"
     }
 
     // TODO: Docstring
@@ -256,13 +256,11 @@ class ReportFileCreator extends BaseFileCreator{
         List<Map<String, Map<String, Object>>> results = []
         for (RecordTree processes : workflowStats.children) {
             for (RecordTree tasks : processes.children) {
-                for (RecordTree records : tasks.children) {
-                    if (results.size() < maxTasks) {
-                        results.add(records.toMap().get('values') as Map<String, Map<String, Object>>)
-                    }
-                    else {
-                        break
-                    }
+                if (results.size() < maxTasks) {
+                    results.add(tasks.toMap().get('values') as Map<String, Map<String, Object>>)
+                }
+                else {
+                    break
                 }
             }
         }
