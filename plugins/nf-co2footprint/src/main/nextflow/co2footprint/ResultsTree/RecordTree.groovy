@@ -54,12 +54,12 @@ class RecordTree {
 
     RecordTree collectAttributes(
         Map<String, Closure> attributeTransformers = [
-             co2e: { CO2Record r -> r.store.co2e },
-             energy: { CO2Record r -> r.store.energy },
-             co2e_non_cached: { CO2Record r -> r.store['status'] != 'CACHED' ? r.store.co2e : null },
-             energy_non_cached: { CO2Record r -> r.store['status'] != 'CACHED' ? r.store.energy : null },
-             co2e_market: { CO2Record r -> r.store.co2eMarket },
-             energy_market: { CO2Record r -> r.store.energy },
+             co2e: { CO2Record record -> record.store.co2e },
+             energy: { CO2Record record -> record.store.energy },
+             co2e_non_cached: { CO2Record record -> record.store.status != 'CACHED' ? record.store.co2e : null },
+             energy_non_cached: { CO2Record record -> record.store.status != 'CACHED' ? record.store.energy : null },
+             co2e_market: { CO2Record record -> record.store.co2eMarket },
+             energy_market: { CO2Record record -> record.store.energy },
         ]
     ) {
         attributeTransformers.each{ String name, Closure transformer ->
