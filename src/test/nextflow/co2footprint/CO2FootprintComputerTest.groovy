@@ -46,11 +46,11 @@ class CO2FootprintComputerTest extends Specification{
         CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdpDataMatrix, ciDataMatrix, [:])
         CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
         CiRecordCollector timeCiRecordCollector = new CiRecordCollector(config)
-        CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord, timeCiRecordCollector)
+        CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(traceRecord, new TaskId(0), timeCiRecordCollector)
 
         expect:
-        round(co2Record.energy*1000) == expectedEnergy
-        round(co2Record.co2e) == expectedCO2
+        round(co2Record.store.energy*1000 as Double) == expectedEnergy
+        round(co2Record.store.co2e as Double) == expectedCO2
 
         where:
         cpuModel           | configMap                      || expectedEnergy   | expectedCO2
@@ -104,7 +104,7 @@ class CO2FootprintComputerTest extends Specification{
         def result = null
         def caught = null
         try {
-            result = co2FootprintComputer.computeTaskCO2footprint(new TaskId(1), traceRecord, timeCiRecordCollector)
+            result = co2FootprintComputer.computeTaskCO2footprint(traceRecord, new TaskId(1), timeCiRecordCollector)
         } catch (Exception e) {
             caught = e
         }
@@ -115,7 +115,7 @@ class CO2FootprintComputerTest extends Specification{
             assert caught instanceof MissingValueException
         } else {
             // Otherwise, check that the computed memory matches the expected value (in GB)
-            assert result.memory == expectedMemory
+            assert result.store.memory == expectedMemory
         }
 
         where:

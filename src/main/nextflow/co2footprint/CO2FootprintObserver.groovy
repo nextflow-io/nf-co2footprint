@@ -67,7 +67,7 @@ class CO2FootprintObserver implements TraceObserver {
     Map<TaskId, TraceRecord> runningTasks = new ConcurrentHashMap<>()
 
     // Stores all results and execution traces
-    final private RecordTree workflowStats
+    final protected RecordTree workflowStats
 
     /**
      * Constructor for the observer.

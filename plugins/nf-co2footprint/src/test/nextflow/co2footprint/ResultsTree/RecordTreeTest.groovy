@@ -97,43 +97,28 @@ class RecordTreeTest extends Specification {
         parentNode.summarize()
 
         then:
-        Map parentMap = parentNode.toMap()
+        Map parentMap = parentNode.toMap(true)
         String yamlString = yaml.dump(parentMap)
         String expectedYamlString = 'name: parent\n' +
                 'attributes: {level: parent}\n' +
                 'values:\n' +
-                '  task_id:\n' +
-                '    raw:\n' +
-                '      value: !!set {\'111\': null}\n' +
-                '      type: LinkedHashSet\n' +
-                '    readable: \'[111]\'\n' +
-                '  process:\n' +
-                '    raw:\n' +
-                '      value: !!set {testProcess: null}\n' +
-                '      type: LinkedHashSet\n' +
-                '    readable: \'[testProcess]\'\n' +
-                '  realtime:\n' +
-                '    raw: {value: 7200000, type: Long}\n' +
-                '    readable: 2h\n' +
+                '  name:\n' +
+                '    raw: {value: null, type: str}\n' +
+                '    readable: \'-\'\n' +
                 '  cpus:\n' +
                 '    raw: {value: 1, type: Integer, scale: \'\', unit: \'\'}\n' +
                 '    readable: \'1\'\n' +
+                '  memory:\n' +
+                '    raw: {value: 1.073741824E10, type: Double, scale: \'\', unit: B}\n' +
+                '    readable: 10 GB\n' +
+                '  time:\n' +
+                '    raw: {value: 25920000000000.0000, type: BigDecimal, scale: ms, unit: \'\'}\n' +
+                '    readable: 25920000000s\n' +
                 '  cpu_model:\n' +
                 '    raw:\n' +
                 '      value: !!set {Some model: null}\n' +
                 '      type: LinkedHashSet\n' +
                 '    readable: \'[Some model]\'\n' +
-                '  \'%cpu\':\n' +
-                '    raw: {value: 200.0, type: BigDecimal, scale: \'%\', unit: \'\'}\n' +
-                '    readable: 200.0%\n' +
-                '  memory:\n' +
-                '    raw: {value: 1.073741824E10, type: Double, scale: \'\', unit: B}\n' +
-                '    readable: 10 GB\n' +
-                '  status:\n' +
-                '    raw:\n' +
-                '      value: !!set {COMPLETED: null}\n' +
-                '      type: LinkedHashSet\n' +
-                '    readable: <span class="badge badge-null">[COMPLETED]</span>\n' +
                 '  energy:\n' +
                 '    raw: {value: 4000.0, type: Double, scale: \'\', unit: Wh}\n' +
                 '    readable: 4 kWh\n' +
@@ -149,9 +134,6 @@ class RecordTreeTest extends Specification {
                 '  cpuUsage:\n' +
                 '    raw: {value: 1.0, type: Double, scale: \'%\', unit: \'\'}\n' +
                 '    readable: 1 %\n' +
-                '  time:\n' +
-                '    raw: {value: 25920000000000.0000, type: BigDecimal, scale: ms, unit: \'\'}\n' +
-                '    readable: 25920000000s\n' +
                 '  powerdrawCPU:\n' +
                 '    raw: {value: 7.0, type: Double, scale: \'\', unit: W}\n' +
                 '    readable: 7 W\n' +
@@ -159,30 +141,21 @@ class RecordTreeTest extends Specification {
                 '- name: child1\n' +
                 '  attributes: {level: child}\n' +
                 '  values:\n' +
-                '    task_id:\n' +
-                '      raw: {value: \'111\', type: String}\n' +
-                '      readable: \'111\'\n' +
-                '    process:\n' +
-                '      raw: {value: testProcess, type: String}\n' +
-                '      readable: testProcess\n' +
-                '    realtime:\n' +
-                '      raw: {value: 3600000, type: Long}\n' +
-                '      readable: 1h\n' +
+                '    name:\n' +
+                '      raw: {value: null, type: str}\n' +
+                '      readable: \'-\'\n' +
                 '    cpus:\n' +
                 '      raw: {value: 1, type: Integer, scale: \'\', unit: \'\'}\n' +
                 '      readable: \'1\'\n' +
-                '    cpu_model:\n' +
-                '      raw: {value: Some model, type: String}\n' +
-                '      readable: Some model\n' +
-                '    \'%cpu\':\n' +
-                '      raw: {value: 100.0, type: BigDecimal, scale: \'%\', unit: \'\'}\n' +
-                '      readable: 100.0%\n' +
                 '    memory:\n' +
                 '      raw: {value: 1.073741824E10, type: Double, scale: \'\', unit: B}\n' +
                 '      readable: 10 GB\n' +
-                '    status:\n' +
-                '      raw: {value: COMPLETED, type: String}\n' +
-                '      readable: <span class="badge badge-success">COMPLETED</span>\n' +
+                '    time:\n' +
+                '      raw: {value: 12960000000000.0000, type: BigDecimal, scale: ms, unit: \'\'}\n' +
+                '      readable: 12960000000s\n' +
+                '    cpu_model:\n' +
+                '      raw: {value: Some model, type: String}\n' +
+                '      readable: Some model\n' +
                 '    energy:\n' +
                 '      raw: {value: 2000.0, type: Double, scale: \'\', unit: Wh}\n' +
                 '      readable: 2 kWh\n' +
@@ -198,9 +171,6 @@ class RecordTreeTest extends Specification {
                 '    cpuUsage:\n' +
                 '      raw: {value: 1.0, type: Double, scale: \'%\', unit: \'\'}\n' +
                 '      readable: 1 %\n' +
-                '    time:\n' +
-                '      raw: {value: 12960000000000.0000, type: BigDecimal, scale: ms, unit: \'\'}\n' +
-                '      readable: 12960000000s\n' +
                 '    powerdrawCPU:\n' +
                 '      raw: {value: 7.0, type: Double, scale: \'\', unit: W}\n' +
                 '      readable: 7 W\n' +
@@ -208,30 +178,21 @@ class RecordTreeTest extends Specification {
                 '- name: child2\n' +
                 '  attributes: {level: child}\n' +
                 '  values:\n' +
-                '    task_id:\n' +
-                '      raw: {value: \'111\', type: String}\n' +
-                '      readable: \'111\'\n' +
-                '    process:\n' +
-                '      raw: {value: testProcess, type: String}\n' +
-                '      readable: testProcess\n' +
-                '    realtime:\n' +
-                '      raw: {value: 3600000, type: Long}\n' +
-                '      readable: 1h\n' +
+                '    name:\n' +
+                '      raw: {value: null, type: str}\n' +
+                '      readable: \'-\'\n' +
                 '    cpus:\n' +
                 '      raw: {value: 1, type: Integer, scale: \'\', unit: \'\'}\n' +
                 '      readable: \'1\'\n' +
-                '    cpu_model:\n' +
-                '      raw: {value: Some model, type: String}\n' +
-                '      readable: Some model\n' +
-                '    \'%cpu\':\n' +
-                '      raw: {value: 100.0, type: BigDecimal, scale: \'%\', unit: \'\'}\n' +
-                '      readable: 100.0%\n' +
                 '    memory:\n' +
                 '      raw: {value: 1.073741824E10, type: Double, scale: \'\', unit: B}\n' +
                 '      readable: 10 GB\n' +
-                '    status:\n' +
-                '      raw: {value: COMPLETED, type: String}\n' +
-                '      readable: <span class="badge badge-success">COMPLETED</span>\n' +
+                '    time:\n' +
+                '      raw: {value: 12960000000000.0000, type: BigDecimal, scale: ms, unit: \'\'}\n' +
+                '      readable: 12960000000s\n' +
+                '    cpu_model:\n' +
+                '      raw: {value: Some model, type: String}\n' +
+                '      readable: Some model\n' +
                 '    energy:\n' +
                 '      raw: {value: 2000.0, type: Double, scale: \'\', unit: Wh}\n' +
                 '      readable: 2 kWh\n' +
@@ -247,9 +208,6 @@ class RecordTreeTest extends Specification {
                 '    cpuUsage:\n' +
                 '      raw: {value: 1.0, type: Double, scale: \'%\', unit: \'\'}\n' +
                 '      readable: 1 %\n' +
-                '    time:\n' +
-                '      raw: {value: 12960000000000.0000, type: BigDecimal, scale: ms, unit: \'\'}\n' +
-                '      readable: 12960000000s\n' +
                 '    powerdrawCPU:\n' +
                 '      raw: {value: 7.0, type: Double, scale: \'\', unit: W}\n' +
                 '      readable: 7 W\n' +

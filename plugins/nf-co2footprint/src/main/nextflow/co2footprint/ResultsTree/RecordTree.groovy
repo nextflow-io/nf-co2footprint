@@ -7,8 +7,8 @@ import java.time.Duration
 // TODO: Docstrings
 class RecordTree {
     final name
-    CO2Record value
     final Map attributes
+    CO2Record value
 
     RecordTree parent
     final List<RecordTree> children
@@ -140,13 +140,17 @@ class RecordTree {
         return levelValues
     }
 
-    Map<String, Object> toMap() {
-        Map<String, Map<String, Object>> traceMap = value ? value.toRawReadableMap() : [:]
+    Map<String, Object> toMap(boolean onlyCO2parameters=false) {
+        Map<String, Map<String, Object>> traceMap = value ? value.toRawReadableMap(onlyCO2parameters) : [:]
         return [
             name: name,
             attributes: attributes,
             values: traceMap,
-            children: children.collect({ RecordTree child -> child.toMap() }),
+            children: children.collect({ RecordTree child -> child.toMap(onlyCO2parameters) }),
         ]
+    }
+
+    String toString() {
+        return [name: name, attributes: attributes, values: value, children: children]
     }
 }

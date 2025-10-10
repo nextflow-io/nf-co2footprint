@@ -51,7 +51,6 @@ class SummaryFileCreator extends BaseFileCreator {
      * @param config                 CO2FootprintConfig instance with plugin configuration.
      * @param version                Plugin version string.
      */
-    // TODO: With tree structure
     void write(RecordTree workflowStats, CO2FootprintComputer co2FootprintComputer, CO2FootprintConfig config, String version) {
         if (!created) { return }
         Map<String, Object> totalStats = workflowStats.value.store

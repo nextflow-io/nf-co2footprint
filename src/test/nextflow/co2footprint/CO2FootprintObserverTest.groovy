@@ -113,15 +113,12 @@ class CO2FootprintObserverTest extends Specification{
         observer.onFlowCreate(session)
         observer.onProcessStart(handler, traceRecord)
         observer.onProcessComplete(handler, traceRecord)
+        observer.onFlowComplete()
 
         expect:
-        Double total_co2 = 0d
-        Double total_energy = 0d
-        observer.getCO2eRecords().values().each { co2Record ->
-            total_energy += co2Record.energy
-            total_co2 += co2Record.co2e
-        }
-        // With TDP = 11.41 (default global)
+        Double total_co2 =  observer.workflowStats.value.store.co2e as Double
+        Double total_energy =  observer.workflowStats.value.store.energy as Double
+        // With TDP = 11.45 (default global)
         // Energy consumption converted to Wh
         round(total_energy*1000) == 14.02
         // Total CO₂ in g (should reflect the CI value you set)
@@ -150,12 +147,10 @@ class CO2FootprintObserverTest extends Specification{
         observer.onFlowCreate(session)
         observer.onProcessStart(handler, traceRecord)
         observer.onProcessComplete(handler, traceRecord)
+        observer.onFlowComplete()
 
         // Accumulate CO2
-        Double total_co2 = 0d
-        observer.getCO2eRecords().values().each { co2Record ->
-            total_co2 += co2Record.co2e
-        }
+        Double total_co2 = observer.workflowStats.value.store.co2e as Double
 
         CO2EquivalencesRecord co2EquivalencesRecord = observer
             .getCO2FootprintComputer()
@@ -209,6 +204,7 @@ class CO2FootprintObserverTest extends Specification{
         when:
         // Run necessary observer steps
         observer.onFlowCreate(session)
+        observer.onProcessStart(taskHandler, traceRecord)
         observer.onProcessComplete(taskHandler, traceRecord)
         observer.onFlowComplete()
 

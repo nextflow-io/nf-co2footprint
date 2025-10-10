@@ -20,11 +20,13 @@ import nextflow.trace.TraceRecord
 @Slf4j
 @CompileStatic
 class CO2Record extends TraceRecord {
-    final Set<String> co2Keys = Set.of('energy', 'co2e', 'co2eMarket', 'ci', 'cpuUsage', 'memory', 'time', 'cpus', 'powerdrawCPU', 'cpu_model')
-    final Set<String> traceKeys
+    final List<String> co2Keys = [
+            'name', 'energy', 'co2e', 'co2eMarket', 'ci', 'cpuUsage', 'memory', 'time', 'cpus', 'powerdrawCPU', 'cpu_model'
+    ]
+    final List<String> traceKeys
 
     CO2Record (Map<String, Object> store) {
-        this.traceKeys = store.keySet().findAll({ String key -> key !in co2Keys })
+        this.traceKeys = store.keySet().findAll({ String key -> key !in co2Keys }) as List<String>
         super.store.putAll(store)
     }
 
@@ -51,8 +53,7 @@ class CO2Record extends TraceRecord {
         String cpu_model=null, Double rawEnergyProcessor, Double rawEnergyMemory
     ) {
         // Add trace Record values
-        taskId << traceRecord.taskId
-        traceKeys = traceRecord.store.keySet()
+        traceKeys = traceRecord.store.keySet() as List<String>
         super.store.putAll(traceRecord.store)
 
         // Define CO2-specific storage
@@ -159,7 +160,7 @@ class CO2Record extends TraceRecord {
      *              and the order in which they appear (defaults to all keys in the order of this.store).
      * @return List of readable Entries
      */
-    List<String> getReadableEntries(List<String> order=store.keySet() as List) {
+    List<String> getReadableEntries(List<String> order=co2Keys as List) {
         return order.collect { String key -> getReadable(key) }
     }
 
@@ -185,19 +186,21 @@ class CO2Record extends TraceRecord {
     }
 
     CO2Record plus(CO2Record record) {
+        if (record == null) { return this }
         Map<String, Object> store = record.store.collectEntries { String key, Object value ->
             [key, plus(key, record)]
         }
         return new CO2Record(store)
     }
 
-    Map<String, Map<String, Object>> toRawReadableMap() {
+    Map<String, Map<String, Object>> toRawReadableMap(boolean onlyCO2parameters=false) {
         Map<String, Map<String, Object>> rrMap = FIELDS.collectEntries { String key, String type ->
             [key, [raw: [value: null, type: type], readable: NA]]
         }
         rrMap.putAll(store.collectEntries { String key, Object val ->
             [key, [raw: getRaw(key, val), readable: getReadable(key, val)]]
         })
+        if (onlyCO2parameters) { rrMap.removeAll {String key, Map val -> key !in co2Keys}}
         return rrMap
     }
 }
