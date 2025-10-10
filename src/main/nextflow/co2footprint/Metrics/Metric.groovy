@@ -10,7 +10,7 @@ class Metric {
      *
      * @param value The value, saved in the metric
      */
-    Metric(Object value, String type = value.class.getSimpleName(), String format = null) {
+    Metric(Object value, String type = value?.class?.getSimpleName(), String format = null) {
         this.value = value
         this.type = type
         this.format = format

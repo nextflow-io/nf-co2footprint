@@ -125,7 +125,9 @@ class CO2FootprintObserver implements TraceObserver {
         // Keep started tasks
         runningTasks[traceRecord.taskId] = traceRecord
 
-        workflowStats.addChild(new RecordTree(traceRecord.processName, [level: 'process']))
+        if(!workflowStats.getChild(traceRecord.processName)) {
+            workflowStats.addChild(new RecordTree(traceRecord.processName, [level: 'process']))
+        }
     }
 
     /**
@@ -183,6 +185,9 @@ class CO2FootprintObserver implements TraceObserver {
         // Catch unfinished tasks
         runningTasks.each { TaskId taskId, TraceRecord traceRecord -> aggregateRecords(traceRecord) }
 
+        // Close all files (writes remaining tasks in the trace file)
+        traceFile.close(runningTasks)
+
         workflowStats.summarize()
         workflowStats.collectAttributes()
 
@@ -198,15 +203,12 @@ class CO2FootprintObserver implements TraceObserver {
             reportFile.write()
 
         }
-
-        // Close all files (writes remaining tasks in the trace file)
-        traceFile.close(runningTasks)
         summaryFile.close()
         reportFile.close()
 
         log.info(
-            "🌱 The workflow run used ${workflowStats.value.store['energy']} of electricity, " +
-            "resulting in the release of ${workflowStats.value.store['co2e']} of CO₂ equivalents into the athmosphere."
+            "🌱 The workflow run used ${workflowStats.value.getReadable('energy')} of electricity, " +
+            "resulting in the release of ${workflowStats.value.getReadable('co2e')} of CO₂ equivalents into the athmosphere."
         )
     }
 
