@@ -51,6 +51,7 @@ class CO2Record extends TraceRecord {
         String cpu_model=null, Double rawEnergyProcessor, Double rawEnergyMemory
     ) {
         // Add trace Record values
+        taskId << traceRecord.taskId
         traceKeys = traceRecord.store.keySet()
         super.store.putAll(traceRecord.store)
 

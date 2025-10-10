@@ -92,10 +92,12 @@ class TraceFileCreator extends BaseFileCreator {
      * @param traceRecord   TraceRecord for the task
      * @param co2Record     CO2Record for the task
      */
-    void write(TraceRecord traceRecord, CO2Record co2Record){
+    void write(CO2Record co2Record){
         if (!created) { return }
 
         List<String> recordedEntries = co2Record.getReadableEntries() //  entryKeys.collect { String key -> getReadableEntry(key, traceRecord, co2Record) } ?
+
+        recordedEntries = [co2Record.taskId.toString(), co2Record.store.status as String] + records
 
         traceWriter.send { PrintWriter writer ->
             writer.println( String.join('\t', recordedEntries) )
@@ -115,7 +117,7 @@ class TraceFileCreator extends BaseFileCreator {
         traceWriter.await()
 
         // Write remaining records for unfinished tasks
-        current.values().each { record ->
+        current.values().each { TraceRecord record ->
             file.println("${record.taskId}\t-")
         }
         file.flush()

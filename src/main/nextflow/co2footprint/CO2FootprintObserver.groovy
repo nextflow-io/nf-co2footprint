@@ -184,16 +184,7 @@ class CO2FootprintObserver implements TraceObserver {
         runningTasks.each { TaskId taskId, TraceRecord traceRecord -> aggregateRecords(traceRecord) }
 
         workflowStats.summarize()
-        workflowStats.collectAttributes(
-            [
-                co2e: { CO2Record co2Record -> co2Record.store.co2e },
-                energy: { CO2Record co2Record -> co2Record.store.energy },
-                co2e_non_cached: { CO2Record co2Record -> co2Record.store['status'] != 'CACHED' ? co2Record.store.co2e : null },
-                energy_non_cached: { CO2Record co2Record -> co2Record.store['status'] != 'CACHED' ? co2Record.store.energy : null },
-                co2e_market: { CO2Record co2Record -> co2Record.store.co2eMarket },
-                energy_market: { CO2Record co2Record -> co2Record.store.energy },
-            ]
-        )
+        workflowStats.collectAttributes()
 
         // Create report and summary if any content exists to write to the file
         if (workflowStats) {

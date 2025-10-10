@@ -8,7 +8,7 @@
  */
 function rawOrReadable(data, type) {
   if (type === 'sort' || $('#nf-table-humanreadable').val() == 'false') {
-    return data['raw'];
+    return data['raw'].value;
   }
   return data['readable']
 }
@@ -34,12 +34,12 @@ $(function() {
   }
 
   // Plot histograms of resource usage
-  function plot_resource_usage(){
-    var plot_data = {"total": [], "total_non_cached": []};
-    for(var processName in window.statsByProcess){
+  var plot_data_total = [];
+  var plot_data_non_cached = [];
+  for(var processName in window.data.summary){
 
-      // Extract process statistics
-      var stats = window.statsByProcess[processName];
+    // Extract process statistics
+    var stats = window.data.summary[processName];
 
     // Put stats in plot
     for (var metricsName in stats) {
