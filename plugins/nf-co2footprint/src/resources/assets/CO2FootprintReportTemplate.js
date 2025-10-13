@@ -8,10 +8,12 @@
  */
 function rawOrReadable(data, type) {
   if (type === 'sort' || $('#nf-table-humanreadable').val() == 'false') {
-    return data['raw'].value;
+    return data['raw'].value
   }
   return data['readable']
 }
+
+// TODO: FIX Plots & Cards
 
 //
 // MAIN BLOCK: This block is only executed after the page is fully loaded
@@ -19,38 +21,39 @@ function rawOrReadable(data, type) {
 $(function() {
   // Script block clicked
   $('#tasks_table').on('click', '.script_block', function(e){
-    e.preventDefault();
-    $(this).toggleClass('short');
-  });
+    e.preventDefault()
+    $(this).toggleClass('short')
+  })
 
   $(function() {
     $('[data-toggle="tooltip"]').tooltip()
   })
 
   // Completed date from now
-  var completed_date = moment( $('#workflow_complete').text(), "ddd MMM DD HH:mm:ss .* YYYY" );
+  var completed_date = moment( $('#workflow_complete').text(), "ddd MMM DD HH:mm:ss .* YYYY" )
   if(completed_date.isValid()){
-    $('#completed_fromnow').html('completed ' + completed_date.fromNow() + ', ');
+    $('#completed_fromnow').html('completed ' + completed_date.fromNow() + ', ')
   }
 
   // Plot histograms of resource usage
-  var plot_data_total = [];
-  var plot_data_non_cached = [];
+  var plot_data_total = []
+  var plot_data_non_cached = []
   for(var processName in window.data.summary){
 
     // Extract process statistics
-    var stats = window.data.summary[processName];
+    var stats = window.data.summary[processName]
 
     // Put stats in plot
     for (var metricsName in stats) {
       // Add CO₂ Boxplot to plot
       if (metricsName.startsWith('co2e')) {
-        plot_data_total.push(
+        var current_process_plot = metricsName.endsWith('_non_cached') ? plot_data_non_cached : plot_data_total
+        current_process_plot.push(
           {
             x:processName, y: stats[metricsName], name: processName,
             type:'box', boxmean: true, boxpoints: false,
             hovertemplate:
-              'Min: ${Math.min(...stats.co2e)}'
+              'Min: ${Math.min(...stats.co2e)}<br>' +
               'Q1: %{q1}<br>' +
               'Median: %{median}<br>' +
               'Mean: %{mean}<br>' +
@@ -70,31 +73,32 @@ $(function() {
         )
       }
     }
+  }
 
-    var layout = {
-      title: 'CO<sub>2</sub> emission & energy consumption',
-      legend: {
-        x: 1.1
-      },
-      xaxis: {
-        title: 'Processes',
-      },
-      yaxis: {
-        title: 'CO₂e emission (g)',
-        rangemode: 'tozero',
-      },
-      yaxis2: {
-        title: 'Energy consumption (Wh)',
-        rangemode: 'tozero',
-        gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
-        overlaying: 'y',
-        side: 'right',
-      },
-      boxmode: 'group',
-    };
+  var layout = {
+    title: 'CO<sub>2</sub> emission & energy consumption',
+    legend: {
+      x: 1.1
+    },
+    xaxis: {
+      title: 'Processes',
+    },
+    yaxis: {
+      title: 'CO₂e emission (g)',
+      rangemode: 'tozero',
+    },
+    yaxis2: {
+      title: 'Energy consumption (Wh)',
+      rangemode: 'tozero',
+      gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
+      overlaying: 'y',
+      side: 'right',
+    },
+    boxmode: 'group',
+  }
 
-    Plotly.newPlot('co2e-total-plot', plot_data.total, layout);
-    Plotly.newPlot('co2e-non-cached-plot', plot_data.total_non_cached, layout);
+    Plotly.newPlot('co2e-total-plot', plot_data_total, layout)
+    Plotly.newPlot('co2e-non-cached-plot', plot_data_non_cached, layout)
   }
   plot_resource_usage()
 
@@ -108,15 +112,15 @@ $(function() {
   function make_tasks_table(){
     // reset
       if ( $.fn.dataTable.isDataTable( '#tasks_table' ) ) {
-        $('#tasks_table').DataTable().destroy();
+        $('#tasks_table').DataTable().destroy()
       }
 
       // Column titles
-      var energyConsumptionTitle = 'energy consumption (mWh)'; // Default column title
-      var co2EmissionsTitle = 'CO₂e emissions (mg)';
+      var energyConsumptionTitle = 'energy consumption (mWh)' // Default column title
+      var co2EmissionsTitle = 'CO₂e emissions (mg)'
       if ($('#nf-table-humanreadable').val() == 'true') {
-        energyConsumptionTitle = 'energy consumption'; // Change the column title if the button is selected
-        co2EmissionsTitle = 'CO₂e emissions';
+        energyConsumptionTitle = 'energy consumption' // Change the column title if the button is selected
+        co2EmissionsTitle = 'CO₂e emissions'
       }
 
       var table = $('#tasks_table').DataTable({
@@ -171,22 +175,22 @@ $(function() {
             show: ':hidden',
           },
         ]
-      });
+      })
 
       // Insert column filter button group
       table.buttons().container()
-        .prependTo( $('#tasks_table_filter') );
+        .prependTo( $('#tasks_table_filter') )
 
       // Column filter button group onClick event to highlight active filter
       $('.buttons-colvisGroup').click(function(){
-        var def = 'btn-secondary';
-        var sel = 'btn-primary';
-        $('.buttons-colvisGroup').removeClass(sel).addClass(def);
-        $(this).addClass(sel).removeClass(def);
-      });
+        var def = 'btn-secondary'
+        var sel = 'btn-primary'
+        $('.buttons-colvisGroup').removeClass(sel).addClass(def)
+        $(this).addClass(sel).removeClass(def)
+      })
 
       // Default filter highlight
-      $(".buttons-colvisGroup:contains('All')").click();
+      $(".buttons-colvisGroup:contains('All')").click()
   }
 
   // Executor for task table creation (on page load)
@@ -198,10 +202,10 @@ $(function() {
       $('#tasks-omitted-table').remove()
       // Dropdown changed about raw / human readable values in table
       $('#nf-table-humanreadable').change(function(){
-        make_tasks_table();
-      });
+        make_tasks_table()
+      })
       // Make the table on page load
-      make_tasks_table();
+      make_tasks_table()
   }
 
   /**
@@ -210,7 +214,7 @@ $(function() {
   function make_options_table(){
     // reset
     if ( $.fn.dataTable.isDataTable( '#options_table' ) ) {
-      $('#options_table').DataTable().destroy();
+      $('#options_table').DataTable().destroy()
     }
 
     var table = $('#options_table').DataTable({
@@ -221,11 +225,11 @@ $(function() {
         ],
         "deferRender": true,
         "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
-    });
+    })
   }
 
   // Executor for options table creation (on page load)
-  make_options_table();
+  make_options_table()
 
   //
   // Carbon intensity plot
@@ -356,4 +360,4 @@ $(function() {
 
   // Executor for ci plot generation
   make_ci_plot()
-});
+})
