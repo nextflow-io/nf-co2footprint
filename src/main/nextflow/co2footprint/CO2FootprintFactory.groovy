@@ -4,6 +4,7 @@ import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Logging.LoggingAdapter
 
+import java.nio.file.Path
 import java.nio.file.Paths
 
 import groovy.transform.PackageScope
@@ -17,6 +18,8 @@ import ch.qos.logback.classic.LoggerContext
 import nextflow.Session
 import nextflow.trace.TraceObserver
 import nextflow.trace.TraceObserverFactory
+
+import java.util.jar.Manifest
 
 
 /**
@@ -56,12 +59,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
         catch (NullPointerException nullPointerException) {
             // Fallback to checking all classLoader Files
             if (tryFallback) {
-                Enumeration<URL> manifests = this.class.classLoader.getResources('META-INF/MANIFEST.MF')
-                log.trace("MANIFESTS: ${manifests.toList()}")
-                setPluginVersion(
-                        manifests.find { it.toString().endsWith('/plugins/nf-co2footprint/build/resources/main/META-INF/MANIFEST.MF') } as URL,
-                        false
-                )
+                URL url = this.class.protectionDomain.codeSource.location
+                url = Paths.get(url.path.replace('/classes/groovy/main', '/tmp/jar/MANIFEST.MF')).toUri().toURL()
+
+                setPluginVersion(url, false)
             }
             else {
                 log.error(nullPointerException.getMessage())

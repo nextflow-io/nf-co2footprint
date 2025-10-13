@@ -16,7 +16,7 @@
 
 plugins {
     // Apply the groovy plugin to add support for Groovy
-    id 'io.nextflow.groovy-library-conventions'
+    id 'io.nextflow.nextflow-plugin' version '1.0.0-beta.10'
     id 'idea'
     id 'groovy'
 }
@@ -91,6 +91,36 @@ dependencies {
         module('commons-logging:commons-logging') { replacedBy('org.slf4j:jcl-over-slf4j') }
     }
 }
+
+// Plugin version
+version = '1.0.0'
+
+nextflowPlugin {
+    // Minimum Nextflow version
+    nextflowVersion = '24.10.6'
+
+    // Plugin metadata
+    provider = 'nextflow'
+    className = 'nextflow.co2footprint.CO2FootprintPlugin'
+    extensionPoints = [
+            'nextflow.co2footprint.CO2FootprintFactory'
+    ]
+
+}
+
+jar {
+    manifest {
+        attributes(
+                'Implementation-Title': project.name,
+                'Implementation-Version': version,
+                'Implementation-Vendor': nextflowPlugin.provider,
+                'Specification-Title': project.name,
+                'Specification-Version': version,
+                'Specification-Vendor': nextflowPlugin.provider
+        )
+    }
+}
+
 
 // use JUnit 5 platform
 test {
