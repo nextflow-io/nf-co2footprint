@@ -11,6 +11,7 @@
 - HTML & CSS clarity improvements through comments and block separation
 - Removed some unnecessary conversions in the Computer, JavaScript and Tests
 - Removed `utils` and `HelperFunctions` in favor of `Metrics` class
+- Migration to new plugin template
 
 ## Features:
 - Base config class with more control over parameters
