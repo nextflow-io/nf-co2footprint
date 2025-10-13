@@ -148,7 +148,9 @@ class TDPDataMatrix extends DataMatrix {
                     Markers.silentUnique,
                     modelMatch +
                     " Using ${this.fallbackModel} CPU power draw value (${getTDP(modelData)} W).\n" +
-                    '\t🔖 You can help by reporting this warning and your `.nextflow.log` file to ' +
+                    'If you can find the thermal design power (TDP) or power draw of your model, ' +
+                    'you can supply it through a `customCpuTdpFile` or via `powerdrawCpuDefault` + `ignoreCpuModel`.\n' +
+                    '\t🔖 You can help by posting this warning to ' +
                     'https://github.com/nextflow-io/nf-co2footprint/issues/new?template=missing_chip.yaml. Thanks.'
             )
         }
