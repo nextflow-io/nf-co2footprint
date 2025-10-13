@@ -136,7 +136,9 @@ class TDPDataMatrixTest extends Specification {
         df2TDPPerThread == 5.0
         listAppender.list[0] as String ==  '[WARN] Could not find CPU model "Non-existent" in given TDP data table. ' +
                 'Using default CPU power draw value (100.0 W).\n' +
-                'If you can find the thermal design power (TDP) or power draw of your model, you can supply it through a `customCpuTdpFile` or via `powerdrawCpuDefault` + `ignoreCpuModel`.\n' +
+                'If you can find the thermal design power (TDP) or power draw of your model,' +
+                ' you can supply it through a `customCpuTdpFile` or via `powerdrawCpuDefault` + `ignoreCpuModel` ' +
+                '(see https://nextflow-io.github.io/nf-co2footprint/usage/parameters/#hardware-power-draw).\n' +
                 '\t🔖 You can help by posting this warning to https://github.com/nextflow-io/nf-co2footprint/issues/new?template=missing_chip.yaml. Thanks.'
         // Second instance should be filtered
         listAppender.list.size() == 1
@@ -215,14 +217,18 @@ class TDPDataMatrixTest extends Specification {
         df.matchModel('Non-existent2').getData() == [[100, 4, 8]]
         listAppender.list[0] as String == '[WARN] Could not find CPU model "Non-existent2" in given TDP data table. ' +
                 'Using default CPU power draw value (100.0 W).\n' +
-                'If you can find the thermal design power (TDP) or power draw of your model, you can supply it through a `customCpuTdpFile` or via `powerdrawCpuDefault` + `ignoreCpuModel`.\n' +
+                'If you can find the thermal design power (TDP) or power draw of your model, ' +
+                'you can supply it through a `customCpuTdpFile` or via `powerdrawCpuDefault` + `ignoreCpuModel` ' +
+                '(see https://nextflow-io.github.io/nf-co2footprint/usage/parameters/#hardware-power-draw).\n' +
                 '\t🔖 You can help by posting this warning to https://github.com/nextflow-io/nf-co2footprint/issues/new?template=missing_chip.yaml. Thanks.'
 
         // match against unaccounted variance of model
         df.matchModel('Indel® i3-Fantasy(TM) 10Trillion GW').getData() == [[100, 4, 8]]
         listAppender.list[1] as String == '[WARN] Could not find CPU model "Indel® i3-Fantasy(TM) 10Trillion GW" in given TDP data table. ' +
                 'Using default CPU power draw value (100.0 W).\n' +
-                'If you can find the thermal design power (TDP) or power draw of your model, you can supply it through a `customCpuTdpFile` or via `powerdrawCpuDefault` + `ignoreCpuModel`.\n' +
+                'If you can find the thermal design power (TDP) or power draw of your model, ' +
+                'you can supply it through a `customCpuTdpFile` or via `powerdrawCpuDefault` + `ignoreCpuModel` ' +
+                '(see https://nextflow-io.github.io/nf-co2footprint/usage/parameters/#hardware-power-draw).\n' +
                 '\t🔖 You can help by posting this warning to https://github.com/nextflow-io/nf-co2footprint/issues/new?template=missing_chip.yaml. Thanks.'
     }
 
