@@ -84,7 +84,7 @@ class RecordTreeTest extends Specification {
                 co2eMarket:[null, null, null],
                 ci:[475.0, 475.0, 475.0],
                 cpuUsage:[100.0, 100.0, 100.0],
-                time:['0', '0', '0'],
+                time:[1.0, 1.0, 1.0],
                 powerdrawCPU:[12.0, 12.0, 12.0]
         ]]
     }

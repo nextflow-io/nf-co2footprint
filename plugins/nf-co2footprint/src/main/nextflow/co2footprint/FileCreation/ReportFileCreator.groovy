@@ -204,7 +204,6 @@ class ReportFileCreator extends BaseFileCreator{
             return [:]
         }
     }
-    //TODO: Make card writing from within Groovy (currently: written multiple times with same structure into HTML report)
 
     /**
      * Render the total CO₂ footprint values for the HTML report.
@@ -233,7 +232,12 @@ class ReportFileCreator extends BaseFileCreator{
         "}"
     }
 
-    // TODO: Docstring
+    /**
+     * Collects statistics at the process level
+     *
+     * @param workflowStats RecordTree representation of workflow stats with marked levels
+     * @return Map of the process-specific statistics
+     */
     protected Map<String, Object> collectSummary(RecordTree workflowStats=this.workflowStats) {
         // Add an empty map if the process is not already present
         return workflowStats.collectByLevel('process', ['co2e', 'energy', 'co2e_non_cached', 'energy_non_cached'])
