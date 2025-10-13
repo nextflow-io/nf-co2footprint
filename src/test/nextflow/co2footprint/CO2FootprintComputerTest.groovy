@@ -37,6 +37,7 @@ class CO2FootprintComputerTest extends Specification{
     def "CO2e calculation for various configurations"() {
         given:
         def traceRecord = new TraceRecord()
+        traceRecord.task_id = '1'
         traceRecord.realtime = (1 as Long) * (3600000 as Long)
         traceRecord.cpus = 1
         traceRecord.cpu_model = cpuModel
@@ -46,7 +47,7 @@ class CO2FootprintComputerTest extends Specification{
         CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdpDataMatrix, ciDataMatrix, [:])
         CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
         CiRecordCollector timeCiRecordCollector = new CiRecordCollector(config)
-        CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(traceRecord, new TaskId(0), timeCiRecordCollector)
+        CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(traceRecord, timeCiRecordCollector)
 
         expect:
         round(co2Record.store.energy*1000 as Double) == expectedEnergy
@@ -87,6 +88,7 @@ class CO2FootprintComputerTest extends Specification{
         given:
         // Prepare a TraceRecord with test parameters for each case
         def traceRecord = new TraceRecord()
+        traceRecord.task_id = '1'
         traceRecord.realtime = 3600000L
         traceRecord.cpus = 1
         traceRecord.cpu_model = "TestCPU"
@@ -104,7 +106,7 @@ class CO2FootprintComputerTest extends Specification{
         def result = null
         def caught = null
         try {
-            result = co2FootprintComputer.computeTaskCO2footprint(traceRecord, new TaskId(1), timeCiRecordCollector)
+            result = co2FootprintComputer.computeTaskCO2footprint(traceRecord, timeCiRecordCollector)
         } catch (Exception e) {
             caught = e
         }

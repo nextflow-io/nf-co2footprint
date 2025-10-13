@@ -1,0 +1,10 @@
+{
+  "summary_test.txt": {
+    "checksum": "e38a335eb5dcc8cccbcc76883147bc29",
+    "num_lines": 29
+  },
+  "report_test.html": {
+    "checksum": "ae89a8ecef007521b5a6f0ca408fcf95",
+    "num_lines": 1248
+  }
+}

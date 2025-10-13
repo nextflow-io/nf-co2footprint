@@ -53,29 +53,28 @@ class CO2FootprintComputer {
     *   - Energy consumption in Wh
     *   - CO₂ emissions in gCO₂e (location-based and optional market-based)
     *
-    * @param taskID  The Nextflow TaskId for this task.
     * @param trace   The TraceRecord containing task resource usage.
     * @param timeCiRecords Collector for carbon intensity records.
     * @return        CO2Record with energy consumption, CO₂ emissions, and task/resource details.
     */
-    CO2Record computeTaskCO2footprint(TraceRecord trace, TaskId taskID=trace.taskId, CiRecordCollector timeCiRecords) {
+    CO2Record computeTaskCO2footprint(TraceRecord trace, CiRecordCollector timeCiRecords) {
 
         /* ===== CPU Information ===== */
 
         final String cpuModel = config.value('ignoreCpuModel') ? 'default' : trace.get('cpu_model') as String
 
         // Runtime [h]
-        final BigDecimal runtime_h = (getTraceOrDefault(trace, taskID, 'realtime', 0, 'missing-realtime') as BigDecimal) / (1000 * 60 * 60)
+        final BigDecimal runtime_h = (getTraceOrDefault(trace, trace.taskId, 'realtime', 0, 'missing-realtime') as BigDecimal) / (1000 * 60 * 60)
 
         // Number of CPU cores
-        final Integer numberOfCores = getTraceOrDefault(trace, taskID, 'cpus', 1, 'missing-cpus') as Integer
+        final Integer numberOfCores = getTraceOrDefault(trace, trace.taskId, 'cpus', 1, 'missing-cpus') as Integer
 
         // CPU usage: fraction of total requested cores
-        BigDecimal cpuUsage = getTraceOrDefault(trace, taskID, '%cpu', numberOfCores * 100, 'missing-%cpu') as BigDecimal
+        BigDecimal cpuUsage = getTraceOrDefault(trace, trace.taskId, '%cpu', numberOfCores * 100, 'missing-%cpu') as BigDecimal
         if ( cpuUsage == 0.0 ) {
             log.warn(
                 Markers.unique,
-                "The reported CPU usage is 0.0 for task ${taskID}.",
+                "The reported CPU usage is 0.0 for task ${trace.taskId}.",
                 'zero-cpu-usage-warning'
             )
         }
@@ -101,12 +100,12 @@ class CO2FootprintComputer {
         else if (maxRequiredMemory != null) {
             memory = Converter.scaleUnits(maxRequiredMemory, '', 'B', 'G').value
             log.warn(Markers.unique,
-                "Requested memory is null for task ${taskID}. Using maximum consumed memory/`peak_rss` (${memory} GB) for CO₂e footprint computation.",
+                "Requested memory is null for task ${trace.taskId}. Using maximum consumed memory/`peak_rss` (${memory} GB) for CO₂e footprint computation.",
                 'memory-is-null-warning')
         }
         // 3. If both missing, throw an error
         else {
-            String message = "No requested memory and maximum consumed memory found for task ${taskID}."
+            String message = "No requested memory and maximum consumed memory found for task ${trace.taskId}."
             log.error(message)
             throw new MissingValueException(message)
         }
