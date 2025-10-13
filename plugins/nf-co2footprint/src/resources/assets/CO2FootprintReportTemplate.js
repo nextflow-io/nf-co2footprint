@@ -13,8 +13,6 @@ function rawOrReadable(data, type) {
   return data['readable']
 }
 
-// TODO: FIX Plots & Cards
-
 //
 // MAIN BLOCK: This block is only executed after the page is fully loaded
 //
