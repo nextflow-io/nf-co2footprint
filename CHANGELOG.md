@@ -2,6 +2,7 @@
 ## Bug Fixes:
 ## Misc:
 ## Features:
+- Usage of tree structure for result value propagation and summary / accumulation
 
 # Version 1.1.0
 ## Bug Fixes:
