@@ -16,6 +16,7 @@
 - Added sample outputs to documentation
 - Support for custom polynomial CPU power models via the `cpuPowerModel` configuration parameter#
 - Usage of tree structure for result value propagation and summary / accumulation
+- Logging of results to console at the end of the workflow
 
 # Version 1.0.0
 ## Bug Fixes:
