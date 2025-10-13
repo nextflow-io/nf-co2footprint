@@ -244,7 +244,7 @@ class CO2FootprintObserverTest extends Specification{
         fileChecker.runChecks(
             reportPath,
             [
-                975: '    window.options = [' +
+                 826: '    window.options = [' +
                         '{"option":"ci","value":"480.0"},'+
                         '{"option":"ciMarket","value":null},' +
                         '{"option":"customCpuTdpFile","value":null},' +
@@ -257,7 +257,7 @@ class CO2FootprintObserverTest extends Specification{
                         "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
                         "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
                         "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];",
-                1026: '          ' +
+                875: '          ' +
                         "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                         " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
             ]
