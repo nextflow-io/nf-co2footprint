@@ -91,16 +91,18 @@ class RecordTreeTest extends Specification {
 
     def 'Should construct a valid tree node'() {
         when:
-        RecordTree parentNode = new RecordTree('parent', [level: 'parent'])
-        parentNode.addChild(new RecordTree('child1', [level: 'child'], co2Record))
-        parentNode.addChild(new RecordTree('child2', [level: 'child'], co2Record))
+        RecordTree parentNode = new RecordTree('crazy_tesla', [level: 'workflow'])
+        RecordTree processNode1 = parentNode.addChild(new RecordTree('test1', [level: 'process']))
+        RecordTree processNode2 = parentNode.addChild(new RecordTree('test2', [level: 'process']))
+        processNode1.addChild(new RecordTree('1', [level: 'task'], co2Record))
+        processNode2.addChild(new RecordTree('2', [level: 'task'], co2Record))
         parentNode.summarize()
 
         then:
         Map parentMap = parentNode.toMap(true)
         String yamlString = yaml.dump(parentMap)
-        String expectedYamlString = 'name: parent\n' +
-                'attributes: {level: parent}\n' +
+        String expectedYamlString = 'name: crazy_tesla\n' +
+                'attributes: {level: workflow}\n' +
                 'values:\n' +
                 '  name:\n' +
                 '    raw: {value: null, type: str}\n' +
@@ -138,8 +140,8 @@ class RecordTreeTest extends Specification {
                 '    raw: {value: 7.0, type: Double, scale: \'\', unit: W}\n' +
                 '    readable: 7 W\n' +
                 'children:\n' +
-                '- name: child1\n' +
-                '  attributes: {level: child}\n' +
+                '- name: test1\n' +
+                '  attributes: {level: process}\n' +
                 '  values:\n' +
                 '    name:\n' +
                 '      raw: {value: null, type: str}\n' +
@@ -174,9 +176,46 @@ class RecordTreeTest extends Specification {
                 '    powerdrawCPU:\n' +
                 '      raw: {value: 7.0, type: Double, scale: \'\', unit: W}\n' +
                 '      readable: 7 W\n' +
-                '  children: []\n' +
-                '- name: child2\n' +
-                '  attributes: {level: child}\n' +
+                '  children:\n' +
+                '  - name: \'1\'\n' +
+                '    attributes: {level: task}\n' +
+                '    values:\n' +
+                '      name:\n' +
+                '        raw: {value: null, type: str}\n' +
+                '        readable: \'-\'\n' +
+                '      cpus:\n' +
+                '        raw: {value: 1, type: Integer, scale: \'\', unit: \'\'}\n' +
+                '        readable: \'1\'\n' +
+                '      memory:\n' +
+                '        raw: {value: 1.073741824E10, type: Double, scale: \'\', unit: B}\n' +
+                '        readable: 10 GB\n' +
+                '      time:\n' +
+                '        raw: {value: 12960000000000.0000, type: BigDecimal, scale: ms, unit: \'\'}\n' +
+                '        readable: 12960000000s\n' +
+                '      cpu_model:\n' +
+                '        raw: {value: Some model, type: String}\n' +
+                '        readable: Some model\n' +
+                '      energy:\n' +
+                '        raw: {value: 2000.0, type: Double, scale: \'\', unit: Wh}\n' +
+                '        readable: 2 kWh\n' +
+                '      co2e:\n' +
+                '        raw: {value: 200.0, type: Double, scale: \'\', unit: g}\n' +
+                '        readable: 200 g\n' +
+                '      co2eMarket:\n' +
+                '        raw: {value: null, type: Number, scale: m, unit: g}\n' +
+                '        readable: \'-\'\n' +
+                '      ci:\n' +
+                '        raw: {value: 100.0, type: Double, scale: \'\', unit: gCO₂e/kWh}\n' +
+                '        readable: 100 gCO₂e/kWh\n' +
+                '      cpuUsage:\n' +
+                '        raw: {value: 1.0, type: Double, scale: \'%\', unit: \'\'}\n' +
+                '        readable: 1 %\n' +
+                '      powerdrawCPU:\n' +
+                '        raw: {value: 7.0, type: Double, scale: \'\', unit: W}\n' +
+                '        readable: 7 W\n' +
+                '    children: []\n' +
+                '- name: test2\n' +
+                '  attributes: {level: process}\n' +
                 '  values:\n' +
                 '    name:\n' +
                 '      raw: {value: null, type: str}\n' +
@@ -211,7 +250,44 @@ class RecordTreeTest extends Specification {
                 '    powerdrawCPU:\n' +
                 '      raw: {value: 7.0, type: Double, scale: \'\', unit: W}\n' +
                 '      readable: 7 W\n' +
-                '  children: []\n'
+                '  children:\n' +
+                '  - name: \'2\'\n' +
+                '    attributes: {level: task}\n' +
+                '    values:\n' +
+                '      name:\n' +
+                '        raw: {value: null, type: str}\n' +
+                '        readable: \'-\'\n' +
+                '      cpus:\n' +
+                '        raw: {value: 1, type: Integer, scale: \'\', unit: \'\'}\n' +
+                '        readable: \'1\'\n' +
+                '      memory:\n' +
+                '        raw: {value: 1.073741824E10, type: Double, scale: \'\', unit: B}\n' +
+                '        readable: 10 GB\n' +
+                '      time:\n' +
+                '        raw: {value: 12960000000000.0000, type: BigDecimal, scale: ms, unit: \'\'}\n' +
+                '        readable: 12960000000s\n' +
+                '      cpu_model:\n' +
+                '        raw: {value: Some model, type: String}\n' +
+                '        readable: Some model\n' +
+                '      energy:\n' +
+                '        raw: {value: 2000.0, type: Double, scale: \'\', unit: Wh}\n' +
+                '        readable: 2 kWh\n' +
+                '      co2e:\n' +
+                '        raw: {value: 200.0, type: Double, scale: \'\', unit: g}\n' +
+                '        readable: 200 g\n' +
+                '      co2eMarket:\n' +
+                '        raw: {value: null, type: Number, scale: m, unit: g}\n' +
+                '        readable: \'-\'\n' +
+                '      ci:\n' +
+                '        raw: {value: 100.0, type: Double, scale: \'\', unit: gCO₂e/kWh}\n' +
+                '        readable: 100 gCO₂e/kWh\n' +
+                '      cpuUsage:\n' +
+                '        raw: {value: 1.0, type: Double, scale: \'%\', unit: \'\'}\n' +
+                '        readable: 1 %\n' +
+                '      powerdrawCPU:\n' +
+                '        raw: {value: 7.0, type: Double, scale: \'\', unit: W}\n' +
+                '        readable: 7 W\n' +
+                '    children: []\n'
         List<String> lines = yamlString.readLines()
         List<String> expectedLines = expectedYamlString.readLines()
         int lineCounter = 1
