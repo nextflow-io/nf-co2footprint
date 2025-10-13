@@ -604,7 +604,7 @@
       }
       return data['readable']
     }
-
+    
     //
     // MAIN BLOCK: This block is only executed after the page is fully loaded
     //
@@ -626,69 +626,73 @@
       }
     
       // Plot histograms of resource usage
-      var plot_data_total = []
-      var plot_data_non_cached = []
-      for(var processName in window.data.summary){
+      function plot_resource_usage() {
+        var plot_data_total = []
+        var plot_data_non_cached = []
+        for(var processName in window.data.summary){
     
-        // Extract process statistics
-        var stats = window.data.summary[processName]
+          // Extract process statistics
+          var stats = window.data.summary[processName]
     
-        // Put stats in plot
-        for (var metricsName in stats) {
-          // Add CO₂ Boxplot to plot
-          if (metricsName.startsWith('co2e')) {
-            var current_process_plot = metricsName.endsWith('_non_cached') ? plot_data_non_cached : plot_data_total
-            current_process_plot.push(
-              {
-                x:processName, y: stats[metricsName], name: processName,
-                type:'box', boxmean: true, boxpoints: false,
-                hovertemplate:
-                  'Min: ${Math.min(...stats.co2e)}<br>' +
-                  'Q1: %{q1}<br>' +
-                  'Median: %{median}<br>' +
-                  'Mean: %{mean}<br>' +
-                  'Q3: %{q3}<br>' +
-                  'Max: ${max}<extra></extra>'
-              }
-            )
-          }
-          else {
-            // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
-            plot_data_total.push(
-              {
-                x:processName, y:stats[metricsName]?.map(v => v * 1000) ?? null, name: processName,
-                type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
-                hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
-              }
-            )
+          // Put stats in plot
+          for (var metricsName in stats) {
+            // Add CO₂ Boxplot to plot
+            if (metricsName.startsWith('co2e')) {
+              var current_process_plot = metricsName.endsWith('_non_cached') ? plot_data_non_cached : plot_data_total
+              current_process_plot.push(
+                {
+                  x:processName, y: stats[metricsName], name: processName,
+                  type:'box', boxmean: true, boxpoints: false,
+                  hovertemplate:
+                    'Min: ${Math.min(...stats.co2e)}<br>' +
+                    'Q1: %{q1}<br>' +
+                    'Median: %{median}<br>' +
+                    'Mean: %{mean}<br>' +
+                    'Q3: %{q3}<br>' +
+                    'Max: ${max}<extra></extra>'
+                }
+              )
+            }
+            else {
+              // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
+              plot_data_total.push(
+                {
+                  x:processName, y:stats[metricsName]?.map(v => v * 1000) ?? null, name: processName,
+                  type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
+                  hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
+                }
+              )
+            }
           }
         }
+    
+        var layout = {
+          title: 'CO<sub>2</sub> emission & energy consumption',
+          legend: {
+            x: 1.1
+          },
+          xaxis: {
+            title: 'Processes',
+          },
+          yaxis: {
+            title: 'CO₂e emission (g)',
+            rangemode: 'tozero',
+          },
+          yaxis2: {
+            title: 'Energy consumption (Wh)',
+            rangemode: 'tozero',
+            gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
+            overlaying: 'y',
+            side: 'right',
+          },
+          boxmode: 'group',
+        }
+    
+        Plotly.newPlot('co2e-total-plot', plot_data_total, layout)
+        Plotly.newPlot('co2e-non-cached-plot', plot_data_non_cached, layout)
       }
     
-      var layout = {
-        title: 'CO<sub>2</sub> emission & energy consumption',
-        legend: {
-          x: 1.1
-        },
-        xaxis: {
-          title: 'Processes',
-        },
-        yaxis: {
-          title: 'CO₂e emission (g)',
-          rangemode: 'tozero',
-        },
-        yaxis2: {
-          title: 'Energy consumption (Wh)',
-          rangemode: 'tozero',
-          gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
-          overlaying: 'y',
-          side: 'right',
-        },
-        boxmode: 'group',
-      }
-    
-      Plotly.newPlot('co2e-total-plot', plot_data_total, layout)
-      Plotly.newPlot('co2e-non-cached-plot', plot_data_non_cached, layout)
+      plot_resource_usage()
     
       //
       // Table creation functions
@@ -818,22 +822,20 @@
     
       // Executor for options table creation (on page load)
       make_options_table()
-    })
-      make_options_table();
-
+    
       //
       // Carbon intensity plot
       //
-
+    
       function make_ci_plot() {
         var ci_plot_data = []
-
+    
         // Add Date() entry to start and end time of tasks
         window.data.trace.forEach(task => {
-          task.start.time = new Date(task.start.raw)
-          task.complete.time = new Date(task.complete.raw)
+          task.start.time = new Date(task.start.raw.value)
+          task.complete.time = new Date(task.complete.raw.value)
         })
-
+    
         // Tasks:
         // Collect all time boundaries
         const timePoints = new Set()
@@ -842,10 +844,10 @@
           timePoints.add(task.complete.time)
         }
         const sortedTimes = Array.from(timePoints).sort((a,b) => a-b)
-
+    
         // Define first and last point
         var [tasksStart, tasksEnd] = [sortedTimes[0], sortedTimes[sortedTimes.length - 1]]
-
+    
         // For each subinterval, calculate the total energy from active intervals
         // Add first point to energy trace
         const timeSteps = [tasksStart], totalEnergy = [0.0]
@@ -853,34 +855,34 @@
         for (let i = 0; i < sortedTimes.length - 1; i++) {
           const t0 = sortedTimes[i]
           const t1 = sortedTimes[i + 1]
-
+    
           // Sum energy of intervals active in [t0, t1)
           let total = 0
           for (const task of window.data.trace) {
             if (task.start.time <= t0 && task.complete.time >= t1) {
-              total += task.energy.raw
+              total += task.energy.raw.value
             }
           }
-
+    
           timeSteps.push(t0, t1)
           totalEnergy.push(total, total)
         }
         // Add last point to energy trace
         timeSteps.push(tasksEnd)
         totalEnergy.push(0.0)
-
+    
         // CI Records:
         var ciRecords = new Map()
-
+    
         // Change keys to Date() and sort
         for (let [key, value] of Object.entries(window.ciRecords)) {
           ciRecords.set(new Date(key), value)
         }
         ciRecords = new Map([...ciRecords.entries()].sort((a,b) => a[0]-b[0]))
-
+    
         if (ciRecords.size == 0) {
-          ciRecords.set(tasksStart, window.data.trace[0].ci.raw)
-          ciRecords.set(tasksEnd, window.data.trace[0].ci.raw)
+          ciRecords.set(tasksStart, window.data.trace[0].ci.raw.value)
+          ciRecords.set(tasksEnd, window.data.trace[0].ci.raw.value)
         }
         else {
           const times = [...ciRecords.keys()]
@@ -892,11 +894,11 @@
             ciRecords.set(tasksEnd, cis[cis.length - 1])
           }
         }
-
+    
         ciRecords = new Map([...ciRecords.entries()].sort((a,b) => a[0]-b[0]))
         var timestamps = [...ciRecords.keys()]
         var ciValues = [...ciRecords.values()]
-
+    
         // Add CI trace to plot
         ci_plot_data.push(
           {
@@ -908,7 +910,7 @@
             marker: { color: "grey" },
           }
         )
-
+    
         // Add energy trace to plot
         ci_plot_data.push(
           {
@@ -919,7 +921,7 @@
             line: { color: "#FFCC00", shape: "hv" },
           }
         )
-
+    
         // Layout:
         var ci_layout = {
           title: 'Carbon intensity index',
@@ -943,18 +945,19 @@
             side: 'right',
           }
         }
-
+    
         // Create plot:
         Plotly.newPlot('ci-plot', ci_plot_data, ci_layout)
       }
-
+    
       // Executor for ci plot generation
       make_ci_plot()
-    });
+    })
 
     // Nextflow report data
     window.data = {"trace":[{"task_id":{"raw":{"value":"111","type":"String"},"readable":"111"},"hash":{"raw":{"value":null,"type":"str"},"readable":"-"},"native_id":{"raw":{"value":null,"type":"str"},"readable":"-"},"process":{"raw":{"value":"observerTestProcess","type":"String"},"readable":"observerTestProcess"},"module":{"raw":{"value":null,"type":"str"},"readable":"-"},"container":{"raw":{"value":null,"type":"str"},"readable":"-"},"tag":{"raw":{"value":null,"type":"str"},"readable":"-"},"name":{"raw":{"value":null,"type":"str"},"readable":"-"},"status":{"raw":{"value":"COMPLETED","type":"String"},"readable":"<span class=\"badge badge-success\">COMPLETED</span>"},"exit":{"raw":{"value":null,"type":"str"},"readable":"-"},"submit":{"raw":{"value":null,"type":"date"},"readable":"-"},"start":{"raw":{"value":null,"type":"date"},"readable":"-"},"complete":{"raw":{"value":null,"type":"date"},"readable":"-"},"duration":{"raw":{"value":null,"type":"time"},"readable":"-"},"realtime":{"raw":{"value":3600000,"type":"Long"},"readable":"1h"},"%cpu":{"raw":{"value":100.0,"type":"BigDecimal","scale":"%","unit":""},"readable":"100.0%"},"%mem":{"raw":{"value":null,"type":"perc"},"readable":"-"},"rss":{"raw":{"value":null,"type":"mem"},"readable":"-"},"vmem":{"raw":{"value":null,"type":"mem"},"readable":"-"},"peak_rss":{"raw":{"value":null,"type":"mem"},"readable":"-"},"peak_vmem":{"raw":{"value":null,"type":"mem"},"readable":"-"},"rchar":{"raw":{"value":null,"type":"mem"},"readable":"-"},"wchar":{"raw":{"value":null,"type":"mem"},"readable":"-"},"syscr":{"raw":{"value":null,"type":"num"},"readable":"-"},"syscw":{"raw":{"value":null,"type":"num"},"readable":"-"},"read_bytes":{"raw":{"value":null,"type":"mem"},"readable":"-"},"write_bytes":{"raw":{"value":null,"type":"mem"},"readable":"-"},"attempt":{"raw":{"value":null,"type":"num"},"readable":"-"},"workdir":{"raw":{"value":null,"type":"str"},"readable":"-"},"script":{"raw":{"value":null,"type":"str"},"readable":"-"},"scratch":{"raw":{"value":null,"type":"str"},"readable":"-"},"queue":{"raw":{"value":null,"type":"str"},"readable":"-"},"cpus":{"raw":{"value":1,"type":"Integer","scale":"","unit":""},"readable":"1"},"memory":{"raw":{"value":7.516192768E9,"type":"Double","scale":"","unit":"B"},"readable":"7 GB"},"disk":{"raw":{"value":null,"type":"mem"},"readable":"-"},"time":{"raw":{"value":3600000.0000,"type":"BigDecimal","scale":"ms","unit":""},"readable":"3600s"},"env":{"raw":{"value":null,"type":"str"},"readable":"-"},"error_action":{"raw":{"value":null,"type":"str"},"readable":"-"},"vol_ctxt":{"raw":{"value":null,"type":"num"},"readable":"-"},"inv_ctxt":{"raw":{"value":null,"type":"num"},"readable":"-"},"hostname":{"raw":{"value":null,"type":"str"},"readable":"-"},"cpu_model":{"raw":{"value":"Unknown model","type":"String"},"readable":"Unknown model"},"energy":{"raw":{"value":14.057500000000001,"type":"Double","scale":"","unit":"Wh"},"readable":"14.06 Wh"},"co2e":{"raw":{"value":6.7476,"type":"Double","scale":"","unit":"g"},"readable":"6.75 g"},"co2eMarket":{"raw":{"value":null,"type":"Number","scale":"m","unit":"g"},"readable":"-"},"ci":{"raw":{"value":480.0,"type":"Double","scale":"","unit":"gCO\u2082e/kWh"},"readable":"480 gCO\u2082e/kWh"},"cpuUsage":{"raw":{"value":100.0,"type":"Double","scale":"%","unit":""},"readable":"100 %"},"powerdrawCPU":{"raw":{"value":11.45,"type":"Double","scale":"","unit":"W"},"readable":"11.45 W"}}],"summary":{"observerTestProcess":{"co2e":[6.7476],"energy":[0.0140575],"co2e_non_cached":[6.7476],"energy_non_cached":[0.0140575]}}};
-    window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir7462494069088535353/report_test.html"},{"option":"summaryFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir7462494069088535353/summary_test.txt"},{"option":"traceFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir7462494069088535353/trace_test.txt"}];
+    window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir5458348167366271364/report_test.html"},{"option":"summaryFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir5458348167366271364/summary_test.txt"},{"option":"traceFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir5458348167366271364/trace_test.txt"}];
+    window.ciRecords = {};
   </script>
 
 </head>
@@ -1004,7 +1007,7 @@
       <dl>
         <dt>Run times</dt>
         <dd>
-          <span id="workflow_start">30-Sep-2025 10:23:17</span> - <span id="workflow_complete">30-Sep-2025 10:23:17</span>
+          <span id="workflow_start">13-Oct-2025 11:19:50</span> - <span id="workflow_complete">13-Oct-2025 11:19:50</span>
           (<span id="completed_fromnow"></span>duration: <strong>null</strong>)
         </dd>
 
@@ -1204,7 +1207,7 @@
               </span>
                   </li>
                   <li class="mb-3">
-
+                      
                       The carbon intensity (CI) values used in the calculation originate from
                       <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">Electricity Maps</a>
                       under the
@@ -1215,7 +1218,7 @@
                     https://www.electricitymaps.com
                   </a>
                 </span>
-
+                      
                   </li>
                   <li class="mb-3">
                       The processors thermal design power (TDP) values used in the calculation originate from
