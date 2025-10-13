@@ -33,17 +33,17 @@ class CO2Record extends TraceRecord {
     /**
     * Constructs a CO2Record representing the resource usage and emissions for a single task.
     *
-    * @param energy             Total energy consumed by the task (kWh)
-    * @param co2e               CO₂ equivalent emissions (g) based on location-based carbon intensity
-    * @param co2eMarket         CO₂ equivalent emissions (g) based on market-based (personal energy mix) carbon intensity
-    * @param time               Time spent on the task (ms)
-    * @param ci                 Location-based carbon intensity used for calculation (gCO₂eq/kWh)
-    * @param cpus               Number of CPU cores used
-    * @param powerdrawCPU       Power draw (TDP) of the CPU (W)
-    * @param cpuUsage           CPU usage percentage during the task (%)
-    * @param memory             Memory used by the task (bytes)
-    * @param name               Name of the task
-    * @param cpu_model          CPU model name
+    * @param traceRecord   The trace record with the corresponding, unchanges values from which the CO2Record is derived
+    * @param energy        Total energy consumed by the task (kWh)
+    * @param co2e          CO₂ equivalent emissions (g) based on location-based carbon intensity
+    * @param co2eMarket    CO₂ equivalent emissions (g) based on market-based (personal energy mix) carbon intensity
+    * @param ci            Location-based carbon intensity used for calculation (gCO₂eq/kWh)
+    * @param cpuUsage      CPU usage percentage during the task (%)
+    * @param memory        Memory used by the task (bytes)
+    * @param time          Time spent on the task (ms)
+    * @param cpus          Number of CPU cores used
+    * @param powerdrawCPU  Power draw (TDP) of the CPU (W)
+    * @param cpu_model     CPU model name
     * @param rawEnergyProcessor Processor-specific energy consumed by the task (kWh)
     * @param rawEnergyMemory    Memory-specific energy consumed by the task (kWh)
     */
@@ -164,7 +164,15 @@ class CO2Record extends TraceRecord {
         return order.collect { String key -> getReadable(key) }
     }
 
-    // TODO: Docstrings
+    /**
+     * Add an element from one CO2Record to the same in another.
+     * This can correspond to a simple addition, but also cover non-addable value such as Strings, which are collectes,
+     * or accumulation with a weighted average.
+     *
+     * @param key Key to the entry
+     * @param record Other CO2Record
+     * @return Summary of both values
+     */
     Object plus(String key, CO2Record record) {
         Object newValue = record.store[key]
         Object thisValue = this.store[key]
@@ -185,6 +193,12 @@ class CO2Record extends TraceRecord {
         }
     }
 
+    /**
+     * Add all values withing a CO2Record to another.
+     *
+     * @param record CO2Record which is added to this
+     * @return A new CO2Record with all elements added up/summarized
+     */
     CO2Record plus(CO2Record record) {
         if (record == null) { return this }
         Map<String, Object> store = record.store.collectEntries { String key, Object value ->
@@ -193,6 +207,13 @@ class CO2Record extends TraceRecord {
         return new CO2Record(store)
     }
 
+    /**
+     * Create a map with all parameters in their "raw" and "readable" state. The "raw" value contains the unit and scope,
+     * as well as comments to contextualize the value.
+     *
+     * @param onlyCO2parameters
+     * @return
+     */
     Map<String, Map<String, Object>> toRawReadableMap(boolean onlyCO2parameters=false) {
         Map<String, Map<String, Object>> rrMap = FIELDS.collectEntries { String key, String type ->
             [key, [raw: [value: null, type: type], readable: NA]]
