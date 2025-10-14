@@ -4,6 +4,7 @@ import groovy.util.logging.Slf4j
 
 import java.math.RoundingMode
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 
 /**
  * Utility functions to convert and format values for reporting.
@@ -48,7 +49,7 @@ class Converter {
         } else if (value == null) {
             return value
         } else {
-            def formatter = new DecimalFormat("0.00E0")
+            def formatter = new DecimalFormat("0.00E0", DecimalFormatSymbols.getInstance(Locale.US))
             return formatter.format(value)
         }
     }
