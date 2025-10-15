@@ -148,7 +148,7 @@ class TDPDataMatrix extends DataMatrix {
                     Markers.silentUnique,
                     modelMatch +
                     " Using ${this.fallbackModel} CPU power draw value (${getTDP(modelData)} W).\n" +
-                    '\t🔖 To fix this warning, please refer to https://nextflow-io.github.io/nf-co2footprint/usage/faq/#could-not-find-cpu-model.'
+                    '\t🔖 To fix this warning, please refer to https://nextflow-io.github.io/nf-co2footprint/usage/faq/#cpu-model.'
             )
         }
         else {
