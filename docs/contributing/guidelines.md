@@ -46,5 +46,5 @@ Run unit test frequently to notice faulty code early on. For that purpose also t
 
 To run your unit tests, run the following command in the project root directory (ie. where the file `settings.gradle` is located):
 ```bash
-./gradlew check
+make test
 ```
