@@ -37,8 +37,7 @@ The plugin can be tested without using a local Nextflow build using the followin
 
 !!! warning
 
-    This will install the compiled plugin code into your `$NXF_PLUGINS_DIR` directory (default: `${HOME}/.nextflow/plugins`). 
-    If the plugin version from the manifest file (`plugins/nf-co2footprint/src/resources/META-INF/MANIFEST.MF`) of the dev code matches an existing plugin, any install will be overwritten.
+    This will install the compiled plugin code into the `$NXF_PLUGINS_DIR` directory (default: `${HOME}/.nextflow/plugins`). If a plugin with the same version (as specified in `nf-co2footprint/build.gradle`) already exists in this directory, it will be overwritten. 
 
 1. Compile and install the plugin code
 
@@ -49,7 +48,7 @@ The plugin can be tested without using a local Nextflow build using the followin
 2. Run nextflow with this command, specifying the plugin version:
 
    ```bash
-   nextflow run -plugins nf-co2footprint@1.0.0 <script/pipeline name> [pipeline params]
+   nextflow run <script/pipeline name> [pipeline params] -plugins nf-co2footprint@1.0.0
    ```
 
 
@@ -58,7 +57,7 @@ The plugin can be tested without using a local Nextflow build using the followin
 To compile and run the tests use the following command:
 
 ```bash
-./gradlew check
+make test
 ```
 
 
