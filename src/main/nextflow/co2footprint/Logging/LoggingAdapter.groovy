@@ -151,6 +151,5 @@ class LoggingAdapter {
         )   // Define DeduplicateMarkerFilter
         deduplicateMarkerFilter.start()
         loggerContext.addTurboFilter(deduplicateMarkerFilter)                                       // Add filter to context
-
     }
 }

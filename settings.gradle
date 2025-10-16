@@ -15,6 +15,3 @@
  */
 
 rootProject.name = 'nf-co2footprint'
-include('plugins')
-include('plugins:nf-co2footprint')
-//includeBuild('../nextflow')

@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-Plugin-Id: nf-co2footprint
-Plugin-Version: 1.0.0
-Plugin-Class: nextflow.co2footprint.CO2FootprintPlugin
-Plugin-Provider: nextflow
-Plugin-Requires: >=24.01.0-edge
