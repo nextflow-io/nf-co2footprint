@@ -10,7 +10,7 @@
 - HTML & CSS clarity improvements through comments and block separation
 - Removed some unnecessary conversions in the Computer, JavaScript and Tests
 - Removed `utils` and `HelperFunctions` in favor of `Metrics` class
-- Moved from `plotly.min.js` to `plotly-cartesian.min.js` for smaller report file size
+- Moved from `plotly.min.js` to `plotly-custom.min.js` for smaller report file size
 
 ## Features:
 - Base config class with more control over parameters
@@ -67,7 +67,7 @@
 
 ## Bug Fixes:
 - Adjusted rendering of flights to deliver percentage < 1.0 flights and number of flights afterwards
-- Add null checks, fallbacks, and logging to CO₂ calculation in `CO2FootprintComputer` class 
+- Add null checks, fallbacks, and logging to CO₂ calculation in `CO2FootprintComputer` class
 - Enabled access to `store` of `CO2Record`s within parent methods
 - Check row replacement upon supplying a customTDPDataTable
 
