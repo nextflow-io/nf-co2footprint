@@ -121,7 +121,7 @@ class CO2FootprintObserverTest extends Specification{
             total_energy += co2Record.energy
             total_co2 += co2Record.co2e
         }
-        // With TDP = 11.45 (default global)
+        // With TDP = 11.41 (default global)
         // Energy consumption converted to Wh
         round(total_energy*1000) == 14.02
         // Total CO₂ in g (should reflect the CI value you set)
