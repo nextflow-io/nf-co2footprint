@@ -116,8 +116,8 @@ class CO2FootprintObserverTest extends Specification{
         observer.onFlowComplete()
 
         expect:
-        Double total_co2 =  observer.workflowStats.value.store.co2e as Double
-        Double total_energy =  observer.workflowStats.value.store.energy as Double
+        Double total_co2 =  observer.workflowStats.co2Record.store.co2e as Double
+        Double total_energy =  observer.workflowStats.co2Record.store.energy as Double
         // With TDP = 11.45 (default global)
         // Energy consumption converted to Wh
         round(total_energy*1000) == 14.02
@@ -150,7 +150,7 @@ class CO2FootprintObserverTest extends Specification{
         observer.onFlowComplete()
 
         // Accumulate CO2
-        Double total_co2 = observer.workflowStats.value.store.co2e as Double
+        Double total_co2 = observer.workflowStats.co2Record.store.co2e as Double
 
         CO2EquivalencesRecord co2EquivalencesRecord = observer
             .getCO2FootprintComputer()

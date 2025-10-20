@@ -6,7 +6,7 @@ import nextflow.co2footprint.CO2FootprintComputer
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.Metrics.Converter
-import nextflow.co2footprint.ResultsTree.RecordTree
+import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.trace.TraceHelper
 
 import java.nio.file.Path
@@ -51,9 +51,9 @@ class SummaryFileCreator extends BaseFileCreator {
      * @param config                 CO2FootprintConfig instance with plugin configuration.
      * @param version                Plugin version string.
      */
-    void write(RecordTree workflowStats, CO2FootprintComputer co2FootprintComputer, CO2FootprintConfig config, String version) {
+    void write(CO2RecordTree workflowStats, CO2FootprintComputer co2FootprintComputer, CO2FootprintConfig config, String version) {
         if (!created) { return }
-        Map<String, Object> totalStats = workflowStats.value.store
+        Map<String, Object> totalStats = workflowStats.co2Record.store
 
         // Launch the agent (for thread safety, though only one write is performed)
         summaryWriter = new Agent<PrintWriter>(file)

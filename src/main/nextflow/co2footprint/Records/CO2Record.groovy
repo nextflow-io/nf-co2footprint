@@ -20,12 +20,23 @@ import nextflow.trace.TraceRecord
 @Slf4j
 @CompileStatic
 class CO2Record extends TraceRecord {
+    // Stores keys that are related to the CO2 calculation
     final List<String> co2Keys = [
             'name', 'energy', 'co2e', 'co2eMarket', 'ci', 'cpuUsage', 'memory', 'time', 'cpus', 'powerdrawCPU', 'cpu_model'
     ]
+
+    // Stores non-CO₂ keys from the trace record and store them as traceKeys
     final List<String> traceKeys
 
-    CO2Record (Map<String, Object> store) {
+    // Store for additional metrics
+    final Map<String, Object> additionalMetrics = [:]
+
+    /**
+     * Create a CO2Record from the given store map.
+     *
+     * @param store Map with all objects to be stores in this CO2Record
+     */
+    CO2Record(Map<String, Object> store) {
         this.traceKeys = store.keySet().findAll({ String key -> key !in co2Keys }) as List<String>
         super.store.putAll(store)
     }
@@ -33,7 +44,7 @@ class CO2Record extends TraceRecord {
     /**
     * Constructs a CO2Record representing the resource usage and emissions for a single task.
     *
-    * @param traceRecord   The trace record with the corresponding, unchanges values from which the CO2Record is derived
+    * @param traceRecord   The trace record with the corresponding, unchanged values from which the CO2Record is derived
     * @param energy        Total energy consumed by the task (kWh)
     * @param co2e          CO₂ equivalent emissions (g) based on location-based carbon intensity
     * @param co2eMarket    CO₂ equivalent emissions (g) based on market-based (personal energy mix) carbon intensity
@@ -79,6 +90,16 @@ class CO2Record extends TraceRecord {
     @Override
     String getFmtStr(String name, String converter = null) {
         return name in co2Keys ? store[name] as String : super.getFmtStr(name, converter)
+    }
+
+    /**
+     * Fetch an entry from the store, and if not present search additional Metrics for an entry.
+     *
+     * @param key Name of the entry
+     * @return Value of the entry
+     */
+    Object get(String key){
+        return (key in store) ? store.get(key) : additionalMetrics.get(key)
     }
 
     /**
@@ -165,29 +186,38 @@ class CO2Record extends TraceRecord {
     }
 
     /**
-     * Add an element from one CO2Record to the same in another.
-     * This can correspond to a simple addition, but also cover non-addable value such as Strings, which are collectes,
-     * or accumulation with a weighted average.
+     * Combine the specified element from two CO2Records.
+     * The combination logic is dependent on the metric type.
      *
      * @param key Key to the entry
      * @param record Other CO2Record
-     * @return Summary of both values
+     * @return Combination of both values
      */
     Object plus(String key, CO2Record record) {
         Object newValue = record.store[key]
         Object thisValue = this.store[key]
+
+        // Weighted average by energy for carbon intensity and CPU power draw
         if (key in ['ci', 'powerdrawCPU']) {
             return Calculator.weightedAverage([thisValue, newValue], [store['energy'], record.store['energy']])
         }
+
+        // Weighted average by time for CPU usage
         else if (key == 'cpuUsage') {
             return Calculator.weightedAverage([thisValue, newValue], [store['time'], record.store['time']])
         }
+
+        // For memory and CPU count, keep the maximum
         else if (key in ['memory', 'cpus']) {
             return Calculator.max(thisValue, newValue)
         }
+
+        // For string/date-like fields, store all unique values in a Set
         else if ((key in ['cpu_model', 'name', 'status']) || (FIELDS.get(key) in ['str', 'date'])) {
             return thisValue instanceof Set ? thisValue.add(newValue) : [thisValue, newValue] as Set
         }
+
+        // For other numeric fields, sum values safely
         else {
             return Calculator.add(thisValue, newValue)
         }
@@ -197,7 +227,7 @@ class CO2Record extends TraceRecord {
      * Add all values withing a CO2Record to another.
      *
      * @param record CO2Record which is added to this
-     * @return A new CO2Record with all elements added up/summarized
+     * @return A new CO2Record with combined elements from both
      */
     CO2Record plus(CO2Record record) {
         if (record == null) { return this }
@@ -208,11 +238,11 @@ class CO2Record extends TraceRecord {
     }
 
     /**
-     * Create a map with all parameters in their "raw" and "readable" state. The "raw" value contains the unit and scope,
-     * as well as comments to contextualize the value.
+     * Convert the record into a nested map with raw and readable values for each field.
+     * The raw value contains the unit and scope, as well as comments to contextualize the value.
      *
-     * @param onlyCO2parameters
-     * @return
+     * @param onlyCO2parameters if true, keep only CO₂-specific keys
+     * @return map of field → { raw: {value, type}, readable: value }
      */
     Map<String, Map<String, Object>> toRawReadableMap(boolean onlyCO2parameters=false) {
         Map<String, Map<String, Object>> rrMap = FIELDS.collectEntries { String key, String type ->
