@@ -47,6 +47,10 @@ Before contributing, please read the [contribution guidelines](contributing/guid
 
 After your changes are accepted. maintainers may then [publish](contributing/publishing.md) a new version along with your contribution.
 
+## Troubleshooting
+If you encounter any problem, please have a look at our [FAQ](usage/FAQ.md) and the [issue section](https://github.com/nextflow-io/nf-co2footprint/issues) on our Github.
+If you can't find a satisfying solution please open a new issue. Chances are you are not the only one experiencing it.
+
 ## Credits
 
 The `nf-co2footprint` plugin has been mainly developed by:
