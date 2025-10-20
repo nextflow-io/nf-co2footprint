@@ -14,7 +14,7 @@
     2. Naming of CPU models is inconsistent. Sometimes the true model name ("Model X 1000") is appended with
         extra information ("Model X 1000 @10MHz"), slightly changed ("Manufacturer - Model X 1000"), or hidden ("M1"). While
         we are working on accounting for all these cases, it's not a trivial problem to solve.
-    3. Cloud providers somtimes use custom processors that are not publicly listed.
+    3. Cloud providers sometimes use custom processors that are not publicly listed.
     
     <br>
     **💡 Solution**
@@ -23,8 +23,8 @@
     ```
     [WARN] Could not find CPU model "Model X 1000" in given TDP data table. Using default CPU power draw value (100.0 W).
     ```
-    As previously mentioned, all information we need should be out there somewhere, just ask your friendly neighborhood
-    internet search provider about the TDP of your model. Once you know the TDP and the number of cores you can either:
+    As previously mentioned, all information we need should be out there somewhere — the TDP of your model should be
+    easy to find with a quick online search. Once you know the TDP and the number of cores you can either:
     
     - Create a [small table](./parameters.md#custom-tdp-table) with your CPU model names, as they are presented in the warnings, and
       supply the path to this table via the `customCpuTdpFile = <path>` parameter.
