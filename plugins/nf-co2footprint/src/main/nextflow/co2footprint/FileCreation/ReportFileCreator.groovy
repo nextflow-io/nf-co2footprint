@@ -4,7 +4,6 @@ import groovy.json.JsonOutput
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.CO2FootprintComputer
-import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Metrics.Converter
 import nextflow.co2footprint.Records.CiRecordCollector
 
@@ -13,8 +12,7 @@ import groovy.text.Template
 import groovy.util.logging.Slf4j
 
 import nextflow.Session
-import nextflow.co2footprint.Records.CO2Record
-import nextflow.co2footprint.ResultsTree.RecordTree
+import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.trace.TraceHelper
 
 import java.nio.file.Path
@@ -33,7 +31,7 @@ class ReportFileCreator extends BaseFileCreator{
     private int maxTasks
 
     // Information for final report
-    private RecordTree workflowStats
+    private CO2RecordTree workflowStats
     private CO2FootprintComputer co2FootprintComputer
     private CO2FootprintConfig config
     private String version
@@ -69,7 +67,7 @@ class ReportFileCreator extends BaseFileCreator{
      * @param timeCiRecordCollector   Time & CI Record collector that contains a map of all carbon intensities at different times
      */
     void addEntries(
-            RecordTree workflowStats,
+            CO2RecordTree workflowStats,
             CO2FootprintComputer co2FootprintComputer,
             CO2FootprintConfig config,
             String version,
@@ -186,8 +184,8 @@ class ReportFileCreator extends BaseFileCreator{
     */
     private Map<String, String> makeCO2Total(suffix) {
         // Retrieve total CO₂ emissions and energy consumption for the given suffix
-        Double co2e = workflowStats.attributes["co2e${suffix}" as String] as Double
-        Double energy = workflowStats.attributes["energy${suffix}" as String] as Double
+        Double co2e = workflowStats.co2Record.get("co2e${suffix}") as Double
+        Double energy = workflowStats.co2Record.get("energy${suffix}") as Double
 
         if (co2e != null) {
             CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(co2e)
@@ -235,31 +233,25 @@ class ReportFileCreator extends BaseFileCreator{
     /**
      * Collects statistics at the process level
      *
-     * @param workflowStats RecordTree representation of workflow stats with marked levels
+     * @param workflowStats CO2RecordTree representation of workflow stats with marked levels
      * @return Map of the process-specific statistics
      */
-    protected Map<String, Object> collectSummary(RecordTree workflowStats=this.workflowStats) {
+    protected Map<String, Object> collectSummary(CO2RecordTree workflowStats=this.workflowStats) {
         // Add an empty map if the process is not already present
         return workflowStats.collectByLevel('process', ['co2e', 'energy', 'co2e_non_cached', 'energy_non_cached'])
     }
 
 
     /**
-     * Render the executed tasks as a JSON list.
+     * Collect task-level metrics from the RecordTree up to a maximum number of tasks.
      *
-     * Each list item is a merged map of trace- and CO2-fields:
-     *   <fieldName> -> [ raw: <original>, readable: <formatted> ]
-     * Missing trace fields are included with [raw: null, readable: "-"].
-     * The number of tasks is limited by `maxTasks`.
-     *
-     * @param traceRecords Map of {@link nextflow.processor.TaskId} -> {@link nextflow.trace.TraceRecord}
-     * @param co2Records   Map of {@link nextflow.processor.TaskId} -> {@link CO2Record}
-     * @return             List of per-task maps combining trace and CO2 entries
+     * @param workflowStats CO2RecordTree with workflow, process, and task metrics
+     * @return List of task value maps
      */
-    protected List<Map<String, Map<String, Object>>> collectTasks(RecordTree workflowStats=this.workflowStats){
+    protected List<Map<String, Map<String, Object>>> collectTasks(CO2RecordTree workflowStats=this.workflowStats){
         List<Map<String, Map<String, Object>>> results = []
-        for (RecordTree processes : workflowStats.children) {
-            for (RecordTree tasks : processes.children) {
+        for (CO2RecordTree processes : workflowStats.children) {
+            for (CO2RecordTree tasks : processes.children) {
                 if (results.size() < maxTasks) {
                     results.add(tasks.toMap().get('values') as Map<String, Map<String, Object>>)
                 }

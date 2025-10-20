@@ -8,7 +8,7 @@ import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.FileCreation.ReportFileCreator
 import nextflow.co2footprint.FileCreation.SummaryFileCreator
 import nextflow.co2footprint.FileCreation.TraceFileCreator
-import nextflow.co2footprint.ResultsTree.RecordTree
+import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.co2footprint.Records.CiRecordCollector
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskId
@@ -65,8 +65,8 @@ class CO2FootprintObserver implements TraceObserver {
     @PackageScope
     Map<TaskId, TraceRecord> runningTasks = new ConcurrentHashMap<>()
 
-    // Stores all results and execution traces
-    final protected RecordTree workflowStats
+    // Hierarchical tree that stores all results and execution traces
+    final protected CO2RecordTree workflowStats
 
     /**
      * Constructor for the observer.
@@ -90,8 +90,9 @@ class CO2FootprintObserver implements TraceObserver {
         this.version = version
         this.config = config
 
-        // Collect metrics in hierarchical node structure
-        this.workflowStats = new RecordTree(session.runName, [level: 'workflow'])
+        // Create a CORecordTree root node for the run, tagged with 'workflow' level,
+        // to collect and organize execution metrics hierarchically.
+        this.workflowStats = new CO2RecordTree(session.runName, [level: 'workflow'])
 
         // Make file instances
         this.traceFile = new TraceFileCreator((config.value('traceFile') as Path).complete(), overwrite)
@@ -123,9 +124,10 @@ class CO2FootprintObserver implements TraceObserver {
     private synchronized void recordStarted(TraceRecord traceRecord) {
         // Keep started tasks
         runningTasks[traceRecord.taskId] = traceRecord
-
+        
+        // Add a process node under the workflow if it doesn’t exist yet
         if(!workflowStats.getChild(traceRecord.processName)) {
-            workflowStats.addChild(new RecordTree(traceRecord.processName, [level: 'process']))
+            workflowStats.addChild(new CO2RecordTree(traceRecord.processName, [level: 'process']))
         }
     }
 
@@ -144,9 +146,9 @@ class CO2FootprintObserver implements TraceObserver {
         // Optionally write to trace file
         this.traceFile?.write(co2Record)
 
-        // Insert records into Tree structure
-        RecordTree processNode = workflowStats.getChild(traceRecord.processName)
-        processNode.addChild(new RecordTree(traceRecord.taskId, [level: 'task'], co2Record))
+        // Add a task node with its CO2Record to the corresponding process
+        CO2RecordTree processNode = workflowStats.getChild(traceRecord.processName)
+        processNode.addChild(new CO2RecordTree(traceRecord.taskId, [level: 'task'], co2Record))
     }
 
     // ------ OBSERVER METHODS ------
@@ -188,7 +190,7 @@ class CO2FootprintObserver implements TraceObserver {
         traceFile.close(runningTasks)
 
         workflowStats.summarize()
-        workflowStats.collectAttributes()
+        workflowStats.collectAdditionalMetrics()
 
         // Create report and summary if any content exists to write to the file
         if (workflowStats) {
@@ -206,8 +208,8 @@ class CO2FootprintObserver implements TraceObserver {
         reportFile.close()
 
         log.info(
-            "🌱 The workflow run used ${workflowStats.value.getReadable('energy')} of electricity, " +
-            "causing ${workflowStats.value.getReadable('co2e')} of CO2 equivalents to be released into the athmosphere."
+            "🌱 The workflow run used ${workflowStats.co2Record.getReadable('energy')} of electricity, " +
+            "causing ${workflowStats.co2Record.getReadable('co2e')} of CO2 equivalents to be released into the atmosphere."
         )
     }
 

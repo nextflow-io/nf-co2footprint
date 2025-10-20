@@ -84,6 +84,11 @@ class Quantity extends Metric {
         return readable
     }
 
+    /**
+     * Convert the Quantity object to a map with all metaData as named entries.
+     *
+     * @return A map with all entries from this Quantity
+     */
     Map<String, ? extends Object> toMap() {
         return super.toMap() + [scale: scale, unit: unit]
     }

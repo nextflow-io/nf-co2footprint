@@ -1,21 +1,19 @@
-package nextflow.co2footprint.ResultsTree
+package nextflow.co2footprint.Records
 
-import nextflow.co2footprint.Records.CO2Record
+
 import nextflow.trace.TraceRecord
 import org.yaml.snakeyaml.Yaml
 import spock.lang.Shared
 import spock.lang.Specification
 
-import java.util.stream.Stream
-
-class RecordTreeTest extends Specification {
+class CO2RecordTreeTest extends Specification {
     @Shared
     TraceRecord traceRecord = new TraceRecord()
     @Shared
     CO2Record co2Record
 
     @Shared
-    RecordTree recordsTree = new RecordTree('workflow', [level: 'workflow'])
+    CO2RecordTree recordsTree = new CO2RecordTree('workflow', [level: 'workflow'])
 
     @Shared
     Yaml yaml = new Yaml()
@@ -37,8 +35,8 @@ class RecordTreeTest extends Specification {
                 1.0, 10, 60*60*1000, 1, 7.0, 'Some model'
         )
 
-        RecordTree process1 = recordsTree.addChild(new RecordTree('process1', [level: 'process']))
-        RecordTree process2 = recordsTree.addChild(new RecordTree('process2', [level: 'process']))
+        CO2RecordTree process1 = recordsTree.addChild(new CO2RecordTree('process1', [level: 'process']))
+        CO2RecordTree process2 = recordsTree.addChild(new CO2RecordTree('process2', [level: 'process']))
 
         int counter = 0
         [[0.0d, 'COMPLETED'], [1.0d, 'COMPLETED'], [2.0d, 'CACHED']].each { Double value, String status ->
@@ -47,8 +45,8 @@ class RecordTreeTest extends Specification {
             traceRecord2.putAll(traceRecord.store)
             traceRecord2.putAll([name: "task_${counter}", status: status])
 
-            RecordTree process = counter > 2 ? process2 : process1
-            process.addChild(new RecordTree("task_${counter}", [level: 'task'],
+            CO2RecordTree process = counter > 2 ? process2 : process1
+            process.addChild(new CO2RecordTree("task_${counter}", [level: 'task'],
                 new CO2Record(
                     traceRecord2, value, value, null, 475.0,
                     100.0, 1024**3, 1.0d, 1, 12, 'Unknown model'
@@ -91,18 +89,18 @@ class RecordTreeTest extends Specification {
 
     def 'Should construct a valid tree node'() {
         when:
-        RecordTree parentNode = new RecordTree('crazy_tesla', [level: 'workflow'])
-        RecordTree processNode1 = parentNode.addChild(new RecordTree('test1', [level: 'process']))
-        RecordTree processNode2 = parentNode.addChild(new RecordTree('test2', [level: 'process']))
-        processNode1.addChild(new RecordTree('1', [level: 'task'], co2Record))
-        processNode2.addChild(new RecordTree('2', [level: 'task'], co2Record))
+        CO2RecordTree parentNode = new CO2RecordTree('crazy_tesla', [level: 'workflow'])
+        CO2RecordTree processNode1 = parentNode.addChild(new CO2RecordTree('test1', [level: 'process']))
+        CO2RecordTree processNode2 = parentNode.addChild(new CO2RecordTree('test2', [level: 'process']))
+        processNode1.addChild(new CO2RecordTree('1', [level: 'task'], co2Record))
+        processNode2.addChild(new CO2RecordTree('2', [level: 'task'], co2Record))
         parentNode.summarize()
 
         then:
         Map parentMap = parentNode.toMap(true)
         String yamlString = yaml.dump(parentMap)
         String expectedYamlString = 'name: crazy_tesla\n' +
-                'attributes: {level: workflow}\n' +
+                'metaData: {level: workflow}\n' +
                 'values:\n' +
                 '  name:\n' +
                 '    raw: {value: null, type: str}\n' +
@@ -141,7 +139,7 @@ class RecordTreeTest extends Specification {
                 '    readable: 7 W\n' +
                 'children:\n' +
                 '- name: test1\n' +
-                '  attributes: {level: process}\n' +
+                '  metaData: {level: process}\n' +
                 '  values:\n' +
                 '    name:\n' +
                 '      raw: {value: null, type: str}\n' +
@@ -178,7 +176,7 @@ class RecordTreeTest extends Specification {
                 '      readable: 7 W\n' +
                 '  children:\n' +
                 '  - name: \'1\'\n' +
-                '    attributes: {level: task}\n' +
+                '    metaData: {level: task}\n' +
                 '    values:\n' +
                 '      name:\n' +
                 '        raw: {value: null, type: str}\n' +
@@ -215,7 +213,7 @@ class RecordTreeTest extends Specification {
                 '        readable: 7 W\n' +
                 '    children: []\n' +
                 '- name: test2\n' +
-                '  attributes: {level: process}\n' +
+                '  metaData: {level: process}\n' +
                 '  values:\n' +
                 '    name:\n' +
                 '      raw: {value: null, type: str}\n' +
@@ -252,7 +250,7 @@ class RecordTreeTest extends Specification {
                 '      readable: 7 W\n' +
                 '  children:\n' +
                 '  - name: \'2\'\n' +
-                '    attributes: {level: task}\n' +
+                '    metaData: {level: task}\n' +
                 '    values:\n' +
                 '      name:\n' +
                 '        raw: {value: null, type: str}\n' +
