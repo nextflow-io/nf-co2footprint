@@ -2,6 +2,7 @@
 ## Bug Fixes:
 - Conversion of time leaving trailing full bigger units (e.g. 60s instead of 1min)
 - Small stylistic overreaches in report fixed
+- Hard-code locale for decimal separator
 
 ## Misc:
 - Renamed FileCreator and its classes
@@ -66,7 +67,7 @@
 
 ## Bug Fixes:
 - Adjusted rendering of flights to deliver percentage < 1.0 flights and number of flights afterwards
-- Add null checks, fallbacks, and logging to CO₂ calculation in `CO2FootprintComputer` class 
+- Add null checks, fallbacks, and logging to CO₂ calculation in `CO2FootprintComputer` class
 - Enabled access to `store` of `CO2Record`s within parent methods
 - Check row replacement upon supplying a customTDPDataTable
 
