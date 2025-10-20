@@ -151,7 +151,7 @@ class ReportFileCreator extends BaseFileCreator{
                         readTemplate('nextflow/trace/assets/bootstrap.min.js'),
                         readTemplate('nextflow/trace/assets/datatables.min.js'),
                         readTemplate('nextflow/trace/assets/moment.min.js'),
-                        readTemplate('nextflow/trace/assets/plotly.min.js'),
+                        readTemplate('assets/plotly-custom-3.1.2.min.js'),
                         readTemplate('assets/CO2FootprintReportTemplate.js')
                 ]
         ]

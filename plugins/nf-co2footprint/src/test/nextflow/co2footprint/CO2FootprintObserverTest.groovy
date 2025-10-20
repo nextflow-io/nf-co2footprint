@@ -38,7 +38,7 @@ class CO2FootprintObserverTest extends Specification{
             [
                 'task_id': '111',
                 'process': 'observerTestProcess',
-                'realtime': (1 as Long) * (3600000 as Long), // 1 h 
+                'realtime': (1 as Long) * (3600000 as Long), // 1 h
                  'cpus': 1,
                  'cpu_model': "Unknown model",
                  '%cpu': 100.0,
@@ -81,14 +81,14 @@ class CO2FootprintObserverTest extends Specification{
     }
 
     // ------ FULL RUN CALCULATION TESTS ------
-    // The expected results were compared with the results from https://calculator.green-algorithms.org (v2.2), where the following values were used: 
+    // The expected results were compared with the results from https://calculator.green-algorithms.org (v2.2), where the following values were used:
     // - Running time: 1h
     // - Type of cores: CPU
     // - Number of cores: 1
     // - Model: Any
     // - Memory available: 7 GB
     // - Platform used: Personal computer
-    // - Location: world 
+    // - Location: world
     // - Usage factor: 1
 
     def 'test full run calculation of total CO2e and energy consumption with specific CI' () {
@@ -248,7 +248,7 @@ class CO2FootprintObserverTest extends Specification{
         fileChecker.runChecks(
             reportPath,
             [
-                975: '    window.options = [' +
+                1057: '    window.options = [' +
                         '{"option":"ci","value":"480.0"},'+
                         '{"option":"ciMarket","value":null},' +
                         '{"option":"customCpuTdpFile","value":null},' +
@@ -261,7 +261,7 @@ class CO2FootprintObserverTest extends Specification{
                         "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
                         "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
                         "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];",
-                1026: '          ' +
+                1108: '          ' +
                         "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                         " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
             ]
