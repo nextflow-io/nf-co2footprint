@@ -65,7 +65,7 @@ The following parameters are currently available:
   **Default**: 0.3725.
   
 - **`customCpuTdpFile`**  
-  CSV file containing custom CPU TDP data. This should contain the following columns: `name`, `tdp (W)`, `cores`. Note that this overwrites TDP values for already provided CPU models. You can find the by default used TDP data [here](https://nextflow-io.github.io/nf-co2footprint/plugins/nf-co2footprint/src/resources/cpu_tdp_data/CPU_TDP_wikichip.csv).  
+  CSV file containing custom CPU TDP data. This should contain the following columns: `name`, `tdp (W)`, `cores`. Note that this overwrites TDP values for already provided CPU models. You can find the default TDP data [here](https://nextflow-io.github.io/nf-co2footprint/plugins/nf-co2footprint/src/resources/cpu_tdp_data/CPU_TDP.csv).  
   **Default**: `null`.
 
     Example custom CPU TDP table: <a id="custom-tdp-table"></a>
@@ -102,4 +102,4 @@ The following parameters are currently available:
 
     Example custom CPU power model:
 
-    <img src="../assets/example_powerdraw_function_linear.png" alt="Example custom CPU power model" width="700"/>
+    <img src="./assets/example_powerdraw_function_linear.png" alt="Example custom CPU power model" width="700"/>
