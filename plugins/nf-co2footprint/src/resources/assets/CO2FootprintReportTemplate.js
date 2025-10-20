@@ -8,13 +8,10 @@
  */
 function rawOrReadable(data, type) {
   if (type === 'sort' || $('#nf-table-humanreadable').val() == 'false') {
-    return data['raw'];
+    return data['raw'].value
   }
   return data['readable']
 }
-
-// Map for collecting statistics by process
-window.statsByProcess = {};
 
 //
 // MAIN BLOCK: This block is only executed after the page is fully loaded
@@ -22,74 +19,60 @@ window.statsByProcess = {};
 $(function() {
   // Script block clicked
   $('#tasks_table').on('click', '.script_block', function(e){
-    e.preventDefault();
-    $(this).toggleClass('short');
-  });
+    e.preventDefault()
+    $(this).toggleClass('short')
+  })
 
   $(function() {
     $('[data-toggle="tooltip"]').tooltip()
   })
 
   // Completed date from now
-  var completed_date = moment( $('#workflow_complete').text(), "ddd MMM DD HH:mm:ss .* YYYY" );
+  var completed_date = moment( $('#workflow_complete').text(), "ddd MMM DD HH:mm:ss .* YYYY" )
   if(completed_date.isValid()){
-    $('#completed_fromnow').html('completed ' + completed_date.fromNow() + ', ');
-  }
-
-  // Collect metrics by process
-  for(let processName in window.data.summary){
-    let metrics = window.data.summary[processName];
-
-    // Add an empty map if the process is not already present
-    window.statsByProcess[processName] ??= {};
-
-    for (let metricName in metrics) {
-      // Skip if metric is not present
-      if (metrics[metricName] == null) { continue; }
-
-      if( metrics[metricName]['min'] == metrics[metricName]['max'] ) {
-        // min equals max ==> show just a value
-        window.statsByProcess[processName][metricName] = [ metrics[metricName]['min'] ];
-      }
-      else {
-          // otherwise show all values
-          window.statsByProcess[processName][metricName] = ['min', 'q1', 'q2', 'q3', 'max'].map(stat => metrics[metricName][stat])
-      }
-      if (metricName == "time") {
-        window.statsByProcess[processName][metricName] = window.statsByProcess[processName][metricName].map(function(d,i){
-          return moment.duration(d).asMinutes().toFixed(1);
-        });
-      }
-    }
+    $('#completed_fromnow').html('completed ' + completed_date.fromNow() + ', ')
   }
 
   // Plot histograms of resource usage
-  function plot_resource_usage(){
-    var plot_data = {"total": [], "total_non_cached": []};
-    for(var processName in window.statsByProcess){
+  function plot_resource_usage() {
+    var plot_data_total = []
+    var plot_data_non_cached = []
+    for(var processName in window.data.summary){
 
       // Extract process statistics
-      var stats = window.statsByProcess[processName];
+      var stats = window.data.summary[processName]
 
-      // Add CO₂ Boxplot to plot
-        for (const [i, suffix] of ["", "_non_cached"].entries()){
-          plot_data[`total${suffix}`].push(
+      // Put stats in plot
+      for (var metricsName in stats) {
+        // Add CO₂ Boxplot to plot
+        if (metricsName.startsWith('co2e')) {
+          var current_process_plot = metricsName.endsWith('_non_cached') ? plot_data_non_cached : plot_data_total
+          current_process_plot.push(
             {
-              x:processName, y: stats[`co2e${suffix}`], name: processName,
-              type:'box', boxmean: true, boxpoints: false
+              x:processName, y: stats[metricsName], name: processName,
+              type:'box', boxmean: true, boxpoints: false,
+              hovertemplate:
+                'Min: ${Math.min(...stats.co2e)}<br>' +
+                'Q1: %{q1}<br>' +
+                'Median: %{median}<br>' +
+                'Mean: %{mean}<br>' +
+                'Q3: %{q3}<br>' +
+                'Max: ${max}<extra></extra>'
             }
-          );
-
+          )
+        }
+        else {
           // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
-          plot_data[`total${suffix}`].push(
+          plot_data_total.push(
             {
-              x:processName, y: stats[`energy${suffix}`]?.map(v => v * 1000) ?? null, name: processName,
+              x:processName, y:stats[metricsName]?.map(v => v * 1000) ?? null, name: processName,
               type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
               hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
             }
-          );
+          )
         }
       }
+    }
 
     var layout = {
       title: 'CO<sub>2</sub> emission & energy consumption',
@@ -111,11 +94,12 @@ $(function() {
         side: 'right',
       },
       boxmode: 'group',
-    };
+    }
 
-    Plotly.newPlot('co2e-total-plot', plot_data.total, layout);
-    Plotly.newPlot('co2e-non-cached-plot', plot_data.total_non_cached, layout);
+    Plotly.newPlot('co2e-total-plot', plot_data_total, layout)
+    Plotly.newPlot('co2e-non-cached-plot', plot_data_non_cached, layout)
   }
+
   plot_resource_usage()
 
   //
@@ -128,15 +112,15 @@ $(function() {
   function make_tasks_table(){
     // reset
       if ( $.fn.dataTable.isDataTable( '#tasks_table' ) ) {
-        $('#tasks_table').DataTable().destroy();
+        $('#tasks_table').DataTable().destroy()
       }
 
       // Column titles
-      var energyConsumptionTitle = 'energy consumption (mWh)'; // Default column title
-      var co2EmissionsTitle = 'CO₂e emissions (mg)';
+      var energyConsumptionTitle = 'energy consumption (mWh)' // Default column title
+      var co2EmissionsTitle = 'CO₂e emissions (mg)'
       if ($('#nf-table-humanreadable').val() == 'true') {
-        energyConsumptionTitle = 'energy consumption'; // Change the column title if the button is selected
-        co2EmissionsTitle = 'CO₂e emissions';
+        energyConsumptionTitle = 'energy consumption' // Change the column title if the button is selected
+        co2EmissionsTitle = 'CO₂e emissions'
       }
 
       var table = $('#tasks_table').DataTable({
@@ -191,22 +175,22 @@ $(function() {
             show: ':hidden',
           },
         ]
-      });
+      })
 
       // Insert column filter button group
       table.buttons().container()
-        .prependTo( $('#tasks_table_filter') );
+        .prependTo( $('#tasks_table_filter') )
 
       // Column filter button group onClick event to highlight active filter
       $('.buttons-colvisGroup').click(function(){
-        var def = 'btn-secondary';
-        var sel = 'btn-primary';
-        $('.buttons-colvisGroup').removeClass(sel).addClass(def);
-        $(this).addClass(sel).removeClass(def);
-      });
+        var def = 'btn-secondary'
+        var sel = 'btn-primary'
+        $('.buttons-colvisGroup').removeClass(sel).addClass(def)
+        $(this).addClass(sel).removeClass(def)
+      })
 
       // Default filter highlight
-      $(".buttons-colvisGroup:contains('All')").click();
+      $(".buttons-colvisGroup:contains('All')").click()
   }
 
   // Executor for task table creation (on page load)
@@ -218,10 +202,10 @@ $(function() {
       $('#tasks-omitted-table').remove()
       // Dropdown changed about raw / human readable values in table
       $('#nf-table-humanreadable').change(function(){
-        make_tasks_table();
-      });
+        make_tasks_table()
+      })
       // Make the table on page load
-      make_tasks_table();
+      make_tasks_table()
   }
 
   /**
@@ -230,7 +214,7 @@ $(function() {
   function make_options_table(){
     // reset
     if ( $.fn.dataTable.isDataTable( '#options_table' ) ) {
-      $('#options_table').DataTable().destroy();
+      $('#options_table').DataTable().destroy()
     }
 
     var table = $('#options_table').DataTable({
@@ -241,11 +225,11 @@ $(function() {
         ],
         "deferRender": true,
         "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
-    });
+    })
   }
 
   // Executor for options table creation (on page load)
-  make_options_table();
+  make_options_table()
 
   //
   // Carbon intensity plot
@@ -256,8 +240,8 @@ $(function() {
 
     // Add Date() entry to start and end time of tasks
     window.data.trace.forEach(task => {
-      task.start.time = new Date(task.start.raw)
-      task.complete.time = new Date(task.complete.raw)
+      task.start.time = new Date(task.start.raw.value)
+      task.complete.time = new Date(task.complete.raw.value)
     })
 
     // Tasks:
@@ -284,7 +268,7 @@ $(function() {
       let total = 0
       for (const task of window.data.trace) {
         if (task.start.time <= t0 && task.complete.time >= t1) {
-          total += task.energy.raw
+          total += task.energy.raw.value
         }
       }
 
@@ -305,8 +289,8 @@ $(function() {
     ciRecords = new Map([...ciRecords.entries()].sort((a,b) => a[0]-b[0]))
 
     if (ciRecords.size == 0) {
-      ciRecords.set(tasksStart, window.data.trace[0].ci.raw)
-      ciRecords.set(tasksEnd, window.data.trace[0].ci.raw)
+      ciRecords.set(tasksStart, window.data.trace[0].ci.raw.value)
+      ciRecords.set(tasksEnd, window.data.trace[0].ci.raw.value)
     }
     else {
       const times = [...ciRecords.keys()]
@@ -376,4 +360,4 @@ $(function() {
 
   // Executor for ci plot generation
   make_ci_plot()
-});
+})

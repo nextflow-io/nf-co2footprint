@@ -5,7 +5,7 @@ import java.math.RoundingMode
 /**
  * A number associated with a unit.
  */
-class Quantity {
+class Quantity extends Metric {
     BigDecimal value
     String scale
     String unit
@@ -20,6 +20,7 @@ class Quantity {
      * @param separator The separator between value and scaled unit, defaults to ' '
      */
     Quantity(Number value, String scale='', String unit='', String separator=' ') {
+        super(value, value?.class?.getSimpleName() ?: 'Number')
         this.value = value as BigDecimal
         this.scale = scale
         this.unit = unit
@@ -81,5 +82,14 @@ class Quantity {
         if (scaledUnit) { readable += this.separator + scaledUnit }
 
         return readable
+    }
+
+    /**
+     * Convert the Quantity object to a map with all metaData as named entries.
+     *
+     * @return A map with all entries from this Quantity
+     */
+    Map<String, ? extends Object> toMap() {
+        return super.toMap() + [scale: scale, unit: unit]
     }
 }
