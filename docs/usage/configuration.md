@@ -52,7 +52,7 @@ The logic applied in detail:
 3. **If only `location` is set**, the plugin will fallback to a default value for the specified zone. 
 4. **If neither `ci` nor valid `location` and `apiKey` are provided**, the plugin will  fallback to a global default value.
 
-> Carbon intensity data is retrieved from [Electricity Maps](https://www.electricitymaps.com/) and used under the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1-0/). See the full attribution and license terms [here](https://nextflow-io.github.io/nf-co2footprint/).
+> Carbon intensity data is retrieved from [Electricity Maps](https://www.electricitymaps.com/) and used under the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1-0/). See the full attribution and license terms [here](https://nextflow-io.github.io/nf-co2footprint/#data-attribution).
 
 ### Accounting for a personal energy mix
 
@@ -79,7 +79,7 @@ While the CO₂ footprint calculation works on cloud instances, **nf-co2footprin
 
 !!! info
 
-    For common cloud platforms, the plugin automatically applies provider-specific default PUE values. However, not all cloud providers or platforms are currently covered, so you may need to supply some information manually. You can view the full list of supported providers and their corresponding PUEs in the [executor PUE mapping file](https://github.com/nextflow-io/nf-co2footprint/blob/master/plugins/nf-co2footprint/src/resources/executor_machine_pue_mapping.csv). For example, for AWS a default PUE of **1.15** is used.
+    For common cloud platforms, the plugin automatically applies provider-specific default PUE values. However, not all cloud providers or platforms are currently covered, so you may need to supply some information manually. You can view the full list of supported providers and their corresponding PUEs in the [executor PUE mapping file](https://github.com/nextflow-io/nf-co2footprint/blob/master/src/resources/executor_machine_pue_mapping.csv). For example, for AWS a default PUE of **1.15** is used.
 
 To improve the estimate of your CO₂ footprint on the cloud, you are encouraged to manually provide:  
 
@@ -90,7 +90,7 @@ To improve the estimate of your CO₂ footprint on the cloud, you are encouraged
     - If you have multiple CPU models, provide a `customCpuTdpFile` containing their TDP values.
     - If you have only one CPU model and do not want to provide a table, set `ignoreCpuModel = true` and specify `powerdrawCpuDefault`.  
 
-For more information, see [parameters.md](parameters.md).
+For more information, see [Parameters](parameters.md).
 
 **Example configuration:**
 
