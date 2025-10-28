@@ -121,11 +121,11 @@ class CO2FootprintObserverTest extends Specification{
             total_energy += co2Record.energy
             total_co2 += co2Record.co2e
         }
-        // With TDP = 11.45 (default global)
+        // With TDP = 11.41 (default global)
         // Energy consumption converted to Wh
-        round(total_energy*1000) == 14.06
+        round(total_energy*1000) == 14.02
         // Total CO₂ in g (should reflect the CI value you set)
-        round(total_co2) == 6.68
+        round(total_co2) == 6.66
     }
 
     def 'test full run with co2e equivalences calculation and specific CI' () {
@@ -163,9 +163,9 @@ class CO2FootprintObserverTest extends Specification{
 
         expect:
         // Values compared to result from www.green-algorithms.org (1h, 1core, TDP=11.45, CI:475)
-        co2EquivalencesRecord.getCarKilometers().round(7) == 0.0381561 as Double
-        co2EquivalencesRecord.getTreeMonths().round(7) == 0.0072817 as Double
-        co2EquivalencesRecord.getPlanePercent().round(7) == 0.0133546 as Double
+        co2EquivalencesRecord.getCarKilometers().round(7) == 0.0380475 as Double
+        co2EquivalencesRecord.getTreeMonths().round(7) == 0.007261 as Double
+        co2EquivalencesRecord.getPlanePercent().round(7) == 0.0133166 as Double
     }
 
 
@@ -228,10 +228,10 @@ class CO2FootprintObserverTest extends Specification{
                 'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'carbon_intensity', '%cpu', 'memory', 'realtime', 'cpus', 'powerdraw_cpu', 'cpu_model'
         ]
         values == [
-            '111', 'COMPLETED', '-', '14.06 Wh', '6.75 g', '-', '480 gCO₂e/kWh', '100 %', '7 GB', '3600s', '1', '11.45 W', 'Unknown model'
+            '111', 'COMPLETED', '-', '14.02 Wh', '6.73 g', '-', '480 gCO₂e/kWh', '100 %', '7 GB', '3600s', '1', '11.41 W', 'Unknown model'
         ] // GA: CO₂e is 6.94g with CI of 475 gCO₂eq/kWh
 
-        fileChecker.compareChecksums(tracePath, 'bf2f91768ca03a910e7751645f38cde0')
+        fileChecker.compareChecksums(tracePath, 'a742ca72b4d57809644fe19af7a7d73c')
 
 
         // Check Summary File
