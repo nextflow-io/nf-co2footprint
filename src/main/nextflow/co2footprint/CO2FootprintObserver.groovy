@@ -40,9 +40,9 @@ class CO2FootprintObserver implements TraceObserver {
     private Session session
 
     // Output file objects
-    private TraceFileCreator traceFile
-    private SummaryFileCreator summaryFile
-    private ReportFileCreator reportFile
+    TraceFileCreator traceFile
+    SummaryFileCreator summaryFile
+    ReportFileCreator reportFile
 
     // Overwrite existing files if true
     private boolean overwrite
@@ -124,7 +124,7 @@ class CO2FootprintObserver implements TraceObserver {
      *
      * @param trace the TraceRecord of the task that just started
      */
-    private synchronized void startRecord(TraceRecord trace) {
+    synchronized void startRecord(TraceRecord trace) {
         // Keep started tasks
         runningTasks[trace.taskId] = trace
 
@@ -139,7 +139,7 @@ class CO2FootprintObserver implements TraceObserver {
      *
      * @param trace TraceRecord of the finished task
      */
-    private synchronized void aggregateRecords(TraceRecord trace) {
+    synchronized void aggregateRecords(TraceRecord trace) {
         // Remove task from set of running tasks
         runningTasks.remove(trace.taskId)
 
@@ -159,39 +159,7 @@ class CO2FootprintObserver implements TraceObserver {
         this.traceFile?.write(trace.taskId, trace, co2Record)
     }
 
-    // ------ OBSERVER METHODS ------
-
-    // ---- WORKFLOW LEVEL ----
-
-    /**
-     * Start of the workflow; Creates the trace file.
-     *
-     * @param session The current Nextflow session
-     */
-    @Override
-    void onFlowCreate(Session session) {
-        log.debug('Workflow started -- CO2Footprint file instantiated')
-
-        // Construct session and aggregator
-        this.session = session
-        this.aggregator = new CO2RecordAggregator()
-
-        // Start hourly CI updating
-        timeCiRecordCollector.start()
-
-        // Create trace file
-        traceFile.create()
-    }
-
-    /**
-     * Save the pending processes and close the files
-     */
-    void onFlowComplete() {
-        log.debug('Workflow completed -- rendering & saving files')
-
-        // Stop hourly CI updating
-        timeCiRecordCollector.stop()
-
+    void renderFiles() {
         // Compute the statistics (total, mean, min, max, quantiles) on process level
         final Map<String, Map<String, Map<String, ?>>> processStats = aggregator.computeProcessStats()
         // Collect the total sums of all metrics
@@ -229,6 +197,43 @@ class CO2FootprintObserver implements TraceObserver {
         traceFile.close(runningTasks)
         summaryFile.close()
         reportFile.close()
+    }
+
+    // ------ OBSERVER METHODS ------
+
+    // ---- WORKFLOW LEVEL ----
+
+    /**
+     * Start of the workflow; Creates the trace file.
+     *
+     * @param session The current Nextflow session
+     */
+    @Override
+    void onFlowCreate(Session session) {
+        log.debug('Workflow started -- CO2Footprint file instantiated')
+
+        // Construct session and aggregator
+        this.session = session
+        this.aggregator = new CO2RecordAggregator()
+
+        // Start hourly CI updating
+        timeCiRecordCollector.start()
+
+        // Create trace file
+        traceFile.create()
+    }
+
+    /**
+     * Save the pending processes and close the files
+     */
+    void onFlowComplete() {
+        log.debug('Workflow completed -- rendering & saving files')
+
+        // Stop hourly CI updating
+        timeCiRecordCollector.stop()
+
+        // Write files
+        renderFiles()
     }
 
 

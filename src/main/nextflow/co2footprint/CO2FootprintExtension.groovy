@@ -2,23 +2,22 @@ package nextflow.co2footprint
 
 import nextflow.Session
 import nextflow.co2footprint.Records.CO2Record
+import nextflow.co2footprint.Records.CiRecordCollector
 import nextflow.plugin.extension.Function
 import nextflow.plugin.extension.PluginExtensionPoint
-import nextflow.trace.TraceObserver
 import nextflow.trace.TraceRecord
-import nextflow.co2footprint.Records.CiRecordCollector
 
 import java.nio.file.Path
 import java.time.LocalDateTime
 import java.util.concurrent.ConcurrentHashMap
 
 class CO2FootprintExtension extends PluginExtensionPoint {
-    TraceObserver observer
+    CO2FootprintObserver observer
 
     @Override
     void init(Session session){
         CO2FootprintFactory factory = new CO2FootprintFactory()
-        observer = factory.create(session)[0]
+        observer = factory.create(session)[0] as CO2FootprintObserver
     }
 
     @Function
@@ -42,11 +41,11 @@ class CO2FootprintExtension extends PluginExtensionPoint {
         }
 
         observer.traceFile.create()
-        observer.startRecord()
+        observer.startRecord(traceRecord)
         CO2Record co2Record = observer.aggregateRecords(traceRecord)
 
         if (renderFiles) {
-            observer.renderOutput()
+            observer.renderFiles()
         }
 
         return co2Record
