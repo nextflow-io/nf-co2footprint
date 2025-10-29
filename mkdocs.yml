@@ -14,6 +14,7 @@ nav:
       - usage/parameters.md
       - usage/output.md
       - usage/FAQ.md
+      - usage/extension.md
   - Contributing:
       - contributing/setup.md
       - contributing/guidelines.md
