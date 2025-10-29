@@ -123,6 +123,9 @@ class Converter {
      */
     static Quantity scaleTime(Number value, String unit='ms', String targetUnit='s') {
         value = value as BigDecimal
+        // Alternative names for the units
+        final Map<String, String> alternativeUnits = ['m': 'min', 'd': 'days', 'w': 'weeks']
+        unit = alternativeUnits.containsKey(unit) ? alternativeUnits.get(unit) : unit
         // Supported time units
         final List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']
         // Conversion factors between units (e.g., 1000 ms = 1 s, 60 s = 1 min, etc.)

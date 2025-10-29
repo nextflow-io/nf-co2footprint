@@ -55,7 +55,7 @@ class CO2FootprintObserver implements TraceObserver {
     CO2FootprintConfig config
 
     // Aggregator for resource usage stats
-    private CO2RecordAggregator aggregator
+    CO2RecordAggregator aggregator
 
     // Calculator for CO₂ footprint
     private CO2FootprintComputer co2FootprintComputer
@@ -140,7 +140,7 @@ class CO2FootprintObserver implements TraceObserver {
      *
      * @param trace TraceRecord of the finished task
      */
-    synchronized void aggregateRecords(TraceRecord trace) {
+    synchronized CO2Record aggregateRecords(TraceRecord trace) {
         // Remove task from set of running tasks
         runningTasks.remove(trace.taskId)
 
@@ -158,6 +158,8 @@ class CO2FootprintObserver implements TraceObserver {
 
         // Optionally write to trace file
         this.traceFile?.write(trace, co2Record)
+
+        return co2Record
     }
 
     void renderFiles() {
