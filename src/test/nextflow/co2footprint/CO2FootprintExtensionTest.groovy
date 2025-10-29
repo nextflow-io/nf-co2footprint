@@ -15,7 +15,10 @@ class CO2FootprintExtensionTest extends Specification {
         when:
         CO2FootprintExtension extension = new CO2FootprintExtension()
         extension.init(session)
-        List<CO2Record> co2Records = extension.calculateCO2(this.class.getResource('/execution-trace-test.txt').path as Path)
+        List<CO2Record> co2Records = extension.calculateCO2(
+                this.class.getResource('/execution-trace-test.txt').path as Path,
+                false
+        )
 
         then:
         co2Records.size() == 8
