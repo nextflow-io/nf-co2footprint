@@ -59,9 +59,9 @@ class CO2FootprintObserverTest extends Specification{
         return Mock(Session) {
             getConfig() >> [
                 co2footprint: [
-                    'traceFile': tracePath,
-                    'summaryFile': summaryPath,
-                    'reportFile': reportPath,
+                    'trace': ['enabled': true, 'file': tracePath],
+                    'summary': ['enabled': true, 'file': summaryPath],
+                    'report': ['enabled': true, 'file': reportPath],
                     'ci': ciValue
                 ]
             ]
@@ -183,12 +183,12 @@ class CO2FootprintObserverTest extends Specification{
         // Mock Session
         Session session = Mock(Session)
         session.getConfig() >> [
-                co2footprint:
-                        [
-                                'traceFile': tracePath,
-                                'summaryFile': summaryPath,
-                                'reportFile': reportPath
-                        ]
+            co2footprint:
+                [
+                    'trace': [enabled: true, file: tracePath],
+                    'summary': [enabled: true, file: summaryPath],
+                    'report': [enabled: true, file: reportPath]
+                ]
         ]
         session.getExecService() >> Executors.newFixedThreadPool(1)
         WorkflowMetadata meta = Mock(WorkflowMetadata)

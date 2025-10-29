@@ -136,12 +136,11 @@ class CO2FootprintPluginTest extends Specification{
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
         Map config = [
-                co2footprint:
-                        [
-                                'traceFile': tracePath,
-                                'summaryFile': summaryPath,
-                                'reportFile': reportPath,
-                        ]
+            co2footprint: [
+                'trace': ['enabled': true, 'file': tracePath],
+                'summary': ['enabled': true, 'file': summaryPath],
+                'report': ['enabled': true, 'file': reportPath]
+            ]
         ]
         Session session = mockSession(config)
 
