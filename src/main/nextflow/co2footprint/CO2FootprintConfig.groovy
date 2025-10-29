@@ -20,8 +20,18 @@ import java.nio.file.Paths
  *
  * Example usage in config:
  * co2footprint {
- *     traceFile = "co2footprint_trace.txt"
- *     summaryFile = "co2footprint_summary.txt"
+ *     trace = {
+ *       enabled: true,
+ *       file: "co2footprint_trace.txt"
+ *     }
+ *     summary = {
+ *       enabled: true,
+ *       file: "co2footprint_summary.txt"
+ *     }
+ *     report = {
+ *       enabled: true,
+ *       file: "co2footprint_report.txt
+ *     }
  *     ci = 300
  *     pue = 1.4
  *     powerdrawMem = 0.67
@@ -41,16 +51,16 @@ class CO2FootprintConfig extends BaseConfig {
     private void defineParameters() {
         // Name, description, default value or function, return type, additional allowed types
         defineParameter(
-                'traceFile', 'Path to the trace file',
-                "co2footprint_trace_${timestamp}.txt", String, Set.of(GString, Path)
+                'trace', 'Trace file config',
+                new CO2FootprintSubConfig('trace', [:] as LinkedHashMap), CO2FootprintSubConfig
         )
         defineParameter(
-                'summaryFile', 'Path to the summary file',
-                "co2footprint_summary_${timestamp}.txt", String, Set.of(GString, Path)
+                'summary', 'Summary file config',
+                new CO2FootprintSubConfig('summary', [:] as LinkedHashMap), CO2FootprintSubConfig
         )
         defineParameter(
-                'reportFile', 'Path to the report file',
-                "co2footprint_report_${timestamp}.html", String, Set.of(GString, Path)
+                'report', 'Report file config',
+                new CO2FootprintSubConfig('report', [:] as LinkedHashMap), CO2FootprintSubConfig
         )
         defineParameter(
                 'location', 'Location GeoCode from Electricity maps',
@@ -120,7 +130,15 @@ class CO2FootprintConfig extends BaseConfig {
         // Assign values from map to config
         configMap.each { name, value ->
             if (this.containsKey(name)) {
-                this.get(name).set(value)
+                if (name == 'trace') {
+                    this.get('trace').set(new CO2FootprintSubConfig('trace', value))
+                } else if (name == 'summary') {
+                    this.get('summary').set(new CO2FootprintSubConfig('summary', value))
+                } else if (name == 'report') {
+                    this.get('report').set(new CO2FootprintSubConfig('report', value))
+                } else {
+                    this.get(name).set(value)
+                }
             } else if (name != 'params') {
                 log.debug("Skipping unknown configuration key: '${name}'")
             } 
@@ -255,8 +273,11 @@ class CO2FootprintConfig extends BaseConfig {
      * @return SortedMap of output file options
      */
     SortedMap<String, Object> collectOutputFileOptions() {
-        Set<String> outputFileOptions = Set.of('traceFile', 'summaryFile', 'reportFile')
-        return getValueMap(outputFileOptions).sort() as SortedMap
+        return [
+            reportFile: this.value('report').value('file'),
+            summaryFile: this.value('summary').value('file'),
+            traceFile: this.value('trace').value('file')
+        ].sort() as SortedMap
     }
 
     /**
