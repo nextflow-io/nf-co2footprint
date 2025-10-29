@@ -7,7 +7,6 @@ include { calculateCO2 } from 'plugin/nf-co2footprint'
 
 ch_co2Records = channel.of( calculateCO2( Path.of(<Path_to_your_trace_file>, <Return_files>, <CI>) ) )
 ```
-// TODO: Does the upper schema work? I have no idea for the part before the "="
 
 ### Functions
 #### `parseTraceFile`
@@ -20,6 +19,12 @@ Parse the trace file into a list of TraceRecord instances.
 
 #### `calculateCO2`
 Can be used to calculate the emissions of a trace.
+!!! warning
+
+    This is not the recommended way to estimate the footprint.
+    Trace files contain the same metrics as the internal trace, but is often lacking accuracy, especially when they are written in human-readable mode.
+
+
 - **tracePath**:
   Path to the trace file 
 
