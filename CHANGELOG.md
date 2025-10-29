@@ -2,6 +2,7 @@
 ## Bug Fixes:
 ## Misc:
 ## Features:
+- Provided an extension point so trace files can be processed post-run through a pipeline
 
 # Version 1.1.0
 ## Bug Fixes:
