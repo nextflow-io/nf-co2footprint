@@ -27,7 +27,7 @@ The following parameters are currently available:
 
 - **`emApiKey`**  
   Your Electricity Maps API token.  
-  Register in the [developer portal](https://portal.electricitymaps.com), then create a Nextflow secret with the name `EM_API_KEY` for your API key using:  
+  Register in the [developer portal](https://portal.electricitymaps.com/auth/signup?return=/developer-hub/playground), then create a Nextflow secret with the name `EM_API_KEY` for your API key using:  
   `nextflow secrets set EM_API_KEY "paste_api_key_here"`. Then, set the config parameter to `secrets.EM_API_KEY`.  
   **Default**: `null`
   
@@ -44,7 +44,7 @@ The following parameters are currently available:
 ## Data Center & Machine Settings
 
 - **`pue`**  
-  Power usage effectiveness (PUE) of the data centre. For local cluster you can usually find out your specific PUE from the system administrators or system managers. Also, the current [yearly worldwide average](https://www.statista.com/statistics/1229367/data-center-average-annual-pue-worldwide/) could be used. The plugin uses provider-specific default PUE values for supported cloud platforms if the respective executor is registered by Nextflow. You can find these values in the [executor PUE mapping file](https://github.com/nextflow-io/nf-co2footprint/blob/master/plugins/nf-co2footprint/src/resources/executor_machine_pue_mapping.csv).  
+  Power usage effectiveness (PUE) of the data centre. For local cluster you can usually find out your specific PUE from the system administrators or system managers. Also, the current [yearly worldwide average](https://www.statista.com/statistics/1229367/data-center-average-annual-pue-worldwide/) could be used. The plugin uses provider-specific default PUE values for supported cloud platforms if the respective executor is registered by Nextflow. You can find these values in the [executor PUE mapping file](https://github.com/nextflow-io/nf-co2footprint/blob/master/src/resources/executor_machine_pue_mapping.csv).  
   **If specified, this value will override any PUE determined by `machineType`.**  
   **Default**: 1.00
 
@@ -61,20 +61,23 @@ The following parameters are currently available:
 ## Hardware Power Draw
 
 - **`powerdrawMem`**  
-  power draw from memory.  
+  Power draw from memory.  
   **Default**: 0.3725.
   
 - **`customCpuTdpFile`**  
-  Input CSV file containing custom CPU TDP data. This should contain the following columns: `name`, `tdp (W)`, `cores`. Note that this overwrites TDP values for already provided CPU models. You can find the by default used TDP data [here](https://nextflow-io.github.io/nf-co2footprint/plugins/nf-co2footprint/src/resources/cpu_tdp_data/CPU_TDP_wikichip.csv).  
+  Input CSV file containing custom CPU TDP data. This should contain the following columns: `name`, `tdp (W)`, `cores`. Note that this overwrites TDP values for already provided CPU models. You can find the by default used TDP data [here](https://github.com/nextflow-io/nf-co2footprint/blob/master/src/resources/cpu_tdp_data/CPU_TDP.csv).  
   **Default**: `null`.
 
-    Example custom CPU TDP file:
+    Example custom CPU TDP table: <a id="custom-tdp-table"></a>
 
     | name                            | tdp (W) | cores |
     |---------------------------------|---------|-------|
     | Intel(R) Xeon(R) CPU E5-2670 v3 | 120     | 12    |
     | AMD EPYC 7742                   | 225     | 64    |
     | Intel(R) Core(TM) i7-9700K      | 95      | 8     |
+
+    !!! Note "File format"
+        The table has to be supplied in [.csv](https://www.wikihow.com/Create-a-CSV-File) format.
 
 - **`ignoreCpuModel`**  
   Ignore the retrieved Nextflow trace `cpu_model` name and use the default CPU power draw value. This is useful, if the cpu model information provided by the linux kernel is not correct, for example, in the case of VMs emulating a different CPU architecture.  

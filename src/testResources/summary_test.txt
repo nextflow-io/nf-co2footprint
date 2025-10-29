@@ -1,0 +1,29 @@
+Total CO₂e footprint measures of this workflow run (including cached tasks):
+  CO₂e emissions: 6.73 g
+  Energy consumption: 14.02 Wh
+  CO₂e emissions (market): -
+
+Which equals:
+  - 0.038 km travelled by car
+  - It takes one tree 5h 21min 43.83s to sequester the equivalent amount of CO₂ from the atmosphere
+  - 0.013 % of a flight from Paris to London
+
+The calculation of these values is based on the carbon footprint computation method developed in the Green Algorithms project:
+  Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation.
+  Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707
+
+nf-co2footprint plugin version: 1.0.0
+
+nf-co2footprint options:
+  ci: 480.0
+  ciMarket: null
+  ignoreCpuModel: false
+  location: null
+  machineType: null
+  powerdrawCpuDefault: null
+  powerdrawMem: 0.3725
+  pue: 1.0
+  customCpuTdpFile: null
+  reportFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir4983784543560255214/report_test.html
+  summaryFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir4983784543560255214/summary_test.txt
+  traceFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir4983784543560255214/trace_test.txt
