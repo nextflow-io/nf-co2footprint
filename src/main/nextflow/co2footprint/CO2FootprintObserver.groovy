@@ -187,11 +187,17 @@ class CO2FootprintObserver implements TraceObserver {
         this.session = session
         this.aggregator = new CO2RecordAggregator()
 
+        // we wouldn't expect a config where all output files are turned off, so warn the user
+        if (!traceFile && !summaryFile && !reportFile) {
+            log.warn("No output files are enabled - set 'enabled: true' in the sections 'trace', 'summary' and " +
+                    "'report' to turn these on")
+        }
+
         // Start hourly CI updating
         timeCiRecordCollector.start()
 
         // Create trace file
-        traceFile.create()
+        traceFile?.create()
     }
 
     /**
@@ -226,20 +232,22 @@ class CO2FootprintObserver implements TraceObserver {
 
         // Create report and summary if any content exists to write to the file
         if (totalStats) {
-            summaryFile.create()
-            reportFile.create()
+            if (summaryFile) {
+                summaryFile.create()
+                summaryFile.write(totalStats, co2FootprintComputer, config, version)
+                summaryFile.close()
+            }
+
+            if (reportFile) {
+                reportFile.create()
+                reportFile.addEntries(processStats, totalStats, co2FootprintComputer, config, version, session, traceRecords, co2eRecords, timeCiRecordCollector)
+                reportFile.write()
+                reportFile.close()
+            }
         }
 
-        // Write report and summary
-        summaryFile.write(totalStats, co2FootprintComputer, config, version)
-
-        reportFile.addEntries(processStats, totalStats, co2FootprintComputer, config, version, session, traceRecords, co2eRecords, timeCiRecordCollector)
-        reportFile.write()
-
-        // Close all files (writes remaining tasks in the trace file)
-        traceFile.close(runningTasks)
-        summaryFile.close()
-        reportFile.close()
+        // write remaining tasks in the trace file
+        traceFile?.close(runningTasks)
     }
 
 
