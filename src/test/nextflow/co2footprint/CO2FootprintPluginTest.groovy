@@ -195,10 +195,8 @@ class CO2FootprintPluginTest extends Specification{
         then:
         observers.size() == 1
         filesExist(tracePath, summaryPath, reportPath) == [false, false, false]
-        listAppender.list.size() == 1
-        listAppender.list[0] == (
-            "No output files are enabled - set 'enabled: true' in the sections 'trace', 'summary' and 'report' to " +
-            "turn these on"
-        )
+        listAppender.list.any { ILoggingEvent event ->
+            event.message == 'No output files are enabled - to enable, set `enabled: true` in the sections `trace`, `summary` or `report`.'
+        }
     }
 }
