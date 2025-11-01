@@ -1,52 +1,12 @@
-/*
- * Copyright 2020-2022, Seqera Labs
- * Copyright 2013-2019, Centre for Genomic Regulation (CRG)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+package nextflow.co2footprint.TestHelpers
 
-package nextflow.co2footprint
-
-import com.google.common.jimfs.Configuration
-import com.google.common.jimfs.Jimfs
+import groovy.json.JsonSlurper
 import org.opentest4j.AssertionFailedError
 
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
-
 import java.security.MessageDigest
-import groovy.json.JsonSlurper
-
-/**
- *
- * @author Paolo Di Tommaso <paolo.ditommaso@gmail.com>
- */
-class TestHelper {
-
-    static private fs = Jimfs.newFileSystem(Configuration.unix())
-
-    static Path createInMemTempFile(String name='temp.file', String content=null) {
-        Path tmp = fs.getPath("/tmp")
-        tmp.mkdir()
-        def result = Files.createTempDirectory(tmp, 'test').resolve(name)
-        if( content )
-            result.text = content
-        return result
-    }
-
-}
-
 
 /**
  * Checksum checker to compare and generate checksums (for files) and more
@@ -184,40 +144,40 @@ class FileChecker {
         Path snapPath = parent.resolve("new_${recordPath.getFileName()}")
 
         int linePosition = 0
-            path.withReader { Reader readerNew ->
-                recordPath.withReader { Reader readerRecord ->
-                    String lineNew, lineRecord
-                    while ((lineNew = readerNew.readLine()) != null & (lineRecord = readerRecord.readLine()) != null) {
-                        if (!excludedLines.contains(linePosition)) {
-                            if (lineNew.size() < 10000 & lineRecord.size() < 10000){
-                                try {
-                                    assert lineNew == lineRecord, "Mismatch in line ${linePosition}"
-                                }
-                                catch (Throwable error) {
-                                    addError(error)
-                                }
-                            } else if (lineNew != lineRecord) {
-                                addError(
-                                    new AssertionFailedError(
-                                        "Mismatching new line: ${lineNew}\n" +
-                                        "Mismatch in line ${linePosition}. Output too long, omitting recorded line."
-                                    )
-                                )
+        path.withReader { Reader readerNew ->
+            recordPath.withReader { Reader readerRecord ->
+                String lineNew, lineRecord
+                while ((lineNew = readerNew.readLine()) != null & (lineRecord = readerRecord.readLine()) != null) {
+                    if (!excludedLines.contains(linePosition)) {
+                        if (lineNew.size() < 10000 & lineRecord.size() < 10000){
+                            try {
+                                assert lineNew == lineRecord, "Mismatch in line ${linePosition}"
                             }
+                            catch (Throwable error) {
+                                addError(error)
+                            }
+                        } else if (lineNew != lineRecord) {
+                            addError(
+                                    new AssertionFailedError(
+                                            "Mismatching new line: ${lineNew}\n" +
+                                                    "Mismatch in line ${linePosition}. Output too long, omitting recorded line."
+                                    )
+                            )
                         }
-                        linePosition += 1
                     }
+                    linePosition += 1
+                }
 
-                    // Check for extra lines:
-                    if (readerNew.readLine() != null) {
-                        addError( new AssertionFailedError("New file has extra lines") )
-                    }
-                    // Check for extra lines:
-                    if (readerRecord.readLine() != null) {
-                        addError( new AssertionFailedError("Recorded file has extra lines at the end.") )
-                    }
+                // Check for extra lines:
+                if (readerNew.readLine() != null) {
+                    addError( new AssertionFailedError("New file has extra lines") )
+                }
+                // Check for extra lines:
+                if (readerRecord.readLine() != null) {
+                    addError( new AssertionFailedError("Recorded file has extra lines at the end.") )
                 }
             }
+        }
 
         return snapPath
     }
@@ -250,13 +210,13 @@ class FileChecker {
             if(recordPath) {
                 snapPath = compareFiles(path, recordPath, excludedLines)
                 addError(
-                    new AssertionFailedError(
-                        "Recorded checksum '${recordedChecksum}' and new checksum '${newChecksum}' did not match, " +
-                        "but the checked lines (all except ${excludedLines}) in ${recordPath} and '${path}' reveal no difference."
-                    )
+                        new AssertionFailedError(
+                                "Recorded checksum '${recordedChecksum}' and new checksum '${newChecksum}' did not match, " +
+                                        "but the checked lines (all except ${excludedLines}) in ${recordPath} and '${path}' reveal no difference."
+                        )
                 )
             } else {
-               addError(assertionError)
+                addError(assertionError)
             }
         }
         return [checksum: newChecksum, snapPath: snapPath]
@@ -312,12 +272,12 @@ class FileChecker {
 
             // Print info to adopt the changes
             String message =
-                "🔎 The actual error message can be found below under 'Suppressed:'.\n\n" +
-                "ℹ️ If you want to adopt the changes, you may replace the file content in `nextflow.co2footprint/testResources/${recordPath.getFileName()}`\n" +
-                "with the new file content in: `${snapPath}`.\n" +
-                "💡 Suggested new fileCheck configuration (apply this in `nextflow.co2footprint/testResources/file_checks.json`):\n" +
-                "${newCheckInfos}" +
-                "\n⚠️ Pay attention to the excluded_lines, as they may differ from the suggested ones depending on your changes.\n"
+                    "🔎 The actual error message can be found below under 'Suppressed:'.\n\n" +
+                            "ℹ️ If you want to adopt the changes, you may replace the file content in `nextflow.co2footprint/testResources/${recordPath.getFileName()}`\n" +
+                            "with the new file content in: `${snapPath}`.\n" +
+                            "💡 Suggested new fileCheck configuration (apply this in `nextflow.co2footprint/testResources/file_checks.json`):\n" +
+                            "${newCheckInfos}" +
+                            "\n⚠️ Pay attention to the excluded_lines, as they may differ from the suggested ones depending on your changes.\n"
 
             Exception checkFailedException = new Exception(message)
             checkFailedException.addSuppressed(error)

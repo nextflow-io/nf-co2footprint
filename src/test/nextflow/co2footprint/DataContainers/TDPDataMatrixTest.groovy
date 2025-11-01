@@ -1,15 +1,6 @@
 package nextflow.co2footprint.DataContainers
 
-import ch.qos.logback.classic.LoggerContext
-import ch.qos.logback.classic.spi.ILoggingEvent
-import ch.qos.logback.classic.turbo.TurboFilter
-import ch.qos.logback.core.read.ListAppender
-import ch.qos.logback.classic.Level
-import nextflow.co2footprint.Logging.DeduplicateMarkerFilter
-import nextflow.co2footprint.Logging.LoggingAdapter
-import nextflow.co2footprint.Logging.Markers
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import nextflow.co2footprint.TestHelpers.LogChecker
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
@@ -32,30 +23,15 @@ class TDPDataMatrixTest extends Specification {
             ['Indel® i3-Fantasy', 'Ambere ultraEfficient Processor', 'AMT YPS-x42', 'default'] as LinkedHashSet,
     )
 
-    static LoggerContext lc = LoggerFactory.getILoggerFactory() as LoggerContext
-
     @Shared
-    Logger logger
-    ListAppender<ILoggingEvent> listAppender = new ListAppender<>()
-
-    // Setup method for the class
-    def setupSpec() {
-        LoggingAdapter loggingAdapter = new LoggingAdapter(lc)
-        loggingAdapter.addUniqueMarkerFilter()
-        loggingAdapter.changePatternConsoleAppender()
-        logger = lc.getLogger(TDPDataMatrix)
-    }
+    LogChecker logChecker
 
     def setup() {
-        logger.setLevel(Level.WARN) // Ensure WARN level
-        listAppender.start()
-        logger.addAppender(listAppender)
+        logChecker = new LogChecker(TDPDataMatrix)
     }
 
     def cleanup() {
-        listAppender.list.clear()
-        logger.detachAndStopAllAppenders()
-        listAppender.stop()
+        logChecker.clear()
     }
 
     def 'Should get a valid DataMatrix Extension' () {
@@ -134,12 +110,12 @@ class TDPDataMatrixTest extends Specification {
         df2TDPPerCore == 10.0
         dfTDPPerThread == 12.5
         df2TDPPerThread == 5.0
-        listAppender.list[0] as String ==  '[WARN] Could not find CPU model "Non-existent" in given TDP data table. ' +
+        logChecker.checkLogs(1,  [
+                'Could not find CPU model "Non-existent" in given TDP data table. ' +
                 'Using default CPU power draw value (100.0 W).\n' +
                 '\t🔖 You can help by reporting this warning and your `.nextflow.log` file to ' +
                 'https://github.com/nextflow-io/nf-co2footprint/issues/new?template=missing_chip.yaml. Thanks.'
-        // Second instance should be filtered
-        listAppender.list.size() == 1
+        ])
 
     }
 
@@ -213,17 +189,22 @@ class TDPDataMatrixTest extends Specification {
         expect:
         // match against non existent model
         df.matchModel('Non-existent2').getData() == [[100, 4, 8]]
-        listAppender.list[0] as String == '[WARN] Could not find CPU model "Non-existent2" in given TDP data table. ' +
+        logChecker.checkLogs(null, [
+                'Could not find CPU model "Non-existent2" in given TDP data table. ' +
                 'Using default CPU power draw value (100.0 W).\n' +
                 '\t🔖 You can help by reporting this warning and your `.nextflow.log` file to ' +
                 'https://github.com/nextflow-io/nf-co2footprint/issues/new?template=missing_chip.yaml. Thanks.'
+        ])
+        logChecker.clear()
 
         // match against unaccounted variance of model
         df.matchModel('Indel® i3-Fantasy(TM) 10Trillion GW').getData() == [[100, 4, 8]]
-        listAppender.list[1] as String == '[WARN] Could not find CPU model "Indel® i3-Fantasy(TM) 10Trillion GW" in given TDP data table. ' +
+        logChecker.checkLogs(null, [
+                'Could not find CPU model "Indel® i3-Fantasy(TM) 10Trillion GW" in given TDP data table. ' +
                 'Using default CPU power draw value (100.0 W).\n' +
                 '\t🔖 You can help by reporting this warning and your `.nextflow.log` file to ' +
                 'https://github.com/nextflow-io/nf-co2footprint/issues/new?template=missing_chip.yaml. Thanks.'
+        ])
     }
 
     @Unroll
@@ -239,10 +220,10 @@ class TDPDataMatrixTest extends Specification {
         def rows = ['default local', 'default compute cluster', 'default', 'other'] as LinkedHashSet
 
         and:
-        def tdpMatrix = new TDPDataMatrix(data, columns, rows, fallbackModel, null, null, null)
+        TDPDataMatrix tdpMatrix = new TDPDataMatrix(data, columns, rows, fallbackModel, null, null, null)
 
         when:
-        def result = tdpMatrix.matchModel('NonExistentCPU')
+        TDPDataMatrix result = tdpMatrix.matchModel('NonExistentCPU')
 
         then:
         result.getOrderedRowKeys() == [fallbackModel] as LinkedHashSet
