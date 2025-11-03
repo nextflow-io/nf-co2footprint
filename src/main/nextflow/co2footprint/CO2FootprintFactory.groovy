@@ -79,8 +79,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
     /**
      * External Data integration of TDP (Thermal design power) and CI (Carbon intensity) values
      */
-    private TDPDataMatrix tdpDataMatrix
-    private CIDataMatrix ciDataMatrix
+    TDPDataMatrix tdpDataMatrix
+    CIDataMatrix ciDataMatrix
     
     /**
      * Creates and returns the CO2Footprint trace observer.
@@ -90,7 +90,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
      * @return Collection of TraceObserver (with one CO2FootprintObserver)
      */
     @Override
-    Collection<TraceObserver> create(Session session, boolean verbose=true) {
+    Collection<TraceObserver> create(Session session) {
         // Logging
         LoggingAdapter loggingAdapter = new LoggingAdapter()
         loggingAdapter.addUniqueMarkerFilter()
@@ -98,10 +98,8 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
         // Read the plugin version
         setPluginVersion()
-        if (verbose) {
-            log.info("nf-co2footprint plugin  ~  version ${this.pluginVersion}")
-            log.info('🔕 Repeated task-specific messages (🔁) are only logged once in the console. Further occurrences are logged at DEBUG level, appearing only in the `.nextflow.log` file.')
-        }
+        log.info("nf-co2footprint plugin  ~  version ${this.pluginVersion}")
+        log.info('🔕 Repeated task-specific messages (🔁) are only logged once in the console. Further occurrences are logged at DEBUG level, appearing only in the `.nextflow.log` file.')
 
         // Read in matrices
         this.tdpDataMatrix = TDPDataMatrix.fromCsv(

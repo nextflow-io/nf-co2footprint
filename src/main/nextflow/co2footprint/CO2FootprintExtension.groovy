@@ -1,8 +1,6 @@
 package nextflow.co2footprint
 
 import nextflow.Session
-import nextflow.co2footprint.DataContainers.CIDataMatrix
-import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Metrics.Converter
 import nextflow.co2footprint.Metrics.Quantity
 import nextflow.co2footprint.Records.CO2Record
@@ -10,15 +8,11 @@ import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.Records.CiRecordCollector
 import nextflow.plugin.extension.Function
 import nextflow.plugin.extension.PluginExtensionPoint
-import nextflow.script.ScriptFile
-import nextflow.script.WorkflowMetadata
 import nextflow.trace.TraceRecord
 
 import java.nio.file.Path
-import java.nio.file.Paths
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
-import java.time.OffsetDateTime
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -31,12 +25,23 @@ class CO2FootprintExtension extends PluginExtensionPoint {
     CO2FootprintObserver observer
 
     /**
+     * Configuration for post-run
+     */
+    CO2FootprintConfig config
+
+    /**
      * Initializes the Extension point of the plugin with the session to create an observer.
      */
     @Override
-    void init(Session session){
+    void init(Session session) {
         CO2FootprintFactory factory = new CO2FootprintFactory()
         observer = factory.create(session)[0] as CO2FootprintObserver
+        config = new CO2FootprintConfig(
+                session.config.navigate('co2footprint') as Map,
+                factory.tdpDataMatrix,
+                factory.ciDataMatrix,
+                session.config.navigate('process') as Map
+        )
     }
 
     /**
@@ -110,31 +115,32 @@ class CO2FootprintExtension extends PluginExtensionPoint {
     @Function
     List<CO2Record> calculateCO2(
             Path tracePath, Double carbonIntensity=null, Map<LocalDateTime, Number> timeCIs=null,
-            Boolean renderFiles=true
+            CO2FootprintConfig config=this.config
     ){
         // Parse the trace file
         List<TraceRecord> traceRecords = parseTraceFile(tracePath)
 
         // Determine CI
         if (carbonIntensity) {
-            observer.config.set('ci', carbonIntensity)
+            config.set('ci', carbonIntensity)
         }
         if (timeCIs) {
-            observer.timeCiRecordCollector = new CiRecordCollector(observer.config, timeCIs as ConcurrentHashMap)
+            observer.timeCiRecordCollector = new CiRecordCollector(config, timeCIs as ConcurrentHashMap)
         }
+
+        // Replace the config with modified one
+        observer.config = config
 
         // Prepare aggregator
         observer.aggregator = new CO2RecordAggregator()
 
         // Collect CO2Records from traces & optionally write the corresponding files
-        if (renderFiles) { observer.traceFile.create() }
         List<CO2Record> co2Records = []
         traceRecords.each { TraceRecord traceRecord ->
             observer.startRecord(traceRecord)
             co2Records.add(observer.aggregateRecords(traceRecord))
         }
-
-        if (renderFiles) { observer.renderFiles() }
+        observer.renderFiles()
 
         return co2Records
     }
