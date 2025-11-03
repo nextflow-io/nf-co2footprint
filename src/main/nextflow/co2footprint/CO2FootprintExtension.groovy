@@ -92,15 +92,15 @@ class CO2FootprintExtension extends PluginExtensionPoint {
      * Calculate the CO2 footprint of all tasks in a trace file.
      *
      * @param tracePath Path to the trace file
-     * @param renderFiles Whether the output files are saved. Only returns {@link CO2Record}s if disabled. Default: true
      * @param carbonIntensity The carbon intensity [g/kWh] that should be used for the carbon estimation
      * @param timeCIs A map of times linked to CI values. Can be used to infer the CI during the run which produced the trace file
+     * @param renderFiles Whether the output files are saved. Only returns {@link CO2Record}s if disabled. Default: true
      * @return
      */
     @Function
     List<CO2Record> calculateCO2(
-            Path tracePath, Boolean renderFiles=true,
-            Double carbonIntensity=null, Map<LocalDateTime, Number> timeCIs=null
+            Path tracePath, Double carbonIntensity=null, Map<LocalDateTime, Number> timeCIs=null,
+            Boolean renderFiles=true
     ){
         // Parse the trace file
         List<TraceRecord> traceRecords = parseTraceFile(tracePath)

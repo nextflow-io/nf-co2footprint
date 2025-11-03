@@ -16,7 +16,7 @@ class CO2FootprintExtensionTest extends Specification {
         CO2FootprintExtension extension = new CO2FootprintExtension()
         extension.init(session)
         List<CO2Record> co2Records = extension.calculateCO2(
-                this.class.getResource('/execution-trace-test.txt').path as Path,
+                this.class.getResource('/execution-trace-test.txt').path as Path, null, null,
                 false
         )
 
