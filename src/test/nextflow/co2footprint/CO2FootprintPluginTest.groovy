@@ -1,6 +1,5 @@
 package nextflow.co2footprint
 
-import jline.internal.Log
 import nextflow.NextflowMeta
 import nextflow.Session
 import nextflow.co2footprint.TestHelpers.LogChecker
