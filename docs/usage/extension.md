@@ -5,7 +5,10 @@ The interaction follows the [Nextflow extension function schema](https://nextflo
 ```Nextflow
 include { calculateCO2 } from 'plugin/nf-co2footprint'
 
-ch_co2Records = channel.of( calculateCO2( Path.of(<Path_to_your_trace_file>, <Return_files>, <CI>) ) )
+workflow {
+    Path tracePath = java.nio.file.Paths.get('<Path_to_your_execution_trace_file>')
+    def co2Records = calculateCO2(tracePath)
+}
 ```
 
 ### Functions
