@@ -90,7 +90,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
      * @return Collection of TraceObserver (with one CO2FootprintObserver)
      */
     @Override
-    Collection<TraceObserver> create(Session session) {
+    Collection<TraceObserver> create(Session session, boolean verbose=true) {
         // Logging
         LoggingAdapter loggingAdapter = new LoggingAdapter()
         loggingAdapter.addUniqueMarkerFilter()
@@ -98,8 +98,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
         // Read the plugin version
         setPluginVersion()
-        log.info("nf-co2footprint plugin  ~  version ${this.pluginVersion}")
-        log.info('🔕 Repeated task-specific messages (🔁) are only logged once in the console. Further occurrences are logged at DEBUG level, appearing only in the `.nextflow.log` file.')
+        if (verbose) {
+            log.info("nf-co2footprint plugin  ~  version ${this.pluginVersion}")
+            log.info('🔕 Repeated task-specific messages (🔁) are only logged once in the console. Further occurrences are logged at DEBUG level, appearing only in the `.nextflow.log` file.')
+        }
 
         // Read in matrices
         this.tdpDataMatrix = TDPDataMatrix.fromCsv(

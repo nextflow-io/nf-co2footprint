@@ -69,7 +69,12 @@ class Converter {
      * @return Converted quantity with appropriate scale
      */
     static Quantity scaleUnits(double value, String scale='', String unit='', String targetScale=null) {
+        // Define whether byte-sized steps should be assumed
         int scalingFactor = unit == 'B' ? 1024 : 1000
+        // Alternative names for the units
+        final Map<String, String> alternativeScales = ['K': 'k']
+        scale = alternativeScales.containsKey(scale) ? alternativeScales.get(scale) : scale
+        //
         final List<String> scales = ['p', 'n', 'u', 'm', '', 'k', 'M', 'G', 'T', 'P', 'E']  // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
         int scaleIndex = getIdx(scale, scales)
 

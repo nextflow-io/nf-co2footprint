@@ -1,6 +1,8 @@
 package nextflow.co2footprint
 
 import nextflow.Session
+import nextflow.co2footprint.DataContainers.CIDataMatrix
+import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Metrics.Converter
 import nextflow.co2footprint.Metrics.Quantity
 import nextflow.co2footprint.Records.CO2Record
@@ -8,15 +10,19 @@ import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.Records.CiRecordCollector
 import nextflow.plugin.extension.Function
 import nextflow.plugin.extension.PluginExtensionPoint
+import nextflow.script.ScriptFile
+import nextflow.script.WorkflowMetadata
 import nextflow.trace.TraceRecord
 
 import java.nio.file.Path
+import java.nio.file.Paths
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * A PluginExtensionPoint wo interact with core functionalities of the plugin.
+ * A {@link PluginExtensionPoint} to interact with core functionalities of the plugin.
  */
 class CO2FootprintExtension extends PluginExtensionPoint {
     /**
@@ -41,7 +47,7 @@ class CO2FootprintExtension extends PluginExtensionPoint {
      * @return A list of all task-specific trace records inferred from the trace file
      */
     @Function
-    static List<TraceRecord> parseTraceFile(Path tracePath, String delimiter='\t') {
+    List<TraceRecord> parseTraceFile(Path tracePath, String delimiter='\t') {
         SimpleDateFormat dateParser = new SimpleDateFormat('yyyy-MM-dd HH:mm:ss.SSS')
         List<String> lines = tracePath.text.readLines()
         List<String> headers = lines.remove(0).split(delimiter)
@@ -64,9 +70,13 @@ class CO2FootprintExtension extends PluginExtensionPoint {
                     case 'time' -> {
                         if(value.matches('\\d+')) { value }
                         else {
-                            String numeric = value.find('\\d+[.]?\\d*')
-                            Quantity quantity = Converter.scaleTime(numeric.toDouble(), value.replace(numeric, ''), 'ms')
-                            quantity.value.toLong()
+                            Long time = 0
+                            value.split(' ').each { String timePart ->
+                                String numeric = timePart.find('\\d+[.]?\\d*')
+                                Quantity timeStep =  Converter.scaleTime(numeric.toDouble(), timePart.replace(numeric, ''), 'ms')
+                                time += timeStep.value.toLong()
+                            }
+                            time
                         }
                     }
                     case 'perc' -> value.replace('%', '').toDouble()
@@ -113,11 +123,13 @@ class CO2FootprintExtension extends PluginExtensionPoint {
             observer.timeCiRecordCollector = new CiRecordCollector(observer.config, timeCIs as ConcurrentHashMap)
         }
 
+        // Prepare aggregator
+        observer.aggregator = new CO2RecordAggregator()
+
         // Collect CO2Records from traces & optionally write the corresponding files
+        if (renderFiles) { observer.traceFile.create() }
         List<CO2Record> co2Records = []
         traceRecords.each { TraceRecord traceRecord ->
-            observer.aggregator = new CO2RecordAggregator()
-            if (renderFiles) { observer.traceFile.create() }
             observer.startRecord(traceRecord)
             co2Records.add(observer.aggregateRecords(traceRecord))
         }

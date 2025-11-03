@@ -14,6 +14,7 @@ import groovy.util.logging.Slf4j
 
 import nextflow.Session
 import nextflow.processor.TaskId
+import nextflow.script.WorkflowMetadata
 import nextflow.trace.TraceHelper
 import nextflow.trace.TraceRecord
 
