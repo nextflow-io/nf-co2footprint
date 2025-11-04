@@ -98,7 +98,7 @@ class CO2FootprintExtension extends PluginExtensionPoint {
      * @param tracePath Path to the trace file
      * @param configModifications Which changes should be made to the given config. Default: [:]
      * @param timeCIs A map of times linked to CI values. Can be used to infer the CI during the run which produced the trace file
-     * @return
+     * @return A {@link List} of {@link CO2Record}s that were extracted from the given tasks
      */
     @Function
     List<CO2Record> calculateCO2(

@@ -114,6 +114,15 @@ class CO2FootprintFactory implements TraceObserverFactory {
         )
     }
 
+    /**
+     * Define a configuration for the nf-co2footprint plugin.
+     *
+     * @param configModifications Modifications that should be made to the config as a {@link Map}
+     * @param session The current Nextflow session
+     * @param tdpDataMatrix Matrix with CPU Thermal design power (TDP) information
+     * @param ciDataMatrix Matrix with carbon intensity (CI) information
+     * @return A configuration that can be used by the plugin
+     */
     CO2FootprintConfig defineConfig(
         Map<String, Object> configModifications=[:],
         Session session=this.session,
@@ -130,6 +139,13 @@ class CO2FootprintFactory implements TraceObserverFactory {
         )
     }
 
+    /**
+     * Define a co2-footprint computer instance.
+     *
+     * @param config A {@link CO2FootprintConfig} with information for plugin execution
+     * @param tdpDataMatrix Matrix with CPU Thermal design power (TDP) information
+     * @return
+     */
     CO2FootprintComputer defineComputer(
             CO2FootprintConfig config=this.config,
             TDPDataMatrix tdpDataMatrix=this.tdpDataMatrix
