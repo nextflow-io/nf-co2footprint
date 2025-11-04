@@ -1,20 +1,31 @@
 ### Extension points
 The plugin provides some extension points to facilitate interaction with the plugin from within Nextflow pipeline runs.
 
-The interaction follows the [Nextflow extension function schema](https://nextflow.io/docs/latest/plugins/developing-plugins.html):
+The interaction follows the [Nextflow extension function schema](https://nextflow.io/docs/latest/plugins/developing-plugins.html).
 ```Nextflow
 include { calculateCO2 } from 'plugin/nf-co2footprint'
 
-workflow {
-    Path tracePath = java.nio.file.Paths.get('<Path_to_your_execution_trace_file>')
+process calculate_CO2 {
+  input:
+    val executionTracePath
+  output:
+    stdout
+  script:
     def co2Records = calculateCO2(
-        executionTracePath,
-        [
-            traceFile: './out/pipeline_info/post-run_trace.txt',
-            summaryFile: './out/pipeline_info/post-run_summary.txt',
-            reportFile: './out/pipeline_info/post-run_report.html',
-        ]
-    )
+      Path.of(executionTracePath),
+      [
+        traceFile: './out/pipeline_info/post-run_trace.txt',
+        summaryFile: './out/pipeline_info/post-run_summary.txt',
+        reportFile: './out/pipeline_info/post-run_report.html',
+      ]
+  )
+  """
+  echo "Finished CO2 calculation."
+  """
+}
+
+workflow {
+  calculate_CO2('<Path_to_your_execution_trace>')
 }
 ```
 
@@ -38,11 +49,9 @@ Can be used to calculate the emissions of a trace.
 - **tracePath**:
   Path to the trace file 
 
-- **renderFiles**:
-  Whether the output files are saved. Only returns CO2Records if disabled. Defaults to `true`.
-
-- **carbonIntensity**:
-  The carbon intensity that should be used for the carbon estimation in g/kWh. Defaults to `null`.
+- **configModifications**:
+  Which changes should be made to the given config. Can be used to change the file output path and carbon-intensity for post-run estimations. Defaults to `[:]`.
+  Example: `[traceFile: <Path_to_your_output_trace_file>, ci: <Your_carbon_intensity>]`
 
 - **timeCIs**:
   A map of times linked to CI values. Can be used to infer the CI during the run which produced the trace file. Defaults to `null`.

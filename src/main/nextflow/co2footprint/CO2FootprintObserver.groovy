@@ -157,7 +157,10 @@ class CO2FootprintObserver implements TraceObserver {
         aggregator.add(trace, co2Record)
 
         // Optionally write to trace file
-        this.traceFile?.write(trace, co2Record)
+        if(traceFile) {
+            if (!traceFile.created) { traceFile.create() }
+            traceFile.write(trace, co2Record)
+        }
 
         return co2Record
     }
@@ -222,13 +225,10 @@ class CO2FootprintObserver implements TraceObserver {
 
         // Construct session and aggregator
         this.session = session
-        this.aggregator = new CO2RecordAggregator()
+        aggregator = new CO2RecordAggregator()
 
         // Start hourly CI updating
         timeCiRecordCollector.start()
-
-        // Create trace file
-        traceFile.create()
     }
 
     /**
