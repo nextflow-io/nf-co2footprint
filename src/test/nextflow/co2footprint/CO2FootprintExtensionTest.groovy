@@ -10,15 +10,15 @@ import java.nio.file.Path
 
 class CO2FootprintExtensionTest extends Specification {
     @Shared
-    Session session
+    FileChecker fileChecker = new FileChecker()
 
-    def setupSpec() {
+    Session createSession() {
         Path tempPath = Files.createTempDirectory('tmpdir')
-        Path tracePath = tempPath.resolve('trace_test.txt')
-        Path summaryPath = tempPath.resolve('summary_test.txt')
-        Path reportPath = tempPath.resolve('report_test.html')
+        Path tracePath = tempPath.resolve('trace_extension_test.txt')
+        Path summaryPath = tempPath.resolve('summary_extension_test.txt')
+        Path reportPath = tempPath.resolve('report_extension_test.html')
 
-        session = new Session(
+        return new Session(
             [ co2footprint:
                   [
                       ci: 100.0,
@@ -31,11 +31,14 @@ class CO2FootprintExtensionTest extends Specification {
     }
 
     def 'Should calculate the CO2Footprint from an old trace file'() {
-        when:
+        given:
+        Session session = createSession()
         CO2FootprintExtension extension = new CO2FootprintExtension()
         extension.init(session)
+
+        when:
         List<CO2Record> co2Records = extension.calculateCO2(
-                this.class.getResource('/execution-trace-test.txt').path as Path, null, null,
+                this.class.getResource('/execution-trace-test.txt').path as Path, [:]
         )
 
         then:
@@ -44,5 +47,33 @@ class CO2FootprintExtensionTest extends Specification {
                 3.2729169285E-6, 3.2729169285E-4, null, 2.777778E-4, 100.0,
                 1, 11.41, 100.0, 1, 'VALUE_TESTING', null
         )
+        // Check whether all files exist
+        ['trace', 'summary',  'report'].each { String fileType ->
+            Path filePath = Path.of(extension.factory.config.value(fileType + 'File') as String)
+            fileChecker.checkIsFile(filePath)
+        }
+    }
+
+    def 'Should modify the output paths'() {
+        given:
+        Path tempPath = Files.createTempDirectory('tmpdir')
+        Path tracePath = tempPath.resolve('trace_test.txt')
+
+        Session session = createSession()
+        CO2FootprintExtension extension = new CO2FootprintExtension()
+        extension.init(session)
+
+        when:
+        List<CO2Record> co2Records = extension.calculateCO2(
+                this.class.getResource('/execution-trace-test.txt').path as Path, [traceFile: tracePath]
+        )
+
+        then:
+        co2Records.size() == 8
+        co2Records[7] == new CO2Record(
+                3.2729169285E-6, 3.2729169285E-4, null, 2.777778E-4, 100.0,
+                1, 11.41, 100.0, 1, 'VALUE_TESTING', null
+        )
+        fileChecker.checkIsFile(tracePath)
     }
 }

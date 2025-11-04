@@ -22,26 +22,15 @@ class CO2FootprintExtension extends PluginExtensionPoint {
     /**
      * Instance of an observer to simulate a run with a parsed trace file.
      */
-    CO2FootprintObserver observer
-
-    /**
-     * Configuration for post-run
-     */
-    CO2FootprintConfig config
+    CO2FootprintFactory factory
 
     /**
      * Initializes the Extension point of the plugin with the session to create an observer.
      */
     @Override
     void init(Session session) {
-        CO2FootprintFactory factory = new CO2FootprintFactory()
-        observer = factory.create(session)[0] as CO2FootprintObserver
-        config = new CO2FootprintConfig(
-                session.config.navigate('co2footprint') as Map,
-                factory.tdpDataMatrix,
-                factory.ciDataMatrix,
-                session.config.navigate('process') as Map
-        )
+        factory = new CO2FootprintFactory()
+        factory.create(session)[0]
     }
 
     /**
@@ -107,32 +96,33 @@ class CO2FootprintExtension extends PluginExtensionPoint {
      * Calculate the CO2 footprint of all tasks in a trace file.
      *
      * @param tracePath Path to the trace file
-     * @param carbonIntensity The carbon intensity [g/kWh] that should be used for the carbon estimation
+     * @param configModifications Which changes should be made to the given config. Default: [:]
      * @param timeCIs A map of times linked to CI values. Can be used to infer the CI during the run which produced the trace file
-     * @param renderFiles Whether the output files are saved. Only returns {@link CO2Record}s if disabled. Default: true
      * @return
      */
     @Function
     List<CO2Record> calculateCO2(
-            Path tracePath, Double carbonIntensity=null, Map<LocalDateTime, Number> timeCIs=null,
-            CO2FootprintConfig config=this.config
+            Path tracePath,
+            Map<String, Object> configModifications=null,
+            Map<LocalDateTime, Number> timeCIs=null
     ){
+        // Define separate observer
+        CO2FootprintConfig config = factory.defineConfig(configModifications)
+        CO2FootprintObserver observer = factory.defineObserver(config)
+
         // Parse the trace file
         List<TraceRecord> traceRecords = parseTraceFile(tracePath)
 
         // Determine CI
-        if (carbonIntensity) {
-            config.set('ci', carbonIntensity)
-        }
         if (timeCIs) {
             observer.timeCiRecordCollector = new CiRecordCollector(config, timeCIs as ConcurrentHashMap)
         }
 
-        // Replace the config with modified one
-        observer.config = config
-
         // Prepare aggregator
         observer.aggregator = new CO2RecordAggregator()
+
+        // Create trace file
+        observer.traceFile.create()
 
         // Collect CO2Records from traces & optionally write the corresponding files
         List<CO2Record> co2Records = []
