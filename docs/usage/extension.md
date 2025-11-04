@@ -7,7 +7,14 @@ include { calculateCO2 } from 'plugin/nf-co2footprint'
 
 workflow {
     Path tracePath = java.nio.file.Paths.get('<Path_to_your_execution_trace_file>')
-    def co2Records = calculateCO2(tracePath)
+    def co2Records = calculateCO2(
+        executionTracePath,
+        [
+            traceFile: './out/pipeline_info/post-run_trace.txt',
+            summaryFile: './out/pipeline_info/post-run_summary.txt',
+            reportFile: './out/pipeline_info/post-run_report.html',
+        ]
+    )
 }
 ```
 
