@@ -14,6 +14,7 @@
 - Moved from `plotly.min.js` to `plotly-custom.min.js` for smaller report file size
 - Migration to new plugin template (https://github.com/nextflow-io/nf-plugin-template)
 - Added link to documentation to warnings about unknown CPUs
+- Added separate energy measurements of Processor and Memory to CO2Record
 
 ## Features:
 - Base config class with more control over parameters
