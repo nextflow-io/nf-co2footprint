@@ -11,4 +11,4 @@ description: Nextflow plugin for CO₂ footprint estimations
 
 ==}
 
---8<-- "README.md:6:"
+--8<-- "README.md:9:"

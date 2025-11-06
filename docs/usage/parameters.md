@@ -61,20 +61,23 @@ The following parameters are currently available:
 ## Hardware Power Draw
 
 - **`powerdrawMem`**  
-  power draw from memory.  
+  Power draw from memory.  
   **Default**: 0.3725.
   
 - **`customCpuTdpFile`**  
   Input CSV file containing custom CPU TDP data. This should contain the following columns: `name`, `tdp (W)`, `cores`. Note that this overwrites TDP values for already provided CPU models. You can find the by default used TDP data [here](https://github.com/nextflow-io/nf-co2footprint/blob/master/src/resources/cpu_tdp_data/CPU_TDP.csv).  
   **Default**: `null`.
 
-    Example custom CPU TDP file:
+    Example custom CPU TDP table: <a id="custom-tdp-table"></a>
 
     | name                            | tdp (W) | cores |
     |---------------------------------|---------|-------|
     | Intel(R) Xeon(R) CPU E5-2670 v3 | 120     | 12    |
     | AMD EPYC 7742                   | 225     | 64    |
     | Intel(R) Core(TM) i7-9700K      | 95      | 8     |
+
+    !!! Note "File format"
+        The table has to be supplied in [.csv](https://www.wikihow.com/Create-a-CSV-File) format.
 
 - **`ignoreCpuModel`**  
   Ignore the retrieved Nextflow trace `cpu_model` name and use the default CPU power draw value. This is useful, if the cpu model information provided by the linux kernel is not correct, for example, in the case of VMs emulating a different CPU architecture.  

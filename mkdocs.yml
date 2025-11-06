@@ -13,6 +13,7 @@ nav:
       - usage/configuration.md
       - usage/parameters.md
       - usage/output.md
+      - usage/FAQ.md
   - Contributing:
       - contributing/setup.md
       - contributing/guidelines.md
@@ -77,6 +78,10 @@ markdown_extensions:
       custom_checkbox: true
   - pymdownx.arithmatex:
       generic: true
+  - attr_list
 
 plugins:
   - search
+
+extra_css:
+  - style.css
