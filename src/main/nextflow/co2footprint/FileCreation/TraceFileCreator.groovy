@@ -49,7 +49,7 @@ class TraceFileCreator extends BaseFileCreator {
         List<String> headers = [
                 'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market',
                 'carbon_intensity', '%cpu', 'memory', 'realtime', 'cpus', 'powerdraw_cpu',
-                'cpu_model' 
+                'cpu_model', 'rawEnergyProcessor', 'rawEnergyMemory', 'pue',
         ]
 
         traceWriter.send {
@@ -69,7 +69,10 @@ class TraceFileCreator extends BaseFileCreator {
         if (!created) { return }
 
         List<String> records = co2Record.getReadableEntries(
-                ['name', 'energy', 'co2e', 'co2eMarket', 'ci', 'cpuUsage', 'memory', 'time', 'cpus', 'powerdrawCPU', 'cpu_model']
+                [
+                    'name', 'energy', 'co2e', 'co2eMarket', 'ci', 'cpuUsage', 'memory', 'time', 'cpus',
+                    'powerdrawCPU', 'cpu_model', 'rawEnergyProcessor', 'rawEnergyMemory', 'pue',
+                ]
         )
 
         records = [taskId as String, trace.get('status') as String] + records

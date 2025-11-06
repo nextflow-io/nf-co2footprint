@@ -225,13 +225,15 @@ class CO2FootprintObserverTest extends Specification{
         headers.size() == values.size()
 
         headers == [
-                'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'carbon_intensity', '%cpu', 'memory', 'realtime', 'cpus', 'powerdraw_cpu', 'cpu_model'
+                'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'carbon_intensity', '%cpu',
+                'memory', 'realtime', 'cpus', 'powerdraw_cpu', 'cpu_model', 'rawEnergyProcessor', 'rawEnergyMemory', 'pue'
         ]
         values == [
-            '111', 'COMPLETED', '-', '14.02 Wh', '6.73 g', '-', '480 gCO₂e/kWh', '100 %', '7 GB', '3600s', '1', '11.41 W', 'Unknown model'
+            '111', 'COMPLETED', '-', '14.02 Wh', '6.73 g', '-', '480 gCO₂e/kWh', '100 %',
+            '7 GB', '3600s', '1', '11.41 W', 'Unknown model', '11.41 Wh', '2.61 Wh', '1.0',
         ] // GA: CO₂e is 6.94g with CI of 475 gCO₂eq/kWh
 
-        fileChecker.compareChecksums(tracePath, 'a742ca72b4d57809644fe19af7a7d73c')
+        fileChecker.compareChecksums(tracePath, 'd6f413cfd60b66e3a3666306509dc95b')
 
 
         // Check Summary File

@@ -177,7 +177,7 @@ class ReportFileCreatorTest extends Specification{
                             '"ci":{"raw":475.0,"readable":"475 gCO\\u2082e/kWh"},' +
                             '"powerdrawCPU":{"raw":12.0,"readable":"12 W"},' +
                             '"cpuUsage":{"raw":100.0,"readable":"100 %"},' +
-                            '"rawEnergyCPU":{"raw":0.5,"readable":"500 Wh"},' +
+                            '"rawEnergyProcessor":{"raw":0.5,"readable":"500 Wh"},' +
                             '"rawEnergyMemory":{"raw":0.5,"readable":"500 Wh"},' +
                             '"pue":{"raw":1.0,"readable":"1.0"}' +
                         '}' +

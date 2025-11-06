@@ -42,7 +42,7 @@ class CO2Record extends TraceRecord {
     // CPU model name
     final String cpu_model
     // Raw energy used by CPU (kWh)
-    final Double rawEnergyCPU
+    final Double rawEnergyProcessor
     // Raw energy used by memory (kWh)
     final Double rawEnergyMemory
     // Power usage effectiveness
@@ -50,20 +50,20 @@ class CO2Record extends TraceRecord {
 
     // Properties of entries for JSON rendering
     final public static Map<String,String> FIELDS = [
-            energy:                     'num',
-            co2e:                       'num',
-            co2eMarket:                 'num',
-            time:                       'num',
-            ci:                         'num',
-            cpus:                       'num',
-            powerdrawCPU:               'num',
-            cpuUsage:                   'num',
-            memory:                     'num',
-            name:                       'str',
-            cpu_model:                  'str',
-            rawEnergyCPU:               'num',
-            rawEnergyMemory:            'num',
-            pue:                        'num',
+            energy:             'num',
+            co2e:               'num',
+            co2eMarket:         'num',
+            time:               'num',
+            ci:                 'num',
+            cpus:               'num',
+            powerdrawCPU:       'num',
+            cpuUsage:           'num',
+            memory:             'num',
+            name:               'str',
+            cpu_model:          'str',
+            rawEnergyProcessor: 'num',
+            rawEnergyMemory:    'num',
+            pue:                'num',
     ]
 
     /**
@@ -80,7 +80,7 @@ class CO2Record extends TraceRecord {
     * @param memory             Memory used by the task (bytes)
     * @param name               Name of the task
     * @param cpu_model          CPU model name
-    * @param rawEnergyCPU       Processor-specific energy consumed by the task (kWh)
+    * @param rawEnergyProcessor Processor-specific energy consumed by the task (kWh)
     * @param rawEnergyMemory    Memory-specific energy consumed by the task (kWh)
     * @param pue                Power usage effectiveness of the machine
     */
@@ -88,7 +88,7 @@ class CO2Record extends TraceRecord {
             Double energy=null, Double co2e=null, Double co2eMarket=null, Double time=null,
             Double ci=null, Integer cpus=null, Double powerdrawCPU=null,
             Double cpuUsage=null, Long memory=null, String name=null, String cpu_model=null,
-            Double rawEnergyCPU, Double rawEnergyMemory, Double pue
+            Double rawEnergyProcessor, Double rawEnergyMemory, Double pue
     ) {
         this.energy = energy
         this.co2e = co2e
@@ -101,7 +101,7 @@ class CO2Record extends TraceRecord {
         this.memory = memory
         this.name = name
         this.cpu_model = cpu_model
-        this.rawEnergyCPU = rawEnergyCPU
+        this.rawEnergyProcessor = rawEnergyProcessor
         this.rawEnergyMemory = rawEnergyMemory
         this.pue = pue
         Map<String, Object> store = new LinkedHashMap<>([
@@ -116,7 +116,7 @@ class CO2Record extends TraceRecord {
                 memory:             memory,
                 name:               name,
                 cpu_model:          cpu_model,
-                rawEnergyCPU:       rawEnergyCPU,
+                rawEnergyProcessor: rawEnergyProcessor,
                 rawEnergyMemory:    rawEnergyMemory,
                 pue:                pue
         ])
@@ -146,7 +146,7 @@ class CO2Record extends TraceRecord {
             case 'powerdrawCPU' ->  Converter.toReadableUnits(value as double, '', 'W')
             case 'cpuUsage' ->  Converter.toReadableUnits(value as double, '', '%', '')
             case 'memory' ->  Converter.toReadableUnits(value as double, 'G', 'B')
-            case 'rawEnergyCPU' ->  Converter.toReadableUnits(value as double, 'k', 'Wh')
+            case 'rawEnergyProcessor' ->  Converter.toReadableUnits(value as double, 'k', 'Wh')
             case 'rawEnergyMemory' ->  Converter.toReadableUnits(value as double, 'k', 'Wh')
             default -> value as String
         }

@@ -128,9 +128,9 @@ class CO2FootprintComputer {
         /* ===== Energy & Emission Calculation ===== */
 
         // Energy consumption [kWh]
-        BigDecimal rawEnergyCPU = runtime_h * numberOfCores * powerdrawPerCore * coreUsage * 0.001
+        BigDecimal rawEnergyProcessor = runtime_h * numberOfCores * powerdrawPerCore * coreUsage * 0.001
         BigDecimal rawEnergyMemory = runtime_h * memory * powerdrawMem * 0.001
-        BigDecimal energy = pue * (rawEnergyCPU + rawEnergyMemory)
+        BigDecimal energy = pue * (rawEnergyProcessor + rawEnergyMemory)
 
         // Resulting CO₂ emissions
         BigDecimal co2e = (energy * ci) // Emissions in CO2 equivalents [g] CO2e
@@ -148,7 +148,7 @@ class CO2FootprintComputer {
                 memory as Long,
                 trace.get('name') as String,
                 config.value('ignoreCpuModel') ? 'Custom value' : cpuModel,
-                rawEnergyCPU,
+                rawEnergyProcessor,
                 rawEnergyMemory,
                 pue
         )
