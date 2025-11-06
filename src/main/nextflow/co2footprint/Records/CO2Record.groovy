@@ -19,7 +19,7 @@ import nextflow.trace.TraceRecord
 @CompileStatic
 class CO2Record extends TraceRecord {
 
-    // Energy used (Wh)
+    // Energy used (kWh)
     final Double energy
     // CO2 equivalent emissions (g)
     final Double co2e
@@ -41,6 +41,12 @@ class CO2Record extends TraceRecord {
     final String name
     // CPU model name
     final String cpu_model
+    // Raw energy used by CPU (kWh)
+    final Double rawEnergyCPU
+    // Raw energy used by memory (kWh)
+    final Double rawEnergyMemory
+    // Power usage effectiveness
+    final Double pue
 
     // Properties of entries for JSON rendering
     final public static Map<String,String> FIELDS = [
@@ -54,28 +60,35 @@ class CO2Record extends TraceRecord {
             cpuUsage:                   'num',
             memory:                     'num',
             name:                       'str',
-            cpu_model:                  'str'
+            cpu_model:                  'str',
+            rawEnergyCPU:               'num',
+            rawEnergyMemory:            'num',
+            pue:                        'num',
     ]
 
     /**
     * Constructs a CO2Record representing the resource usage and emissions for a single task.
     *
-    * @param energy        Total energy consumed by the task (Wh)
-    * @param co2e          CO₂ equivalent emissions (g) based on location-based carbon intensity
-    * @param co2eMarket    CO₂ equivalent emissions (g) based on market-based (personal energy mix) carbon intensity
-    * @param time          Time spent on the task (ms)
-    * @param ci            Location-based carbon intensity used for calculation (gCO₂eq/kWh)
-    * @param cpus          Number of CPU cores used
-    * @param powerdrawCPU  Power draw (TDP) of the CPU (W)
-    * @param cpuUsage      CPU usage percentage during the task (%)
-    * @param memory        Memory used by the task (bytes)
-    * @param name          Name of the task
-    * @param cpu_model     CPU model name
+    * @param energy             Total energy consumed by the task (kWh)
+    * @param co2e               CO₂ equivalent emissions (g) based on location-based carbon intensity
+    * @param co2eMarket         CO₂ equivalent emissions (g) based on market-based (personal energy mix) carbon intensity
+    * @param time               Time spent on the task (ms)
+    * @param ci                 Location-based carbon intensity used for calculation (gCO₂eq/kWh)
+    * @param cpus               Number of CPU cores used
+    * @param powerdrawCPU       Power draw (TDP) of the CPU (W)
+    * @param cpuUsage           CPU usage percentage during the task (%)
+    * @param memory             Memory used by the task (bytes)
+    * @param name               Name of the task
+    * @param cpu_model          CPU model name
+    * @param rawEnergyCPU       Processor-specific energy consumed by the task (kWh)
+    * @param rawEnergyMemory    Memory-specific energy consumed by the task (kWh)
+    * @param pue                Power usage effectiveness of the machine
     */
     CO2Record(
             Double energy=null, Double co2e=null, Double co2eMarket=null, Double time=null,
             Double ci=null, Integer cpus=null, Double powerdrawCPU=null,
-            Double cpuUsage=null, Long memory=null, String name=null, String cpu_model=null
+            Double cpuUsage=null, Long memory=null, String name=null, String cpu_model=null,
+            Double rawEnergyCPU, Double rawEnergyMemory, Double pue
     ) {
         this.energy = energy
         this.co2e = co2e
@@ -88,18 +101,24 @@ class CO2Record extends TraceRecord {
         this.memory = memory
         this.name = name
         this.cpu_model = cpu_model
+        this.rawEnergyCPU = rawEnergyCPU
+        this.rawEnergyMemory = rawEnergyMemory
+        this.pue = pue
         Map<String, Object> store = new LinkedHashMap<>([
-                'energy':                   energy,
-                'co2e':                     co2e,
-                'co2eMarket':               co2eMarket,
-                'time':                     time,
-                'ci':                       ci,
-                'cpus':                     cpus,
-                'powerdrawCPU':             powerdrawCPU,
-                'cpuUsage':                 cpuUsage,
-                'memory':                   memory,
-                'name':                     name,
-                'cpu_model':                cpu_model
+                energy:             energy,
+                co2e:               co2e,
+                co2eMarket:         co2eMarket,
+                time:               time,
+                ci:                 ci,
+                cpus:               cpus,
+                powerdrawCPU:       powerdrawCPU,
+                cpuUsage:           cpuUsage,
+                memory:             memory,
+                name:               name,
+                cpu_model:          cpu_model,
+                rawEnergyCPU:       rawEnergyCPU,
+                rawEnergyMemory:    rawEnergyMemory,
+                pue:                pue
         ])
         // Overload the store of the parent to ensure inherited methods can access the stored data
         super.store << store
@@ -121,12 +140,14 @@ class CO2Record extends TraceRecord {
         return switch (key) {
             case 'energy' ->  Converter.toReadableUnits(value as double, 'k', 'Wh')
             case 'co2e' ->  Converter.toReadableUnits(value as double, '', 'g')
-            case 'co2eMarket' ->  Converter.toReadableUnits(value as double, 'm', 'g')
+            case 'co2eMarket' ->  Converter.toReadableUnits(value as double, '', 'g')
             case 'time' ->  Converter.toReadableTimeUnits(value as double, 'h', 'ms', 's', 0.0d)
             case 'ci' -> Converter.toReadableUnits(value as double, '', 'gCO₂e/kWh')
             case 'powerdrawCPU' ->  Converter.toReadableUnits(value as double, '', 'W')
             case 'cpuUsage' ->  Converter.toReadableUnits(value as double, '', '%', '')
             case 'memory' ->  Converter.toReadableUnits(value as double, 'G', 'B')
+            case 'rawEnergyCPU' ->  Converter.toReadableUnits(value as double, 'k', 'Wh')
+            case 'rawEnergyMemory' ->  Converter.toReadableUnits(value as double, 'k', 'Wh')
             default -> value as String
         }
     }
