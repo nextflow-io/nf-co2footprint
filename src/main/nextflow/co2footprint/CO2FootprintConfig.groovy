@@ -126,6 +126,9 @@ class CO2FootprintConfig extends BaseConfig {
             } 
         }
 
+        /* ===== Determine location from AWS region ===== */
+        setLocationFromAWSRegion()
+        
         /* ===== Determine the Carbon Intensity (CI) value ===== */
         set('ci', new CiRecord(value('ci') as Number, ciData, value('location') as String, value('emApiKey') as String))
 
@@ -198,6 +201,58 @@ class CO2FootprintConfig extends BaseConfig {
             }
         }
     }
+
+    /**
+     * Detects the AWS region using environment variables, EC2 metadata, or the AWS CLI,
+     * and sets the corresponding geographic Zone ID in the configuration.
+     *
+     * The mapping between AWS regions and Zone IDs is read from
+     * `aws_region_zoneID_mapping.csv`, which must have:
+     * - Row index: 'Region code'
+     * - Column: 'Zone id'
+     */
+    private void setLocationFromAWSRegion() {
+        DataMatrix awsMatrix = DataMatrix.fromCsv(
+            Paths.get(this.getClass().getResource('/aws_region_zoneID_mapping.csv').toURI()),
+            ',', 0, null, 'Region code'
+            )
+        awsMatrix.checkRequiredColumns(['Zone id'])
+
+        String region = null
+
+        // 1️⃣ Try environment variables first (works for Batch, Fargate, CloudShell)
+        region = System.getenv('AWS_REGION') ?: System.getenv('AWS_DEFAULT_REGION')
+        region = region?.trim()
+        
+        // 2️⃣ Try EC2 metadata service (works on EC2 instances)
+        if (!region) {
+            try {
+                URL url = new URL("http://169.254.169.254/latest/meta-data/placement/availability-zone")
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection()
+                conn.connectTimeout = 1000
+                conn.readTimeout = 1000
+                String az = conn.inputStream.text.trim()
+                if (az && az.length() > 1) {
+                    region = az.substring(0, az.length() - 1)
+                }
+            } catch (Exception ignored) { }
+        }
+
+        // 3️⃣ Optional fallback: AWS CLI
+        if (!region) {
+            try {
+                def proc = ["aws", "configure", "get", "region"].execute()
+                region = proc.text.trim()
+            } catch (ignored) { }
+        }
+
+        if (region && awsMatrix.rowIndex.containsKey(region)) {
+            String zoneId = awsMatrix.get(region, 'Zone id') as String
+            fill('location', zoneId)
+            log.info "AWS region '${region}' detected; Zone ID '${zoneId}' was set."
+        }
+    }
+
 
     /**
      * Sets the machine type and PUE based on the executor.
