@@ -76,7 +76,7 @@ class ReportFileCreatorTest extends Specification{
         CO2Record co2Record = new CO2Record(
                 1.0d, 1.0d, null, 1.0d, 475.0,
                 1, 12, 100.0, 7, 'testTask', 'Unknown model',
-                0.5d, 0.5d, 1.0d,
+                0.5d, 0.5d
         )
 
         
@@ -178,8 +178,7 @@ class ReportFileCreatorTest extends Specification{
                             '"powerdrawCPU":{"raw":12.0,"readable":"12 W"},' +
                             '"cpuUsage":{"raw":100.0,"readable":"100 %"},' +
                             '"rawEnergyProcessor":{"raw":0.5,"readable":"500 Wh"},' +
-                            '"rawEnergyMemory":{"raw":0.5,"readable":"500 Wh"},' +
-                            '"pue":{"raw":1.0,"readable":"1.0"}' +
+                            '"rawEnergyMemory":{"raw":0.5,"readable":"500 Wh"}' +
                         '}' +
                     '],' +
                 '"summary":' +

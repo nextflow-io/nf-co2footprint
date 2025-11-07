@@ -40,7 +40,7 @@ class CO2RecordAggregatorTest extends Specification{
                     co2Record  : new CO2Record(
                             value, value, null, 1.0d, 475.0, 1, 12,
                             100.0, 1024**3, "testTask_${counter}", 'Unknown model',
-                            0.5d, 0.5d, 1.0d,
+                            0.5d, 0.5d
                     )
             ]
         }

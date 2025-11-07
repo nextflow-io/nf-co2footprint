@@ -45,8 +45,6 @@ class CO2Record extends TraceRecord {
     final Double rawEnergyProcessor
     // Raw energy used by memory (kWh)
     final Double rawEnergyMemory
-    // Power usage effectiveness
-    final Double pue
 
     // Properties of entries for JSON rendering
     final public static Map<String,String> FIELDS = [
@@ -63,7 +61,6 @@ class CO2Record extends TraceRecord {
             cpu_model:          'str',
             rawEnergyProcessor: 'num',
             rawEnergyMemory:    'num',
-            pue:                'num',
     ]
 
     /**
@@ -82,13 +79,12 @@ class CO2Record extends TraceRecord {
     * @param cpu_model          CPU model name
     * @param rawEnergyProcessor Processor-specific energy consumed by the task (kWh)
     * @param rawEnergyMemory    Memory-specific energy consumed by the task (kWh)
-    * @param pue                Power usage effectiveness of the machine
     */
     CO2Record(
             Double energy=null, Double co2e=null, Double co2eMarket=null, Double time=null,
             Double ci=null, Integer cpus=null, Double powerdrawCPU=null,
             Double cpuUsage=null, Long memory=null, String name=null, String cpu_model=null,
-            Double rawEnergyProcessor, Double rawEnergyMemory, Double pue
+            Double rawEnergyProcessor, Double rawEnergyMemory
     ) {
         this.energy = energy
         this.co2e = co2e
@@ -103,7 +99,6 @@ class CO2Record extends TraceRecord {
         this.cpu_model = cpu_model
         this.rawEnergyProcessor = rawEnergyProcessor
         this.rawEnergyMemory = rawEnergyMemory
-        this.pue = pue
         Map<String, Object> store = new LinkedHashMap<>([
                 energy:             energy,
                 co2e:               co2e,
@@ -118,7 +113,6 @@ class CO2Record extends TraceRecord {
                 cpu_model:          cpu_model,
                 rawEnergyProcessor: rawEnergyProcessor,
                 rawEnergyMemory:    rawEnergyMemory,
-                pue:                pue
         ])
         // Overload the store of the parent to ensure inherited methods can access the stored data
         super.store << store

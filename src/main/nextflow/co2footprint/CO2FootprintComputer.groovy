@@ -150,7 +150,6 @@ class CO2FootprintComputer {
                 config.value('ignoreCpuModel') ? 'Custom value' : cpuModel,
                 rawEnergyProcessor,
                 rawEnergyMemory,
-                pue
         )
     }
 
