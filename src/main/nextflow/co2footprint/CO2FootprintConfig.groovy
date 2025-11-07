@@ -231,9 +231,9 @@ class CO2FootprintConfig extends BaseConfig {
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection()
                 conn.connectTimeout = 1000
                 conn.readTimeout = 1000
-                String az = conn.inputStream.text.trim()
-                if (az && az.length() > 1) {
-                    region = az.substring(0, az.length() - 1)
+                String availabilityZone = conn.inputStream.text.trim()
+                if (availabilityZone && availabilityZone.length() > 1) {
+                    region = availabilityZone.substring(0, availabilityZone.length() - 1)
                 }
             } catch (Exception ignored) { }
         }
