@@ -20,7 +20,8 @@
 - Base config class with more control over parameters
 - Added sample outputs to documentation
 - Support for custom polynomial CPU power models via the `cpuPowerModel` configuration parameter
-- Automatic detection of AWS region and mapping to geographic Zone ID 
+- Automatic detection of AWS region and mapping to geographic Zone ID
+- Verbose output after run including major metrics
 
 # Version 1.0.0
 ## Bug Fixes:
