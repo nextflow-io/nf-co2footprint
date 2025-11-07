@@ -12,7 +12,7 @@ To customize the plugin settings to your computing environment and preferences, 
 
 ```groovy title="nextflow.config"
 plugins {
-  id 'nf-co2footprint@1.0.0'
+  id 'nf-co2footprint@1.1.0'
 }
 
 // Optional example config settings for CO₂ reporting:
@@ -109,7 +109,7 @@ For more information, see [Parameters](parameters.md).
 
 ```groovy title="nextflow_cloud.config"
 plugins {
-  id 'nf-co2footprint@1.0.0'
+  id 'nf-co2footprint@1.1.0'
 }
 
 def co2_timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')

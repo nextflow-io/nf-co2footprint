@@ -1,5 +1,10 @@
 # New
 ## Bug Fixes:
+## Misc:
+## Features:
+
+# Version 1.1.0
+## Bug Fixes:
 - Conversion of time leaving trailing full bigger units (e.g. 60s instead of 1min)
 - Small stylistic overreaches in report fixed
 - Hard-code locale for decimal separator

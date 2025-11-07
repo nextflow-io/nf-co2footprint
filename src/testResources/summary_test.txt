@@ -12,7 +12,7 @@ The calculation of these values is based on the carbon footprint computation met
   Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation.
   Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707
 
-nf-co2footprint plugin version: 1.0.0
+nf-co2footprint plugin version: 1.1.0
 
 nf-co2footprint options:
   ci: 480.0

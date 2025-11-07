@@ -138,7 +138,7 @@ body:
           </details>
         </details>
       placeholder: |
-        - Plugin version: 1.0.0-rc
+        - Plugin version: 1.1.0
         - Nextflow version: 25.8.0-edge
         - Java version: openjdk 17.0.14
         - Groovy version: 4.0.25 JVM: 17.0.11
