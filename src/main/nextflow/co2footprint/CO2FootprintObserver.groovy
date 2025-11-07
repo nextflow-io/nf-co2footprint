@@ -156,7 +156,7 @@ class CO2FootprintObserver implements TraceObserver {
         aggregator.add(trace, co2Record)
 
         // Optionally write to trace file
-        this.traceFile?.write(trace.taskId, trace, co2Record)
+        this.traceFile?.write(trace, co2Record)
     }
 
     // ------ OBSERVER METHODS ------
