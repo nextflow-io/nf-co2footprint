@@ -4,6 +4,7 @@ import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
 
 import nextflow.Session
+import nextflow.co2footprint.Metrics.Converter
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.FileCreation.ReportFileCreator
@@ -229,6 +230,12 @@ class CO2FootprintObserver implements TraceObserver {
         traceFile.close(runningTasks)
         summaryFile.close()
         reportFile.close()
+
+
+        log.info(
+            "🌱 The workflow run used ${Converter.toReadableUnits(totalStats.get('energy'),'k','Wh')} of electricity, " +
+            "causing ${Converter.toReadableUnits(totalStats.get('co2e'),'', 'g')} of CO2 equivalents to be released into the atmosphere."
+        )
     }
 
 
