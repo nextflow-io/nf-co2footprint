@@ -231,7 +231,6 @@ class CO2FootprintObserver implements TraceObserver {
         summaryFile.close()
         reportFile.close()
 
-
         log.info(
             "🌱 The workflow run used ${Converter.toReadableUnits(totalStats.get('energy'),'k','Wh')} of electricity, " +
             "causing ${Converter.toReadableUnits(totalStats.get('co2e'),'', 'g')} of CO2 equivalents to be released into the atmosphere."
