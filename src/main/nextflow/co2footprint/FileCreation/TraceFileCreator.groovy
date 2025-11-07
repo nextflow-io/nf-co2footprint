@@ -21,6 +21,20 @@ class TraceFileCreator extends BaseFileCreator {
     // Agent for thread-safe writing to the trace file
     private Agent<PrintWriter> traceWriter
 
+    // Execution & CO2-footprint trace keys that are included into trace file
+    private List<String> entryKeys = [
+            'task_id', 'status', 'name', 'energy', 'co2e', 'co2eMarket', 'ci', 'cpuUsage', 'memory', 'time', 'cpus',
+            'powerdrawCPU', 'cpu_model', 'rawEnergyProcessor', 'rawEnergyMemory'
+    ]
+
+    // Mapping of entry keys to the CO2-footprint trace file header
+    private final Map<String, String> keyHeaderMapping = [
+        task_id: 'task_id', status: 'status',
+        name:'name', energy: 'energy_consumption', co2e: 'CO2e', co2eMarket: 'CO2e_market', ci: 'carbon_intensity',
+        cpuUsage: '%cpu', memory: 'memory', time: 'realtime', cpus: 'cpus', powerdrawCPU: 'powerdraw_cpu',
+        cpu_model: 'cpu_model', rawEnergyProcessor: 'rawEnergyProcessor', rawEnergyMemory: 'rawEnergyMemory'
+    ]
+
     /**
      * Constructor for the trace file.
      *
@@ -29,6 +43,23 @@ class TraceFileCreator extends BaseFileCreator {
      */
     TraceFileCreator(Path path, boolean overwrite) {
         super(path, overwrite)
+    }
+
+    /**
+     * Return a readable entry from either {@link CO2Record} or {@link TraceRecord}.
+     *
+     * @param key           Entry key as a String
+     * @param traceRecord   TraceRecord of a task
+     * @param co2Record     CO2 record of a task
+     * @return The entry in its human-readable form
+     */
+    private static String getReadableEntry(String key, TraceRecord traceRecord, CO2Record co2Record) {
+        if (co2Record.containsKey(key)) {
+            return co2Record.getReadable(key)
+        }
+        else {
+            return traceRecord.get(key)
+        }
     }
 
     /**
@@ -46,11 +77,7 @@ class TraceFileCreator extends BaseFileCreator {
         traceWriter = new Agent<PrintWriter>(file)
 
         // Write the header line to the trace file
-        List<String> headers = [
-                'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market',
-                'carbon_intensity', '%cpu', 'memory', 'realtime', 'cpus', 'powerdraw_cpu',
-                'cpu_model', 'rawEnergyProcessor', 'rawEnergyMemory', 'pue',
-        ]
+        List<String> headers = entryKeys.collect { String entryName -> keyHeaderMapping.get(entryName) }
 
         traceWriter.send {
             file.println( String.join('\t', headers) )
@@ -61,24 +88,16 @@ class TraceFileCreator extends BaseFileCreator {
     /**
      * Write a single task's trace record to the file.
      *
-     * @param taskId    Task identifier
-     * @param trace     TraceRecord for the task
-     * @param co2Record CO2Record for the task
+     * @param traceRecord   TraceRecord for the task
+     * @param co2Record     CO2Record for the task
      */
-    void write(TaskId taskId, TraceRecord trace, CO2Record co2Record){
+    void write(TraceRecord traceRecord, CO2Record co2Record){
         if (!created) { return }
 
-        List<String> records = co2Record.getReadableEntries(
-                [
-                    'name', 'energy', 'co2e', 'co2eMarket', 'ci', 'cpuUsage', 'memory', 'time', 'cpus',
-                    'powerdrawCPU', 'cpu_model', 'rawEnergyProcessor', 'rawEnergyMemory', 'pue',
-                ]
-        )
-
-        records = [taskId as String, trace.get('status') as String] + records
+        List<String> recordedEntries = entryKeys.collect { String key -> getReadableEntry(key, traceRecord, co2Record) }
 
         traceWriter.send { PrintWriter writer ->
-            writer.println( String.join('\t', records) )
+            writer.println( String.join('\t', recordedEntries) )
             writer.flush()
         }
     }

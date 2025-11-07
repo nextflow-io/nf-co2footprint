@@ -153,17 +153,6 @@ class CO2Record extends TraceRecord {
     }
 
     /**
-     * Get the Entries in a readable format for the summary
-     *
-     * @param order List of keys that defines both which entries are included
-     *              and the order in which they appear (defaults to all keys in the order of this.store).
-     * @return List of readable Entries
-     */
-    List<String> getReadableEntries(List<String> order=store.keySet() as List) {
-        return order.collect { String key -> getReadable(key) }
-    }
-
-    /**
      * Renders the JSON output of a CO2Record.
      *
      * @param stringBuilder A StringBuilder used to elongate the String
