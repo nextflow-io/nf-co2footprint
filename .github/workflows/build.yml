@@ -39,6 +39,7 @@ jobs:
         run: ./gradlew assemble
 
       - name: Execute checks / tests
+        id: gradle
         run: ./gradlew check --no-daemon --info || echo "exit_code=$?" >> $GITHUB_OUTPUT
 
       - name: Upload test and check reports
