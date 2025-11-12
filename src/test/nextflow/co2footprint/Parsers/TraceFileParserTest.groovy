@@ -4,8 +4,16 @@ import nextflow.trace.TraceRecord
 import spock.lang.Specification
 
 import java.nio.file.Path
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 
 class TraceFileParserTest extends Specification {
+    Long convertEpochMillisToLocalZone(Long epochMillis, String originalZone) {
+        return Instant.ofEpochMilli(epochMillis).atZone(ZoneId.of(originalZone))   // Original Instant
+                .withZoneSameInstant(ZoneId.systemDefault()).toInstant().toEpochMilli() // Converted to new EpochMilli
+    }
+
     def 'Test parsing of regular trace file.'() {
         when:
         List<TraceRecord> traceRecords = TraceFileParser.parseExecutionTraceFile(
@@ -15,9 +23,10 @@ class TraceFileParserTest extends Specification {
         assert traceRecords.size() == 8
         traceRecords[0].store == [
                 task_id:'3', hash:'cb/c73296', native_id:'72563',
-                name:'NFCORE_DEMO:DEMO:SEQTK_TRIM (SAMPLE2_PE)', status:'COMPLETED', exit:'0',
-                submit:1760017742707, duration:29500, realtime:14000, '%cpu':121.7d, peak_rss:9332326, peak_vmem:20342374,
-                rchar:33764147, wchar:33344716, process:'NFCORE_DEMO:DEMO:SEQTK_TRIM (SAMPLE2_PE)'
+                name   :'NFCORE_DEMO:DEMO:SEQTK_TRIM (SAMPLE2_PE)', status:'COMPLETED', exit:'0',
+                submit : convertEpochMillisToLocalZone(1760017742707, 'Europe/Berlin'),
+                duration:29500, realtime:14000, '%cpu':121.7d, peak_rss:9332326, peak_vmem:20342374,
+                rchar  :33764147, wchar:33344716, process:'NFCORE_DEMO:DEMO:SEQTK_TRIM (SAMPLE2_PE)'
         ]
     }
 
