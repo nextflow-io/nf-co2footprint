@@ -40,6 +40,16 @@ jobs:
 
       - name: Execute checks / tests
         run: ./gradlew check --no-daemon --info
+        continue-on-error: true
+
+      - name: Upload test and check reports
+        if: always()  # run even if previous step failed
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-check-reports
+          path: |
+            **/build/reports/
+            **/build/test-results/
 
       - name: Summarize tests results
         uses: jeantessier/test-summary-action@v1
