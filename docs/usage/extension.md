@@ -75,8 +75,8 @@ Can be used to calculate the emissions of a trace.
   Path to the trace file 
 
 - **configModifications**:
-  Which changes should be made to the given config. Can be used to change the file output path and carbon-intensity for post-run estimations. Defaults to `[:]`.
+  By default the extension point uses the Nextflow config of the current run, including parameters within the `co2footprint` field.
+  This parameter is designed to change the config dynamically within workflow runs. By forming the union between the `co2footprint` field and a given map.
+  The changes here are exclusive to one single run of an extension function and do not affect the overall workflow run parameters.
+  In essence: This can be used to change the output paths of files, the carbon-intensity, and more for post-run estimations. Defaults to `[:]`.
   Example: `[traceFile: <Path_to_your_output_trace_file>, ci: <Your_carbon_intensity>]`
-
-- **timeCIs**:
-  A map of times linked to CI values. Can be used to infer the CI during the run which produced the trace file. Defaults to `null`.

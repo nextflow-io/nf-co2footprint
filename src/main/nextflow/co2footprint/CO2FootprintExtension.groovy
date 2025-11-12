@@ -48,14 +48,12 @@ class CO2FootprintExtension extends PluginExtensionPoint {
      *
      * @param tracePath Path to the trace file
      * @param configModifications Which changes should be made to the given config. Default: [:]
-     * @param timeCIs A map of times linked to CI values. Can be used to infer the CI during the run which produced the trace file
      * @return A {@link List} of {@link CO2Record}s that were extracted from the given tasks
      */
     @Function
     List<CO2Record> calculateCO2(
             Path tracePath,
-            Map<String, Object> configModifications=null,
-            Map<LocalDateTime, Number> timeCIs=null
+            Map<String, Object> configModifications=null
     ){
         // Define separate observer
         CO2FootprintConfig config = factory.defineConfig(configModifications)
@@ -63,11 +61,6 @@ class CO2FootprintExtension extends PluginExtensionPoint {
 
         // Parse the trace file
         List<TraceRecord> traceRecords = parseTraceFile(tracePath)
-
-        // Determine CI
-        if (timeCIs) {
-            observer.timeCiRecordCollector = new CiRecordCollector(config, timeCIs as ConcurrentHashMap)
-        }
 
         // Prepare aggregator
         observer.aggregator = new CO2RecordAggregator()
