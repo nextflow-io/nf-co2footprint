@@ -1,11 +1,8 @@
 package nextflow.co2footprint
 
-import ch.qos.logback.classic.Level
-import ch.qos.logback.classic.LoggerContext
-import ch.qos.logback.classic.spi.ILoggingEvent
-import ch.qos.logback.core.read.ListAppender
 import nextflow.NextflowMeta
 import nextflow.Session
+import nextflow.co2footprint.TestHelpers.LogChecker
 import nextflow.executor.NopeExecutor
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskId
@@ -14,8 +11,7 @@ import nextflow.processor.TaskRun
 import nextflow.script.WorkflowMetadata
 import nextflow.trace.TraceObserver
 import nextflow.trace.TraceRecord
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -25,11 +21,6 @@ import java.time.OffsetDateTime
 import java.util.concurrent.Executors
 
 class CO2FootprintPluginTest extends Specification{
-    static LoggerContext lc = LoggerFactory.getILoggerFactory() as LoggerContext
-    @Shared
-    Logger logger
-    ListAppender<ILoggingEvent> listAppender = new ListAppender<>()
-
     @Shared
     CO2FootprintFactory factory = new CO2FootprintFactory()
 
@@ -43,9 +34,6 @@ class CO2FootprintPluginTest extends Specification{
     def traceRecord = new TraceRecord()
 
     def setupSpec() {
-        // Get Logger
-        logger = lc.getLogger('ROOT')
-
         // Create task
         taskRun = new TaskRun(id: TaskId.of(111))
         taskRun.processor = Mock(TaskProcessor)
@@ -64,18 +52,6 @@ class CO2FootprintPluginTest extends Specification{
                         'status': 'COMPLETED'
                 ]
         )
-    }
-
-    def setup() {
-        logger.setLevel(Level.INFO)
-        listAppender.start()
-        logger.addAppender(listAppender)
-    }
-
-    def cleanup() {
-        listAppender.list.clear()
-        logger.detachAndStopAllAppenders()
-        listAppender.stop()
     }
 
     /**
@@ -176,6 +152,9 @@ class CO2FootprintPluginTest extends Specification{
     }
 
     def 'Creation of no files'() {
+        setup:
+        LogChecker logChecker = new LogChecker(CO2FootprintObserver)
+
         when:
         Path tempPath = Files.createTempDirectory('tmpdir')
         Path tracePath = tempPath.resolve('trace_test.txt')
@@ -195,10 +174,8 @@ class CO2FootprintPluginTest extends Specification{
         then:
         observers.size() == 1
         filesExist(tracePath, summaryPath, reportPath) == [false, false, false]
-        listAppender.list.size() == 1
-        listAppender.list[0] == (
-            "No output files are enabled - set 'enabled: true' in the sections 'trace', 'summary' and 'report' to " +
-            "turn these on"
-        )
+        logChecker.checkLogs(null, [
+            'No output files are enabled - to enable, set `enabled: true` in the sections `trace`, `summary` or `report`.'
+        ])
     }
 }

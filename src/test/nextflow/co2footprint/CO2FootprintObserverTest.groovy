@@ -3,6 +3,7 @@ package nextflow.co2footprint
 import nextflow.NextflowMeta
 import nextflow.Session
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
+import nextflow.co2footprint.TestHelpers.FileChecker
 import nextflow.executor.NopeExecutor
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskId

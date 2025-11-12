@@ -189,8 +189,7 @@ class CO2FootprintObserver implements TraceObserver {
 
         // we wouldn't expect a config where all output files are turned off, so warn the user
         if (!traceFile && !summaryFile && !reportFile) {
-            log.warn("No output files are enabled - set 'enabled: true' in the sections 'trace', 'summary' and " +
-                    "'report' to turn these on")
+            log.warn('No output files are enabled - to enable, set `enabled: true` in the sections `trace`, `summary` or `report`.')
         }
 
         // Start hourly CI updating

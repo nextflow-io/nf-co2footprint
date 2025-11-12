@@ -1,19 +1,9 @@
 package nextflow.co2footprint.Logging
 
-import ch.qos.logback.classic.Level
-import ch.qos.logback.classic.turbo.TurboFilter
-import ch.qos.logback.classic.LoggerContext
-import ch.qos.logback.classic.spi.ILoggingEvent
-import ch.qos.logback.core.read.ListAppender
-
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import nextflow.co2footprint.TestHelpers.LogChecker
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
-import groovy.util.logging.Slf4j
-
-@Slf4j
 
 
 /**
@@ -21,33 +11,11 @@ import groovy.util.logging.Slf4j
  */
 @Stepwise
 class LoggingTest extends Specification {
-
-    static LoggerContext lc = LoggerFactory.getILoggerFactory() as LoggerContext
-
     @Shared
-    Logger logger
-    ListAppender<ILoggingEvent> listAppender = new ListAppender<>()
+    LogChecker logChecker
 
-    // Setup method for the class
-    def setupSpec() {
-        LoggingAdapter loggingAdapter = new LoggingAdapter(lc)
-        loggingAdapter.addUniqueMarkerFilter()
-        loggingAdapter.changePatternConsoleAppender()
-        logger = lc.getLogger(LoggerTestClass)
-    }
-
-    // Setup method that executes once before each test
     def setup() {
-        logger.setLevel(Level.INFO)
-        listAppender.start()
-        logger.addAppender(listAppender)
-    }
-
-    // Repeated cleanup method that executes once after each test
-    def cleanup() {
-        listAppender.list.clear()
-        logger.detachAndStopAllAppenders()
-        listAppender.stop()
+        logChecker = new LogChecker(LoggerTestClass)
     }
 
     def 'Should return warning only once' () {
@@ -58,16 +26,15 @@ class LoggingTest extends Specification {
 
         then:
         // Additional warnings are blocked
-        listAppender.list.size() == 1
+        logChecker.checkLogs(1)
     }
 
-    def 'Should block further warnings' () {
-        when:
+    def 'Should block further warnings' () {when:
         LoggerTestClass.warn()
 
         then:
         // Warnings are still blocked
-        listAppender.list.size() == 0
+        logChecker.checkLogs(0)
 
     }
 
@@ -77,26 +44,23 @@ class LoggingTest extends Specification {
 
         then:
         // Warnings are still blocked & Messages with level below Info (Debug & Trace) are ignored
-        listAppender.list.size() == 2
-        listAppender.list.collect({it as String}) as Set ==
-                ['[INFO] Info', '[ERROR] Error'].collect({"${it} message" as String}) as Set
+        logChecker.checkLogs(2, ['Info message', 'Error message'])
     }
 
     def 'Should deduplicate based on dedupKey and allow custom trace message' () {
-        given:
+        setup:
         String dedupKey = "memory_is_null"
         String warnMessage = "Requested memory is null for task 123."
 
         when:
         // Log with dedupKey 
-        logger.warn(Markers.unique, warnMessage, dedupKey)
-        logger.warn(Markers.unique, warnMessage, dedupKey)
-        logger.warn(Markers.unique, warnMessage, dedupKey)
+        logChecker.logger.warn(Markers.unique, warnMessage, dedupKey)
+        logChecker.logger.warn(Markers.unique, warnMessage, dedupKey)
+        logChecker.logger.warn(Markers.unique, warnMessage, dedupKey)
 
         then:
         // Only the first warning should be logged
-        listAppender.list.size() == 1
-        listAppender.list[0].getFormattedMessage() == "🔁 ${warnMessage}" as String
+        logChecker.checkLogs(1, ["🔁 ${warnMessage}"])
     }
 }
 
