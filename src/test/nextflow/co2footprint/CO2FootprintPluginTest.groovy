@@ -1,10 +1,8 @@
 package nextflow.co2footprint
 
-import ch.qos.logback.classic.LoggerContext
-import ch.qos.logback.classic.spi.ILoggingEvent
-import ch.qos.logback.core.read.ListAppender
 import nextflow.NextflowMeta
 import nextflow.Session
+import nextflow.co2footprint.TestHelpers.LogChecker
 import nextflow.executor.NopeExecutor
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskId
@@ -13,8 +11,7 @@ import nextflow.processor.TaskRun
 import nextflow.script.WorkflowMetadata
 import nextflow.trace.TraceObserver
 import nextflow.trace.TraceRecord
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -24,11 +21,6 @@ import java.time.OffsetDateTime
 import java.util.concurrent.Executors
 
 class CO2FootprintPluginTest extends Specification{
-    static LoggerContext lc = LoggerFactory.getILoggerFactory() as LoggerContext
-    @Shared
-    Logger logger
-    ListAppender<ILoggingEvent> listAppender = new ListAppender<>()
-
     @Shared
     CO2FootprintFactory factory = new CO2FootprintFactory()
 
@@ -42,9 +34,6 @@ class CO2FootprintPluginTest extends Specification{
     def traceRecord = new TraceRecord()
 
     def setupSpec() {
-        // Get Logger
-        logger = lc.getLogger('ROOT')
-
         // Create task
         taskRun = new TaskRun(id: TaskId.of(111))
         taskRun.processor = Mock(TaskProcessor)
@@ -63,17 +52,6 @@ class CO2FootprintPluginTest extends Specification{
                         'status': 'COMPLETED'
                 ]
         )
-    }
-
-    def setup() {
-        listAppender.start()
-        logger.addAppender(listAppender)
-    }
-
-    def cleanup() {
-        listAppender.list.clear()
-        logger.detachAndStopAllAppenders()
-        listAppender.stop()
     }
 
     /**
@@ -136,12 +114,11 @@ class CO2FootprintPluginTest extends Specification{
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
         Map config = [
-                co2footprint:
-                        [
-                                'traceFile': tracePath,
-                                'summaryFile': summaryPath,
-                                'reportFile': reportPath,
-                        ]
+            co2footprint: [
+                'trace': ['enabled': true, 'file': tracePath],
+                'summary': ['enabled': true, 'file': summaryPath],
+                'report': ['enabled': true, 'file': reportPath]
+            ]
         ]
         Session session = mockSession(config)
 
@@ -150,5 +127,55 @@ class CO2FootprintPluginTest extends Specification{
         then:
         observers.size() == 1
         filesExist(tracePath, summaryPath, reportPath) == [true, true, true]
+    }
+
+    def 'Creation of some files'() {
+        when:
+        Path tempPath = Files.createTempDirectory('tmpdir')
+        Path tracePath = tempPath.resolve('trace_test.txt')
+        Path summaryPath = tempPath.resolve('summary_test.txt')
+        Path reportPath = tempPath.resolve('report_test.html')
+        Map config = [
+            co2footprint: [
+                'trace': ['enabled': true, 'file': tracePath],
+                'summary': ['enabled': false, 'file': summaryPath],
+                'report': ['enabled': true, 'file': reportPath]
+            ]
+        ]
+        Session session = mockSession(config)
+
+        Collection<TraceObserver> observers = createFiles(session)
+
+        then:
+        observers.size() == 1
+        filesExist(tracePath, summaryPath, reportPath) == [true, false, true]
+    }
+
+    def 'Creation of no files'() {
+        setup:
+        LogChecker logChecker = new LogChecker(CO2FootprintObserver)
+
+        when:
+        Path tempPath = Files.createTempDirectory('tmpdir')
+        Path tracePath = tempPath.resolve('trace_test.txt')
+        Path summaryPath = tempPath.resolve('summary_test.txt')
+        Path reportPath = tempPath.resolve('report_test.html')
+        Map config = [
+            co2footprint: [
+                'trace': ['enabled': false, 'file': tracePath],
+                'summary': ['enabled': false, 'file': summaryPath],
+                'report': ['enabled': false, 'file': reportPath]
+            ]
+        ]
+        Session session = mockSession(config)
+
+        Collection<TraceObserver> observers = createFiles(session)
+
+        then:
+        observers.size() == 1
+        filesExist(tracePath, summaryPath, reportPath) == [false, false, false]
+        logChecker.checkLogs(null, [
+            'No output files are enabled - to enable, set `enabled: true` in the sections `trace`, `summary` or `report`.'
+        ])
     }
 }

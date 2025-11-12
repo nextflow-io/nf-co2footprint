@@ -20,9 +20,18 @@ plugins {
 def co2_timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
 
 co2footprint {
-  traceFile = "${params.outdir}/pipeline_info/co2footprint_trace_${co2_timestamp}.txt"
-  summaryFile = "${params.outdir}/pipeline_info/co2footprint_summary_${co2_timestamp}.txt"
-  reportFile = "${params.outdir}/pipeline_info/co2footprint_report_${co2_timestamp}.html"
+  trace = {
+    file: "${params.outdir}/pipeline_info/co2footprint_trace_${co2_timestamp}.txt"
+  }
+
+  summary = {
+    file: "${params.outdir}/pipeline_info/co2footprint_summary_${co2_timestamp}.txt"
+  }
+
+  report  = {
+    file: "${params.outdir}/pipeline_info/co2footprint_report_${co2_timestamp}.html"
+  }
+
   location = 'DE'                             // replace with your zone code
   emApiKey = secrets.EM_API_KEY               // set your API key as Nextflow secret with the name 'EM_API_KEY'
   pue = 1.3                                   // replace with PUE of your data center
@@ -115,9 +124,18 @@ plugins {
 def co2_timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
 
 co2footprint {
-    traceFile           = "${params.outdir}/co2footprint/co2footprint_trace_${co2_timestamp}.txt"
-    summaryFile         = "${params.outdir}/co2footprint/co2footprint_summary_${co2_timestamp}.txt"
-    reportFile          = "${params.outdir}/co2footprint/co2footprint_report_${co2_timestamp}.html"
+    trace = {
+      file: "${params.outdir}/co2footprint/co2footprint_trace_${co2_timestamp}.txt"
+    }
+
+    summary = {
+      file: "${params.outdir}/co2footprint/co2footprint_summary_${co2_timestamp}.txt"
+    }
+
+    report = {
+      file: "${params.outdir}/co2footprint/co2footprint_report_${co2_timestamp}.html"
+    }
+
     location            = 'DE'
     emApiKey            = secrets.EM_API_KEY
     pue                 = 1.3

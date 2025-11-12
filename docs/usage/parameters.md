@@ -7,17 +7,26 @@ The following parameters are currently available:
 
 ## Output Files
 
-- **`traceFile`**  
-  Name of the `.txt` carbon footprint report containing the energy consumption, estimated CO₂ emission, and other relevant metrics for each task.  
-  **Default**: `co2footprint_trace_<timestamp>.txt`
+- **`trace`**  
+  Map containing:
+    - `enabled`: whether to produce this file
+    - `file`: name of the `.txt` carbon footprint report containing the energy consumption, estimated CO₂ emission, and other relevant metrics for each task.  
+
+  **Default**: `[enabled: true, file: co2footprint_trace_<timestamp>.txt]`
 
 - **`summaryFile`**  
-  Name of the `.txt` carbon footprint summary file containing the total energy consumption and total estimated CO₂ emission of the pipeline run.  
-  **Default**: `co2footprint_summary_<timestamp>.txt`
+  Map containing:
+    - `enabled`: whether to produce this file
+    - `file`: name of the `.txt` carbon footprint summary file containing the total energy consumption and total estimated CO₂ emission of the pipeline run.
+  
+  **Default**: `[enabled: true, file: co2footprint_summary_<timestamp>.txt]`
 
 - **`reportFile`**  
-  Name of the HTML report containing information about the entire carbon footprint, overview plots, and more detailed task-specific metrics.  
-  **Default**: `co2footprint_report_<timestamp>.html`
+  Map containing:
+    - `enabled`: whether to produce this file
+    - `file`: name of the HTML report containing information about the entire carbon footprint, overview plots, and more detailed task-specific metrics.
+  
+  **Default**: `[enabled: true, file: co2footprint_report_<timestamp>.html]`
 
 ## Location & Carbon Intensity
 

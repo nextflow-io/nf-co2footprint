@@ -4,6 +4,7 @@ import nextflow.Session
 import nextflow.co2footprint.CO2FootprintComputer
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.CO2FootprintConfig
+import nextflow.co2footprint.Config.FileSubConfig
 import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
@@ -49,21 +50,21 @@ class ReportFileCreatorTest extends Specification{
 
         Session session = Mock(Session) {
             getConfig() >> [
-                    co2footprint: [
-                            'traceFile': tempPath,
-                            'summaryFile': tempPath,
-                            'reportFile': reportPath,
-                            'ci': 475.0
-                    ]
+                co2footprint: [
+                    'trace': new FileSubConfig('trace', ['enabled': true, 'file': tempPath]),
+                    'summary': new FileSubConfig('summary', ['enabled': true, 'file': tempPath]),
+                    'report': new FileSubConfig('report', ['enabled': true, 'file': reportPath]),
+                    'ci': 475.0
+                ]
             ]
         }
         session.getExecService() >> Executors.newFixedThreadPool(1)
 
         CO2FootprintConfig config = new CO2FootprintConfig(
                 [
-                    'traceFile': tempPath,
-                    'summaryFile': tempPath,
-                    'reportFile': reportPath,
+                    'trace': ['enabled': true, 'file': tempPath],
+                    'summary': ['enabled': true, 'file': tempPath],
+                    'report': ['enabled': true, 'file': reportPath],
                     'ci': 475.0
                 ],
                 Mock(TDPDataMatrix),

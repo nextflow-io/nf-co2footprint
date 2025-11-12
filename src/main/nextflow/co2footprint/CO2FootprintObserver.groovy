@@ -99,9 +99,20 @@ class CO2FootprintObserver implements TraceObserver {
         this.config = config
 
         // Make file instances
-        this.traceFile = new TraceFileCreator((config.value('traceFile') as Path).complete(), overwrite)
-        this.summaryFile = new SummaryFileCreator((config.value('summaryFile') as Path).complete(), overwrite)
-        this.reportFile = new ReportFileCreator((config.value('reportFile') as Path).complete(), overwrite, maxTasks)
+        def traceConf = config.value('trace')
+        if (traceConf && traceConf.value('enabled')) {
+            this.traceFile = new TraceFileCreator((traceConf.value('file') as Path).complete(), overwrite)
+        }
+
+        def summaryConf = config.value('summary')
+        if (summaryConf && summaryConf.value('enabled')) {
+            this.summaryFile = new SummaryFileCreator((summaryConf.value('file') as Path).complete(), overwrite)
+        }
+
+        def reportConf = config.value('report')
+        if (reportConf && reportConf.value('enabled')) {
+            this.reportFile = new ReportFileCreator((reportConf.value('file') as Path).complete(), overwrite, maxTasks)
+        }
 
         this.co2FootprintComputer = co2FootprintComputer
         this.overwrite = overwrite
@@ -177,11 +188,16 @@ class CO2FootprintObserver implements TraceObserver {
         this.session = session
         this.aggregator = new CO2RecordAggregator()
 
+        // we wouldn't expect a config where all output files are turned off, so warn the user
+        if (!traceFile && !summaryFile && !reportFile) {
+            log.warn('No output files are enabled - to enable, set `enabled: true` in the sections `trace`, `summary` or `report`.')
+        }
+
         // Start hourly CI updating
         timeCiRecordCollector.start()
 
         // Create trace file
-        traceFile.create()
+        traceFile?.create()
     }
 
     /**
@@ -216,20 +232,24 @@ class CO2FootprintObserver implements TraceObserver {
 
         // Create report and summary if any content exists to write to the file
         if (totalStats) {
-            summaryFile.create()
-            reportFile.create()
+            if (summaryFile) {
+                summaryFile.create()
+                summaryFile.write(totalStats, co2FootprintComputer, config, version)
+                summaryFile.close()
+            }
+
+            if (reportFile) {
+                reportFile.create()
+                reportFile.addEntries(processStats, totalStats, co2FootprintComputer, config, version, session, traceRecords, co2eRecords, timeCiRecordCollector)
+                reportFile.write()
+                reportFile.close()
+            }
         }
 
-        // Write report and summary
-        summaryFile.write(totalStats, co2FootprintComputer, config, version)
-
-        reportFile.addEntries(processStats, totalStats, co2FootprintComputer, config, version, session, traceRecords, co2eRecords, timeCiRecordCollector)
-        reportFile.write()
-
         // Close all files (writes remaining tasks in the trace file)
-        traceFile.close(runningTasks)
-        summaryFile.close()
-        reportFile.close()
+        traceFile?.close(runningTasks)
+        summaryFile?.close()
+        reportFile?.close()
 
         log.info(
             "🌱 The workflow run used ${Converter.toReadableUnits(totalStats.get('energy'),'k','Wh')} of electricity, " +
