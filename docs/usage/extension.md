@@ -15,7 +15,7 @@ The plugin provides some extension points for post-run estimations of carbon foo
       raw = true
       fields = [
           'task_id', 'hash', 'native_id', 'name', 'status', 'exit', 'submit', 'duration', 'realtime', '%cpu', 'peak_rss', 'peak_vmem', 'rchar', 'wchar', // Standard
-          'start', 'complete', 'cpus', 'memory', 'process', // For Post-run calculation
+          'start', 'complete', 'cpus', 'memory', 'process', 'cpu_model' // For Post-run calculation
         ]
     }
     ```
