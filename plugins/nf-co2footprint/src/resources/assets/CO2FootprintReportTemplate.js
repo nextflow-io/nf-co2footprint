@@ -178,8 +178,7 @@ $(function() {
       })
 
       // Insert column filter button group
-      table.buttons().container()
-        .prependTo( $('#tasks_table_filter') )
+      table.buttons().container().prependTo( $('#tasks_table_filter') )
 
       // Column filter button group onClick event to highlight active filter
       $('.buttons-colvisGroup').click(function(){
