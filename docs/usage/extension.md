@@ -1,6 +1,36 @@
 ### Extension points
-The plugin provides some extension points to facilitate interaction with the plugin from within Nextflow pipeline runs.
+The plugin provides some extension points for post-run estimations of carbon footprints.
 
+!!! warning
+
+    This is not the recommended way to estimate the footprint.
+    Trace files contain the same metrics as the internal trace, but is often lacking accuracy, especially when they are written in human-readable mode.
+
+!!! danger
+
+    Keep in mind that the standard execution trace file does not report all necessary values and rounds values when using human-readable output.
+    For best results use:
+    ```
+    trace {
+      raw = true
+      fields = [
+          'task_id', 'hash', 'native_id', 'name', 'status', 'exit', 'submit', 'duration', 'realtime', '%cpu', 'peak_rss', 'peak_vmem', 'rchar', 'wchar', // Standard
+          'start', 'complete', 'cpus', 'memory', 'process', // For Post-run calculation
+        ]
+    }
+    ```
+
+#### From the command line
+The command line functionality utilizes Nextflow configs, like the regular plugin (see [parameters.md](./pa
+rameters.md)).
+It is recommended to set the output paths and a fixed carbon intensity value (`ci`) from within the config.
+```bash
+nextflow plugin nf-co2footprint:postRun --config <path_to_nextflow.config> --tracePath <path_to_execution_trace.txt>
+```
+
+
+
+#### From within a workflow run
 The interaction follows the [Nextflow extension function schema](https://nextflow.io/docs/latest/plugins/developing-plugins.html).
 ```Nextflow
 include { calculateCO2 } from 'plugin/nf-co2footprint'
@@ -29,8 +59,8 @@ workflow {
 }
 ```
 
-### Functions
-#### `parseTraceFile`
+##### Functions
+###### `parseTraceFile`
 Parse the trace file into a list of TraceRecord instances. 
 - **tracePath**:
   Path to a trace file
@@ -38,13 +68,8 @@ Parse the trace file into a list of TraceRecord instances.
 - **delimiter**:
   Deliming character of the tabular trace file. Defaults to `'\t'`.
 
-#### `calculateCO2`
+###### `calculateCO2`
 Can be used to calculate the emissions of a trace.
-!!! warning
-
-    This is not the recommended way to estimate the footprint.
-    Trace files contain the same metrics as the internal trace, but is often lacking accuracy, especially when they are written in human-readable mode.
-
 
 - **tracePath**:
   Path to the trace file 
@@ -55,7 +80,3 @@ Can be used to calculate the emissions of a trace.
 
 - **timeCIs**:
   A map of times linked to CI values. Can be used to infer the CI during the run which produced the trace file. Defaults to `null`.
-
-!!! note
-
-    If neither `carbonIntensity` nor `timeCIs` is given, the global default carbon intensity is used.

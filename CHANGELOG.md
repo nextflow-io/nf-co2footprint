@@ -3,6 +3,7 @@
 ## Misc:
 ## Features:
 - Provided an extension point so trace files can be processed post-run through a pipeline
+- Provided an CLI option to process execution trace files post-run
 
 # Version 1.1.0
 ## Bug Fixes:
