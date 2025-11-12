@@ -22,7 +22,7 @@ import nextflow.trace.TraceRecord
 class CO2Record extends TraceRecord {
     // Stores keys that are related to the CO2 calculation
     final List<String> co2Keys = [
-            'name', 'energy', 'co2e', 'co2eMarket', 'ci', 'cpuUsage', 'memory', 'time', 'cpus', 'powerdrawCPU', 'cpu_model'
+            'name', 'energy', 'co2e', 'co2eMarket', 'ci', 'cpuUsage', 'memory', 'time', 'cpus', 'powerdrawCPU', 'cpu_model', 'rawEnergyProcessor', 'rawEnergyMemory'
     ]
 
     // Stores non-CO₂ keys from the trace record and store them as traceKeys
@@ -59,9 +59,9 @@ class CO2Record extends TraceRecord {
     * @param rawEnergyMemory    Memory-specific energy consumed by the task (kWh)
     */
     CO2Record(
-        TraceRecord traceRecord=null, Double energy=null, Double co2e=null, Double co2eMarket=null, Double ci=null,
-        Double cpuUsage=null, Long memory=null, Double time=null,  Integer cpus=null, Double powerdrawCPU=null,
-        String cpu_model=null, Double rawEnergyProcessor, Double rawEnergyMemory
+        TraceRecord traceRecord, Double energy, Double co2e, Double co2eMarket, Double ci,
+        Double cpuUsage, Long memory, Double time,  Integer cpus, Double powerdrawCPU,
+        String cpu_model, Double rawEnergyProcessor, Double rawEnergyMemory
     ) {
         // Add trace Record values
         traceKeys = traceRecord.store.keySet() as List<String>
@@ -157,20 +157,33 @@ class CO2Record extends TraceRecord {
             case 'cpuUsage' ->  Converter.toReadableUnits(value as Double, '', '%', '')
             case 'memory' ->  Converter.toReadableUnits(value as Double, 'G', 'B')
             case 'realtime' -> Converter.toReadableTimeUnits(value as Double)
-            case 'status' -> {
-                Map<String, String> colors = [COMPLETED: 'success', CACHED: 'secondary', ABORTED: 'danger', FAILED: 'danger']
-                "<span class=\"badge badge-${colors[value]}\">${value}</span>"
-            }
+            case 'rawEnergyProcessor' ->  Converter.toReadableUnits(value as Double, 'k', 'Wh')
+            case 'rawEnergyMemory' ->  Converter.toReadableUnits(value as Double, 'k', 'Wh')
+            default -> getFmtStr(key)
+        }
+    }
+
+    /**
+     * Converts a CO₂ record entry into a String that is to be included into the report.
+     * Returns `null`, if it does not differ from normal readable instance.
+     *
+     * @param key   The entry key (e.g. "energy", "co2e", "time", "cpuUsage")
+     * @param value Optional value to convert; defaults to the stored value for the key
+     * @return      A human-readable string, or null if no conversion is possible
+     */
+    String getReportable(String key, Object value=store[key]) {
+        return switch (key) {
             case 'hash' -> {
                 String script = ''
                 (value as String).eachLine { String line -> script += "${line.trim()}\n" }
                 script = script.dropRight(1)
                 "<div class=\"script_block short\"><code>${script}</code></div>"
             }
-
-            case 'rawEnergyProcessor' ->  Converter.toReadableUnits(value as Double, 'k', 'Wh')
-            case 'rawEnergyMemory' ->  Converter.toReadableUnits(value as Double, 'k', 'Wh')
-            default -> getFmtStr(key)
+            case 'status' -> {
+                Map<String, String> colors = [COMPLETED: 'success', CACHED: 'secondary', ABORTED: 'danger', FAILED: 'danger']
+                "<span class=\"badge badge-${colors[value]}\">${value}</span>"
+            }
+            default -> null
         }
     }
 
@@ -249,7 +262,10 @@ class CO2Record extends TraceRecord {
             [key, [raw: [value: null, type: type], readable: NA]]
         }
         rrMap.putAll(store.collectEntries { String key, Object val ->
-            [key, [raw: getRaw(key, val), readable: getReadable(key, val)]]
+            String reportValue = getReportable(key, val)
+            Map<String, Object> entries = [raw: getRaw(key, val), readable: getReadable(key, val)]
+            if (reportValue != null) {  entries = entries +  [report: reportValue as Object] }
+            [key,  entries]
         })
         if (onlyCO2parameters) { rrMap.removeAll {String key, Map val -> key !in co2Keys}}
         return rrMap

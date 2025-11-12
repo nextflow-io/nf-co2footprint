@@ -47,23 +47,6 @@ class TraceFileCreator extends BaseFileCreator {
     }
 
     /**
-     * Return a readable entry from either {@link CO2Record} or {@link TraceRecord}.
-     *
-     * @param key           Entry key as a String
-     * @param traceRecord   TraceRecord of a task
-     * @param co2Record     CO2 record of a task
-     * @return The entry in its human-readable form
-     */
-    private static String getReadableEntry(String key, TraceRecord traceRecord, CO2Record co2Record) {
-        if (co2Record.containsKey(key)) {
-            return co2Record.getReadable(key)
-        }
-        else {
-            return traceRecord.get(key)
-        }
-    }
-
-    /**
      * Create the trace file and write the header.
      * If file already exists, it is overwritten or rolled depending on settings.
      */
@@ -95,9 +78,7 @@ class TraceFileCreator extends BaseFileCreator {
     void write(CO2Record co2Record){
         if (!created) { return }
 
-        List<String> recordedEntries = co2Record.getReadableEntries() //  entryKeys.collect { String key -> getReadableEntry(key, traceRecord, co2Record) } ?
-
-        recordedEntries = [co2Record.taskId.toString(), co2Record.store.status as String] + records
+        List<String> recordedEntries = co2Record.getReadableEntries(entryKeys) //  entryKeys.collect { String key -> getReadableEntry(key, traceRecord, co2Record) } ?
 
         traceWriter.send { PrintWriter writer ->
             writer.println( String.join('\t', recordedEntries) )

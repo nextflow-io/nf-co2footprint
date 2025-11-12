@@ -635,15 +635,18 @@
     /**
      * Decides whether raw or readable values are to be displayed
      *
-     * @param {*} data The data (number/string/...)
+     * @param {*} data The data
      * @param {*} type Type of the data
      * @returns
      */
     function rawOrReadable(data, type) {
-      if (type === "sort" || $("#nf-table-humanreadable").val() == "false") {
-        return data["raw"];
+      if (type === 'sort' || $('#nf-table-humanreadable').val() == 'false') {
+        return data['raw'].value
       }
-      return data["readable"];
+      if(data.hasOwnProperty('report')) {
+        return data['report']
+      }
+      return data['readable']
     }
     
     // Map for collecting statistics by process
@@ -652,135 +655,91 @@
     //
     // MAIN BLOCK: This block is only executed after the page is fully loaded
     //
-    $(function () {
+    $(function() {
       // Script block clicked
-      $("#tasks_table").on("click", ".script_block", function (e) {
-        e.preventDefault();
-        $(this).toggleClass("short");
-      });
+      $('#tasks_table').on('click', '.script_block', function(e){
+        e.preventDefault()
+        $(this).toggleClass('short')
+      })
     
-      $(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-      });
+      $(function() {
+        $('[data-toggle="tooltip"]').tooltip()
+      })
     
       // Completed date from now
-      var completed_date = moment(
-        $("#workflow_complete").text(),
-        "ddd MMM DD HH:mm:ss .* YYYY",
-      );
-      if (completed_date.isValid()) {
-        $("#completed_fromnow").html(
-          "completed " + completed_date.fromNow() + ", ",
-        );
-      }
-    
-      // Collect metrics by process
-      for (let processName in window.data.summary) {
-        let metrics = window.data.summary[processName];
-    
-        // Add an empty map if the process is not already present
-        window.statsByProcess[processName] ??= {};
-    
-        for (let metricName in metrics) {
-          // Skip if metric is not present
-          if (metrics[metricName] == null) {
-            continue;
-          }
-    
-          if (metrics[metricName]["min"] == metrics[metricName]["max"]) {
-            // min equals max ==> show just a value
-            window.statsByProcess[processName][metricName] = [
-              metrics[metricName]["min"],
-            ];
-          } else {
-            // otherwise show all values
-            window.statsByProcess[processName][metricName] = [
-              "min",
-              "q1",
-              "q2",
-              "q3",
-              "max",
-            ].map((stat) => metrics[metricName][stat]);
-          }
-          if (metricName == "time") {
-            window.statsByProcess[processName][metricName] = window.statsByProcess[
-              processName
-            ][metricName].map(function (d, i) {
-              return moment.duration(d).asMinutes().toFixed(1);
-            });
-          }
-        }
+      var completed_date = moment( $('#workflow_complete').text(), "ddd MMM DD HH:mm:ss .* YYYY" )
+      if(completed_date.isValid()){
+        $('#completed_fromnow').html('completed ' + completed_date.fromNow() + ', ')
       }
     
       // Plot histograms of resource usage
       function plot_resource_usage() {
-        var plot_data = { total: [], total_non_cached: [] };
-        for (var processName in window.statsByProcess) {
+        var plot_data_total = []
+        var plot_data_non_cached = []
+        for(var processName in window.data.summary){
+    
           // Extract process statistics
-          var stats = window.statsByProcess[processName];
+          var stats = window.data.summary[processName]
     
-          // Add CO₂ Boxplot to plot
-          for (const [i, suffix] of ["", "_non_cached"].entries()) {
-            plot_data[`total${suffix}`].push({
-              x: processName,
-              y: stats[`co2e${suffix}`],
-              name: processName,
-              type: "box",
-              boxmean: true,
-              boxpoints: false,
-              width: 0.8,
-              hoverinfo: "y+name",
-            });
-    
-            // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
-            plot_data[`total${suffix}`].push({
-              x: processName,
-              y: stats[`energy${suffix}`]?.map((v) => v * 1000) ?? null,
-              name: processName,
-              type: "box",
-              boxmean: true,
-              boxpoints: false,
-              yaxis: "y2",
-              showlegend: false,
-              hoverinfo: "skip",
-              marker: { color: "rgba(0,0,0,0)" },
-              fillcolor: "rgba(0,0,0,0)",
-              width: 0.8,
-            });
+          // Put stats in plot
+          for (var metricsName in stats) {
+            // Add CO₂ Boxplot to plot
+            if (metricsName.startsWith('co2e')) {
+              var current_process_plot = metricsName.endsWith('_non_cached') ? plot_data_non_cached : plot_data_total
+              current_process_plot.push(
+                {
+                  x:processName, y: stats[metricsName], name: processName,
+                  type:'box', boxmean: true, boxpoints: false,
+                  hovertemplate:
+                    'Min: ${Math.min(...stats.co2e)}<br>' +
+                    'Q1: %{q1}<br>' +
+                    'Median: %{median}<br>' +
+                    'Mean: %{mean}<br>' +
+                    'Q3: %{q3}<br>' +
+                    'Max: ${max}<extra></extra>'
+                }
+              )
+            }
+            else {
+              // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
+              plot_data_total.push(
+                {
+                  x:processName, y:stats[metricsName]?.map(v => v * 1000) ?? null, name: processName,
+                  type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
+                  hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
+                }
+              )
+            }
           }
         }
     
         var layout = {
-          title: {
-            text: "CO<sub>2</sub> emission & energy consumption",
-          },
+          title: 'CO<sub>2</sub> emission & energy consumption',
           legend: {
-            x: 1.1,
+            x: 1.1
           },
-          hovermode: "x",
           xaxis: {
-            title: { text: "Processes" },
+            title: 'Processes',
           },
           yaxis: {
-            title: { text: "CO₂e emission (g)" },
-            rangemode: "tozero",
+            title: 'CO₂e emission (g)',
+            rangemode: 'tozero',
           },
           yaxis2: {
-            title: { text: "Energy consumption (Wh)" },
-            rangemode: "tozero",
-            gridcolor: "rgba(0, 0, 0, 0)", // transparent grid lines
-            overlaying: "y",
-            side: "right",
+            title: 'Energy consumption (Wh)',
+            rangemode: 'tozero',
+            gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
+            overlaying: 'y',
+            side: 'right',
           },
-          boxmode: "group",
-          boxgap: 0,
-          boxgroupgap: 0.1,
-        };
+          boxmode: 'group',
+        }
     
-        Plotly.newPlot("co2e-total-plot", plot_data.total, layout);
-        Plotly.newPlot("co2e-non-cached-plot", plot_data.total_non_cached, layout);
+        Plotly.newPlot('co2e-total-plot', plot_data_total, layout)
+        Plotly.newPlot('co2e-non-cached-plot', plot_data_non_cached, layout)
       }
-      plot_resource_usage();
+    
+      plot_resource_usage()
     
       //
       // Table creation functions
@@ -789,272 +748,261 @@
       /**
        * Function to create the table of tasks
        */
-      function make_tasks_table() {
+      function make_tasks_table(){
         // reset
-        if ($.fn.dataTable.isDataTable("#tasks_table")) {
-          $("#tasks_table").DataTable().destroy();
-        }
+          if ( $.fn.dataTable.isDataTable( '#tasks_table' ) ) {
+            $('#tasks_table').DataTable().destroy()
+          }
     
-        // Column titles
-        var energyConsumptionTitle = "energy consumption (mWh)"; // Default column title
-        var co2EmissionsTitle = "CO₂e emissions (mg)";
-        if ($("#nf-table-humanreadable").val() == "true") {
-          energyConsumptionTitle = "energy consumption"; // Change the column title if the button is selected
-          co2EmissionsTitle = "CO₂e emissions";
-        }
+          // Column titles
+          var energyConsumptionTitle = 'energy consumption (mWh)' // Default column title
+          var co2EmissionsTitle = 'CO₂e emissions (mg)'
+          if ($('#nf-table-humanreadable').val() == 'true') {
+            energyConsumptionTitle = 'energy consumption' // Change the column title if the button is selected
+            co2EmissionsTitle = 'CO₂e emissions'
+          }
     
-        var table = $("#tasks_table").DataTable({
-          data: window.data.trace,
-          columns: [
-            { title: "task_id", data: "task_id" },
-            { title: "process", data: "process" },
-            { title: "tag", data: "tag" },
-            { title: "status", data: "status" },
-            { title: "hash", data: "hash" },
-            { title: energyConsumptionTitle, data: "energy" },
-            { title: co2EmissionsTitle, data: "co2e" },
-            { title: `${co2EmissionsTitle} (market)`, data: "co2eMarket" },
-            { title: "carbon intensity", data: "ci" },
-            { title: "allocated cpus", data: "cpus" },
-            { title: "%cpu", data: "cpuUsage" },
-            { title: "allocated memory", data: "memory" },
-            { title: "realtime", data: "time" },
-            { title: "power draw (in W/core)", data: "powerdrawCPU" },
-            { title: "cpu model", data: "cpu_model" },
-          ],
-          deferRender: true,
-          lengthMenu: [
-            [25, 50, 100, -1],
-            [25, 50, 100, "All"],
-          ],
-          scrollX: true,
-          colReorder: true,
-          columnDefs: [
-            { targets: "_all", render: rawOrReadable },
-            { className: "id", targets: [0, 1, 2, 3] },
-            { className: "meta", targets: [4, 7, 8, 9, 10, 11] },
-            { className: "metrics", targets: [5, 6] },
-          ],
-          dom:
-            "<'row'<'col-auto'l><'col text-center'B><'col-auto'f>>" +
-            "<'row'<'col-12'tr>>" +
-            "<'row'<'col'i><'col-auto'p>>",
-          buttons: [
-            {
-              extend: "colvisGroup",
-              text: "Metrics",
-              show: [".id", ".metrics"],
-              hide: [".meta"],
-            },
-            {
-              extend: "colvisGroup",
-              text: "Metadata",
-              show: [".id", ".meta"],
-              hide: [".metrics"],
-            },
-            {
-              extend: "colvisGroup",
-              text: "All",
-              show: ":hidden",
-            },
-          ],
-        });
+          var table = $('#tasks_table').DataTable({
+            data: window.data.trace,
+            columns: [
+              { title: 'task_id', data: 'task_id' },
+              { title: 'process', data: 'process' },
+              { title: 'tag', data: 'tag' },
+              { title: 'status', data: 'status' },
+              { title: 'hash', data: 'hash' },
+              { title: energyConsumptionTitle, data: 'energy' },
+              { title: co2EmissionsTitle, data: 'co2e' },
+              { title: `${co2EmissionsTitle} (market)`, data: 'co2eMarket' },
+              { title: 'carbon intensity', data: 'ci' },
+              { title: 'allocated cpus', data: 'cpus' },
+              { title: '%cpu', data: 'cpuUsage' },
+              { title: 'allocated memory', data: 'memory' },
+              { title: 'realtime', data: 'time' },
+              { title: 'power draw (in W/core)', data: 'powerdrawCPU' },
+              { title: 'cpu model', data: 'cpu_model' },
+            ],
+            deferRender: true,
+            lengthMenu: [[25, 50, 100, -1], [25, 50, 100, "All"]],
+            scrollX: true,
+            colReorder: true,
+            columnDefs: [
+              { targets: '_all', render: rawOrReadable },
+              { className: "id", "targets": [ 0,1,2,3 ] },
+              { className: "meta", "targets": [ 4,7,8,9,10,11 ] },
+              { className: "metrics", "targets": [ 5,6 ] }
+            ],
+            dom:
+                "<'row'<'col-auto'l><'col text-center'B><'col-auto'f>>" +
+                "<'row'<'col-12'tr>>" +
+                "<'row'<'col'i><'col-auto'p>>",
+            buttons: [
+              {
+                extend: 'colvisGroup',
+                text: 'Metrics',
+                show: [ '.id', '.metrics' ],
+                hide: [ '.meta' ],
+              },
+              {
+                extend: 'colvisGroup',
+                text: 'Metadata',
+                show: [ '.id', '.meta'],
+                hide: [ '.metrics' ],
+              },
+              {
+                extend: 'colvisGroup',
+                text: 'All',
+                show: ':hidden',
+              },
+            ]
+          })
     
-        // Insert column filter button group
-        table.buttons().container().prependTo($("#tasks_table_filter"));
+          // Insert column filter button group
+          table.buttons().container().prependTo( $('#tasks_table_filter') )
     
-        // Column filter button group onClick event to highlight active filter
-        $(".buttons-colvisGroup").click(function () {
-          var def = "btn-secondary";
-          var sel = "btn-primary";
-          $(".buttons-colvisGroup").removeClass(sel).addClass(def);
-          $(this).addClass(sel).removeClass(def);
-        });
+          // Column filter button group onClick event to highlight active filter
+          $('.buttons-colvisGroup').click(function(){
+            var def = 'btn-secondary'
+            var sel = 'btn-primary'
+            $('.buttons-colvisGroup').removeClass(sel).addClass(def)
+            $(this).addClass(sel).removeClass(def)
+          })
     
-        // Default filter highlight
-        $(".buttons-colvisGroup:contains('All')").click();
+          // Default filter highlight
+          $(".buttons-colvisGroup:contains('All')").click()
       }
     
       // Executor for task table creation (on page load)
-      if (window.data.trace == null) {
-        // Hide tasks table if too many tasks are present
-        $("#tasks-present-table").remove();
-      } else {
-        $("#tasks-omitted-table").remove();
-        // Dropdown changed about raw / human readable values in table
-        $("#nf-table-humanreadable").change(function () {
-          make_tasks_table();
-        });
-        // Make the table on page load
-        make_tasks_table();
+      if( window.data.trace==null ) {
+          // Hide tasks table if too many tasks are present
+          $('#tasks-present-table').remove()
+      }
+      else {
+          $('#tasks-omitted-table').remove()
+          // Dropdown changed about raw / human readable values in table
+          $('#nf-table-humanreadable').change(function(){
+            make_tasks_table()
+          })
+          // Make the table on page load
+          make_tasks_table()
       }
     
       /**
        * Function to create the table of options / configurations
        */
-      function make_options_table() {
+      function make_options_table(){
         // reset
-        if ($.fn.dataTable.isDataTable("#options_table")) {
-          $("#options_table").DataTable().destroy();
+        if ( $.fn.dataTable.isDataTable( '#options_table' ) ) {
+          $('#options_table').DataTable().destroy()
         }
     
-        var table = $("#options_table").DataTable({
+        var table = $('#options_table').DataTable({
           data: window.options,
           columns: [
-            { title: "Option", data: "option" },
-            { title: "Value", data: "value" },
-          ],
-          deferRender: true,
-          lengthMenu: [
-            [25, 50, 100, -1],
-            [25, 50, 100, "All"],
-          ],
-        });
+              { title: "Option", data: "option" },
+              { title: "Value", data: "value" }
+            ],
+            "deferRender": true,
+            "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
+        })
       }
     
       // Executor for options table creation (on page load)
-      make_options_table();
+      make_options_table()
     
       //
       // Carbon intensity plot
       //
     
       function make_ci_plot() {
-        var ci_plot_data = [];
+        var ci_plot_data = []
     
         // Add Date() entry to start and end time of tasks
-        window.data.trace.forEach((task) => {
-          task.start.time = new Date(task.start.raw);
-          task.complete.time = new Date(task.complete.raw);
-        });
+        window.data.trace.forEach(task => {
+          task.start.time = new Date(task.start.raw.value)
+          task.complete.time = new Date(task.complete.raw.value)
+        })
     
         // Tasks:
         // Collect all time boundaries
-        const timePoints = new Set();
+        const timePoints = new Set()
         for (const task of window.data.trace) {
-          timePoints.add(task.start.time);
-          timePoints.add(task.complete.time);
+          timePoints.add(task.start.time)
+          timePoints.add(task.complete.time)
         }
-        const sortedTimes = Array.from(timePoints).sort((a, b) => a - b);
+        const sortedTimes = Array.from(timePoints).sort((a,b) => a-b)
     
         // Define first and last point
-        var [tasksStart, tasksEnd] = [
-          sortedTimes[0],
-          sortedTimes[sortedTimes.length - 1],
-        ];
+        var [tasksStart, tasksEnd] = [sortedTimes[0], sortedTimes[sortedTimes.length - 1]]
     
         // For each subinterval, calculate the total energy from active intervals
         // Add first point to energy trace
-        const timeSteps = [tasksStart],
-          totalEnergy = [0.0];
+        const timeSteps = [tasksStart], totalEnergy = [0.0]
         // Add intermediate points to energy trace
         for (let i = 0; i < sortedTimes.length - 1; i++) {
-          const t0 = sortedTimes[i];
-          const t1 = sortedTimes[i + 1];
+          const t0 = sortedTimes[i]
+          const t1 = sortedTimes[i + 1]
     
           // Sum energy of intervals active in [t0, t1)
-          let total = 0;
+          let total = 0
           for (const task of window.data.trace) {
             if (task.start.time <= t0 && task.complete.time >= t1) {
-              total += task.energy.raw;
+              total += task.energy.raw.value
             }
           }
     
-          timeSteps.push(t0, t1);
-          totalEnergy.push(total, total);
+          timeSteps.push(t0, t1)
+          totalEnergy.push(total, total)
         }
         // Add last point to energy trace
-        timeSteps.push(tasksEnd);
-        totalEnergy.push(0.0);
+        timeSteps.push(tasksEnd)
+        totalEnergy.push(0.0)
     
         // CI Records:
-        var ciRecords = new Map();
+        var ciRecords = new Map()
     
         // Change keys to Date() and sort
         for (let [key, value] of Object.entries(window.ciRecords)) {
-          ciRecords.set(new Date(key), value);
+          ciRecords.set(new Date(key), value)
         }
-        ciRecords = new Map([...ciRecords.entries()].sort((a, b) => a[0] - b[0]));
+        ciRecords = new Map([...ciRecords.entries()].sort((a,b) => a[0]-b[0]))
     
         if (ciRecords.size == 0) {
-          ciRecords.set(tasksStart, window.data.trace[0].ci.raw);
-          ciRecords.set(tasksEnd, window.data.trace[0].ci.raw);
-        } else {
-          const times = [...ciRecords.keys()];
-          const cis = [...ciRecords.values()];
+          ciRecords.set(tasksStart, window.data.trace[0].ci.raw.value)
+          ciRecords.set(tasksEnd, window.data.trace[0].ci.raw.value)
+        }
+        else {
+          const times = [...ciRecords.keys()]
+          const cis = [...ciRecords.values()]
           if (tasksStart < times[0]) {
-            ciRecords.set(tasksStart, cis[0]);
+            ciRecords.set(tasksStart, cis[0])
           }
           if (tasksEnd > times[times.length - 1]) {
-            ciRecords.set(tasksEnd, cis[cis.length - 1]);
+            ciRecords.set(tasksEnd, cis[cis.length - 1])
           }
         }
     
-        ciRecords = new Map([...ciRecords.entries()].sort((a, b) => a[0] - b[0]));
-        var timestamps = [...ciRecords.keys()];
-        var ciValues = [...ciRecords.values()];
+        ciRecords = new Map([...ciRecords.entries()].sort((a,b) => a[0]-b[0]))
+        var timestamps = [...ciRecords.keys()]
+        var ciValues = [...ciRecords.values()]
     
         // Add CI trace to plot
-        ci_plot_data.push({
-          name: "Carbon intensity",
-          x: timestamps,
-          y: ciValues,
-          type: "scatter",
-          mode: "lines+markers",
-          line: { color: "grey" },
-          marker: { color: "grey" },
-        });
+        ci_plot_data.push(
+          {
+            name: "Carbon intensity",
+            x: timestamps, y: ciValues,
+            type: "scatter",
+            mode: "lines+markers",
+            line: { color: "grey" },
+            marker: { color: "grey" },
+          }
+        )
     
         // Add energy trace to plot
-        ci_plot_data.push({
-          name: "Energy consumption",
-          x: timeSteps,
-          y: totalEnergy,
-          type: "scatter",
-          fill: "tozeroy",
-          yaxis: "y2",
-          line: { color: "#FFCC00", shape: "hv" },
-        });
+        ci_plot_data.push(
+          {
+            name:"Energy consumption",
+            x: timeSteps, y: totalEnergy,
+            type: "scatter",
+            fill: "tozeroy", yaxis: "y2",
+            line: { color: "#FFCC00", shape: "hv" },
+          }
+        )
     
         // Layout:
         var ci_layout = {
-          title: {
-            text: "Carbon intensity index",
-          },
+          title: 'Carbon intensity index',
           legend: {
-            x: 1.1,
+            x: 1.1
           },
-          hovermode: "x",
           xaxis: {
-            title: { text: "Time" },
+            title: 'Time',
             ticklabelstandoff: 10,
-            overlay: "x2",
+            overlay: 'x2',
           },
           yaxis: {
-            title: { text: "Carbon Intensity (g/kWh)" },
-            rangemode: "tozero",
+            title: 'Carbon Intensity (g/kWh)',
+            rangemode: 'tozero',
           },
           yaxis2: {
-            title: { text: "Energy consumption (kWh)" },
-            rangemode: "tozero",
-            gridcolor: "rgba(0, 0, 0, 0)", // transparent grid lines
-            overlaying: "y",
-            side: "right",
-          },
-        };
+            title: 'Energy consumption (kWh)',
+            rangemode: 'tozero',
+            gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
+            overlaying: 'y',
+            side: 'right',
+          }
+        }
     
         // Create plot:
-        Plotly.newPlot("ci-plot", ci_plot_data, ci_layout);
+        Plotly.newPlot('ci-plot', ci_plot_data, ci_layout)
       }
     
       // Executor for ci plot generation
-      make_ci_plot();
-    });
-
+      make_ci_plot()
+    })
 
     // Nextflow report data
-    window.data = {"trace":[{"task_id":{"raw":"111","readable":"111"},"process":{"raw":"observerTestProcess","readable":"observerTestProcess"},"realtime":{"raw":3600000,"readable":"1h"},"cpus":{"raw":1,"readable":"1"},"cpu_model":{"raw":"Unknown model","readable":"Unknown model"},"%cpu":{"raw":100.0,"readable":"100.0%"},"memory":{"raw":7,"readable":"7 GB"},"status":{"raw":"COMPLETED","readable":"<span class=\"badge badge-success\">COMPLETED</span>"},"hash":{"raw":null,"readable":"-"},"native_id":{"raw":null,"readable":"-"},"module":{"raw":null,"readable":"-"},"container":{"raw":null,"readable":"-"},"tag":{"raw":null,"readable":"-"},"name":{"raw":null,"readable":"-"},"exit":{"raw":null,"readable":"-"},"submit":{"raw":null,"readable":"-"},"start":{"raw":null,"readable":"-"},"complete":{"raw":null,"readable":"-"},"duration":{"raw":null,"readable":"-"},"%mem":{"raw":null,"readable":"-"},"rss":{"raw":null,"readable":"-"},"vmem":{"raw":null,"readable":"-"},"peak_rss":{"raw":null,"readable":"-"},"peak_vmem":{"raw":null,"readable":"-"},"rchar":{"raw":null,"readable":"-"},"wchar":{"raw":null,"readable":"-"},"syscr":{"raw":null,"readable":"-"},"syscw":{"raw":null,"readable":"-"},"read_bytes":{"raw":null,"readable":"-"},"write_bytes":{"raw":null,"readable":"-"},"attempt":{"raw":null,"readable":"-"},"workdir":{"raw":null,"readable":"-"},"script":{"raw":null,"readable":"-"},"scratch":{"raw":null,"readable":"-"},"queue":{"raw":null,"readable":"-"},"disk":{"raw":null,"readable":"-"},"time":{"raw":1.0,"readable":"3600s"},"env":{"raw":null,"readable":"-"},"error_action":{"raw":null,"readable":"-"},"vol_ctxt":{"raw":null,"readable":"-"},"inv_ctxt":{"raw":null,"readable":"-"},"hostname":{"raw":null,"readable":"-"},"energy":{"raw":0.0140175,"readable":"14.02 Wh"},"co2e":{"raw":6.7284,"readable":"6.73 g"},"co2eMarket":{"raw":null,"readable":"-"},"ci":{"raw":480.0,"readable":"480 gCO\u2082e/kWh"},"powerdrawCPU":{"raw":11.41,"readable":"11.41 W"},"cpuUsage":{"raw":100.0,"readable":"100 %"},"rawEnergyProcessor":{"raw":0.01141,"readable":"11.41 Wh"},"rawEnergyMemory":{"raw":0.0026075,"readable":"2.61 Wh"}}],"summary":{"observerTestProcess":{"co2e":{"all":[6.7284],"total":6.7284,"mean":6.7284,"minLabel":null,"min":6.7284,"q1Label":null,"q1":6.7284,"q2Label":null,"q2":6.7284,"q3Label":null,"q3":6.7284,"maxLabel":null,"max":6.7284},"energy":{"all":[0.0140175],"total":0.0140175,"mean":0.0140175,"minLabel":null,"min":0.0140175,"q1Label":null,"q1":0.0140175,"q2Label":null,"q2":0.0140175,"q3Label":null,"q3":0.0140175,"maxLabel":null,"max":0.0140175},"co2e_non_cached":{"all":[6.7284],"total":6.7284,"mean":6.7284,"minLabel":null,"min":6.7284,"q1Label":null,"q1":6.7284,"q2Label":null,"q2":6.7284,"q3Label":null,"q3":6.7284,"maxLabel":null,"max":6.7284},"energy_non_cached":{"all":[0.0140175],"total":0.0140175,"mean":0.0140175,"minLabel":null,"min":0.0140175,"q1Label":null,"q1":0.0140175,"q2Label":null,"q2":0.0140175,"q3Label":null,"q3":0.0140175,"maxLabel":null,"max":0.0140175},"co2e_market":{},"energy_market":{"all":[0.0140175],"total":0.0140175,"mean":0.0140175,"minLabel":null,"min":0.0140175,"q1Label":null,"q1":0.0140175,"q2Label":null,"q2":0.0140175,"q3Label":null,"q3":0.0140175,"maxLabel":null,"max":0.0140175}}}};
-    window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir6580783026414819978/report_test.html"},{"option":"summaryFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir6580783026414819978/summary_test.txt"},{"option":"traceFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir6580783026414819978/trace_test.txt"}];
+    window.data = {"trace":[{"task_id":{"raw":{"value":"111","type":"String"},"readable":"111"},"hash":{"raw":{"value":null,"type":"str"},"readable":"-"},"native_id":{"raw":{"value":null,"type":"str"},"readable":"-"},"process":{"raw":{"value":"observerTestProcess","type":"String"},"readable":"observerTestProcess"},"module":{"raw":{"value":null,"type":"str"},"readable":"-"},"container":{"raw":{"value":null,"type":"str"},"readable":"-"},"tag":{"raw":{"value":null,"type":"str"},"readable":"-"},"name":{"raw":{"value":null,"type":"str"},"readable":"-"},"status":{"raw":{"value":"COMPLETED","type":"String"},"readable":"COMPLETED","report":"<span class=\"badge badge-success\">COMPLETED</span>"},"exit":{"raw":{"value":null,"type":"str"},"readable":"-"},"submit":{"raw":{"value":null,"type":"date"},"readable":"-"},"start":{"raw":{"value":null,"type":"date"},"readable":"-"},"complete":{"raw":{"value":null,"type":"date"},"readable":"-"},"duration":{"raw":{"value":null,"type":"time"},"readable":"-"},"realtime":{"raw":{"value":3600000,"type":"Long"},"readable":"1h"},"%cpu":{"raw":{"value":100.0,"type":"BigDecimal","scale":"%","unit":""},"readable":"100.0%"},"%mem":{"raw":{"value":null,"type":"perc"},"readable":"-"},"rss":{"raw":{"value":null,"type":"mem"},"readable":"-"},"vmem":{"raw":{"value":null,"type":"mem"},"readable":"-"},"peak_rss":{"raw":{"value":null,"type":"mem"},"readable":"-"},"peak_vmem":{"raw":{"value":null,"type":"mem"},"readable":"-"},"rchar":{"raw":{"value":null,"type":"mem"},"readable":"-"},"wchar":{"raw":{"value":null,"type":"mem"},"readable":"-"},"syscr":{"raw":{"value":null,"type":"num"},"readable":"-"},"syscw":{"raw":{"value":null,"type":"num"},"readable":"-"},"read_bytes":{"raw":{"value":null,"type":"mem"},"readable":"-"},"write_bytes":{"raw":{"value":null,"type":"mem"},"readable":"-"},"attempt":{"raw":{"value":null,"type":"num"},"readable":"-"},"workdir":{"raw":{"value":null,"type":"str"},"readable":"-"},"script":{"raw":{"value":null,"type":"str"},"readable":"-"},"scratch":{"raw":{"value":null,"type":"str"},"readable":"-"},"queue":{"raw":{"value":null,"type":"str"},"readable":"-"},"cpus":{"raw":{"value":1,"type":"Integer","scale":"","unit":""},"readable":"1"},"memory":{"raw":{"value":7.516192768E9,"type":"Double","scale":"","unit":"B"},"readable":"7 GB"},"disk":{"raw":{"value":null,"type":"mem"},"readable":"-"},"time":{"raw":{"value":3600000.0000,"type":"BigDecimal","scale":"ms","unit":""},"readable":"3600s"},"env":{"raw":{"value":null,"type":"str"},"readable":"-"},"error_action":{"raw":{"value":null,"type":"str"},"readable":"-"},"vol_ctxt":{"raw":{"value":null,"type":"num"},"readable":"-"},"inv_ctxt":{"raw":{"value":null,"type":"num"},"readable":"-"},"hostname":{"raw":{"value":null,"type":"str"},"readable":"-"},"cpu_model":{"raw":{"value":"Unknown model","type":"String"},"readable":"Unknown model"},"energy":{"raw":{"value":14.0175,"type":"Double","scale":"","unit":"Wh"},"readable":"14.02 Wh"},"co2e":{"raw":{"value":6.7284,"type":"Double","scale":"","unit":"g"},"readable":"6.73 g"},"co2eMarket":{"raw":{"value":null,"type":"Number","scale":"m","unit":"g"},"readable":"-"},"ci":{"raw":{"value":480.0,"type":"Double","scale":"","unit":"gCO\u2082e/kWh"},"readable":"480 gCO\u2082e/kWh"},"cpuUsage":{"raw":{"value":100.0,"type":"Double","scale":"%","unit":""},"readable":"100 %"},"powerdrawCPU":{"raw":{"value":11.41,"type":"Double","scale":"","unit":"W"},"readable":"11.41 W"},"rawEnergyProcessor":{"raw":{"value":0.01141,"type":"Double"},"readable":"11.41 Wh"},"rawEnergyMemory":{"raw":{"value":0.0026075,"type":"Double"},"readable":"2.61 Wh"}}],"summary":{"observerTestProcess":{"co2e":[6.7284],"energy":[0.0140175],"co2e_non_cached":[6.7284],"energy_non_cached":[0.0140175]}}};
+    window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir7359220000031252436/report_test.html"},{"option":"summaryFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir7359220000031252436/summary_test.txt"},{"option":"traceFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir7359220000031252436/trace_test.txt"}];
     window.ciRecords = {};
   </script>
 
@@ -1105,7 +1053,7 @@
       <dl>
         <dt>Run times</dt>
         <dd>
-          <span id="workflow_start">07-Nov-2025 14:59:02</span> - <span id="workflow_complete">07-Nov-2025 14:59:02</span>
+          <span id="workflow_start">12-Nov-2025 17:53:56</span> - <span id="workflow_complete">12-Nov-2025 17:53:56</span>
           (<span id="completed_fromnow"></span>duration: <strong>null</strong>)
         </dd>
 
@@ -1158,7 +1106,7 @@
           </div>
 
           <div class="metric-card card p-1">
-            <span class="metric">5h 21min 43.83s</span>
+            <span class="metric">5h</span>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M378.31 378.49L298.42 288h30.63c9.01 0 16.98-5 20.78-13.06c3.8-8.04 2.55-17.26-3.28-24.05L268.42 160h28.89c9.1 0 17.3-5.35 20.86-13.61c3.52-8.13 1.86-17.59-4.24-24.08L203.66 4.83c-6.03-6.45-17.28-6.45-23.32 0L70.06 122.31c-6.1 6.49-7.75 15.95-4.24 24.08C69.38 154.65 77.59 160 86.69 160h28.89l-78.14 90.91c-5.81 6.78-7.06 15.99-3.27 24.04C37.97 283 45.93 288 54.95 288h30.63L5.69 378.49c-6 6.79-7.36 16.09-3.56 24.26c3.75 8.05 12 13.25 21.01 13.25H160v24.45l-30.29 48.4c-5.32 10.64 2.42 23.16 14.31 23.16h95.96c11.89 0 19.63-12.52 14.31-23.16L224 440.45V416h136.86c9.01 0 17.26-5.2 21.01-13.25c3.8-8.17 2.44-17.47-3.56-24.26z"/></svg>
             <span class="metric-title">Tree sequestration time</span>
           </div>
@@ -1193,7 +1141,7 @@
           </div>
 
           <div class="metric-card card p-1">
-            <span class="metric">5h 21min 43.83s</span>
+            <span class="metric">5h</span>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M378.31 378.49L298.42 288h30.63c9.01 0 16.98-5 20.78-13.06c3.8-8.04 2.55-17.26-3.28-24.05L268.42 160h28.89c9.1 0 17.3-5.35 20.86-13.61c3.52-8.13 1.86-17.59-4.24-24.08L203.66 4.83c-6.03-6.45-17.28-6.45-23.32 0L70.06 122.31c-6.1 6.49-7.75 15.95-4.24 24.08C69.38 154.65 77.59 160 86.69 160h28.89l-78.14 90.91c-5.81 6.78-7.06 15.99-3.27 24.04C37.97 283 45.93 288 54.95 288h30.63L5.69 378.49c-6 6.79-7.36 16.09-3.56 24.26c3.75 8.05 12 13.25 21.01 13.25H160v24.45l-30.29 48.4c-5.32 10.64 2.42 23.16 14.31 23.16h95.96c11.89 0 19.63-12.52 14.31-23.16L224 440.45V416h136.86c9.01 0 17.26-5.2 21.01-13.25c3.8-8.17 2.44-17.47-3.56-24.26z"/></svg>
             <span class="metric-title">Tree sequestration time</span>
           </div>

@@ -100,9 +100,12 @@ class ReportFileCreatorTest extends Specification{
         when:
         CO2RecordTree workflowStats = new CO2RecordTree('workflow', [level: 'workflow'])
         CO2RecordTree processTree =  workflowStats.addChild(new CO2RecordTree('process', [level: 'process']))
-        processTree.addChild(
-                new CO2RecordTree('task', [level: 'task'], new CO2Record(new TraceRecord(), 100.0d, co2e))
+        CO2Record co2Record = new CO2Record(
+                new TraceRecord(), 100.0, co2e,
+                null, null, null, null, null, null, null, null, null, null
         )
+
+        processTree.addChild(new CO2RecordTree('task', [level: 'task'], co2Record))
         workflowStats.summarize()
         workflowStats.collectAdditionalMetrics()
 
@@ -133,14 +136,14 @@ class ReportFileCreatorTest extends Specification{
                     '[' +
                         '{' +
                             '"task_id":{"raw":{"value":"111","type":"String"},"readable":"111"},' +
-                            '"hash":{"raw":{"value":"ca/372f78","type":"String"},"readable":"<div class=\\"script_block short\\"><code>ca/372f78</code></div>"},' +
+                            '"hash":{"raw":{"value":"ca/372f78","type":"String"},"readable":"ca/372f78","report":"<div class=\\"script_block short\\"><code>ca/372f78</code></div>"},' +
                             '"native_id":{"raw":{"value":null,"type":"str"},"readable":"-"},' +
                             '"process":{"raw":{"value":"reportTestProcess","type":"String"},"readable":"reportTestProcess"},' +
                             '"module":{"raw":{"value":null,"type":"str"},"readable":"-"},' +
                             '"container":{"raw":{"value":null,"type":"str"},"readable":"-"},' +
                             '"tag":{"raw":{"value":null,"type":"str"},"readable":"-"},' +
                             '"name":{"raw":{"value":"testTask","type":"String"},"readable":"testTask"},' +
-                            '"status":{"raw":{"value":"COMPLETED","type":"String"},"readable":"<span class=\\"badge badge-success\\">COMPLETED</span>"},' +
+                            '"status":{"raw":{"value":"COMPLETED","type":"String"},"readable":"COMPLETED","report":"<span class=\\"badge badge-success\\">COMPLETED</span>"},' +
                             '"exit":{"raw":{"value":null,"type":"str"},"readable":"-"},' +
                             '"submit":{"raw":{"value":null,"type":"date"},"readable":"-"},' +
                             '"start":{"raw":{"value":null,"type":"date"},"readable":"-"},' +
@@ -180,8 +183,8 @@ class ReportFileCreatorTest extends Specification{
                             '"ci":{"raw":{"value":475.0,"type":"Double","scale":"","unit":"gCO\\u2082e/kWh"},"readable":"475 gCO\\u2082e/kWh"},' +
                             '"cpuUsage":{"raw":{"value":100.0,"type":"Double","scale":"%","unit":""},"readable":"100 %"},' +
                             '"powerdrawCPU":{"raw":{"value":12.0,"type":"Double","scale":"","unit":"W"},"readable":"12 W"},' +
-                    '"rawEnergyProcessor":{"raw":0.5,"readable":"500 Wh"},' +
-                    '"rawEnergyMemory":{"raw":0.5,"readable":"500 Wh"}' +
+                            '"rawEnergyProcessor":{"raw":{"value":0.5,"type":"Double"},"readable":"500 Wh"},' +
+                            '"rawEnergyMemory":{"raw":{"value":0.5,"type":"Double"},"readable":"500 Wh"}' +
                         '}' +
                     '],' +
                 '"summary":' +

@@ -2,13 +2,16 @@
 /**
  * Decides whether raw or readable values are to be displayed
  *
- * @param {*} data The data (number/string/...)
+ * @param {*} data The data
  * @param {*} type Type of the data
  * @returns
  */
 function rawOrReadable(data, type) {
   if (type === 'sort' || $('#nf-table-humanreadable').val() == 'false') {
     return data['raw'].value
+  }
+  if(data.hasOwnProperty('report')) {
+    return data['report']
   }
   return data['readable']
 }

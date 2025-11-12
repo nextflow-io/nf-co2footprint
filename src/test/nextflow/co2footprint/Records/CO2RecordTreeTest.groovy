@@ -32,7 +32,7 @@ class CO2RecordTreeTest extends Specification {
 
         co2Record = new CO2Record(
                 traceRecord, 2.0, 200.0, null, 100.0,
-                1.0, 10, 60*60*1000, 1, 7.0, 'Some model'
+                1.0, 10, 60*60*1000, 1, 7.0, 'Some model', 5.0d, 5.0d
         )
 
         CO2RecordTree process1 = recordsTree.addChild(new CO2RecordTree('process1', [level: 'process']))
@@ -49,7 +49,7 @@ class CO2RecordTreeTest extends Specification {
             process.addChild(new CO2RecordTree("task_${counter}", [level: 'task'],
                 new CO2Record(
                     traceRecord2, value, value, null, 475.0,
-                    100.0, 1024**3, 1.0d, 1, 12, 'Unknown model'
+                    100.0, 1024**3, 1.0d, 1, 12, 'Unknown model', 5.0d, 5.0d
                 )
             ))
         }
@@ -83,7 +83,9 @@ class CO2RecordTreeTest extends Specification {
                 ci:[475.0, 475.0, 475.0],
                 cpuUsage:[100.0, 100.0, 100.0],
                 time:[1.0, 1.0, 1.0],
-                powerdrawCPU:[12.0, 12.0, 12.0]
+                powerdrawCPU:[12.0, 12.0, 12.0],
+                rawEnergyProcessor:[5.0, 5.0, 5.0],
+                rawEnergyMemory:[5.0, 5.0, 5.0],
         ]]
     }
 
@@ -137,6 +139,12 @@ class CO2RecordTreeTest extends Specification {
                 '  powerdrawCPU:\n' +
                 '    raw: {value: 7.0, type: Double, scale: \'\', unit: W}\n' +
                 '    readable: 7 W\n' +
+                '  rawEnergyProcessor:\n' +
+                '    raw: {value: 10.0, type: Double}\n' +
+                '    readable: 10 kWh\n' +
+                '  rawEnergyMemory:\n' +
+                '    raw: {value: 10.0, type: Double}\n' +
+                '    readable: 10 kWh\n' +
                 'children:\n' +
                 '- name: test1\n' +
                 '  metaData: {level: process}\n' +
@@ -174,6 +182,12 @@ class CO2RecordTreeTest extends Specification {
                 '    powerdrawCPU:\n' +
                 '      raw: {value: 7.0, type: Double, scale: \'\', unit: W}\n' +
                 '      readable: 7 W\n' +
+                '    rawEnergyProcessor:\n' +
+                '      raw: {value: 5.0, type: Double}\n' +
+                '      readable: 5 kWh\n' +
+                '    rawEnergyMemory:\n' +
+                '      raw: {value: 5.0, type: Double}\n' +
+                '      readable: 5 kWh\n' +
                 '  children:\n' +
                 '  - name: \'1\'\n' +
                 '    metaData: {level: task}\n' +
@@ -211,6 +225,12 @@ class CO2RecordTreeTest extends Specification {
                 '      powerdrawCPU:\n' +
                 '        raw: {value: 7.0, type: Double, scale: \'\', unit: W}\n' +
                 '        readable: 7 W\n' +
+                '      rawEnergyProcessor:\n' +
+                '        raw: {value: 5.0, type: Double}\n' +
+                '        readable: 5 kWh\n' +
+                '      rawEnergyMemory:\n' +
+                '        raw: {value: 5.0, type: Double}\n' +
+                '        readable: 5 kWh\n' +
                 '    children: []\n' +
                 '- name: test2\n' +
                 '  metaData: {level: process}\n' +
@@ -248,6 +268,12 @@ class CO2RecordTreeTest extends Specification {
                 '    powerdrawCPU:\n' +
                 '      raw: {value: 7.0, type: Double, scale: \'\', unit: W}\n' +
                 '      readable: 7 W\n' +
+                '    rawEnergyProcessor:\n' +
+                '      raw: {value: 5.0, type: Double}\n' +
+                '      readable: 5 kWh\n' +
+                '    rawEnergyMemory:\n' +
+                '      raw: {value: 5.0, type: Double}\n' +
+                '      readable: 5 kWh\n' +
                 '  children:\n' +
                 '  - name: \'2\'\n' +
                 '    metaData: {level: task}\n' +
@@ -285,6 +311,12 @@ class CO2RecordTreeTest extends Specification {
                 '      powerdrawCPU:\n' +
                 '        raw: {value: 7.0, type: Double, scale: \'\', unit: W}\n' +
                 '        readable: 7 W\n' +
+                '      rawEnergyProcessor:\n' +
+                '        raw: {value: 5.0, type: Double}\n' +
+                '        readable: 5 kWh\n' +
+                '      rawEnergyMemory:\n' +
+                '        raw: {value: 5.0, type: Double}\n' +
+                '        readable: 5 kWh\n' +
                 '    children: []\n'
         List<String> lines = yamlString.readLines()
         List<String> expectedLines = expectedYamlString.readLines()

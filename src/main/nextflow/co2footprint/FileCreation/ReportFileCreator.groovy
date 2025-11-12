@@ -211,9 +211,7 @@ class ReportFileCreator extends BaseFileCreator{
     protected Map<String, String> renderCO2TotalsJson() {
         Map<String, String> totalsMap = [:]
 
-        ['', '_non_cached', '_market'].each { String suffix ->
-            totalsMap.putAll(makeCO2Total(suffix))
-        }
+        ['', '_non_cached', '_market'].each { String suffix -> totalsMap.putAll(makeCO2Total(suffix)) }
 
         return totalsMap
     }
