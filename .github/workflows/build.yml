@@ -58,5 +58,5 @@ jobs:
       - name: Fail if Gradle check failed
         if: ${{ steps.gradle.outputs.exit_code }}
         run: |
-          echo "Gradle check failed with exit code ${{ steps.gradle.outputs.exit_code }}"
+          echo "Gradle check failed with exit code `${{ steps.gradle.outputs.exit_code }}`. See GitHub Artifacts for a comprehensive report."
           exit ${{ steps.gradle.outputs.exit_code }}
