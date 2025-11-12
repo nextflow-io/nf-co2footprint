@@ -43,7 +43,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload test and check reports
-        if: always()  # run even if previous step failed
+        if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
           name: gradle-check-reports_${{ matrix.java_version }}
