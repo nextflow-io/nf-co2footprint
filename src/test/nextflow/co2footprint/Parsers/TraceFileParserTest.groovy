@@ -11,7 +11,7 @@ import java.time.ZoneId
 class TraceFileParserTest extends Specification {
     Long convertEpochMillisToLocalZone(Long epochMillis, String originalZone) {
         return Instant.ofEpochMilli(epochMillis).atZone(ZoneId.of(originalZone))   // Original Instant
-                .withZoneSameInstant(ZoneId.systemDefault()).toInstant().toEpochMilli() // Converted to new EpochMilli
+                .withZoneSameLocal(ZoneId.systemDefault()).toInstant().toEpochMilli() // Converted to new EpochMilli
     }
 
     def 'Test parsing of regular trace file.'() {
