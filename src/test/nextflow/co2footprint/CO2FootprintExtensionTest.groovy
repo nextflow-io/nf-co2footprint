@@ -38,7 +38,7 @@ class CO2FootprintExtensionTest extends Specification {
 
         when:
         List<CO2Record> co2Records = extension.calculateCO2(
-                this.class.getResource('/execution-trace-test.txt').path as Path, [:]
+                this.class.getResource('/execution-trace-regular.tsv').path as Path, [:]
         )
 
         then:
@@ -65,7 +65,7 @@ class CO2FootprintExtensionTest extends Specification {
 
         when:
         List<CO2Record> co2Records = extension.calculateCO2(
-                this.class.getResource('/execution-trace-test.txt').path as Path, [traceFile: tracePath]
+                this.class.getResource('/execution-trace-regular.tsv').path as Path, [traceFile: tracePath]
         )
 
         then:

@@ -97,7 +97,7 @@ version = '1.1.0'
 
 nextflowPlugin {
     // Minimum Nextflow version
-    nextflowVersion = '24.10.6'
+    nextflowVersion = '25.10.0'
 
     // Plugin metadata
     provider = 'nextflow'

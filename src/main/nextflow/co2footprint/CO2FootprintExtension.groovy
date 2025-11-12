@@ -1,8 +1,7 @@
 package nextflow.co2footprint
 
 import nextflow.Session
-import nextflow.co2footprint.Metrics.Converter
-import nextflow.co2footprint.Metrics.Quantity
+import nextflow.co2footprint.Parsers.TraceFileParser
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.Records.CiRecordCollector
@@ -11,7 +10,6 @@ import nextflow.plugin.extension.PluginExtensionPoint
 import nextflow.trace.TraceRecord
 
 import java.nio.file.Path
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.util.concurrent.ConcurrentHashMap
 
@@ -42,54 +40,7 @@ class CO2FootprintExtension extends PluginExtensionPoint {
      */
     @Function
     List<TraceRecord> parseTraceFile(Path tracePath, String delimiter='\t') {
-        SimpleDateFormat dateParser = new SimpleDateFormat('yyyy-MM-dd HH:mm:ss.SSS')
-        List<String> lines = tracePath.text.readLines()
-        List<String> headers = lines.remove(0).split(delimiter)
-
-        List<TraceRecord> traceRecords = []
-        lines.each { String line ->
-            TraceRecord traceRecord = new TraceRecord()
-            List<String> entries = line.split(delimiter)
-            headers.eachWithIndex { String key, Integer i ->
-                Object value = entries[i]
-
-                // Perform readable and raw value parsing
-                value = switch(TraceRecord.FIELDS.get(key)) {
-                    case 'mem' -> if (value.endsWith('B')) {
-                        List<String> split = value.split(' ')
-                        Quantity quantity = Converter.scaleUnits(split[0].toDouble(), split[1].dropRight(1), 'B', '')
-                        quantity.value.toLong()
-                    }
-                    case 'date' -> { value.matches('\\d+') ? value : dateParser.parse(value).toInstant().toEpochMilli() }
-                    case 'time' -> {
-                        if(value.matches('\\d+')) { value }
-                        else {
-                            Long time = 0
-                            value.split(' ').each { String timePart ->
-                                String numeric = timePart.find('\\d+[.]?\\d*')
-                                Quantity timeStep =  Converter.scaleTime(numeric.toDouble(), timePart.replace(numeric, ''), 'ms')
-                                time += timeStep.value.toLong()
-                            }
-                            time
-                        }
-                    }
-                    case 'perc' -> value.replace('%', '').toDouble()
-                    case 'num' -> value.toDouble()
-                    default -> value
-                }
-
-                // Include the entry into the trace record
-                traceRecord.put(key, value)
-            }
-
-            // Add additional entries
-            traceRecord.put('process', traceRecord.get('name'))
-
-            // Add to collection of trace records
-            traceRecords.add(traceRecord)
-        }
-
-        return traceRecords
+        return TraceFileParser.parseExecutionTraceFile(tracePath, delimiter)
     }
 
     /**

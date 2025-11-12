@@ -129,13 +129,13 @@ class CO2FootprintFactory implements TraceObserverFactory {
         TDPDataMatrix tdpDataMatrix=this.tdpDataMatrix,
         CIDataMatrix ciDataMatrix=this.ciDataMatrix
     ) {
-        Map<String, Object> co2footprintConfig = (session.config.navigate('co2footprint') as Map ?: [:])
+        Map<String, Object> co2footprintConfig = (session?.config?.navigate('co2footprint') as Map ?: [:])
         if (configModifications) { co2footprintConfig += configModifications}
         return new CO2FootprintConfig(
                 co2footprintConfig,
                 tdpDataMatrix,
                 ciDataMatrix,
-                session.config.navigate('process') as Map
+                session?.config?.navigate('process') as Map
         )
     }
 

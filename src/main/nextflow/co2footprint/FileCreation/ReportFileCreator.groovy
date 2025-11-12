@@ -14,7 +14,6 @@ import groovy.util.logging.Slf4j
 
 import nextflow.Session
 import nextflow.processor.TaskId
-import nextflow.script.WorkflowMetadata
 import nextflow.trace.TraceHelper
 import nextflow.trace.TraceRecord
 
@@ -131,7 +130,7 @@ class ReportFileCreator extends BaseFileCreator{
                 // Plugin information
                 // Metadata
                 plugin_version: version,
-                workflow : session.getWorkflowMetadata(),
+                workflow : session?.getWorkflowMetadata() ?: [:],
                 options : renderOptionsJson(),
 
                 // Data

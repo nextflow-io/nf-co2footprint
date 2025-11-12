@@ -118,7 +118,7 @@ class CO2FootprintConfig extends BaseConfig {
         configMap ?= [:]
 
         // Assign values from map to config
-        configMap.each { name, value ->
+        configMap.each { String name, Object value ->
             if (this.containsKey(name)) {
                 this.get(name).set(value)
             } else if (name != 'params') {
