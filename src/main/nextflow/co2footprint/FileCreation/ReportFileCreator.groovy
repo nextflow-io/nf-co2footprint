@@ -130,7 +130,7 @@ class ReportFileCreator extends BaseFileCreator{
                 // Plugin information
                 // Metadata
                 plugin_version: version,
-                workflow : session.getWorkflowMetadata(),
+                workflow : session?.getWorkflowMetadata() ?: [:],
                 options : renderOptionsJson(),
 
                 // Data

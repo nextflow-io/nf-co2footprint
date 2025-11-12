@@ -41,9 +41,9 @@ class CO2FootprintObserver implements TraceObserver {
     private Session session
 
     // Output file objects
-    private TraceFileCreator traceFile
-    private SummaryFileCreator summaryFile
-    private ReportFileCreator reportFile
+    TraceFileCreator traceFile
+    SummaryFileCreator summaryFile
+    ReportFileCreator reportFile
 
     // Overwrite existing files if true
     private boolean overwrite
@@ -55,7 +55,7 @@ class CO2FootprintObserver implements TraceObserver {
     CO2FootprintConfig config
 
     // Aggregator for resource usage stats
-    private CO2RecordAggregator aggregator
+    CO2RecordAggregator aggregator
 
     // Calculator for CO₂ footprint
     private CO2FootprintComputer co2FootprintComputer
@@ -125,7 +125,7 @@ class CO2FootprintObserver implements TraceObserver {
      *
      * @param trace the TraceRecord of the task that just started
      */
-    private synchronized void startRecord(TraceRecord trace) {
+    synchronized void startRecord(TraceRecord trace) {
         // Keep started tasks
         runningTasks[trace.taskId] = trace
 
@@ -140,7 +140,7 @@ class CO2FootprintObserver implements TraceObserver {
      *
      * @param trace TraceRecord of the finished task
      */
-    private synchronized void aggregateRecords(TraceRecord trace) {
+    synchronized CO2Record aggregateRecords(TraceRecord trace) {
         // Remove task from set of running tasks
         runningTasks.remove(trace.taskId)
 
@@ -157,42 +157,15 @@ class CO2FootprintObserver implements TraceObserver {
         aggregator.add(trace, co2Record)
 
         // Optionally write to trace file
-        this.traceFile?.write(trace, co2Record)
+        if(traceFile) {
+            if (!traceFile.created) { traceFile.create() }
+            traceFile.write(trace, co2Record)
+        }
+
+        return co2Record
     }
 
-    // ------ OBSERVER METHODS ------
-
-    // ---- WORKFLOW LEVEL ----
-
-    /**
-     * Start of the workflow; Creates the trace file.
-     *
-     * @param session The current Nextflow session
-     */
-    @Override
-    void onFlowCreate(Session session) {
-        log.debug('Workflow started -- CO2Footprint file instantiated')
-
-        // Construct session and aggregator
-        this.session = session
-        this.aggregator = new CO2RecordAggregator()
-
-        // Start hourly CI updating
-        timeCiRecordCollector.start()
-
-        // Create trace file
-        traceFile.create()
-    }
-
-    /**
-     * Save the pending processes and close the files
-     */
-    void onFlowComplete() {
-        log.debug('Workflow completed -- rendering & saving files')
-
-        // Stop hourly CI updating
-        timeCiRecordCollector.stop()
-
+    void renderFiles() {
         // Compute the statistics (total, mean, min, max, quantiles) on process level
         final Map<String, Map<String, Map<String, ?>>> processStats = aggregator.computeProcessStats()
         // Collect the total sums of all metrics
@@ -235,6 +208,41 @@ class CO2FootprintObserver implements TraceObserver {
             "🌱 The workflow run used ${Converter.toReadableUnits(totalStats.get('energy'),'k','Wh')} of electricity, " +
             "resulting in the release of ${Converter.toReadableUnits(totalStats.get('co2e'),'', 'g')} of CO₂ equivalents into the atmosphere."
         )
+    }
+
+    // ------ OBSERVER METHODS ------
+
+    // ---- WORKFLOW LEVEL ----
+
+    /**
+     * Start of the workflow; Creates the trace file.
+     *
+     * @param session The current Nextflow session
+     */
+    @Override
+    void onFlowCreate(Session session) {
+        log.debug('Workflow started -- CO2Footprint file instantiated')
+
+        // Construct session and aggregator
+        this.session = session
+        aggregator = new CO2RecordAggregator()
+
+        // Start hourly CI updating
+        timeCiRecordCollector.start()
+    }
+
+    /**
+     * Save the pending processes and close the files
+     */
+    @Override
+    void onFlowComplete() {
+        log.debug('Workflow completed -- rendering & saving files')
+
+        // Stop hourly CI updating
+        timeCiRecordCollector.stop()
+
+        // Write files
+        renderFiles()
     }
 
 

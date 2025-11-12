@@ -97,13 +97,14 @@ version = '1.1.0'
 
 nextflowPlugin {
     // Minimum Nextflow version
-    nextflowVersion = '24.10.6'
+    nextflowVersion = '25.10.0'
 
     // Plugin metadata
     provider = 'nextflow'
     className = 'nextflow.co2footprint.CO2FootprintPlugin'
     extensionPoints = [
-            'nextflow.co2footprint.CO2FootprintFactory'
+            'nextflow.co2footprint.CO2FootprintFactory',
+            'nextflow.co2footprint.CO2FootprintExtension'
     ]
 
 }

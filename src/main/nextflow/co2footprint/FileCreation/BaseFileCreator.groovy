@@ -23,7 +23,7 @@ class BaseFileCreator {
     protected PrintWriter file
 
     // Whether this file was created
-    protected boolean created
+    boolean created
 
     /**
      * Constructor for generic file class.

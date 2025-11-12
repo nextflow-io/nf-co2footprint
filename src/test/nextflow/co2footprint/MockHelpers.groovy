@@ -177,6 +177,6 @@ class MockTaskHandler extends TaskHandler {
     }
 
     @Override
-    void kill() { }
+    void killTask() { }
 
 }
