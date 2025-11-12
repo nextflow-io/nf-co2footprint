@@ -234,6 +234,7 @@ class CO2FootprintObserver implements TraceObserver {
     /**
      * Save the pending processes and close the files
      */
+    @Override
     void onFlowComplete() {
         log.debug('Workflow completed -- rendering & saving files')
 

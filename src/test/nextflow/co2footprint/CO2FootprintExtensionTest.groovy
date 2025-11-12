@@ -45,7 +45,8 @@ class CO2FootprintExtensionTest extends Specification {
         co2Records.size() == 8
         co2Records[7] == new CO2Record(
                 3.2729169285E-6, 3.2729169285E-4, null, 2.777778E-4, 100.0,
-                1, 11.41, 100.0, 1, 'VALUE_TESTING', null
+                1, 11.41, 100.0, 1, 'VALUE_TESTING', null,
+                3.169444698E-6, 1.034722305E-7
         )
         // Check whether all files exist
         ['trace', 'summary',  'report'].each { String fileType ->
@@ -72,7 +73,8 @@ class CO2FootprintExtensionTest extends Specification {
         co2Records.size() == 8
         co2Records[7] == new CO2Record(
                 3.2729169285E-6, 3.2729169285E-4, null, 2.777778E-4, 100.0,
-                1, 11.41, 100.0, 1, 'VALUE_TESTING', null
+                1, 11.41, 100.0, 1, 'VALUE_TESTING', null,
+                3.169444698E-6, 1.034722305E-7
         )
         fileChecker.checkIsFile(tracePath)
     }
