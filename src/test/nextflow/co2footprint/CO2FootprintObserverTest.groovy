@@ -39,7 +39,7 @@ class CO2FootprintObserverTest extends Specification{
             [
                 'task_id': '111',
                 'process': 'observerTestProcess',
-                'realtime': (1 as Long) * (3600000 as Long), // 1 h 
+                'realtime': (1 as Long) * (3600000 as Long), // 1 h
                  'cpus': 1,
                  'cpu_model': "Unknown model",
                  '%cpu': 100.0,
@@ -82,14 +82,14 @@ class CO2FootprintObserverTest extends Specification{
     }
 
     // ------ FULL RUN CALCULATION TESTS ------
-    // The expected results were compared with the results from https://calculator.green-algorithms.org (v2.2), where the following values were used: 
+    // The expected results were compared with the results from https://calculator.green-algorithms.org (v2.2), where the following values were used:
     // - Running time: 1h
     // - Type of cores: CPU
     // - Number of cores: 1
     // - Model: Any
     // - Memory available: 7 GB
     // - Platform used: Personal computer
-    // - Location: world 
+    // - Location: world
     // - Usage factor: 1
 
     def 'test full run calculation of total CO2e and energy consumption with specific CI' () {
@@ -226,13 +226,15 @@ class CO2FootprintObserverTest extends Specification{
         headers.size() == values.size()
 
         headers == [
-                'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'carbon_intensity', '%cpu', 'memory', 'realtime', 'cpus', 'powerdraw_cpu', 'cpu_model'
+                'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'carbon_intensity', '%cpu',
+                'memory', 'realtime', 'cpus', 'powerdraw_cpu', 'cpu_model', 'rawEnergyProcessor', 'rawEnergyMemory',
         ]
         values == [
-            '111', 'COMPLETED', '-', '14.02 Wh', '6.73 g', '-', '480 gCO₂e/kWh', '100 %', '7 GB', '3600s', '1', '11.41 W', 'Unknown model'
+            '111', 'COMPLETED', '-', '14.02 Wh', '6.73 g', '-', '480 gCO₂e/kWh', '100 %',
+            '7 GB', '3600s', '1', '11.41 W', 'Unknown model', '11.41 Wh', '2.61 Wh',
         ] // GA: CO₂e is 6.94g with CI of 475 gCO₂eq/kWh
 
-        fileChecker.compareChecksums(tracePath, 'a742ca72b4d57809644fe19af7a7d73c')
+        fileChecker.compareChecksums(tracePath, '43c74a1981bb0a8c7694a97d697e22ae')
 
 
         // Check Summary File
@@ -249,7 +251,7 @@ class CO2FootprintObserverTest extends Specification{
         fileChecker.runChecks(
             reportPath,
             [
-                975: '    window.options = [' +
+                1057: '    window.options = [' +
                         '{"option":"ci","value":"480.0"},'+
                         '{"option":"ciMarket","value":null},' +
                         '{"option":"customCpuTdpFile","value":null},' +
@@ -262,7 +264,7 @@ class CO2FootprintObserverTest extends Specification{
                         "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
                         "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
                         "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];",
-                1026: '          ' +
+                1108: '          ' +
                         "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                         " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
             ]

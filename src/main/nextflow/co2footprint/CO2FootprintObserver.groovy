@@ -4,6 +4,7 @@ import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
 
 import nextflow.Session
+import nextflow.co2footprint.Metrics.Converter
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.FileCreation.ReportFileCreator
@@ -167,7 +168,7 @@ class CO2FootprintObserver implements TraceObserver {
         aggregator.add(trace, co2Record)
 
         // Optionally write to trace file
-        this.traceFile?.write(trace.taskId, trace, co2Record)
+        this.traceFile?.write(trace, co2Record)
     }
 
     // ------ OBSERVER METHODS ------
@@ -245,8 +246,15 @@ class CO2FootprintObserver implements TraceObserver {
             }
         }
 
-        // write remaining tasks in the trace file
+        // Close all files (writes remaining tasks in the trace file)
         traceFile?.close(runningTasks)
+        summaryFile.close()
+        reportFile.close()
+
+        log.info(
+            "🌱 The workflow run used ${Converter.toReadableUnits(totalStats.get('energy'),'k','Wh')} of electricity, " +
+            "resulting in the release of ${Converter.toReadableUnits(totalStats.get('co2e'),'', 'g')} of CO₂ equivalents into the atmosphere."
+        )
     }
 
 

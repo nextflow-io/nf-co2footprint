@@ -1,5 +1,10 @@
 # New
 ## Bug Fixes:
+## Misc:
+## Features:
+
+# Version 1.1.0
+## Bug Fixes:
 - Conversion of time leaving trailing full bigger units (e.g. 60s instead of 1min)
 - Small stylistic overreaches in report fixed
 - Hard-code locale for decimal separator
@@ -11,12 +16,17 @@
 - HTML & CSS clarity improvements through comments and block separation
 - Removed some unnecessary conversions in the Computer, JavaScript and Tests
 - Removed `utils` and `HelperFunctions` in favor of `Metrics` class
+- Moved from `plotly.min.js` to `plotly-custom.min.js` for smaller report file size
 - Migration to new plugin template (https://github.com/nextflow-io/nf-plugin-template)
+- Added link to documentation to warnings about unknown CPUs
+- Added separate energy measurements of Processor and Memory to CO2Record
 
 ## Features:
 - Base config class with more control over parameters
 - Added sample outputs to documentation
 - Support for custom polynomial CPU power models via the `cpuPowerModel` configuration parameter
+- Automatic detection of AWS region and mapping to geographic Zone ID
+- Verbose output after run including major metrics
 
 # Version 1.0.0
 ## Bug Fixes:

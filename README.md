@@ -27,7 +27,7 @@ Declare the plugin in your Nextflow pipeline configuration file:
 
 ```groovy title="nextflow.config"
 plugins {
-  id 'nf-co2footprint@1.0.0'
+  id 'nf-co2footprint@1.1.0'
 }
 ```
 
@@ -46,6 +46,10 @@ For more details, see the [output documentation](usage/output.md).
 Before contributing, please read the [contribution guidelines](contributing/guidelines.md) carefully. You may also find the recommended [testing setup](contributing/setup.md) helpful.
 
 After your changes are accepted. maintainers may then [publish](contributing/publishing.md) a new version along with your contribution.
+
+## Troubleshooting
+If you encounter any problem, please have a look at our [FAQ](usage/FAQ.md) and the [issue section](https://github.com/nextflow-io/nf-co2footprint/issues) on our Github.
+If you can't find a satisfying solution please open a new issue. Chances are you are not the only one experiencing it.
 
 ## Credits
 
@@ -69,7 +73,7 @@ We additionally thank the following people for their extensive assistance in the
 
 ### How to cite:
 ```text
-J. Carl, N. Volkmann, J. Mir-Pedrol, P. Ewels, S. Nahnsen, S. Krakau nextflow-io/nf-co2footprint v1.0.0. (Jun., 2025). nextflow-io. Available: https://github.com/nextflow-io/nf-co2footprint
+J. Carl, N. Volkmann, J. Mir-Pedrol, P. Ewels, S. Nahnsen, S. Krakau nextflow-io/nf-co2footprint v1.1.0. (Nov., 2025). nextflow-io. Available: https://github.com/nextflow-io/nf-co2footprint
 ```
 ```Bibtex
 @software{nf_co2footprint_plugin,
@@ -80,10 +84,10 @@ J. Carl, N. Volkmann, J. Mir-Pedrol, P. Ewels, S. Nahnsen, S. Krakau nextflow-io
                  Sven Nahnsen and
                  Sabrina Krakau}
     title   =   {nextflow-io/nf-co2footprint - A Nextflow plugin to estimate the CO2e footprint of pipeline runs}
-    month   =   {June}
+    month   =   {November}
     year    =   {2025}
     publisher = {Nextflow-io}
-    version =   {v1.0.0}
+    version =   {v1.1.0}
     url     =   {https://doi.org/10.5281/zenodo.14622304}
     doi     =   {10.5281/zenodo.14622304}
 }

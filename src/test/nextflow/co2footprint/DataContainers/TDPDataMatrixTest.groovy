@@ -113,9 +113,10 @@ class TDPDataMatrixTest extends Specification {
         logChecker.checkLogs(1,  [
                 'Could not find CPU model "Non-existent" in given TDP data table. ' +
                 'Using default CPU power draw value (100.0 W).\n' +
-                '\t🔖 You can help by reporting this warning and your `.nextflow.log` file to ' +
-                'https://github.com/nextflow-io/nf-co2footprint/issues/new?template=missing_chip.yaml. Thanks.'
+                '\t🔖 To fix this warning, please refer to https://nextflow-io.github.io/nf-co2footprint/usage/faq/#cpu-model.'
         ])
+        // Second instance should be filtered
+        listAppender.list.size() == 1
 
     }
 
@@ -192,8 +193,7 @@ class TDPDataMatrixTest extends Specification {
         logChecker.checkLogs(null, [
                 'Could not find CPU model "Non-existent2" in given TDP data table. ' +
                 'Using default CPU power draw value (100.0 W).\n' +
-                '\t🔖 You can help by reporting this warning and your `.nextflow.log` file to ' +
-                'https://github.com/nextflow-io/nf-co2footprint/issues/new?template=missing_chip.yaml. Thanks.'
+                '\t🔖 To fix this warning, please refer to https://nextflow-io.github.io/nf-co2footprint/usage/faq/#cpu-model.'
         ])
         logChecker.clear()
 
@@ -202,8 +202,7 @@ class TDPDataMatrixTest extends Specification {
         logChecker.checkLogs(null, [
                 'Could not find CPU model "Indel® i3-Fantasy(TM) 10Trillion GW" in given TDP data table. ' +
                 'Using default CPU power draw value (100.0 W).\n' +
-                '\t🔖 You can help by reporting this warning and your `.nextflow.log` file to ' +
-                'https://github.com/nextflow-io/nf-co2footprint/issues/new?template=missing_chip.yaml. Thanks.'
+                '\t🔖 To fix this warning, please refer to https://nextflow-io.github.io/nf-co2footprint/usage/faq/#cpu-model.'
         ])
     }
 

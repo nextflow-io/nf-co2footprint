@@ -12,7 +12,7 @@ To customize the plugin settings to your computing environment and preferences, 
 
 ```groovy title="nextflow.config"
 plugins {
-  id 'nf-co2footprint@1.0.0'
+  id 'nf-co2footprint@1.1.0'
 }
 
 // Optional example config settings for CO₂ reporting:
@@ -84,20 +84,33 @@ $$
 
 ## Cloud computations
 
-While the CO₂ footprint calculation works on cloud instances, **nf-co2footprint** can currently not natively support all cloud environments, as cloud-specific values (such as certain CPU models or PUE values) may be missing in our datasets. As a result, calculations may often rely on fallback values.
+While the **nf-co2footprint** plugin supports carbon footprint calculations for cloud instances, there are important limitations and configuration options to consider.
 
-!!! info
+### ✅ What is supported automatically
 
-    For common cloud platforms, the plugin automatically applies provider-specific default PUE values. However, not all cloud providers or platforms are currently covered, so you may need to supply some information manually. You can view the full list of supported providers and their corresponding PUEs in the [executor PUE mapping file](https://github.com/nextflow-io/nf-co2footprint/blob/master/src/resources/executor_machine_pue_mapping.csv). For example, for AWS a default PUE of **1.15** is used.
+- **Provider-specific default PUE values:**  
+  For common cloud platforms, the plugin automatically applies default Power Usage Effectiveness (PUE) values. For example, AWS uses a default PUE of **1.15**.  
+  See the full list of supported providers and their PUEs in the [executor PUE mapping file](https://github.com/nextflow-io/nf-co2footprint/blob/master/src/resources/executor_machine_pue_mapping.csv).
+- **Automatic AWS region detection:**  
+  When running on AWS (Batch, Fargate, EC2), the plugin can automatically detect your region and set the corresponding location for more accurate calculations.
 
-To improve the estimate of your CO₂ footprint on the cloud, you are encouraged to manually provide:  
+!!! warning "Cloud limitations"
 
-- [The location of your instance](https://portal.electricitymaps.com/docs/getting-started#geographical-coverage) (e.g., zone code `'DE'` for AWS region `eu-central-1`)
-- Set the `ciMarket` parameter if you know the CI of the energy mix used by the cloud instance
+    - **Incomplete cloud-specific data:**  
+      Not all cloud environments are fully supported. Some values, such as specific CPU models or PUEs, may be missing from our datasets. Calculations may rely on fallback values in these cases.
+    - **Unsupported providers/platforms:**  
+      If your cloud provider or platform is not covered by the plugin’s defaults, you may need to supply additional information manually.
+      
+### 🛠️ What you can configure manually
+
+To improve the accuracy of your CO₂ footprint estimates on the cloud, you are encouraged to provide:
+
+- [The location of your instance](https://portal.electricitymaps.com/docs/getting-started#geographical-coverage)
+- The `ciMarket` parameter if you know the carbon intensity (CI) of the energy mix used by your cloud instance
 - The PUE of the data center (cloud providers often give global averages)
-- If the plugin’s TDP table does not include the CPU models used by your cloud compute instance and you know the per-core TDP for those models, you have two options:  
+- CPU TDP values:
     - If you have multiple CPU models, provide a `customCpuTdpFile` containing their TDP values.
-    - If you have only one CPU model and do not want to provide a table, set `ignoreCpuModel = true` and specify `powerdrawCpuDefault`.  
+    - If you have only one CPU model and do not want to provide a table, set `ignoreCpuModel = true` and specify `powerdrawCpuDefault`.
 
 For more information, see [Parameters](parameters.md).
 
@@ -105,7 +118,7 @@ For more information, see [Parameters](parameters.md).
 
 ```groovy title="nextflow_cloud.config"
 plugins {
-  id 'nf-co2footprint@1.0.0'
+  id 'nf-co2footprint@1.1.0'
 }
 
 def co2_timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
