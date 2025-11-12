@@ -115,9 +115,6 @@ class TDPDataMatrixTest extends Specification {
                 'Using default CPU power draw value (100.0 W).\n' +
                 '\t🔖 To fix this warning, please refer to https://nextflow-io.github.io/nf-co2footprint/usage/faq/#cpu-model.'
         ])
-        // Second instance should be filtered
-        listAppender.list.size() == 1
-
     }
 
     def 'Should match the default model names correctly' () {

@@ -248,8 +248,8 @@ class CO2FootprintObserver implements TraceObserver {
 
         // Close all files (writes remaining tasks in the trace file)
         traceFile?.close(runningTasks)
-        summaryFile.close()
-        reportFile.close()
+        summaryFile?.close()
+        reportFile?.close()
 
         log.info(
             "🌱 The workflow run used ${Converter.toReadableUnits(totalStats.get('energy'),'k','Wh')} of electricity, " +
