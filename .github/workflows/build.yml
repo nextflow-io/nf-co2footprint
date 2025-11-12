@@ -46,7 +46,7 @@ jobs:
         if: always()  # run even if previous step failed
         uses: actions/upload-artifact@v4
         with:
-          name: gradle-check-reports
+          name: gradle-check-reports_${{ matrix.java_version }}
           path: |
             **/build/reports/
             **/build/test-results/
