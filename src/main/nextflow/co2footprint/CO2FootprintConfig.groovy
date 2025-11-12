@@ -2,6 +2,7 @@ package nextflow.co2footprint
 
 import groovy.util.logging.Slf4j
 import nextflow.co2footprint.Config.BaseConfig
+import nextflow.co2footprint.Config.FileSubConfig
 import nextflow.co2footprint.DataContainers.DataMatrix
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
@@ -52,15 +53,15 @@ class CO2FootprintConfig extends BaseConfig {
         // Name, description, default value or function, return type, additional allowed types
         defineParameter(
                 'trace', 'Trace file config',
-                new CO2FootprintSubConfig('trace', [:] as LinkedHashMap), CO2FootprintSubConfig
+                new FileSubConfig('trace', [:] as LinkedHashMap), FileSubConfig
         )
         defineParameter(
                 'summary', 'Summary file config',
-                new CO2FootprintSubConfig('summary', [:] as LinkedHashMap), CO2FootprintSubConfig
+                new FileSubConfig('summary', [:] as LinkedHashMap), FileSubConfig
         )
         defineParameter(
                 'report', 'Report file config',
-                new CO2FootprintSubConfig('report', [:] as LinkedHashMap), CO2FootprintSubConfig
+                new FileSubConfig('report', [:] as LinkedHashMap), FileSubConfig
         )
         defineParameter(
                 'location', 'Location GeoCode from Electricity maps',
@@ -131,11 +132,11 @@ class CO2FootprintConfig extends BaseConfig {
         configMap.each { name, value ->
             if (this.containsKey(name)) {
                 if (name == 'trace') {
-                    this.get('trace').set(new CO2FootprintSubConfig('trace', value))
+                    this.get('trace').set(new FileSubConfig('trace', value))
                 } else if (name == 'summary') {
-                    this.get('summary').set(new CO2FootprintSubConfig('summary', value))
+                    this.get('summary').set(new FileSubConfig('summary', value))
                 } else if (name == 'report') {
-                    this.get('report').set(new CO2FootprintSubConfig('report', value))
+                    this.get('report').set(new FileSubConfig('report', value))
                 } else {
                     this.get(name).set(value)
                 }

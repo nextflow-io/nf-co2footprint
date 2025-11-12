@@ -1,4 +1,4 @@
-package nextflow.co2footprint
+package nextflow.co2footprint.Config
 
 import groovy.util.logging.Slf4j
 import nextflow.co2footprint.Config.BaseConfig
@@ -14,7 +14,7 @@ import java.lang.Boolean
  * @author Murray Wham <murray.wham@ed.ac.uk>
  */
 @Slf4j
-class CO2FootprintSubConfig extends BaseConfig {
+class FileSubConfig extends BaseConfig {
     private String name
     private String timestamp = TraceHelper.launchTimestampFmt()
 
@@ -35,7 +35,7 @@ class CO2FootprintSubConfig extends BaseConfig {
      * @param subConfigName  Name for this sub-config - used to get a default file name for this output file
      * @param configMap      Map of configuration values (from Nextflow config)
      */
-    CO2FootprintSubConfig(String subConfigName, Map<String, Object> configMap) {
+    FileSubConfig(String subConfigName, Map<String, Object> configMap) {
         this.name = subConfigName
 
         // Define the possible parameters of the configuration
