@@ -1,6 +1,9 @@
 package nextflow.co2footprint.Records
 
-import nextflow.co2footprint.Metrics.Converter
+
+import nextflow.co2footprint.Metrics.Duration
+import nextflow.co2footprint.Metrics.Percentage
+import nextflow.co2footprint.Metrics.Quantity
 
 /**
  * Stores equivalence values for CO₂ emissions:
@@ -28,16 +31,16 @@ class CO2EquivalencesRecord {
     }
 
     Double getCarKilometers() { carKilometers }
-    String getCarKilometersReadable() { Converter.toScientificNotation(carKilometers) }
+    String getCarKilometersReadable() { new Quantity(carKilometers).toScientificNotation() }
 
     Double getTreeMonths() { treeMonths }
-    String getTreeMonthsReadable() { Converter.toReadableTimeUnits(treeMonths, 'months', 's', 'years', 0) }
+    String getTreeMonthsReadable() { new Duration(treeMonths, 'months').toReadable('s', 'years', 0) }
 
     Double getPlanePercent() { planePercent }
-    String getPlanePercentReadable() { "${Converter.toScientificNotation(planePercent)} %" }
+    String getPlanePercentReadable() { new Percentage(planePercent).toScientificNotation() }
 
     Integer getPlaneFlights() { planePercent / 100 as Integer }
-    String getPlaneFlightsReadable() { Converter.toScientificNotation(this.getPlaneFlights()) }
+    String getPlaneFlightsReadable() { new Quantity(planeFlights).toScientificNotation() }
 
     /**
      * Returns a list of readable equivalence strings.

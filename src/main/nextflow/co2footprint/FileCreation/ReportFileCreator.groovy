@@ -1,10 +1,11 @@
 package nextflow.co2footprint.FileCreation
 
 import groovy.json.JsonOutput
+import nextflow.co2footprint.Metrics.Quantity
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.CO2FootprintComputer
-import nextflow.co2footprint.Metrics.Converter
+
 import nextflow.co2footprint.Records.CiRecordCollector
 
 import groovy.text.GStringTemplateEngine
@@ -190,8 +191,8 @@ class ReportFileCreator extends BaseFileCreator{
         if (co2e != null) {
             CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(co2e)
             return [
-                ("co2e${suffix}" as String): Converter.toReadableUnits(co2e,'', 'g'),
-                ("energy${suffix}" as String): Converter.toReadableUnits(energy,'k','Wh'),
+                ("co2e${suffix}" as String): new Quantity(co2e,'', 'g').toReadable(),
+                ("energy${suffix}" as String): new Quantity(energy,'k','Wh').toReadable(),
                 ("car${suffix}" as String): equivalences.getCarKilometersReadable(),
                 ("tree${suffix}" as String): equivalences.getTreeMonthsReadable(),
                 ("plane_percent${suffix}" as String): equivalences.getPlanePercent() < 100.0 ? equivalences.getPlanePercentReadable() : null,

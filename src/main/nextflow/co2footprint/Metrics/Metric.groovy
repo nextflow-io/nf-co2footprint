@@ -1,19 +1,47 @@
 package nextflow.co2footprint.Metrics
 
-class Metric {
-    Object value
+import groovy.util.logging.Slf4j
+
+/**
+ * A class to track metrics through the run.
+ */
+@Slf4j
+class Metric<T> {
+    T value
     String type
-    String format
+    String description
 
     /**
-     * Creator of a Metric, to track non number metrics.
+     * A new Metric for a data entry.
      *
-     * @param value The value, saved in the metric
+     * @param value         The value, saved in the metric
+     * @param type          The type of the value (e.g. String)
+     * @param description   A human-readable description of the metric
      */
-    Metric(Object value, String type = value?.class?.getSimpleName(), String format = null) {
+    Metric(T value, String type = null, String description = null) {
+        type ?= value?.class?.getSimpleName()
         this.value = value
         this.type = type
-        this.format = format
+        this.description = description
+    }
+
+    /**
+     * Checks whether a element was found in a list and throws an error if not.
+     *
+     * @param element The element to search for
+     * @param list The list in which to search
+     * @return The index of the element in the list
+     */
+    static int getIdx(Object element, List<Object> list) {
+        int idx = list.indexOf(element)
+
+        if (idx < 0) {
+            String message = "Element `${element}` not found in list `${list}`"
+            log.error(message)
+            throw new IllegalArgumentException(message)
+        }
+
+        return idx
     }
 
     String getReadable() {
@@ -21,6 +49,6 @@ class Metric {
     }
 
     Map<String, Object> toMap() {
-        return format ? [value: value, type: type, format: format] : [value: value, type: type]
+        return description ? [value: value, type: type, description: description] : [value: value, type: type]
     }
 }

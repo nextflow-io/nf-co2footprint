@@ -170,7 +170,7 @@ class ReportFileCreatorTest extends Specification{
                             '"cpus":{"raw":{"value":1,"type":"Integer","scale":"","unit":""},"readable":"1"},' +
                             '"memory":{"raw":{"value":7.516192768E9,"type":"Double","scale":"","unit":"B"},"readable":"7 GB"},' +
                             '"disk":{"raw":{"value":null,"type":"mem"},"readable":"-"},' +
-                            '"time":{"raw":{"value":3600000.0000,"type":"BigDecimal","scale":"ms","unit":""},"readable":"3600s"},' +
+                            '"time":{"raw":{"value":3600000.0000,"type":"BigDecimal","scale":"ms","unit":""},"readable":"1h"},' +
                             '"env":{"raw":{"value":null,"type":"str"},"readable":"-"},' +
                             '"error_action":{"raw":{"value":null,"type":"str"},"readable":"-"},' +
                             '"vol_ctxt":{"raw":{"value":null,"type":"num"},"readable":"-"},' +

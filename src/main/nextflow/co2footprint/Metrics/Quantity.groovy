@@ -1,41 +1,30 @@
 package nextflow.co2footprint.Metrics
 
+
 import java.math.RoundingMode
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 
 /**
- * A number associated with a unit.
+ * A number associated with a unit and other descriptors.
  */
-class Quantity extends Metric {
-    BigDecimal value
+class Quantity extends Metric<BigDecimal> {
     String scale
     String unit
-    String separator
+    String separator = ' '
+    int scalingFactor = 1000
 
     /**
      * Creator of a Quantity, combining the tracking and reporting of a number, associated with a unit.
      *
-     * @param value The numerical value, saved in the quantity
-     * @param scale The scale of the Quantity, defaults to ''
-     * @param unit The unit of the quantity
-     * @param separator The separator between value and scaled unit, defaults to ' '
+     * @param value         Numerical value, saved in the quantity
+     * @param scale         Scale of the Quantity, defaults to ''
+     * @param unit          Unit of the quantity
+     * @param type          Type of he value
+     * @param description   A human-readable description of the value
      */
-    Quantity(Number value, String scale='', String unit='', String separator=' ') {
-        super(value, value?.class?.getSimpleName() ?: 'Number')
-        this.value = value as BigDecimal
-        this.scale = scale
-        this.unit = unit
-        this.separator = separator
-    }
-
-    /**
-     * Set the contents of a Quantity.
-     *
-     * @param value Number of the quantity
-     * @param scale Scale of the unit
-     * @param unit Unit string
-     */
-    void set(Number value, String scale=this.scale, String unit=this.unit) {
-        this.value = value as BigDecimal
+    Quantity(Object value, String scale='', String unit='', String type='Number', String description = null) {
+        super(value as BigDecimal, type, description)
         this.scale = scale
         this.unit = unit
     }
@@ -48,7 +37,7 @@ class Quantity extends Metric {
      */
     Quantity round(Integer precision=2, RoundingMode roundingMode=RoundingMode.HALF_UP) {
         if (precision != null) {
-            this.value = this.value.setScale(precision, roundingMode)
+            value = value.setScale(precision, roundingMode)
         }
 
         return this
@@ -61,10 +50,76 @@ class Quantity extends Metric {
      */
     Quantity floor(Integer precision=0) {
         if (precision != null) {
-            this.value = this.value.setScale(precision, RoundingMode.FLOOR)
+            value = value.setScale(precision, RoundingMode.FLOOR)
+        }
+        return this
+    }
+
+    /**
+     * Converts a numeric value to the closest or given scale with SI prefixes.
+     * Scales the value up or down by a given factor and adjusts the scale prefix accordingly.
+     *
+     * @param targetScale The scale that should be converted to (e.g. G), default of null (optional)
+     * @return Converted quantity with appropriate scale
+     */
+    Quantity scale(String targetScale=null) {
+        if (value) {
+            final List<String> scales = ['p', 'n', 'u', 'm', '', 'k', 'M', 'G', 'T', 'P', 'E']
+            // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
+            int scaleIndex = getIdx(scale, scales)
+
+            int targetScaleIndex
+            int difference
+            // Either choose custom target scale,
+            if (targetScale != null) {
+                targetScaleIndex = getIdx(targetScale, scales)
+                difference = targetScaleIndex - scaleIndex
+            }
+            // or use logarithm to determine the number of steps to return a number above 0
+            else {
+                // -scaleIndex <= floor( log_1000(|value|) ) <= maxIndex - scaleIndex
+                difference = Math.min(scales.size() - 1 - scaleIndex, Math.max(-1 * scaleIndex,
+                        Math.floor(Math.log(Math.abs(value)) / Math.log(scalingFactor)) as int
+                ))
+                targetScaleIndex = scaleIndex + difference
+            }
+            value = (value / scalingFactor**difference) as BigDecimal
+            targetScale = scales[targetScaleIndex]
         }
 
+        scale = targetScale
         return this
+    }
+
+    /**
+     * Converts a quantity into scientific notation (e.g., 1.23E3).
+     *
+     * @return String in scientific notation or rounded if in [0.001, 999]
+     */
+    String toScientificNotation() {
+        if (value == 0) {
+            return value.toString()
+        } else if (value <= 999 && value >= 0.001) {
+            return value.setScale(3, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()
+        } else if (value == null) {
+            return value
+        } else {
+            def formatter = new DecimalFormat("0.00E0", DecimalFormatSymbols.getInstance(Locale.US))
+            return formatter.format(value)
+        }
+    }
+
+    /**
+     * Converts a numeric value to a human-readable string with SI prefixes.
+     * {@link #scale}s the quantity to a readable format, which is subsequently rounded and combined to a String.
+     * For example, 1200 with unit 'Wh' becomes '1.2 kWh'.
+     *
+     * @param targetScale Target scale to convert to, default of null (optional)
+     * @param precision Decimal places to round to, default of 2
+     * @return Scaled value as a formatted String with appropriate scale and rounding
+     */
+    String toReadable(String targetScale=null, Integer precision=2) {
+        return this.scale(targetScale).round(precision).getReadable()
     }
 
     /**

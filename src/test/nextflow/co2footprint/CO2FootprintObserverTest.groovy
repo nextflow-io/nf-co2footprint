@@ -116,8 +116,8 @@ class CO2FootprintObserverTest extends Specification{
         observer.onFlowComplete()
 
         expect:
-        Double total_co2 =  observer.workflowStats.co2Record.store.co2e as Double
-        Double total_energy =  observer.workflowStats.co2Record.store.energy as Double
+        Double total_co2 =  observer.workflowStats.co2Record.store.co2e
+        Double total_energy =  observer.workflowStats.co2Record.store.energy
         // With TDP = 11.45 (default global)
         // Energy consumption converted to Wh
         round(total_energy*1000) == 14.02
@@ -149,12 +149,9 @@ class CO2FootprintObserverTest extends Specification{
         observer.onProcessComplete(handler, traceRecord)
         observer.onFlowComplete()
 
-        // Accumulate CO2
-        Double total_co2 = observer.workflowStats.co2Record.store.co2e as Double
-
         CO2EquivalencesRecord co2EquivalencesRecord = observer
             .getCO2FootprintComputer()
-            .computeCO2footprintEquivalences(total_co2)
+            .computeCO2footprintEquivalences(observer.workflowStats.co2Record.store.co2e)
 
         expect:
         // Values compared to result from www.green-algorithms.org (1h, 1core, TDP=11.45, CI:475)
@@ -226,10 +223,10 @@ class CO2FootprintObserverTest extends Specification{
         ]
         values == [
             '111', 'COMPLETED', '-', '14.02 Wh', '6.73 g', '-', '480 gCO₂e/kWh', '100 %',
-            '7 GB', '3600s', '1', '11.41 W', 'Unknown model', '11.41 Wh', '2.61 Wh',
+            '7 GB', '1h', '1', '11.41 W', 'Unknown model', '11.41 Wh', '2.61 Wh',
         ] // GA: CO₂e is 6.94g with CI of 475 gCO₂eq/kWh
 
-        fileChecker.compareChecksums(tracePath, '43c74a1981bb0a8c7694a97d697e22ae')
+        fileChecker.compareChecksums(tracePath, 'a9face6b58356811b2f77c87f6542b70')
 
 
         // Check Summary File

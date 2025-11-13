@@ -86,10 +86,10 @@ class CO2RecordTree {
      */
     CO2RecordTree collectAdditionalMetrics(
             Map<String, Closure> metricTransformers = [
-                    co2e_non_cached: { CO2Record record -> record.store.status != 'CACHED' ? record.store.co2e : null },
-                    energy_non_cached: { CO2Record record -> record.store.status != 'CACHED' ? record.store.energy : null },
-                    co2e_market: { CO2Record record -> record.store.co2eMarket },
-                    energy_market: { CO2Record record -> record.store.energy },
+                    co2e_non_cached: { CO2Record record -> record.store.status != 'CACHED' ? record.co2e : null },
+                    energy_non_cached: { CO2Record record -> record.store.status != 'CACHED' ? record.energy : null },
+                    co2e_market: { CO2Record record -> record.co2eMarket },
+                    energy_market: { CO2Record record -> record.energy },
             ]
     ) {
         metricTransformers.each{ String name, Closure transformer ->
@@ -185,12 +185,17 @@ class CO2RecordTree {
      * @return A map representation of this Record Tree
      */
     Map<String, Object> toMap(boolean onlyCO2parameters=false) {
-        Map<String, Map<String, Object>> recordMap = co2Record ? co2Record.toRawReadableMap(onlyCO2parameters) : [:]
+        Map<String, Map<String, Object>> recordMap = [:]
+        if (co2Record) {
+            (onlyCO2parameters ? co2Record.co2Keys : co2Record.keySet()).each { String key ->
+                recordMap.put(key, co2Record.representationMap.get(key))
+            }
+        }
         return [
-                name: name,
-                metaData: metaData,
-                values: recordMap,
-                children: children.collect({ CO2RecordTree child -> child.toMap(onlyCO2parameters) }),
+            name: name,
+            metaData: metaData,
+            values: recordMap,
+            children: children.collect({ CO2RecordTree child -> child.toMap(onlyCO2parameters) }),
         ]
     }
 
@@ -200,6 +205,6 @@ class CO2RecordTree {
      * @return String representation of this node
      */
     String toString() {
-        return [name: name, attributes: metaData, record: co2Record, children: children]
+        return [name: name, metaData: metaData, record: co2Record, children: children]
     }
 }

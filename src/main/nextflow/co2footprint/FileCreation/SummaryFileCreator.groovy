@@ -3,9 +3,10 @@ package nextflow.co2footprint.FileCreation
 import groovy.util.logging.Slf4j
 import groovyx.gpars.agent.Agent
 import nextflow.co2footprint.CO2FootprintComputer
+import nextflow.co2footprint.Metrics.Quantity
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
-import nextflow.co2footprint.Metrics.Converter
+
 import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.trace.TraceHelper
 
@@ -62,9 +63,9 @@ class SummaryFileCreator extends BaseFileCreator {
 
         String outText = """\
         Total CO₂e footprint measures of this workflow run (including cached tasks):
-          CO₂e emissions: ${Converter.toReadableUnits(totalStats['co2e'] as Double,'', 'g')}
-          Energy consumption: ${Converter.toReadableUnits(totalStats['energy'] as Double,'k', 'Wh')}
-          CO₂e emissions (market): ${totalStats['co2eMarket'] ? Converter.toReadableUnits(totalStats['co2eMarket'] as Double, '', 'g') : "-"}
+          CO₂e emissions: ${new Quantity(totalStats['co2e'],'', 'g').round().toReadable() }
+          Energy consumption: ${new Quantity(totalStats['energy'], 'k', 'Wh').toReadable() }
+          CO₂e emissions (market): ${totalStats['co2eMarket'] ? new Quantity(totalStats['co2eMarket'], '', 'g').toReadable() : "-"}
 
         """.stripIndent()
         List<String> readableEquivalences = equivalences.getReadableEquivalences()

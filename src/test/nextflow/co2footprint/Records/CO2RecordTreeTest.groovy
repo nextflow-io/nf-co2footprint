@@ -32,7 +32,7 @@ class CO2RecordTreeTest extends Specification {
 
         co2Record = new CO2Record(
                 traceRecord, 2.0, 200.0, null, 100.0,
-                1.0, 10, 60*60*1000, 1, 7.0, 'Some model', 5.0d, 5.0d
+                1.0, 10, 1.0, 1, 7.0, 'Some model', 5.0d, 5.0d
         )
 
         CO2RecordTree process1 = recordsTree.addChild(new CO2RecordTree('process1', [level: 'process']))
@@ -101,7 +101,9 @@ class CO2RecordTreeTest extends Specification {
         then:
         Map parentMap = parentNode.toMap(true)
         String yamlString = yaml.dump(parentMap)
-        String expectedYamlString = 'name: crazy_tesla\n' +
+        //String expectedYamlString = this.class.getResource('/test_tree.yaml').text
+        String expectedYamlString = '' +
+            'name: crazy_tesla\n' +
                 'metaData: {level: workflow}\n' +
                 'values:\n' +
                 '  name:\n' +
@@ -115,7 +117,7 @@ class CO2RecordTreeTest extends Specification {
                 '    readable: 10 GB\n' +
                 '  time:\n' +
                 '    raw: {value: 25920000000000.0000, type: BigDecimal, scale: ms, unit: \'\'}\n' +
-                '    readable: 25920000000s\n' +
+                '    readable: 821years 6days 14h 24min 0ms\n' +
                 '  cpu_model:\n' +
                 '    raw:\n' +
                 '      value: !!set {Some model: null}\n' +
@@ -160,7 +162,7 @@ class CO2RecordTreeTest extends Specification {
                 '      readable: 10 GB\n' +
                 '    time:\n' +
                 '      raw: {value: 12960000000000.0000, type: BigDecimal, scale: ms, unit: \'\'}\n' +
-                '      readable: 12960000000s\n' +
+                '      readable: 410years 6months 3days 7h 11min 60s 0ms\n' +
                 '    cpu_model:\n' +
                 '      raw: {value: Some model, type: String}\n' +
                 '      readable: Some model\n' +

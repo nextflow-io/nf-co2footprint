@@ -2,9 +2,10 @@ package nextflow.co2footprint
 
 import nextflow.co2footprint.Logging.Markers
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
+import nextflow.co2footprint.Metrics.Bytes
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
-import nextflow.co2footprint.Metrics.Converter
+
 import nextflow.co2footprint.Records.CiRecordCollector
 
 import groovy.util.logging.Slf4j
@@ -94,11 +95,11 @@ class CO2FootprintComputer {
 
         // 1. Use requested memory if available
         if (requestedMemory != null) {
-            memory = Converter.scaleUnits(requestedMemory, '', 'B', 'G').value
+            memory = new Bytes(requestedMemory, '').scale('G').value
         }
         // 2. If missing, fall back to peak_rss
         else if (maxRequiredMemory != null) {
-            memory = Converter.scaleUnits(maxRequiredMemory, '', 'B', 'G').value
+            memory = new Bytes(maxRequiredMemory, '').scale('G').value
             log.warn(Markers.unique,
                 "Requested memory is null for task ${trace.taskId}. Using maximum consumed memory/`peak_rss` (${memory} GB) for CO₂e footprint computation.",
                 'memory-is-null-warning')
