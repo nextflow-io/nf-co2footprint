@@ -20,14 +20,14 @@ values:
     raw: {value: 1.0, type: Percentage, scale: '%', unit: ''}
     readable: 1 %
   memory:
-    raw: {value: 1.073741824E+10, type: Bytes, scale: '', unit: B}
+    raw: {value: 10737418240, type: Bytes, scale: '', unit: B}
     readable: 10 GB
   time:
     raw: {value: 7200000.0000, type: Duration, scale: '', unit: ms}
     readable: 2h
     report: 2h
   cpus:
-    raw: {value: !!float '1', type: Number, scale: '', unit: ''}
+    raw: {value: 1, type: Number, scale: '', unit: ''}
     readable: '1'
   powerdrawCPU:
     raw: {value: 7.0, type: Number, scale: '', unit: W}
@@ -44,69 +44,52 @@ values:
     raw: {value: 10000.0, type: Number, scale: '', unit: Wh}
     readable: 10 kWh
 children:
-  - name: test1
-    metaData: {level: process}
-    values:
-      name: &id001
-        raw: {value: null, type: str}
-        readable: '-'
-      energy: &id002
-        raw: {value: 2000.0, type: Number, scale: '', unit: Wh}
-        readable: 2 kWh
-      co2e: &id003
-        raw: {value: 200.0, type: Number, scale: '', unit: g}
-        readable: 200 g
-      co2eMarket: &id004
-        raw: {value: null, type: Number, scale: '', unit: g}
-        readable: '-'
-      ci: &id005
-        raw: {value: 100.0, type: Number, scale: '', unit: gCO₂e/kWh}
-        readable: 100 gCO₂e/kWh
-      cpuUsage: &id006
-        raw: {value: 1.0, type: Percentage, scale: '%', unit: ''}
-        readable: 1 %
-      memory: &id007
-        raw: {value: 1.073741824E+10, type: Bytes, scale: '', unit: B}
-        readable: 10 GB
-      time: &id008
-        raw: {value: 3600000.0000, type: Duration, scale: '', unit: ms}
-        readable: 1h
-        report: 1h
-      cpus: &id009
-        raw: {value: !!float '1', type: Number, scale: '', unit: ''}
-        readable: '1'
-      powerdrawCPU: &id010
-        raw: {value: 7.0, type: Number, scale: '', unit: W}
-        readable: 7 W
-      cpu_model: &id011
-        raw: {value: Some model, type: str}
-        readable: Some model
-      rawEnergyProcessor: &id012
-        raw: {value: 5000.0, type: Number, scale: '', unit: Wh}
-        readable: 5 kWh
-      rawEnergyMemory: &id013
-        raw: {value: 5000.0, type: Number, scale: '', unit: Wh}
-        readable: 5 kWh
-    children:
-      - name: '1'
-        metaData: {level: task}
-        values:
-          name: *id001
-          energy: *id002
-          co2e: *id003
-          co2eMarket: *id004
-          ci: *id005
-          cpuUsage: *id006
-          memory: *id007
-          time: *id008
-          cpus: *id009
-          powerdrawCPU: *id010
-          cpu_model: *id011
-          rawEnergyProcessor: *id012
-          rawEnergyMemory: *id013
-        children: []
-  - name: test2
-    metaData: {level: process}
+- name: test1
+  metaData: {level: process}
+  values:
+    name: &id001
+      raw: {value: null, type: str}
+      readable: '-'
+    energy: &id002
+      raw: {value: 2000.0, type: Number, scale: '', unit: Wh}
+      readable: 2 kWh
+    co2e: &id003
+      raw: {value: 200.0, type: Number, scale: '', unit: g}
+      readable: 200 g
+    co2eMarket: &id004
+      raw: {value: null, type: Number, scale: '', unit: g}
+      readable: '-'
+    ci: &id005
+      raw: {value: 100.0, type: Number, scale: '', unit: gCO₂e/kWh}
+      readable: 100 gCO₂e/kWh
+    cpuUsage: &id006
+      raw: {value: 1.0, type: Percentage, scale: '%', unit: ''}
+      readable: 1 %
+    memory: &id007
+      raw: {value: 10737418240, type: Bytes, scale: '', unit: B}
+      readable: 10 GB
+    time: &id008
+      raw: {value: 3600000.0000, type: Duration, scale: '', unit: ms}
+      readable: 1h
+      report: 1h
+    cpus: &id009
+      raw: {value: 1, type: Number, scale: '', unit: ''}
+      readable: '1'
+    powerdrawCPU: &id010
+      raw: {value: 7.0, type: Number, scale: '', unit: W}
+      readable: 7 W
+    cpu_model: &id011
+      raw: {value: Some model, type: str}
+      readable: Some model
+    rawEnergyProcessor: &id012
+      raw: {value: 5000.0, type: Number, scale: '', unit: Wh}
+      readable: 5 kWh
+    rawEnergyMemory: &id013
+      raw: {value: 5000.0, type: Number, scale: '', unit: Wh}
+      readable: 5 kWh
+  children:
+  - name: '1'
+    metaData: {level: task}
     values:
       name: *id001
       energy: *id002
@@ -121,21 +104,38 @@ children:
       cpu_model: *id011
       rawEnergyProcessor: *id012
       rawEnergyMemory: *id013
-    children:
-      - name: '2'
-        metaData: {level: task}
-        values:
-          name: *id001
-          energy: *id002
-          co2e: *id003
-          co2eMarket: *id004
-          ci: *id005
-          cpuUsage: *id006
-          memory: *id007
-          time: *id008
-          cpus: *id009
-          powerdrawCPU: *id010
-          cpu_model: *id011
-          rawEnergyProcessor: *id012
-          rawEnergyMemory: *id013
-        children: []
+    children: []
+- name: test2
+  metaData: {level: process}
+  values:
+    name: *id001
+    energy: *id002
+    co2e: *id003
+    co2eMarket: *id004
+    ci: *id005
+    cpuUsage: *id006
+    memory: *id007
+    time: *id008
+    cpus: *id009
+    powerdrawCPU: *id010
+    cpu_model: *id011
+    rawEnergyProcessor: *id012
+    rawEnergyMemory: *id013
+  children:
+  - name: '2'
+    metaData: {level: task}
+    values:
+      name: *id001
+      energy: *id002
+      co2e: *id003
+      co2eMarket: *id004
+      ci: *id005
+      cpuUsage: *id006
+      memory: *id007
+      time: *id008
+      cpus: *id009
+      powerdrawCPU: *id010
+      cpu_model: *id011
+      rawEnergyProcessor: *id012
+      rawEnergyMemory: *id013
+    children: []

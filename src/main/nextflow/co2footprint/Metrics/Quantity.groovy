@@ -11,6 +11,7 @@ import java.text.DecimalFormatSymbols
 class Quantity extends Metric<BigDecimal> {
     String scale
     String unit
+    boolean integerType
     String separator = ' '
     int scalingFactor = 1000
 
@@ -27,6 +28,7 @@ class Quantity extends Metric<BigDecimal> {
         super(value as BigDecimal, type, description)
         this.scale = scale
         this.unit = unit
+        integerType = [Integer, Long, int, long, BigInteger].contains(value?.class)
     }
 
     /**
@@ -140,11 +142,23 @@ class Quantity extends Metric<BigDecimal> {
     }
 
     /**
+     * Returns the correct representation of the value. If the original value has been of an integer-associated type,
+     * it will return the {@link BigInteger}, otherwise the {@link BigDecimal} representation.
+     *
+     * @return A representation of the current value
+     */
+    Number returnValue() {
+        return  integerType ? value.toBigIntegerExact() : value
+    }
+
+    /**
      * Convert the Quantity object to a map with all metaData as named entries.
      *
      * @return A map with all entries from this Quantity
      */
     Map<String, ? extends Object> toMap() {
-        return super.toMap() + [scale: scale, unit: unit]
+        Map<String, Object> map = super.toMap() + [scale: scale, unit: unit]
+        map['value'] = returnValue()
+        return map
     }
 }
