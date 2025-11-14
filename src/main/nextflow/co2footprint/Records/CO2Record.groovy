@@ -16,6 +16,25 @@ import nextflow.trace.TraceRecord
 @Slf4j
 @CompileStatic
 class CO2Record extends TraceRecord {
+    static {
+        FIELDS.putAll(
+                [
+                        energy:             'mem',
+                        co2e:               'num',
+                        co2eMarket:         'num',
+                        ci:                 'num',
+                        cpuUsage:           'perc',
+                        time:               'time',
+                        cpus:               'num',
+                        memory:             'mem',
+                        powerdrawCPU:       'num',
+                        cpu_model:          'str',
+                        rawEnergyProcessor: 'num',
+                        rawEnergyMemory:    'num',
+                ]
+        )
+    }
+
     // Stores keys that are related to the CO2 calculation
     final List<String> co2Keys = [
             'name', 'energy', 'co2e', 'co2eMarket', 'ci', 'cpuUsage', 'memory', 'time',
@@ -29,25 +48,8 @@ class CO2Record extends TraceRecord {
     final Map<String, Object> additionalMetrics = [:]
 
     // Map representation of class
-    Map<String, Map<String, Object>> representationMap = FIELDS.keySet().collectEntries { String key -> [key, getEntryRepresentation(key, null)]}
-
-    static {
-        FIELDS.putAll(
-            [
-                    energy:             'mem',
-                    co2e:               'num',
-                    co2eMarket:         'num',
-                    ci:                 'num',
-                    cpuUsage:           'perc',
-                    time:               'time',
-                    cpus:               'num',
-                    memory:             'mem',
-                    powerdrawCPU:       'num',
-                    cpu_model:          'str',
-                    rawEnergyProcessor: 'num',
-                    rawEnergyMemory:    'num',
-            ]
-        )
+    Map<String, Map<String, Object>> representationMap = FIELDS.keySet().collectEntries { String key ->
+        [key, getEntryRepresentation(key, null)]
     }
 
     /**
@@ -124,8 +126,6 @@ class CO2Record extends TraceRecord {
         return (store.containsKey(key)) ? store.get(key) : additionalMetrics.get(key)
     }
 
-
-
     /**
      * Combine the specified element from two CO2Records.
      * The combination logic is dependent on the metric type.
@@ -190,26 +190,26 @@ class CO2Record extends TraceRecord {
      */
     Map<String, ? extends Object> toRaw(String key, Object value=store[key]) {
          Map<String, ? extends Object> rawValue = switch (key) {
-             case 'energy' -> new Quantity(value, 'k', 'Wh').scale('').toMap()
-             case 'co2e' -> new Quantity(value, '', 'g').toMap()
-             case 'co2eMarket' -> new Quantity(value, '', 'g').toMap()
-             case 'time' -> new Duration(value, 'h').scale('ms').toMap()
-             case 'ci' -> new Quantity(value, '', 'gCO₂e/kWh').toMap()
-             case 'powerdrawCPU' -> new Quantity(value, '', 'W').toMap()
-             case 'cpuUsage' -> new Percentage(value).toMap()
-             case 'memory' -> new Bytes(value, 'G').scale('').toMap()
-             case 'rawEnergyProcessor' -> new Quantity(value, 'k', 'Wh').scale('').toMap()
-             case 'rawEnergyMemory' -> new Quantity(value, 'k', 'Wh').scale('').toMap()
+             case 'energy' -> Quantity.of(value, 'k', 'Wh').scale('').toMap()
+             case 'co2e' -> Quantity.of(value, '', 'g').toMap()
+             case 'co2eMarket' -> Quantity.of(value, '', 'g').toMap()
+             case 'time' -> Duration.of(value, 'h').scale('ms').toMap()
+             case 'ci' -> Quantity.of(value, '', 'gCO₂e/kWh').toMap()
+             case 'powerdrawCPU' -> Quantity.of(value, '', 'W').toMap()
+             case 'cpuUsage' -> Percentage.of(value).toMap()
+             case 'memory' -> Bytes.of(value, 'G').scale('').toMap()
+             case 'rawEnergyProcessor' -> Quantity.of(value, 'k', 'Wh').scale('').toMap()
+             case 'rawEnergyMemory' -> Quantity.of(value, 'k', 'Wh').scale('').toMap()
              default -> null
          }
          if (rawValue != null) { return rawValue }
         String type = FIELDS.get(key)
          return switch (type) {
-            case 'date' -> new Duration(value, 'ms', 'DateTime', 'Unix time').toMap()
-            case 'time' -> new Duration(value).toMap()
-            case 'perc' -> new Percentage(value).toMap()
-            case 'mem' -> new Bytes(value).toMap()
-            case 'num' -> new Quantity(value).toMap()
+            case 'date' -> Duration.of(value, 'ms', 'DateTime', 'Unix time').toMap()
+            case 'time' -> Duration.of(value).toMap()
+            case 'perc' -> Percentage.of(value).toMap()
+            case 'mem' -> Bytes.of(value).toMap()
+            case 'num' -> Quantity.of(value).toMap()
             default -> new Metric(value, type).toMap()
         }
     }

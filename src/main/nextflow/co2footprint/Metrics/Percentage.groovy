@@ -16,6 +16,25 @@ class Percentage extends Quantity {
     }
 
     /**
+     * Creates a {@link Metric} or a {@link Quantity} if the value is numerical.
+     *
+     * @param value         Numerical value, saved in the quantity
+     * @param scale         Scale of the Quantity, defaults to ''
+     * @param unit          Unit of the quantity
+     * @param type          Type of he value
+     * @param description   A human-readable description of the value
+     * @return
+     */
+    static Metric of(Object value, String scale='%', String unit='', String type='Percentage', String description = null) {
+        if (value instanceof Number) {
+            return new Percentage(value, scale, unit, type, description)
+        }
+        else {
+            return new Metric(value, type, "${scale}${unit}", description)
+        }
+    }
+
+    /**
      * Converts a quantity into scientific notation (e.g., 1.23E3).
      *
      * @return String in scientific notation or rounded if in [0.001, 999]

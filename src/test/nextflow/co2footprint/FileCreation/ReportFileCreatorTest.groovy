@@ -130,75 +130,7 @@ class ReportFileCreatorTest extends Specification{
         String payloadJson = co2FootprintReport.renderDataJson()
 
         then:
-        String expectedPayloadJson =
-            '{' +
-                '"trace":' +
-                    '[' +
-                        '{' +
-                            '"task_id":{"raw":{"value":"111","type":"str"},"readable":"111"},' +
-                            '"hash":{"raw":{"value":"ca/372f78","type":"str"},"readable":"ca/372f78","report":"<div class=\\"script_block short\\"><code>ca/372f78</code></div>"},' +
-                            '"native_id":{"raw":{"value":null,"type":"str"},"readable":"-"},' +
-                            '"process":{"raw":{"value":"reportTestProcess","type":"str"},"readable":"reportTestProcess"},' +
-                            '"module":{"raw":{"value":null,"type":"str"},"readable":"-"},' +
-                            '"container":{"raw":{"value":null,"type":"str"},"readable":"-"},' +
-                            '"tag":{"raw":{"value":null,"type":"str"},"readable":"-"},' +
-                            '"name":{"raw":{"value":"testTask","type":"str"},"readable":"testTask"},' +
-                            '"status":{"raw":{"value":"COMPLETED","type":"str"},' +
-                            '"readable":"COMPLETED","report":"<span class=\\"badge badge-success\\">COMPLETED</span>"},' +
-                            '"exit":{"raw":{"value":null,"type":"str"},"readable":"-"},' +
-                            '"submit":{"raw":{"value":null,"type":"DateTime","description":"Unix time","scale":"","unit":"ms"},"readable":"-"},' +
-                            '"start":{"raw":{"value":null,"type":"DateTime","description":"Unix time","scale":"","unit":"ms"},"readable":"-"},' +
-                            '"complete":{"raw":{"value":null,"type":"DateTime","description":"Unix time","scale":"","unit":"ms"},"readable":"-"},' +
-                            '"duration":{"raw":{"value":null,"type":"Duration","scale":"","unit":"ms"},"readable":"-"},' +
-                            '"realtime":{"raw":{"value":3600000,"type":"Duration","scale":"","unit":"ms"},"readable":"1h","report":"1h"},' +
-                            '"%cpu":{"raw":{"value":100.0,"type":"Percentage","scale":"%","unit":""},"readable":"100.0%"},' +
-                            '"%mem":{"raw":{"value":null,"type":"Percentage","scale":"%","unit":""},"readable":"-"},' +
-                            '"rss":{"raw":{"value":null,"type":"Bytes","scale":"","unit":"B"},"readable":"-"},' +
-                            '"vmem":{"raw":{"value":null,"type":"Bytes","scale":"","unit":"B"},"readable":"-"},' +
-                            '"peak_rss":{"raw":{"value":null,"type":"Bytes","scale":"","unit":"B"},"readable":"-"},' +
-                            '"peak_vmem":{"raw":{"value":null,"type":"Bytes","scale":"","unit":"B"},"readable":"-"},' +
-                            '"rchar":{"raw":{"value":null,"type":"Bytes","scale":"","unit":"B"},"readable":"-"},' +
-                            '"wchar":{"raw":{"value":null,"type":"Bytes","scale":"","unit":"B"},"readable":"-"},' +
-                            '"syscr":{"raw":{"value":null,"type":"Number","scale":"","unit":""},"readable":"-"},' +
-                            '"syscw":{"raw":{"value":null,"type":"Number","scale":"","unit":""},"readable":"-"},' +
-                            '"read_bytes":{"raw":{"value":null,"type":"Bytes","scale":"","unit":"B"},"readable":"-"},' +
-                            '"write_bytes":{"raw":{"value":null,"type":"Bytes","scale":"","unit":"B"},"readable":"-"},' +
-                            '"attempt":{"raw":{"value":null,"type":"Number","scale":"","unit":""},"readable":"-"},' +
-                            '"workdir":{"raw":{"value":null,"type":"str"},"readable":"-"},' +
-                            '"script":{"raw":{"value":null,"type":"str"},"readable":"-"},' +
-                            '"scratch":{"raw":{"value":null,"type":"str"},"readable":"-"},' +
-                            '"queue":{"raw":{"value":null,"type":"str"},"readable":"-"},' +
-                            '"cpus":{"raw":{"value":1,"type":"Number","scale":"","unit":""},"readable":"1"},' +
-                            '"memory":{"raw":{"value":7516192768,"type":"Bytes","scale":"","unit":"B"},"readable":"7 GB"},' +
-                            '"disk":{"raw":{"value":null,"type":"Bytes","scale":"","unit":"B"},"readable":"-"},' +
-                            '"time":{"raw":{"value":3600000.0000,"type":"Duration","scale":"","unit":"ms"},"readable":"1h","report":"1h"},' +
-                            '"env":{"raw":{"value":null,"type":"str"},"readable":"-"},' +
-                            '"error_action":{"raw":{"value":null,"type":"str"},"readable":"-"},' +
-                            '"vol_ctxt":{"raw":{"value":null,"type":"Number","scale":"","unit":""},"readable":"-"},' +
-                            '"inv_ctxt":{"raw":{"value":null,"type":"Number","scale":"","unit":""},"readable":"-"},' +
-                            '"hostname":{"raw":{"value":null,"type":"str"},"readable":"-"},' +
-                            '"cpu_model":{"raw":{"value":"Unknown model","type":"str"},"readable":"Unknown model"},' +
-                            '"energy":{"raw":{"value":100000.0,"type":"Number","scale":"","unit":"Wh"},"readable":"100 kWh"},' +
-                            '"co2e":{"raw":{"value":10.0,"type":"Number","scale":"","unit":"g"},"readable":"10 g"},' +
-                            '"co2eMarket":{"raw":{"value":null,"type":"Number","scale":"","unit":"g"},"readable":"-"},' +
-                            '"ci":{"raw":{"value":475.0,"type":"Number","scale":"","unit":"gCO\\u2082e/kWh"},"readable":"475 gCO\\u2082e/kWh"},' +
-                            '"cpuUsage":{"raw":{"value":100.0,"type":"Percentage","scale":"%","unit":""},"readable":"100 %"},' +
-                            '"powerdrawCPU":{"raw":{"value":12.0,"type":"Number","scale":"","unit":"W"},"readable":"12 W"},' +
-                            '"rawEnergyProcessor":{"raw":{"value":500.0,"type":"Number","scale":"","unit":"Wh"},"readable":"500 Wh"},' +
-                            '"rawEnergyMemory":{"raw":{"value":500.0,"type":"Number","scale":"","unit":"Wh"},"readable":"500 Wh"}' +
-                        '}' +
-                    '],' +
-                '"summary":' +
-                    '{' +
-                        '"process":' +
-                            '{' +
-                                '"co2e":[10.0],' +
-                                '"energy":[100.0],' +
-                                '"co2e_non_cached":[10.0],' +
-                                '"energy_non_cached":[100.0]' +
-                            '}' +
-                    '}' +
-            '}'
+        String expectedPayloadJson = this.class.getResource('/test_payload.json').text
         payloadJson == expectedPayloadJson
     }
 

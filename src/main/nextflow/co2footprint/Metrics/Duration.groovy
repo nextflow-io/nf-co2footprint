@@ -15,6 +15,23 @@ class Duration extends Quantity {
     }
 
     /**
+     * Creator of a Time quantity, combining the tracking and reporting of a duration, associated with a unit.
+     *
+     * @param value         Numerical value, saved in the quantity
+     * @param unit          Unit of the quantity
+     * @param type          Type of he value
+     * @param description   A human-readable description of the value
+     */
+    static Metric of(Object value, String unit='ms', String type='Duration', String description = null) {
+        if (value instanceof Number) {
+            return new Duration(value, unit, type, description)
+        }
+        else {
+            return new Metric(value, type, unit, description)
+        }
+    }
+
+    /**
      * Converts a duration from one unit to another.
      * E.g., 120000 ms to minutes returns 2.
      *

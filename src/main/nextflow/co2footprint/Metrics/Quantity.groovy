@@ -10,7 +10,6 @@ import java.text.DecimalFormatSymbols
  */
 class Quantity extends Metric<BigDecimal> {
     String scale
-    String unit
     boolean integerType
     String separator = ' '
     int scalingFactor = 1000
@@ -20,15 +19,33 @@ class Quantity extends Metric<BigDecimal> {
      *
      * @param value         Numerical value, saved in the quantity
      * @param scale         Scale of the Quantity, defaults to ''
-     * @param unit          Unit of the quantity
+     * @param unit          Unit of the metric
      * @param type          Type of he value
      * @param description   A human-readable description of the value
      */
     Quantity(Object value, String scale='', String unit='', String type='Number', String description = null) {
-        super(value as BigDecimal, type, description)
+        super(value as BigDecimal, type, unit, description)
         this.scale = scale
-        this.unit = unit
         integerType = [Integer, Long, int, long, BigInteger].contains(value?.class)
+    }
+
+    /**
+     * Creates a {@link Metric} or a {@link Quantity} if the value is numerical.
+     *
+     * @param value         Numerical value, saved in the quantity
+     * @param scale         Scale of the Quantity, defaults to ''
+     * @param unit          Unit of the quantity
+     * @param type          Type of he value, defaults to 'Number'
+     * @param description   A human-readable description of the value
+     * @return
+     */
+    static Metric of(Object value, String scale='', String unit='', String type='Number', String description = null) {
+        if (value instanceof Number) {
+            return new Quantity(value, scale, unit, type, description)
+        }
+        else {
+            return new Metric(value, type, "${scale}${unit}", description)
+        }
     }
 
     /**
@@ -157,7 +174,7 @@ class Quantity extends Metric<BigDecimal> {
      * @return A map with all entries from this Quantity
      */
     Map<String, ? extends Object> toMap() {
-        Map<String, Object> map = super.toMap() + [scale: scale, unit: unit]
+        Map<String, Object> map = super.toMap() + [unit: unit, scale: scale]
         map['value'] = returnValue()
         return map
     }

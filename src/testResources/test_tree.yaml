@@ -5,32 +5,32 @@ values:
     raw: {value: null, type: str}
     readable: '-'
   energy:
-    raw: {value: 4000.0, type: Number, scale: '', unit: Wh}
+    raw: {value: 4000.0, type: Number, unit: Wh, scale: ''}
     readable: 4 kWh
   co2e:
-    raw: {value: 400.0, type: Number, scale: '', unit: g}
+    raw: {value: 400.0, type: Number, unit: g, scale: ''}
     readable: 400 g
   co2eMarket:
-    raw: {value: null, type: Number, scale: '', unit: g}
+    raw: {value: null, type: Number, unit: g}
     readable: '-'
   ci:
-    raw: {value: 100.0, type: Number, scale: '', unit: gCO₂e/kWh}
+    raw: {value: 100.0, type: Number, unit: gCO₂e/kWh, scale: ''}
     readable: 100 gCO₂e/kWh
   cpuUsage:
-    raw: {value: 1.0, type: Percentage, scale: '%', unit: ''}
+    raw: {value: 1.0, type: Percentage, unit: '', scale: '%'}
     readable: 1 %
   memory:
-    raw: {value: 10737418240, type: Bytes, scale: '', unit: B}
+    raw: {value: 10737418240, type: Bytes, unit: B, scale: ''}
     readable: 10 GB
   time:
-    raw: {value: 7200000.0000, type: Duration, scale: '', unit: ms}
+    raw: {value: 7200000.0000, type: Duration, unit: ms, scale: ''}
     readable: 2h
     report: 2h
   cpus:
-    raw: {value: 1, type: Number, scale: '', unit: ''}
+    raw: {value: 1, type: Number, unit: '', scale: ''}
     readable: '1'
   powerdrawCPU:
-    raw: {value: 7.0, type: Number, scale: '', unit: W}
+    raw: {value: 7.0, type: Number, unit: W, scale: ''}
     readable: 7 W
   cpu_model:
     raw:
@@ -38,10 +38,10 @@ values:
       type: str
     readable: '[Some model]'
   rawEnergyProcessor:
-    raw: {value: 10000.0, type: Number, scale: '', unit: Wh}
+    raw: {value: 10000.0, type: Number, unit: Wh, scale: ''}
     readable: 10 kWh
   rawEnergyMemory:
-    raw: {value: 10000.0, type: Number, scale: '', unit: Wh}
+    raw: {value: 10000.0, type: Number, unit: Wh, scale: ''}
     readable: 10 kWh
 children:
 - name: test1
@@ -51,41 +51,41 @@ children:
       raw: {value: null, type: str}
       readable: '-'
     energy: &id002
-      raw: {value: 2000.0, type: Number, scale: '', unit: Wh}
+      raw: {value: 2000.0, type: Number, unit: Wh, scale: ''}
       readable: 2 kWh
     co2e: &id003
-      raw: {value: 200.0, type: Number, scale: '', unit: g}
+      raw: {value: 200.0, type: Number, unit: g, scale: ''}
       readable: 200 g
     co2eMarket: &id004
-      raw: {value: null, type: Number, scale: '', unit: g}
+      raw: {value: null, type: Number, unit: g}
       readable: '-'
     ci: &id005
-      raw: {value: 100.0, type: Number, scale: '', unit: gCO₂e/kWh}
+      raw: {value: 100.0, type: Number, unit: gCO₂e/kWh, scale: ''}
       readable: 100 gCO₂e/kWh
     cpuUsage: &id006
-      raw: {value: 1.0, type: Percentage, scale: '%', unit: ''}
+      raw: {value: 1.0, type: Percentage, unit: '', scale: '%'}
       readable: 1 %
     memory: &id007
-      raw: {value: 10737418240, type: Bytes, scale: '', unit: B}
+      raw: {value: 10737418240, type: Bytes, unit: B, scale: ''}
       readable: 10 GB
     time: &id008
-      raw: {value: 3600000.0000, type: Duration, scale: '', unit: ms}
+      raw: {value: 3600000.0000, type: Duration, unit: ms, scale: ''}
       readable: 1h
       report: 1h
     cpus: &id009
-      raw: {value: 1, type: Number, scale: '', unit: ''}
+      raw: {value: 1, type: Number, unit: '', scale: ''}
       readable: '1'
     powerdrawCPU: &id010
-      raw: {value: 7.0, type: Number, scale: '', unit: W}
+      raw: {value: 7.0, type: Number, unit: W, scale: ''}
       readable: 7 W
     cpu_model: &id011
       raw: {value: Some model, type: str}
       readable: Some model
     rawEnergyProcessor: &id012
-      raw: {value: 5000.0, type: Number, scale: '', unit: Wh}
+      raw: {value: 5000.0, type: Number, unit: Wh, scale: ''}
       readable: 5 kWh
     rawEnergyMemory: &id013
-      raw: {value: 5000.0, type: Number, scale: '', unit: Wh}
+      raw: {value: 5000.0, type: Number, unit: Wh, scale: ''}
       readable: 5 kWh
   children:
   - name: '1'
