@@ -2,9 +2,9 @@ package nextflow.co2footprint.Records
 
 import groovy.util.logging.Slf4j
 import nextflow.co2footprint.CO2FootprintConfig
+import nextflow.co2footprint.Metrics.Duration
 import nextflow.exception.MissingValueException
 import nextflow.trace.TraceRecord
-import nextflow.co2footprint.Metrics.Duration
 
 import java.time.Instant
 import java.time.LocalDateTime

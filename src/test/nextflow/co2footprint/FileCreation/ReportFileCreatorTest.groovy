@@ -2,12 +2,12 @@ package nextflow.co2footprint.FileCreation
 
 import nextflow.Session
 import nextflow.co2footprint.CO2FootprintComputer
-import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.CO2FootprintConfig
-import nextflow.co2footprint.Records.CO2Record
+import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
-import nextflow.co2footprint.Records.CiRecordCollector
+import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordTree
+import nextflow.co2footprint.Records.CiRecordCollector
 import nextflow.trace.TraceRecord
 import spock.lang.Shared
 import spock.lang.Specification

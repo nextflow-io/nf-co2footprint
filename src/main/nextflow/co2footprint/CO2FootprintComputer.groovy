@@ -1,14 +1,12 @@
 package nextflow.co2footprint
 
-import nextflow.co2footprint.Logging.Markers
+import groovy.util.logging.Slf4j
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
+import nextflow.co2footprint.Logging.Markers
 import nextflow.co2footprint.Metrics.Bytes
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
-
 import nextflow.co2footprint.Records.CiRecordCollector
-
-import groovy.util.logging.Slf4j
 import nextflow.exception.MissingValueException
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord

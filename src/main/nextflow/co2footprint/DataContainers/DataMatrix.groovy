@@ -2,8 +2,8 @@ package nextflow.co2footprint.DataContainers
 
 import groovy.util.logging.Slf4j
 
-import java.nio.file.Path
 import java.nio.file.Files
+import java.nio.file.Path
 
 /**
  * DataMatrix / Table Base Class.
@@ -127,7 +127,7 @@ class DataMatrix implements Matrix {
             data.add(row)
             // Check if the line was properly closed
             // If we are still escaped, it means the last quote was not closed
-            assert escaped == false, "Unclosed quote in line: ${line}"
+            assert !escaped, "Unclosed quote in line: ${line}"
             start = 0
         }
 

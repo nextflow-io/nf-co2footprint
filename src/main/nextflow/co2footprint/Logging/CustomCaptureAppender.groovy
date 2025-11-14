@@ -4,7 +4,6 @@ import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.PatternLayout
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.AppenderBase
-
 import nextflow.Session
 import nextflow.trace.AnsiLogObserver
 import nextflow.util.LoggerHelper

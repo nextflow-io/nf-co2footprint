@@ -3,15 +3,13 @@ package nextflow.co2footprint.FileCreation
 import groovy.util.logging.Slf4j
 import groovyx.gpars.agent.Agent
 import nextflow.co2footprint.CO2FootprintComputer
+import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.Metrics.Quantity
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
-import nextflow.co2footprint.CO2FootprintConfig
-
 import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.trace.TraceHelper
 
 import java.nio.file.Path
-
 
 /**
  * Generates the summary text file for the CO₂ footprint.

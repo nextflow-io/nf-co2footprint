@@ -19,14 +19,13 @@ package nextflow.co2footprint
 
 import com.google.common.jimfs.Configuration
 import com.google.common.jimfs.Jimfs
+import groovy.json.JsonSlurper
 import org.opentest4j.AssertionFailedError
 
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
-
 import java.security.MessageDigest
-import groovy.json.JsonSlurper
 
 /**
  *

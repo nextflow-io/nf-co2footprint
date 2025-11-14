@@ -1,9 +1,5 @@
 package nextflow.co2footprint.Metrics
 
-import java.math.RoundingMode
-import java.text.DecimalFormat
-import java.text.DecimalFormatSymbols
-
 class Percentage extends Quantity {
     /**
      * Creator of a Quantity, combining the tracking and reporting of a number, associated with a unit.

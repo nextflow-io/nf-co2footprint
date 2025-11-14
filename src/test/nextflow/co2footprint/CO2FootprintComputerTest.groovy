@@ -1,19 +1,17 @@
 package nextflow.co2footprint
 
+import groovy.util.logging.Slf4j
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CiRecordCollector
 import nextflow.exception.MissingValueException
-import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
 import spock.lang.Shared
 import spock.lang.Specification
 
 import java.nio.file.Paths
-
-import groovy.util.logging.Slf4j
 
 @Slf4j
 class CO2FootprintComputerTest extends Specification{

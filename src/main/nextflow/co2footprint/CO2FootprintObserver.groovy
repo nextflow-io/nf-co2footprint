@@ -2,13 +2,11 @@ package nextflow.co2footprint
 
 import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
-
 import nextflow.Session
-
-import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.FileCreation.ReportFileCreator
 import nextflow.co2footprint.FileCreation.SummaryFileCreator
 import nextflow.co2footprint.FileCreation.TraceFileCreator
+import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.co2footprint.Records.CiRecordCollector
 import nextflow.processor.TaskHandler
@@ -19,7 +17,6 @@ import nextflow.trace.TraceRecord
 
 import java.nio.file.Path
 import java.util.concurrent.ConcurrentHashMap
-
 
 /**
  * Observer for CO₂ footprint reporting in Nextflow workflows.

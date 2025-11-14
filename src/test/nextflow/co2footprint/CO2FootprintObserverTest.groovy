@@ -1,5 +1,6 @@
 package nextflow.co2footprint
 
+import groovy.util.logging.Slf4j
 import nextflow.NextflowMeta
 import nextflow.Session
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
@@ -11,17 +12,13 @@ import nextflow.processor.TaskRun
 import nextflow.script.WorkflowMetadata
 import nextflow.trace.TraceObserver
 import nextflow.trace.TraceRecord
-
 import spock.lang.Shared
 import spock.lang.Specification
 
 import java.nio.file.Files
 import java.nio.file.Path
-
 import java.time.OffsetDateTime
 import java.util.concurrent.Executors
-import groovy.util.logging.Slf4j
-
 
 @Slf4j
 class CO2FootprintObserverTest extends Specification{
@@ -116,8 +113,8 @@ class CO2FootprintObserverTest extends Specification{
         observer.onFlowComplete()
 
         expect:
-        Double total_co2 =  observer.workflowStats.co2Record.store.co2e
-        Double total_energy =  observer.workflowStats.co2Record.store.energy
+        Double total_co2 =  observer.workflowStats.co2Record.store.co2e as Double
+        Double total_energy =  observer.workflowStats.co2Record.store.energy as Double
         // With TDP = 11.45 (default global)
         // Energy consumption converted to Wh
         round(total_energy*1000) == 14.02
@@ -151,7 +148,7 @@ class CO2FootprintObserverTest extends Specification{
 
         CO2EquivalencesRecord co2EquivalencesRecord = observer
             .getCO2FootprintComputer()
-            .computeCO2footprintEquivalences(observer.workflowStats.co2Record.store.co2e)
+            .computeCO2footprintEquivalences(observer.workflowStats.co2Record.store.co2e as Double)
 
         expect:
         // Values compared to result from www.green-algorithms.org (1h, 1core, TDP=11.45, CI:475)

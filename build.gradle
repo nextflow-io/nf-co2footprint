@@ -63,14 +63,12 @@ ext {
 String groovyVersion = '4.0.27'
 String pf4jVersion = '3.13.0'
 String slf4jVersion = '2.0.17'
-String argparseVersion = '0.9.0'
 
 dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     compileOnly "io.nextflow:nextflow:$nextflowVersion"
     compileOnly "org.slf4j:slf4j-api:$slf4jVersion"
     compileOnly "org.pf4j:pf4j:$pf4jVersion"
-    compileOnly "net.sourceforge.argparse4j:argparse4j:$argparseVersion"
 
     // add here plugins dependencies
 

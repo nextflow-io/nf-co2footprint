@@ -1,14 +1,8 @@
 package nextflow.co2footprint.Records
 
 import groovy.transform.CompileStatic
-import nextflow.co2footprint.Metrics.Bytes
-import nextflow.co2footprint.Metrics.Calculator
-
 import groovy.util.logging.Slf4j
-import nextflow.co2footprint.Metrics.Duration
-import nextflow.co2footprint.Metrics.Metric
-import nextflow.co2footprint.Metrics.Percentage
-import nextflow.co2footprint.Metrics.Quantity
+import nextflow.co2footprint.Metrics.*
 import nextflow.trace.TraceRecord
 
 /**

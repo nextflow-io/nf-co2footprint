@@ -1,17 +1,15 @@
 package nextflow.co2footprint.Logging
 
 import ch.qos.logback.classic.Level
-import ch.qos.logback.classic.turbo.TurboFilter
 import ch.qos.logback.classic.LoggerContext
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.read.ListAppender
-
+import groovy.util.logging.Slf4j
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
-import groovy.util.logging.Slf4j
 
 @Slf4j
 

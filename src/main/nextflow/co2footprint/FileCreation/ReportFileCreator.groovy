@@ -1,23 +1,19 @@
 package nextflow.co2footprint.FileCreation
 
 import groovy.json.JsonOutput
-import nextflow.co2footprint.Metrics.Quantity
-import nextflow.co2footprint.Records.CO2EquivalencesRecord
-import nextflow.co2footprint.CO2FootprintConfig
-import nextflow.co2footprint.CO2FootprintComputer
-
-import nextflow.co2footprint.Records.CiRecordCollector
-
 import groovy.text.GStringTemplateEngine
 import groovy.text.Template
 import groovy.util.logging.Slf4j
-
 import nextflow.Session
+import nextflow.co2footprint.CO2FootprintComputer
+import nextflow.co2footprint.CO2FootprintConfig
+import nextflow.co2footprint.Metrics.Quantity
+import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2RecordTree
+import nextflow.co2footprint.Records.CiRecordCollector
 import nextflow.trace.TraceHelper
 
 import java.nio.file.Path
-
 
 /**
  * Generates the HTML CO₂ footprint report file.
