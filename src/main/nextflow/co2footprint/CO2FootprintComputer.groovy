@@ -1,13 +1,12 @@
 package nextflow.co2footprint
 
-import nextflow.co2footprint.Logging.Markers
+import groovy.util.logging.Slf4j
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
+import nextflow.co2footprint.Logging.Markers
+import nextflow.co2footprint.Metrics.Bytes
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
-import nextflow.co2footprint.Metrics.Converter
 import nextflow.co2footprint.Records.CiRecordCollector
-
-import groovy.util.logging.Slf4j
 import nextflow.exception.MissingValueException
 import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
@@ -53,29 +52,28 @@ class CO2FootprintComputer {
     *   - Energy consumption in Wh
     *   - CO₂ emissions in gCO₂e (location-based and optional market-based)
     *
-    * @param taskID  The Nextflow TaskId for this task.
     * @param trace   The TraceRecord containing task resource usage.
     * @param timeCiRecords Collector for carbon intensity records.
     * @return        CO2Record with energy consumption, CO₂ emissions, and task/resource details.
     */
-    CO2Record computeTaskCO2footprint(TaskId taskID, TraceRecord trace, CiRecordCollector timeCiRecords) {
+    CO2Record computeTaskCO2footprint(TraceRecord trace, CiRecordCollector timeCiRecords) {
 
         /* ===== CPU Information ===== */
 
         final String cpuModel = config.value('ignoreCpuModel') ? 'default' : trace.get('cpu_model') as String
 
         // Runtime [h]
-        final BigDecimal runtime_h = (getTraceOrDefault(trace, taskID, 'realtime', 0, 'missing-realtime') as BigDecimal) / (1000 * 60 * 60)
+        final BigDecimal runtime_h = (getTraceOrDefault(trace, trace.taskId, 'realtime', 0, 'missing-realtime') as BigDecimal) / (1000 * 60 * 60)
 
         // Number of CPU cores
-        final Integer numberOfCores = getTraceOrDefault(trace, taskID, 'cpus', 1, 'missing-cpus') as Integer
+        final Integer numberOfCores = getTraceOrDefault(trace, trace.taskId, 'cpus', 1, 'missing-cpus') as Integer
 
         // CPU usage: fraction of total requested cores
-        BigDecimal cpuUsage = getTraceOrDefault(trace, taskID, '%cpu', numberOfCores * 100, 'missing-%cpu') as BigDecimal
+        BigDecimal cpuUsage = getTraceOrDefault(trace, trace.taskId, '%cpu', numberOfCores * 100, 'missing-%cpu') as BigDecimal
         if ( cpuUsage == 0.0 ) {
             log.warn(
                 Markers.unique,
-                "The reported CPU usage is 0.0 for task ${taskID}.",
+                "The reported CPU usage is 0.0 for task ${trace.taskId}.",
                 'zero-cpu-usage-warning'
             )
         }
@@ -95,18 +93,18 @@ class CO2FootprintComputer {
 
         // 1. Use requested memory if available
         if (requestedMemory != null) {
-            memory = Converter.scaleUnits(requestedMemory, '', 'B', 'G').value
+            memory = new Bytes(requestedMemory, '').scale('G').value
         }
         // 2. If missing, fall back to peak_rss
         else if (maxRequiredMemory != null) {
-            memory = Converter.scaleUnits(maxRequiredMemory, '', 'B', 'G').value
+            memory = new Bytes(maxRequiredMemory, '').scale('G').value
             log.warn(Markers.unique,
-                "Requested memory is null for task ${taskID}. Using maximum consumed memory/`peak_rss` (${memory} GB) for CO₂e footprint computation.",
+                "Requested memory is null for task ${trace.taskId}. Using maximum consumed memory/`peak_rss` (${memory} GB) for CO₂e footprint computation.",
                 'memory-is-null-warning')
         }
         // 3. If both missing, throw an error
         else {
-            String message = "No requested memory and maximum consumed memory found for task ${taskID}."
+            String message = "No requested memory and maximum consumed memory found for task ${trace.taskId}."
             log.error(message)
             throw new MissingValueException(message)
         }
@@ -137,19 +135,19 @@ class CO2FootprintComputer {
         BigDecimal co2eMarket = ciMarket ? (energy * ciMarket) : null
 
         return new CO2Record(
-                energy,
-                co2e,
-                co2eMarket,
-                runtime_h,
-                ci,
-                numberOfCores as Integer,
-                powerdrawPerCore,
-                cpuUsage,
-                memory as Long,
-                trace.get('name') as String,
-                config.value('ignoreCpuModel') ? 'Custom value' : cpuModel,
-                rawEnergyProcessor,
-                rawEnergyMemory,
+            trace,
+            energy,
+            co2e,
+            co2eMarket,
+            ci,
+            cpuUsage,
+            memory as Long,
+            runtime_h,
+            numberOfCores as Integer,
+            powerdrawPerCore,
+            config.value('ignoreCpuModel') ? 'Custom value' : cpuModel,
+            rawEnergyProcessor,
+            rawEnergyMemory,
         )
     }
 
@@ -207,15 +205,15 @@ class CO2FootprintComputer {
     /**
     * Computes CPU power draw using the configured polynomial model.
     *
-    * @param coeffs List of polynomial coefficients (highest degree first), as Double or BigDecimal.
+    * @param coefficients List of polynomial coefficients (highest degree first), as Double or BigDecimal.
     * @param coreUsage CPU usage in percent (0–100).
     * @return Estimated power draw [W/core], or null if no model configured.
     */
-    BigDecimal getPowerDrawFromModel(List<Number> coeffs, BigDecimal coreUsage) {
+    static BigDecimal getPowerDrawFromModel(List<Number> coefficients, BigDecimal coreUsage) {
         BigDecimal power = 0.0
-        Integer degree = coeffs.size() - 1
+        Integer degree = coefficients.size() - 1
 
-        coeffs.eachWithIndex { c, i ->
+        coefficients.eachWithIndex { Number c, Integer i ->
             power += (c as BigDecimal) * coreUsage ** (degree - i)
         }
 

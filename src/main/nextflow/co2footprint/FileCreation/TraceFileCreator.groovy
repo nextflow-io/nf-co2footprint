@@ -46,23 +46,6 @@ class TraceFileCreator extends BaseFileCreator {
     }
 
     /**
-     * Return a readable entry from either {@link CO2Record} or {@link TraceRecord}.
-     *
-     * @param key           Entry key as a String
-     * @param traceRecord   TraceRecord of a task
-     * @param co2Record     CO2 record of a task
-     * @return The entry in its human-readable form
-     */
-    private static String getReadableEntry(String key, TraceRecord traceRecord, CO2Record co2Record) {
-        if (co2Record.containsKey(key)) {
-            return co2Record.getReadable(key)
-        }
-        else {
-            return traceRecord.get(key)
-        }
-    }
-
-    /**
      * Create the trace file and write the header.
      * If file already exists, it is overwritten or rolled depending on settings.
      */
@@ -91,10 +74,10 @@ class TraceFileCreator extends BaseFileCreator {
      * @param traceRecord   TraceRecord for the task
      * @param co2Record     CO2Record for the task
      */
-    void write(TraceRecord traceRecord, CO2Record co2Record){
+    void write(CO2Record co2Record){
         if (!created) { return }
 
-        List<String> recordedEntries = entryKeys.collect { String key -> getReadableEntry(key, traceRecord, co2Record) }
+        List<String> recordedEntries = co2Record.getReadableEntries(entryKeys) //  entryKeys.collect { String key -> getReadableEntry(key, traceRecord, co2Record) } ?
 
         traceWriter.send { PrintWriter writer ->
             writer.println( String.join('\t', recordedEntries) )
@@ -114,7 +97,7 @@ class TraceFileCreator extends BaseFileCreator {
         traceWriter.await()
 
         // Write remaining records for unfinished tasks
-        current.values().each { record ->
+        current.values().each { TraceRecord record ->
             file.println("${record.taskId}\t-")
         }
         file.flush()

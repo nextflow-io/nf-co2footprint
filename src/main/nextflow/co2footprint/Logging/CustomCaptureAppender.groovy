@@ -4,7 +4,6 @@ import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.PatternLayout
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.AppenderBase
-
 import nextflow.Session
 import nextflow.trace.AnsiLogObserver
 import nextflow.util.LoggerHelper
@@ -52,9 +51,9 @@ class CustomCaptureAppender extends AppenderBase<ILoggingEvent> {
             }
             else {
                 // Choose appropriate level
-                switch (event.level) {
-                    case Level.ERROR -> renderer.appendError(message)
-                    case Level.WARN -> renderer.appendWarning(message)
+                switch (event.level.levelInt) {
+                    case Level.ERROR.levelInt -> renderer.appendError(message)
+                    case Level.WARN.levelInt -> renderer.appendWarning(message)
                     default -> renderer.appendInfo(message)
                 }
             }

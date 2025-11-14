@@ -1,9 +1,5 @@
 package nextflow.co2footprint
 
-import java.nio.file.Files
-import java.util.jar.Manifest
-
-import nextflow.Channel
 import nextflow.plugin.Plugins
 import nextflow.plugin.TestPluginDescriptorFinder
 import nextflow.plugin.TestPluginManager
@@ -13,8 +9,9 @@ import spock.lang.Shared
 import spock.lang.Timeout
 import test.Dsl2Spec
 
+import java.nio.file.Files
 import java.nio.file.Path
-
+import java.util.jar.Manifest
 
 /**
  * Unit test for CO2Footprint DSL

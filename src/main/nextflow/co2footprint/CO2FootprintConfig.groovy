@@ -2,8 +2,8 @@ package nextflow.co2footprint
 
 import groovy.util.logging.Slf4j
 import nextflow.co2footprint.Config.BaseConfig
-import nextflow.co2footprint.DataContainers.DataMatrix
 import nextflow.co2footprint.DataContainers.CIDataMatrix
+import nextflow.co2footprint.DataContainers.DataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CiRecord
 import nextflow.trace.TraceHelper
@@ -218,16 +218,14 @@ class CO2FootprintConfig extends BaseConfig {
             )
         awsMatrix.checkRequiredColumns(['Zone id'])
 
-        String region = null
-
         // 1️⃣ Try environment variables first (works for Batch, Fargate, CloudShell)
-        region = System.getenv('AWS_REGION') ?: System.getenv('AWS_DEFAULT_REGION')
+        String region = System.getenv('AWS_REGION') ?: System.getenv('AWS_DEFAULT_REGION')
         region = region?.trim()
         
         // 2️⃣ Try EC2 metadata service (works on EC2 instances)
         if (!region) {
             try {
-                URL url = new URL("http://169.254.169.254/latest/meta-data/placement/availability-zone")
+                URL url = new URI("http://169.254.169.254/latest/meta-data/placement/availability-zone").toURL()
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection()
                 conn.connectTimeout = 1000
                 conn.readTimeout = 1000

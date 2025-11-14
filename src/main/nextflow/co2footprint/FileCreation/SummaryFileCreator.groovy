@@ -3,13 +3,13 @@ package nextflow.co2footprint.FileCreation
 import groovy.util.logging.Slf4j
 import groovyx.gpars.agent.Agent
 import nextflow.co2footprint.CO2FootprintComputer
-import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.CO2FootprintConfig
-import nextflow.co2footprint.Metrics.Converter
+import nextflow.co2footprint.Metrics.Quantity
+import nextflow.co2footprint.Records.CO2EquivalencesRecord
+import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.trace.TraceHelper
 
 import java.nio.file.Path
-
 
 /**
  * Generates the summary text file for the CO₂ footprint.
@@ -50,19 +50,20 @@ class SummaryFileCreator extends BaseFileCreator {
      * @param config                 CO2FootprintConfig instance with plugin configuration.
      * @param version                Plugin version string.
      */
-    void write(Map<String, Double> totalStats, CO2FootprintComputer co2FootprintComputer, CO2FootprintConfig config, String version) {
+    void write(CO2RecordTree workflowStats, CO2FootprintComputer co2FootprintComputer, CO2FootprintConfig config, String version) {
         if (!created) { return }
+        Map<String, Object> totalStats = workflowStats.co2Record.store
 
         // Launch the agent (for thread safety, though only one write is performed)
         summaryWriter = new Agent<PrintWriter>(file)
 
-        CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(totalStats['co2e'])
+        CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(totalStats['co2e'] as Double)
 
         String outText = """\
         Total CO₂e footprint measures of this workflow run (including cached tasks):
-          CO₂e emissions: ${Converter.toReadableUnits(totalStats['co2e'],'', 'g')}
-          Energy consumption: ${Converter.toReadableUnits(totalStats['energy'],'k', 'Wh')}
-          CO₂e emissions (market): ${totalStats['co2eMarket'] ? Converter.toReadableUnits(totalStats['co2eMarket'], '', 'g') : "-"}
+          CO₂e emissions: ${new Quantity(totalStats['co2e'],'', 'g').round().toReadable() }
+          Energy consumption: ${new Quantity(totalStats['energy'], 'k', 'Wh').toReadable() }
+          CO₂e emissions (market): ${totalStats['co2eMarket'] ? new Quantity(totalStats['co2eMarket'], '', 'g').toReadable() : "-"}
 
         """.stripIndent()
         List<String> readableEquivalences = equivalences.getReadableEquivalences()
