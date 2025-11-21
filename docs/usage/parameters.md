@@ -14,14 +14,14 @@ The following parameters are currently available:
 
   **Default**: `[enabled: true, file: co2footprint_trace_<timestamp>.txt]`
 
-- **`summaryFile`**  
+- **`summary`**  
   Map containing:
     - `enabled`: whether to produce this file
     - `file`: name of the `.txt` carbon footprint summary file containing the total energy consumption and total estimated CO₂ emission of the pipeline run.
   
   **Default**: `[enabled: true, file: co2footprint_summary_<timestamp>.txt]`
 
-- **`reportFile`**  
+- **`report`**  
   Map containing:
     - `enabled`: whether to produce this file
     - `file`: name of the HTML report containing information about the entire carbon footprint, overview plots, and more detailed task-specific metrics.
