@@ -230,6 +230,12 @@ class CO2FootprintConfig implements ConfigScope {
         }
     }
 
+    /**
+     * Mapping between AWS regions and Zone IDs is read from
+     * `aws_region_zoneID_mapping.csv`, which must have:
+     * - Row index: 'Region code'
+     * - Column: 'Zone id'
+     */
     private String getLocationFromAWSRegion() {
         AWSRegionsDataMatrix awsMatrix = AWSRegionsDataMatrix.fromCsv(
             Path.of(this.getClass().getResource('/aws_region_zoneID_mapping.csv').toURI())

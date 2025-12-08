@@ -43,13 +43,7 @@ class AWSRegionsDataMatrix extends DataMatrix{
     }
 
     /**
-     * Detects the AWS region using environment variables, EC2 metadata, or the AWS CLI,
-     * and sets the corresponding geographic Zone ID in the configuration.
-     *
-     * The mapping between AWS regions and Zone IDs is read from
-     * `aws_region_zoneID_mapping.csv`, which must have:
-     * - Row index: 'Region code'
-     * - Column: 'Zone id'
+     * Detects the AWS region using environment variables, EC2 metadata, or the AWS CLI.
      */
     String fetchRegion() {
         // 1️⃣ Try environment variables first (works for Batch, Fargate, CloudShell)
@@ -91,10 +85,7 @@ class AWSRegionsDataMatrix extends DataMatrix{
     /**
      * Finds the corresponding geographic Zone ID.
      *
-     * The mapping between AWS regions and Zone IDs is read from
-     * `aws_region_zoneID_mapping.csv`, which must have:
-     * - Row index: 'Region code'
-     * - Column: 'Zone id'
+     * @param region    AWS region name
      */
     AWSRegionsDataMatrix matchRegion(String region=this.region) {
         if (rowIndex.containsKey(region)) {
@@ -107,7 +98,7 @@ class AWSRegionsDataMatrix extends DataMatrix{
     }
 
     /**
-     * Return Zone iD of DataMatrix row. If none is given, the first position is assumed.
+     * Return Zone ID of DataMatrix row. If none is given, the first position is assumed.
      *
      * @param dm     DataMatrix with TDP values (default: this)
      * @param rowID  ID of the respective row (default: null)

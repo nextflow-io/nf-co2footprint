@@ -31,7 +31,7 @@ class MachineTypeDataMatrix extends DataMatrix {
      * @param columnIndexPos Position of the column index (default is 0)
      * @param rowIndexPos Position of the row index (default is null)
      * @param rowIndexColumn Name of the column used for the row index (default is 'executor')
-     * @return A TDPDataMatrix object
+     * @return A MachineTypeDataMatrix object
      */
     static MachineTypeDataMatrix fromCsv(
             Path path,
@@ -42,6 +42,12 @@ class MachineTypeDataMatrix extends DataMatrix {
         return new MachineTypeDataMatrix(dataMatrix.data, dataMatrix.getOrderedColumnKeys(), dataMatrix.getOrderedRowKeys())
     }
 
+    /**
+     * Find an executor in the machine type data matrix.
+     *
+     * @param executor Name of the executor
+     * @return The respective line or `null` if the executor is not found.
+     */
     MachineTypeDataMatrix matchExecutor(String executor) {
         if (rowIndex.containsKey(executor)) {
             DataMatrix executorData = select([executor] as LinkedHashSet)
@@ -69,7 +75,7 @@ class MachineTypeDataMatrix extends DataMatrix {
     }
 
     /**
-     * Return PUE value of DataMatrix row. If none is given, the first position is assumed.
+     * Return machine type of DataMatrix row. If none is given, the first position is assumed.
      *
      * @param dm     DataMatrix with TDP values (default: this)
      * @param rowID  ID of the respective row (default: null)
