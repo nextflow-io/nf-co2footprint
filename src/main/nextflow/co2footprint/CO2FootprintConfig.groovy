@@ -171,7 +171,7 @@ class CO2FootprintConfig implements ConfigScope {
         }
 
         // Powerdraw memory
-        powerdrawMem = configMap.remove('powerdrawMem') as BigDecimal ?: 0.3725
+        powerdrawMem = configMap.containsKey('powerdrawMem') ?  configMap.remove('powerdrawMem') as BigDecimal : 0.3725
 
 
         // Executor (Can define Machine type & PUE, if not already given
@@ -188,7 +188,7 @@ class CO2FootprintConfig implements ConfigScope {
                 executorMatrix?.getMachineType()
 
         // PUE (Given -> Executor -> MachineType -> 1.0)
-        pue = configMap.remove('pue') as BigDecimal ?:
+        pue = configMap.containsKey('pue') ? configMap.remove('pue') as BigDecimal :
                 executorMatrix?.getPUE() ?:
                         machineTypeDataMatrix.matchExecutor(machineType)?.getPUE() ?:
                                 1.0

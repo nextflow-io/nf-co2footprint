@@ -10,5 +10,4 @@ class TraceFileConfig extends BaseFileConfig implements ConfigScope{
     TraceFileConfig(Map traceFileConfig, String timestamp=null) {
         super(traceFileConfig, timestamp, 'trace', 'txt')
     }
-
 }

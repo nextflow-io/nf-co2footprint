@@ -10,5 +10,4 @@ class ReportFileConfig extends BaseFileConfig implements ConfigScope{
     ReportFileConfig(Map reportFileConfig, String timestamp=null) {
         super(reportFileConfig, timestamp, 'report', 'html')
     }
-
 }

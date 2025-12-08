@@ -37,7 +37,7 @@ class BaseFileConfig {
         this.ending = fileEnding ?: 'txt'
 
         file = Path.of(fileConfigMap.remove('file') as String ?: "co2footprint_${name}_${timestamp}.${ending}")
-        enabled = fileConfigMap.remove('enabled') ?: true
+        enabled =  fileConfigMap.containsKey('enabled') ? fileConfigMap.remove('enabled') : true
 
         // Check whether all parameters were included successfully
         if (!fileConfigMap.isEmpty()){

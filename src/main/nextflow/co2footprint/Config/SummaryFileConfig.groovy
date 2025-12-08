@@ -10,5 +10,4 @@ class SummaryFileConfig extends BaseFileConfig implements ConfigScope{
     SummaryFileConfig(Map summaryFileConfig, String timestamp=null) {
         super(summaryFileConfig, timestamp, 'summary', 'txt')
     }
-
 }

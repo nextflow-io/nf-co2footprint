@@ -102,19 +102,16 @@ class CO2FootprintObserver implements TraceObserver {
         this.config = config
 
         // Make file instances
-        TraceFileConfig traceConf = config.trace
-        if (traceConf && traceConf.enabled) {
-            this.traceFile = new TraceFileCreator((traceConf.file).complete(), overwrite)
+        if (config.trace && config.trace.enabled) {
+            this.traceFile = new TraceFileCreator(config.trace.file.complete(), overwrite)
         }
 
-        SummaryFileConfig summaryConf = config.summary
-        if (summaryConf && summaryConf.enabled) {
-            this.summaryFile = new SummaryFileCreator((summaryConf.file ).complete(), overwrite)
+        if (config.summary && config.summary.enabled) {
+            this.summaryFile = new SummaryFileCreator(config.summary.file.complete(), overwrite)
         }
 
-        ReportFileConfig reportConf = config.report
-        if (reportConf && reportConf.enabled) {
-            this.reportFile = new ReportFileCreator((reportConf.file).complete(), overwrite, maxTasks)
+        if (config.report && config.report.enabled) {
+            this.reportFile = new ReportFileCreator(config.report.file.complete(), overwrite, maxTasks)
         }
 
         this.co2FootprintComputer = co2FootprintComputer
