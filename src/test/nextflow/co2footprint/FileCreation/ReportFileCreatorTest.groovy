@@ -51,9 +51,9 @@ class ReportFileCreatorTest extends Specification{
         Session session = Mock(Session) {
             getConfig() >> [
                 co2footprint: [
-                    'trace': new FileSubConfig('trace', ['enabled': true, 'file': tempPath]),
-                    'summary': new FileSubConfig('summary', ['enabled': true, 'file': tempPath]),
-                    'report': new FileSubConfig('report', ['enabled': true, 'file': reportPath]),
+                    'trace': new FileSubConfig(['enabled': true, 'file': tempPath], 'trace'),
+                    'summary': new FileSubConfig(['enabled': true, 'file': tempPath], 'summary'),
+                    'report': new FileSubConfig(['enabled': true, 'file': reportPath], 'report', 'html'),
                     'ci': 475.0
                 ]
             ]

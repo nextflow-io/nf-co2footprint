@@ -17,6 +17,7 @@ import java.lang.Boolean
 class FileSubConfig extends BaseConfig {
     private String name
     private String timestamp = TraceHelper.launchTimestampFmt()
+    private String ending = 'txt'
 
     private void defineParameters() {
         // Name, description, default value or function, return type, additional allowed types
@@ -25,7 +26,7 @@ class FileSubConfig extends BaseConfig {
         )
         defineParameter(
                 'file', 'Path to the output file',
-                "co2footprint_${name}_${timestamp}.txt", String, Set.of(GString, Path)
+                "co2footprint_${name}_${timestamp}.${ending}", String, Set.of(GString, Path)
         )
     }
 
@@ -35,8 +36,9 @@ class FileSubConfig extends BaseConfig {
      * @param subConfigName  Name for this sub-config - used to get a default file name for this output file
      * @param configMap      Map of configuration values (from Nextflow config)
      */
-    FileSubConfig(String subConfigName, Map<String, Object> configMap) {
+    FileSubConfig(Map<String, Object> configMap, String subConfigName, String fileEnding='txt') {
         this.name = subConfigName
+        this.ending = fileEnding
 
         // Define the possible parameters of the configuration
         defineParameters()
@@ -53,7 +55,7 @@ class FileSubConfig extends BaseConfig {
                 this.get(name).set(value)
             } else if (name != 'params') {
                 log.debug("Skipping unknown configuration key: '${name}'")
-            } 
+            }
         }
     }
 }

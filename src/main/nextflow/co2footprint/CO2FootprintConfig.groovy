@@ -53,15 +53,15 @@ class CO2FootprintConfig extends BaseConfig {
         // Name, description, default value or function, return type, additional allowed types
         defineParameter(
                 'trace', 'Trace file config',
-                new FileSubConfig('trace', [:] as LinkedHashMap), FileSubConfig
+                new FileSubConfig([:] as LinkedHashMap,'trace'), FileSubConfig
         )
         defineParameter(
                 'summary', 'Summary file config',
-                new FileSubConfig('summary', [:] as LinkedHashMap), FileSubConfig
+                new FileSubConfig([:] as LinkedHashMap, 'summary'), FileSubConfig
         )
         defineParameter(
                 'report', 'Report file config',
-                new FileSubConfig('report', [:] as LinkedHashMap), FileSubConfig
+                new FileSubConfig([:] as LinkedHashMap,'report', 'html'), FileSubConfig
         )
         defineParameter(
                 'location', 'Location GeoCode from Electricity maps',
@@ -132,13 +132,13 @@ class CO2FootprintConfig extends BaseConfig {
         configMap.each { name, value ->
             if (this.containsKey(name)) {
                 if (name == 'trace') {
-                    this.get('trace').set(new FileSubConfig('trace', value))
+                    this.set('trace', new FileSubConfig(value, 'trace'))
                 } else if (name == 'summary') {
-                    this.get('summary').set(new FileSubConfig('summary', value))
+                    this.set('summary', new FileSubConfig(value, 'summary'))
                 } else if (name == 'report') {
-                    this.get('report').set(new FileSubConfig('report', value))
+                    this.set('report', new FileSubConfig(value, 'report', 'html'))
                 } else {
-                    this.get(name).set(value)
+                    this.set(name, value)
                 }
             } else if (name != 'params') {
                 log.debug("Skipping unknown configuration key: '${name}'")
