@@ -4,9 +4,6 @@ import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
 
 import nextflow.Session
-import nextflow.co2footprint.Config.ReportFileConfig
-import nextflow.co2footprint.Config.SummaryFileConfig
-import nextflow.co2footprint.Config.TraceFileConfig
 import nextflow.co2footprint.Metrics.Converter
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordAggregator
@@ -20,7 +17,6 @@ import nextflow.processor.TaskProcessor
 import nextflow.trace.TraceObserver
 import nextflow.trace.TraceRecord
 
-import java.nio.file.Path
 import java.util.concurrent.ConcurrentHashMap
 
 

@@ -3,7 +3,6 @@ package nextflow.co2footprint.Config
 import groovy.util.logging.Slf4j
 import nextflow.config.spec.ConfigOption
 import nextflow.script.dsl.Description
-import nextflow.trace.TraceHelper
 import java.nio.file.Path
 
 /**

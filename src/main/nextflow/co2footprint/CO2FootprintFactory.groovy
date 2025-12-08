@@ -1,6 +1,5 @@
 package nextflow.co2footprint
 
-
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Logging.LoggingAdapter
