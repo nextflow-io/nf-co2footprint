@@ -4,6 +4,9 @@ import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
 
 import nextflow.Session
+import nextflow.co2footprint.Config.ReportFileConfig
+import nextflow.co2footprint.Config.SummaryFileConfig
+import nextflow.co2footprint.Config.TraceFileConfig
 import nextflow.co2footprint.Metrics.Converter
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordAggregator
@@ -99,19 +102,19 @@ class CO2FootprintObserver implements TraceObserver {
         this.config = config
 
         // Make file instances
-        def traceConf = config.value('trace')
-        if (traceConf && traceConf.value('enabled')) {
-            this.traceFile = new TraceFileCreator((traceConf.value('file') as Path).complete(), overwrite)
+        TraceFileConfig traceConf = config.trace
+        if (traceConf && traceConf.enabled) {
+            this.traceFile = new TraceFileCreator((traceConf.file).complete(), overwrite)
         }
 
-        def summaryConf = config.value('summary')
-        if (summaryConf && summaryConf.value('enabled')) {
-            this.summaryFile = new SummaryFileCreator((summaryConf.value('file') as Path).complete(), overwrite)
+        SummaryFileConfig summaryConf = config.summary
+        if (summaryConf && summaryConf.enabled) {
+            this.summaryFile = new SummaryFileCreator((summaryConf.file ).complete(), overwrite)
         }
 
-        def reportConf = config.value('report')
-        if (reportConf && reportConf.value('enabled')) {
-            this.reportFile = new ReportFileCreator((reportConf.value('file') as Path).complete(), overwrite, maxTasks)
+        ReportFileConfig reportConf = config.report
+        if (reportConf && reportConf.enabled) {
+            this.reportFile = new ReportFileCreator((reportConf.file).complete(), overwrite, maxTasks)
         }
 
         this.co2FootprintComputer = co2FootprintComputer

@@ -183,7 +183,7 @@ class ReportFileCreator extends BaseFileCreator{
     protected String renderOptionsJson() {
         Map<String,?> all_options = config.collectInputFileOptions() + config.collectOutputFileOptions() + config.collectCO2CalcOptions()
 
-            // Render JSON
+        // Render JSON
         List<Map<String, String>> options = all_options.collect { String name, value ->
             [option: name, value: value as String]
         }
