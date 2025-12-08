@@ -235,12 +235,12 @@ class CO2FootprintConfig implements ConfigScope {
             Path.of(this.getClass().getResource('/aws_region_zoneID_mapping.csv').toURI())
         )
 
-        String region = awsMatrix.getRegion()
+        String region = awsMatrix.fetchRegion()
 
         if (region) {
             AWSRegionsDataMatrix regionMatrix = awsMatrix.matchRegion(region)
             if (regionMatrix) {
-                String zoneId = awsMatrix.get(region, 'Zone id') as String
+                String zoneId = regionMatrix.getZoneId()
                 log.info("AWS region '${region}' detected; Zone ID '${zoneId}' was set.")
                 return zoneId
             }
