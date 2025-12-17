@@ -78,9 +78,9 @@ $$
 \mathrm{ci}_{\mathrm{total}} = \left( \mathrm{ci}_{\mathrm{hydro}} \cdot 0.2 + \mathrm{ci}_{\mathrm{solar}} \cdot 0.8 \right) \cdot 0.5 + \mathrm{ci}_{\mathrm{region}} \cdot 0.5
 $$
 
-!!! info
+!!! warning
 
-    If your market-based CI meets temporal and spatial alignment requirements of the [GHG protocol](https://ghgprotocol.org/), reporting of both resulting emissions is encouraged. In essence the purchased and consumed power must be provided within the same hour and market region.
+    Reporting your market-based carbon footprint is only recommended if your market-based CI meets temporal and spatial alignment requirements of the [GHG protocol](https://ghgprotocol.org/). In essence the purchased and consumed power must be provided within the same hour and market region. In this case the reporting of both resulting emissions is encouraged.
 
 
 ## Cloud computations

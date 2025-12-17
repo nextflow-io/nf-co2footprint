@@ -18,6 +18,7 @@ out
 ./co2footprint_*.txt
 ./co2footprint_*.html
 site
+**/classes/
 
 # Ignore Python virtual environment
 venv/
