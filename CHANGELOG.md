@@ -2,6 +2,7 @@
 ## Bug Fixes:
 ## Misc:
 - Improved the testing of log messages
+- Added recommendation for market-based CI usage
 
 ## Features:
 - Updated the config syntax inline with standard Nextflow style

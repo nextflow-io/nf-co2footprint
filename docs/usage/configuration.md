@@ -80,7 +80,8 @@ $$
 
 !!! info
 
-    We encourage the reporting of emission values by location instead of marked-based carbon intensities. The energy is still drawn from a finite pool of renewables, currently available to your grid. It would likely be utilized for another buyer, regardless of the contract. This is not to say that these contracts are without merit, but the short-term differences are limited.
+    If your market-based CI meets temporal and spatial alignment requirements of the [GHG protocol](https://ghgprotocol.org/), reporting of both resulting emissions is encouraged. In essence the purchased and consumed power must be provided within the same hour and market region.
+
 
 ## Cloud computations
 
