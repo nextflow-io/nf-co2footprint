@@ -44,8 +44,8 @@ class DataMatrix implements Matrix {
         }
 
         // Add index into Map
-        rowIndex.eachWithIndex { rowIdx, i -> this.rowIndex.put(rowIdx, i) }
-        columnIndex.eachWithIndex { columnIdx, i -> this.columnIndex.put(columnIdx, i) }
+        rowIndex.eachWithIndex { Object rowIdx, Integer i -> this.rowIndex.put(rowIdx, i) }
+        columnIndex.eachWithIndex { Object columnIdx, Integer i -> this.columnIndex.put(columnIdx, i) }
 
         // Check integrity
         assertIntegrity()
@@ -96,10 +96,10 @@ class DataMatrix implements Matrix {
         boolean escaped = false // Track if we are inside a quoted field
 
         // Parse each line of the CSV, handling quoted fields and separators
-        lines.each { line ->
+        lines.each { String line ->
             List<Object> row = []
 
-            line.eachWithIndex { character, i ->
+            line.eachWithIndex { String character, Integer i ->
                 end = i
                 if (character == separator && !escaped) {
                     row.add(inferTypeOfString(line.substring(start, end)))
@@ -127,7 +127,7 @@ class DataMatrix implements Matrix {
             data.add(row)
             // Check if the line was properly closed
             // If we are still escaped, it means the last quote was not closed
-            assert escaped == false, "Unclosed quote in line: ${line}"
+            assert !escaped, "Unclosed quote in line: ${line}"
             start = 0
         }
 
@@ -141,7 +141,7 @@ class DataMatrix implements Matrix {
      * Throws IllegalStateException if not.
      */
     void assertRowLengthEqual() throws IllegalStateException  {
-       data.eachWithIndex { row, i ->
+       data.eachWithIndex { List<Object> row, Integer i ->
            if (row.size() != this.data[0].size()) {
                final String message = "Length of row ${i} (${row.size()}) does not match size preceding rows (${this.data[0].size()})."
                log.error(message)
@@ -210,7 +210,7 @@ class DataMatrix implements Matrix {
      */
     private static List<Integer> collectIndices(LinkedHashSet<Object> keys, BiMap<Object, Integer> bimap) {
         List<Integer> indices = keys.collect( { key -> bimap.getValue(key) } )
-        indices.removeAll( {it == null })
+        indices.removeAll( { Integer it -> it == null })
         return indices
     }
 
@@ -232,7 +232,7 @@ class DataMatrix implements Matrix {
     private DataMatrix selectColumns(LinkedHashSet<Object> columns){
         // Collect indices
         final List<Integer> iList = collectIndices(columns, this.columnIndex)
-        List<List<Object>> data = this.data.collect { row -> row[iList] }
+        List<List<Object>> data = this.data.collect { List<Object> row -> row[iList] }
 
         return new DataMatrix(data, columns, this.rowIndex.keySet() as LinkedHashSet)
     }
@@ -275,14 +275,14 @@ class DataMatrix implements Matrix {
      * Return the row keys in matrix order.
      */
     LinkedHashSet getOrderedRowKeys() {
-        return this.rowIndex.valueSet().sort().collect {i -> this.rowIndex.getKey(i)}
+        return this.rowIndex.valueSet().sort().collect { Integer i -> this.rowIndex.getKey(i)}
     }
 
     /**
      * Return the column keys in matrix order.
      */
     LinkedHashSet getOrderedColumnKeys() {
-        return this.columnIndex.valueSet().sort().collect {i -> this.columnIndex.getKey(i)}
+        return this.columnIndex.valueSet().sort().collect { Integer i -> this.columnIndex.getKey(i)}
     }
 
     /**
@@ -366,7 +366,7 @@ class DataMatrix implements Matrix {
             csvString += separator + colIdx.toString()
         }
         csvString += '\n'
-        this.data.eachWithIndex {row, i ->
+        this.data.eachWithIndex { List<Object> row, Integer i ->
             csvString += this.rowIndex.getKey(i).toString()
             row.each { element ->
                 String elementString =  element.toString()
@@ -396,7 +396,7 @@ class DataMatrix implements Matrix {
     String toString() {
         final LinkedHashSet<Object> sortedColumnsIndex = getOrderedColumnKeys()
         String stringRepresentation = "\t\t${sortedColumnsIndex.toString()}"
-        data.eachWithIndex {row, i  ->
+        data.eachWithIndex { List<Object> row, Integer i  ->
             stringRepresentation += "\n${this.rowIndex.getKey(i)}\t${row.toString()}"
         }
         return stringRepresentation
@@ -410,7 +410,7 @@ class DataMatrix implements Matrix {
     * @param requiredColumns The list of required column names.
     */
     void checkRequiredColumns(List<String> requiredColumns) {
-        def matrixColumns = this.columnIndex.keySet()
+        Set<Object> matrixColumns = this.columnIndex.keySet()
         if (!matrixColumns.containsAll(requiredColumns)) {
             def missing = requiredColumns - matrixColumns
             log.error("CSV is missing required columns: ${missing}")
