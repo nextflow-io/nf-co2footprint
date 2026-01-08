@@ -107,9 +107,9 @@ class AWSRegionsDataMatrix extends DataMatrix{
      */
     String getZoneId(DataMatrix dm=this, Object rowID=null, Integer rowIdx=0) {
         if (rowID) {
-            return dm.get(rowID, zoneId)
+            return dm.get(rowID, zoneId) as String
         } else {
-            return dm.get(rowIdx, zoneId, true)
+            return dm.get(rowIdx, zoneId, true) as String
         }
     }
 }

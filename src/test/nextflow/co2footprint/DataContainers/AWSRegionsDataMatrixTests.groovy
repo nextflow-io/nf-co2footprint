@@ -2,12 +2,10 @@ package nextflow.co2footprint.DataContainers
 
 import spock.lang.Shared
 import spock.lang.Specification
-import spock.lang.Stepwise
 
 import java.nio.file.Paths
 
 
-@Stepwise
 class AWSRegionsDataMatrixTests extends Specification {
     @Shared
     AWSRegionsDataMatrix awsRegionsDataMatrix = AWSRegionsDataMatrix.fromCsv(
