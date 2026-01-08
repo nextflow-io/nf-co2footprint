@@ -105,11 +105,11 @@ class AWSRegionsDataMatrix extends DataMatrix{
      * @param rowIdx Index of the respective row (default: 0, ignored if rowID is given)
      * @return       TDP value (W)
      */
-        BigDecimal getZoneId(DataMatrix dm=this, Object rowID=null, Integer rowIdx=0) {
-            if (rowID) {
-                return dm.get(rowID, zoneId) as BigDecimal
-            } else {
-                return dm.get(rowIdx, zoneId, true) as BigDecimal
-            }
+    String getZoneId(DataMatrix dm=this, Object rowID=null, Integer rowIdx=0) {
+        if (rowID) {
+            return dm.get(rowID, zoneId)
+        } else {
+            return dm.get(rowIdx, zoneId, true)
         }
+    }
 }
