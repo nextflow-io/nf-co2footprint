@@ -31,7 +31,7 @@ import java.nio.file.Paths
  *     }
  *     report = {
  *       enabled: true,
- *       file: "co2footprint_report.txt
+ *       file: "co2footprint_report.html
  *     }
  *     ci = 300
  *     pue = 1.4
@@ -53,15 +53,15 @@ class CO2FootprintConfig extends BaseConfig {
         // Name, description, default value or function, return type, additional allowed types
         defineParameter(
                 'trace', 'Trace file config',
-                new FileSubConfig('trace', [:] as LinkedHashMap), FileSubConfig
+                new FileSubConfig([:] as LinkedHashMap, 'trace'), FileSubConfig
         )
         defineParameter(
                 'summary', 'Summary file config',
-                new FileSubConfig('summary', [:] as LinkedHashMap), FileSubConfig
+                new FileSubConfig([:] as LinkedHashMap, 'summary'), FileSubConfig
         )
         defineParameter(
                 'report', 'Report file config',
-                new FileSubConfig('report', [:] as LinkedHashMap), FileSubConfig
+                new FileSubConfig( [:] as LinkedHashMap, 'report', 'html'), FileSubConfig
         )
         defineParameter(
                 'location', 'Location GeoCode from Electricity maps',
@@ -132,11 +132,11 @@ class CO2FootprintConfig extends BaseConfig {
         configMap.each { name, value ->
             if (this.containsKey(name)) {
                 if (name == 'trace') {
-                    this.get('trace').set(new FileSubConfig('trace', value))
+                    this.get('trace').set(new FileSubConfig(value as Map, 'trace'))
                 } else if (name == 'summary') {
-                    this.get('summary').set(new FileSubConfig('summary', value))
+                    this.get('summary').set(new FileSubConfig(value as Map, 'summary'))
                 } else if (name == 'report') {
-                    this.get('report').set(new FileSubConfig('report', value))
+                    this.get('report').set(new FileSubConfig(value as Map, 'report', 'html'))
                 } else {
                     this.get(name).set(value)
                 }
@@ -237,16 +237,14 @@ class CO2FootprintConfig extends BaseConfig {
             )
         awsMatrix.checkRequiredColumns(['Zone id'])
 
-        String region = null
-
         // 1️⃣ Try environment variables first (works for Batch, Fargate, CloudShell)
-        region = System.getenv('AWS_REGION') ?: System.getenv('AWS_DEFAULT_REGION')
+        String region = System.getenv('AWS_REGION') ?: System.getenv('AWS_DEFAULT_REGION')
         region = region?.trim()
         
         // 2️⃣ Try EC2 metadata service (works on EC2 instances)
         if (!region) {
             try {
-                URL url = new URL("http://169.254.169.254/latest/meta-data/placement/availability-zone")
+                URL url = new URI("http://169.254.169.254/latest/meta-data/placement/availability-zone").toURL()
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection()
                 conn.connectTimeout = 1000
                 conn.readTimeout = 1000

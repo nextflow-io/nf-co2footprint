@@ -5,6 +5,7 @@
 
 ## Features:
 - Updated the config syntax inline with standard Nextflow style
+- Usage of tree structure for result value propagation and summary / accumulation
 
 # Version 1.1.0
 ## Bug Fixes:

@@ -5,9 +5,8 @@ import nextflow.co2footprint.DataContainers.DataMatrix
 import nextflow.co2footprint.DataContainers.Matrix
 import spock.lang.Specification
 
-import java.nio.file.Path
 import java.nio.file.Files
-
+import java.nio.file.Path
 
 class BiMapTest extends  Specification {
     def 'Should create an empty bidirectional Map'() {

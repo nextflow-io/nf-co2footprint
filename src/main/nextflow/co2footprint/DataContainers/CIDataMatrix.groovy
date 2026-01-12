@@ -1,9 +1,7 @@
 package nextflow.co2footprint.DataContainers
 
 import groovy.transform.Canonical
-import groovy.transform.TupleConstructor
 import groovy.util.logging.Slf4j
-
 import nextflow.co2footprint.Logging.Markers
 
 import java.nio.file.Path
