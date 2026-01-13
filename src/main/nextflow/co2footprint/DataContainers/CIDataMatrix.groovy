@@ -3,10 +3,11 @@ package nextflow.co2footprint.DataContainers
 import groovy.transform.Canonical
 import groovy.transform.TupleConstructor
 import groovy.util.logging.Slf4j
-
+import nextflow.co2footprint.CO2FootprintFactory
 import nextflow.co2footprint.Logging.Markers
 
 import java.nio.file.Path
+import java.nio.file.Paths
 
 /**
  * A match onto the CI matrix with associated zone and ci value.
@@ -26,6 +27,18 @@ import java.nio.file.Path
  */
 @Slf4j
 class CIDataMatrix extends DataMatrix {
+    static final CIDataMatrix ciDataMatrix = readCiDataMatrix()
+
+    /**
+     * External Data integration of CI (Carbon intensity) values.
+     *
+     * @return The CI data as a matrix
+     */
+    static CIDataMatrix readCiDataMatrix() {
+        return fromCsv(
+                Paths.get(CO2FootprintFactory.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
+        )
+    }
 
     private final String ciColumn = 'Carbon intensity gCO₂eq/kWh (Life cycle)'
 

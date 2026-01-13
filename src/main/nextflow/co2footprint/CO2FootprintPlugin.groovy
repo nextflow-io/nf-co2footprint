@@ -18,7 +18,9 @@ package nextflow.co2footprint
 
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
+
 import nextflow.cli.PluginAbstractExec
+
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Parsers.ArgsParser
@@ -71,11 +73,11 @@ class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
         Map<String, Object> parsedArgs = ArgsParser.parse(args)
         if( cmd == 'postRun' ) {
             // Define trace path
-            assert parsedArgs.containsKey('tracePath') && parsedArgs.get('tracePath') instanceof String
+            assert parsedArgs.containsKey('tracePath') && (parsedArgs.get('tracePath') instanceof String)
             Path tracePath = Path.of(parsedArgs.get('tracePath') as String)
 
             // Define config
-            assert parsedArgs.get('config') instanceof String
+            assert (parsedArgs.get('config') instanceof String)
             Path configPath = Path.of(parsedArgs.get('config') as String)
             ConfigParser configParser = ConfigParserFactory.create()
             Map<String, Object> co2Config = configParser.parse(configPath).navigate('co2footprint') as Map?: [:]
@@ -90,10 +92,11 @@ class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
             Map<String, Object> processConfig = configParser.parse(configPath).navigate('process') as Map?: [:]
 
             // Define separate observer
-            TDPDataMatrix tdpDataMatrix = CO2FootprintFactory.readTdpDataMatrix()
-            CIDataMatrix ciDataMatrix = CO2FootprintFactory.readCiDataMatrix()
-            CO2FootprintConfig config = new CO2FootprintConfig(co2Config, tdpDataMatrix, ciDataMatrix, processConfig)
-            CO2FootprintComputer computer = new CO2FootprintComputer(tdpDataMatrix, config)
+            CO2FootprintConfig config = new CO2FootprintConfig(
+                    co2Config, TDPDataMatrix.tdpDataMatrix,
+                    CIDataMatrix.ciDataMatrix, processConfig
+            )
+            CO2FootprintComputer computer = new CO2FootprintComputer(TDPDataMatrix.tdpDataMatrix, config)
             CO2FootprintObserver observer = new CO2FootprintObserver(null, 'unknown', config, computer)
 
             // Parse the trace file

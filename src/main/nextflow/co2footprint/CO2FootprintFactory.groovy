@@ -4,7 +4,6 @@ import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Logging.LoggingAdapter
 
-import java.nio.file.Path
 import java.nio.file.Paths
 
 import groovy.transform.PackageScope
@@ -12,14 +11,11 @@ import groovy.transform.PackageScopeTarget
 import groovy.transform.CompileStatic
 
 import groovy.util.logging.Slf4j
-import org.slf4j.LoggerFactory
-import ch.qos.logback.classic.LoggerContext
 
 import nextflow.Session
 import nextflow.trace.TraceObserver
 import nextflow.trace.TraceObserverFactory
 
-import java.util.jar.Manifest
 
 
 /**
@@ -46,9 +42,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
     // Computer
     CO2FootprintComputer co2FootprintComputer = null
 
-    //External Data integration of TDP (Thermal design power) and CI (Carbon intensity) values.
-    final TDPDataMatrix tdpDataMatrix = readTdpDataMatrix()
-    final CIDataMatrix ciDataMatrix = readCiDataMatrix()
 
     /**
      * Set the current plugin version from the local /META-INF/MANIFEST.MF
@@ -93,28 +86,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
     }
 
     /**
-     * External Data integration of TDP (Thermal design power) values.
-     *
-     * @return The TDP data as a matrix
-     */
-    static TDPDataMatrix readTdpDataMatrix() {
-        return TDPDataMatrix.fromCsv(
-                Paths.get(CO2FootprintFactory.class.getResource('/cpu_tdp_data/CPU_TDP.csv').toURI())
-        )
-    }
-
-    /**
-     * External Data integration of CI (Carbon intensity) values.
-     *
-     * @return The CI data as a matrix
-     */
-    static CIDataMatrix readCiDataMatrix() {
-        return CIDataMatrix.fromCsv(
-                Paths.get(CO2FootprintFactory.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
-        )
-    }
-
-    /**
      * Define a configuration for the nf-co2footprint plugin.
      *
      * @param configModifications Modifications that should be made to the config as a {@link Map}
@@ -124,10 +95,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
      * @return A configuration that can be used by the plugin
      */
     CO2FootprintConfig defineConfig(
-        Map<String, Object> configModifications=[:],
-        Session session=this.session,
-        TDPDataMatrix tdpDataMatrix=this.tdpDataMatrix,
-        CIDataMatrix ciDataMatrix=this.ciDataMatrix
+            Map<String, Object> configModifications=[:],
+            Session session=this.session,
+            TDPDataMatrix tdpDataMatrix=TDPDataMatrix.tdpDataMatrix,
+            CIDataMatrix ciDataMatrix=CIDataMatrix.ciDataMatrix
     ) {
         Map<String, Object> co2footprintConfig = (session?.config?.navigate('co2footprint') as Map ?: [:])
         if (configModifications) { co2footprintConfig += configModifications}
@@ -148,7 +119,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
      */
     CO2FootprintComputer defineComputer(
             CO2FootprintConfig config=this.config,
-            TDPDataMatrix tdpDataMatrix=this.tdpDataMatrix
+            TDPDataMatrix tdpDataMatrix=TDPDataMatrix.tdpDataMatrix
     ){
         return new CO2FootprintComputer(tdpDataMatrix, config)
     }
