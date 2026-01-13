@@ -2,6 +2,8 @@ package nextflow.co2footprint
 
 import nextflow.Session
 import nextflow.co2footprint.Records.CO2Record
+import nextflow.co2footprint.TestHelpers.FileChecker
+import nextflow.trace.TraceRecord
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -22,9 +24,9 @@ class CO2FootprintExtensionTest extends Specification {
             [ co2footprint:
                   [
                       ci: 100.0,
-                      'traceFile': tracePath,
-                      'summaryFile': summaryPath,
-                      'reportFile': reportPath
+                      trace: [file: tracePath],
+                      summary: [file: summaryPath],
+                      report: [file: reportPath]
                   ]
             ]
         )
@@ -43,14 +45,12 @@ class CO2FootprintExtensionTest extends Specification {
 
         then:
         co2Records.size() == 8
-        co2Records[7] == new CO2Record(
-                3.2729169285E-6, 3.2729169285E-4, null, 2.777778E-4, 100.0,
-                1, 11.41, 100.0, 1, 'VALUE_TESTING', null,
-                3.169444698E-6, 1.034722305E-7
-        )
+        co2Records[7].getReadableEntries() == ['VALUE_TESTING', '3.27 mWh', '327.29 ug', '-', '100 gCO₂e/kWh', '100 %', '1 GB', '1s 0ms', '1', '11.41 W', '-', '3.17 mWh', '103.47 uWh']
+        co2Records[7].additionalMetrics == [co2e_non_cached:3.2729169285E-4, energy_non_cached:3.2729169285E-6, co2e_market:null, energy_market:3.2729169285E-6]
+
         // Check whether all files exist
         ['trace', 'summary',  'report'].each { String fileType ->
-            Path filePath = Path.of(extension.factory.config.value(fileType + 'File') as String)
+            Path filePath = Path.of(extension.factory.config.value(fileType).value('file') as String)
             fileChecker.checkIsFile(filePath)
         }
     }
@@ -66,16 +66,13 @@ class CO2FootprintExtensionTest extends Specification {
 
         when:
         List<CO2Record> co2Records = extension.calculateCO2(
-                this.class.getResource('/execution-trace-regular.tsv').path as Path, [traceFile: tracePath]
+                this.class.getResource('/execution-trace-regular.tsv').path as Path, [trace: [file: tracePath]]
         )
 
         then:
         co2Records.size() == 8
-        co2Records[7] == new CO2Record(
-                3.2729169285E-6, 3.2729169285E-4, null, 2.777778E-4, 100.0,
-                1, 11.41, 100.0, 1, 'VALUE_TESTING', null,
-                3.169444698E-6, 1.034722305E-7
-        )
+        co2Records[7].getReadableEntries() == ['VALUE_TESTING', '3.27 mWh', '327.29 ug', '-', '100 gCO₂e/kWh', '100 %', '1 GB', '1s 0ms', '1', '11.41 W', '-', '3.17 mWh', '103.47 uWh']
+        co2Records[7].additionalMetrics == [co2e_non_cached:3.2729169285E-4, energy_non_cached:3.2729169285E-6, co2e_market:null, energy_market:3.2729169285E-6]
         fileChecker.checkIsFile(tracePath)
     }
 }

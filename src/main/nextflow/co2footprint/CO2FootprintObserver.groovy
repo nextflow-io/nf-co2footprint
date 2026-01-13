@@ -161,6 +161,39 @@ class CO2FootprintObserver implements TraceObserver {
         return co2Record
     }
 
+    void renderFiles() {
+        // Catch unfinished tasks
+        runningTasks.each { TaskId taskId, TraceRecord traceRecord -> aggregateRecords(traceRecord) }
+
+        // Close all files (writes remaining tasks in the trace file)
+        traceFile?.close(runningTasks)
+
+        // Finalize and aggregate all workflow statistics
+        workflowStats.summarize()
+        workflowStats.collectAdditionalMetrics()
+
+        // Create report and summary if any content exists to write to the file
+        if (workflowStats) {
+            if (summaryFile) {
+                summaryFile.create()
+                summaryFile.write(workflowStats, co2FootprintComputer, config, version)
+                summaryFile.close()
+            }
+
+            if (reportFile) {
+                reportFile.create()
+                reportFile.addEntries(workflowStats, co2FootprintComputer, config, version, session, timeCiRecordCollector)
+                reportFile.write()
+                reportFile.close()
+            }
+        }
+
+        // Close all files (writes remaining tasks in the trace file)
+        traceFile?.close(runningTasks)
+        summaryFile?.close()
+        reportFile?.close()
+    }
+
     // ------ OBSERVER METHODS ------
 
     // ---- WORKFLOW LEVEL ----
@@ -192,92 +225,6 @@ class CO2FootprintObserver implements TraceObserver {
     /**
      * Save the pending processes and close the files
      */
-    void onFlowComplete() {
-        log.debug('Workflow completed -- rendering & saving files')
-
-        // Stop hourly CI updating
-        timeCiRecordCollector.stop()
-
-    void renderFiles() {
-        // Compute the statistics (total, mean, min, max, quantiles) on process level
-        final Map<String, Map<String, Map<String, ?>>> processStats = aggregator.computeProcessStats()
-        // Collect the total sums of all metrics
-        final Map<String, Double> totalStats = [:]
-        // Iterate over each process and its metrics
-        processStats.each { String processName, Map<String, Map<String, ?>> processMetrics ->
-            // Iterate over each metric for the current process (e.g., co2e, energy, etc.)
-            processMetrics.each { String metricName, Map<String, ?> metricValue ->
-                // Extract the 'total' value for the current metric
-                Double totalValue = metricValue['total'] as Double
-                // If the total value exists, add it to the running sum for this metric
-                if (totalValue != null) {
-                    // Accumulate the total for each metric across all processes
-                    totalStats[metricName] = (totalStats.get(metricName) ?: 0d) + totalValue
-                }
-            }
-        }
-
-        // Catch unfinished tasks
-        runningTasks.each { TaskId taskId, TraceRecord traceRecord -> aggregateRecords(traceRecord) }
-
-        // Close all files (writes remaining tasks in the trace file)
-        traceFile?.close(runningTasks)
-
-        // Finalize and aggregate all workflow statistics
-        workflowStats.summarize()
-        workflowStats.collectAdditionalMetrics()
-
-        // Create report and summary if any content exists to write to the file
-        if (workflowStats) {
-            if (summaryFile) {
-                summaryFile.create()
-                summaryFile.write(workflowStats, co2FootprintComputer, config, version)
-                summaryFile.close()
-            }
-
-            if (reportFile) {
-                reportFile.create()
-                reportFile.addEntries(workflowStats, co2FootprintComputer, config, version, session, timeCiRecordCollector)
-                reportFile.write()
-                reportFile.close()
-            }
-        }
-
-        // Close all files (writes remaining tasks in the trace file)
-        traceFile?.close(runningTasks)
-        summaryFile?.close()
-        reportFile?.close()
-
-        log.info(
-            "🌱 The workflow run used ${workflowStats.co2Record.toReadable('energy')} of electricity, " +
-            "resulting in the release of ${workflowStats.co2Record.toReadable('co2e')} of CO₂ equivalents into the atmosphere."
-        )
-    }
-
-    // ------ OBSERVER METHODS ------
-
-    // ---- WORKFLOW LEVEL ----
-
-    /**
-     * Start of the workflow; Creates the trace file.
-     *
-     * @param session The current Nextflow session
-     */
-    @Override
-    void onFlowCreate(Session session) {
-        log.debug('Workflow started -- CO2Footprint file instantiated')
-
-        // Construct session and aggregator
-        this.session = session
-        aggregator = new CO2RecordAggregator()
-
-        // Start hourly CI updating
-        timeCiRecordCollector.start()
-    }
-
-    /**
-     * Save the pending processes and close the files
-     */
     @Override
     void onFlowComplete() {
         log.debug('Workflow completed -- rendering & saving files')
@@ -287,6 +234,11 @@ class CO2FootprintObserver implements TraceObserver {
 
         // Write files
         renderFiles()
+
+        log.info(
+            "🌱 The workflow run used ${workflowStats.co2Record.toReadable('energy')} of electricity, " +
+            "resulting in the release of ${workflowStats.co2Record.toReadable('co2e')} of CO₂ equivalents into the atmosphere."
+        )
     }
 
 

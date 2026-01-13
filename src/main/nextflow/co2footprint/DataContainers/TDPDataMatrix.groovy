@@ -26,7 +26,7 @@ class TDPDataMatrix extends DataMatrix {
      */
     static TDPDataMatrix readTdpDataMatrix() {
         return fromCsv(
-                Path.of(TDPDataMatrix.class.getResource('/cpu_tdp_data/CPU_TDP.csv').toURI())
+            Path.of(TDPDataMatrix.class.getResource('/cpu_tdp_data/CPU_TDP.csv').toURI())
         )
     }
 

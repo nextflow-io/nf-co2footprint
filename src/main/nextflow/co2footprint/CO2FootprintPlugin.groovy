@@ -25,7 +25,6 @@ import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Parsers.ArgsParser
 import nextflow.co2footprint.Records.CO2Record
-import nextflow.co2footprint.Records.CO2RecordAggregator
 import nextflow.co2footprint.Parsers.TraceFileParser
 import nextflow.config.ConfigParserFactory
 import nextflow.config.ConfigParser
@@ -102,16 +101,13 @@ class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
             // Parse the trace file
             List<TraceRecord> traceRecords = TraceFileParser.parseExecutionTraceFile(tracePath)
 
-            // Prepare aggregator
-            observer.aggregator = new CO2RecordAggregator()
-
             // Create trace file
             observer.traceFile.create()
 
             // Collect CO2Records from traces & optionally write the corresponding files
             List<CO2Record> co2Records = []
             traceRecords.each { TraceRecord traceRecord ->
-                observer.startRecord(traceRecord)
+                observer.recordStarted(traceRecord)
                 co2Records.add(observer.aggregateRecords(traceRecord))
             }
             observer.renderFiles()

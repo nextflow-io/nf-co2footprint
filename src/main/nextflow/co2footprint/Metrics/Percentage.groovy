@@ -1,7 +1,5 @@
 package nextflow.co2footprint.Metrics
 
-import java.math.RoundingMode
-
 class Percentage extends Quantity {
     /**
      * Creator of Percentage, a Quantity which represents a percentage.

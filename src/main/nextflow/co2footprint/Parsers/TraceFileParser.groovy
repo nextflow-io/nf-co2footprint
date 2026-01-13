@@ -1,6 +1,8 @@
 package nextflow.co2footprint.Parsers
 
-import nextflow.co2footprint.Metrics.Converter
+import nextflow.co2footprint.Metrics.Bytes
+import nextflow.co2footprint.Metrics.Duration
+import nextflow.co2footprint.Metrics.Metric
 import nextflow.co2footprint.Metrics.Quantity
 import nextflow.trace.TraceRecord
 
@@ -38,8 +40,8 @@ class TraceFileParser {
                     value = switch (TraceRecord.FIELDS.get(key)) {
                         case 'mem' -> if (value.endsWith('B')) {
                             List<String> split = value.split(' ')
-                            Quantity quantity = Converter.scaleUnits(split[0].toDouble(), split[1].dropRight(1), 'B', '')
-                            quantity.value.toLong()
+                            Metric<BigDecimal> bytes = Bytes.of(split[0].toDouble(), split[1].dropRight(1)).scale('')
+                            bytes.value.toLong()
                         } else {
                             value.toLong()
                         }
@@ -53,7 +55,7 @@ class TraceFileParser {
                                 Long time = 0
                                 value.split(' ').each { String timePart ->
                                     String numeric = timePart.find('\\d+[.]?\\d*')
-                                    Quantity timeStep = Converter.scaleTime(numeric.toDouble(), timePart.replace(numeric, ''), 'ms')
+                                    Metric<BigDecimal> timeStep = Duration.of(numeric.toDouble(), timePart.replace(numeric, '')).scale('ms')
                                     time += timeStep.value.toLong()
                                 }
                                 time

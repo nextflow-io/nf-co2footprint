@@ -33,7 +33,7 @@ class CIDataMatrix extends DataMatrix {
      */
     static CIDataMatrix readCiDataMatrix() {
         return fromCsv(
-                Path.of(CIDataMatrix.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
+            Path.of(CIDataMatrix.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
         )
     }
 

@@ -25,7 +25,12 @@ class Quantity extends Metric<BigDecimal> {
      */
     Quantity(Object value, String scale='', String unit='', String type='Number', String description = null) {
         super(value as BigDecimal, type, unit, description)
+
+        // Alternative names for the scales
+        final Map<String, String> alternativeScales = ['K': 'k']
+        scale = alternativeScales.containsKey(scale) ? alternativeScales.get(scale) : scale
         this.scale = scale
+
         integerType = [Integer, Long, int, long, BigInteger].contains(value?.class)
     }
 
@@ -83,6 +88,7 @@ class Quantity extends Metric<BigDecimal> {
      */
     Quantity scale(String targetScale=null) {
         if (value) {
+
             final List<String> scales = ['p', 'n', 'u', 'm', '', 'k', 'M', 'G', 'T', 'P', 'E']
             // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
             int scaleIndex = getIdx(scale, scales)

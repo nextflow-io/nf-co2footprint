@@ -3,15 +3,11 @@ package nextflow.co2footprint
 import nextflow.Session
 import nextflow.co2footprint.Parsers.TraceFileParser
 import nextflow.co2footprint.Records.CO2Record
-import nextflow.co2footprint.Records.CO2RecordAggregator
-import nextflow.co2footprint.Records.CiRecordCollector
 import nextflow.plugin.extension.Function
 import nextflow.plugin.extension.PluginExtensionPoint
 import nextflow.trace.TraceRecord
 
 import java.nio.file.Path
-import java.time.LocalDateTime
-import java.util.concurrent.ConcurrentHashMap
 
 /**
  * A {@link PluginExtensionPoint} to interact with core functionalities of the plugin.
@@ -39,7 +35,7 @@ class CO2FootprintExtension extends PluginExtensionPoint {
      * @return A list of all task-specific trace records inferred from the trace file
      */
     @Function
-    List<TraceRecord> parseTraceFile(Path tracePath, String delimiter='\t') {
+    static List<TraceRecord> parseTraceFile(Path tracePath, String delimiter='\t') {
         return TraceFileParser.parseExecutionTraceFile(tracePath, delimiter)
     }
 
@@ -62,16 +58,13 @@ class CO2FootprintExtension extends PluginExtensionPoint {
         // Parse the trace file
         List<TraceRecord> traceRecords = parseTraceFile(tracePath)
 
-        // Prepare aggregator
-        observer.aggregator = new CO2RecordAggregator()
-
         // Create trace file
         observer.traceFile.create()
 
         // Collect CO2Records from traces & optionally write the corresponding files
         List<CO2Record> co2Records = []
         traceRecords.each { TraceRecord traceRecord ->
-            observer.startRecord(traceRecord)
+            observer.recordStarted(traceRecord)
             co2Records.add(observer.aggregateRecords(traceRecord))
         }
         observer.renderFiles()
