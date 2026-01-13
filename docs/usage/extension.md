@@ -3,13 +3,7 @@ The plugin provides some extension points for post-run estimations of carbon foo
 
 !!! warning
 
-    This is not the recommended way to estimate the footprint.
-    Trace files contain the same metrics as the internal trace, but is often lacking accuracy, especially when they are written in human-readable mode.
-
-!!! danger
-
-    Keep in mind that the standard execution trace file does not report all necessary values and rounds values when using human-readable output.
-    For best results use:
+    Post-run estimation using trace files can be inaccurate due to missing or rounded values, especially when using human-readable output. For reliable results, enable raw tracing and include all required fields:
     ```
     trace {
       raw = true
@@ -23,14 +17,14 @@ The plugin provides some extension points for post-run estimations of carbon foo
 #### From the command line
 The command line functionality utilizes Nextflow configs, like the regular plugin (see [parameters.md](./pa
 rameters.md)).
-It is recommended to set the output paths and a fixed carbon intensity value (`ci`) from within the config.
+It is recommended to set the output paths and a fixed carbon intensity value (`ci`) in the config.
 ```bash
 nextflow plugin nf-co2footprint:postRun --config <path_to_nextflow.config> --tracePath <path_to_execution_trace.txt>
 ```
 
 
 
-#### From within a workflow run
+#### Within a workflow through functions
 The interaction follows the [Nextflow extension function schema](https://nextflow.io/docs/latest/plugins/developing-plugins.html).
 ```Nextflow
 include { calculateCO2 } from 'plugin/nf-co2footprint'
@@ -75,8 +69,5 @@ Can be used to calculate the emissions of a trace.
   Path to the trace file 
 
 - **configModifications**:
-  By default the extension point uses the Nextflow config of the current run, including parameters within the `co2footprint` field.
-  This parameter is designed to change the config dynamically within workflow runs. By forming the union between the `co2footprint` field and a given map.
-  The changes here are exclusive to one single run of an extension function and do not affect the overall workflow run parameters.
-  In essence: This can be used to change the output paths of files, the carbon-intensity, and more for post-run estimations. Defaults to `[:]`.
+  Temporarily overrides parameters in the `co2footprint` block of the current Nextflow configuration for a single extension function call. The provided map is merged with the existing configuration and does not affect the overall workflow run. Can be used to adjust settings such as output paths or carbon intensity for post-run estimations. Defaults to [:].
   Example: `[traceFile: <Path_to_your_output_trace_file>, ci: <Your_carbon_intensity>]`
