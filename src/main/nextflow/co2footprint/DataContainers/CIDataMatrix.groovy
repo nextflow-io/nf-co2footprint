@@ -1,13 +1,10 @@
 package nextflow.co2footprint.DataContainers
 
 import groovy.transform.Canonical
-import groovy.transform.TupleConstructor
 import groovy.util.logging.Slf4j
-import nextflow.co2footprint.CO2FootprintFactory
 import nextflow.co2footprint.Logging.Markers
 
 import java.nio.file.Path
-import java.nio.file.Paths
 
 /**
  * A match onto the CI matrix with associated zone and ci value.
@@ -36,7 +33,7 @@ class CIDataMatrix extends DataMatrix {
      */
     static CIDataMatrix readCiDataMatrix() {
         return fromCsv(
-                Paths.get(CO2FootprintFactory.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
+                Path.of(CIDataMatrix.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
         )
     }
 

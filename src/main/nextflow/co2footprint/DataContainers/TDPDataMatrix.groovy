@@ -1,12 +1,10 @@
 package nextflow.co2footprint.DataContainers
 
-import nextflow.co2footprint.CO2FootprintFactory
 import nextflow.co2footprint.Logging.Markers
 
 import groovy.util.logging.Slf4j
 
 import java.nio.file.Path
-import java.nio.file.Paths
 import java.util.regex.Matcher
 
 /**
@@ -29,7 +27,7 @@ class TDPDataMatrix extends DataMatrix {
      */
     static TDPDataMatrix readTdpDataMatrix() {
         return fromCsv(
-                Paths.get(CO2FootprintFactory.class.getResource('/cpu_tdp_data/CPU_TDP.csv').toURI())
+                Path.of(TDPDataMatrix.class.getResource('/cpu_tdp_data/CPU_TDP.csv').toURI())
         )
     }
 
