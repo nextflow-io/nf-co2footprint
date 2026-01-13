@@ -39,7 +39,7 @@ nextflow run <pipeline_name>.nf
 More details are available in the Nextflow [plugin documentation](https://www.nextflow.io/docs/latest/plugins.html#plugins) and the [configuration guide](https://www.nextflow.io/docs/latest/config.html). 
 
 ## Extension
-The plugin supports an extension point for workflows which can read in execution trace files and calculate their carbon footprint. For more information see the [extension manual](usage/extension.md).
+The plugin also provides a CLI command for post-run carbon footprint calculations from Nextflow's execution trace files, as well as a function that can be included in Nextflow pipelines. For more information, see the [extension manual](usage/extension.md).
 
 ## Output
 The plugin generates three files, a [detailed report](assets/co2footprint_report_sample.html), a [text summary](assets/co2footprint_summary_sample.txt), and a [trace file](assets/co2footprint_trace_sample.txt).  
