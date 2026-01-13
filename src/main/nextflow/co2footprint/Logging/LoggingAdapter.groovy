@@ -1,22 +1,19 @@
 package nextflow.co2footprint.Logging
 
+import ch.qos.logback.classic.Logger
+import ch.qos.logback.classic.LoggerContext
+import ch.qos.logback.classic.PatternLayout
 import ch.qos.logback.classic.spi.ILoggingEvent
-import ch.qos.logback.core.pattern.CompositeConverter
-import groovy.util.logging.Slf4j
-
-import org.slf4j.LoggerFactory
 import ch.qos.logback.classic.turbo.TurboFilter
+import ch.qos.logback.core.Appender
 import ch.qos.logback.core.ConsoleAppender
 import ch.qos.logback.core.encoder.Encoder
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder
 import ch.qos.logback.core.filter.Filter
-import ch.qos.logback.classic.Logger
-import ch.qos.logback.classic.LoggerContext
-import ch.qos.logback.classic.PatternLayout
-import ch.qos.logback.core.Appender
-
+import groovy.util.logging.Slf4j
 import nextflow.Global
 import nextflow.Session
+import org.slf4j.LoggerFactory
 
 import java.util.function.Supplier
 

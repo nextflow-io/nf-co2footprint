@@ -1,7 +1,11 @@
 # New
 ## Bug Fixes:
 ## Misc:
+- Improved the testing of log messages
+
 ## Features:
+- Updated the config syntax inline with standard Nextflow style
+- Usage of tree structure for result value propagation and summary / accumulation
 - Provided an extension point so trace files can be processed post-run through a pipeline
 - Provided an CLI option to process execution trace files post-run
 

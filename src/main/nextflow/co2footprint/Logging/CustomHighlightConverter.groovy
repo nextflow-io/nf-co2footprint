@@ -1,8 +1,8 @@
 package nextflow.co2footprint.Logging
 
-import ch.qos.logback.core.pattern.color.ForegroundCompositeConverterBase
-import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.classic.Level
+import ch.qos.logback.classic.spi.ILoggingEvent
+import ch.qos.logback.core.pattern.color.ForegroundCompositeConverterBase
 
 class CustomHighlightConverter extends ForegroundCompositeConverterBase<ILoggingEvent> {
 
