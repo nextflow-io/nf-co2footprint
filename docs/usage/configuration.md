@@ -21,15 +21,15 @@ To customize the plugin settings to your computing environment and preferences, 
     def co2_timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
     
     co2footprint {
-      trace = {
+      trace {
         file = "${params.outdir}/pipeline_info/co2footprint_trace_${co2_timestamp}.txt"
       }
     
-      summary = {
+      summary {
         file = "${params.outdir}/pipeline_info/co2footprint_summary_${co2_timestamp}.txt"
       }
     
-      report  = {
+      report {
         file = "${params.outdir}/pipeline_info/co2footprint_report_${co2_timestamp}.html"
       }
     
@@ -129,15 +129,15 @@ For more information, see [Parameters](parameters.md).
     def co2_timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
     
     co2footprint {
-        trace = {
+        trace {
           file = "${params.outdir}/co2footprint/co2footprint_trace_${co2_timestamp}.txt"
         }
     
-        summary = {
+        summary {
           file = "${params.outdir}/co2footprint/co2footprint_summary_${co2_timestamp}.txt"
         }
     
-        report = {
+        report {
           file = "${params.outdir}/co2footprint/co2footprint_report_${co2_timestamp}.html"
         }
     
