@@ -10,7 +10,7 @@ class MachineTypeDataMatrix extends DataMatrix {
     String machineTypeId = 'machineType'
 
     /**
-     * Constructor for TDPDataMatrix.
+     * Constructor for MachineTypeDataMatrix.
      *
      * @param data         Matrix data
      * @param columnIndex  Column index set
@@ -61,10 +61,10 @@ class MachineTypeDataMatrix extends DataMatrix {
     /**
      * Return PUE value of DataMatrix row. If none is given, the first position is assumed.
      *
-     * @param dm     DataMatrix with TDP values (default: this)
+     * @param dm     DataMatrix with values (default: this)
      * @param rowID  ID of the respective row (default: null)
      * @param rowIdx Index of the respective row (default: 0, ignored if rowID is given)
-     * @return       TDP value (W)
+     * @return       PUE value (W)
      */
     BigDecimal getPUE(DataMatrix dm=this, Object rowID=null, Integer rowIdx=0) {
         if (rowID) {
@@ -77,10 +77,10 @@ class MachineTypeDataMatrix extends DataMatrix {
     /**
      * Return machine type of DataMatrix row. If none is given, the first position is assumed.
      *
-     * @param dm     DataMatrix with TDP values (default: this)
+     * @param dm     DataMatrix with values (default: this)
      * @param rowID  ID of the respective row (default: null)
      * @param rowIdx Index of the respective row (default: 0, ignored if rowID is given)
-     * @return       TDP value (W)
+     * @return       Machine type value (W)
      */
     String getMachineType(DataMatrix dm=this, Object rowID=null, Integer rowIdx=0) {
         if (rowID) {
