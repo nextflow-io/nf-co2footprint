@@ -213,7 +213,7 @@ class CO2FootprintConfig implements ConfigScope {
             }
         } else if (executorMatrix == null) {
             log.warn(
-                "Executor '${executor}' is not mapped => `machineType` <- null, pue <- 1.0. " +
+                "Executor is `null` / not mapped. Fallback to: `machineType = null`, `pue = 1.0`. " +
                 "To eliminate this warning you can set `machineType` in the config to one of ${supportedMachineTypes}."
             )
         }
