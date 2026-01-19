@@ -224,9 +224,8 @@ class CO2FootprintConfig implements ConfigScope {
         }
 
         // Check whether all parameters were included successfully
-        configMap.remove('params')
         if (!configMap.isEmpty()){
-            log.warn("`co2footprint` configuration scope contains unused parameters ${configMap.keySet()}.")
+            log.debug("`co2footprint` configuration scope contains unused parameters ${configMap.keySet()}.")
         }
     }
 

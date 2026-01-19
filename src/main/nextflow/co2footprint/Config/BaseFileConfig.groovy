@@ -40,7 +40,7 @@ class BaseFileConfig {
 
         // Check whether all parameters were included successfully
         if (!fileConfigMap.isEmpty()){
-            log.warn("`co2footprint.${name}` configuration scope contains unused parameters ${fileConfigMap.keySet()}.")
+            log.debug("`co2footprint.${name}` configuration scope contains unused parameters ${fileConfigMap.keySet()}.")
         }
     }
 }
