@@ -22,15 +22,15 @@ To customize the plugin settings to your computing environment and preferences, 
     
     co2footprint {
       trace = {
-        file: "${params.outdir}/pipeline_info/co2footprint_trace_${co2_timestamp}.txt"
+        file = "${params.outdir}/pipeline_info/co2footprint_trace_${co2_timestamp}.txt"
       }
     
       summary = {
-        file: "${params.outdir}/pipeline_info/co2footprint_summary_${co2_timestamp}.txt"
+        file = "${params.outdir}/pipeline_info/co2footprint_summary_${co2_timestamp}.txt"
       }
     
       report  = {
-        file: "${params.outdir}/pipeline_info/co2footprint_report_${co2_timestamp}.html"
+        file = "${params.outdir}/pipeline_info/co2footprint_report_${co2_timestamp}.html"
       }
     
       location = 'DE'                             // replace with your zone code
@@ -130,15 +130,15 @@ For more information, see [Parameters](parameters.md).
     
     co2footprint {
         trace = {
-          file: "${params.outdir}/co2footprint/co2footprint_trace_${co2_timestamp}.txt"
+          file = "${params.outdir}/co2footprint/co2footprint_trace_${co2_timestamp}.txt"
         }
     
         summary = {
-          file: "${params.outdir}/co2footprint/co2footprint_summary_${co2_timestamp}.txt"
+          file = "${params.outdir}/co2footprint/co2footprint_summary_${co2_timestamp}.txt"
         }
     
         report = {
-          file: "${params.outdir}/co2footprint/co2footprint_report_${co2_timestamp}.html"
+          file = "${params.outdir}/co2footprint/co2footprint_report_${co2_timestamp}.html"
         }
     
         location            = 'DE'

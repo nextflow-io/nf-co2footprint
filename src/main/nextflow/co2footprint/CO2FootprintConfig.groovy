@@ -22,16 +22,14 @@ import java.nio.file.Paths
  * Example usage in config:
  * co2footprint {
  *     trace = {
- *       enabled: true,
- *       file: "co2footprint_trace.txt"
+ *       enabled = true,
+ *       file = "co2footprint_trace.txt"
  *     }
  *     summary = {
- *       enabled: true,
- *       file: "co2footprint_summary.txt"
+ *       file = "co2footprint_summary.txt"
  *     }
  *     report = {
- *       enabled: true,
- *       file: "co2footprint_report.txt
+ *       file = "co2footprint_report.txt
  *     }
  *     ci = 300
  *     pue = 1.4
