@@ -185,13 +185,13 @@ class CO2FootprintConfig implements ConfigScope {
 
         // Machine type (Given -> Executor -> null)
         machineType = configMap.remove('machineType') as String ?:
-                executorMatrix?.getMachineType()
+            executorMatrix?.getMachineType()
 
         // PUE (Given -> Executor -> MachineType -> 1.0)
         pue = configMap.containsKey('pue') ? configMap.remove('pue') as BigDecimal :
-                executorMatrix?.getPUE() ?:
-                        machineTypeDataMatrix.matchExecutor(machineType)?.getPUE() ?:
-                                1.0
+            executorMatrix?.getPUE() ?:
+                machineTypeDataMatrix.matchExecutor(machineType)?.getPUE() ?:
+                    1.0
 
         // Custom machine-specific logic
         if (machineType) {
@@ -207,13 +207,13 @@ class CO2FootprintConfig implements ConfigScope {
                     )
                 }
             } else {
-                final String message = "machineType '${machineType}' is not supported. Please chose one of ${supportedMachineTypes}."
+                final String message = "`machineType?` '${machineType}' is not supported. Please chose one of ${supportedMachineTypes}."
                 log.error(message)
                 throw new IllegalArgumentException(message)
             }
         } else if (executorMatrix == null) {
             log.warn(
-                "Executor is `null` / not mapped. Fallback to: `machineType = null`, `pue = 1.0`. " +
+                "Fallback to: `machineType = null`, `pue = 1.0`. " +
                 "To eliminate this warning you can set `machineType` in the config to one of ${supportedMachineTypes}."
             )
         }
