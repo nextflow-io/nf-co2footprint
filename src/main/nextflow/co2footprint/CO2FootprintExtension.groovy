@@ -35,7 +35,7 @@ class CO2FootprintExtension extends PluginExtensionPoint {
      * @return A list of all task-specific trace records inferred from the trace file
      */
     @Function
-    static List<TraceRecord> parseTraceFile(Path tracePath, String delimiter='\t') {
+    List<TraceRecord> parseTraceFile(Path tracePath, String delimiter='\t') {
         return TraceFileParser.parseExecutionTraceFile(tracePath, delimiter)
     }
 
