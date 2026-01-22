@@ -81,11 +81,9 @@ $$
 
 !!! warning "Reporting criteria of market-based emissions"
 
-    Reporting your market-based carbon footprint is only recommended if your market-based CI meets temporal and spatial alignment requirements of the [GHG protocol](https://ghgprotocol.org/).
+    Reporting a market-based carbon footprint is only encouraged when the market-based carbon intensity (CI) is temporally and spatially aligned with electricity consumption, as recommended by the [GHG protocol](https://ghgprotocol.org/).  
     
-    In essence the purchased and consumed power must be provided **within the same hour and market region**. 
-
-    In this case the reporting of both resulting emissions is encouraged.
+    This implies that the purchased and consumed electricity must be provided **within the same hour and market region**. 
 
 
 ## Cloud computations
