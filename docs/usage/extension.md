@@ -1,5 +1,5 @@
 ### Extension points
-The plugin provides some extension points for post-run estimations of carbon footprints.
+The plugin provides some [extension points](https://nextflow.io/docs/latest/plugins/developing-plugins.html#extension-points) for post-run estimations of carbon footprints.
 
 !!! warning
 
@@ -25,7 +25,7 @@ nextflow plugin nf-co2footprint:postRun --config <path_to_nextflow.config> --tra
 
 
 #### Within a workflow through functions
-The interaction follows the [Nextflow extension function schema](https://nextflow.io/docs/latest/plugins/developing-plugins.html).
+The interaction follows the [Nextflow extension function schema](https://nextflow.io/docs/latest/plugins/developing-plugins.html#functions).
 ```Nextflow
 include { calculateCO2 } from 'plugin/nf-co2footprint'
 
@@ -70,5 +70,5 @@ Can be used to calculate the emissions of a trace.
   Path to the trace file 
 
 - **configModifications**:
-  Temporarily overrides parameters in the `co2footprint` block of the current Nextflow configuration for a single extension function call. The provided map is merged with the existing configuration and does not affect the overall workflow run. Can be used to adjust settings such as output paths or carbon intensity for post-run estimations. Defaults to [:].
+  Temporarily overrides parameters in the `co2footprint` block of the current Nextflow configuration for a single extension function call. The provided map is merged with the existing configuration and does not affect the overall workflow run. Can be used to adjust settings such as output paths or carbon intensity for post-run estimations. Defaults to [:].  
   Example: `[trace: [file: <Path_to_your_output_trace_file>], ci: <Your_carbon_intensity>]`
