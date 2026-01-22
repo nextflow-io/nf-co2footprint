@@ -36,7 +36,7 @@ import java.nio.file.Path
  *     }
  *     report = {
  *       enabled: true,
- *       file: "co2footprint_report.txt
+ *       file: "co2footprint_report.html
  *     }
  *     ci = 300
  *     pue = 1.4

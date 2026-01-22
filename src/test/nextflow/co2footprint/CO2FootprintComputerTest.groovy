@@ -1,19 +1,17 @@
 package nextflow.co2footprint
 
+import groovy.util.logging.Slf4j
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CiRecordCollector
 import nextflow.exception.MissingValueException
-import nextflow.processor.TaskId
 import nextflow.trace.TraceRecord
 import spock.lang.Shared
 import spock.lang.Specification
 
 import java.nio.file.Paths
-
-import groovy.util.logging.Slf4j
 
 @Slf4j
 class CO2FootprintComputerTest extends Specification{
@@ -37,6 +35,7 @@ class CO2FootprintComputerTest extends Specification{
     def "CO2e calculation for various configurations"() {
         given:
         def traceRecord = new TraceRecord()
+        traceRecord.task_id = '1'
         traceRecord.realtime = (1 as Long) * (3600000 as Long)
         traceRecord.cpus = 1
         traceRecord.cpu_model = cpuModel
@@ -46,11 +45,11 @@ class CO2FootprintComputerTest extends Specification{
         CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdpDataMatrix, ciDataMatrix, [:])
         CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
         CiRecordCollector timeCiRecordCollector = new CiRecordCollector(config)
-        CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(new TaskId(0), traceRecord, timeCiRecordCollector)
+        CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(traceRecord, timeCiRecordCollector)
 
         expect:
-        round(co2Record.energy*1000) == expectedEnergy
-        round(co2Record.co2e) == expectedCO2
+        round(co2Record.store.energy*1000 as Double) == expectedEnergy
+        round(co2Record.store.co2e as Double) == expectedCO2
 
         where:
         cpuModel           | configMap                      || expectedEnergy   | expectedCO2
@@ -87,6 +86,7 @@ class CO2FootprintComputerTest extends Specification{
         given:
         // Prepare a TraceRecord with test parameters for each case
         def traceRecord = new TraceRecord()
+        traceRecord.task_id = '1'
         traceRecord.realtime = 3600000L
         traceRecord.cpus = 1
         traceRecord.cpu_model = "TestCPU"
@@ -104,7 +104,7 @@ class CO2FootprintComputerTest extends Specification{
         def result = null
         def caught = null
         try {
-            result = co2FootprintComputer.computeTaskCO2footprint(new TaskId(1), traceRecord, timeCiRecordCollector)
+            result = co2FootprintComputer.computeTaskCO2footprint(traceRecord, timeCiRecordCollector)
         } catch (Exception e) {
             caught = e
         }
@@ -115,7 +115,7 @@ class CO2FootprintComputerTest extends Specification{
             assert caught instanceof MissingValueException
         } else {
             // Otherwise, check that the computed memory matches the expected value (in GB)
-            assert result.memory == expectedMemory
+            assert result.store.memory == expectedMemory
         }
 
         where:

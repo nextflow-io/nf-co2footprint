@@ -1,8 +1,9 @@
 package nextflow.co2footprint.DataContainers
 
 import spock.lang.Specification
-import java.nio.file.Path
+
 import java.nio.file.Files
+import java.nio.file.Path
 
 class CIDataMatrixTest extends Specification {
 

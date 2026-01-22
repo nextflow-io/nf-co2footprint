@@ -2,8 +2,8 @@ package nextflow.co2footprint.DataContainers
 
 import groovy.util.logging.Slf4j
 
-import java.nio.file.Path
 import java.nio.file.Files
+import java.nio.file.Path
 
 /**
  * DataMatrix / Table Base Class.
