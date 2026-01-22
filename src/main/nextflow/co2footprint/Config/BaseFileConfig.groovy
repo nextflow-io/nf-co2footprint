@@ -1,6 +1,7 @@
 package nextflow.co2footprint.Config
 
 import groovy.util.logging.Slf4j
+import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.config.spec.ConfigOption
 import nextflow.script.dsl.Description
 import java.nio.file.Path
@@ -37,12 +38,11 @@ class BaseFileConfig {
         this.name = subConfigName
         this.ending = fileEnding ?: 'txt'
 
-        file = Path.of(fileConfigMap.remove('file') as String ?: "co2footprint_${name}_${timestamp}.${ending}")
-        enabled =  fileConfigMap.containsKey('enabled') ? fileConfigMap.remove('enabled') : true
+        LinkedHashSet<String> usedKeys = [] as LinkedHashSet<String>
 
-        // Check whether all parameters were included successfully
-        if (!fileConfigMap.isEmpty()){
-            log.debug("`co2footprint.${name}` configuration scope contains unused parameters ${fileConfigMap.keySet()}.")
-        }
+        file = Path.of(CO2FootprintConfig.getCollect('file', fileConfigMap, usedKeys) as String ?: "co2footprint_${name}_${timestamp}.${ending}")
+        enabled =  fileConfigMap.containsKey('enabled') ? CO2FootprintConfig.getCollect('enabled', fileConfigMap, usedKeys) : true
+
+        CO2FootprintConfig.checkKeyUsage(fileConfigMap, usedKeys)
     }
 }

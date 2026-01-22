@@ -49,10 +49,9 @@ class CO2FootprintExtensionTest extends Specification {
         co2Records[7].additionalMetrics == [co2e_non_cached:3.2729169285E-4, energy_non_cached:3.2729169285E-6, co2e_market:null, energy_market:3.2729169285E-6]
 
         // Check whether all files exist
-        ['trace', 'summary',  'report'].each { String fileType ->
-            Path filePath = Path.of(extension.factory.config.value(fileType).value('file') as String)
-            fileChecker.checkIsFile(filePath)
-        }
+        fileChecker.checkIsFile(extension.factory.config.trace.file)
+        fileChecker.checkIsFile(extension.factory.config.summary.file)
+        fileChecker.checkIsFile(extension.factory.config.report.file)
     }
 
     def 'Should modify the output paths'() {

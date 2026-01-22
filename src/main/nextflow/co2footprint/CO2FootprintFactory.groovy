@@ -57,7 +57,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
         try {
             // Get version from manifest
             List<String> lines = manifest.readLines()
-            String line = lines.find {it.startsWith('Plugin-Version: ') }
+            String line = lines.find {String line -> line.startsWith('Plugin-Version: ') }
             return line.split(': ')[1]
         }
         catch (NullPointerException nullPointerException) {
