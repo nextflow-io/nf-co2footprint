@@ -228,7 +228,7 @@ class FileChecker {
                 addError(
                         new AssertionFailedError(
                                 "Recorded checksum '${recordedChecksum}' and new checksum '${newChecksum}' did not match, " +
-                                        "but the checked lines (all except ${excludedLines}) in ${recordPath} and '${path}' reveal no difference."
+                                        "but the checked lines (all except ${excludedLines.collect({ Integer line -> line + 1 })}) in ${recordPath} and '${path}' reveal no difference."
                         )
                 )
             } else {

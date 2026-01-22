@@ -15,7 +15,6 @@ import nextflow.processor.TaskProcessor
 import nextflow.trace.TraceObserver
 import nextflow.trace.TraceRecord
 
-import java.nio.file.Path
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -92,19 +91,16 @@ class CO2FootprintObserver implements TraceObserver {
         this.workflowStats = new CO2RecordTree(session?.runName, [level: 'workflow'])
 
         // Make file instances
-        def traceConf = config.value('trace')
-        if (traceConf && traceConf.value('enabled')) {
-            this.traceFile = new TraceFileCreator((traceConf.value('file') as Path).complete(), overwrite)
+        if (config.trace && config.trace.enabled) {
+            this.traceFile = new TraceFileCreator(config.trace.file.complete(), overwrite)
         }
 
-        def summaryConf = config.value('summary')
-        if (summaryConf && summaryConf.value('enabled')) {
-            this.summaryFile = new SummaryFileCreator((summaryConf.value('file') as Path).complete(), overwrite)
+        if (config.summary && config.summary.enabled) {
+            this.summaryFile = new SummaryFileCreator(config.summary.file.complete(), overwrite)
         }
 
-        def reportConf = config.value('report')
-        if (reportConf && reportConf.value('enabled')) {
-            this.reportFile = new ReportFileCreator((reportConf.value('file') as Path).complete(), overwrite, maxTasks)
+        if (config.report && config.report.enabled) {
+            this.reportFile = new ReportFileCreator(config.report.file.complete(), overwrite, maxTasks)
         }
 
         this.co2FootprintComputer = co2FootprintComputer

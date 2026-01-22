@@ -122,11 +122,4 @@ class CiRecord {
             )
         }
     }
-
-    /**
-     * Method which is picked up by ConfigEntry to return the raw value of an instance.
-     *
-     * @return The current carbon intensity
-     */
-    Number evaluate() { return value }
 }

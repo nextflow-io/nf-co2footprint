@@ -58,14 +58,14 @@ class CiRecordCollector {
      * @param traceRecord The trace record containing task start and end times
      * @return The carbon intensity value for the trace record
      */
-    Number getCi(TraceRecord traceRecord) { this.timeCIs ? getWeightedCI(traceRecord) : config.value('ci') as Number }
+    Number getCi(TraceRecord traceRecord) { this.timeCIs ? getWeightedCI(traceRecord) : config.ci.value}
 
     /**
      * Adds time CI pairs to CI record
      *
      * @param timeCi Map of LocalDateTime and Double that is added to the CI record
      */
-    protected void add(CiRecord ciRecord=this.config.get('ci').raw as CiRecord) {
+    protected void add(CiRecord ciRecord=this.config.ci) {
         ciRecord.update()
         this.timeCIs.putAll( [(ciRecord.time): ciRecord.value] )
     }
@@ -82,7 +82,7 @@ class CiRecordCollector {
             log.trace("Started periodically fetching the CI every ${new Duration(period, 'ms').toReadable()}")
             timer.scheduleAtFixedRate(new TimerTask() {
                 void run() {
-                    add(config.get('ci').raw as CiRecord)
+                    add(config.ci)
                 }
             }, delay, period)
         }
