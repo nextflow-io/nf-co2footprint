@@ -6,6 +6,7 @@
 ## Features:
 - Updated the config syntax inline with standard Nextflow style
 - Usage of tree structure for result value propagation and summary / accumulation
+- Added new raw energy consumption metrics into report and trace file
 
 # Version 1.1.0
 ## Bug Fixes:
