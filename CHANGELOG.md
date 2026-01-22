@@ -12,6 +12,7 @@
 - Configuration now represented in Nextflow Syntax Extension and V2 Parser
 - Provided an extension point so trace files can be processed post-run through a pipeline
 - Provided an CLI option to process execution trace files post-run
+- Added new raw energy consumption metrics into report and trace file
 
 # Version 1.1.0
 ## Bug Fixes:

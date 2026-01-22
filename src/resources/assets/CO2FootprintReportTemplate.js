@@ -122,10 +122,14 @@ $(function() {
       }
 
       // Column titles
-      var energyConsumptionTitle = 'energy consumption (mWh)' // Default column title
-      var co2EmissionsTitle = 'CO₂e emissions (mg)'
+      var energyConsumptionProcessorTitle = 'energy consumption (processor) [mWh]'
+      var energyConsumptionMemoryTitle = 'energy consumption (memory) [mWh]'
+      var energyConsumptionTitle = 'energy consumption (incl. PUE) [mWh]' // Default column title
+      var co2EmissionsTitle = 'CO₂e emissions [mg]'
       if ($('#nf-table-humanreadable').val() == 'true') {
-        energyConsumptionTitle = 'energy consumption' // Change the column title if the button is selected
+        energyConsumptionProcessorTitle = 'energy consumption (processor)'
+        energyConsumptionMemoryTitle = 'energy consumption (memory)'
+        energyConsumptionTitle = 'energy consumption (incl. PUE)' // Change the column title if the button is selected
         co2EmissionsTitle = 'CO₂e emissions'
       }
 
@@ -138,6 +142,8 @@ $(function() {
           { title: 'status', data: 'status' },
           { title: 'hash', data: 'hash' },
           { title: energyConsumptionTitle, data: 'energy' },
+          { title: energyConsumptionProcessorTitle, data: 'rawEnergyProcessor' },
+          { title: energyConsumptionMemoryTitle, data: 'rawEnergyMemory' },
           { title: co2EmissionsTitle, data: 'co2e' },
           { title: `${co2EmissionsTitle} (market)`, data: 'co2eMarket' },
           { title: 'carbon intensity', data: 'ci' },
@@ -345,6 +351,7 @@ $(function() {
         title: 'Time',
         ticklabelstandoff: 10,
         overlay: 'x2',
+        range: [tasksStart, tasksEnd],
       },
       yaxis: {
         title: 'Carbon Intensity (g/kWh)',

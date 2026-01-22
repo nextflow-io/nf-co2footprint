@@ -32,7 +32,7 @@ class TraceFileCreator extends BaseFileCreator {
         task_id: 'task_id', status: 'status',
         name:'name', energy: 'energy_consumption', co2e: 'CO2e', co2eMarket: 'CO2e_market', ci: 'carbon_intensity',
         cpuUsage: '%cpu', memory: 'memory', time: 'realtime', cpus: 'cpus', powerdrawCPU: 'powerdraw_cpu',
-        cpu_model: 'cpu_model', rawEnergyProcessor: 'rawEnergyProcessor', rawEnergyMemory: 'rawEnergyMemory'
+        cpu_model: 'cpu_model', rawEnergyProcessor: 'raw_energy_processor', rawEnergyMemory: 'raw_energy_memory'
     ]
 
     /**
