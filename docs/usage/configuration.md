@@ -10,34 +10,35 @@ To test if the plugin works on your system please follow the quick start guide (
 
 To customize the plugin settings to your computing environment and preferences, you can adjust the nf-co2footprint plugin parameters in your config file as follows:
 
-```groovy title="nextflow.config"
-plugins {
-  id 'nf-co2footprint@1.1.0'
-}
-
-// Optional example config settings for CO₂ reporting:
-
-def co2_timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
-
-co2footprint {
-  trace = {
-    file: "${params.outdir}/pipeline_info/co2footprint_trace_${co2_timestamp}.txt"
-  }
-
-  summary = {
-    file: "${params.outdir}/pipeline_info/co2footprint_summary_${co2_timestamp}.txt"
-  }
-
-  report  = {
-    file: "${params.outdir}/pipeline_info/co2footprint_report_${co2_timestamp}.html"
-  }
-
-  location = 'DE'                             // replace with your zone code
-  emApiKey = secrets.EM_API_KEY               // set your API key as Nextflow secret with the name 'EM_API_KEY'
-  pue = 1.3                                   // replace with PUE of your data center
-  machineType = 'compute cluster'             // set to 'compute cluster', 'local', or 'cloud'
-}
-```
+???+ example
+    ```groovy title="nextflow.config"
+    plugins {
+      id 'nf-co2footprint@1.1.0'
+    }
+    
+    // Optional example config settings for CO₂ reporting:
+    
+    def co2_timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
+    
+    co2footprint {
+      trace {
+        file = "${params.outdir}/pipeline_info/co2footprint_trace_${co2_timestamp}.txt"
+      }
+    
+      summary {
+        file = "${params.outdir}/pipeline_info/co2footprint_summary_${co2_timestamp}.txt"
+      }
+    
+      report {
+        file = "${params.outdir}/pipeline_info/co2footprint_report_${co2_timestamp}.html"
+      }
+    
+      location = 'DE'                             // replace with your zone code
+      emApiKey = secrets.EM_API_KEY               // set your API key as Nextflow secret with the name 'EM_API_KEY'
+      pue = 1.3                                   // replace with PUE of your data center
+      machineType = 'compute cluster'             // set to 'compute cluster', 'local', or 'cloud'
+    }
+    ```
 
 Include the config file for your pipeline run using the `-c` Nextflow parameter, for example as follows:
 
@@ -63,7 +64,7 @@ The logic applied in detail:
 
 > Carbon intensity data is retrieved from [Electricity Maps](https://www.electricitymaps.com/) and used under the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1-0/). See the full attribution and license terms [here](https://nextflow-io.github.io/nf-co2footprint/#data-attribution).
 
-### Accounting for a personal energy mix
+### Accounting for a personal energy mix (`ciMarket`)
 
 The `ciMarket` parameter can be used to provide a custom value to account for differences to your regional average. This can occur due to:  
 
@@ -78,9 +79,12 @@ $$
 \mathrm{ci}_{\mathrm{total}} = \left( \mathrm{ci}_{\mathrm{hydro}} \cdot 0.2 + \mathrm{ci}_{\mathrm{solar}} \cdot 0.8 \right) \cdot 0.5 + \mathrm{ci}_{\mathrm{region}} \cdot 0.5
 $$
 
-!!! info
+!!! warning "Reporting criteria of market-based emissions"
 
-    We encourage the reporting of emission values by location instead of marked-based carbon intensities. The energy is still drawn from a finite pool of renewables, currently available to your grid. It would likely be utilized for another buyer, regardless of the contract. This is not to say that these contracts are without merit, but the short-term differences are limited.
+    Reporting a market-based carbon footprint is only encouraged when the market-based carbon intensity (CI) is temporally and spatially aligned with electricity consumption, as recommended by the [GHG protocol](https://ghgprotocol.org/).  
+    
+    This implies that the purchased and consumed electricity must be provided **within the same hour and market region**. 
+
 
 ## Cloud computations
 
@@ -114,35 +118,34 @@ To improve the accuracy of your CO₂ footprint estimates on the cloud, you are 
 
 For more information, see [Parameters](parameters.md).
 
-**Example configuration:**
-
-```groovy title="nextflow_cloud.config"
-plugins {
-  id 'nf-co2footprint@1.1.0'
-}
-
-def co2_timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
-
-co2footprint {
-    trace = {
-      file: "${params.outdir}/co2footprint/co2footprint_trace_${co2_timestamp}.txt"
+???+ example
+    ```groovy title="nextflow_cloud.config"
+    plugins {
+      id 'nf-co2footprint@1.1.0'
     }
-
-    summary = {
-      file: "${params.outdir}/co2footprint/co2footprint_summary_${co2_timestamp}.txt"
+    
+    def co2_timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
+    
+    co2footprint {
+        trace {
+          file = "${params.outdir}/co2footprint/co2footprint_trace_${co2_timestamp}.txt"
+        }
+    
+        summary {
+          file = "${params.outdir}/co2footprint/co2footprint_summary_${co2_timestamp}.txt"
+        }
+    
+        report {
+          file = "${params.outdir}/co2footprint/co2footprint_report_${co2_timestamp}.html"
+        }
+    
+        location            = 'DE'
+        emApiKey            = secrets.EM_API_KEY
+        pue                 = 1.3
+        ignoreCpuModel      = true
+        powerdrawCpuDefault = 8
     }
-
-    report = {
-      file: "${params.outdir}/co2footprint/co2footprint_report_${co2_timestamp}.html"
-    }
-
-    location            = 'DE'
-    emApiKey            = secrets.EM_API_KEY
-    pue                 = 1.3
-    ignoreCpuModel      = true
-    powerdrawCpuDefault = 8
-}
-```
+    ```
 
 ## GPU computations
 
