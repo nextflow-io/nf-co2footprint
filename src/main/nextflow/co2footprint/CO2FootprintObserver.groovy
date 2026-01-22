@@ -89,7 +89,7 @@ class CO2FootprintObserver implements TraceObserver {
 
         // Create a CO2RecordTree root node for the run, tagged with 'workflow' level,
         // to collect and organize execution metrics hierarchically.
-        this.workflowStats = new CO2RecordTree(session.runName, [level: 'workflow'])
+        this.workflowStats = new CO2RecordTree(session?.runName, [level: 'workflow'])
 
         // Make file instances
         def traceConf = config.value('trace')
