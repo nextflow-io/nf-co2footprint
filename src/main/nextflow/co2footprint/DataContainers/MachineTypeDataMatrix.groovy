@@ -4,6 +4,11 @@ import groovy.util.logging.Slf4j
 
 import java.nio.file.Path
 
+/**
+ * DataMatrix for mapping executors to machine types and PUE values.
+ * Used to resolve infrastructure-specific parameters for CO₂ calculations.
+ */
+
 @Slf4j
 class MachineTypeDataMatrix extends DataMatrix {
     String pueId = 'pue'

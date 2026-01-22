@@ -6,7 +6,7 @@ import nextflow.script.dsl.Description
 import java.nio.file.Path
 
 /**
- * Sub-config base class for configuring the trace, summary and report output files. Stores
+ * Base configuration class for file-based outputs of the nf-co2footprint plugin. Stores
  * `enabled` and `file` parameters, and declares a `name` field in subclasses to control
  * the default output file name for trace, summary and report files.
  *
@@ -26,10 +26,12 @@ class BaseFileConfig {
     final Boolean enabled
 
     /**
-     * Load a nested map configuration and set up defaults and fallbacks.
+     * Parses a file-based sub-configuration for nf-co2footprint and sets up defaults and fallbacks.
      *
-     * @param subConfigName  Name for this sub-config - used to get a default file name for this output file
-     * @param configMap      Map of configuration values (from Nextflow config)
+     * @param fileConfigMap  User-provided configuration options
+     * @param timestamp      Timestamp for generating default filenames
+     * @param subConfigName  Name of the configuration scope
+     * @param fileEnding     Output file extension (default: txt)
      */
     BaseFileConfig(Map<String, Object> fileConfigMap, String timestamp, String subConfigName, String fileEnding='txt') {
         this.name = subConfigName

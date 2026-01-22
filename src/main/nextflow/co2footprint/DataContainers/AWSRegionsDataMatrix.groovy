@@ -4,6 +4,10 @@ import groovy.util.logging.Slf4j
 
 import java.nio.file.Path
 
+/**
+ * AWS-specific DataMatrix for mapping AWS regions to geographic zone identifiers.
+ * Provides utilities for region detection and zone lookup for CO₂ calculations.
+ */
 @Slf4j
 class AWSRegionsDataMatrix extends DataMatrix{
     String zoneId = 'Zone id'
