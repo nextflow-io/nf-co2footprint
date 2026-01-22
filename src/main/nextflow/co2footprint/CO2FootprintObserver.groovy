@@ -37,9 +37,9 @@ class CO2FootprintObserver implements TraceObserver {
     private Session session
 
     // Output file objects
-    private TraceFileCreator traceFile
-    private SummaryFileCreator summaryFile
-    private ReportFileCreator reportFile
+    TraceFileCreator traceFile
+    SummaryFileCreator summaryFile
+    ReportFileCreator reportFile
 
     // Overwrite existing files if true
     private boolean overwrite
@@ -88,7 +88,7 @@ class CO2FootprintObserver implements TraceObserver {
 
         // Create a CO2RecordTree root node for the run, tagged with 'workflow' level,
         // to collect and organize execution metrics hierarchically.
-        this.workflowStats = new CO2RecordTree(session.runName, [level: 'workflow'])
+        this.workflowStats = new CO2RecordTree(session?.runName, [level: 'workflow'])
 
         // Make file instances
         if (config.trace && config.trace.enabled) {
@@ -125,7 +125,7 @@ class CO2FootprintObserver implements TraceObserver {
      *
      * @param trace the TraceRecord of the task that just started
      */
-    private synchronized void recordStarted(TraceRecord traceRecord) {
+    synchronized void recordStarted(TraceRecord traceRecord) {
         // Keep started tasks
         runningTasks[traceRecord.taskId] = traceRecord
 
@@ -140,7 +140,7 @@ class CO2FootprintObserver implements TraceObserver {
      *
      * @param trace TraceRecord of the finished task
      */
-    private synchronized void aggregateRecords(TraceRecord traceRecord) {
+    synchronized CO2Record aggregateRecords(TraceRecord traceRecord) {
         // Remove task from set of running tasks
         runningTasks.remove(traceRecord.taskId)
 
@@ -153,6 +153,41 @@ class CO2FootprintObserver implements TraceObserver {
         // Add a task node with its CO2Record to the corresponding process
         CO2RecordTree processNode = workflowStats.getChild(traceRecord.processName)
         processNode.addChild(new CO2RecordTree(traceRecord.taskId, [level: 'task'], co2Record))
+
+        return co2Record
+    }
+
+    void renderFiles() {
+        // Catch unfinished tasks
+        runningTasks.each { TaskId taskId, TraceRecord traceRecord -> aggregateRecords(traceRecord) }
+
+        // Close all files (writes remaining tasks in the trace file)
+        traceFile?.close(runningTasks)
+
+        // Finalize and aggregate all workflow statistics
+        workflowStats.summarize()
+        workflowStats.collectAdditionalMetrics()
+
+        // Create report and summary if any content exists to write to the file
+        if (workflowStats) {
+            if (summaryFile) {
+                summaryFile.create()
+                summaryFile.write(workflowStats, co2FootprintComputer, config, version)
+                summaryFile.close()
+            }
+
+            if (reportFile) {
+                reportFile.create()
+                reportFile.addEntries(workflowStats, co2FootprintComputer, config, version, session, timeCiRecordCollector)
+                reportFile.write()
+                reportFile.close()
+            }
+        }
+
+        // Close all files (writes remaining tasks in the trace file)
+        traceFile?.close(runningTasks)
+        summaryFile?.close()
+        reportFile?.close()
     }
 
     // ------ OBSERVER METHODS ------
@@ -186,42 +221,15 @@ class CO2FootprintObserver implements TraceObserver {
     /**
      * Save the pending processes and close the files
      */
+    @Override
     void onFlowComplete() {
         log.debug('Workflow completed -- rendering & saving files')
 
         // Stop hourly CI updating
         timeCiRecordCollector.stop()
 
-        // Catch unfinished tasks
-        runningTasks.each { TaskId taskId, TraceRecord traceRecord -> aggregateRecords(traceRecord) }
-
-        // Close all files (writes remaining tasks in the trace file)
-        traceFile?.close(runningTasks)
-
-        // Finalize and aggregate all workflow statistics
-        workflowStats.summarize()
-        workflowStats.collectAdditionalMetrics()
-
-        // Create report and summary if any content exists to write to the file
-        if (workflowStats) {
-            if (summaryFile) {
-                summaryFile.create()
-                summaryFile.write(workflowStats, co2FootprintComputer, config, version)
-                summaryFile.close()
-            }
-
-            if (reportFile) {
-                reportFile.create()
-                reportFile.addEntries(workflowStats, co2FootprintComputer, config, version, session, timeCiRecordCollector)
-                reportFile.write()
-                reportFile.close()
-            }
-        }
-
-        // Close all files (writes remaining tasks in the trace file)
-        traceFile?.close(runningTasks)
-        summaryFile?.close()
-        reportFile?.close()
+        // Write files
+        renderFiles()
 
         log.info(
             "🌱 The workflow run used ${workflowStats.co2Record.toReadable('energy')} of electricity, " +

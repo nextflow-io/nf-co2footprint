@@ -13,6 +13,9 @@ class Duration extends Quantity {
      */
     Duration(Object value, String unit='ms', String type='Duration', String description = null) {
         super(value, '', unit, type, description)
+        // Alternative names for the units
+        final Map<String, String> alternativeUnits = ['m': 'min', 'd': 'days', 'w': 'weeks']
+        this.unit = alternativeUnits.containsKey(unit) ? alternativeUnits.get(unit) : unit
         separator = ''
     }
 

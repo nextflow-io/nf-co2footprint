@@ -39,8 +39,24 @@ jobs:
         run: ./gradlew assemble
 
       - name: Execute checks / tests
-        run: ./gradlew check --no-daemon --info
+        id: gradle
+        run: ./gradlew check --no-daemon --info || echo "exit_code=$?" >> $GITHUB_OUTPUT
+
+      - name: Upload test and check reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-check-reports_${{ matrix.java_version }}
+          path: |
+            **/build/reports/
+            **/build/test-results/
 
       - name: Summarize tests results
+        if: always()
         uses: jeantessier/test-summary-action@v1
-        if: ${{ always() }}
+
+      - name: Fail if Gradle check failed
+        if: ${{ steps.gradle.outputs.exit_code }}
+        run: |
+          echo "Gradle check failed with exit code `${{ steps.gradle.outputs.exit_code }}`. See GitHub Artifacts for a comprehensive report."
+          exit ${{ steps.gradle.outputs.exit_code }}

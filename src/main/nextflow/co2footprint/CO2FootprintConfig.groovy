@@ -126,23 +126,25 @@ class CO2FootprintConfig implements ConfigScope {
         // Ensure configMap is not null
         configMap ?= [:]
 
+        LinkedHashSet<String> usedKeys = [] as LinkedHashSet<String>
+
         // File parameters (sub-scopes)
-        trace = new TraceFileConfig(configMap.remove('trace') as Map ?: [:], timestamp)
-        summary = new SummaryFileConfig(configMap.remove('summary') as Map ?: [:], timestamp)
-        report = new ReportFileConfig(configMap.remove('report') as Map ?: [:], timestamp)
+        trace = new TraceFileConfig(getCollect('trace', configMap, usedKeys) as Map ?: [:], timestamp)
+        summary = new SummaryFileConfig(getCollect('summary', configMap, usedKeys) as Map ?: [:], timestamp)
+        report = new ReportFileConfig(getCollect('report', configMap, usedKeys) as Map ?: [:], timestamp)
 
         // Location
-        location = configMap.remove('location') as String ?: getLocationFromAWSRegion()
+        location = getCollect('location', configMap, usedKeys) as String ?: getLocationFromAWSRegion()
 
         // API key
-        emApiKey = configMap.remove('emApiKey') as String
+        emApiKey = getCollect('emApiKey', configMap, usedKeys) as String
 
         // Carbon intensities
-        ci = new CiRecord(configMap.remove('ci') as BigDecimal, ciData, location, emApiKey)
-        ciMarket = configMap.remove('ciMarket') as BigDecimal
+        ci = new CiRecord(getCollect('ci', configMap, usedKeys) as BigDecimal, ciData, location, emApiKey)
+        ciMarket = getCollect('ciMarket', configMap, usedKeys) as BigDecimal
 
         // Power model
-        cpuPowerModel = configMap.remove('cpuPowerModel') as List<BigDecimal>
+        cpuPowerModel = getCollect('cpuPowerModel', configMap, usedKeys) as List<BigDecimal>
         if (cpuPowerModel != null) {
             Integer degree = cpuPowerModel.size() - 1
             List<String> terms = []
@@ -153,25 +155,25 @@ class CO2FootprintConfig implements ConfigScope {
         // Powerdraw factors
         // Custom TPD file
         if (configMap.containsKey('customCpuTdpFile')) {
-            customCpuTdpFile = Path.of(configMap.remove('customCpuTdpFile') as String)
+            customCpuTdpFile = Path.of(getCollect('customCpuTdpFile', configMap, usedKeys) as String)
             cpuData.update( TDPDataMatrix.fromCsv(Path.of(customCpuTdpFile as String)) )
         } else {
             customCpuTdpFile = null
         }
 
         // Ignore CPU model
-        ignoreCpuModel = configMap.remove('ignoreCpuModel') as boolean
+        ignoreCpuModel = getCollect('ignoreCpuModel', configMap, usedKeys) as boolean
 
         // Default CPU powerdraw
         if (configMap.containsKey('powerdrawCpuDefault')) {
-            powerdrawCpuDefault = configMap.remove('powerdrawCpuDefault') as BigDecimal
+            powerdrawCpuDefault = getCollect('powerdrawCpuDefault', configMap, usedKeys) as BigDecimal
             cpuData.set(powerdrawCpuDefault, cpuData.fallbackModel, 'tdp (W)')
         } else {
             powerdrawCpuDefault = null
         }
 
         // Powerdraw memory
-        powerdrawMem = configMap.containsKey('powerdrawMem') ?  configMap.remove('powerdrawMem') as BigDecimal : 0.3725
+        powerdrawMem = configMap.containsKey('powerdrawMem') ?  getCollect('powerdrawMem', configMap, usedKeys) as BigDecimal : 0.3725
 
 
         // Executor (Can define Machine type & PUE, if not already given
@@ -184,11 +186,11 @@ class CO2FootprintConfig implements ConfigScope {
         }
 
         // Machine type (Given -> Executor -> null)
-        machineType = configMap.remove('machineType') as String ?:
+        machineType = getCollect('machineType', configMap, usedKeys) as String ?:
             executorMatrix?.getMachineType()
 
         // PUE (Given -> Executor -> MachineType -> 1.0)
-        pue = configMap.containsKey('pue') ? configMap.remove('pue') as BigDecimal :
+        pue = configMap.containsKey('pue') ? getCollect('pue', configMap, usedKeys) as BigDecimal :
             executorMatrix?.getPUE() ?:
                 machineTypeDataMatrix.matchExecutor(machineType)?.getPUE() ?:
                     1.0
@@ -223,10 +225,39 @@ class CO2FootprintConfig implements ConfigScope {
             log.warn("Both 'customCpuTdpFile' and 'ignoreCpuModel=true' are set. Note: When 'ignoreCpuModel' is true, the custom TDP file will be ignored.")
         }
 
-        // Check whether all parameters were included successfully
-        if (!configMap.isEmpty()){
-            log.debug("`co2footprint` configuration scope contains unused parameters ${configMap.keySet()}.")
+        checkKeyUsage(configMap, usedKeys)
+    }
+
+    /**
+     * Gets entries from a map and adds them to a set of used keys.
+     *
+     * @param key The key to the entry
+     * @param map The map with all entries
+     * @param usedKeys A set of used keys, which is extended
+     * @return Entry in map under the key
+     */
+    static getCollect(String key, Map<String, Object> map, Set<String> usedKeys = LinkedHashSet.of()) {
+        if(map.containsKey(key)) {
+            usedKeys.add(key)
         }
+        return map.get(key)
+    }
+
+    /**
+     * Check whether all keys were used.
+     *
+     * @param map A map that was queried
+     * @param usedKeys The keys that were used during entry extraction
+     * @return
+     */
+    static boolean checkKeyUsage(Map<String, Object> map, Set<String> usedKeys) {
+        // Check whether all parameters were included successfully
+        Set<String> unusedKeys = map.keySet() - usedKeys
+        if (unusedKeys){
+            log.debug("`co2footprint` configuration scope contains unused parameters ${unusedKeys}.")
+            return false
+        }
+        return true
     }
 
     /**

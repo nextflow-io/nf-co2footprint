@@ -24,6 +24,18 @@ import java.nio.file.Path
  */
 @Slf4j
 class CIDataMatrix extends DataMatrix {
+    static final CIDataMatrix ciDataMatrix = readCiDataMatrix()
+
+    /**
+     * External Data integration of CI (Carbon intensity) values.
+     *
+     * @return The CI data as a matrix
+     */
+    static CIDataMatrix readCiDataMatrix() {
+        return fromCsv(
+            Path.of(CIDataMatrix.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
+        )
+    }
 
     private final String ciColumn = 'Carbon intensity gCO₂eq/kWh (Life cycle)'
 

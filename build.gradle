@@ -103,7 +103,8 @@ nextflowPlugin {
     provider = 'nextflow'
     className = 'nextflow.co2footprint.CO2FootprintPlugin'
     extensionPoints = [
-            'nextflow.co2footprint.CO2FootprintFactory'
+            'nextflow.co2footprint.CO2FootprintFactory',
+            'nextflow.co2footprint.CO2FootprintExtension'
     ]
 
 }

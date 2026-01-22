@@ -42,9 +42,7 @@ class CO2FootprintFactoryTest extends Specification {
 
     def 'check version' () {
         when:
-        CO2FootprintFactory factory = new CO2FootprintFactory()
-        factory.setPluginVersion()
-        String pluginVersion = factory.getPluginVersion()
+        String pluginVersion = CO2FootprintFactory.readPluginVersion()
 
         then:
         pluginVersion == "1.1.0"
