@@ -27,7 +27,8 @@ class Calculator {
         if (o1 == null && o2 == null) { return null }
         else if (o1 == null) { return o2 }
         else if (o2 == null) { return o1 }
-        else { return o1 + o2 }
+        else {
+            return o1 + o2 }
     }
 
     /**
@@ -39,8 +40,12 @@ class Calculator {
      * @return weighted average as a Number, or null if inputs are empty
      */
     static Number weightedAverage(List<? extends Object> values, List<? extends Object> weights) {
-        values.removeAll([null])
-        weights.removeAll([null])
+        List<Integer> nullIndices = []
+        values.eachWithIndex{ Object val, int i -> if(val == null) { nullIndices.add(i) } }
+        nullIndices.reverse().each { Integer nullIndex ->
+            values.removeAt(nullIndex)
+            weights.removeAt(nullIndex)
+        }
         assert values.size() == weights.size()
 
         if (values.isEmpty() || weights.isEmpty()) { return null }
@@ -50,6 +55,13 @@ class Calculator {
         values.eachWithIndex { Object value, Integer index ->
             total += value * weights[index]
         }
-        return total / norm
+
+        Number result = total / norm
+        if(Double.isFinite(result)) {
+            return result
+        }
+        else {
+            return null
+        }
     }
 }

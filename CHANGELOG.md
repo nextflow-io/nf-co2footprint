@@ -2,10 +2,15 @@
 ## Bug Fixes:
 ## Misc:
 - Improved the testing of log messages
+- Removed some classes that became outdated after Nextflow added support for mixed-typed Config Options
+- New minimum Nextflow version: 25.10.0
 
 ## Features:
 - Updated the config syntax inline with standard Nextflow style
 - Usage of tree structure for result value propagation and summary / accumulation
+- Configuration now represented in Nextflow Syntax Extension and V2 Parser
+- Provided an extension point so trace files can be processed post-run through a pipeline
+- Provided an CLI option to process execution trace files post-run
 - Added new raw energy consumption metrics into report and trace file
 
 # Version 1.1.0

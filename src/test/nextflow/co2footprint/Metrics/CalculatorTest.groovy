@@ -3,7 +3,7 @@ package nextflow.co2footprint.Metrics
 import spock.lang.Specification
 
 class CalculatorTest extends Specification {
-    def 'Should calculate weighted averages' () {
+    def 'Should calculate correct weighted averages' () {
         expect:
         Calculator.weightedAverage(values, weights) == weightedAverage
 
