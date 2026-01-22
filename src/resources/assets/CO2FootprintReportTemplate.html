@@ -75,7 +75,7 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
       <h1 class="display-3">Nextflow CO₂e Footprint Report</h1>
       <h2 class="text-muted mb-4"><samp>[${workflow.runName}]</samp> ${workflow.resume ? '<em>(resumed run)</em>' : ''}</h2>
 
-      <% if ( workflow.success && workflow.stats.ignoredCount ){ %>
+      <% if ( workflow.success && workflow.stats?.ignoredCount ){ %>
           <div class="alert alert-warning mb-4">
               Workflow execution completed successfully. One or more tasks reported an error condition.
           </div>
@@ -95,7 +95,7 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
       <dl>
         <dt>Run times</dt>
         <dd>
-          <span id="workflow_start">${workflow.start.format('dd-MMM-yyyy HH:mm:ss')}</span> - <span id="workflow_complete">${workflow.complete.format('dd-MMM-yyyy HH:mm:ss')}</span>
+          <span id="workflow_start">${workflow.start?.format('dd-MMM-yyyy HH:mm:ss')}</span> - <span id="workflow_complete">${workflow.complete?.format('dd-MMM-yyyy HH:mm:ss')}</span>
           (<span id="completed_fromnow"></span>duration: <strong>${workflow.duration}</strong>)
         </dd>
 
@@ -105,7 +105,7 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
 
       <dl>
         <dt>Nextflow version</dt>
-        <dd>version ${workflow.nextflow.version}, build ${workflow.nextflow.build} (${workflow.nextflow.timestamp})</dd>
+        <dd>version ${workflow.nextflow?.version}, build ${workflow.nextflow?.build} (${workflow.nextflow?.timestamp})</dd>
 
         <dt>nf-co2footprint plugin version</dt>
         <dd>version ${plugin_version}</dd>
@@ -154,7 +154,7 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
           </div>
 
           <div class="metric-card card p-1">
-            <span class="metric">${co2_totals.tree}</span>
+            <span class="metric">${co2_totals.tree.split(' ')[0]}</span>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M378.31 378.49L298.42 288h30.63c9.01 0 16.98-5 20.78-13.06c3.8-8.04 2.55-17.26-3.28-24.05L268.42 160h28.89c9.1 0 17.3-5.35 20.86-13.61c3.52-8.13 1.86-17.59-4.24-24.08L203.66 4.83c-6.03-6.45-17.28-6.45-23.32 0L70.06 122.31c-6.1 6.49-7.75 15.95-4.24 24.08C69.38 154.65 77.59 160 86.69 160h28.89l-78.14 90.91c-5.81 6.78-7.06 15.99-3.27 24.04C37.97 283 45.93 288 54.95 288h30.63L5.69 378.49c-6 6.79-7.36 16.09-3.56 24.26c3.75 8.05 12 13.25 21.01 13.25H160v24.45l-30.29 48.4c-5.32 10.64 2.42 23.16 14.31 23.16h95.96c11.89 0 19.63-12.52 14.31-23.16L224 440.45V416h136.86c9.01 0 17.26-5.2 21.01-13.25c3.8-8.17 2.44-17.47-3.56-24.26z"/></svg>
             <span class="metric-title">Tree sequestration time</span>
           </div>
@@ -189,7 +189,7 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
           </div>
 
           <div class="metric-card card p-1">
-            <span class="metric">${co2_totals.tree_non_cached}</span>
+            <span class="metric">${co2_totals.tree_non_cached.split(' ')[0]}</span>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M378.31 378.49L298.42 288h30.63c9.01 0 16.98-5 20.78-13.06c3.8-8.04 2.55-17.26-3.28-24.05L268.42 160h28.89c9.1 0 17.3-5.35 20.86-13.61c3.52-8.13 1.86-17.59-4.24-24.08L203.66 4.83c-6.03-6.45-17.28-6.45-23.32 0L70.06 122.31c-6.1 6.49-7.75 15.95-4.24 24.08C69.38 154.65 77.59 160 86.69 160h28.89l-78.14 90.91c-5.81 6.78-7.06 15.99-3.27 24.04C37.97 283 45.93 288 54.95 288h30.63L5.69 378.49c-6 6.79-7.36 16.09-3.56 24.26c3.75 8.05 12 13.25 21.01 13.25H160v24.45l-30.29 48.4c-5.32 10.64 2.42 23.16 14.31 23.16h95.96c11.89 0 19.63-12.52 14.31-23.16L224 440.45V416h136.86c9.01 0 17.26-5.2 21.01-13.25c3.8-8.17 2.44-17.47-3.56-24.26z"/></svg>
             <span class="metric-title">Tree sequestration time</span>
           </div>
@@ -225,7 +225,7 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
             </div>
 
             <div class="metric-card card p-1">
-              <span class="metric">${co2_totals.tree_market}</span>
+              <span class="metric">${co2_totals.tree_market.split(' ')[0]}</span>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M378.31 378.49L298.42 288h30.63c9.01 0 16.98-5 20.78-13.06c3.8-8.04 2.55-17.26-3.28-24.05L268.42 160h28.89c9.1 0 17.3-5.35 20.86-13.61c3.52-8.13 1.86-17.59-4.24-24.08L203.66 4.83c-6.03-6.45-17.28-6.45-23.32 0L70.06 122.31c-6.1 6.49-7.75 15.95-4.24 24.08C69.38 154.65 77.59 160 86.69 160h28.89l-78.14 90.91c-5.81 6.78-7.06 15.99-3.27 24.04C37.97 283 45.93 288 54.95 288h30.63L5.69 378.49c-6 6.79-7.36 16.09-3.56 24.26c3.75 8.05 12 13.25 21.01 13.25H160v24.45l-30.29 48.4c-5.32 10.64 2.42 23.16 14.31 23.16h95.96c11.89 0 19.63-12.52 14.31-23.16L224 440.45V416h136.86c9.01 0 17.26-5.2 21.01-13.25c3.8-8.17 2.44-17.47-3.56-24.26z"/></svg>
               <span class="metric-title">Tree sequestration time</span>
             </div>
@@ -353,10 +353,10 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
                       In the event that real-time data was unavailable, fallback values from the 2024 yearly historical data were used.<br>
                       <span class="font-italic small">
                   Electricity Maps (2025). Real-time Carbon Intensity Data accessed via API
-                  (<% if (workflow.start.format('MMM dd, yyyy') != workflow.complete.format('MMM dd, yyyy')) { %>
-                    for the period ${workflow.start.format('MMM dd, yyyy')} to ${workflow.complete.format('MMM dd, yyyy')}
+                  (<% if (workflow.start?.format('MMM dd, yyyy') != workflow.complete?.format('MMM dd, yyyy')) { %>
+                    for the period ${workflow.start?.format('MMM dd, yyyy')} to ${workflow.complete?.format('MMM dd, yyyy')}
                   <% } else { %>
-                    retrieved: ${workflow.start.format('MMM dd, yyyy')}
+                    retrieved: ${workflow.start?.format('MMM dd, yyyy')}
                   <% } %>).
                   Electricity Maps.
                   <a href="https://www.electricitymaps.com/" target="_blank" rel="noopener">
@@ -397,7 +397,7 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
   <!-- Footer -->
   <footer>
     <div class="container-fluid">
-      Generated by <a href="https://www.nextflow.io" target="_blank">Nextflow</a>, version ${workflow.nextflow.version}
+      Generated by <a href="https://www.nextflow.io" target="_blank">Nextflow</a>, version ${workflow.nextflow?.version}
     </div>
   </footer>
 </body>

@@ -3,6 +3,7 @@ package nextflow.co2footprint
 import nextflow.co2footprint.DataContainers.DataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.DataContainers.CIDataMatrix
+import nextflow.co2footprint.Records.CiRecord
 import spock.lang.Specification
 import groovy.util.logging.Slf4j
 import java.util.concurrent.ConcurrentHashMap
@@ -34,8 +35,8 @@ class CO2FootprintConfigTest extends Specification {
         CO2FootprintConfig config = new CO2FootprintConfig(input, tdp, ci, [:])
 
         then:
-        keys.each({property ->
-            config.value(property) == input.get(property)
+        keys.each({String property ->
+            config.getProperty(property) == input.get(property)
         }).every()
 
         where:
@@ -50,11 +51,11 @@ class CO2FootprintConfigTest extends Specification {
         CO2FootprintConfig config = new CO2FootprintConfig(pluginConfig, tdp, ci, processConfig)
 
         then:
-        keys.each({property ->
-            config.value(property) == pluginConfig.get(property)
+        keys.each({String property ->
+            config.getProperty(property) == pluginConfig.get(property)
         }).every()
-        tdp.fallbackModel == "default ${config.value('machineType')}"
-        config.value('pue') == pue
+        tdp.fallbackModel == "default ${config.machineType}"
+        config.pue == pue
 
         where:
         pluginConfig                            || processConfig                || keys                     || pue
@@ -70,9 +71,9 @@ class CO2FootprintConfigTest extends Specification {
     def 'test dynamic ci computation with GLOBAL fallback'() {
         expect:
         CO2FootprintConfig config = new CO2FootprintConfig(['location': location], tdp, ci, [:])
-        assert config.value('ci') instanceof Double
-        assert config.value('ci') == expectedCi
-        assert config.value('location') == location
+        assert config.ci instanceof CiRecord
+        assert config.ci.value == expectedCi
+        assert config.location == location
         validateDefaultProperties(config)
 
         where:
@@ -95,7 +96,7 @@ class CO2FootprintConfigTest extends Specification {
         matrix.checkRequiredColumns(['required1', 'required2'])
 
         then:
-        def e = thrown(IllegalStateException)
+        IllegalStateException e = thrown(IllegalStateException)
         e.message.contains("CSV is missing required columns")
     }
 
@@ -108,7 +109,7 @@ class CO2FootprintConfigTest extends Specification {
         CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdp, ci, processMap)
 
         then:
-        config.value('machineType') == null
+        config.machineType == null
         // Optionally: check logs for warning if your framework supports it
     }
 
@@ -121,7 +122,7 @@ class CO2FootprintConfigTest extends Specification {
         CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdp, ci, processMap)
 
         then:
-        config.value('pue') == 2.22
+        config.pue == 2.22
     }
 
     def 'should log custom CPU power model as polynomial'() {
@@ -136,16 +137,16 @@ class CO2FootprintConfigTest extends Specification {
         logger.addAppender(listAppender)
 
         when:
-        new CO2FootprintConfig(configMap, tdp, ci, processMap)
+        new CO2FootprintConfig(configMap, tdp, ci, processMap as Map)
 
         then:
-        def logMessages = listAppender.list*.formattedMessage
-        logMessages.any { it.contains("Using custom CPU power model: f(x) = 2.5*x^2 + 1.3*x^1 + 0.7*x^0") }
+        List<String> logMessages = listAppender.list*.formattedMessage
+        logMessages.any {String message -> message.contains("Using custom CPU power model: f(x) = 2.5*x^2 + 1.3*x^1 + 0.7*x^0") }
     }
 
     // Helper method to validate default properties
     private static void validateDefaultProperties(CO2FootprintConfig config) {
-        assert config.value('powerdrawMem') == 0.3725
-        assert config.value('pue') == 1.0
+        assert config.powerdrawMem == 0.3725
+        assert config.pue == 1.0
     }
 }

@@ -1,9 +1,7 @@
 package nextflow.co2footprint.DataContainers
 
-
-import nextflow.co2footprint.Logging.Markers
-
 import groovy.util.logging.Slf4j
+import nextflow.co2footprint.Logging.Markers
 
 import java.nio.file.Path
 import java.util.regex.Matcher
@@ -18,6 +16,19 @@ import java.util.regex.Matcher
  */
 @Slf4j
 class TDPDataMatrix extends DataMatrix {
+    //External Data integration of TDP (Thermal design power) and CI (Carbon intensity) values.
+    static final TDPDataMatrix tdpDataMatrix = readTdpDataMatrix()
+
+    /**
+     * External Data integration of TDP (Thermal design power) values.
+     *
+     * @return The TDP data as a matrix
+     */
+    static TDPDataMatrix readTdpDataMatrix() {
+        return fromCsv(
+            Path.of(TDPDataMatrix.class.getResource('/cpu_tdp_data/CPU_TDP.csv').toURI())
+        )
+    }
 
     // Column IDs for TDP, cores, and threads
     private final Object tdpID = 'tdp (W)'

@@ -1,8 +1,10 @@
 executor,machineType,pue,source
+cloud,cloud,1.56,https://datacenter.uptimeinstitute.com/rs/711-RIA-145/images/2024.GlobalDataCenterSurvey.Report.pdf
 awsbatch,cloud,1.15,https://sustainability.aboutamazon.com/products-services/aws-cloud
 azurebatch,cloud,1.18,https://azure.microsoft.com/en-us/blog/how-microsoft-measures-datacenter-water-and-energy-use-to-improve-azure-cloud-sustainability/?utm_source=chatgpt.com
 google-batch,cloud,1.1,https://datacenters.google/efficiency/
 google-lifesciences,cloud,1.1,https://datacenters.google/efficiency/
+compute cluster,compute cluster,1.67,
 bridge,compute cluster,1.67,
 flux,compute cluster,1.67,
 condor,compute cluster,1.67,
