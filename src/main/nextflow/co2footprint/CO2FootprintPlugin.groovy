@@ -76,19 +76,22 @@ class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
             Path tracePath = Path.of(parsedArgs.get('tracePath') as String)
 
             // Define config
-            assert (parsedArgs.get('config') instanceof String)
-            Path configPath = Path.of(parsedArgs.get('config') as String)
-            ConfigParser configParser = ConfigParserFactory.create()
-            Map<String, Object> co2Config = configParser.parse(configPath).navigate('co2footprint') as Map?: [:]
-            if (co2Config.containsKey('emApiKey') && !co2Config.get('emApiKey')) {
-                log.warn(
-                    'Empty value discovered for `emApiKey` in config.' +
-                    'Keep in mind that secrets can not be accessed via `nextflow plugin ...`.' +
-                    'Removing `emApiKey from config.'
-                )
-                co2Config.remove('emApiKey')
+            Map<String, Object> co2Config = [:]
+            Map<String, Object> processConfig = [:]
+            if(parsedArgs.get('config') instanceof String) {
+                Path configPath = Path.of(parsedArgs.get('config') as String)
+                ConfigParser configParser = ConfigParserFactory.create()
+                co2Config = configParser.parse(configPath).navigate('co2footprint') as Map?: [:]
+                if (co2Config.containsKey('emApiKey') && !co2Config.get('emApiKey')) {
+                    log.warn(
+                        'Empty value discovered for `emApiKey` in config.' +
+                        'Keep in mind that secrets can not be accessed via `nextflow plugin ...`.' +
+                        'Removing `emApiKey from config.'
+                    )
+                    co2Config.remove('emApiKey')
+                }
+                configParser.parse(configPath).navigate('process') as Map?: [:]
             }
-            Map<String, Object> processConfig = configParser.parse(configPath).navigate('process') as Map?: [:]
 
             // Define separate observer
             CO2FootprintConfig config = new CO2FootprintConfig(
