@@ -38,9 +38,9 @@ process calculate_CO2 {
     def co2Records = calculateCO2(
       Path.of(executionTracePath),
       [
-        traceFile: './out/pipeline_info/post-run_trace.txt',
-        summaryFile: './out/pipeline_info/post-run_summary.txt',
-        reportFile: './out/pipeline_info/post-run_report.html',
+        trace: [file: './out/pipeline_info/post-run_trace.txt'],
+        summary: [file: './out/pipeline_info/post-run_summary.txt'],
+        report: [file: './out/pipeline_info/post-run_report.html'],
       ]
   )
   """
