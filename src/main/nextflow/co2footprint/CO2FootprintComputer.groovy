@@ -60,7 +60,7 @@ class CO2FootprintComputer {
 
         /* ===== CPU Information ===== */
 
-        final String cpuModel = config.value('ignoreCpuModel') ? 'default' : trace.get('cpu_model') as String
+        final String cpuModel = config.ignoreCpuModel ? 'default' : trace.get('cpu_model') as String
 
         // Runtime [h]
         final BigDecimal runtime_h = (getTraceOrDefault(trace, trace.taskId, 'realtime', 0, 'missing-realtime') as BigDecimal) / (1000 * 60 * 60)
@@ -80,7 +80,7 @@ class CO2FootprintComputer {
         final BigDecimal coreUsage = cpuUsage / (100.0 * numberOfCores)
 
         // Per-core power draw: either custom polynomial model or TDP lookup [W/core]
-        final List<Number> cpuPowerModel = config.value('cpuPowerModel')
+        final List<Number> cpuPowerModel = config.cpuPowerModel
         final BigDecimal powerdrawPerCore = cpuPowerModel ? getPowerDrawFromModel(cpuPowerModel, coreUsage) : tdpDataMatrix.matchModel(cpuModel).getCoreTDP()
 
         /* ===== Memory Information ===== */
@@ -109,18 +109,18 @@ class CO2FootprintComputer {
             throw new MissingValueException(message)
         }
 
-        final BigDecimal powerdrawMem  = config.value('powerdrawMem') // [W per GB]
+        final BigDecimal powerdrawMem  = config.powerdrawMem // [W per GB]
 
         /* ===== Data Center Effectiveness and Carbon Intensity ===== */
 
          // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
-        final BigDecimal pue = config.value('pue')
+        final BigDecimal pue = config.pue
 
         // CI: carbon intensity [gCO₂e kWh−1]
         final BigDecimal ci = timeCiRecords.getCi(trace)
 
         // Personal energy mix based carbon intensity
-        final Double ciMarket = config.value('ciMarket')
+        final Double ciMarket = config.ciMarket
 
 
         /* ===== Energy & Emission Calculation ===== */
@@ -145,7 +145,7 @@ class CO2FootprintComputer {
             runtime_h,
             numberOfCores as Integer,
             powerdrawPerCore,
-            config.value('ignoreCpuModel') ? 'Custom value' : cpuModel,
+            config.ignoreCpuModel ? 'Custom value' : cpuModel,
             rawEnergyProcessor,
             rawEnergyMemory,
         )
