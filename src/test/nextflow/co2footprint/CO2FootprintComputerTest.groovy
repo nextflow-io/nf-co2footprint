@@ -144,4 +144,29 @@ class CO2FootprintComputerTest extends Specification{
         [BigDecimal.valueOf(1), 5] | 3     || 8.0       // supports BigDecimal coeffs too
     }
 
+    def "Determination of number of CPUs"() {
+        given:
+        def traceRecord = new TraceRecord()
+        traceRecord.task_id = '1'
+        traceRecord.realtime = (1 as Long) * (3600000 as Long)
+        traceRecord.cpus = cpus
+        traceRecord.cpu_model = "Some model"
+        traceRecord.'%cpu' = pCpu
+        traceRecord.memory = (7 as Long) * (1024**3 as Long)
+
+        CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, ciDataMatrix, [:])
+        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
+        CiRecordCollector timeCiRecordCollector = new CiRecordCollector(config)
+        CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(traceRecord, timeCiRecordCollector)
+
+        expect:
+        co2Record.store.cpus == expectedCpus
+
+        where:
+        pCpu    | cpus | expectedCpus
+        100.0   | 1    | 1
+        100.0   | 2    | 2
+        150.0   | 1    | 2
+    }
+
 }
