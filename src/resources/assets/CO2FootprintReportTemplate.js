@@ -350,7 +350,8 @@ $(function() {
         gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
         overlaying: 'y',
         side: 'right',
-      }
+      },
+      hovermode: 'x'
     }
 
     // Create plot:
