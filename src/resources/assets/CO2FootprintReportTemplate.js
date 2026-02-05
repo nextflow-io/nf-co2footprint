@@ -41,69 +41,56 @@ $(function() {
 
   // Plot histograms of resource usage
   function plot_resource_usage() {
-    var plot_data_total = []
-    var plot_data_non_cached = []
-    for(var processName in window.data.summary){
+    var plot_data = { total: [], total_non_cached: [] };
+    for(var process in window.data.summary){
 
       // Extract process statistics
-      var stats = window.data.summary[processName]
+      var stats = window.data.summary[process]
+      var processName = process.split(':').pop() ?? process
 
       // Put stats in plot
-      for (var metricsName in stats) {
+      for (const [i, suffix] of ["", "_non_cached"].entries()) {
         // Add CO₂ Boxplot to plot
-        if (metricsName.startsWith('co2e')) {
-          var current_process_plot = metricsName.endsWith('_non_cached') ? plot_data_non_cached : plot_data_total
-          current_process_plot.push(
-            {
-              x:processName, y: stats[metricsName], name: processName,
-              type:'box', boxmean: true, boxpoints: false,
-              hovertemplate:
-                'Min: ${Math.min(...stats.co2e)}<br>' +
-                'Q1: %{q1}<br>' +
-                'Median: %{median}<br>' +
-                'Mean: %{mean}<br>' +
-                'Q3: %{q3}<br>' +
-                'Max: ${max}<extra></extra>'
-            }
-          )
-        }
-        else {
-          // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
-          plot_data_total.push(
-            {
-              x:processName, y:stats[metricsName]?.map(v => v * 1000) ?? null, name: processName,
-              type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
-              hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
-            }
-          )
-        }
+        plot_data[`total${suffix}`].push(
+          {
+            x:process, y: stats[`co2e${suffix}`], name: processName,
+            type:'box', boxmean: true, boxpoints: 'all', hoverinfo: "y"
+          }
+        )
+        // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
+        plot_data[`total${suffix}`].push(
+          {
+            x:process, y:stats[`energy${suffix}`]?.map(v => v * 1000) ?? null, name: processName,
+            type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
+            hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
+          }
+        )
       }
     }
 
     var layout = {
-      title: 'CO<sub>2</sub> emission & energy consumption',
+      title: {text: 'CO<sub>2</sub> emission & energy consumption'},
       legend: {
         x: 1.1
       },
       xaxis: {
-        title: 'Processes',
+        title: {text: 'Processes'},
       },
       yaxis: {
-        title: 'CO₂e emission (g)',
+        title: {text: 'CO₂e emission (g)'},
         rangemode: 'tozero',
       },
       yaxis2: {
-        title: 'Energy consumption (Wh)',
+        title: {text: 'Energy consumption (Wh)'},
         rangemode: 'tozero',
         gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
         overlaying: 'y',
         side: 'right',
-      },
-      boxmode: 'group',
+      }
     }
 
-    Plotly.newPlot('co2e-total-plot', plot_data_total, layout)
-    Plotly.newPlot('co2e-non-cached-plot', plot_data_non_cached, layout)
+    Plotly.newPlot("co2e-total-plot", plot_data.total, layout);
+    Plotly.newPlot("co2e-non-cached-plot", plot_data.total_non_cached, layout);
   }
 
   plot_resource_usage()
@@ -343,22 +330,22 @@ $(function() {
 
     // Layout:
     var ci_layout = {
-      title: 'Carbon intensity index',
+      title: {text: 'Carbon intensity index'},
       legend: {
         x: 1.1
       },
       xaxis: {
-        title: 'Time',
+        title: {text: 'Time'},
         ticklabelstandoff: 10,
         overlay: 'x2',
         range: [tasksStart, tasksEnd],
       },
       yaxis: {
-        title: 'Carbon Intensity (g/kWh)',
+        title: {text: 'Carbon Intensity (g/kWh)'},
         rangemode: 'tozero',
       },
       yaxis2: {
-        title: 'Energy consumption (kWh)',
+        title: {text: 'Energy consumption (kWh)'},
         rangemode: 'tozero',
         gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
         overlaying: 'y',
