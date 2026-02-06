@@ -39,7 +39,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
     CO2FootprintConfig config = null
 
     // Computer
-    CO2FootprintComputer co2FootprintComputer = null
+    CO2FootprintCalculator co2FootprintComputer = null
 
 
     /**
@@ -116,11 +116,11 @@ class CO2FootprintFactory implements TraceObserverFactory {
      * @param tdpDataMatrix Matrix with CPU Thermal design power (TDP) information
      * @return
      */
-    CO2FootprintComputer defineComputer(
+    CO2FootprintCalculator defineComputer(
             CO2FootprintConfig config=this.config,
             TDPDataMatrix tdpDataMatrix=TDPDataMatrix.tdpDataMatrix
     ){
-        return new CO2FootprintComputer(tdpDataMatrix, config)
+        return new CO2FootprintCalculator(tdpDataMatrix, config)
     }
 
     /**
@@ -136,7 +136,7 @@ class CO2FootprintFactory implements TraceObserverFactory {
             CO2FootprintConfig config=this.config,
             Session session=this.session,
             String pluginVersion=this.pluginVersion,
-            CO2FootprintComputer co2FootprintComputer=this.co2FootprintComputer
+            CO2FootprintCalculator co2FootprintComputer=this.co2FootprintComputer
     ){
         return new CO2FootprintObserver(session, pluginVersion, config, co2FootprintComputer)
     }

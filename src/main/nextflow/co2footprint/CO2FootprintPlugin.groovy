@@ -98,7 +98,7 @@ class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
                     co2Config, TDPDataMatrix.tdpDataMatrix,
                     CIDataMatrix.ciDataMatrix, processConfig
             )
-            CO2FootprintComputer computer = new CO2FootprintComputer(TDPDataMatrix.tdpDataMatrix, config)
+            CO2FootprintCalculator computer = new CO2FootprintCalculator(TDPDataMatrix.tdpDataMatrix, config)
             CO2FootprintObserver observer = new CO2FootprintObserver(null, 'unknown', config, computer)
 
             // Parse the trace file
