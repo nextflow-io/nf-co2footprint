@@ -5,7 +5,7 @@ import groovy.text.GStringTemplateEngine
 import groovy.text.Template
 import groovy.util.logging.Slf4j
 import nextflow.Session
-import nextflow.co2footprint.CO2FootprintComputer
+import nextflow.co2footprint.CO2FootprintCalculator
 import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.Metrics.Quantity
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
@@ -29,7 +29,7 @@ class ReportFileCreator extends BaseFileCreator{
 
     // Information for final report
     private CO2RecordTree workflowStats
-    private CO2FootprintComputer co2FootprintComputer
+    private CO2FootprintCalculator co2FootprintComputer
     private CO2FootprintConfig config
     private String version
     private Session session
@@ -65,7 +65,7 @@ class ReportFileCreator extends BaseFileCreator{
      */
     void addEntries(
             CO2RecordTree workflowStats,
-            CO2FootprintComputer co2FootprintComputer,
+            CO2FootprintCalculator co2FootprintComputer,
             CO2FootprintConfig config,
             String version,
             Session session,

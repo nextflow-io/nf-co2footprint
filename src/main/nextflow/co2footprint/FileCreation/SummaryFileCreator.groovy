@@ -2,7 +2,7 @@ package nextflow.co2footprint.FileCreation
 
 import groovy.util.logging.Slf4j
 import groovyx.gpars.agent.Agent
-import nextflow.co2footprint.CO2FootprintComputer
+import nextflow.co2footprint.CO2FootprintCalculator
 import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.Metrics.Quantity
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
@@ -46,11 +46,11 @@ class SummaryFileCreator extends BaseFileCreator {
      * Write the summary file with totals and options.
      *
      * @param totalStats             Map containing total energy ('energy') in Wh and total CO₂ emissions ('co2e') in grams.
-     * @param co2FootprintComputer   CO2FootprintComputer instance for calculating equivalences.
+     * @param co2FootprintComputer   CO2FootprintCalculator instance for calculating equivalences.
      * @param config                 CO2FootprintConfig instance with plugin configuration.
      * @param version                Plugin version string.
      */
-    void write(CO2RecordTree workflowStats, CO2FootprintComputer co2FootprintComputer, CO2FootprintConfig config, String version) {
+    void write(CO2RecordTree workflowStats, CO2FootprintCalculator co2FootprintComputer, CO2FootprintConfig config, String version) {
         if (!created) { return }
         Map<String, Object> totalStats = workflowStats.co2Record.store
 

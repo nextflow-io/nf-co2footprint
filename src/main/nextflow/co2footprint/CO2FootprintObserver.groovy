@@ -51,8 +51,8 @@ class CO2FootprintObserver implements TraceObserver {
     CO2FootprintConfig config
 
     // Calculator for CO₂ footprint
-    private CO2FootprintComputer co2FootprintComputer
-    CO2FootprintComputer getCO2FootprintComputer() { co2FootprintComputer }
+    private CO2FootprintCalculator co2FootprintComputer
+    CO2FootprintCalculator getCO2FootprintComputer() { co2FootprintComputer }
 
     // Record for CI values during execution
     CiRecordCollector timeCiRecordCollector
@@ -78,7 +78,7 @@ class CO2FootprintObserver implements TraceObserver {
             Session session,
             String version,
             CO2FootprintConfig config,
-            CO2FootprintComputer co2FootprintComputer,
+            CO2FootprintCalculator co2FootprintComputer,
             boolean overwrite=true,
             int maxTasks=10_000
     ) {

@@ -1,7 +1,7 @@
 package nextflow.co2footprint.FileCreation
 
 import nextflow.Session
-import nextflow.co2footprint.CO2FootprintComputer
+import nextflow.co2footprint.CO2FootprintCalculator
 import nextflow.co2footprint.Config.ReportFileConfig
 import nextflow.co2footprint.Config.SummaryFileConfig
 import nextflow.co2footprint.Config.TraceFileConfig
@@ -87,7 +87,7 @@ class ReportFileCreatorTest extends Specification{
 
         co2FootprintReport = new ReportFileCreator(reportPath, false, 10_000)
         co2FootprintReport.addEntries(
-                workflowStats, new CO2FootprintComputer(Mock(TDPDataMatrix), config),
+                workflowStats, new CO2FootprintCalculator(Mock(TDPDataMatrix), config),
                 config, 'test-version', session, timeCiRecordCollector
         )
 
@@ -113,7 +113,7 @@ class ReportFileCreatorTest extends Specification{
         workflowStats.collectAdditionalMetrics()
 
         co2FootprintReport.addEntries(
-                workflowStats, new CO2FootprintComputer(Mock(TDPDataMatrix), null),
+                workflowStats, new CO2FootprintCalculator(Mock(TDPDataMatrix), null),
                 null, null, null, timeCiRecordCollector
         )
         Map<String, String> totalsJson = co2FootprintReport.renderCO2TotalsJson()
