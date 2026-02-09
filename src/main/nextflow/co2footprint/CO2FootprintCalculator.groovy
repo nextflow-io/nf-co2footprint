@@ -66,7 +66,7 @@ class CO2FootprintCalculator {
         final BigDecimal runtime_h = (getTraceOrDefault(trace, trace.taskId, 'realtime', 0, 'missing-realtime') as BigDecimal) / (1000 * 60 * 60)
 
         // Number of CPU cores
-        final Integer numberOfCores = getTraceOrDefault(trace, trace.taskId, 'cpus', 1, 'missing-cpus') as Integer
+        Integer numberOfCores = getTraceOrDefault(trace, trace.taskId, 'cpus', 1, 'missing-cpus') as Integer
 
         // CPU usage: fraction of total requested cores
         BigDecimal cpuUsage = getTraceOrDefault(trace, trace.taskId, '%cpu', numberOfCores * 100, 'missing-%cpu') as BigDecimal
@@ -77,6 +77,7 @@ class CO2FootprintCalculator {
                 'zero-cpu-usage-warning'
             )
         }
+        numberOfCores = Math.max( Math.ceil(cpuUsage / 100), numberOfCores) as Integer // Ensure that the number of cores is at least ceil(%cpu/100)
         final BigDecimal coreUsage = cpuUsage / (100.0 * numberOfCores)
 
         // Per-core power draw: either custom polynomial model or TDP lookup [W/core]
