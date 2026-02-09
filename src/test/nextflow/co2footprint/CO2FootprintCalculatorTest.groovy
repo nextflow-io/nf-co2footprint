@@ -14,7 +14,7 @@ import spock.lang.Specification
 import java.nio.file.Paths
 
 @Slf4j
-class CO2FootprintComputerTest extends Specification{
+class CO2FootprintCalculatorTest extends Specification{
 
     private static BigDecimal round( double value ) {
         Math.round( value * 100 ) / 100
@@ -43,7 +43,7 @@ class CO2FootprintComputerTest extends Specification{
         traceRecord.memory = (7 as Long) * (1024**3 as Long)
 
         CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdpDataMatrix, ciDataMatrix, [:])
-        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
+        CO2FootprintCalculator co2FootprintComputer = new CO2FootprintCalculator(tdpDataMatrix, config)
         CiRecordCollector timeCiRecordCollector = new CiRecordCollector(config)
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(traceRecord, timeCiRecordCollector)
 
@@ -66,7 +66,7 @@ class CO2FootprintComputerTest extends Specification{
     def 'test co2e equivalences calculation' () {
         given:
         CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, ciDataMatrix, [:])
-        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
+        CO2FootprintCalculator co2FootprintComputer = new CO2FootprintCalculator(tdpDataMatrix, config)
         CO2EquivalencesRecord co2EquivalencesRecord = co2FootprintComputer.computeCO2footprintEquivalences(co2e)
 
         expect:
@@ -94,9 +94,9 @@ class CO2FootprintComputerTest extends Specification{
         traceRecord.memory = memory
         traceRecord.peak_rss = peak_rss
 
-        // Create config and the CO2FootprintComputer under test
+        // Create config and the CO2FootprintCalculator under test
         CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, ciDataMatrix, [:])
-        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
+        CO2FootprintCalculator co2FootprintComputer = new CO2FootprintCalculator(tdpDataMatrix, config)
         CiRecordCollector timeCiRecordCollector = new CiRecordCollector(config)
 
         when:
@@ -128,7 +128,7 @@ class CO2FootprintComputerTest extends Specification{
 
     def 'test power draw from polynomial model'() {
         given:
-        def computer = new CO2FootprintComputer(null, null)
+        def computer = new CO2FootprintCalculator(null, null)
 
         expect:
         computer.getPowerDrawFromModel(coeffs, usage as BigDecimal).round(6) == expected

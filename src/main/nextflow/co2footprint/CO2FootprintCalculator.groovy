@@ -15,7 +15,7 @@ import nextflow.trace.TraceRecord
  * Class for computation of energy usage, CO₂ emission, and equivalence metrics.
  */
 @Slf4j
-class CO2FootprintComputer {
+class CO2FootprintCalculator {
 
     // Holds CPU TDP data for different processors
     private final TDPDataMatrix tdpDataMatrix
@@ -23,12 +23,12 @@ class CO2FootprintComputer {
     private final CO2FootprintConfig config
 
     /**
-     * Constructor for CO2FootprintComputer.
+     * Constructor for CO2FootprintCalculator.
      *
      * @param tdpDataMatrix  Data matrix with CPU TDP (Thermal Design Power) values.
      * @param config         Configuration object with plugin and calculation settings.
      */
-    CO2FootprintComputer(TDPDataMatrix tdpDataMatrix, CO2FootprintConfig config) {
+    CO2FootprintCalculator(TDPDataMatrix tdpDataMatrix, CO2FootprintConfig config) {
         this.tdpDataMatrix = tdpDataMatrix
         this.config = config
     }
