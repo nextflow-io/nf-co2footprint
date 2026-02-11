@@ -302,8 +302,19 @@ $(function() {
     }
 
     ciRecords = new Map([...ciRecords.entries()].sort((a,b) => a[0]-b[0]))
-    var timestamps = [...ciRecords.keys()]
-    var ciValues = [...ciRecords.values()]
+    // Step plot for carbon intensity
+    var previousValue = null
+    var timestamps = []
+    var ciValues = []
+    for (const [timestamp, value] of ciRecords) {
+      if (previousValue != null) {
+        timestamps.push(timestamp)
+        ciValues.push(previousValue)
+      }
+      timestamps.push(timestamp)
+      ciValues.push(value)
+      previousValue = value
+    }
 
     // Add CI trace to plot
     ci_plot_data.push(
