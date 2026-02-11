@@ -64,7 +64,7 @@ The logic applied in detail:
 
 > Carbon intensity data is retrieved from [Electricity Maps](https://www.electricitymaps.com/) and used under the [Open Database License (ODbL)](https://opendatacommons.org/licenses/odbl/1-0/). See the full attribution and license terms [here](https://nextflow-io.github.io/nf-co2footprint/#data-attribution).
 
-### Accounting for a personal energy mix (`ciMarket`)
+### Accounting for a personal energy mix (`ciMarket`) {#accounting-for-a-personal-energy-mix}
 
 The `ciMarket` parameter can be used to provide a custom value to account for differences to your regional average. This can occur due to:  
 

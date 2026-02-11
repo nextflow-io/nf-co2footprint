@@ -207,7 +207,7 @@ class CO2FootprintCalculator {
     * Computes CPU power draw using the configured polynomial model.
     *
     * @param coefficients List of polynomial coefficients (highest degree first), as Double or BigDecimal.
-    * @param coreUsage CPU usage in percent (0–100).
+    * @param coreUsage CPU usage as a fraction between 0 and 1.
     * @return Estimated power draw [W/core], or null if no model configured.
     */
     static BigDecimal getPowerDrawFromModel(List<Number> coefficients, BigDecimal coreUsage) {
