@@ -155,7 +155,7 @@ class CO2FootprintCalculatorTest extends Specification{
         traceRecord.memory = (7 as Long) * (1024**3 as Long)
 
         CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, ciDataMatrix, [:])
-        CO2FootprintComputer co2FootprintComputer = new CO2FootprintComputer(tdpDataMatrix, config)
+        CO2FootprintCalculator co2FootprintComputer = new CO2FootprintCalculator(tdpDataMatrix, config)
         CiRecordCollector timeCiRecordCollector = new CiRecordCollector(config)
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(traceRecord, timeCiRecordCollector)
 
