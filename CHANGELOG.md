@@ -1,10 +1,14 @@
 # New
 ## Bug Fixes:
+- Plot display of titles and axes names in report
+
 ## Misc:
 - Improved the testing of log messages
 - Removed some classes that became outdated after Nextflow added support for mixed-typed Config Options
 - New minimum Nextflow version: 25.10.0
 - Added recommendation for market-based CI usage
+- Single values in process summary plot
+- Numbers that are not in Double format are now accepted for config values
 
 ## Features:
 - Updated the config syntax inline with standard Nextflow style

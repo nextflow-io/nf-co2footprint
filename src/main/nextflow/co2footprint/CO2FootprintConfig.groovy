@@ -72,11 +72,11 @@ class CO2FootprintConfig implements ConfigScope {
     @Description('Location GeoCode from Electricity maps.')
     final String location
 
-    @ConfigOption(types=[Double, BigDecimal])
+    @ConfigOption(types=[Number, BigDecimal])
     @Description('Location-based carbon intensity (CI).')
     final CiRecord ci
 
-    @ConfigOption(types=[Double])
+    @ConfigOption(types=[Number])
     @Description('Market-based carbon intensity (CI).')
     final BigDecimal ciMarket
 
@@ -84,11 +84,11 @@ class CO2FootprintConfig implements ConfigScope {
     @Description('Electricity-maps API token.')
     final String emApiKey
 
-    @ConfigOption(types=[Double])
+    @ConfigOption(types=[Number])
     @Description('Power usage effectiveness (PUE) of the data centre.')
     BigDecimal pue
 
-    @ConfigOption(types=[Double])
+    @ConfigOption(types=[Number])
     @Description('Power draw of memory [W per GB].')
     final BigDecimal powerdrawMem
 
@@ -96,7 +96,7 @@ class CO2FootprintConfig implements ConfigScope {
     @Description('Turns off pattern matching of CPU names.')
     final Boolean ignoreCpuModel
 
-    @ConfigOption(types=[Double])
+    @ConfigOption(types=[Number])
     @Description('Default powerdraw of the CPU.')
     final BigDecimal powerdrawCpuDefault
 
