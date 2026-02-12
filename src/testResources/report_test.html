@@ -643,7 +643,7 @@
       if (type === 'sort' || $('#nf-table-humanreadable').val() == 'false') {
         return data['raw'].value
       }
-      if(data.hasOwnProperty('report')) {
+      if (data.hasOwnProperty('report')) {
         return data['report']
       }
       return data['readable']
@@ -655,27 +655,27 @@
     //
     // MAIN BLOCK: This block is only executed after the page is fully loaded
     //
-    $(function() {
+    $(function () {
       // Script block clicked
-      $('#tasks_table').on('click', '.script_block', function(e){
+      $('#tasks_table').on('click', '.script_block', function (e) {
         e.preventDefault()
         $(this).toggleClass('short')
       })
     
-      $(function() {
+      $(function () {
         $('[data-toggle="tooltip"]').tooltip()
       })
     
       // Completed date from now
-      var completed_date = moment( $('#workflow_complete').text(), "ddd MMM DD HH:mm:ss .* YYYY" )
-      if(completed_date.isValid()){
+      var completed_date = moment($('#workflow_complete').text(), "ddd MMM DD HH:mm:ss .* YYYY")
+      if (completed_date.isValid()) {
         $('#completed_fromnow').html('completed ' + completed_date.fromNow() + ', ')
       }
     
       // Plot histograms of resource usage
       function plot_resource_usage() {
         var plot_data = { total: [], total_non_cached: [] };
-        for(var process in window.data.summary){
+        for (var process in window.data.summary) {
     
           // Extract process statistics
           var stats = window.data.summary[process]
@@ -686,35 +686,35 @@
             // Add CO₂ Boxplot to plot
             plot_data[`total${suffix}`].push(
               {
-                x:process, y: stats[`co2e${suffix}`], name: processName,
-                type:'box', boxmean: true, boxpoints: 'all', hoverinfo: "y"
+                x: process, y: stats[`co2e${suffix}`], name: processName,
+                type: 'box', boxmean: true, boxpoints: 'all', hoverinfo: "y"
               }
             )
             // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
             plot_data[`total${suffix}`].push(
               {
-                x:process, y:stats[`energy${suffix}`]?.map(v => v * 1000) ?? null, name: processName,
-                type:'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
-                hoverinfo: 'skip', marker: {color: 'rgba(0,0,0,0)'}, fillcolor: 'rgba(0,0,0,0)'
+                x: process, y: stats[`energy${suffix}`]?.map(v => v * 1000) ?? null, name: processName,
+                type: 'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
+                hoverinfo: 'skip', marker: { color: 'rgba(0,0,0,0)' }, fillcolor: 'rgba(0,0,0,0)'
               }
             )
           }
         }
     
         var layout = {
-          title: {text: 'CO<sub>2</sub> emission & energy consumption'},
+          title: { text: 'CO<sub>2</sub> emission & energy consumption' },
           legend: {
             x: 1.1
           },
           xaxis: {
-            title: {text: 'Processes'},
+            title: { text: 'Processes' },
           },
           yaxis: {
-            title: {text: 'CO₂e emission (g)'},
+            title: { text: 'CO₂e emission (g)' },
             rangemode: 'tozero',
           },
           yaxis2: {
-            title: {text: 'Energy consumption (Wh)'},
+            title: { text: 'Energy consumption (Wh)' },
             rangemode: 'tozero',
             gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
             overlaying: 'y',
@@ -735,127 +735,127 @@
       /**
        * Function to create the table of tasks
        */
-      function make_tasks_table(){
+      function make_tasks_table() {
         // reset
-          if ( $.fn.dataTable.isDataTable( '#tasks_table' ) ) {
-            $('#tasks_table').DataTable().destroy()
-          }
+        if ($.fn.dataTable.isDataTable('#tasks_table')) {
+          $('#tasks_table').DataTable().destroy()
+        }
     
-          // Column titles
-          var energyConsumptionProcessorTitle = 'energy consumption (processor) [mWh]'
-          var energyConsumptionMemoryTitle = 'energy consumption (memory) [mWh]'
-          var energyConsumptionTitle = 'energy consumption (incl. PUE) [mWh]' // Default column title
-          var co2EmissionsTitle = 'CO₂e emissions [mg]'
-          if ($('#nf-table-humanreadable').val() == 'true') {
-            energyConsumptionProcessorTitle = 'energy consumption (processor)'
-            energyConsumptionMemoryTitle = 'energy consumption (memory)'
-            energyConsumptionTitle = 'energy consumption (incl. PUE)' // Change the column title if the button is selected
-            co2EmissionsTitle = 'CO₂e emissions'
-          }
+        // Column titles
+        var energyConsumptionProcessorTitle = 'energy consumption (processor) [mWh]'
+        var energyConsumptionMemoryTitle = 'energy consumption (memory) [mWh]'
+        var energyConsumptionTitle = 'energy consumption (incl. PUE) [mWh]' // Default column title
+        var co2EmissionsTitle = 'CO₂e emissions [mg]'
+        if ($('#nf-table-humanreadable').val() == 'true') {
+          energyConsumptionProcessorTitle = 'energy consumption (processor)'
+          energyConsumptionMemoryTitle = 'energy consumption (memory)'
+          energyConsumptionTitle = 'energy consumption (incl. PUE)' // Change the column title if the button is selected
+          co2EmissionsTitle = 'CO₂e emissions'
+        }
     
-          var table = $('#tasks_table').DataTable({
-            data: window.data.trace,
-            columns: [
-              { title: 'task_id', data: 'task_id' },
-              { title: 'process', data: 'process' },
-              { title: 'tag', data: 'tag' },
-              { title: 'status', data: 'status' },
-              { title: 'hash', data: 'hash' },
-              { title: energyConsumptionTitle, data: 'energy' },
-              { title: energyConsumptionProcessorTitle, data: 'rawEnergyProcessor' },
-              { title: energyConsumptionMemoryTitle, data: 'rawEnergyMemory' },
-              { title: co2EmissionsTitle, data: 'co2e' },
-              { title: `${co2EmissionsTitle} (market)`, data: 'co2eMarket' },
-              { title: 'carbon intensity', data: 'ci' },
-              { title: 'allocated cpus', data: 'cpus' },
-              { title: '%cpu', data: 'cpuUsage' },
-              { title: 'allocated memory', data: 'memory' },
-              { title: 'realtime', data: 'time' },
-              { title: 'power draw (in W/core)', data: 'powerdrawCPU' },
-              { title: 'cpu model', data: 'cpu_model' },
-            ],
-            deferRender: true,
-            lengthMenu: [[25, 50, 100, -1], [25, 50, 100, "All"]],
-            scrollX: true,
-            colReorder: true,
-            columnDefs: [
-              { targets: '_all', render: rawOrReadable },
-              { className: "id", "targets": [ 0,1,2,3 ] },
-              { className: "meta", "targets": [ 4,7,8,9,10,11 ] },
-              { className: "metrics", "targets": [ 5,6 ] }
-            ],
-            dom:
-                "<'row'<'col-auto'l><'col text-center'B><'col-auto'f>>" +
-                "<'row'<'col-12'tr>>" +
-                "<'row'<'col'i><'col-auto'p>>",
-            buttons: [
-              {
-                extend: 'colvisGroup',
-                text: 'Metrics',
-                show: [ '.id', '.metrics' ],
-                hide: [ '.meta' ],
-              },
-              {
-                extend: 'colvisGroup',
-                text: 'Metadata',
-                show: [ '.id', '.meta'],
-                hide: [ '.metrics' ],
-              },
-              {
-                extend: 'colvisGroup',
-                text: 'All',
-                show: ':hidden',
-              },
-            ]
-          })
+        var table = $('#tasks_table').DataTable({
+          data: window.data.trace,
+          columns: [
+            { title: 'task_id', data: 'task_id' },
+            { title: 'process', data: 'process' },
+            { title: 'tag', data: 'tag' },
+            { title: 'status', data: 'status' },
+            { title: 'hash', data: 'hash' },
+            { title: energyConsumptionTitle, data: 'energy' },
+            { title: energyConsumptionProcessorTitle, data: 'rawEnergyProcessor' },
+            { title: energyConsumptionMemoryTitle, data: 'rawEnergyMemory' },
+            { title: co2EmissionsTitle, data: 'co2e' },
+            { title: `${co2EmissionsTitle} (market)`, data: 'co2eMarket' },
+            { title: 'carbon intensity', data: 'ci' },
+            { title: 'allocated cpus', data: 'cpus' },
+            { title: '%cpu', data: 'cpuUsage' },
+            { title: 'allocated memory', data: 'memory' },
+            { title: 'realtime', data: 'time' },
+            { title: 'power draw (in W/core)', data: 'powerdrawCPU' },
+            { title: 'cpu model', data: 'cpu_model' },
+          ],
+          deferRender: true,
+          lengthMenu: [[25, 50, 100, -1], [25, 50, 100, "All"]],
+          scrollX: true,
+          colReorder: true,
+          columnDefs: [
+            { targets: '_all', render: rawOrReadable },
+            { className: "id", "targets": [0, 1, 2, 3] },
+            { className: "meta", "targets": [4, 7, 8, 9, 10, 11] },
+            { className: "metrics", "targets": [5, 6] }
+          ],
+          dom:
+            "<'row'<'col-auto'l><'col text-center'B><'col-auto'f>>" +
+            "<'row'<'col-12'tr>>" +
+            "<'row'<'col'i><'col-auto'p>>",
+          buttons: [
+            {
+              extend: 'colvisGroup',
+              text: 'Metrics',
+              show: ['.id', '.metrics'],
+              hide: ['.meta'],
+            },
+            {
+              extend: 'colvisGroup',
+              text: 'Metadata',
+              show: ['.id', '.meta'],
+              hide: ['.metrics'],
+            },
+            {
+              extend: 'colvisGroup',
+              text: 'All',
+              show: ':hidden',
+            },
+          ]
+        })
     
-          // Insert column filter button group
-          table.buttons().container().prependTo( $('#tasks_table_filter') )
+        // Insert column filter button group
+        table.buttons().container().prependTo($('#tasks_table_filter'))
     
-          // Column filter button group onClick event to highlight active filter
-          $('.buttons-colvisGroup').click(function(){
-            var def = 'btn-secondary'
-            var sel = 'btn-primary'
-            $('.buttons-colvisGroup').removeClass(sel).addClass(def)
-            $(this).addClass(sel).removeClass(def)
-          })
+        // Column filter button group onClick event to highlight active filter
+        $('.buttons-colvisGroup').click(function () {
+          var def = 'btn-secondary'
+          var sel = 'btn-primary'
+          $('.buttons-colvisGroup').removeClass(sel).addClass(def)
+          $(this).addClass(sel).removeClass(def)
+        })
     
-          // Default filter highlight
-          $(".buttons-colvisGroup:contains('All')").click()
+        // Default filter highlight
+        $(".buttons-colvisGroup:contains('All')").click()
       }
     
       // Executor for task table creation (on page load)
-      if( window.data.trace==null ) {
-          // Hide tasks table if too many tasks are present
-          $('#tasks-present-table').remove()
+      if (window.data.trace == null) {
+        // Hide tasks table if too many tasks are present
+        $('#tasks-present-table').remove()
       }
       else {
-          $('#tasks-omitted-table').remove()
-          // Dropdown changed about raw / human readable values in table
-          $('#nf-table-humanreadable').change(function(){
-            make_tasks_table()
-          })
-          // Make the table on page load
+        $('#tasks-omitted-table').remove()
+        // Dropdown changed about raw / human readable values in table
+        $('#nf-table-humanreadable').change(function () {
           make_tasks_table()
+        })
+        // Make the table on page load
+        make_tasks_table()
       }
     
       /**
        * Function to create the table of options / configurations
        */
-      function make_options_table(){
+      function make_options_table() {
         // reset
-        if ( $.fn.dataTable.isDataTable( '#options_table' ) ) {
+        if ($.fn.dataTable.isDataTable('#options_table')) {
           $('#options_table').DataTable().destroy()
         }
     
         var table = $('#options_table').DataTable({
           data: window.options,
           columns: [
-              { title: "Option", data: "option" },
-              { title: "Value", data: "value" }
-            ],
-            "deferRender": true,
-            "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
+            { title: "Option", data: "option" },
+            { title: "Value", data: "value" }
+          ],
+          "deferRender": true,
+          "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
         })
       }
     
@@ -882,7 +882,7 @@
           timePoints.add(task.start.time)
           timePoints.add(task.complete.time)
         }
-        const sortedTimes = Array.from(timePoints).sort((a,b) => a-b)
+        const sortedTimes = Array.from(timePoints).sort((a, b) => a - b)
     
         // Define first and last point
         var [tasksStart, tasksEnd] = [sortedTimes[0], sortedTimes[sortedTimes.length - 1]]
@@ -917,7 +917,7 @@
         for (let [key, value] of Object.entries(window.ciRecords)) {
           ciRecords.set(new Date(key), value)
         }
-        ciRecords = new Map([...ciRecords.entries()].sort((a,b) => a[0]-b[0]))
+        ciRecords = new Map([...ciRecords.entries()].sort((a, b) => a[0] - b[0]))
     
         if (ciRecords.size == 0) {
           ciRecords.set(tasksStart, window.data.trace[0].ci.raw.value)
@@ -934,7 +934,7 @@
           }
         }
     
-        ciRecords = new Map([...ciRecords.entries()].sort((a,b) => a[0]-b[0]))
+        ciRecords = new Map([...ciRecords.entries()].sort((a, b) => a[0] - b[0]))
         // Step plot for carbon intensity
         var previousValue = null
         var timestamps = []
@@ -958,48 +958,65 @@
             mode: "lines+markers",
             line: { color: "grey" },
             marker: { color: "grey" },
+            line: { shape: "hv", width: 2, color: "grey" },
+            // Clean hover with units; x is formatted by hoverformat in layout
+            hovertemplate:
+              "CI: %{y:.1f} g/kWh<extra></extra>",
           }
         )
     
         // Add energy trace to plot
         ci_plot_data.push(
           {
-            name:"Energy consumption",
+            name: "Energy consumption",
             x: timeSteps, y: totalEnergy,
             type: "scatter",
             fill: "tozeroy", yaxis: "y2",
-            line: { color: "#FFCC00", shape: "hv" },
+            line: { shape: "hv", width: 2, color: "#FFCC00" },
+            hovertemplate:
+              "Energy: %{y:.4f} kWh<extra></extra>",
           }
         )
     
         // Layout:
         var ci_layout = {
-          title: {text: 'Carbon intensity index'},
+          title: { text: "Carbon intensity & energy over time" },
+          margin: { l: 70, r: 70, t: 60, b: 60 },
           legend: {
-            x: 1.1
+            x: 1.05,
+            y: 1,
+            xanchor: "left",
+            yanchor: "top",
           },
           xaxis: {
-            title: {text: 'Time'},
-            ticklabelstandoff: 10,
-            overlay: 'x2',
+            title: { text: "Time" },
             range: [tasksStart, tasksEnd],
+            ticklabelstandoff: 10,
+            // Nice for long workflows:
+            rangeslider: { visible: true, thickness: 0.08 },
+            // Controls timestamp formatting in hover:
+            hoverformat: "%Y-%m-%d %H:%M",
           },
           yaxis: {
-            title: {text: 'Carbon Intensity (g/kWh)'},
-            rangemode: 'tozero',
+            title: { text: "Carbon intensity (g/kWh)" },
+            rangemode: "tozero",
+            zeroline: true,
           },
           yaxis2: {
-            title: {text: 'Energy consumption (kWh)'},
-            rangemode: 'tozero',
-            gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
-            overlaying: 'y',
-            side: 'right',
+            title: { text: "Energy (kWh)" },
+            rangemode: "tozero",
+            overlaying: "y",
+            side: "right",
+            showgrid: false,
+            zeroline: false,
           },
-          hovermode: 'x'
+          // Cleaner hover box:
+          hovermode: "x unified",
+          hoverlabel: { align: "left" },
         }
     
         // Create plot:
-        Plotly.newPlot('ci-plot', ci_plot_data, ci_layout)
+        Plotly.newPlot("ci-plot", ci_plot_data, ci_layout, { responsive: true })
       }
     
       // Executor for ci plot generation
@@ -1008,7 +1025,7 @@
 
     // Nextflow report data
     window.data = {"trace":[{"task_id":{"raw":{"value":"111","type":"str"},"readable":"111"},"hash":{"raw":{"value":null,"type":"str"},"readable":"-","report":"<div class=\"script_block short\"><code>-</code></div>"},"native_id":{"raw":{"value":null,"type":"str"},"readable":"-"},"process":{"raw":{"value":"observerTestProcess","type":"str"},"readable":"observerTestProcess"},"module":{"raw":{"value":null,"type":"str"},"readable":"-"},"container":{"raw":{"value":null,"type":"str"},"readable":"-"},"tag":{"raw":{"value":null,"type":"str"},"readable":"-"},"name":{"raw":{"value":null,"type":"str"},"readable":"-"},"status":{"raw":{"value":"COMPLETED","type":"str"},"readable":"COMPLETED","report":"<span class=\"badge badge-success\">COMPLETED</span>"},"exit":{"raw":{"value":null,"type":"str"},"readable":"-"},"submit":{"raw":{"value":null,"type":"DateTime","unit":"ms","description":"Unix time"},"readable":"-"},"start":{"raw":{"value":null,"type":"DateTime","unit":"ms","description":"Unix time"},"readable":"-"},"complete":{"raw":{"value":null,"type":"DateTime","unit":"ms","description":"Unix time"},"readable":"-"},"duration":{"raw":{"value":null,"type":"Duration","unit":"ms"},"readable":"-"},"realtime":{"raw":{"value":3600000,"type":"Duration","unit":"ms","scale":""},"readable":"1h","report":"1h"},"%cpu":{"raw":{"value":100.0,"type":"Percentage","unit":"","scale":"%"},"readable":"100.0%"},"%mem":{"raw":{"value":null,"type":"Percentage","unit":"%"},"readable":"-"},"rss":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"vmem":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"peak_rss":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"peak_vmem":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"rchar":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"wchar":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"syscr":{"raw":{"value":null,"type":"Number"},"readable":"-"},"syscw":{"raw":{"value":null,"type":"Number"},"readable":"-"},"read_bytes":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"write_bytes":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"attempt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"workdir":{"raw":{"value":null,"type":"str"},"readable":"-"},"script":{"raw":{"value":null,"type":"str"},"readable":"-"},"scratch":{"raw":{"value":null,"type":"str"},"readable":"-"},"queue":{"raw":{"value":null,"type":"str"},"readable":"-"},"cpus":{"raw":{"value":1,"type":"Number","unit":"","scale":""},"readable":"1"},"memory":{"raw":{"value":7516192768,"type":"Bytes","unit":"B","scale":""},"readable":"7 GB"},"disk":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"time":{"raw":{"value":3600000.0000,"type":"Duration","unit":"ms","scale":""},"readable":"1h","report":"1h"},"env":{"raw":{"value":null,"type":"str"},"readable":"-"},"error_action":{"raw":{"value":null,"type":"str"},"readable":"-"},"vol_ctxt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"inv_ctxt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"hostname":{"raw":{"value":null,"type":"str"},"readable":"-"},"cpu_model":{"raw":{"value":"Unknown model","type":"str"},"readable":"Unknown model"},"energy":{"raw":{"value":14.0175,"type":"Number","unit":"Wh","scale":""},"readable":"14.02 Wh"},"co2e":{"raw":{"value":6.7284,"type":"Number","unit":"g","scale":""},"readable":"6.73 g"},"co2eMarket":{"raw":{"value":null,"type":"Number","unit":"g"},"readable":"-"},"ci":{"raw":{"value":480.0,"type":"Number","unit":"gCO\u2082e/kWh","scale":""},"readable":"480 gCO\u2082e/kWh"},"cpuUsage":{"raw":{"value":100.0,"type":"Percentage","unit":"","scale":"%"},"readable":"100 %"},"powerdrawCPU":{"raw":{"value":11.41,"type":"Number","unit":"W","scale":""},"readable":"11.41 W"},"rawEnergyProcessor":{"raw":{"value":11.41,"type":"Number","unit":"Wh","scale":""},"readable":"11.41 Wh"},"rawEnergyMemory":{"raw":{"value":2.6075,"type":"Number","unit":"Wh","scale":""},"readable":"2.61 Wh"}}],"summary":{"observerTestProcess":{"co2e":[6.7284],"energy":[0.0140175],"co2e_non_cached":[6.7284],"energy_non_cached":[0.0140175]}}};
-    window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir11890369862519019914/report_test.html"},{"option":"summaryFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir11890369862519019914/summary_test.txt"},{"option":"traceFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir11890369862519019914/trace_test.txt"}];
+    window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir3251688762107949375/report_test.html"},{"option":"summaryFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir3251688762107949375/summary_test.txt"},{"option":"traceFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir3251688762107949375/trace_test.txt"}];
     window.ciRecords = {};
   </script>
 
@@ -1059,7 +1076,7 @@
       <dl>
         <dt>Run times</dt>
         <dd>
-          <span id="workflow_start">11-Feb-2026 11:12:35</span> - <span id="workflow_complete">11-Feb-2026 11:12:35</span>
+          <span id="workflow_start">12-Feb-2026 16:58:18</span> - <span id="workflow_complete">12-Feb-2026 16:58:18</span>
           (<span id="completed_fromnow"></span>duration: <strong>null</strong>)
         </dd>
 
@@ -1200,7 +1217,7 @@
 
     <!-- CI records plot -->
     <div class="container">
-      <h3 id="ci-records">Carbon intensity records</h3>
+      <h3 id="ci-records">Carbon intensity & energy usage timeline</h3>
       <div id="ci-plot"></div>
       <p class="mt-3 mb-3">This plot shows the fluctuation of carbon intensity (CI) during workflow computation and the energy consumption of individual tasks. Together, these two factors determine the emitted CO₂e.</p>
     </div>
