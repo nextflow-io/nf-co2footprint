@@ -111,4 +111,4 @@ The following parameters are currently available:
 
     Example custom CPU power model:
 
-    <img src="../assets/example_powerdraw_function_linear.png" alt="Example custom CPU power model" width="700"/>
+    <img src="../assets/custom_powerdraw_function_linear_gh_pages.png" alt="Example custom CPU power model" width="700"/>
