@@ -41,6 +41,11 @@ class CO2Record extends TraceRecord {
             'cpus', 'powerdrawCPU', 'cpu_model', 'rawEnergyProcessor', 'rawEnergyMemory'
     ]
 
+    // Trace fields to exclude (only the problematic timestamp fields that accumulate)
+    static final Set<String> excludedTraceFields = [
+            'submit', 'start', 'complete'   // Timing fields that accumulate as arrays during execution
+    ] as Set
+
     // Stores non-CO₂ keys from the trace record and store them as traceKeys
     final List<String> traceKeys
 
@@ -58,7 +63,7 @@ class CO2Record extends TraceRecord {
      * @param store Map with all objects to be stores in this CO2Record
      */
     CO2Record(Map<String, Object> store) {
-        traceKeys = store.keySet().findAll({ String key -> key !in co2Keys }) as List<String>
+        traceKeys = store.keySet().findAll({ String key -> key !in co2Keys && key !in excludedTraceFields }) as List<String>
         putAll(store)
     }
 
@@ -84,9 +89,16 @@ class CO2Record extends TraceRecord {
         Double cpuUsage, Long memory, Double time,  Integer cpus, Double powerdrawCPU,
         String cpu_model, Double rawEnergyProcessor, Double rawEnergyMemory
     ) {
-        // Add trace Record values
-        traceKeys = traceRecord.store.keySet() as List<String>
-        putAll(traceRecord.store)
+        // Filter out excluded trace fields before copying
+        Map<String, Object> filteredStore = traceRecord.store.findAll { String key, Object value ->
+            key !in excludedTraceFields
+        } as Map<String, Object>
+        
+        // Track only useful non-CO₂ trace fields
+        traceKeys = filteredStore.keySet().findAll({ String key -> key !in co2Keys }) as List<String>
+        
+        // Add filtered trace fields
+        putAll(filteredStore)
 
         // Define CO2-specific storage
         Map<String, Object> store = new LinkedHashMap<>([
