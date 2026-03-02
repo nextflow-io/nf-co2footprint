@@ -13,7 +13,7 @@ class SessionTraceRecorderTest extends Specification{
         sleep(1000)
         sessionTraceRecorder.stop()
 
-        TraceRecord record = sessionTraceRecorder.record
+        TraceRecord record = sessionTraceRecorder.sessionRecord
 
         then:
         [
@@ -53,7 +53,7 @@ class SessionTraceRecorderTest extends Specification{
         sessionTraceRecorder.samples.add(sample2)
         sessionTraceRecorder.stop()
 
-        TraceRecord record = sessionTraceRecorder.record
+        TraceRecord record = sessionTraceRecorder.sessionRecord
 
         then:
         sessionTraceRecorder.samples == [sample1, sample2]

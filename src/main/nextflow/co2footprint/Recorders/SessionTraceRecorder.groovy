@@ -4,7 +4,6 @@ import nextflow.Session
 import nextflow.trace.TraceRecord
 import oshi.SystemInfo
 import oshi.hardware.CentralProcessor
-import oshi.hardware.GlobalMemory
 import oshi.software.os.OSProcess
 import oshi.software.os.OperatingSystem
 
@@ -33,13 +32,13 @@ class SessionTraceRecorder {
 
     // Aggregation
     final List<RecordSample> samples = [].asSynchronized() as List<RecordSample>
-    final TraceRecord record = new TraceRecord()
+    final TraceRecord sessionRecord = new TraceRecord()
 
     /**
      * Start the recording of a session.
      */
     void start() {
-        record.putAll(
+        sessionRecord.putAll(
                 [
                         container:      'JVM',
                         tag:            'Session',
@@ -62,7 +61,7 @@ class SessionTraceRecorder {
 
         timer.scheduleAtFixedRate(new TimerTask() { void run() { sample(pid) } } , 0, 500)
 
-        record.putAll(
+        sessionRecord.putAll(
                 [
                         task_id:        session.uniqueId as String,
                         hash:           session.hashCode(),
@@ -71,30 +70,26 @@ class SessionTraceRecorder {
                         name:           session.getRunName(),
                         status:         'STARTED',
                         start:          System.currentTimeMillis(),
-                        attempt:        record.get('attempt') + 1
+                        attempt:        sessionRecord.get('attempt') + 1
                 ]
         )
     }
 
     /**
-     * Stop the sampling and finish accumulating the information in the TraceRecord.
+     * Create a finalized session specific {@link TraceRecord} from the current samples.
      */
-    void stop() {
+    TraceRecord report() {
         long endTimestamp = System.currentTimeMillis()
-
-        timer.cancel()
-        timer.purge()
-
-        record.putAll(
+        sessionRecord.putAll(
                 [
                         status:         'COMPLETED',
                         complete:       endTimestamp,
-                        duration:       endTimestamp - (record.get('submit') as long),
+                        duration:       endTimestamp - (sessionRecord.get('submit') as long),
                         realtime:       runtimeBean.uptime,
                 ]
         )
         if (samples) {
-            record.putAll(
+            sessionRecord.putAll(
                     [
                             '%cpu':         samples.collect({RecordSample sample -> sample.cpuUsage}).average() * 100,
                             rss:            samples.collect({RecordSample sample -> sample.rssBytes}).average() as Long,
@@ -108,6 +103,16 @@ class SessionTraceRecorder {
                     ]
             )
         }
+
+        return sessionRecord
+    }
+
+    /**
+     * Stop the sampling and finish accumulating the information in the TraceRecord.
+     */
+    void stop() {
+        timer.cancel()
+        timer.purge()
     }
 
     /**
