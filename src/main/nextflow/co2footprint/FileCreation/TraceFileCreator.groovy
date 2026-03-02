@@ -41,7 +41,7 @@ class TraceFileCreator extends BaseFileCreator {
      * @param path      Path to the trace file
      * @param overwrite Whether to overwrite existing files
      */
-    TraceFileCreator(Path path, boolean overwrite) {
+    TraceFileCreator(Path path, boolean overwrite=true) {
         super(path, overwrite)
     }
 

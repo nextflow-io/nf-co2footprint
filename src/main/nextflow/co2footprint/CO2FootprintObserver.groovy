@@ -42,12 +42,6 @@ class CO2FootprintObserver implements TraceObserver {
     SummaryFileCreator summaryFile
     ReportFileCreator reportFile
 
-    // Overwrite existing files if true
-    private boolean overwrite
-
-    // Max number of tasks allowed in the report, when they exceed this number the tasks table is omitted
-    private int maxTasks
-
     // Plugin configuration
     CO2FootprintConfig config
 
@@ -79,9 +73,7 @@ class CO2FootprintObserver implements TraceObserver {
             Session session,
             String version,
             CO2FootprintConfig config,
-            CO2FootprintCalculator co2FootprintComputer,
-            boolean overwrite=true,
-            int maxTasks=10_000
+            CO2FootprintCalculator co2FootprintComputer
     ) {
         this.session = session
         this.version = version
@@ -93,20 +85,18 @@ class CO2FootprintObserver implements TraceObserver {
 
         // Make file instances
         if (config.trace && config.trace.enabled) {
-            this.traceFile = new TraceFileCreator(config.trace.file.complete(), overwrite)
+            this.traceFile = new TraceFileCreator(config.trace.file.complete())
         }
 
         if (config.summary && config.summary.enabled) {
-            this.summaryFile = new SummaryFileCreator(config.summary.file.complete(), overwrite)
+            this.summaryFile = new SummaryFileCreator(config.summary.file.complete())
         }
 
         if (config.report && config.report.enabled) {
-            this.reportFile = new ReportFileCreator(config.report.file.complete(), overwrite, maxTasks)
+            this.reportFile = new ReportFileCreator(config.report.file.complete())
         }
 
         this.co2FootprintComputer = co2FootprintComputer
-        this.overwrite = overwrite
-        this.maxTasks = maxTasks
 
         this.timeCiRecordCollector = new CiRecordCollector(config)
     }

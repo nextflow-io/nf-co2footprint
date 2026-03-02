@@ -28,7 +28,7 @@ class SummaryFileCreator extends BaseFileCreator {
      * @param path      Path to the summary file
      * @param overwrite Whether to overwrite existing files
      */
-    SummaryFileCreator(Path path, boolean overwrite) {
+    SummaryFileCreator(Path path, boolean overwrite=true) {
         super(path, overwrite)
     }
 

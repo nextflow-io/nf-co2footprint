@@ -45,7 +45,7 @@ class ReportFileCreator extends BaseFileCreator{
      * @param overwrite Whether to overwrite existing files
      * @param maxTasks  Maximum number of tasks to include in the report table
      */
-    ReportFileCreator(Path path, boolean overwrite=false, int maxTasks=10_000) {
+    ReportFileCreator(Path path, boolean overwrite=true, int maxTasks=10_000) {
         super(path, overwrite)
         this.maxTasks = maxTasks
     }
