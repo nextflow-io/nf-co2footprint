@@ -18,6 +18,7 @@
 - Provided an CLI option to process execution trace files post-run
 - Added new raw energy consumption metrics into report and trace file
 - `cpus` is now at least `ceil(%cpu / 100)`
+- Tracking of whole session emissions
 
 # Version 1.1.0
 ## Bug Fixes:

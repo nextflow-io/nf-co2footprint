@@ -23,6 +23,8 @@ import nextflow.cli.PluginAbstractExec
 
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
+import nextflow.co2footprint.Recorders.RecordSample
+import nextflow.co2footprint.Recorders.SessionTraceRecorder
 import nextflow.co2footprint.Parsers.ArgsParser
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Parsers.TraceFileParser
@@ -42,9 +44,22 @@ import java.nio.file.Path
 @CompileStatic
 @Slf4j
 class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
+    static final SessionTraceRecorder sessionTraceRecorder = new SessionTraceRecorder()
 
     CO2FootprintPlugin(PluginWrapper wrapper) {
         super(wrapper)
+    }
+
+    @Override
+    void start() {
+        sessionTraceRecorder.start()
+        super.start()
+    }
+
+    @Override
+    void stop() {
+        sessionTraceRecorder.stop()
+        super.stop()
     }
 
     /**

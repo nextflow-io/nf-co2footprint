@@ -6,6 +6,7 @@ import nextflow.Session
 import nextflow.co2footprint.FileCreation.ReportFileCreator
 import nextflow.co2footprint.FileCreation.SummaryFileCreator
 import nextflow.co2footprint.FileCreation.TraceFileCreator
+import nextflow.co2footprint.Recorders.SessionTraceRecorder
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.co2footprint.Records.CiRecordCollector
@@ -202,6 +203,8 @@ class CO2FootprintObserver implements TraceObserver {
     @Override
     void onFlowCreate(Session session) {
         log.debug('Workflow started -- CO2Footprint file instantiated')
+
+        CO2FootprintPlugin.sessionTraceRecorder.attachSession(session)
 
         // Construct session and aggregator
         this.session = session
