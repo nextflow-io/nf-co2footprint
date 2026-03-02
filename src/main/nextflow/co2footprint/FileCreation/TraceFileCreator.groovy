@@ -2,12 +2,11 @@ package nextflow.co2footprint.FileCreation
 
 import groovy.util.logging.Slf4j
 import groovyx.gpars.agent.Agent
+import nextflow.co2footprint.Config.TraceFileConfig
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.processor.TaskId
 import nextflow.trace.TraceHelper
 import nextflow.trace.TraceRecord
-
-import java.nio.file.Path
 
 /**
  * Generates the CO₂ footprint trace file.
@@ -38,11 +37,16 @@ class TraceFileCreator extends BaseFileCreator {
     /**
      * Constructor for the trace file.
      *
-     * @param path      Path to the trace file
-     * @param overwrite Whether to overwrite existing files
+     * @param config A {@link TraceFileConfig} that defines the created file.
      */
-    TraceFileCreator(Path path, boolean overwrite=true) {
-        super(path, overwrite)
+    TraceFileCreator(TraceFileConfig config) {
+        super(config)
+
+        if(!config.enabled) {
+            this.metaClass.create = { -> null }
+            this.metaClass.write = { -> null }
+            this.metaClass.close = { -> null }
+        }
     }
 
     /**

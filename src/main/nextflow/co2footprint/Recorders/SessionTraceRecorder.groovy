@@ -70,7 +70,7 @@ class SessionTraceRecorder {
                         name:           session.getRunName(),
                         status:         'STARTED',
                         start:          System.currentTimeMillis(),
-                        attempt:        sessionRecord.get('attempt') + 1
+                        attempt:        sessionRecord.store.get('attempt', 0) + 1
                 ]
         )
     }

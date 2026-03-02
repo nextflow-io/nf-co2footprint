@@ -99,6 +99,14 @@ class CO2FootprintPluginTest extends Specification{
         return observers
     }
 
+    def 'check version' () {
+        when:
+        String pluginVersion = CO2FootprintPlugin.readPluginVersion()
+
+        then:
+        pluginVersion == "1.1.0"
+    }
+
     def 'Empty configuration'() {
         when:
         Session session = mockSession()

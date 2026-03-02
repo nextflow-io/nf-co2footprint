@@ -85,10 +85,11 @@ class ReportFileCreatorTest extends Specification{
         CO2RecordTree processTree =  workflowStats.addChild(new CO2RecordTree('process', [level: 'process']))
         processTree.addChild(new CO2RecordTree('task', [level: 'task'], co2Record))
 
-        co2FootprintReport = new ReportFileCreator(reportPath, false, 10_000)
+        ReportFileConfig reportFileConfig = new ReportFileConfig([file: reportPath])
+        co2FootprintReport = new ReportFileCreator(reportFileConfig)
         co2FootprintReport.addEntries(
                 workflowStats, new CO2FootprintCalculator(Mock(TDPDataMatrix), config),
-                config, 'test-version', session, timeCiRecordCollector
+                config, session, timeCiRecordCollector
         )
 
         workflowStats.summarize()
@@ -98,7 +99,8 @@ class ReportFileCreatorTest extends Specification{
     def 'Test correct value rendering for totalsJson' () {
         given:
         Path tempPath = Files.createTempDirectory('tmpdir')
-        ReportFileCreator co2FootprintReport = new ReportFileCreator(tempPath.resolve('report_test.html'))
+        ReportFileConfig reportFileConfig = new ReportFileConfig([file: tempPath.resolve('report_test.html')])
+        ReportFileCreator co2FootprintReport = new ReportFileCreator(reportFileConfig)
 
         when:
         CO2RecordTree workflowStats = new CO2RecordTree('workflow', [level: 'workflow'])

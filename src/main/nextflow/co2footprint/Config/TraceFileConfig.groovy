@@ -1,5 +1,6 @@
 package nextflow.co2footprint.Config
 
+import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.config.spec.ConfigScope
 import nextflow.config.spec.ScopeName
 import nextflow.script.dsl.Description
@@ -9,5 +10,7 @@ import nextflow.script.dsl.Description
 class TraceFileConfig extends BaseFileConfig implements ConfigScope{
     TraceFileConfig(Map traceFileConfig, String timestamp=null) {
         super(traceFileConfig, timestamp, 'trace', 'txt')
+
+        CO2FootprintConfig.checkKeyUsage(traceFileConfig, usedKeys)
     }
 }

@@ -18,16 +18,15 @@ package nextflow.co2footprint
 
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
-
 import nextflow.cli.PluginAbstractExec
 
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
-import nextflow.co2footprint.Recorders.RecordSample
 import nextflow.co2footprint.Recorders.SessionTraceRecorder
 import nextflow.co2footprint.Parsers.ArgsParser
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Parsers.TraceFileParser
+import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.config.ConfigParserFactory
 import nextflow.config.ConfigParser
 import nextflow.plugin.BasePlugin
@@ -35,6 +34,7 @@ import nextflow.trace.TraceRecord
 import org.pf4j.PluginWrapper
 
 import java.nio.file.Path
+import java.nio.file.Paths
 
 /**
  * Implements the CO2Footprint plugins entry point
@@ -44,7 +44,14 @@ import java.nio.file.Path
 @CompileStatic
 @Slf4j
 class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
+    // Record stats about the session
     static final SessionTraceRecorder sessionTraceRecorder = new SessionTraceRecorder()
+
+    // Plugin version
+    static final String version = readPluginVersion()
+
+    // Observer of Nextflow workflows/processes/tasks
+    static CO2FootprintObserver observer
 
     CO2FootprintPlugin(PluginWrapper wrapper) {
         super(wrapper)
@@ -52,6 +59,8 @@ class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
 
     @Override
     void start() {
+        log.info("nf-co2footprint plugin  ~  version ${version}")
+
         sessionTraceRecorder.start()
         super.start()
     }
@@ -59,7 +68,53 @@ class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
     @Override
     void stop() {
         sessionTraceRecorder.stop()
+        TraceRecord sessionRecord = sessionTraceRecorder.report()
+
+        CO2Record sessionCO2Record = observer.createCO2Record(sessionRecord)
+        observer.timeCiRecordCollector.stop()
+
+        CO2RecordTree sessionStats = new CO2RecordTree(
+                observer.session?.runName,
+                [level: 'session'],
+                sessionCO2Record,
+                null,
+                [observer.workflowStats]
+        )
+
+        observer.renderFiles()
+
         super.stop()
+    }
+
+    /**
+     * Set the current plugin version from the local /META-INF/MANIFEST.MF
+     *
+     * @param manifest URL to the manifest
+     * @param tryFallback Whether a fallback in the form of a search of all MANIFESTS from the class loader should be attempted
+     */
+    protected static String readPluginVersion(
+            URL manifest=CO2FootprintPlugin.class.getResource('/META-INF/MANIFEST.MF'),
+            boolean tryFallback=true
+    ) {
+        try {
+            // Get version from manifest
+            List<String> lines = manifest.readLines()
+            String line = lines.find {String line -> line.startsWith('Plugin-Version: ') }
+            return line.split(': ')[1]
+        }
+        catch (NullPointerException nullPointerException) {
+            // Fallback to checking all classLoader Files
+            if (tryFallback) {
+                URL url = CO2FootprintPlugin.class.protectionDomain.codeSource.location
+                url = Paths.get(url.path.replace('/classes/groovy/main', '/tmp/jar/MANIFEST.MF')).toUri().toURL()
+
+                readPluginVersion(url, false)
+            }
+            else {
+                log.error(nullPointerException.getMessage())
+                throw nullPointerException
+            }
+        }
     }
 
     /**
@@ -114,7 +169,7 @@ class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
                     CIDataMatrix.ciDataMatrix, processConfig
             )
             CO2FootprintCalculator computer = new CO2FootprintCalculator(TDPDataMatrix.tdpDataMatrix, config)
-            CO2FootprintObserver observer = new CO2FootprintObserver(null, 'unknown', config, computer)
+            CO2FootprintObserver observer = new CO2FootprintObserver(null, config, computer)
 
             // Parse the trace file
             List<TraceRecord> traceRecords = TraceFileParser.parseExecutionTraceFile(tracePath)
