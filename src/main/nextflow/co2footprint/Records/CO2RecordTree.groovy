@@ -74,7 +74,10 @@ class CO2RecordTree {
             addableChildren = children.collect({ CO2RecordTree child -> child.summarize() })
         }
 
-        co2Record = addableChildren.collect( { CO2RecordTree child -> child.co2Record }).sum() as CO2Record
+        CO2Record childCO2Record = addableChildren.collect({ CO2RecordTree child -> child.co2Record }).sum() as CO2Record
+        if (!co2Record?.respondsTo('plus')) {
+            co2Record = childCO2Record
+        }
         return this
     }
 
@@ -177,6 +180,21 @@ class CO2RecordTree {
         }
 
         return levelValues
+    }
+
+    /**
+     * Descent to another level in the tree.
+     *
+     * @param level Name of the level.
+     * @return A list of record trees at the specified level.
+     */
+    List<CO2RecordTree> descentTo(String level) {
+        if (metaData?.level === level) {
+            return [this]
+        }
+        else {
+            return children.collect( { CO2RecordTree child -> child.descentTo(level) } ).flatten() as List<CO2RecordTree>
+        }
     }
 
     /**

@@ -19,6 +19,7 @@
 - Added new raw energy consumption metrics into report and trace file
 - `cpus` is now at least `ceil(%cpu / 100)`
 - Tracking of whole session emissions
+- Precursor of machine-actionable file
 
 # Version 1.1.0
 ## Bug Fixes:

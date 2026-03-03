@@ -226,32 +226,26 @@ class ReportFileCreator extends BaseFileCreator{
     /**
      * Collects statistics at the process level
      *
-     * @param workflowStats CO2RecordTree representation of workflow stats with marked levels
+     * @param stats CO2RecordTree representation of workflow stats with marked levels
      * @return Map of the process-specific statistics
      */
-    protected Map<String, Object> collectSummary(CO2RecordTree workflowStats=this.stats) {
+    protected Map<String, Object> collectSummary(CO2RecordTree stats=this.stats) {
         // Add an empty map if the process is not already present
-        return workflowStats.collectByLevel('process', ['co2e', 'energy', 'co2e_non_cached', 'energy_non_cached'])
+        return stats.collectByLevel('process', ['co2e', 'energy', 'co2e_non_cached', 'energy_non_cached'])
     }
 
 
     /**
      * Collect task-level metrics from the RecordTree up to a maximum number of tasks.
      *
-     * @param workflowStats CO2RecordTree with workflow, process, and task metrics
+     * @param stats CO2RecordTree with workflow, process, and task metrics
      * @return List of task value maps
      */
-    protected List<Map<String, Map<String, Object>>> collectTasks(CO2RecordTree workflowStats=this.stats){
+    protected List<Map<String, Map<String, Object>>> collectTasks(CO2RecordTree stats=this.stats){
         List<Map<String, Map<String, Object>>> results = []
-        for (CO2RecordTree processes : workflowStats.children) {
-            for (CO2RecordTree tasks : processes.children) {
-                if (results.size() < maxTasks) {
-                    results.add(tasks.toMap().get('values') as Map<String, Map<String, Object>>)
-                }
-                else {
-                    break
-                }
-            }
+        List<CO2RecordTree> taskRecordTrees = stats.descentTo('task')
+        for(int i = 0; i < Math.min(taskRecordTrees.size(), maxTasks); i++) {
+            results.add(taskRecordTrees[i].toMap().get('values') as Map<String, Map<String, Object>>)
         }
 
         return results

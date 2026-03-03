@@ -1,6 +1,7 @@
 package nextflow.co2footprint.Recorders
 
 import nextflow.Session
+import nextflow.processor.TaskRun
 import nextflow.trace.TraceRecord
 import oshi.SystemInfo
 import oshi.hardware.CentralProcessor
@@ -63,7 +64,7 @@ class SessionTraceRecorder {
 
         sessionRecord.putAll(
                 [
-                        task_id:        session.uniqueId as String,
+                        task_id:        '-1',
                         hash:           session.hashCode(),
                         native_id:      pid as String,
                         process:        session.getScriptName(),
@@ -91,6 +92,7 @@ class SessionTraceRecorder {
         if (samples) {
             sessionRecord.putAll(
                     [
+                            memory:         Runtime.getRuntime().maxMemory(),
                             '%cpu':         samples.collect({RecordSample sample -> sample.cpuUsage}).average() * 100,
                             rss:            samples.collect({RecordSample sample -> sample.rssBytes}).average() as Long,
                             vmem:           samples.collect({RecordSample sample -> sample.virtualMemoryBytes}).average() as Long,

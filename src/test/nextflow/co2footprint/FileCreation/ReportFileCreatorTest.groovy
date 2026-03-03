@@ -2,6 +2,7 @@ package nextflow.co2footprint.FileCreation
 
 import nextflow.Session
 import nextflow.co2footprint.CO2FootprintCalculator
+import nextflow.co2footprint.Config.DataFileConfig
 import nextflow.co2footprint.Config.ReportFileConfig
 import nextflow.co2footprint.Config.SummaryFileConfig
 import nextflow.co2footprint.Config.TraceFileConfig
@@ -27,7 +28,7 @@ class ReportFileCreatorTest extends Specification{
     Path reportPath = tempPath.resolve('report_test.html')
 
     @Shared
-    CO2RecordTree workflowStats
+    CO2RecordTree sessionStats
 
     @Shared
     CiRecordCollector timeCiRecordCollector
@@ -40,6 +41,7 @@ class ReportFileCreatorTest extends Specification{
                         'trace': ['enabled': true, 'file': tempPath],
                         'summary': ['enabled': true, 'file': tempPath],
                         'report': ['enabled': true, 'file': reportPath],
+                        'dataFile': [enabled: true, file: tempPath],
                         'ci': 475.0
                 ],
                 Mock(TDPDataMatrix),
@@ -69,6 +71,7 @@ class ReportFileCreatorTest extends Specification{
                     'trace': new TraceFileConfig(['enabled': true, 'file': tempPath]),
                     'summary': new SummaryFileConfig(['enabled': true, 'file': tempPath]),
                     'report': new ReportFileConfig(['enabled': true, 'file': reportPath]),
+                    'dataFile': new DataFileConfig([enabled: true, file: tempPath]),
                     'ci': 475.0
                 ]
             ]
@@ -81,19 +84,20 @@ class ReportFileCreatorTest extends Specification{
             traceRecord, 100.0d, 10.0d, null, 475.0, 100.0, 7,
             1.0d, 1, 12, 'Unknown model', 0.5d, 0.5d
         )
-        workflowStats = new CO2RecordTree('workflow', [level: 'workflow'])
+        sessionStats = new CO2RecordTree(name: 'session', [level: 'session'])
+        CO2RecordTree workflowStats = sessionStats.addChild(new CO2RecordTree('workflow', [level: 'workflow']))
         CO2RecordTree processTree =  workflowStats.addChild(new CO2RecordTree('process', [level: 'process']))
         processTree.addChild(new CO2RecordTree('task', [level: 'task'], co2Record))
 
         ReportFileConfig reportFileConfig = new ReportFileConfig([file: reportPath])
         co2FootprintReport = new ReportFileCreator(reportFileConfig)
         co2FootprintReport.addEntries(
-                workflowStats, new CO2FootprintCalculator(Mock(TDPDataMatrix), config),
+                sessionStats, new CO2FootprintCalculator(Mock(TDPDataMatrix), config),
                 config, session, timeCiRecordCollector
         )
 
-        workflowStats.summarize()
-        workflowStats.collectAdditionalMetrics()
+        sessionStats.summarize()
+        sessionStats.collectAdditionalMetrics()
     }
 
     def 'Test correct value rendering for totalsJson' () {
@@ -103,7 +107,8 @@ class ReportFileCreatorTest extends Specification{
         ReportFileCreator co2FootprintReport = new ReportFileCreator(reportFileConfig)
 
         when:
-        CO2RecordTree workflowStats = new CO2RecordTree('workflow', [level: 'workflow'])
+        sessionStats = new CO2RecordTree(name: 'session', [level: 'session'])
+        CO2RecordTree workflowStats = sessionStats.addChild(new CO2RecordTree('workflow', [level: 'workflow']))
         CO2RecordTree processTree =  workflowStats.addChild(new CO2RecordTree('process', [level: 'process']))
         CO2Record co2Record = new CO2Record(
                 new TraceRecord(), 100.0, co2e,
@@ -111,12 +116,12 @@ class ReportFileCreatorTest extends Specification{
         )
 
         processTree.addChild(new CO2RecordTree('task', [level: 'task'], co2Record))
-        workflowStats.summarize()
-        workflowStats.collectAdditionalMetrics()
+        sessionStats.summarize()
+        sessionStats.collectAdditionalMetrics()
 
         co2FootprintReport.addEntries(
-                workflowStats, new CO2FootprintCalculator(Mock(TDPDataMatrix), null),
-                null, null, null, timeCiRecordCollector
+                sessionStats, new CO2FootprintCalculator(Mock(TDPDataMatrix), null),
+                null, null, timeCiRecordCollector
         )
         Map<String, String> totalsJson = co2FootprintReport.renderCO2TotalsJson()
 
@@ -149,6 +154,7 @@ class ReportFileCreatorTest extends Specification{
                     '{"option":"ci","value":"475.0"},'+
                     '{"option":"ciMarket","value":null},' +
                     '{"option":"customCpuTdpFile","value":null},' +
+                    "{\"option\":\"dataFile\",\"value\":\"${tempPath}\"}," +
                     '{"option":"ignoreCpuModel","value":"false"},' +
                     '{"option":"location","value":null},' +
                     '{"option":"machineType","value":null},' +

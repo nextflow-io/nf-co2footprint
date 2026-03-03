@@ -81,7 +81,8 @@ class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
                 [observer.workflowStats]
         )
 
-        observer.renderFiles()
+        // Render files
+        observer.renderFiles(sessionStats)
 
         super.stop()
     }
