@@ -207,6 +207,7 @@ class CO2FootprintObserverTest extends Specification{
         observer.onProcessStart(taskHandler, traceRecord)
         observer.onProcessComplete(taskHandler, traceRecord)
         observer.onFlowComplete()
+        observer.renderFiles()
 
         then:
         //

@@ -218,6 +218,8 @@ class CO2FootprintObserver implements TraceObserver {
         // Stop hourly CI updating
         timeCiRecordCollector.stop()
 
+        workflowStats.summarize()
+
         log.info(
             "🌱 The workflow run used ${workflowStats.co2Record.toReadable('energy')} of electricity, " +
             "resulting in the release of ${workflowStats.co2Record.toReadable('co2e')} of CO₂ equivalents into the atmosphere."

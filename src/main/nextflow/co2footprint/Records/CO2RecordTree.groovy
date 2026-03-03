@@ -68,16 +68,17 @@ class CO2RecordTree {
      * @return this RecordTree node with aggregated summary values
      */
     CO2RecordTree summarize() {
+
+        if (co2Record?.respondsTo('plus')) {
+            return this
+        }
         List<CO2RecordTree> addableChildren = children.findAll( { CO2RecordTree child -> child.co2Record?.respondsTo('plus') } )
 
         if (!addableChildren) {
             addableChildren = children.collect({ CO2RecordTree child -> child.summarize() })
         }
 
-        CO2Record childCO2Record = addableChildren.collect({ CO2RecordTree child -> child.co2Record }).sum() as CO2Record
-        if (!co2Record?.respondsTo('plus')) {
-            co2Record = childCO2Record
-        }
+        co2Record = addableChildren.collect({ CO2RecordTree child -> child.co2Record }).sum() as CO2Record
         return this
     }
 

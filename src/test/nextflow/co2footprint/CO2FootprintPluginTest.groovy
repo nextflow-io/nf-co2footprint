@@ -95,6 +95,7 @@ class CO2FootprintPluginTest extends Specification{
         observer.onProcessStart(taskHandler, traceRecord)
         observer.onProcessComplete(taskHandler, traceRecord)
         observer.onFlowComplete()
+        observer.renderFiles()
 
         return observers
     }
