@@ -74,16 +74,16 @@ The following parameters are currently available:
   **Default**: 0.3725.
   
 - **`customCpuTdpFile`**  
-  Input CSV file containing custom CPU TDP data. This should contain the following columns: `name`, `tdp (W)`, `cores`. Note that this overwrites TDP values for already provided CPU models. You can find the by default used TDP data [here](https://github.com/nextflow-io/nf-co2footprint/blob/master/src/resources/cpu_tdp_data/CPU_TDP.csv).  
+  Input CSV file containing custom CPU TDP data. This should contain the following columns: `name`, `tdp (W)`, `logicalCores`. Note that this overwrites TDP values for already provided CPU models. You can find the by default used TDP data [here](https://github.com/nextflow-io/nf-co2footprint/blob/master/src/resources/cpu_tdp_data/CPU_TDP.csv).  
   **Default**: `null`.
 
     Example custom CPU TDP table: <a id="custom-tdp-table"></a>
 
-    | name                            | tdp (W) | cores |
-    |---------------------------------|---------|-------|
-    | Intel(R) Xeon(R) CPU E5-2670 v3 | 120     | 12    |
-    | AMD EPYC 7742                   | 225     | 64    |
-    | Intel(R) Core(TM) i7-9700K      | 95      | 8     |
+    | name                            | tdp (W) | logicalCores |
+    |---------------------------------|---------|--------------|
+    | Intel(R) Xeon(R) CPU E5-2670 v3 | 120     | 24           |
+    | AMD EPYC 7742                   | 225     | 128          |
+    | Intel(R) Core(TM) i7-9700K      | 95      | 16           |
 
     !!! Note "File format"
         The table has to be supplied in [.csv](https://www.wikihow.com/Create-a-CSV-File) format.
@@ -94,8 +94,7 @@ The following parameters are currently available:
 
 - **`powerdrawCpuDefault`**  
   The default value used as the power draw from a computing core.
-  This is only applied if the parameter `ignoreCpuModel` is set or if the retrieved `cpu_model` could not be found in the given CPU TDP data.  
-  **Default**: 12.0.
+  This is only applied if the parameter `ignoreCpuModel` is set or if the retrieved `cpu_model` could not be found in the given CPU TDP data.
   
 
 - **`cpuPowerModel`**  
