@@ -1,5 +1,8 @@
 package nextflow.co2footprint.Recorders
 
+/**
+ * A sample of a process record with trace metrics.
+ */
 class RecordSample {
     long timestamp
 

@@ -8,7 +8,7 @@ import java.nio.file.Path
 
 class CO2FootprintCLITest extends  Specification {
     @Shared
-    FileChecker fileChecker = new FileChecker(Path.of(this.class.getResource('/cli/file_checks.json').toURI()))
+    FileChecker fileChecker = new FileChecker()
 
     private Path outPath = Path.of(this.class.getResource('.').toURI()).complete().resolve('cli').resolve('out')
     private File outputDirectory = outPath.toFile()

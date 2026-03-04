@@ -30,7 +30,7 @@ The following parameters are currently available:
     - `overwrite`: whether to overwrite the file, if it already exists.
     - `maxTasks`: maximum number of tasks which are included into the report.
 
-    **Default**: `[enabled: true, file: co2footprint_report_<timestamp>.html, overwrite: true]`
+    **Default**: `[enabled: true, file: co2footprint_report_<timestamp>.html, overwrite: true, maxTasks: 10000]`
 
 - **`dataFile`**  
   Map containing:

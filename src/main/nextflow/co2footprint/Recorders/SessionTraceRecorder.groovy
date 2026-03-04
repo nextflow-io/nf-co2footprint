@@ -13,6 +13,10 @@ import java.lang.management.RuntimeMXBean
 
 import com.sun.management.OperatingSystemMXBean
 
+/**
+ * A Recorder of trace values for a Nextflow session, which can be attached after startup
+ * to capture timepoints before workflow invocation.
+ */
 class SessionTraceRecorder {
     // OSHI info handles
     private final RuntimeMXBean          runtimeBean = ManagementFactory.getRuntimeMXBean()
