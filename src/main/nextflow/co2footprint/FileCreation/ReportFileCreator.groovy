@@ -49,7 +49,9 @@ class ReportFileCreator extends BaseFileCreator{
             this.metaClass.create = { -> null }
             this.metaClass.write = { -> null }
             this.metaClass.close = { -> null }
-            this.metaClass.addEntries = { -> null }
+            this.metaClass.addEntries = {
+                CO2RecordTree X, CO2FootprintCalculator Y, CO2FootprintConfig Z, Session A, CiRecordCollector B -> null
+            }
         }
     }
 
@@ -58,17 +60,15 @@ class ReportFileCreator extends BaseFileCreator{
      *
      * @param stats         The {@link CO2RecordTree} with all stats.
      * @param config        Plugin configuration
-     * @param session       Nextflow session
-     * @param traceRecords  Map of TaskId to TraceRecord
-     * @param co2eRecords   Map of TaskId to CO2Record
      * @param timeCiRecordCollector   Time & CI Record collector that contains a map of all carbon intensities at different times
+     * @param session       Nextflow session
      */
     void addEntries(
             CO2RecordTree stats,
             CO2FootprintCalculator co2FootprintComputer,
             CO2FootprintConfig config,
-            Session session,
-            CiRecordCollector timeCiRecordCollector
+            CiRecordCollector timeCiRecordCollector,
+            Session session = null
     ) {
         this.stats = stats
         this.co2FootprintComputer = co2FootprintComputer

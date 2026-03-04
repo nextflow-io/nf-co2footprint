@@ -28,9 +28,6 @@ class ReportFileCreatorTest extends Specification{
     Path reportPath = tempPath.resolve('report_test.html')
 
     @Shared
-    CO2RecordTree sessionStats
-
-    @Shared
     CiRecordCollector timeCiRecordCollector
 
     static ReportFileCreator co2FootprintReport
@@ -84,17 +81,20 @@ class ReportFileCreatorTest extends Specification{
             traceRecord, 100.0d, 10.0d, null, 475.0, 100.0, 7,
             1.0d, 1, 12, 'Unknown model', 0.5d, 0.5d
         )
-        sessionStats = new CO2RecordTree(name: 'session', [level: 'session'])
+
+        // Define Record treee
+        CO2RecordTree sessionStats = new CO2RecordTree('session', [level: 'session'])
         CO2RecordTree workflowStats = sessionStats.addChild(new CO2RecordTree('workflow', [level: 'workflow']))
         CO2RecordTree processTree =  workflowStats.addChild(new CO2RecordTree('process', [level: 'process']))
         processTree.addChild(new CO2RecordTree('task', [level: 'task'], co2Record))
 
+        // Define calculator
+        CO2FootprintCalculator calculator = new CO2FootprintCalculator(Mock(TDPDataMatrix), config)
+
+        // Define report file
         ReportFileConfig reportFileConfig = new ReportFileConfig([file: reportPath])
         co2FootprintReport = new ReportFileCreator(reportFileConfig)
-        co2FootprintReport.addEntries(
-                sessionStats, new CO2FootprintCalculator(Mock(TDPDataMatrix), config),
-                config, session, timeCiRecordCollector
-        )
+        co2FootprintReport.addEntries(sessionStats, calculator, config, timeCiRecordCollector, session)
 
         sessionStats.summarize()
         sessionStats.collectAdditionalMetrics()
@@ -107,7 +107,7 @@ class ReportFileCreatorTest extends Specification{
         ReportFileCreator co2FootprintReport = new ReportFileCreator(reportFileConfig)
 
         when:
-        sessionStats = new CO2RecordTree(name: 'session', [level: 'session'])
+        CO2RecordTree sessionStats = new CO2RecordTree('session', [level: 'session'])
         CO2RecordTree workflowStats = sessionStats.addChild(new CO2RecordTree('workflow', [level: 'workflow']))
         CO2RecordTree processTree =  workflowStats.addChild(new CO2RecordTree('process', [level: 'process']))
         CO2Record co2Record = new CO2Record(
@@ -119,10 +119,8 @@ class ReportFileCreatorTest extends Specification{
         sessionStats.summarize()
         sessionStats.collectAdditionalMetrics()
 
-        co2FootprintReport.addEntries(
-                sessionStats, new CO2FootprintCalculator(Mock(TDPDataMatrix), null),
-                null, null, timeCiRecordCollector
-        )
+        CO2FootprintCalculator co2FootprintCalculator = new CO2FootprintCalculator(Mock(TDPDataMatrix), null)
+        co2FootprintReport.addEntries(sessionStats, co2FootprintCalculator, null, timeCiRecordCollector)
         Map<String, String> totalsJson = co2FootprintReport.renderCO2TotalsJson()
 
         then:

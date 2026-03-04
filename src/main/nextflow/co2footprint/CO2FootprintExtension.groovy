@@ -1,6 +1,7 @@
 package nextflow.co2footprint
 
 import nextflow.Session
+import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Parsers.TraceFileParser
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.plugin.extension.Function
@@ -19,12 +20,17 @@ class CO2FootprintExtension extends PluginExtensionPoint {
     CO2FootprintFactory factory
 
     /**
+     * Instance of the current session.
+     */
+    Session session
+
+    /**
      * Initializes the Extension point of the plugin with the session to create an observer.
      */
     @Override
     void init(Session session) {
         factory = new CO2FootprintFactory()
-        factory.create(session)[0]
+        this.session = session
     }
 
     /**
@@ -47,13 +53,14 @@ class CO2FootprintExtension extends PluginExtensionPoint {
      * @return A {@link List} of {@link CO2Record}s that were extracted from the given tasks
      */
     @Function
-    List<CO2Record> calculateCO2(
+    Output calculateCO2(
             Path tracePath,
             Map<String, Object> configModifications=null
     ){
         // Define separate observer
-        CO2FootprintConfig config = factory.defineConfig(configModifications)
-        CO2FootprintObserver observer = factory.defineObserver(config)
+        CO2FootprintConfig config = factory.defineConfig(configModifications, session)
+        CO2FootprintCalculator calculator = new CO2FootprintCalculator(TDPDataMatrix.tdpDataMatrix, config)
+        CO2FootprintObserver observer = new CO2FootprintObserver(config, calculator)
 
         // Parse the trace file
         List<TraceRecord> traceRecords = parseTraceFile(tracePath)
@@ -69,6 +76,19 @@ class CO2FootprintExtension extends PluginExtensionPoint {
         }
         observer.renderFiles()
 
-        return co2Records
+        return new Output(co2Records, config)
+    }
+
+    /**
+     * Structure for Extension output.
+     */
+    class Output {
+        List<CO2Record> co2Records
+        CO2FootprintConfig config
+
+        Output(List<CO2Record> co2Records, CO2FootprintConfig config) {
+            this.co2Records = co2Records
+            this.config = config
+        }
     }
 }

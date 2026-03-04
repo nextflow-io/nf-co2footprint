@@ -151,7 +151,7 @@ class CO2FootprintObserverTest extends Specification{
         observer.onFlowComplete()
 
         CO2EquivalencesRecord co2EquivalencesRecord = observer
-            .getCO2FootprintComputer()
+            .getCO2FootprintCalculator()
             .computeCO2footprintEquivalences(observer.workflowStats.co2Record.store.co2e as Double)
 
         expect:

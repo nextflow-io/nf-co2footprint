@@ -44,8 +44,8 @@ class TraceFileCreator extends BaseFileCreator {
 
         if(!config.enabled) {
             this.metaClass.create = { -> null }
-            this.metaClass.write = { -> null }
-            this.metaClass.close = { -> null }
+            this.metaClass.write = { CO2Record X -> null }
+            this.metaClass.close = { Map<TaskId, TraceRecord> X -> null }
         }
     }
 

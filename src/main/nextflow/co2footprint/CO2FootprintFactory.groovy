@@ -32,9 +32,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
     // Configuration
     CO2FootprintConfig config = null
 
-    // Computer
-    CO2FootprintCalculator co2FootprintComputer = null
-
     /**
      * Adapt the current logging to filter marked messages for uniqueness and change the coloring of the console output.
      */
@@ -70,36 +67,6 @@ class CO2FootprintFactory implements TraceObserverFactory {
     }
 
     /**
-     * Define a co2-footprint computer instance.
-     *
-     * @param config A {@link CO2FootprintConfig} with information for plugin execution
-     * @param tdpDataMatrix Matrix with CPU Thermal design power (TDP) information
-     * @return
-     */
-    CO2FootprintCalculator defineComputer(
-            CO2FootprintConfig config=this.config,
-            TDPDataMatrix tdpDataMatrix=TDPDataMatrix.tdpDataMatrix
-    ){
-        return new CO2FootprintCalculator(tdpDataMatrix, config)
-    }
-
-    /**
-     * Define the process observer.
-     *
-     * @param config Configuration that is to be used
-     * @param session Current session
-     * @param co2FootprintComputer Computer for CO2 calculations
-     * @return An observer for the session with the applied settings from the config and computer
-     */
-    CO2FootprintObserver defineObserver(
-            CO2FootprintConfig config=this.config,
-            Session session=this.session,
-            CO2FootprintCalculator co2FootprintComputer=this.co2FootprintComputer
-    ){
-        return new CO2FootprintObserver(session, config, co2FootprintComputer)
-    }
-
-    /**
      * Creates and returns the CO2Footprint trace observer.
      * Loads configuration, sets up the observer, and injects all required data.
      *
@@ -115,11 +82,12 @@ class CO2FootprintFactory implements TraceObserverFactory {
 
         // Define components (config & computer)
         config = defineConfig()
-        co2FootprintComputer = defineComputer()
+        CO2FootprintCalculator co2FootprintCalculator = new CO2FootprintCalculator(TDPDataMatrix.tdpDataMatrix, config)
 
         // Define list of observers
-        TraceObserver observer = defineObserver()
-        CO2FootprintPlugin.observer = observer
+        TraceObserver observer = new CO2FootprintObserver(config, co2FootprintCalculator)
+        CO2FootprintPlugin co2FootprintPlugin = CO2FootprintPlugin.getPlugin()
+        co2FootprintPlugin?.observer = observer
         final ArrayList<TraceObserver> result = [ observer ]
         return result
     }

@@ -39,19 +39,19 @@ class CO2FootprintExtensionTest extends Specification {
         extension.init(session)
 
         when:
-        List<CO2Record> co2Records = extension.calculateCO2(
+        CO2FootprintExtension.Output output = extension.calculateCO2(
                 this.class.getResource('/execution-trace-regular.tsv').path as Path, [:]
         )
 
         then:
-        co2Records.size() == 8
-        co2Records[7].getReadableEntries() == ['VALUE_TESTING', '3.27 mWh', '327.29 ug', '-', '100 gCO₂e/kWh', '100 %', '1 GB', '1s 0ms', '1', '11.41 W', '-', '3.17 mWh', '103.47 uWh']
-        co2Records[7].additionalMetrics == [co2e_non_cached:3.2729169285E-4, energy_non_cached:3.2729169285E-6, co2e_market:null, energy_market:3.2729169285E-6]
+        output.co2Records.size() == 8
+        output.co2Records[7].getReadableEntries() == ['VALUE_TESTING', '3.27 mWh', '327.29 ug', '-', '100 gCO₂e/kWh', '100 %', '1 GB', '1s 0ms', '1', '11.41 W', '-', '3.17 mWh', '103.47 uWh']
+        output.co2Records[7].additionalMetrics == [co2e_non_cached:3.2729169285E-4, energy_non_cached:3.2729169285E-6, co2e_market:null, energy_market:3.2729169285E-6]
 
         // Check whether all files exist
-        fileChecker.checkIsFile(extension.factory.config.trace.file)
-        fileChecker.checkIsFile(extension.factory.config.summary.file)
-        fileChecker.checkIsFile(extension.factory.config.report.file)
+        fileChecker.checkIsFile(output.config.trace.file)
+        fileChecker.checkIsFile(output.config.summary.file)
+        fileChecker.checkIsFile(output.config.report.file)
     }
 
     def 'Should modify the output paths'() {
@@ -64,14 +64,14 @@ class CO2FootprintExtensionTest extends Specification {
         extension.init(session)
 
         when:
-        List<CO2Record> co2Records = extension.calculateCO2(
+        CO2FootprintExtension.Output output = extension.calculateCO2(
                 this.class.getResource('/execution-trace-regular.tsv').path as Path, [trace: [file: tracePath]]
         )
 
         then:
-        co2Records.size() == 8
-        co2Records[7].getReadableEntries() == ['VALUE_TESTING', '3.27 mWh', '327.29 ug', '-', '100 gCO₂e/kWh', '100 %', '1 GB', '1s 0ms', '1', '11.41 W', '-', '3.17 mWh', '103.47 uWh']
-        co2Records[7].additionalMetrics == [co2e_non_cached:3.2729169285E-4, energy_non_cached:3.2729169285E-6, co2e_market:null, energy_market:3.2729169285E-6]
+        output.co2Records.size() == 8
+        output.co2Records[7].getReadableEntries() == ['VALUE_TESTING', '3.27 mWh', '327.29 ug', '-', '100 gCO₂e/kWh', '100 %', '1 GB', '1s 0ms', '1', '11.41 W', '-', '3.17 mWh', '103.47 uWh']
+        output.co2Records[7].additionalMetrics == [co2e_non_cached:3.2729169285E-4, energy_non_cached:3.2729169285E-6, co2e_market:null, energy_market:3.2729169285E-6]
         fileChecker.checkIsFile(tracePath)
     }
 }

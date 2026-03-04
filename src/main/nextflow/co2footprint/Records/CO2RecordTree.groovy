@@ -4,7 +4,7 @@ package nextflow.co2footprint.Records
  * relationship.
  */
 class CO2RecordTree {
-    final name
+    String name
     final Map metaData
     CO2Record co2Record
 
@@ -68,10 +68,10 @@ class CO2RecordTree {
      * @return this RecordTree node with aggregated summary values
      */
     CO2RecordTree summarize() {
-
         if (co2Record?.respondsTo('plus')) {
             return this
         }
+
         List<CO2RecordTree> addableChildren = children.findAll( { CO2RecordTree child -> child.co2Record?.respondsTo('plus') } )
 
         if (!addableChildren) {
@@ -102,6 +102,9 @@ class CO2RecordTree {
                 child.co2Record.additionalMetrics.get(name)
             }
             childMetrics.removeAll([null])
+            if(!co2Record) {
+                print("NO CO2")
+            }
             Object attribute = childMetrics ? childMetrics.sum() : transformer(co2Record)
             co2Record.additionalMetrics.put(name , attribute)
         }

@@ -33,7 +33,7 @@ class SummaryFileCreator extends BaseFileCreator {
 
         if(!config.enabled) {
             this.metaClass.create = { -> null }
-            this.metaClass.write = { -> null }
+            this.metaClass.write = { CO2RecordTree X, CO2FootprintCalculator Y, CO2FootprintConfig Z -> null }
         }
     }
 

@@ -77,8 +77,8 @@ class CO2FootprintPluginTest extends Specification{
     /**
      * @return A list with booleans indicating the existence of files
      */
-    List<Boolean> filesExist(Path tracePath, Path summaryPath,Path reportPath) {
-        return [tracePath, summaryPath, reportPath].collect({ Path path -> path.isFile() })
+    List<Boolean> filesExist(Path tracePath, Path summaryPath,Path reportPath, Path dataPath) {
+        return [tracePath, summaryPath, reportPath, dataPath].collect({ Path path -> path.isFile() })
     }
 
     /**
@@ -123,11 +123,13 @@ class CO2FootprintPluginTest extends Specification{
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
+        Path dataPath = tempPath.resolve('data_test.yaml')
         Map config = [
             co2footprint: [
                 'trace': ['enabled': true, 'file': tracePath],
                 'summary': ['enabled': true, 'file': summaryPath],
-                'report': ['enabled': true, 'file': reportPath]
+                'report': ['enabled': true, 'file': reportPath],
+                'dataFile': [enabled: true, file: dataPath]
             ]
         ]
         Session session = mockSession(config)
@@ -136,7 +138,7 @@ class CO2FootprintPluginTest extends Specification{
 
         then:
         observers.size() == 1
-        filesExist(tracePath, summaryPath, reportPath) == [true, true, true]
+        filesExist(tracePath, summaryPath, reportPath, dataPath) == [true, true, true, true]
     }
 
     def 'Creation of some files'() {
@@ -145,12 +147,14 @@ class CO2FootprintPluginTest extends Specification{
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
+        Path dataPath = tempPath.resolve('data_test.yaml')
         Map config = [
-            co2footprint: [
-                'trace': ['enabled': true, 'file': tracePath],
-                'summary': ['enabled': false, 'file': summaryPath],
-                'report': ['enabled': true, 'file': reportPath]
-            ]
+                co2footprint: [
+                        'trace': ['enabled': true, 'file': tracePath],
+                        'summary': ['enabled': false, 'file': summaryPath],
+                        'report': ['enabled': true, 'file': reportPath],
+                        'dataFile': [enabled: false, file: dataPath]
+                ]
         ]
         Session session = mockSession(config)
 
@@ -158,7 +162,7 @@ class CO2FootprintPluginTest extends Specification{
 
         then:
         observers.size() == 1
-        filesExist(tracePath, summaryPath, reportPath) == [true, false, true]
+        filesExist(tracePath, summaryPath, reportPath, dataPath) == [true, false, true, false]
     }
 
     def 'Creation of no files'() {
@@ -170,12 +174,14 @@ class CO2FootprintPluginTest extends Specification{
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
+        Path dataPath = tempPath.resolve('data_test.yaml')
         Map config = [
-            co2footprint: [
-                'trace': ['enabled': false, 'file': tracePath],
-                'summary': ['enabled': false, 'file': summaryPath],
-                'report': ['enabled': false, 'file': reportPath]
-            ]
+                co2footprint: [
+                        'trace': ['enabled': false, 'file': tracePath],
+                        'summary': ['enabled': false, 'file': summaryPath],
+                        'report': ['enabled': false, 'file': reportPath],
+                        'dataFile': [enabled: false, file: dataPath]
+                ]
         ]
         Session session = mockSession(config)
 
@@ -183,7 +189,7 @@ class CO2FootprintPluginTest extends Specification{
 
         then:
         observers.size() == 1
-        filesExist(tracePath, summaryPath, reportPath) == [false, false, false]
+        filesExist(tracePath, summaryPath, reportPath, dataPath) == [false, false, false, false]
         logChecker.checkLogs(null, [
             'No output files are enabled - to enable, set `enabled: true` in the sections `trace`, `summary` or `report`.'
         ])
