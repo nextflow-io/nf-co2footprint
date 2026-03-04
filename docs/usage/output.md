@@ -16,6 +16,15 @@ The nf-co2footprint plugin creates three output files:
 - **`report`** ([sample](../assets/co2footprint_report_sample.html))  
   The HTML report contains information about the carbon footprint of the whole pipeline run as well as plots showing the distributions of the CO₂ emissions for the different processes. The CO₂ emissions are separated into newly generated (i.e. from non-cached tasks) and total (including cached tasks). Additionally, it contains a table with the metrics for all individual tasks. The table is limited to 10000 entries by default. It finishes up with an overview plot of the carbon intensities during the workflow execution.
 
+- **`dataFile`**  
+  The data file includes the estimation of total session emission. This includes all processes that are Nextflow, but not workflow specific from the point of plugin startup to its stopping.
+  
+    !!! note "Comparison session vs. workflow"
+        The tracking of resource usage, such as `%cpu` and `memory` differ from the way Nextflow determines trace values and therefore it might not be 100% comparable.
+  
+    !!! warning "Preliminary feature"
+        The data file is currently not in its final version. Changes in the near future are very likely.
+  
 !!! note
 
     Column headers in tables displaying task-specific metrics use the same field names as Nextflow’s native trace output when representing the same metric. For field definitions, see the Nextflow documentation: [Trace file fields](https://www.nextflow.io/docs/latest/tracing.html#trace-file).
