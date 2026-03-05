@@ -30,18 +30,18 @@ class TDPDataMatrix extends DataMatrix {
         )
     }
 
-    // Column IDs for TDP, cores, and threads
+    // Column IDs for TDP, physicalCoresID, and logicalCores
     private final Object tdpID = 'tdp (W)'
-    private final Object coresID = 'cores'
-    private final Object threadsID = 'threads'
+    private final Object physicalCoresID = 'physicalCores'
+    private final Object logicalCoresID = 'logicalCores'
 
     // Fallback/default model name
     Object fallbackModel = 'default'
 
     // Optional override values
     Double tdp = null
-    Integer cores = null
-    Integer threads = null
+    Integer physicalCores = null
+    Integer logicalCores = null
     
     /**
      * Constructor for TDPDataMatrix.
@@ -51,13 +51,13 @@ class TDPDataMatrix extends DataMatrix {
      * @param rowIndex     Row index set
      * @param fallbackModel Fallback model name
      * @param tdp          TDP value (optional)
-     * @param cores        Number of cores (optional)
-     * @param threads      Number of threads (optional)
+     * @param physicalCores Number of physical cores (optional)
+     * @param logicalCores Number of logical cores (optional)
      */
     TDPDataMatrix(
             List<List> data = [], LinkedHashSet<String> columnIndex = [], LinkedHashSet<String> rowIndex = [],
             Object fallbackModel='default',
-            Double tdp=null, Integer cores=null, Integer threads=null
+            Double tdp=null, Integer physicalCores=null, Integer logicalCores=null
     ) {
         // Initialize DataMatrix without non-ASCII characters in indices
         super(
@@ -69,8 +69,8 @@ class TDPDataMatrix extends DataMatrix {
         // Initialize own values
         this.fallbackModel = fallbackModel
         this.tdp = tdp
-        this.cores = cores
-        this.threads = threads
+        this.physicalCores = physicalCores
+        this.logicalCores = logicalCores
     }
 
     /**
@@ -79,12 +79,12 @@ class TDPDataMatrix extends DataMatrix {
      * @param dataMatrix DataMatrix
      * @param fallbackModel Fallback model as a String (represents row in data table)
      * @param tdp TDP value that overwrites default
-     * @param cores Number of cores that overwrites default
-     * @param threads Number of threads that overwrites default
+     * @param physicalCores Number of physical cores that overwrites default
+     * @param logicalCores Number of logical cores that overwrites default
      */
     TDPDataMatrix(
             DataMatrix dataMatrix, Object fallbackModel='default',
-            Double tdp=null, Integer cores=null, Integer threads=null
+            Double tdp=null, Integer physicalCores=null, Integer logicalCores=null
     ) {
         // Initialize DataMatrix without non-ASCII characters in indices
         super(
@@ -96,8 +96,8 @@ class TDPDataMatrix extends DataMatrix {
         // Initialize own values
         this.fallbackModel = fallbackModel
         this.tdp = tdp
-        this.cores = cores
-        this.threads = threads
+        this.physicalCores = physicalCores
+        this.logicalCores = logicalCores
     }
 
     /**
@@ -171,7 +171,7 @@ class TDPDataMatrix extends DataMatrix {
 
         return new TDPDataMatrix(
                 modelData.data, modelData.getOrderedColumnKeys(), modelData.getOrderedRowKeys(),
-                this.fallbackModel, this.tdp, this.cores, this.threads
+                this.fallbackModel, this.tdp, this.physicalCores, this.logicalCores
         )
     }
 
@@ -195,42 +195,42 @@ class TDPDataMatrix extends DataMatrix {
     }
 
     /**
-     * Return number of cores of DataMatrix row. If none is given, the first position is assumed.
+     * Return number of physicalCores of DataMatrix row. If none is given, the first position is assumed.
      *
      * @param dm     DataMatrix with core values (default: this)
      * @param rowID  ID of the respective row (default: null)
      * @param rowIdx Index of the respective row (default: 0, ignored if rowID is given)
-     * @return       Number of cores
+     * @return       Number of physicalCores
      */
-    Integer getCores(DataMatrix dm=null, Object rowID=null, Integer rowIdx=0) {
+    Integer getPhysicalCores(DataMatrix dm=null, Object rowID=null, Integer rowIdx=0) {
         dm = dm ?: this
-        if (this.cores) {
-            return this.cores
+        if (this.physicalCores) {
+            return this.physicalCores
         } else if (rowID) {
-            return dm.get(rowID, this.coresID) as Integer
+            return dm.get(rowID, this.physicalCoresID) as Integer
         }
         else {
-            return dm.get(rowIdx, this.coresID, true) as Integer
+            return dm.get(rowIdx, this.physicalCoresID, true) as Integer
         }
     }
 
     /**
-     * Return number of threads of DataMatrix row. If none is given, the first position is assumed.
+     * Return number of logical cores of DataMatrix row. If none is given, the first position is assumed.
      *
      * @param dm     DataMatrix with thread values (default: this)
      * @param rowID  ID of the respective row (default: null)
      * @param rowIdx Index of the respective row (default: 0, ignored if rowID is given)
-     * @return       Number of threads
+     * @return       Number of logical cores
      */
-    Integer getThreads(DataMatrix dm=null, Object rowID=null, Integer rowIdx=0) {
+    Integer getLogicalCores(DataMatrix dm=null, Object rowID=null, Integer rowIdx=0) {
         dm = dm ?: this
-        if (this.threads) {
-            return this.threads
+        if (this.logicalCores) {
+            return this.logicalCores
         } else if (rowID) {
-            return dm.get(rowID, this.threadsID) as Integer
+            return dm.get(rowID, this.logicalCoresID) as Integer
         }
         else {
-            return dm.get(rowIdx, this.threadsID, true) as Integer
+            return dm.get(rowIdx, this.logicalCoresID, true) as Integer
         }
     }
 
@@ -242,9 +242,9 @@ class TDPDataMatrix extends DataMatrix {
      * @param rowID  ID of the respective row (default: null)
      * @return       TDP per core (W)
      */
-    Double getCoreTDP(DataMatrix dm=null, Integer rowIdx=0, Object rowID=null) {
+    Double getPhysicalCoreTDP(DataMatrix dm=null, Integer rowIdx=0, Object rowID=null) {
         dm = dm ?: this
-        return getTDP(dm, rowID, rowIdx) / getCores(dm, rowID, rowIdx)
+        return getTDP(dm, rowID, rowIdx) / getPhysicalCores(dm, rowID, rowIdx)
     }
 
     /**
@@ -255,9 +255,9 @@ class TDPDataMatrix extends DataMatrix {
      * @param rowID  ID of the respective row (default: null)
      * @return       TDP per thread (W)
      */
-    Double getThreadTDP(DataMatrix dm=null, Integer rowIdx=0, Object rowID=null) {
+    Double getLogicalCoreTDP(DataMatrix dm=null, Integer rowIdx=0, Object rowID=null) {
         dm = dm ?: this
-        return getTDP(dm, rowID, rowIdx) / getThreads(dm, rowID, rowIdx)
+        return getTDP(dm, rowID, rowIdx) / getLogicalCores(dm, rowID, rowIdx)
     }
 
 /**
@@ -337,7 +337,7 @@ class TDPDataMatrix extends DataMatrix {
         DataMatrix dataMatrix = DataMatrix.fromCsv(path, separator, columnIndexPos, rowIndexPos, rowIndexColumn)
 
         // Check whether all mandatory columns were given
-        dataMatrix.columnIndex.keySet().containsAll(['name', 'tdp (W)', 'cores'])
+        dataMatrix.columnIndex.keySet().containsAll(['name', 'tdp (W)', 'logicalCores'])
 
         return new TDPDataMatrix(dataMatrix)
     }

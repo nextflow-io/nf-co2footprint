@@ -54,7 +54,7 @@ class CO2FootprintCalculatorTest extends Specification{
         where:
         cpuModel           | configMap                      || expectedEnergy   | expectedCO2
         "Unknown model"    | [:]                            || 14.06            | 6.75
-        "AMD EPYC 7251"    | [:]                            || 17.61            | 8.45
+        "AMD EPYC 7251"    | [:]                            || 10.11            | 4.85
         "Unknown model"    | [pue: 1.4]                     || 19.68            | 9.45
         "Unknown model"    | [location: 'DE']               || 14.06            | 4.69
         "Unknown model"    | [ci: 338.66]                   || 14.06            | 4.76

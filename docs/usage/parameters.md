@@ -99,24 +99,22 @@ The following parameters are currently available:
 
 ## Hardware Power Draw
 - **`powerdrawMem`**  
-    Power draw from memory in Watts per GB.
-    
-    **Default**: `0.3725`
-
+  Power draw from memory in Watts per GB..  
+  **Default**: 0.3725.
+  
 - **`customCpuTdpFile`**  
-    Path to a custom CSV file containing CPU TDP (Thermal Design Power) data.
-    
-    This file should contain the following columns: `name`, `tdp (W)`, `cores`. Custom values will overwrite TDP data for matching CPU models. You can find the default TDP data [here](https://github.com/nextflow-io/nf-co2footprint/blob/master/src/resources/cpu_tdp_data/CPU_TDP.csv).
-    
-    **Example custom CPU TDP table**: <a id="custom-tdp-table"></a>
-    
-    | name                            | tdp (W) | cores |
-    |---------------------------------|---------|-------|
-    | Intel(R) Xeon(R) CPU E5-2670 v3 | 120     | 12    |
-    | AMD EPYC 7742                   | 225     | 64    |
-    | Intel(R) Core(TM) i7-9700K      | 95      | 8     |
-    
-    !!! note "File format"
+  Input CSV file containing custom CPU TDP data. This should contain the following columns: `name`, `tdp (W)`, `logicalCores`. Note that this overwrites TDP values for already provided CPU models. You can find the by default used TDP data [here](https://github.com/nextflow-io/nf-co2footprint/blob/master/src/resources/cpu_tdp_data/CPU_TDP.csv).  
+  **Default**: `null`.
+
+    Example custom CPU TDP table: <a id="custom-tdp-table"></a>
+
+    | name                            | tdp (W) | logicalCores |
+    |---------------------------------|---------|--------------|
+    | Intel(R) Xeon(R) CPU E5-2670 v3 | 120     | 24           |
+    | AMD EPYC 7742                   | 225     | 128          |
+    | Intel(R) Core(TM) i7-9700K      | 95      | 16           |
+
+    !!! Note "File format"
         The table must be supplied in [CSV format](https://www.wikihow.com/Create-a-CSV-File).
     
     **Default**: `null`
@@ -129,6 +127,7 @@ The following parameters are currently available:
     **Default**: `false`
 
 - **`powerdrawCpuDefault`**  
+
     Default power draw value (in Watts) for a single computing core.
     
     This value is applied when:
@@ -136,7 +135,7 @@ The following parameters are currently available:
     - The parameter `ignoreCpuModel` is set to `true`, or
     - The retrieved `cpu_model` cannot be found in the CPU TDP data
     
-    **Default**: `12.0`
+    **Default**: `null` -> results in default value from CPU TDP data table
 
 - **`cpuPowerModel`**  
     
