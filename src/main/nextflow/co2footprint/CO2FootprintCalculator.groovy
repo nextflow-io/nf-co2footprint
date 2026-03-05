@@ -82,7 +82,7 @@ class CO2FootprintCalculator {
 
         // Per-core power draw: either custom polynomial model or TDP lookup [W/core]
         final List<Number> cpuPowerModel = config.cpuPowerModel
-        final BigDecimal powerdrawPerCore = cpuPowerModel ? getPowerDrawFromModel(cpuPowerModel, coreUsage) : tdpDataMatrix.matchModel(cpuModel).getCoreTDP()
+        final BigDecimal powerdrawPerCore = cpuPowerModel ? getPowerDrawFromModel(cpuPowerModel, coreUsage) : tdpDataMatrix.matchModel(cpuModel).getLogicalCoreTDP()
 
         /* ===== Memory Information ===== */
 

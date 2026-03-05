@@ -148,13 +148,18 @@ class CO2Record extends TraceRecord {
             return Calculator.weightedAverage([thisValue, newValue], [store['time'], record.store['time']])
         }
 
-        // For memory and CPU count, keep the maximum
-        else if (key in ['memory', 'cpus']) {
+        // For memory and CPU count and completion time, keep the maximum
+        else if (key in ['memory', 'cpus', 'complete']) {
             return Calculator.max(thisValue, newValue)
         }
 
+        // For submission and start time keep minimum
+        else if(key in ['submit', 'start']) {
+            return Calculator.min(thisValue, newValue)
+        }
+
         // For string/date-like fields, store all unique values in a Set
-        else if ((key in ['cpu_model', 'name', 'status']) || (FIELDS.get(key) in ['str', 'date'])) {
+        else if ((key in ['cpu_model', 'status', 'name']) || (FIELDS.get(key) in ['str'])) {
             return thisValue instanceof Set ? thisValue + newValue : [thisValue, newValue] as Set
         }
 

@@ -1,4 +1,4 @@
-name,launch date,source,intended usage,tdp (W),cores,threads,process,die area
+name,launch date,source,intended usage,tdp (W),physicalCores,logicalCores,process,die area
 amd epyc 7251,2017-06-20,https://en.wikichip.org/wiki/amd/epyc/7251,Server,120.0,8,16.0,14.0,213.0
 intel xeon gold 6130f,2017-07-11,https://en.wikichip.org/wiki/intel/xeon_gold/6130f,Server,135.0,16,32.0,14.0,
 default compute cluster,,,Artificial Intelligence; HPC; Server; Supercomputer; Workstation,11.23,1,1.91,,

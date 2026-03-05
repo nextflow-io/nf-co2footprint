@@ -1,6 +1,7 @@
 # New
 ## Bug Fixes:
 - Plot display of titles and axes names in report
+- Accumulation of dates
 
 ## Misc:
 - Improved the testing of log messages
@@ -18,8 +19,10 @@
 - Provided an CLI option to process execution trace files post-run
 - Added new raw energy consumption metrics into report and trace file
 - `cpus` is now at least `ceil(%cpu / 100)`
+- Usage of TDP per logical core, becaus this corresponds best to the `cpus` trace metric
 - Tracking of whole session emissions
 - Precursor of machine-actionable file
+- New CI reporting of failed file comparisons
 
 # Version 1.1.0
 ## Bug Fixes:

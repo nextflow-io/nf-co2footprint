@@ -6,8 +6,19 @@ package nextflow.co2footprint.Metrics
  */
 class Calculator {
     /**
+     * Return the minimum of two objects.
+     *
+     * @param o1 First Object
+     * @param o2 Second Object
+     * @return The minimum of both objects
+     */
+    static min(Object o1, Object o2) {
+        return (o1 < o2) ? o1 : o2
+    }
+
+    /**
      * Return the maximum of two objects.
-     * 
+     *
      * @param o1 First Object
      * @param o2 Second Object
      * @return The maximum of both objects

@@ -19,7 +19,7 @@ class TDPDataMatrixTest extends Specification {
                     [42, 10**3, 2*10**3],
                     [100, 4, 8],
             ],
-            ['tdp (W)', 'cores', 'threads'] as LinkedHashSet,
+            ['tdp (W)', 'physicalCores', 'logicalCores'] as LinkedHashSet,
             ['Indel® i3-Fantasy', 'Ambere ultraEfficient Processor', 'AMT YPS-x42', 'default'] as LinkedHashSet,
     )
 
@@ -54,7 +54,7 @@ class TDPDataMatrixTest extends Specification {
                 [
                         [42, 10**3, 2*10**3],
                 ],
-                ['tdp (W)', 'cores', 'threads'] as LinkedHashSet,
+                ['tdp (W)', 'physicalCores', 'logicalCores'] as LinkedHashSet,
                 [modelName] as LinkedHashSet,
         )
 
@@ -75,12 +75,12 @@ class TDPDataMatrixTest extends Specification {
 
         expect:
         df.getTDP() == 13.0
-        df.getCores() == 1
-        df.getThreads() == 1
+        df.getPhysicalCores() == 1
+        df.getLogicalCores() == 1
         df.getTDP(null, 'default') == 100
         df2.getTDP() == 20.0
-        df2.getCores() == 2
-        df2.getThreads() == 4
+        df2.getPhysicalCores() == 2
+        df2.getLogicalCores() == 4
     }
 
     def 'Should return first name of cpu model' () {
@@ -100,10 +100,10 @@ class TDPDataMatrixTest extends Specification {
         )
 
         when:
-        Double dfTDPPerCore = df.matchModel('Non-existent').getCoreTDP()
-        Double df2TDPPerCore = df2.getCoreTDP()
-        Double dfTDPPerThread = df.matchModel('Non-existent').getThreadTDP()
-        Double df2TDPPerThread = df2.getThreadTDP()
+        Double dfTDPPerCore = df.matchModel('Non-existent').getPhysicalCoreTDP()
+        Double df2TDPPerCore = df2.getPhysicalCoreTDP()
+        Double dfTDPPerThread = df.matchModel('Non-existent').getLogicalCoreTDP()
+        Double df2TDPPerThread = df2.getLogicalCoreTDP()
 
         then:
         dfTDPPerCore == 25.0
@@ -212,7 +212,7 @@ class TDPDataMatrixTest extends Specification {
             [100, 8, 16], // default
             [90, 4, 16]  // some other model
         ]
-        def columns = ['tdp (W)', 'cores', 'threads'] as LinkedHashSet
+        def columns = ['tdp (W)', 'physicalCores', 'logicalCores'] as LinkedHashSet
         def rows = ['default local', 'default compute cluster', 'default', 'other'] as LinkedHashSet
 
         and:
@@ -243,7 +243,7 @@ class TDPDataMatrixTest extends Specification {
                         [13, 13, 'red'],
                         [12, 12, 'redder'],
                 ],
-                ['tdp (W)', 'cores', 'color'] as LinkedHashSet,
+                ['tdp (W)', 'physicalCores', 'color'] as LinkedHashSet,
                 ['Indel i3-Fantasy', 'Indel i5-Fantasy'] as LinkedHashSet
         )
 
@@ -260,7 +260,7 @@ class TDPDataMatrixTest extends Specification {
                         [100, 4, 8],
                         [12, 12, null],
                 ],
-                ['tdp (W)', 'cores', 'threads'] as LinkedHashSet,
+                ['tdp (W)', 'physicalCores', 'logicalCores'] as LinkedHashSet,
                 ['Indel® i3-Fantasy', 'Ambere ultraEfficient Processor', 'AMT YPS-x42', 'default', 'Indel i5-Fantasy'] as LinkedHashSet,
         )
     }
