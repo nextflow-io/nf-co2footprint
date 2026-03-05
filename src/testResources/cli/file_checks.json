@@ -1,0 +1,18 @@
+{
+  "trace_test.txt": {
+    "checksum": "150a81dbbfb35fb9fcbebeab7b55ba14",
+    "num_lines": 3
+  },
+  "summary_test.txt": {
+    "checksum": "d77098c2a78a0cfa184b3556bf1e7b94",
+    "num_lines": 30
+  },
+  "report_test.html": {
+    "checksum": "07803ea4623bcdb7037f468f02c2af5c",
+    "num_lines": 1317
+  },
+  "data_test.yaml": {
+    "checksum": "1b8ad33c3ee1ad1a07f4c44868ed4cd0",
+    "num_lines": 177
+  }
+}

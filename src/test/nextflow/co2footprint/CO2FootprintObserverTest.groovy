@@ -26,7 +26,7 @@ class CO2FootprintObserverTest extends Specification{
 
     // ------ TEST UTILITY METHODS ------
     @Shared
-    FileChecker fileChecker = new FileChecker()
+    FileChecker fileChecker = new FileChecker('/observer')
 
     @Shared
     def traceRecord = new TraceRecord()

@@ -40,7 +40,7 @@ class TraceFileParserTest extends Specification {
         traceRecords[0].store == [
                 task_id:'6', hash:'c6/d3ff54', native_id:'117703',
                 name:'NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (RAP1_UNINDUCED_REP1)',
-                status:'COMPLETED', exit:'0', submit:1759849601467, duration:524, realtime:0, '%cpu':97.0d, peak_rss:5767168, peak_vmem:10838016,
+                status:'COMPLETED', exit:'0', submit:1759849601467, duration:524, realtime:500, '%cpu':97.0d, peak_rss:5767168, peak_vmem:10838016,
                 rchar:2358732, wchar:1533, start:1759849601546, complete:1759849601991, cpus:2.0d, memory:12884901888,
                 process:'NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (RAP1_UNINDUCED_REP1)',
                 disk:null, read_bytes:2625536, write_bytes:8192

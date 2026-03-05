@@ -51,6 +51,14 @@ jobs:
             **/build/reports/
             **/build/test-results/
 
+      - name: Upload failed file comparisons
+        if: ${{ steps.gradle.outputs.exit_code }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: fails_${{ matrix.java_version }}
+          path: |
+            **/build/resources/test/**/failed
+
       - name: Summarize tests results
         if: always()
         uses: jeantessier/test-summary-action@v1
