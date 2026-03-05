@@ -181,7 +181,7 @@ class FileChecker {
                     if (!excludedLines.contains(linePosition)) {
                         if (lineNew.size() < 10000 & lineRecord.size() < 10000){
                             try {
-                                assert lineNew == lineRecord, "Mismatch in line ${linePosition}"
+                                assert lineNew == lineRecord, "Mismatch in line ${linePosition + 1}"
                             }
                             catch (Throwable error) {
                                 errorFound = true
@@ -192,7 +192,7 @@ class FileChecker {
                             addError(
                                     new AssertionFailedError(
                                     "Mismatching new line: ${lineNew}\n" +
-                                    "Mismatch in line ${linePosition}. Output too long, omitting recorded line."
+                                    "Mismatch in line ${linePosition + 1}. Output too long, omitting recorded line."
                                     )
                             )
                         }
