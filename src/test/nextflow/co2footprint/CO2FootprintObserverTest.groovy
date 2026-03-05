@@ -267,5 +267,7 @@ class CO2FootprintObserverTest extends Specification{
                         " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
             ]
         )
+
+        fileChecker.runChecks(dataPath)
     }
 }

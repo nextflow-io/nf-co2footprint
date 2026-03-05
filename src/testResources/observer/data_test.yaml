@@ -1,0 +1,266 @@
+name: null
+metaData: {level: workflow}
+values:
+  task_id: &id001
+    raw: {value: '111', type: str}
+    readable: '111'
+  hash: &id002
+    raw: {value: null, type: str}
+    readable: '-'
+    report: <div class="script_block short"><code>-</code></div>
+  native_id: &id003
+    raw: {value: null, type: str}
+    readable: '-'
+  process: &id004
+    raw: {value: observerTestProcess, type: str}
+    readable: observerTestProcess
+  module: &id005
+    raw: {value: null, type: str}
+    readable: '-'
+  container: &id006
+    raw: {value: null, type: str}
+    readable: '-'
+  tag: &id007
+    raw: {value: null, type: str}
+    readable: '-'
+  name: &id008
+    raw: {value: null, type: str}
+    readable: '-'
+  status: &id009
+    raw: {value: COMPLETED, type: str}
+    readable: COMPLETED
+    report: <span class="badge badge-success">COMPLETED</span>
+  exit: &id010
+    raw: {value: null, type: str}
+    readable: '-'
+  submit: &id011
+    raw: {value: null, type: DateTime, unit: ms, description: Unix time}
+    readable: '-'
+  start: &id012
+    raw: {value: null, type: DateTime, unit: ms, description: Unix time}
+    readable: '-'
+  complete: &id013
+    raw: {value: null, type: DateTime, unit: ms, description: Unix time}
+    readable: '-'
+  duration: &id014
+    raw: {value: null, type: Duration, unit: ms}
+    readable: '-'
+  realtime: &id015
+    raw: {value: 3600000, type: Duration, unit: ms, scale: ''}
+    readable: 1h
+    report: 1h
+  '%cpu': &id016
+    raw: {value: 100.0, type: Percentage, unit: '', scale: '%'}
+    readable: 100.0%
+  '%mem': &id017
+    raw: {value: null, type: Percentage, unit: '%'}
+    readable: '-'
+  rss: &id018
+    raw: {value: null, type: Bytes, unit: B}
+    readable: '-'
+  vmem: &id019
+    raw: {value: null, type: Bytes, unit: B}
+    readable: '-'
+  peak_rss: &id020
+    raw: {value: null, type: Bytes, unit: B}
+    readable: '-'
+  peak_vmem: &id021
+    raw: {value: null, type: Bytes, unit: B}
+    readable: '-'
+  rchar: &id022
+    raw: {value: null, type: Bytes, unit: B}
+    readable: '-'
+  wchar: &id023
+    raw: {value: null, type: Bytes, unit: B}
+    readable: '-'
+  syscr: &id024
+    raw: {value: null, type: Number}
+    readable: '-'
+  syscw: &id025
+    raw: {value: null, type: Number}
+    readable: '-'
+  read_bytes: &id026
+    raw: {value: null, type: Bytes, unit: B}
+    readable: '-'
+  write_bytes: &id027
+    raw: {value: null, type: Bytes, unit: B}
+    readable: '-'
+  attempt: &id028
+    raw: {value: null, type: Number}
+    readable: '-'
+  workdir: &id029
+    raw: {value: null, type: str}
+    readable: '-'
+  script: &id030
+    raw: {value: null, type: str}
+    readable: '-'
+  scratch: &id031
+    raw: {value: null, type: str}
+    readable: '-'
+  queue: &id032
+    raw: {value: null, type: str}
+    readable: '-'
+  cpus: &id033
+    raw: {value: 1, type: Number, unit: '', scale: ''}
+    readable: '1'
+  memory: &id034
+    raw: {value: 7516192768, type: Bytes, unit: B, scale: ''}
+    readable: 7 GB
+  disk: &id035
+    raw: {value: null, type: Bytes, unit: B}
+    readable: '-'
+  time: &id036
+    raw: {value: 3600000.0000, type: Duration, unit: ms, scale: ''}
+    readable: 1h
+    report: 1h
+  env: &id037
+    raw: {value: null, type: str}
+    readable: '-'
+  error_action: &id038
+    raw: {value: null, type: str}
+    readable: '-'
+  vol_ctxt: &id039
+    raw: {value: null, type: Number}
+    readable: '-'
+  inv_ctxt: &id040
+    raw: {value: null, type: Number}
+    readable: '-'
+  hostname: &id041
+    raw: {value: null, type: str}
+    readable: '-'
+  cpu_model: &id042
+    raw: {value: Unknown model, type: str}
+    readable: Unknown model
+  energy: &id043
+    raw: {value: 14.0175, type: Number, unit: Wh, scale: ''}
+    readable: 14.02 Wh
+  co2e: &id044
+    raw: {value: 6.7284, type: Number, unit: g, scale: ''}
+    readable: 6.73 g
+  co2eMarket: &id045
+    raw: {value: null, type: Number, unit: g}
+    readable: '-'
+  ci: &id046
+    raw: {value: 480.0, type: Number, unit: gCO₂e/kWh, scale: ''}
+    readable: 480 gCO₂e/kWh
+  cpuUsage: &id047
+    raw: {value: 100.0, type: Percentage, unit: '', scale: '%'}
+    readable: 100 %
+  powerdrawCPU: &id048
+    raw: {value: 11.41, type: Number, unit: W, scale: ''}
+    readable: 11.41 W
+  rawEnergyProcessor: &id049
+    raw: {value: 11.41, type: Number, unit: Wh, scale: ''}
+    readable: 11.41 Wh
+  rawEnergyMemory: &id050
+    raw: {value: 2.6075, type: Number, unit: Wh, scale: ''}
+    readable: 2.61 Wh
+children:
+- name: observerTestProcess
+  metaData: {level: process}
+  values:
+    task_id: *id001
+    hash: *id002
+    native_id: *id003
+    process: *id004
+    module: *id005
+    container: *id006
+    tag: *id007
+    name: *id008
+    status: *id009
+    exit: *id010
+    submit: *id011
+    start: *id012
+    complete: *id013
+    duration: *id014
+    realtime: *id015
+    '%cpu': *id016
+    '%mem': *id017
+    rss: *id018
+    vmem: *id019
+    peak_rss: *id020
+    peak_vmem: *id021
+    rchar: *id022
+    wchar: *id023
+    syscr: *id024
+    syscw: *id025
+    read_bytes: *id026
+    write_bytes: *id027
+    attempt: *id028
+    workdir: *id029
+    script: *id030
+    scratch: *id031
+    queue: *id032
+    cpus: *id033
+    memory: *id034
+    disk: *id035
+    time: *id036
+    env: *id037
+    error_action: *id038
+    vol_ctxt: *id039
+    inv_ctxt: *id040
+    hostname: *id041
+    cpu_model: *id042
+    energy: *id043
+    co2e: *id044
+    co2eMarket: *id045
+    ci: *id046
+    cpuUsage: *id047
+    powerdrawCPU: *id048
+    rawEnergyProcessor: *id049
+    rawEnergyMemory: *id050
+  children:
+  - name: '111'
+    metaData: {level: task}
+    values:
+      task_id: *id001
+      hash: *id002
+      native_id: *id003
+      process: *id004
+      module: *id005
+      container: *id006
+      tag: *id007
+      name: *id008
+      status: *id009
+      exit: *id010
+      submit: *id011
+      start: *id012
+      complete: *id013
+      duration: *id014
+      realtime: *id015
+      '%cpu': *id016
+      '%mem': *id017
+      rss: *id018
+      vmem: *id019
+      peak_rss: *id020
+      peak_vmem: *id021
+      rchar: *id022
+      wchar: *id023
+      syscr: *id024
+      syscw: *id025
+      read_bytes: *id026
+      write_bytes: *id027
+      attempt: *id028
+      workdir: *id029
+      script: *id030
+      scratch: *id031
+      queue: *id032
+      cpus: *id033
+      memory: *id034
+      disk: *id035
+      time: *id036
+      env: *id037
+      error_action: *id038
+      vol_ctxt: *id039
+      inv_ctxt: *id040
+      hostname: *id041
+      cpu_model: *id042
+      energy: *id043
+      co2e: *id044
+      co2eMarket: *id045
+      ci: *id046
+      cpuUsage: *id047
+      powerdrawCPU: *id048
+      rawEnergyProcessor: *id049
+      rawEnergyMemory: *id050
+    children: []

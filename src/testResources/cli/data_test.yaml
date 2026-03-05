@@ -1,6 +1,39 @@
 name: Unknown workflow
 metaData: {level: workflow}
 values:
+  task_id:
+    raw:
+      value: !!set {'6': null, '4': null}
+      type: str
+    readable: '[6, 4]'
+  hash:
+    raw:
+      value: !!set {c6/d3ff54: null, 06/805ff2: null}
+      type: str
+    readable: '[c6/d3ff54, 06/805ff2]'
+    report: <div class="script_block short"><code>[c6/d3ff54, 06/805ff2]</code></div>
+  native_id:
+    raw:
+      value: !!set {'117703': null, '118020': null}
+      type: str
+    readable: '[117703, 118020]'
+  process:
+    raw:
+      value: !!set {'NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (RAP1_UNINDUCED_REP1)': null,
+        'NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (WT_REP2)': null}
+      type: str
+    readable: '[NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT
+      (RAP1_UNINDUCED_REP1), NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT
+      (WT_REP2)]'
+  module:
+    raw: {value: null, type: str}
+    readable: '-'
+  container:
+    raw: {value: null, type: str}
+    readable: '-'
+  tag:
+    raw: {value: null, type: str}
+    readable: '-'
   name:
     raw:
       value: !!set {'NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (RAP1_UNINDUCED_REP1)': null,
@@ -9,6 +42,120 @@ values:
     readable: '[NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT
       (RAP1_UNINDUCED_REP1), NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT
       (WT_REP2)]'
+  status:
+    raw:
+      value: !!set {COMPLETED: null}
+      type: str
+    readable: '[COMPLETED]'
+    report: <span class="badge badge-null">[COMPLETED]</span>
+  exit:
+    raw:
+      value: !!set {'0': null}
+      type: str
+    readable: '[0]'
+  submit:
+    raw: {value: 1759849601467, type: DateTime, unit: ms, description: Unix time,
+      scale: ''}
+    readable: '2025-10-07 17:06:41.467'
+  start:
+    raw: {value: 1759849601546, type: DateTime, unit: ms, description: Unix time,
+      scale: ''}
+    readable: '2025-10-07 17:06:41.546'
+  complete:
+    raw: {value: 1759849602787, type: DateTime, unit: ms, description: Unix time,
+      scale: ''}
+    readable: '2025-10-07 17:06:42.787'
+  duration:
+    raw: {value: 1555, type: Duration, unit: ms, scale: ''}
+    readable: 1.6s
+  realtime:
+    raw: {value: 1500, type: Duration, unit: ms, scale: ''}
+    readable: 1s 500ms
+    report: 1s
+  '%cpu':
+    raw: {value: 192.4, type: Percentage, unit: '', scale: '%'}
+    readable: 192.4%
+  '%mem':
+    raw: {value: null, type: Percentage, unit: '%'}
+    readable: '-'
+  rss:
+    raw: {value: null, type: Bytes, unit: B}
+    readable: '-'
+  vmem:
+    raw: {value: null, type: Bytes, unit: B}
+    readable: '-'
+  peak_rss:
+    raw: {value: 35651584, type: Bytes, unit: B, scale: ''}
+    readable: 34 MB
+  peak_vmem:
+    raw: {value: 45813760, type: Bytes, unit: B, scale: ''}
+    readable: 43.7 MB
+  rchar:
+    raw: {value: 8927732, type: Bytes, unit: B, scale: ''}
+    readable: 8.5 MB
+  wchar:
+    raw: {value: 3434, type: Bytes, unit: B, scale: ''}
+    readable: 3.4 KB
+  syscr:
+    raw: {value: null, type: Number}
+    readable: '-'
+  syscw:
+    raw: {value: null, type: Number}
+    readable: '-'
+  read_bytes:
+    raw: {value: 2625536, type: Bytes, unit: B, scale: ''}
+    readable: 2.5 MB
+  write_bytes:
+    raw: {value: 16384, type: Bytes, unit: B, scale: ''}
+    readable: 16 KB
+  attempt:
+    raw: {value: null, type: Number}
+    readable: '-'
+  workdir:
+    raw: {value: null, type: str}
+    readable: '-'
+  script:
+    raw: {value: null, type: str}
+    readable: '-'
+  scratch:
+    raw: {value: null, type: str}
+    readable: '-'
+  queue:
+    raw: {value: null, type: str}
+    readable: '-'
+  cpus:
+    raw: {value: 2, type: Number, unit: '', scale: ''}
+    readable: '2'
+  memory:
+    raw: {value: 12884901888, type: Bytes, unit: B, scale: ''}
+    readable: 12 GB
+  disk:
+    raw: {value: null, type: Bytes, unit: B}
+    readable: '-'
+  time:
+    raw: {value: 1500.0001200000000, type: Duration, unit: ms, scale: ''}
+    readable: 1s 500ms
+    report: 1s
+  env:
+    raw: {value: null, type: str}
+    readable: '-'
+  error_action:
+    raw: {value: null, type: str}
+    readable: '-'
+  vol_ctxt:
+    raw: {value: null, type: Number}
+    readable: '-'
+  inv_ctxt:
+    raw: {value: null, type: Number}
+    readable: '-'
+  hostname:
+    raw: {value: null, type: str}
+    readable: '-'
+  cpu_model:
+    raw:
+      value: !!set {null: null}
+      type: str
+    readable: '[null]'
   energy:
     raw: {value: 0.006423331069422, type: Number, unit: Wh, scale: ''}
     readable: 6.42 mWh
@@ -24,24 +171,9 @@ values:
   cpuUsage:
     raw: {value: 95.93333333333332, type: Percentage, unit: '', scale: '%'}
     readable: 95.93 %
-  memory:
-    raw: {value: 12884901888, type: Bytes, unit: B, scale: ''}
-    readable: 12 GB
-  time:
-    raw: {value: 1500.0001200000000, type: Duration, unit: ms, scale: ''}
-    readable: 1s 500ms
-    report: 1s
-  cpus:
-    raw: {value: 2, type: Number, unit: '', scale: ''}
-    readable: '2'
   powerdrawCPU:
     raw: {value: 11.409999999999998, type: Number, unit: W, scale: ''}
     readable: 11.41 W
-  cpu_model:
-    raw:
-      value: !!set {null: null}
-      type: str
-    readable: '[null]'
   rawEnergyProcessor:
     raw: {value: 0.004560830920422, type: Number, unit: Wh, scale: ''}
     readable: 4.56 mWh
@@ -52,126 +184,438 @@ children:
 - name: NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (RAP1_UNINDUCED_REP1)
   metaData: {level: process}
   values:
-    name: &id001
+    task_id: &id001
+      raw: {value: '6', type: str}
+      readable: '6'
+    hash: &id002
+      raw: {value: c6/d3ff54, type: str}
+      readable: c6/d3ff54
+      report: <div class="script_block short"><code>c6/d3ff54</code></div>
+    native_id: &id003
+      raw: {value: '117703', type: str}
+      readable: '117703'
+    process: &id004
       raw: {value: 'NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT
           (RAP1_UNINDUCED_REP1)', type: str}
       readable: NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT
         (RAP1_UNINDUCED_REP1)
-    energy: &id002
-      raw: {value: 0.00215801406153, type: Number, unit: Wh, scale: ''}
-      readable: 2.16 mWh
-    co2e: &id003
-      raw: {value: 0.0010358467495344, type: Number, unit: g, scale: ''}
-      readable: 1.04 mg
-    co2eMarket: &id004
-      raw: {value: null, type: Number, unit: g}
+    module: &id005
+      raw: {value: null, type: str}
       readable: '-'
-    ci: &id005
-      raw: {value: 480.0, type: Number, unit: gCO₂e/kWh, scale: ''}
-      readable: 480 gCO₂e/kWh
-    cpuUsage: &id006
+    container: &id006
+      raw: {value: null, type: str}
+      readable: '-'
+    tag: &id007
+      raw: {value: null, type: str}
+      readable: '-'
+    name: &id008
+      raw: {value: 'NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT
+          (RAP1_UNINDUCED_REP1)', type: str}
+      readable: NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT
+        (RAP1_UNINDUCED_REP1)
+    status: &id009
+      raw: {value: COMPLETED, type: str}
+      readable: COMPLETED
+      report: <span class="badge badge-success">COMPLETED</span>
+    exit: &id010
+      raw: {value: '0', type: str}
+      readable: '0'
+    submit: &id011
+      raw: {value: 1759849601467, type: DateTime, unit: ms, description: Unix time,
+        scale: ''}
+      readable: '2025-10-07 17:06:41.467'
+    start: &id012
+      raw: {value: 1759849601546, type: DateTime, unit: ms, description: Unix time,
+        scale: ''}
+      readable: '2025-10-07 17:06:41.546'
+    complete: &id013
+      raw: {value: 1759849601991, type: DateTime, unit: ms, description: Unix time,
+        scale: ''}
+      readable: '2025-10-07 17:06:41.991'
+    duration: &id014
+      raw: {value: 524, type: Duration, unit: ms, scale: ''}
+      readable: 524ms
+    realtime: &id015
+      raw: {value: 500, type: Duration, unit: ms, scale: ''}
+      readable: 500ms
+      report: 500ms
+    '%cpu': &id016
       raw: {value: 97.0, type: Percentage, unit: '', scale: '%'}
-      readable: 97 %
-    memory: &id007
+      readable: 97.0%
+    '%mem': &id017
+      raw: {value: null, type: Percentage, unit: '%'}
+      readable: '-'
+    rss: &id018
+      raw: {value: null, type: Bytes, unit: B}
+      readable: '-'
+    vmem: &id019
+      raw: {value: null, type: Bytes, unit: B}
+      readable: '-'
+    peak_rss: &id020
+      raw: {value: 5767168, type: Bytes, unit: B, scale: ''}
+      readable: 5.5 MB
+    peak_vmem: &id021
+      raw: {value: 10838016, type: Bytes, unit: B, scale: ''}
+      readable: 10.3 MB
+    rchar: &id022
+      raw: {value: 2358732, type: Bytes, unit: B, scale: ''}
+      readable: 2.2 MB
+    wchar: &id023
+      raw: {value: 1533, type: Bytes, unit: B, scale: ''}
+      readable: 1.5 KB
+    syscr: &id024
+      raw: {value: null, type: Number}
+      readable: '-'
+    syscw: &id025
+      raw: {value: null, type: Number}
+      readable: '-'
+    read_bytes: &id026
+      raw: {value: 2625536, type: Bytes, unit: B, scale: ''}
+      readable: 2.5 MB
+    write_bytes: &id027
+      raw: {value: 8192, type: Bytes, unit: B, scale: ''}
+      readable: 8 KB
+    attempt: &id028
+      raw: {value: null, type: Number}
+      readable: '-'
+    workdir: &id029
+      raw: {value: null, type: str}
+      readable: '-'
+    script: &id030
+      raw: {value: null, type: str}
+      readable: '-'
+    scratch: &id031
+      raw: {value: null, type: str}
+      readable: '-'
+    queue: &id032
+      raw: {value: null, type: str}
+      readable: '-'
+    cpus: &id033
+      raw: {value: 2, type: Number, unit: '', scale: ''}
+      readable: '2'
+    memory: &id034
       raw: {value: 12884901888, type: Bytes, unit: B, scale: ''}
       readable: 12 GB
-    time: &id008
+    disk: &id035
+      raw: {value: null, type: Bytes, unit: B}
+      readable: '-'
+    time: &id036
       raw: {value: 500.0000400000000, type: Duration, unit: ms, scale: ''}
       readable: 500ms
       report: 500ms
-    cpus: &id009
-      raw: {value: 2, type: Number, unit: '', scale: ''}
-      readable: '2'
-    powerdrawCPU: &id010
-      raw: {value: 11.41, type: Number, unit: W, scale: ''}
-      readable: 11.41 W
-    cpu_model: &id011
+    env: &id037
       raw: {value: null, type: str}
       readable: '-'
-    rawEnergyProcessor: &id012
+    error_action: &id038
+      raw: {value: null, type: str}
+      readable: '-'
+    vol_ctxt: &id039
+      raw: {value: null, type: Number}
+      readable: '-'
+    inv_ctxt: &id040
+      raw: {value: null, type: Number}
+      readable: '-'
+    hostname: &id041
+      raw: {value: null, type: str}
+      readable: '-'
+    cpu_model: &id042
+      raw: {value: null, type: str}
+      readable: '-'
+    energy: &id043
+      raw: {value: 0.00215801406153, type: Number, unit: Wh, scale: ''}
+      readable: 2.16 mWh
+    co2e: &id044
+      raw: {value: 0.0010358467495344, type: Number, unit: g, scale: ''}
+      readable: 1.04 mg
+    co2eMarket: &id045
+      raw: {value: null, type: Number, unit: g}
+      readable: '-'
+    ci: &id046
+      raw: {value: 480.0, type: Number, unit: gCO₂e/kWh, scale: ''}
+      readable: 480 gCO₂e/kWh
+    cpuUsage: &id047
+      raw: {value: 97.0, type: Percentage, unit: '', scale: '%'}
+      readable: 97 %
+    powerdrawCPU: &id048
+      raw: {value: 11.41, type: Number, unit: W, scale: ''}
+      readable: 11.41 W
+    rawEnergyProcessor: &id049
       raw: {value: 0.00153718067853, type: Number, unit: Wh, scale: ''}
       readable: 1.54 mWh
-    rawEnergyMemory: &id013
+    rawEnergyMemory: &id050
       raw: {value: 0.000620833383, type: Number, unit: Wh, scale: ''}
       readable: 620.83 uWh
   children:
   - name: '6'
     metaData: {level: task}
     values:
-      name: *id001
-      energy: *id002
-      co2e: *id003
-      co2eMarket: *id004
-      ci: *id005
-      cpuUsage: *id006
-      memory: *id007
-      time: *id008
-      cpus: *id009
-      powerdrawCPU: *id010
-      cpu_model: *id011
-      rawEnergyProcessor: *id012
-      rawEnergyMemory: *id013
+      task_id: *id001
+      hash: *id002
+      native_id: *id003
+      process: *id004
+      module: *id005
+      container: *id006
+      tag: *id007
+      name: *id008
+      status: *id009
+      exit: *id010
+      submit: *id011
+      start: *id012
+      complete: *id013
+      duration: *id014
+      realtime: *id015
+      '%cpu': *id016
+      '%mem': *id017
+      rss: *id018
+      vmem: *id019
+      peak_rss: *id020
+      peak_vmem: *id021
+      rchar: *id022
+      wchar: *id023
+      syscr: *id024
+      syscw: *id025
+      read_bytes: *id026
+      write_bytes: *id027
+      attempt: *id028
+      workdir: *id029
+      script: *id030
+      scratch: *id031
+      queue: *id032
+      cpus: *id033
+      memory: *id034
+      disk: *id035
+      time: *id036
+      env: *id037
+      error_action: *id038
+      vol_ctxt: *id039
+      inv_ctxt: *id040
+      hostname: *id041
+      cpu_model: *id042
+      energy: *id043
+      co2e: *id044
+      co2eMarket: *id045
+      ci: *id046
+      cpuUsage: *id047
+      powerdrawCPU: *id048
+      rawEnergyProcessor: *id049
+      rawEnergyMemory: *id050
     children: []
 - name: NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (WT_REP2)
   metaData: {level: process}
   values:
-    name: &id014
+    task_id: &id051
+      raw: {value: '4', type: str}
+      readable: '4'
+    hash: &id052
+      raw: {value: 06/805ff2, type: str}
+      readable: 06/805ff2
+      report: <div class="script_block short"><code>06/805ff2</code></div>
+    native_id: &id053
+      raw: {value: '118020', type: str}
+      readable: '118020'
+    process: &id054
       raw: {value: 'NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT
           (WT_REP2)', type: str}
       readable: NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT
         (WT_REP2)
-    energy: &id015
-      raw: {value: 0.004265317007892, type: Number, unit: Wh, scale: ''}
-      readable: 4.27 mWh
-    co2e: &id016
-      raw: {value: 0.00204735216378816, type: Number, unit: g, scale: ''}
-      readable: 2.05 mg
-    co2eMarket: &id017
-      raw: {value: null, type: Number, unit: g}
+    module: &id055
+      raw: {value: null, type: str}
       readable: '-'
-    ci: &id018
-      raw: {value: 480.0, type: Number, unit: gCO₂e/kWh, scale: ''}
-      readable: 480 gCO₂e/kWh
-    cpuUsage: &id019
+    container: &id056
+      raw: {value: null, type: str}
+      readable: '-'
+    tag: &id057
+      raw: {value: null, type: str}
+      readable: '-'
+    name: &id058
+      raw: {value: 'NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT
+          (WT_REP2)', type: str}
+      readable: NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT
+        (WT_REP2)
+    status: &id059
+      raw: {value: COMPLETED, type: str}
+      readable: COMPLETED
+      report: <span class="badge badge-success">COMPLETED</span>
+    exit: &id060
+      raw: {value: '0', type: str}
+      readable: '0'
+    submit: &id061
+      raw: {value: 1759849601756, type: DateTime, unit: ms, description: Unix time,
+        scale: ''}
+      readable: '2025-10-07 17:06:41.756'
+    start: &id062
+      raw: {value: 1759849601847, type: DateTime, unit: ms, description: Unix time,
+        scale: ''}
+      readable: '2025-10-07 17:06:41.847'
+    complete: &id063
+      raw: {value: 1759849602787, type: DateTime, unit: ms, description: Unix time,
+        scale: ''}
+      readable: '2025-10-07 17:06:42.787'
+    duration: &id064
+      raw: {value: 1031, type: Duration, unit: ms, scale: ''}
+      readable: 1s
+    realtime: &id065
+      raw: {value: 1000, type: Duration, unit: ms, scale: ''}
+      readable: 1s
+      report: 1s
+    '%cpu': &id066
       raw: {value: 95.4, type: Percentage, unit: '', scale: '%'}
-      readable: 95.4 %
-    memory: &id020
+      readable: 95.4%
+    '%mem': &id067
+      raw: {value: null, type: Percentage, unit: '%'}
+      readable: '-'
+    rss: &id068
+      raw: {value: null, type: Bytes, unit: B}
+      readable: '-'
+    vmem: &id069
+      raw: {value: null, type: Bytes, unit: B}
+      readable: '-'
+    peak_rss: &id070
+      raw: {value: 29884416, type: Bytes, unit: B, scale: ''}
+      readable: 28.5 MB
+    peak_vmem: &id071
+      raw: {value: 34975744, type: Bytes, unit: B, scale: ''}
+      readable: 33.4 MB
+    rchar: &id072
+      raw: {value: 6569000, type: Bytes, unit: B, scale: ''}
+      readable: 6.3 MB
+    wchar: &id073
+      raw: {value: 1901, type: Bytes, unit: B, scale: ''}
+      readable: 1.9 KB
+    syscr: &id074
+      raw: {value: null, type: Number}
+      readable: '-'
+    syscw: &id075
+      raw: {value: null, type: Number}
+      readable: '-'
+    read_bytes: &id076
+      raw: {value: 0, type: Bytes, unit: B, scale: ''}
+      readable: '0'
+    write_bytes: &id077
+      raw: {value: 8192, type: Bytes, unit: B, scale: ''}
+      readable: 8 KB
+    attempt: &id078
+      raw: {value: null, type: Number}
+      readable: '-'
+    workdir: &id079
+      raw: {value: null, type: str}
+      readable: '-'
+    script: &id080
+      raw: {value: null, type: str}
+      readable: '-'
+    scratch: &id081
+      raw: {value: null, type: str}
+      readable: '-'
+    queue: &id082
+      raw: {value: null, type: str}
+      readable: '-'
+    cpus: &id083
+      raw: {value: 2, type: Number, unit: '', scale: ''}
+      readable: '2'
+    memory: &id084
       raw: {value: 12884901888, type: Bytes, unit: B, scale: ''}
       readable: 12 GB
-    time: &id021
+    disk: &id085
+      raw: {value: null, type: Bytes, unit: B}
+      readable: '-'
+    time: &id086
       raw: {value: 1000.0000800000000, type: Duration, unit: ms, scale: ''}
       readable: 1s 0ms
       report: 1s
-    cpus: &id022
-      raw: {value: 2, type: Number, unit: '', scale: ''}
-      readable: '2'
-    powerdrawCPU: &id023
-      raw: {value: 11.41, type: Number, unit: W, scale: ''}
-      readable: 11.41 W
-    cpu_model: &id024
+    env: &id087
       raw: {value: null, type: str}
       readable: '-'
-    rawEnergyProcessor: &id025
+    error_action: &id088
+      raw: {value: null, type: str}
+      readable: '-'
+    vol_ctxt: &id089
+      raw: {value: null, type: Number}
+      readable: '-'
+    inv_ctxt: &id090
+      raw: {value: null, type: Number}
+      readable: '-'
+    hostname: &id091
+      raw: {value: null, type: str}
+      readable: '-'
+    cpu_model: &id092
+      raw: {value: null, type: str}
+      readable: '-'
+    energy: &id093
+      raw: {value: 0.004265317007892, type: Number, unit: Wh, scale: ''}
+      readable: 4.27 mWh
+    co2e: &id094
+      raw: {value: 0.00204735216378816, type: Number, unit: g, scale: ''}
+      readable: 2.05 mg
+    co2eMarket: &id095
+      raw: {value: null, type: Number, unit: g}
+      readable: '-'
+    ci: &id096
+      raw: {value: 480.0, type: Number, unit: gCO₂e/kWh, scale: ''}
+      readable: 480 gCO₂e/kWh
+    cpuUsage: &id097
+      raw: {value: 95.4, type: Percentage, unit: '', scale: '%'}
+      readable: 95.4 %
+    powerdrawCPU: &id098
+      raw: {value: 11.41, type: Number, unit: W, scale: ''}
+      readable: 11.41 W
+    rawEnergyProcessor: &id099
       raw: {value: 0.003023650241892, type: Number, unit: Wh, scale: ''}
       readable: 3.02 mWh
-    rawEnergyMemory: &id026
+    rawEnergyMemory: &id100
       raw: {value: 0.001241666766, type: Number, unit: Wh, scale: ''}
       readable: 1.24 mWh
   children:
   - name: '4'
     metaData: {level: task}
     values:
-      name: *id014
-      energy: *id015
-      co2e: *id016
-      co2eMarket: *id017
-      ci: *id018
-      cpuUsage: *id019
-      memory: *id020
-      time: *id021
-      cpus: *id022
-      powerdrawCPU: *id023
-      cpu_model: *id024
-      rawEnergyProcessor: *id025
-      rawEnergyMemory: *id026
+      task_id: *id051
+      hash: *id052
+      native_id: *id053
+      process: *id054
+      module: *id055
+      container: *id056
+      tag: *id057
+      name: *id058
+      status: *id059
+      exit: *id060
+      submit: *id061
+      start: *id062
+      complete: *id063
+      duration: *id064
+      realtime: *id065
+      '%cpu': *id066
+      '%mem': *id067
+      rss: *id068
+      vmem: *id069
+      peak_rss: *id070
+      peak_vmem: *id071
+      rchar: *id072
+      wchar: *id073
+      syscr: *id074
+      syscw: *id075
+      read_bytes: *id076
+      write_bytes: *id077
+      attempt: *id078
+      workdir: *id079
+      script: *id080
+      scratch: *id081
+      queue: *id082
+      cpus: *id083
+      memory: *id084
+      disk: *id085
+      time: *id086
+      env: *id087
+      error_action: *id088
+      vol_ctxt: *id089
+      inv_ctxt: *id090
+      hostname: *id091
+      cpu_model: *id092
+      energy: *id093
+      co2e: *id094
+      co2eMarket: *id095
+      ci: *id096
+      cpuUsage: *id097
+      powerdrawCPU: *id098
+      rawEnergyProcessor: *id099
+      rawEnergyMemory: *id100
     children: []

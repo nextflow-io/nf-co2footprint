@@ -13,6 +13,9 @@ class DataFileCreator extends BaseFileCreator {
     // Agent for thread-safe writing to the data file
     private Agent<PrintWriter> dataWriter
 
+    // Whether or not only to write emission metrics
+    private boolean emissionMetricsOnly = false
+
     /**
      * Constructor for the data/machine-readable file.
      *
@@ -20,6 +23,8 @@ class DataFileCreator extends BaseFileCreator {
      */
     DataFileCreator(DataFileConfig config) {
         super(config)
+
+        emissionMetricsOnly = config.emissionMetricsOnly
 
         if(!config.enabled) {
             this.metaClass.create = { -> null }
@@ -44,7 +49,7 @@ class DataFileCreator extends BaseFileCreator {
      * @param co2RecordTree A hierarchically structured record tree
      */
     void write(CO2RecordTree co2RecordTree) {
-        Map co2TreeMap = co2RecordTree.toMap(true)
+        Map co2TreeMap = co2RecordTree.toMap(emissionMetricsOnly)
         String yamlString = yaml.dump(co2TreeMap)
 
         dataWriter = new Agent<PrintWriter>(file)

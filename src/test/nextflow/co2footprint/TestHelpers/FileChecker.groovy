@@ -240,9 +240,7 @@ class FileChecker {
                 if (!errorFound) {
                     message += ' ℹ️ The line-by-line comparison showed no difference. Checksum may be outdated.'
                 }
-                addError(
-                    new AssertionFailedError(message)
-                )
+                addError(new AssertionFailedError(message))
             } else {
                 addError(assertionError)
             }
@@ -297,15 +295,16 @@ class FileChecker {
             // Copy snapshot
             Files.copy(path, newPath, StandardCopyOption.REPLACE_EXISTING)
 
-            errors.each { Throwable error ->
+            errors.eachWithIndex { Throwable error, Integer i->
+                System.err.println("----------------- File Checker Error ${i}:")
                 error.printStackTrace()
-                error.println()
+                System.err.println()
             }
 
             // Print info to adopt the changes
             String message =
                 "❌ File checks for '${path}' failed,\n\n" +
-                "🔎 The actual error messages can be found below as a list.\n" +
+                "🔎 The actual error messages can be found above as a list.\n" +
                 "ℹ️ You may want to have a look at the difference between the new and recorded file:\n" +
                 "NEW: ${newPath} <-> RECORDED: ${recordPath}.\n" +
                 "💡 Suggested new fileCheck configuration (apply this to `${checksInfoPath}`):\n" +

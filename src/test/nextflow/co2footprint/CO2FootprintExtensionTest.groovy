@@ -28,7 +28,7 @@ class CO2FootprintExtensionTest extends Specification {
                       trace: [file: tracePath],
                       summary: [file: summaryPath],
                       report: [file: reportPath],
-                      dataFile: [file: dataPath]
+                      dataFile: [file: dataPath, enabled: true]
                   ]
             ]
         )
