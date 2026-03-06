@@ -4,11 +4,11 @@
     "num_lines": 3
   },
   "summary_test.txt": {
-    "checksum": "d77098c2a78a0cfa184b3556bf1e7b94",
+    "checksum": "461437f6e8cf49e5956d5573bc9aa6af",
     "num_lines": 30
   },
   "report_test.html": {
-    "checksum": "197f31a4a8145bcf4b989906ad6ba211",
+    "checksum": "20f7b9dc9ef61fa1ecf2756f2a085923",
     "excluded_lines": [1027, 1028],
     "num_lines": 1317
   },
