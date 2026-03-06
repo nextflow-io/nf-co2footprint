@@ -18,19 +18,22 @@ To customize the plugin settings to your computing environment and preferences, 
     
     // Optional example config settings for CO₂ reporting:
     
-    def co2_timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
+    params {
+      outdir = 'out'
+      trace_report_suffix = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
+    }
     
     co2footprint {
       trace {
-        file = "${params.outdir}/pipeline_info/co2footprint_trace_${co2_timestamp}.txt"
+        file = "${params.outdir}/pipeline_info/co2footprint_trace_${params.trace_report_suffix}.txt"
       }
     
       summary {
-        file = "${params.outdir}/pipeline_info/co2footprint_summary_${co2_timestamp}.txt"
+        file = "${params.outdir}/pipeline_info/co2footprint_summary_${params.trace_report_suffix}.txt"
       }
     
       report {
-        file = "${params.outdir}/pipeline_info/co2footprint_report_${co2_timestamp}.html"
+        file = "${params.outdir}/pipeline_info/co2footprint_report_${params.trace_report_suffix}.html"
       }
     
       location = 'DE'                             // replace with your zone code
@@ -124,26 +127,29 @@ For more information, see [Parameters](parameters.md).
       id 'nf-co2footprint@1.1.0'
     }
     
-    def co2_timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
+    params {
+      outdir = 'out'
+      trace_report_suffix = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
+    }
     
     co2footprint {
-        trace {
-          file = "${params.outdir}/co2footprint/co2footprint_trace_${co2_timestamp}.txt"
-        }
+      trace {
+        file = "${params.outdir}/pipeline_info/co2footprint_trace_${params.trace_report_suffix}.txt"
+      }
     
-        summary {
-          file = "${params.outdir}/co2footprint/co2footprint_summary_${co2_timestamp}.txt"
-        }
+      summary {
+        file = "${params.outdir}/pipeline_info/co2footprint_summary_${params.trace_report_suffix}.txt"
+      }
     
-        report {
-          file = "${params.outdir}/co2footprint/co2footprint_report_${co2_timestamp}.html"
-        }
+      report {
+        file = "${params.outdir}/pipeline_info/co2footprint_report_${params.trace_report_suffix}.html"
+      }
     
-        location            = 'DE'
-        emApiKey            = secrets.EM_API_KEY
-        pue                 = 1.3
-        ignoreCpuModel      = true
-        powerdrawCpuDefault = 8
+      location            = 'DE'
+      emApiKey            = secrets.EM_API_KEY
+      pue                 = 1.3
+      ignoreCpuModel      = true
+      powerdrawCpuDefault = 8
     }
     ```
 
