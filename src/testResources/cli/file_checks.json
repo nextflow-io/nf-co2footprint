@@ -13,7 +13,7 @@
     "num_lines": 1317
   },
   "data_test.yaml": {
-    "checksum": "601970089690d35e8a71cbedfa08ddc5",
+    "checksum": "d65bb67459cea786b515d25b2c4d44d4",
     "excluded_lines": [13, 17, 21, 111, 115, 119, 242, 246, 250],
     "num_lines": 341
   }
