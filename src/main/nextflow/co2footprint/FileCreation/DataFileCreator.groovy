@@ -49,7 +49,7 @@ class DataFileCreator extends BaseFileCreator {
      * @param co2RecordTree A hierarchically structured record tree
      */
     void write(CO2RecordTree co2RecordTree) {
-        Map co2TreeMap = co2RecordTree.toMap(emissionMetricsOnly)
+        Map co2TreeMap = co2RecordTree.toMap(emissionMetricsOnly, false, false)
         String yamlString = yaml.dump(co2TreeMap)
 
         dataWriter = new Agent<PrintWriter>(file)

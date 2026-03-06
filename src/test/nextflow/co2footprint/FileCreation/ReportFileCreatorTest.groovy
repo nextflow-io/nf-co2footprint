@@ -138,7 +138,7 @@ class ReportFileCreatorTest extends Specification{
         String payloadJson = co2FootprintReport.renderDataJson()
 
         then:
-        String expectedPayloadJson = this.class.getResource('/test_payload.json').text
+        String expectedPayloadJson = this.class.getResource('/report/test_payload.json').text
         payloadJson == expectedPayloadJson
     }
 

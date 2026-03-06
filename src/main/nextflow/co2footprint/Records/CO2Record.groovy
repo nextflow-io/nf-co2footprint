@@ -160,7 +160,7 @@ class CO2Record extends TraceRecord {
 
         // For string/date-like fields, store all unique values in a Set
         else if ((key in ['cpu_model', 'status', 'name']) || (FIELDS.get(key) in ['str'])) {
-            return thisValue instanceof Set ? thisValue + newValue : [thisValue, newValue] as Set
+            return thisValue == newValue ? thisValue : null
         }
 
         // For other numeric fields, sum values safely

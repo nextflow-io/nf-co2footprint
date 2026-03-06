@@ -146,21 +146,35 @@ class FileChecker {
      * @param lineRecords Map of paired line positions and line content
      * @return A list of the already checked lines
      */
-    List<Integer> compareLines(Path path, Map<Integer, String> lineRecords) {
+    List<Integer> compareLines(Path path, def lineRecords) {
         List<String> lines  = path.readLines()
         String line
-        lineRecords.each { Integer linePos, String lineRecord ->
-            // Change from 1 to 0-based
-            line = lines[linePos - 1]
-            try {
-                assert line == lineRecord
-            }
-            catch (Throwable throwable) {
-                addError(throwable)
+        List<Integer> visitedPositions = []
+        if (lineRecords instanceof Map<Integer, String> ) {
+            lineRecords.each { Integer linePos, String lineRecord ->
+                visitedPositions.add(linePos)
+                // Change from 1 to 0-based
+                line = lines[linePos - 1]
+                try {
+                    assert line == lineRecord
+                }
+                catch (Throwable throwable) {
+                    addError(throwable)
+                }
             }
         }
-
-        return lineRecords.keySet() as List<Integer>
+        else if (lineRecords instanceof List<String>){
+            lineRecords.eachWithIndex{ String lineRecord, int i ->
+                visitedPositions.add(i + 1)
+                try {
+                    assert lines[i] == lineRecord
+                }
+                catch (Throwable throwable) {
+                    addError(throwable)
+                }
+            }
+        }
+        return visitedPositions
     }
 
     /**

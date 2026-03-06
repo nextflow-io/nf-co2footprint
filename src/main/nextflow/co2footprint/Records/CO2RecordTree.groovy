@@ -199,20 +199,28 @@ class CO2RecordTree {
      * Convert this record tree to a map.
      *
      * @param onlyCO2parameters Whether all parameters should be included, or only the ones that are nf-co2 plugin-specific
+     * @param includeNulls Whether to include parameters that have `null` as a raw value
+     * @param includeReportValues Whether to include 'report' values of entries
      * @return A map representation of this Record Tree
      */
-    Map<String, Object> toMap(boolean onlyCO2parameters=false) {
+    Map<String, Object> toMap(boolean onlyCO2parameters=false, boolean includeNulls=true, boolean includeReportValues=true) {
         Map<String, Map<String, Object>> recordMap = [:]
         if (co2Record) {
             (onlyCO2parameters ? co2Record.co2Keys : co2Record.keySet()).each { String key ->
-                recordMap.put(key, co2Record.representationMap.get(key))
+                Map<String, Object> value = co2Record.representationMap.get(key)
+                if (includeNulls || value['raw']['value'] != null) {
+                    if (!includeReportValues) {
+                        value.remove('report')
+                    }
+                    recordMap.put(key, value)
+                }
             }
         }
         return [
             name: name,
             metaData: metaData,
             values: recordMap,
-            children: children.collect({ CO2RecordTree child -> child.toMap(onlyCO2parameters) }),
+            children: children.collect({ CO2RecordTree child -> child.toMap(onlyCO2parameters, includeNulls, includeReportValues) }),
         ]
     }
 

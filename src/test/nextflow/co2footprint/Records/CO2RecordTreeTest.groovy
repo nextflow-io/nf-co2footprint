@@ -1,10 +1,12 @@
 package nextflow.co2footprint.Records
 
-
+import nextflow.co2footprint.TestHelpers.FileChecker
 import nextflow.trace.TraceRecord
 import org.yaml.snakeyaml.Yaml
 import spock.lang.Shared
 import spock.lang.Specification
+
+import java.nio.file.Path
 
 class CO2RecordTreeTest extends Specification {
     @Shared
@@ -17,6 +19,8 @@ class CO2RecordTreeTest extends Specification {
 
     @Shared
     Yaml yaml = new Yaml()
+
+    FileChecker fileChecker = new FileChecker('/tree')
 
     def setupSpec() {
         traceRecord.putAll([
@@ -98,18 +102,15 @@ class CO2RecordTreeTest extends Specification {
         processNode2.addChild(new CO2RecordTree('2', [level: 'task'], co2Record))
         parentNode.summarize()
 
+        Map parentMap = parentNode.toMap(true, false, false)
+        String yamlLines = yaml.dump(parentMap)
+        Path outPath = Path.of(this.class.getResource('.').toURI()).complete().resolve('tree').resolve('out')
+        outPath.createParentDirectories()
+        outPath.createDirIfNotExists()
+        Path treePath = outPath.resolve('test_tree.yaml')
+        treePath.write(yamlLines)
+
         then:
-        Map parentMap = parentNode.toMap(true)
-        String yamlString = yaml.dump(parentMap)
-        String expectedYamlString = this.class.getResource('/test_tree.yaml').text
-        List<String> lines = yamlString.readLines()
-        List<String> expectedLines = expectedYamlString.readLines()
-        int lineCounter = 1
-        while (lines) {
-            String line = lines.pop()
-            String expectedLine = expectedLines.pop()
-            assert line == expectedLine, "Mismatch in line ${lineCounter}:\nActual  : ${line}\nExpected: ${expectedLine}\n\nComplete:\n${yamlString}"
-            lineCounter += 1
-        }
+        fileChecker.runChecks(treePath)
     }
 }
