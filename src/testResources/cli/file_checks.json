@@ -1,0 +1,20 @@
+{
+  "trace_test.txt": {
+    "checksum": "150a81dbbfb35fb9fcbebeab7b55ba14",
+    "num_lines": 3
+  },
+  "summary_test.txt": {
+    "checksum": "d77098c2a78a0cfa184b3556bf1e7b94",
+    "num_lines": 30
+  },
+  "report_test.html": {
+    "checksum": "197f31a4a8145bcf4b989906ad6ba211",
+    "excluded_lines": [1027, 1028],
+    "num_lines": 1317
+  },
+  "data_test.yaml": {
+    "checksum": "d65bb67459cea786b515d25b2c4d44d4",
+    "excluded_lines": [13, 17, 21, 111, 115, 119, 242, 246, 250],
+    "num_lines": 341
+  }
+}

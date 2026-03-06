@@ -1,10 +1,14 @@
 {
   "summary_test.txt": {
     "checksum": "837cb72b0f14c1927a93a1fb2c362958",
-    "num_lines": 29
+    "num_lines": 30
   },
   "report_test.html": {
     "checksum": "028d7c9f577cab592e4106d3f317a1cf",
     "num_lines": 1317
+  },
+  "data_test.yaml": {
+    "checksum": "58892de4111387d2d7df27552b2f7aa5",
+    "num_lines": 92
   }
 }

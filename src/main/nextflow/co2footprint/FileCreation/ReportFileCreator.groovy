@@ -7,13 +7,13 @@ import groovy.util.logging.Slf4j
 import nextflow.Session
 import nextflow.co2footprint.CO2FootprintCalculator
 import nextflow.co2footprint.CO2FootprintConfig
+import nextflow.co2footprint.CO2FootprintPlugin
+import nextflow.co2footprint.Config.ReportFileConfig
 import nextflow.co2footprint.Metrics.Quantity
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.co2footprint.Records.CiRecordCollector
 import nextflow.trace.TraceHelper
-
-import java.nio.file.Path
 
 /**
  * Generates the HTML CO₂ footprint report file.
@@ -23,15 +23,13 @@ import java.nio.file.Path
  */
 @Slf4j
 class ReportFileCreator extends BaseFileCreator{
-
     // Maximum number of tasks to include in the report table
     private int maxTasks
 
     // Information for final report
-    private CO2RecordTree workflowStats
+    private CO2RecordTree stats
     private CO2FootprintCalculator co2FootprintComputer
     private CO2FootprintConfig config
-    private String version
     private Session session
     private CiRecordCollector timeCiRecordCollector
 
@@ -41,40 +39,40 @@ class ReportFileCreator extends BaseFileCreator{
     /**
      * Constructor for the HTML report file.
      *
-     * @param path      Path to the report file
-     * @param overwrite Whether to overwrite existing files
-     * @param maxTasks  Maximum number of tasks to include in the report table
+     * @param config A {@link ReportFileConfig} that defines the created file.
      */
-    ReportFileCreator(Path path, boolean overwrite=false, int maxTasks=10_000) {
-        super(path, overwrite)
-        this.maxTasks = maxTasks
+    ReportFileCreator(ReportFileConfig config) {
+        super(config)
+        this.maxTasks = config.maxTasks
+
+        if(!config.enabled) {
+            this.metaClass.create = { -> null }
+            this.metaClass.write = { -> null }
+            this.metaClass.close = { -> null }
+            this.metaClass.addEntries = {
+                CO2RecordTree X, CO2FootprintCalculator Y, CO2FootprintConfig Z, Session A, CiRecordCollector B -> null
+            }
+        }
     }
 
     /**
      * Store all data needed for the report.
      *
-     * @param processStats Statistics (quantiles, ...) per process
-     * @param totalStats Total energy used (Wh) & Total CO₂ emissions (g)
-     * @param equivalences  CO₂ equivalence calculations
+     * @param stats         The {@link CO2RecordTree} with all stats.
      * @param config        Plugin configuration
-     * @param version       Plugin version
-     * @param session       Nextflow session
-     * @param traceRecords  Map of TaskId to TraceRecord
-     * @param co2eRecords   Map of TaskId to CO2Record
      * @param timeCiRecordCollector   Time & CI Record collector that contains a map of all carbon intensities at different times
+     * @param session       Nextflow session
      */
     void addEntries(
-            CO2RecordTree workflowStats,
+            CO2RecordTree stats,
             CO2FootprintCalculator co2FootprintComputer,
             CO2FootprintConfig config,
-            String version,
-            Session session,
-            CiRecordCollector timeCiRecordCollector
+            CiRecordCollector timeCiRecordCollector,
+            Session session = null
     ) {
-        this.workflowStats = workflowStats
+        this.stats = stats
         this.co2FootprintComputer = co2FootprintComputer
         this.config = config
-        this.version = version
         this.session = session
         this.timeCiRecordCollector = timeCiRecordCollector
     }
@@ -115,7 +113,7 @@ class ReportFileCreator extends BaseFileCreator{
         final templateFields = [
                 // Plugin information
                 // Metadata
-                plugin_version: version,
+                plugin_version: CO2FootprintPlugin.version,
                 workflow : session?.getWorkflowMetadata() ?: [:],
                 options : renderOptionsJson(),
 
@@ -181,8 +179,8 @@ class ReportFileCreator extends BaseFileCreator{
     */
     private Map<String, String> makeCO2Total(suffix) {
         // Retrieve total CO₂ emissions and energy consumption for the given suffix
-        Double co2e = workflowStats.co2Record.get("co2e${suffix}") as Double
-        Double energy = workflowStats.co2Record.get("energy${suffix}") as Double
+        Double co2e = stats.co2Record.get("co2e${suffix}") as Double
+        Double energy = stats.co2Record.get("energy${suffix}") as Double
 
         if (co2e != null) {
             CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(co2e)
@@ -220,40 +218,34 @@ class ReportFileCreator extends BaseFileCreator{
      */
     protected String renderDataJson() {
         return "{" +
-            "\"trace\":${JsonOutput.toJson(collectTasks(workflowStats))}," +
-            "\"summary\":${JsonOutput.toJson(collectSummary(workflowStats))}" +
+            "\"trace\":${JsonOutput.toJson(collectTasks(stats))}," +
+            "\"summary\":${JsonOutput.toJson(collectSummary(stats))}" +
         "}"
     }
 
     /**
      * Collects statistics at the process level
      *
-     * @param workflowStats CO2RecordTree representation of workflow stats with marked levels
+     * @param stats CO2RecordTree representation of workflow stats with marked levels
      * @return Map of the process-specific statistics
      */
-    protected Map<String, Object> collectSummary(CO2RecordTree workflowStats=this.workflowStats) {
+    protected Map<String, Object> collectSummary(CO2RecordTree stats=this.stats) {
         // Add an empty map if the process is not already present
-        return workflowStats.collectByLevel('process', ['co2e', 'energy', 'co2e_non_cached', 'energy_non_cached'])
+        return stats.collectByLevel('process', ['co2e', 'energy', 'co2e_non_cached', 'energy_non_cached'])
     }
 
 
     /**
      * Collect task-level metrics from the RecordTree up to a maximum number of tasks.
      *
-     * @param workflowStats CO2RecordTree with workflow, process, and task metrics
+     * @param stats CO2RecordTree with workflow, process, and task metrics
      * @return List of task value maps
      */
-    protected List<Map<String, Map<String, Object>>> collectTasks(CO2RecordTree workflowStats=this.workflowStats){
+    protected List<Map<String, Map<String, Object>>> collectTasks(CO2RecordTree stats=this.stats){
         List<Map<String, Map<String, Object>>> results = []
-        for (CO2RecordTree processes : workflowStats.children) {
-            for (CO2RecordTree tasks : processes.children) {
-                if (results.size() < maxTasks) {
-                    results.add(tasks.toMap().get('values') as Map<String, Map<String, Object>>)
-                }
-                else {
-                    break
-                }
-            }
+        List<CO2RecordTree> taskRecordTrees = stats.descentTo('task')
+        for(int i = 0; i < Math.min(taskRecordTrees.size(), maxTasks); i++) {
+            results.add(taskRecordTrees[i].toMap().get('values') as Map<String, Map<String, Object>>)
         }
 
         return results

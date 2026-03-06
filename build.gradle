@@ -71,6 +71,7 @@ dependencies {
     compileOnly "org.pf4j:pf4j:$pf4jVersion"
 
     // add here plugins dependencies
+    implementation(group: 'com.github.oshi', name: 'oshi-core', version: '6.10.0')
 
     // test configuration
     testImplementation "org.apache.groovy:groovy-nio:$groovyVersion"

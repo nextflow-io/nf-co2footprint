@@ -3,6 +3,7 @@ package nextflow.co2footprint
 import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
 import nextflow.Session
+import nextflow.co2footprint.FileCreation.DataFileCreator
 import nextflow.co2footprint.FileCreation.ReportFileCreator
 import nextflow.co2footprint.FileCreation.SummaryFileCreator
 import nextflow.co2footprint.FileCreation.TraceFileCreator
@@ -29,30 +30,21 @@ import java.util.concurrent.ConcurrentHashMap
  */
 @Slf4j
 class CO2FootprintObserver implements TraceObserver {
-
-    // Plugin version
-    private String version
-
     // Holds workflow session
-    private Session session
+    Session session
 
     // Output file objects
-    TraceFileCreator traceFile
-    SummaryFileCreator summaryFile
-    ReportFileCreator reportFile
-
-    // Overwrite existing files if true
-    private boolean overwrite
-
-    // Max number of tasks allowed in the report, when they exceed this number the tasks table is omitted
-    private int maxTasks
+    final TraceFileCreator traceFile
+    final SummaryFileCreator summaryFile
+    final ReportFileCreator reportFile
+    final DataFileCreator dataFile
 
     // Plugin configuration
     CO2FootprintConfig config
 
     // Calculator for CO₂ footprint
-    private CO2FootprintCalculator co2FootprintComputer
-    CO2FootprintCalculator getCO2FootprintComputer() { co2FootprintComputer }
+    private CO2FootprintCalculator co2FootprintCalculator
+    CO2FootprintCalculator getCO2FootprintCalculator() { co2FootprintCalculator }
 
     // Record for CI values during execution
     CiRecordCollector timeCiRecordCollector
@@ -67,45 +59,30 @@ class CO2FootprintObserver implements TraceObserver {
     /**
      * Constructor for the observer.
      *
-     * @param session Nextflow session
-     * @param version Plugin version
      * @param config Plugin configuration
-     * @param co2FootprintComputer CO₂ computation instance
-     * @param overwrite Whether to overwrite existing documents
-     * @param maxTasks The maximum number of tasks until the table in the report is dropped
+     * @param co2FootprintCalculator CO₂ computation instance
      */
     CO2FootprintObserver(
-            Session session,
-            String version,
             CO2FootprintConfig config,
-            CO2FootprintCalculator co2FootprintComputer,
-            boolean overwrite=true,
-            int maxTasks=10_000
+            CO2FootprintCalculator co2FootprintCalculator
     ) {
-        this.session = session
-        this.version = version
         this.config = config
 
         // Create a CO2RecordTree root node for the run, tagged with 'workflow' level,
         // to collect and organize execution metrics hierarchically.
-        this.workflowStats = new CO2RecordTree(session?.runName, [level: 'workflow'])
+        this.workflowStats = new CO2RecordTree('Unknown workflow', [level: 'workflow'])
 
         // Make file instances
-        if (config.trace && config.trace.enabled) {
-            this.traceFile = new TraceFileCreator(config.trace.file.complete(), overwrite)
+        this.traceFile = new TraceFileCreator(config.trace)
+        this.summaryFile = new SummaryFileCreator(config.summary)
+        this.reportFile = new ReportFileCreator(config.report)
+        this.dataFile = new DataFileCreator(config.dataFile)
+
+        if (!config.trace.enabled && !config.summary.enabled && !config.report.enabled && !config.dataFile.enabled) {
+            log.warn('No output files are enabled - to enable, set `enabled: true` in the sections `trace`, `summary` or `report`.')
         }
 
-        if (config.summary && config.summary.enabled) {
-            this.summaryFile = new SummaryFileCreator(config.summary.file.complete(), overwrite)
-        }
-
-        if (config.report && config.report.enabled) {
-            this.reportFile = new ReportFileCreator(config.report.file.complete(), overwrite, maxTasks)
-        }
-
-        this.co2FootprintComputer = co2FootprintComputer
-        this.overwrite = overwrite
-        this.maxTasks = maxTasks
+        this.co2FootprintCalculator = co2FootprintCalculator
 
         this.timeCiRecordCollector = new CiRecordCollector(config)
     }
@@ -136,6 +113,14 @@ class CO2FootprintObserver implements TraceObserver {
     }
 
     /**
+     * Calculate the CO2 emissions in form of a {@link CO2Record} from a {@link TraceRecord}
+     * in conjunction with the current CI Record collector.
+     */
+    CO2Record createCO2Record(TraceRecord traceRecord) {
+        return co2FootprintCalculator.computeTaskCO2footprint(traceRecord, timeCiRecordCollector)
+    }
+
+    /**
      * Aggregates the trace and CO₂ records of a finished task.
      *
      * @param trace TraceRecord of the finished task
@@ -145,10 +130,10 @@ class CO2FootprintObserver implements TraceObserver {
         runningTasks.remove(traceRecord.taskId)
 
         // Compute CO₂ footprint for this task
-        final CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(traceRecord, timeCiRecordCollector)
+        final CO2Record co2Record = createCO2Record(traceRecord)
 
         // Optionally write to trace file
-        this.traceFile?.write(co2Record)
+        this.traceFile.write(co2Record)
 
         // Add a task node with its CO2Record to the corresponding process
         CO2RecordTree processNode = workflowStats.getChild(traceRecord.processName)
@@ -157,37 +142,36 @@ class CO2FootprintObserver implements TraceObserver {
         return co2Record
     }
 
-    void renderFiles() {
+    void renderFiles(CO2RecordTree co2RecordTree=workflowStats) {
         // Catch unfinished tasks
         runningTasks.each { TaskId taskId, TraceRecord traceRecord -> aggregateRecords(traceRecord) }
 
         // Close all files (writes remaining tasks in the trace file)
-        traceFile?.close(runningTasks)
+        traceFile.close(runningTasks)
 
         // Finalize and aggregate all workflow statistics
-        workflowStats.summarize()
-        workflowStats.collectAdditionalMetrics()
+        co2RecordTree.summarize()
+        co2RecordTree.collectAdditionalMetrics()
 
         // Create report and summary if any content exists to write to the file
         if (workflowStats) {
-            if (summaryFile) {
-                summaryFile.create()
-                summaryFile.write(workflowStats, co2FootprintComputer, config, version)
-                summaryFile.close()
-            }
+            summaryFile.create()
+            summaryFile.write(co2RecordTree, co2FootprintCalculator, config)
 
-            if (reportFile) {
-                reportFile.create()
-                reportFile.addEntries(workflowStats, co2FootprintComputer, config, version, session, timeCiRecordCollector)
-                reportFile.write()
-                reportFile.close()
-            }
+            reportFile.create()
+            reportFile.addEntries(co2RecordTree, co2FootprintCalculator, config, timeCiRecordCollector, session)
+            reportFile.write()
+        }
+        if (co2RecordTree) {
+            dataFile.create()
+            dataFile.write(co2RecordTree)
         }
 
         // Close all files (writes remaining tasks in the trace file)
-        traceFile?.close(runningTasks)
-        summaryFile?.close()
-        reportFile?.close()
+        traceFile.close(runningTasks)
+        summaryFile.close()
+        reportFile.close()
+        dataFile.close()
     }
 
     // ------ OBSERVER METHODS ------
@@ -203,8 +187,13 @@ class CO2FootprintObserver implements TraceObserver {
     void onFlowCreate(Session session) {
         log.debug('Workflow started -- CO2Footprint file instantiated')
 
+        CO2FootprintPlugin co2footprintPlugin = CO2FootprintPlugin.getPlugin()
+        co2footprintPlugin?.sessionTraceRecorder?.attachSession(session)
+
         // Construct session and aggregator
         this.session = session
+
+        this.workflowStats.name = session.runName
 
         // we wouldn't expect a config where all output files are turned off, so warn the user
         if (!traceFile && !summaryFile && !reportFile) {
@@ -215,7 +204,7 @@ class CO2FootprintObserver implements TraceObserver {
         timeCiRecordCollector.start()
 
         // Create trace file
-        traceFile?.create()
+        traceFile.create()
     }
 
     /**
@@ -228,8 +217,7 @@ class CO2FootprintObserver implements TraceObserver {
         // Stop hourly CI updating
         timeCiRecordCollector.stop()
 
-        // Write files
-        renderFiles()
+        workflowStats.summarize()
 
         log.info(
             "🌱 The workflow run used ${workflowStats.co2Record.toReadable('energy')} of electricity, " +

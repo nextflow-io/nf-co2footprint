@@ -8,28 +8,41 @@ The following parameters are currently available:
 ## Output Files
 
 - **`trace`**  
-    Map containing:
-    
+  Map containing:
     - `enabled`: Whether to produce this file
     - `file`: Name of the `.txt` carbon footprint report containing the energy consumption, estimated CO₂ emission, and other relevant metrics for each task.
-    
-    **Default**: `[enabled: true, file: co2footprint_trace_<timestamp>.txt]`
+    - `overwrite`: whether to overwrite the file, if it already exists.
+
+    **Default**: `[enabled: true, file: co2footprint_trace_<timestamp>.txt, overwrite: true]`
 
 - **`summary`**  
-    Map containing:
+  Map containing:
+    - `enabled`: Whether to produce this file
+    - `file`: Name of the `.txt` carbon footprint summary file containing the total energy consumption and total estimated CO₂ emission of the pipeline run.
+    - `overwrite`: Whether to overwrite the file, if it already exists.
 
-    - `enabled`: whether to produce this file
-    - `file`: name of the `.txt` carbon footprint summary file containing the total energy consumption and total estimated CO₂ emission of the pipeline run. 
-
-    **Default**: `[enabled: true, file: co2footprint_summary_<timestamp>.txt]`
+    **Default**: `[enabled: true, file: co2footprint_summary_<timestamp>.txt, overwrite: true]`
 
 - **`report`**  
-    Map containing:
+  Map containing:
+    - `enabled`: Whether to produce this file
+    - `file`: Name of the HTML report containing information about the entire carbon footprint, overview plots, and more detailed task-specific metrics.
+    - `overwrite`: Whether to overwrite the file, if it already exists.
+    - `maxTasks`: Maximum number of tasks which are included into the report.
 
-    - `enabled`: whether to produce this file
-    - `file`: name of the HTML report containing information about the entire carbon footprint, overview plots, and more detailed task-specific metrics. 
+    **Default**: `[enabled: true, file: co2footprint_report_<timestamp>.html, overwrite: true, maxTasks: 10000]`
 
-    **Default**: `[enabled: true, file: co2footprint_report_<timestamp>.html]`
+- **`dataFile`**  
+  Map containing:
+    - `enabled`: Whether to produce this file
+    - `file`: Name of the data/machine-actionable file containing all metrics that were used during footprint calculation in a structured way.
+    - `overwrite`: Whether to overwrite the file, if it already exists.
+    - `emissionMetricsOnly`: Whether to only include emission metrics, such as CO₂ equivalents and electricity consumption.
+
+    **Default**: `[enabled: false, file: co2footprint_report_<timestamp>.html, overwrite: true, emissionMetricsOnly: false]`
+
+    !!! warning "Preliminary feature"
+        The data file is currently not in its final version. Changes in the near future are very likely.
 
 ## Location & Carbon Intensity
 

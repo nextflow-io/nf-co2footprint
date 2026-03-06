@@ -4,7 +4,7 @@ package nextflow.co2footprint.Records
  * relationship.
  */
 class CO2RecordTree {
-    final name
+    String name
     final Map metaData
     CO2Record co2Record
 
@@ -68,13 +68,14 @@ class CO2RecordTree {
      * @return this RecordTree node with aggregated summary values
      */
     CO2RecordTree summarize() {
-        List<CO2RecordTree> addableChildren = children.findAll( { CO2RecordTree child -> child.co2Record?.respondsTo('plus') } )
-
-        if (!addableChildren) {
-            addableChildren = children.collect({ CO2RecordTree child -> child.summarize() })
+        if (children) {
+            children.each({ CO2RecordTree child -> child.summarize() })
         }
 
-        co2Record = addableChildren.collect( { CO2RecordTree child -> child.co2Record }).sum() as CO2Record
+        if (!co2Record?.respondsTo('plus')) {
+            co2Record = children.collect({ CO2RecordTree child -> child.co2Record }).sum() as CO2Record
+        }
+
         return this
     }
 
@@ -180,23 +181,46 @@ class CO2RecordTree {
     }
 
     /**
+     * Descent to another level in the tree.
+     *
+     * @param level Name of the level.
+     * @return A list of record trees at the specified level.
+     */
+    List<CO2RecordTree> descentTo(String level) {
+        if (metaData?.level === level) {
+            return [this]
+        }
+        else {
+            return children.collect( { CO2RecordTree child -> child.descentTo(level) } ).flatten() as List<CO2RecordTree>
+        }
+    }
+
+    /**
      * Convert this record tree to a map.
      *
      * @param onlyCO2parameters Whether all parameters should be included, or only the ones that are nf-co2 plugin-specific
+     * @param includeNulls Whether to include parameters that have `null` as a raw value
+     * @param includeReportValues Whether to include 'report' values of entries
      * @return A map representation of this Record Tree
      */
-    Map<String, Object> toMap(boolean onlyCO2parameters=false) {
+    Map<String, Object> toMap(boolean onlyCO2parameters=false, boolean includeNulls=true, boolean includeReportValues=true) {
         Map<String, Map<String, Object>> recordMap = [:]
         if (co2Record) {
             (onlyCO2parameters ? co2Record.co2Keys : co2Record.keySet()).each { String key ->
-                recordMap.put(key, co2Record.representationMap.get(key))
+                Map<String, Object> value = co2Record.representationMap.get(key)
+                if (includeNulls || value['raw']['value'] != null) {
+                    if (!includeReportValues) {
+                        value.remove('report')
+                    }
+                    recordMap.put(key, value)
+                }
             }
         }
         return [
             name: name,
             metaData: metaData,
             values: recordMap,
-            children: children.collect({ CO2RecordTree child -> child.toMap(onlyCO2parameters) }),
+            children: children.collect({ CO2RecordTree child -> child.toMap(onlyCO2parameters, includeNulls, includeReportValues) }),
         ]
     }
 

@@ -18,21 +18,18 @@ package nextflow.co2footprint
 
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
-
 import nextflow.cli.PluginAbstractExec
 
-import nextflow.co2footprint.DataContainers.CIDataMatrix
-import nextflow.co2footprint.DataContainers.TDPDataMatrix
+import nextflow.co2footprint.Recorders.SessionTraceRecorder
 import nextflow.co2footprint.Parsers.ArgsParser
 import nextflow.co2footprint.Records.CO2Record
-import nextflow.co2footprint.Parsers.TraceFileParser
-import nextflow.config.ConfigParserFactory
-import nextflow.config.ConfigParser
+import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.plugin.BasePlugin
+import nextflow.plugin.Plugins
 import nextflow.trace.TraceRecord
 import org.pf4j.PluginWrapper
 
-import java.nio.file.Path
+import java.nio.file.Paths
 
 /**
  * Implements the CO2Footprint plugins entry point
@@ -42,9 +39,92 @@ import java.nio.file.Path
 @CompileStatic
 @Slf4j
 class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
+    // Record stats about the session
+    final SessionTraceRecorder sessionTraceRecorder = new SessionTraceRecorder()
+
+    // Plugin version
+    static final String version = readPluginVersion()
+
+    // Observer of Nextflow workflows/processes/tasks
+    CO2FootprintObserver observer
 
     CO2FootprintPlugin(PluginWrapper wrapper) {
         super(wrapper)
+    }
+
+    /**
+     * Start the plugin. Earliest point of interaction with the core code.
+     */
+    @Override
+    void start() {
+        log.info("nf-co2footprint plugin  ~  version ${version}")
+
+        sessionTraceRecorder.start()
+        super.start()
+    }
+
+    /**
+     * Stop the plugin. Latest point of interaction with the core code.
+     */
+    @Override
+    void stop() {
+        sessionTraceRecorder.stop()
+        TraceRecord sessionRecord = sessionTraceRecorder.report()
+
+        CO2Record sessionCO2Record = observer.createCO2Record(sessionRecord)
+        observer.timeCiRecordCollector.stop()
+
+        CO2RecordTree sessionStats = new CO2RecordTree(
+                observer.session?.runName,
+                [level: 'session'],
+                sessionCO2Record,
+                null,
+                [observer.workflowStats]
+        )
+
+        // Render files
+        observer.renderFiles(sessionStats)
+
+        super.stop()
+    }
+
+    static CO2FootprintPlugin getPlugin() {
+        if(Plugins.manager) {
+            PluginWrapper pluginWrapper = Plugins.manager.getPlugin('nf-co2footprint')
+            return pluginWrapper.plugin as CO2FootprintPlugin
+        }
+        return  null
+    }
+
+    /**
+     * Set the current plugin version from the local /META-INF/MANIFEST.MF
+     *
+     * @param manifest URL to the manifest
+     * @param tryFallback Whether a fallback in the form of a search of all MANIFESTS from the class loader should be attempted
+     */
+    protected static String readPluginVersion(
+            URL manifest=CO2FootprintPlugin.class.getResource('/META-INF/MANIFEST.MF'),
+            boolean tryFallback=true
+    ) {
+        try {
+            // Get version from manifest
+            List<String> lines = manifest.readLines()
+            String line = lines.find {String line -> line.startsWith('Plugin-Version: ') }
+            return line.split(': ')[1]
+        }
+        catch (NullPointerException nullPointerException) {
+            // Fallback to checking all classLoader Files
+            if (tryFallback) {
+                URL url = CO2FootprintPlugin.class.protectionDomain.codeSource.location
+                url = Paths.get(url.path.replace('/classes/groovy/main', '/tmp/jar/MANIFEST.MF')).toUri().toURL()
+
+                readPluginVersion(url, false)
+            }
+            else {
+                log.error(nullPointerException.getMessage())
+                throw nullPointerException
+            }
+        }
     }
 
     /**
@@ -70,56 +150,12 @@ class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
         CO2FootprintFactory.adaptLogging()
 
         Map<String, Object> parsedArgs = ArgsParser.parse(args)
-        if( cmd == 'postRun' ) {
-            // Define trace path
-            assert parsedArgs.containsKey('tracePath') && (parsedArgs.get('tracePath') instanceof String)
-            Path tracePath = Path.of(parsedArgs.get('tracePath') as String)
-
-            // Define config
-            Map<String, Object> co2Config = [:]
-            Map<String, Object> processConfig = [:]
-            if(parsedArgs.get('config') instanceof String) {
-                Path configPath = Path.of(parsedArgs.get('config') as String)
-                ConfigParser configParser = ConfigParserFactory.create()
-                co2Config = configParser.parse(configPath).navigate('co2footprint') as Map?: [:]
-                if (co2Config.containsKey('emApiKey') && !co2Config.get('emApiKey')) {
-                    log.warn(
-                        'Empty value discovered for `emApiKey` in config.' +
-                        'Keep in mind that secrets can not be accessed via `nextflow plugin ...`.' +
-                        'Removing `emApiKey from config.'
-                    )
-                    co2Config.remove('emApiKey')
-                }
-                configParser.parse(configPath).navigate('process') as Map?: [:]
+        return switch (cmd) {
+            case 'postRun' -> CO2FootprintCLI.postRun(parsedArgs)
+            default -> {
+                System.err.println("Invalid command: ${cmd}")
+                1
             }
-
-            // Define separate observer
-            CO2FootprintConfig config = new CO2FootprintConfig(
-                    co2Config, TDPDataMatrix.tdpDataMatrix,
-                    CIDataMatrix.ciDataMatrix, processConfig
-            )
-            CO2FootprintCalculator computer = new CO2FootprintCalculator(TDPDataMatrix.tdpDataMatrix, config)
-            CO2FootprintObserver observer = new CO2FootprintObserver(null, 'unknown', config, computer)
-
-            // Parse the trace file
-            List<TraceRecord> traceRecords = TraceFileParser.parseExecutionTraceFile(tracePath)
-
-            // Create trace file
-            observer.traceFile.create()
-
-            // Collect CO2Records from traces & optionally write the corresponding files
-            List<CO2Record> co2Records = []
-            traceRecords.each { TraceRecord traceRecord ->
-                observer.recordStarted(traceRecord)
-                co2Records.add(observer.aggregateRecords(traceRecord))
-            }
-            observer.renderFiles()
-
-            return 0
-        }
-        else {
-            System.err.println "Invalid command: ${cmd}"
-            return 1
         }
     }
 }

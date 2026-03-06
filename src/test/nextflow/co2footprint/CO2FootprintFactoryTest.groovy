@@ -39,12 +39,4 @@ class CO2FootprintFactoryTest extends Specification {
         observers[0] instanceof  CO2FootprintObserver
         observers.size() == 1
     }
-
-    def 'check version' () {
-        when:
-        String pluginVersion = CO2FootprintFactory.readPluginVersion()
-
-        then:
-        pluginVersion == "1.1.0"
-    }
 }
