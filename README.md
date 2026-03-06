@@ -27,7 +27,7 @@ Declare the plugin in your Nextflow pipeline configuration file:
 
 ```groovy title="nextflow.config"
 plugins {
-  id 'nf-co2footprint@1.1.0'
+  id 'nf-co2footprint@1.2.0'
 }
 ```
 
@@ -76,7 +76,7 @@ We additionally thank the following people for their extensive assistance in the
 
 ### How to cite:
 ```text
-J. Carl, N. Volkmann, J. Mir-Pedrol, P. Ewels, S. Nahnsen, S. Krakau nextflow-io/nf-co2footprint v1.1.0. (Nov., 2025). nextflow-io. Available: https://github.com/nextflow-io/nf-co2footprint
+J. Carl, N. Volkmann, J. Mir-Pedrol, P. Ewels, S. Nahnsen, S. Krakau nextflow-io/nf-co2footprint v1.2.0. (Mar., 2026). nextflow-io. Available: https://github.com/nextflow-io/nf-co2footprint
 ```
 ```Bibtex
 @software{nf_co2footprint_plugin,
@@ -87,10 +87,10 @@ J. Carl, N. Volkmann, J. Mir-Pedrol, P. Ewels, S. Nahnsen, S. Krakau nextflow-io
                  Sven Nahnsen and
                  Sabrina Krakau}
     title   =   {nextflow-io/nf-co2footprint - A Nextflow plugin to estimate the CO2e footprint of pipeline runs}
-    month   =   {November}
-    year    =   {2025}
+    month   =   {March}
+    year    =   {2026}
     publisher = {Nextflow-io}
-    version =   {v1.1.0}
+    version =   {v1.2.0}
     url     =   {https://doi.org/10.5281/zenodo.14622304}
     doi     =   {10.5281/zenodo.14622304}
 }
