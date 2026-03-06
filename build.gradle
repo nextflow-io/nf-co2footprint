@@ -71,17 +71,20 @@ dependencies {
     compileOnly "org.pf4j:pf4j:$pf4jVersion"
 
     // add here plugins dependencies
+    implementation(group: 'com.github.oshi', name: 'oshi-core', version: '6.10.0')
 
     // test configuration
     testImplementation "org.apache.groovy:groovy-nio:$groovyVersion"
     testImplementation "io.nextflow:nextflow:$nextflowVersion"
-    testImplementation ("org.apache.groovy:groovy-test:$groovyVersion") { exclude group: 'org.apache.groovy' }
-    testImplementation ('cglib:cglib-nodep:3.3.0')
-    testImplementation ('org.objenesis:objenesis:3.1')
-    testImplementation ('org.spockframework:spock-core:2.3-groovy-4.0') { exclude group: 'org.apache.groovy'; exclude group: 'net.bytebuddy' }
-    testImplementation ('org.spockframework:spock-junit4:2.3-groovy-4.0') { exclude group: 'org.apache.groovy'; exclude group: 'net.bytebuddy' }
-    testImplementation ('com.google.jimfs:jimfs:1.1')
-    testImplementation ('ch.qos.logback:logback-classic:1.5.18')
+    testImplementation("org.apache.groovy:groovy-test:$groovyVersion") { exclude group: 'org.apache.groovy' }
+    testImplementation('cglib:cglib-nodep:3.3.0')
+    testImplementation('org.objenesis:objenesis:3.1')
+    testImplementation('org.spockframework:spock-core:2.3-groovy-4.0') { exclude group: 'org.apache.groovy';
+        exclude group: 'net.bytebuddy' }
+    testImplementation('org.spockframework:spock-junit4:2.3-groovy-4.0') { exclude group: 'org.apache.groovy';
+        exclude group: 'net.bytebuddy' }
+    testImplementation('com.google.jimfs:jimfs:1.1')
+    testImplementation('ch.qos.logback:logback-classic:1.5.18')
 
     testImplementation(testFixtures("io.nextflow:nextflow:$nextflowVersion"))
     testImplementation(testFixtures("io.nextflow:nf-commons:$nextflowVersion"))
@@ -93,17 +96,18 @@ dependencies {
 }
 
 // Plugin version
-version = '1.1.0'
+version = '1.2.0'
 
 nextflowPlugin {
     // Minimum Nextflow version
-    nextflowVersion = '24.10.6'
+    nextflowVersion = '25.10.0'
 
     // Plugin metadata
     provider = 'nextflow'
     className = 'nextflow.co2footprint.CO2FootprintPlugin'
     extensionPoints = [
-            'nextflow.co2footprint.CO2FootprintFactory'
+            'nextflow.co2footprint.CO2FootprintFactory',
+            'nextflow.co2footprint.CO2FootprintExtension'
     ]
 
 }

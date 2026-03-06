@@ -22,9 +22,9 @@ where
 $$
 \begin{aligned}
 t   & = \text{runtime of the computation (h)} \\
-n_c & = \text{number of cores} \\
+n_c & = \text{number of logical cores} \\
 u_c & = \text{core usage factor (between 0 and 1)} \\
-P_c & = \text{power draw per core (W)} \\
+P_c & = \text{power draw per logical core (W)} \\
 n_m & = \text{size of memory available (GB)} \\
 P_m & = \text{power draw of memory (W, per GB)} \\
 PUE & = \text{Power Usage Effectiveness of the data center} \\

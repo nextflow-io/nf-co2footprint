@@ -4,23 +4,15 @@ import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Logging.LoggingAdapter
 
-import java.nio.file.Path
-import java.nio.file.Paths
-
 import groovy.transform.PackageScope
 import groovy.transform.PackageScopeTarget
 import groovy.transform.CompileStatic
 
 import groovy.util.logging.Slf4j
-import org.slf4j.LoggerFactory
-import ch.qos.logback.classic.LoggerContext
 
 import nextflow.Session
 import nextflow.trace.TraceObserver
 import nextflow.trace.TraceObserverFactory
-
-import java.util.jar.Manifest
-
 
 /**
  * Factory class for creating the CO2Footprint trace observer.
@@ -34,54 +26,46 @@ import java.util.jar.Manifest
 @CompileStatic
 @PackageScope(PackageScopeTarget.FIELDS)
 class CO2FootprintFactory implements TraceObserverFactory {
+    // Nextflow Session
+    private Session session = null
 
-    // Plugin version
-    private String pluginVersion = null
+    // Configuration
+    CO2FootprintConfig config = null
 
     /**
-     * Set the current plugin version from the local /META-INF/MANIFEST.MF
-     *
-     * @param manifest URL to the manifest
-     * @param tryFallback Whether a fallback in the form of a search of all MANIFESTS from the class loader should be attempted
+     * Adapt the current logging to filter marked messages for uniqueness and change the coloring of the console output.
      */
-    protected void setPluginVersion(
-            URL manifest=this.class.getResource('/META-INF/MANIFEST.MF'),
-            boolean tryFallback=true
-    ) {
-        log.trace("MANIFEST.MF path: ${manifest.toString()}")
-
-        try {
-            // Get version from manifest
-            List<String> lines = manifest.readLines()
-            String line = lines.find {it.startsWith('Plugin-Version: ') }
-            pluginVersion = line.split(': ')[1]
-        }
-        catch (NullPointerException nullPointerException) {
-            // Fallback to checking all classLoader Files
-            if (tryFallback) {
-                URL url = this.class.protectionDomain.codeSource.location
-                url = Paths.get(url.path.replace('/classes/groovy/main', '/tmp/jar/MANIFEST.MF')).toUri().toURL()
-
-                setPluginVersion(url, false)
-            }
-            else {
-                log.error(nullPointerException.getMessage())
-                throw nullPointerException
-            }
-        }
+    static void adaptLogging() {
+        LoggingAdapter loggingAdapter = new LoggingAdapter()
+        loggingAdapter.addUniqueMarkerFilter()
+        loggingAdapter.changePatternConsoleAppender()
     }
 
     /**
-     * @return The plugin version
+     * Define a configuration for the nf-co2footprint plugin.
+     *
+     * @param configModifications Modifications that should be made to the config as a {@link Map}
+     * @param session The current Nextflow session
+     * @param tdpDataMatrix Matrix with CPU Thermal design power (TDP) information
+     * @param ciDataMatrix Matrix with carbon intensity (CI) information
+     * @return A configuration that can be used by the plugin
      */
-    String getPluginVersion() { pluginVersion }
+    CO2FootprintConfig defineConfig(
+            Map<String, Object> configModifications=[:],
+            Session session=this.session,
+            TDPDataMatrix tdpDataMatrix=TDPDataMatrix.tdpDataMatrix,
+            CIDataMatrix ciDataMatrix=CIDataMatrix.ciDataMatrix
+    ) {
+        Map<String, Object> co2footprintConfig = (session?.config?.navigate('co2footprint') as Map ?: [:])
+        if (configModifications) { co2footprintConfig += configModifications}
+        return new CO2FootprintConfig(
+                co2footprintConfig,
+                tdpDataMatrix,
+                ciDataMatrix,
+                session?.config?.navigate('process') as Map
+        )
+    }
 
-    /**
-     * External Data integration of TDP (Thermal design power) and CI (Carbon intensity) values
-     */
-    private TDPDataMatrix tdpDataMatrix
-    private CIDataMatrix ciDataMatrix
-    
     /**
      * Creates and returns the CO2Footprint trace observer.
      * Loads configuration, sets up the observer, and injects all required data.
@@ -91,42 +75,20 @@ class CO2FootprintFactory implements TraceObserverFactory {
      */
     @Override
     Collection<TraceObserver> create(Session session) {
-        // Logging
-        LoggingAdapter loggingAdapter = new LoggingAdapter()
-        loggingAdapter.addUniqueMarkerFilter()
-        loggingAdapter.changePatternConsoleAppender()
+        this.session = session
+        adaptLogging()
 
-        // Read the plugin version
-        setPluginVersion()
-        log.info("nf-co2footprint plugin  ~  version ${this.pluginVersion}")
         log.info('🔕 Repeated task-specific messages (🔁) are only logged once in the console. Further occurrences are logged at DEBUG level, appearing only in the `.nextflow.log` file.')
 
-        // Read in matrices
-        this.tdpDataMatrix = TDPDataMatrix.fromCsv(
-                Paths.get(this.class.getResource('/cpu_tdp_data/CPU_TDP.csv').toURI())
-        )
-        this.ciDataMatrix = CIDataMatrix.fromCsv(
-                Paths.get(this.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
-        )
-
-        // Define config
-        CO2FootprintConfig config = new CO2FootprintConfig(
-                session.config.navigate('co2footprint') as Map,
-                this.tdpDataMatrix,
-                this.ciDataMatrix,
-                session.config.navigate('process') as Map
-        )
+        // Define components (config & computer)
+        config = defineConfig()
+        CO2FootprintCalculator co2FootprintCalculator = new CO2FootprintCalculator(TDPDataMatrix.tdpDataMatrix, config)
 
         // Define list of observers
-        final ArrayList<TraceObserver> result = [
-            new CO2FootprintObserver(
-                session,
-                this.pluginVersion,
-                config,
-                new CO2FootprintComputer(this.tdpDataMatrix, config)
-            )
-        ]
-
+        TraceObserver observer = new CO2FootprintObserver(config, co2FootprintCalculator)
+        CO2FootprintPlugin co2FootprintPlugin = CO2FootprintPlugin.getPlugin()
+        co2FootprintPlugin?.observer = observer
+        final ArrayList<TraceObserver> result = [ observer ]
         return result
     }
 }

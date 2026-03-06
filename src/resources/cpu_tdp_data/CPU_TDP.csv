@@ -1,4 +1,4 @@
-name,launch date,source,intended usage,tdp (W),cores,threads,process,die area
+name,launch date,source,intended usage,tdp (W),physicalCores,logicalCores,process,die area
 amd a4-9120c,2019-01-06,https://en.wikichip.org/wiki/amd/a4/a4-9120c,Mobile,6.0,2,2.0,28.0,
 amd a6-9220c,2019-01-06,https://en.wikichip.org/wiki/amd/a6/a6-9220c,Mobile,6.0,2,2.0,28.0,
 amd a8 7680,2019-01-17,https://en.wikichip.org/wiki/amd/a8/7680,Desktop,45.0,4,4.0,28.0,

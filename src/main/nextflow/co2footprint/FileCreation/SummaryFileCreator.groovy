@@ -2,13 +2,14 @@ package nextflow.co2footprint.FileCreation
 
 import groovy.util.logging.Slf4j
 import groovyx.gpars.agent.Agent
-import nextflow.co2footprint.CO2FootprintComputer
-import nextflow.co2footprint.Records.CO2EquivalencesRecord
+import nextflow.co2footprint.CO2FootprintCalculator
 import nextflow.co2footprint.CO2FootprintConfig
-import nextflow.co2footprint.Metrics.Converter
+import nextflow.co2footprint.CO2FootprintPlugin
+import nextflow.co2footprint.Config.SummaryFileConfig
+import nextflow.co2footprint.Metrics.Quantity
+import nextflow.co2footprint.Records.CO2EquivalencesRecord
+import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.trace.TraceHelper
-
-import java.nio.file.Path
 
 
 /**
@@ -25,11 +26,15 @@ class SummaryFileCreator extends BaseFileCreator {
     /**
      * Constructor for summary file.
      *
-     * @param path      Path to the summary file
-     * @param overwrite Whether to overwrite existing files
+     * @param config A {@link SummaryFileConfig} that defines the created file.
      */
-    SummaryFileCreator(Path path, boolean overwrite) {
-        super(path, overwrite)
+    SummaryFileCreator(SummaryFileConfig config) {
+        super(config)
+
+        if(!config.enabled) {
+            this.metaClass.create = { -> null }
+            this.metaClass.write = { CO2RecordTree X, CO2FootprintCalculator Y, CO2FootprintConfig Z -> null }
+        }
     }
 
     /**
@@ -46,23 +51,23 @@ class SummaryFileCreator extends BaseFileCreator {
      * Write the summary file with totals and options.
      *
      * @param totalStats             Map containing total energy ('energy') in Wh and total CO₂ emissions ('co2e') in grams.
-     * @param co2FootprintComputer   CO2FootprintComputer instance for calculating equivalences.
+     * @param co2FootprintComputer   CO2FootprintCalculator instance for calculating equivalences.
      * @param config                 CO2FootprintConfig instance with plugin configuration.
-     * @param version                Plugin version string.
      */
-    void write(Map<String, Double> totalStats, CO2FootprintComputer co2FootprintComputer, CO2FootprintConfig config, String version) {
+    void write(CO2RecordTree workflowStats, CO2FootprintCalculator co2FootprintComputer, CO2FootprintConfig config) {
         if (!created) { return }
+        Map<String, Object> totalStats = workflowStats.co2Record.store
 
         // Launch the agent (for thread safety, though only one write is performed)
         summaryWriter = new Agent<PrintWriter>(file)
 
-        CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(totalStats['co2e'])
+        CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(totalStats['co2e'] as Double)
 
         String outText = """\
         Total CO₂e footprint measures of this workflow run (including cached tasks):
-          CO₂e emissions: ${Converter.toReadableUnits(totalStats['co2e'],'', 'g')}
-          Energy consumption: ${Converter.toReadableUnits(totalStats['energy'],'k', 'Wh')}
-          CO₂e emissions (market): ${totalStats['co2eMarket'] ? Converter.toReadableUnits(totalStats['co2eMarket'], '', 'g') : "-"}
+          CO₂e emissions: ${new Quantity(totalStats['co2e'],'', 'g').round().toReadable() }
+          Energy consumption: ${new Quantity(totalStats['energy'], 'k', 'Wh').toReadable() }
+          CO₂e emissions (market): ${totalStats['co2eMarket'] ? new Quantity(totalStats['co2eMarket'], '', 'g').toReadable() : "-"}
 
         """.stripIndent()
         List<String> readableEquivalences = equivalences.getReadableEquivalences()
@@ -77,7 +82,7 @@ class SummaryFileCreator extends BaseFileCreator {
           Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation.
           Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707
 
-        nf-co2footprint plugin version: ${version}
+        nf-co2footprint plugin version: ${CO2FootprintPlugin.version}
 
         nf-co2footprint options:
         """.stripIndent()

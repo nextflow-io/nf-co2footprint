@@ -24,7 +24,7 @@
     [WARN] Could not find CPU model "Model X 1000" in given TDP data table. Using default CPU power draw value (100.0 W).
     ```
     As previously mentioned, all information we need should be out there somewhere — the TDP of your model should be
-    easy to find with a quick online search. Once you know the TDP and the number of cores you can either:
+    easy to find with a quick online search. Once you know the TDP and the number of logical cores you can either:
     
     - Create a [small table](./parameters.md#custom-tdp-table) with your CPU model names, as they are presented in the warnings, and
       supply the path to this table via the `customCpuTdpFile = <path>` parameter.

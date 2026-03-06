@@ -1,24 +1,19 @@
 package nextflow.co2footprint.FileCreation
 
 import groovy.json.JsonOutput
-import nextflow.co2footprint.Records.CO2EquivalencesRecord
-import nextflow.co2footprint.CO2FootprintConfig
-import nextflow.co2footprint.CO2FootprintComputer
-import nextflow.co2footprint.Records.CO2Record
-import nextflow.co2footprint.Metrics.Converter
-import nextflow.co2footprint.Records.CiRecordCollector
-
 import groovy.text.GStringTemplateEngine
 import groovy.text.Template
 import groovy.util.logging.Slf4j
-
 import nextflow.Session
-import nextflow.processor.TaskId
+import nextflow.co2footprint.CO2FootprintCalculator
+import nextflow.co2footprint.CO2FootprintConfig
+import nextflow.co2footprint.CO2FootprintPlugin
+import nextflow.co2footprint.Config.ReportFileConfig
+import nextflow.co2footprint.Metrics.Quantity
+import nextflow.co2footprint.Records.CO2EquivalencesRecord
+import nextflow.co2footprint.Records.CO2RecordTree
+import nextflow.co2footprint.Records.CiRecordCollector
 import nextflow.trace.TraceHelper
-import nextflow.trace.TraceRecord
-
-import java.nio.file.Path
-
 
 /**
  * Generates the HTML CO₂ footprint report file.
@@ -28,19 +23,14 @@ import java.nio.file.Path
  */
 @Slf4j
 class ReportFileCreator extends BaseFileCreator{
-
     // Maximum number of tasks to include in the report table
     private int maxTasks
 
     // Information for final report
-    private Map<String, Map<String, Map<String, ?>>> processStats
-    private Map<String, Double> totalStats
-    private CO2FootprintComputer co2FootprintComputer
+    private CO2RecordTree stats
+    private CO2FootprintCalculator co2FootprintComputer
     private CO2FootprintConfig config
-    private String version
     private Session session
-    private Map<TaskId, TraceRecord> traceRecords
-    private Map<TaskId, CO2Record> co2eRecords
     private CiRecordCollector timeCiRecordCollector
 
     // Writer for the HTML file
@@ -49,47 +39,41 @@ class ReportFileCreator extends BaseFileCreator{
     /**
      * Constructor for the HTML report file.
      *
-     * @param path      Path to the report file
-     * @param overwrite Whether to overwrite existing files
-     * @param maxTasks  Maximum number of tasks to include in the report table
+     * @param config A {@link ReportFileConfig} that defines the created file.
      */
-    ReportFileCreator(Path path, boolean overwrite=false, int maxTasks=10_000) {
-        super(path, overwrite)
-        this.maxTasks = maxTasks
+    ReportFileCreator(ReportFileConfig config) {
+        super(config)
+        this.maxTasks = config.maxTasks
+
+        if(!config.enabled) {
+            this.metaClass.create = { -> null }
+            this.metaClass.write = { -> null }
+            this.metaClass.close = { -> null }
+            this.metaClass.addEntries = {
+                CO2RecordTree X, CO2FootprintCalculator Y, CO2FootprintConfig Z, Session A, CiRecordCollector B -> null
+            }
+        }
     }
 
     /**
      * Store all data needed for the report.
      *
-     * @param processStats Statistics (quantiles, ...) per process
-     * @param totalStats Total energy used (Wh) & Total CO₂ emissions (g)
-     * @param equivalences  CO₂ equivalence calculations
+     * @param stats         The {@link CO2RecordTree} with all stats.
      * @param config        Plugin configuration
-     * @param version       Plugin version
-     * @param session       Nextflow session
-     * @param traceRecords  Map of TaskId to TraceRecord
-     * @param co2eRecords   Map of TaskId to CO2Record
      * @param timeCiRecordCollector   Time & CI Record collector that contains a map of all carbon intensities at different times
+     * @param session       Nextflow session
      */
     void addEntries(
-            Map<String, Map<String, Map<String, ?>>> processStats,
-            Map<String, Double> totalStats,
-            CO2FootprintComputer co2FootprintComputer,
+            CO2RecordTree stats,
+            CO2FootprintCalculator co2FootprintComputer,
             CO2FootprintConfig config,
-            String version,
-            Session session,
-            Map<TaskId, TraceRecord> traceRecords,
-            Map<TaskId, CO2Record> co2eRecords,
-            CiRecordCollector timeCiRecordCollector
+            CiRecordCollector timeCiRecordCollector,
+            Session session = null
     ) {
-        this.processStats = processStats
-        this.totalStats = totalStats
+        this.stats = stats
         this.co2FootprintComputer = co2FootprintComputer
         this.config = config
-        this.version = version
         this.session = session
-        this.traceRecords = traceRecords
-        this.co2eRecords = co2eRecords
         this.timeCiRecordCollector = timeCiRecordCollector
     }
 
@@ -129,8 +113,8 @@ class ReportFileCreator extends BaseFileCreator{
         final templateFields = [
                 // Plugin information
                 // Metadata
-                plugin_version: version,
-                workflow : session.getWorkflowMetadata(),
+                plugin_version: CO2FootprintPlugin.version,
+                workflow : session?.getWorkflowMetadata() ?: [:],
                 options : renderOptionsJson(),
 
                 // Data
@@ -163,17 +147,6 @@ class ReportFileCreator extends BaseFileCreator{
         return htmlFile
     }
 
-    /**
-     * Render the payload JSON for the report.
-     *
-     * @return Rendered JSON as a String
-     */
-    protected String renderDataJson() {
-        return "{" +
-            "\"trace\":${JsonOutput.toJson(renderTasksJson(traceRecords, co2eRecords))}," +
-            "\"summary\":${JsonOutput.toJson(processStats)}" +
-        "}"
-    }
 
     /**
      * Render the entered options / config as a JSON String.
@@ -183,7 +156,7 @@ class ReportFileCreator extends BaseFileCreator{
     protected String renderOptionsJson() {
         Map<String,?> all_options = config.collectInputFileOptions() + config.collectOutputFileOptions() + config.collectCO2CalcOptions()
 
-            // Render JSON
+        // Render JSON
         List<Map<String, String>> options = all_options.collect { String name, value ->
             [option: name, value: value as String]
         }
@@ -206,14 +179,14 @@ class ReportFileCreator extends BaseFileCreator{
     */
     private Map<String, String> makeCO2Total(suffix) {
         // Retrieve total CO₂ emissions and energy consumption for the given suffix
-        Double co2e = totalStats["co2e${suffix}" as String]
-        Double energy = totalStats["energy${suffix}" as String]
+        Double co2e = stats.co2Record.get("co2e${suffix}") as Double
+        Double energy = stats.co2Record.get("energy${suffix}") as Double
 
         if (co2e != null) {
             CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(co2e)
             return [
-                ("co2e${suffix}" as String): Converter.toReadableUnits(co2e,'', 'g'),
-                ("energy${suffix}" as String): Converter.toReadableUnits(energy,'k','Wh'),
+                ("co2e${suffix}" as String): new Quantity(co2e,'', 'g').toReadable(),
+                ("energy${suffix}" as String): new Quantity(energy,'k','Wh').toReadable(),
                 ("car${suffix}" as String): equivalences.getCarKilometersReadable(),
                 ("tree${suffix}" as String): equivalences.getTreeMonthsReadable(),
                 ("plane_percent${suffix}" as String): equivalences.getPlanePercent() < 100.0 ? equivalences.getPlanePercentReadable() : null,
@@ -228,89 +201,51 @@ class ReportFileCreator extends BaseFileCreator{
     /**
      * Render the total CO₂ footprint values for the HTML report.
      *
-     * @return The JSON map
+     * @return The totals JSON map as a String
      */
     protected Map<String, String> renderCO2TotalsJson() {
         Map<String, String> totalsMap = [:]
 
-        ['', '_non_cached', '_market'].each { String suffix ->
-            totalsMap.putAll(makeCO2Total(suffix))
-        }
+        ['', '_non_cached', '_market'].each { String suffix -> totalsMap.putAll(makeCO2Total(suffix)) }
 
         return totalsMap
     }
 
-     /**
-     * Formats a trace entry into a human-readable string.
-     * Returns {@link nextflow.trace.TraceRecord#NA} if value is null.
+    /**
+     * Render the payload JSON for the report.
      *
-     * @param key   Trace entry key
-     * @param value Entry value
-     * @param traceRecord Provides fallback formatting
-     * @return Human-readable string
-     *
-     * @example getReadableTraceEntry("realtime", 125.5, tr) → "2m 5s"
-     * @example getReadableTraceEntry("memory", 1073741824, tr) → "1 GB"
-     * @example getReadableTraceEntry("status", "COMPLETED", tr) → "<span class=\"badge badge-success\">COMPLETED</span>"
+     * @return Rendered JSON as a String
      */
-    protected static String getReadableTraceEntry(String key, Object value, TraceRecord traceRecord) {
-        if (value == null) { return traceRecord.NA}
-        return switch (key) {
-            case 'realtime' -> Converter.toReadableTimeUnits(value as double)
-            case 'memory' -> Converter.toReadableUnits(value as double, '', 'B')
-            case 'status' -> {
-                Map<String, String> colors = [COMPLETED: 'success', CACHED: 'secondary', ABORTED: 'danger', FAILED: 'danger']
-                "<span class=\"badge badge-${colors[value]}\">${value}</span>"
-            }
-            case 'hash' -> {
-                String script = ''
-                (value as String).eachLine { String line -> script += "${line.trim()}\n" }
-                script = script.dropRight(1)
-                "<div class=\"script_block short\"><code>${script}</code></div>"
-            }
-            default -> traceRecord.getFmtStr(key)
-        }
+    protected String renderDataJson() {
+        return "{" +
+            "\"trace\":${JsonOutput.toJson(collectTasks(stats))}," +
+            "\"summary\":${JsonOutput.toJson(collectSummary(stats))}" +
+        "}"
     }
 
     /**
-     * Render the executed tasks as a JSON list.
+     * Collects statistics at the process level
      *
-     * Each list item is a merged map of trace- and CO2-fields:
-     *   <fieldName> -> [ raw: <original>, readable: <formatted> ]
-     * Missing trace fields are included with [raw: null, readable: "-"].
-     * The number of tasks is limited by `maxTasks`.
-     *
-     * @param traceRecords Map of {@link nextflow.processor.TaskId} -> {@link nextflow.trace.TraceRecord}
-     * @param co2Records   Map of {@link nextflow.processor.TaskId} -> {@link CO2Record}
-     * @return             List of per-task maps combining trace and CO2 entries
+     * @param stats CO2RecordTree representation of workflow stats with marked levels
+     * @return Map of the process-specific statistics
      */
-    protected List<Map<String, Map<String, Object>>> renderTasksJson(
-            Map<TaskId, TraceRecord> traceRecords, Map<TaskId, CO2Record> co2Records
-    ){
-        // Limit to maxTasks
-        traceRecords = traceRecords.take(maxTasks)
+    protected Map<String, Object> collectSummary(CO2RecordTree stats=this.stats) {
+        // Add an empty map if the process is not already present
+        return stats.collectByLevel('process', ['co2e', 'energy', 'co2e_non_cached', 'energy_non_cached'])
+    }
 
-        final List<Map<String, Map<String, Object>>> results = []
-        traceRecords.each { TaskId taskId, TraceRecord traceRecord ->
-            // Build trace entry map: key -> [raw, readable]
-            Map<String, Map<String, Object>> traceRecordMap = traceRecord.store.collectEntries { String key, Object value ->
-                [key, [raw: value, readable: getReadableTraceEntry(key, value, traceRecord)]]
-            }
 
-            // Ensure all declared trace fields are present (fill gaps with a placeholder)
-            traceRecord.FIELDS.each { String key, String _ ->
-                if (!traceRecordMap.containsKey(key)) { traceRecordMap.put(key, [raw: null, readable: TraceRecord.NA]) }
-                return
-            }
-
-            // Build CO2 entry map: key -> [raw, readable]
-            CO2Record co2Record = co2Records[taskId]
-            Map<String, Map<String, Object>> co2RecordMap = co2Record.store.collectEntries { String key, Object value ->
-                [key, [raw: value, readable: co2Record.getReadable(key, value)]]
-            }
-
-            // Merge trace and CO2 maps for this task
-            results.add( traceRecordMap + co2RecordMap )
+    /**
+     * Collect task-level metrics from the RecordTree up to a maximum number of tasks.
+     *
+     * @param stats CO2RecordTree with workflow, process, and task metrics
+     * @return List of task value maps
+     */
+    protected List<Map<String, Map<String, Object>>> collectTasks(CO2RecordTree stats=this.stats){
+        List<Map<String, Map<String, Object>>> results = []
+        List<CO2RecordTree> taskRecordTrees = stats.descentTo('task')
+        for(int i = 0; i < Math.min(taskRecordTrees.size(), maxTasks); i++) {
+            results.add(taskRecordTrees[i].toMap().get('values') as Map<String, Map<String, Object>>)
         }
 
         return results

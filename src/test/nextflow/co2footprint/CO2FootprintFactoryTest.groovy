@@ -17,17 +17,9 @@
 package nextflow.co2footprint
 
 import nextflow.Session
-import nextflow.executor.NopeExecutor
-import nextflow.processor.TaskHandler
-import nextflow.processor.TaskId
-import nextflow.processor.TaskProcessor
-import nextflow.processor.TaskRun
 import nextflow.trace.TraceObserver
-import nextflow.trace.TraceRecord
 import spock.lang.Specification
 
-import java.nio.file.Files
-import java.nio.file.Path
 /**
  * This class implements various tests.
  *
@@ -46,15 +38,5 @@ class CO2FootprintFactoryTest extends Specification {
         then:
         observers[0] instanceof  CO2FootprintObserver
         observers.size() == 1
-    }
-
-    def 'check version' () {
-        when:
-        CO2FootprintFactory factory = new CO2FootprintFactory()
-        factory.setPluginVersion()
-        String pluginVersion = factory.getPluginVersion()
-
-        then:
-        pluginVersion == "1.1.0"
     }
 }

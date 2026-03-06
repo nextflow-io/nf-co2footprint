@@ -1,5 +1,7 @@
 package nextflow.co2footprint.FileCreation
 
+import nextflow.co2footprint.Config.BaseFileConfig
+
 import java.nio.file.Files
 import java.nio.file.Path
 
@@ -23,17 +25,16 @@ class BaseFileCreator {
     protected PrintWriter file
 
     // Whether this file was created
-    protected boolean created
+    boolean created
 
     /**
      * Constructor for generic file class.
      *
-     * @param path Path to the file, or where it is targeted to be written
-     * @param overwrite Whether to overwrite existing files with the same path
+     * @param config A {@link BaseFileConfig}, defining the file
      */
-    BaseFileCreator(Path path, boolean overwrite) {
-        this.path = path
-        this.overwrite = overwrite
+    BaseFileCreator(BaseFileConfig config) {
+        this.path = config.file.complete()
+        this.overwrite = config.overwrite
     }
 
     /**

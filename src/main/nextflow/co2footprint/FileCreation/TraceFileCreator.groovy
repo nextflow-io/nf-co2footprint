@@ -2,12 +2,11 @@ package nextflow.co2footprint.FileCreation
 
 import groovy.util.logging.Slf4j
 import groovyx.gpars.agent.Agent
+import nextflow.co2footprint.Config.TraceFileConfig
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.processor.TaskId
 import nextflow.trace.TraceHelper
 import nextflow.trace.TraceRecord
-
-import java.nio.file.Path
 
 /**
  * Generates the CO₂ footprint trace file.
@@ -32,33 +31,21 @@ class TraceFileCreator extends BaseFileCreator {
         task_id: 'task_id', status: 'status',
         name:'name', energy: 'energy_consumption', co2e: 'CO2e', co2eMarket: 'CO2e_market', ci: 'carbon_intensity',
         cpuUsage: '%cpu', memory: 'memory', time: 'realtime', cpus: 'cpus', powerdrawCPU: 'powerdraw_cpu',
-        cpu_model: 'cpu_model', rawEnergyProcessor: 'rawEnergyProcessor', rawEnergyMemory: 'rawEnergyMemory'
+        cpu_model: 'cpu_model', rawEnergyProcessor: 'raw_energy_processor', rawEnergyMemory: 'raw_energy_memory'
     ]
 
     /**
      * Constructor for the trace file.
      *
-     * @param path      Path to the trace file
-     * @param overwrite Whether to overwrite existing files
+     * @param config A {@link TraceFileConfig} that defines the created file.
      */
-    TraceFileCreator(Path path, boolean overwrite) {
-        super(path, overwrite)
-    }
+    TraceFileCreator(TraceFileConfig config) {
+        super(config)
 
-    /**
-     * Return a readable entry from either {@link CO2Record} or {@link TraceRecord}.
-     *
-     * @param key           Entry key as a String
-     * @param traceRecord   TraceRecord of a task
-     * @param co2Record     CO2 record of a task
-     * @return The entry in its human-readable form
-     */
-    private static String getReadableEntry(String key, TraceRecord traceRecord, CO2Record co2Record) {
-        if (co2Record.containsKey(key)) {
-            return co2Record.getReadable(key)
-        }
-        else {
-            return traceRecord.get(key)
+        if(!config.enabled) {
+            this.metaClass.create = { -> null }
+            this.metaClass.write = { CO2Record X -> null }
+            this.metaClass.close = { Map<TaskId, TraceRecord> X -> null }
         }
     }
 
@@ -91,10 +78,10 @@ class TraceFileCreator extends BaseFileCreator {
      * @param traceRecord   TraceRecord for the task
      * @param co2Record     CO2Record for the task
      */
-    void write(TraceRecord traceRecord, CO2Record co2Record){
+    void write(CO2Record co2Record){
         if (!created) { return }
 
-        List<String> recordedEntries = entryKeys.collect { String key -> getReadableEntry(key, traceRecord, co2Record) }
+        List<String> recordedEntries = co2Record.getReadableEntries(entryKeys)
 
         traceWriter.send { PrintWriter writer ->
             writer.println( String.join('\t', recordedEntries) )
@@ -114,7 +101,7 @@ class TraceFileCreator extends BaseFileCreator {
         traceWriter.await()
 
         // Write remaining records for unfinished tasks
-        current.values().each { record ->
+        current.values().each { TraceRecord record ->
             file.println("${record.taskId}\t-")
         }
         file.flush()

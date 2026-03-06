@@ -1,8 +1,10 @@
 package nextflow.co2footprint
 
+import groovy.util.logging.Slf4j
 import nextflow.NextflowMeta
 import nextflow.Session
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
+import nextflow.co2footprint.TestHelpers.FileChecker
 import nextflow.executor.NopeExecutor
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskId
@@ -11,24 +13,20 @@ import nextflow.processor.TaskRun
 import nextflow.script.WorkflowMetadata
 import nextflow.trace.TraceObserver
 import nextflow.trace.TraceRecord
-
 import spock.lang.Shared
 import spock.lang.Specification
 
 import java.nio.file.Files
 import java.nio.file.Path
-
 import java.time.OffsetDateTime
 import java.util.concurrent.Executors
-import groovy.util.logging.Slf4j
-
 
 @Slf4j
 class CO2FootprintObserverTest extends Specification{
 
     // ------ TEST UTILITY METHODS ------
     @Shared
-    FileChecker fileChecker = new FileChecker()
+    FileChecker fileChecker = new FileChecker('/observer')
 
     @Shared
     def traceRecord = new TraceRecord()
@@ -55,13 +53,14 @@ class CO2FootprintObserverTest extends Specification{
     /**
      * Helper to create a mock session with a specific CI value.
      */
-    private Session mockSessionWithCI(Path tracePath, Path summaryPath, Path reportPath, double ciValue) {
+    private Session mockSessionWithCI(Path tracePath, Path summaryPath, Path reportPath, Path dataPath, double ciValue) {
         return Mock(Session) {
             getConfig() >> [
                 co2footprint: [
-                    'traceFile': tracePath,
-                    'summaryFile': summaryPath,
-                    'reportFile': reportPath,
+                    'trace': ['enabled': true, 'file': tracePath],
+                    'summary': ['enabled': true, 'file': summaryPath],
+                    'report': ['enabled': true, 'file': reportPath],
+                    'dataFile': [enabled: true, file: dataPath],
                     'ci': ciValue
                 ]
             ]
@@ -97,9 +96,10 @@ class CO2FootprintObserverTest extends Specification{
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
+        Path dataPath = tempPath.resolve('data_test.yaml')
 
         // Use helper to mock session with CI value 475.0
-        Session session = mockSessionWithCI(tracePath, summaryPath, reportPath, 475.0)
+        Session session = mockSessionWithCI(tracePath, summaryPath, reportPath, dataPath, 475.0)
 
         // Create task and handler
         TaskRun task = new TaskRun(id: TaskId.of(111))
@@ -113,15 +113,12 @@ class CO2FootprintObserverTest extends Specification{
         observer.onFlowCreate(session)
         observer.onProcessStart(handler, traceRecord)
         observer.onProcessComplete(handler, traceRecord)
+        observer.onFlowComplete()
 
         expect:
-        Double total_co2 = 0d
-        Double total_energy = 0d
-        observer.getCO2eRecords().values().each { co2Record ->
-            total_energy += co2Record.energy
-            total_co2 += co2Record.co2e
-        }
-        // With TDP = 11.41 (default global)
+        Double total_co2 =  observer.workflowStats.co2Record.store.co2e as Double
+        Double total_energy =  observer.workflowStats.co2Record.store.energy as Double
+        // With TDP = 11.45 (default global)
         // Energy consumption converted to Wh
         round(total_energy*1000) == 14.02
         // Total CO₂ in g (should reflect the CI value you set)
@@ -134,9 +131,10 @@ class CO2FootprintObserverTest extends Specification{
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
+        Path dataPath = tempPath.resolve('data_test.yaml')
 
         // Use helper to mock session with CI value 475.0
-        Session session = mockSessionWithCI(tracePath, summaryPath, reportPath, 475.0)
+        Session session = mockSessionWithCI(tracePath, summaryPath, reportPath, dataPath, 475.0)
 
         // Create task and handler
         TaskRun task = new TaskRun(id: traceRecord.getTaskId())
@@ -150,16 +148,11 @@ class CO2FootprintObserverTest extends Specification{
         observer.onFlowCreate(session)
         observer.onProcessStart(handler, traceRecord)
         observer.onProcessComplete(handler, traceRecord)
-
-        // Accumulate CO2
-        Double total_co2 = 0d
-        observer.getCO2eRecords().values().each { co2Record ->
-            total_co2 += co2Record.co2e
-        }
+        observer.onFlowComplete()
 
         CO2EquivalencesRecord co2EquivalencesRecord = observer
-            .getCO2FootprintComputer()
-            .computeCO2footprintEquivalences(total_co2)
+            .getCO2FootprintCalculator()
+            .computeCO2footprintEquivalences(observer.workflowStats.co2Record.store.co2e as Double)
 
         expect:
         // Values compared to result from www.green-algorithms.org (1h, 1core, TDP=11.45, CI:475)
@@ -179,16 +172,18 @@ class CO2FootprintObserverTest extends Specification{
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
+        Path dataPath = tempPath.resolve('data_test.yaml')
 
         // Mock Session
         Session session = Mock(Session)
         session.getConfig() >> [
-                co2footprint:
-                        [
-                                'traceFile': tracePath,
-                                'summaryFile': summaryPath,
-                                'reportFile': reportPath
-                        ]
+            co2footprint:
+                [
+                    'trace': [enabled: true, file: tracePath],
+                    'summary': [enabled: true, file: summaryPath],
+                    'report': [enabled: true, file: reportPath],
+                    'dataFile': [enabled: true, file: dataPath]
+                ]
         ]
         session.getExecService() >> Executors.newFixedThreadPool(1)
         WorkflowMetadata meta = Mock(WorkflowMetadata)
@@ -209,8 +204,10 @@ class CO2FootprintObserverTest extends Specification{
         when:
         // Run necessary observer steps
         observer.onFlowCreate(session)
+        observer.onProcessStart(taskHandler, traceRecord)
         observer.onProcessComplete(taskHandler, traceRecord)
         observer.onFlowComplete()
+        observer.renderFiles()
 
         then:
         //
@@ -226,23 +223,24 @@ class CO2FootprintObserverTest extends Specification{
 
         headers == [
                 'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'carbon_intensity', '%cpu',
-                'memory', 'realtime', 'cpus', 'powerdraw_cpu', 'cpu_model', 'rawEnergyProcessor', 'rawEnergyMemory',
+                'memory', 'realtime', 'cpus', 'powerdraw_cpu', 'cpu_model', 'raw_energy_processor', 'raw_energy_memory',
         ]
         values == [
             '111', 'COMPLETED', '-', '14.02 Wh', '6.73 g', '-', '480 gCO₂e/kWh', '100 %',
-            '7 GB', '3600s', '1', '11.41 W', 'Unknown model', '11.41 Wh', '2.61 Wh',
+            '7 GB', '1h', '1', '11.41 W', 'Unknown model', '11.41 Wh', '2.61 Wh',
         ] // GA: CO₂e is 6.94g with CI of 475 gCO₂eq/kWh
 
-        fileChecker.compareChecksums(tracePath, '43c74a1981bb0a8c7694a97d697e22ae')
+        fileChecker.compareChecksums(tracePath, '935b64980306aa449d4057d3d752fdf3')
 
 
         // Check Summary File
         fileChecker.runChecks(
                 summaryPath,
                 [
-                        27: "  reportFile: ${reportPath}",
-                        28: "  summaryFile: ${summaryPath}",
-                        29: "  traceFile: ${tracePath}"
+                        27: "  dataFile: ${dataPath}",
+                        28: "  reportFile: ${reportPath}",
+                        29: "  summaryFile: ${summaryPath}",
+                        30: "  traceFile: ${tracePath}"
                 ]
         )
 
@@ -250,10 +248,11 @@ class CO2FootprintObserverTest extends Specification{
         fileChecker.runChecks(
             reportPath,
             [
-                1057: '    window.options = [' +
+                1028: '    window.options = [' +
                         '{"option":"ci","value":"480.0"},'+
                         '{"option":"ciMarket","value":null},' +
                         '{"option":"customCpuTdpFile","value":null},' +
+                        "{\"option\":\"dataFile\",\"value\":\"${dataPath}\"}," +
                         '{"option":"ignoreCpuModel","value":"false"},' +
                         '{"option":"location","value":null},' +
                         '{"option":"machineType","value":null},' +
@@ -263,10 +262,12 @@ class CO2FootprintObserverTest extends Specification{
                         "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
                         "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
                         "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];",
-                1108: '          ' +
+                1079: '          ' +
                         "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
                         " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
             ]
         )
+
+        fileChecker.runChecks(dataPath)
     }
 }
