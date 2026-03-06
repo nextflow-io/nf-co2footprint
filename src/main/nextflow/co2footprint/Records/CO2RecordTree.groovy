@@ -102,9 +102,6 @@ class CO2RecordTree {
                 child.co2Record.additionalMetrics.get(name)
             }
             childMetrics.removeAll([null])
-            if(!co2Record) {
-                print("NO CO2")
-            }
             Object attribute = childMetrics ? childMetrics.sum() : transformer(co2Record)
             co2Record.additionalMetrics.put(name , attribute)
         }

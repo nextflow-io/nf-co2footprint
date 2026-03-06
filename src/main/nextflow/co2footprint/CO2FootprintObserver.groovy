@@ -113,7 +113,8 @@ class CO2FootprintObserver implements TraceObserver {
     }
 
     /**
-     *
+     * Calculate the CO2 emissions in form of a {@link CO2Record} from a {@link TraceRecord}
+     * in conjunction with the current CI Record collector.
      */
     CO2Record createCO2Record(TraceRecord traceRecord) {
         return co2FootprintCalculator.computeTaskCO2footprint(traceRecord, timeCiRecordCollector)
