@@ -14,7 +14,7 @@
   },
   "data_test.yaml": {
     "checksum": "601970089690d35e8a71cbedfa08ddc5",
-    "excluded_lines": [11, 15, 19, 109, 114, 117, 240, 244, 248],
+    "excluded_lines": [13, 17, 21, 111, 116, 119, 242, 246, 250],
     "num_lines": 341
   }
 }
