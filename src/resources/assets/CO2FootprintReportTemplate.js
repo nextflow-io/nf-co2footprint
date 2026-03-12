@@ -39,58 +39,168 @@ $(function () {
     $('#completed_fromnow').html('completed ' + completed_date.fromNow() + ', ')
   }
 
-  // Plot histograms of resource usage
+  // Plot per-process emissions (CO₂e or energy, distribution or composition)
   function plot_resource_usage() {
-    var plot_data = { total: [], total_non_cached: [] };
-    for (var process in window.data.summary) {
 
-      // Extract process statistics
-      var stats = window.data.summary[process]
-      var processName = process.split(':').pop() ?? process
-
-      // Put stats in plot
-      for (const [i, suffix] of ["", "_non_cached"].entries()) {
-        // Add CO₂ Boxplot to plot
-        plot_data[`total${suffix}`].push(
-          {
-            x: process, y: stats[`co2e${suffix}`], name: processName,
-            type: 'box', boxmean: true, boxpoints: 'all', hoverinfo: "y"
-          }
-        )
-        // Add energy to link to the right y-axis, hiding the object, hover info and legend itself
-        plot_data[`total${suffix}`].push(
-          {
-            x: process, y: stats[`energy${suffix}`]?.map(v => v * 1000) ?? null, name: processName,
-            type: 'box', boxmean: true, boxpoints: false, yaxis: 'y2', showlegend: false,
-            hoverinfo: 'skip', marker: { color: 'rgba(0,0,0,0)' }, fillcolor: 'rgba(0,0,0,0)'
-          }
-        )
+    // Build minimum-unique-suffix display labels for all process keys.
+    const allProcessKeys = Object.keys(window.data.summary)
+    const summaryDisplayName = new Map()
+    for (const key of allProcessKeys) {
+      const parts = key.split(':')
+      let depth = 1
+      let label = parts[parts.length - 1]
+      while (
+        depth < parts.length &&
+        allProcessKeys.filter(k => k === label || k.endsWith(':' + label)).length > 1
+      ) {
+        depth++
+        label = parts.slice(parts.length - depth).join(':')
       }
+      summaryDisplayName.set(key, label)
     }
 
-    var layout = {
-      title: { text: 'CO<sub>2</sub> emission & energy consumption' },
-      legend: {
-        x: 1.1
-      },
-      xaxis: {
-        title: { text: 'Processes' },
-      },
-      yaxis: {
-        title: { text: 'CO₂e emission (g)' },
-        rangemode: 'tozero',
-      },
-      yaxis2: {
-        title: { text: 'Energy consumption (Wh)' },
-        rangemode: 'tozero',
-        gridcolor: 'rgba(0, 0, 0, 0)', // transparent grid lines
-        overlaying: 'y',
-        side: 'right',
-      }
+    function arrMedian(arr) {
+      if (!arr || arr.length === 0) return 0
+      const s = [...arr].sort((a, b) => a - b)
+      const m = Math.floor(s.length / 2)
+      return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2
     }
 
-    Plotly.newPlot("co2e-total-plot", plot_data.total, layout);
-    Plotly.newPlot("co2e-non-cached-plot", plot_data.total_non_cached, layout);
+    const commonHoverlabel = {
+      bgcolor: 'rgba(28, 48, 66, 0.92)',
+      bordercolor: 'rgba(28, 48, 66, 0.0)',
+      font: { size: 12, color: '#FFFFFF' },
+      align: 'left',
+    }
+    const commonBg = { plot_bgcolor: '#FCFEFF', paper_bgcolor: '#FFFFFF' }
+
+    const state = { metric: 'co2e', cached: 'all', sorted: false }
+
+    function colorFromName(name, lightness, alpha) {
+      let hash = 0
+      for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash)
+      }
+      const hue = Math.abs(hash) % 360
+      return `hsla(${hue},62%,${lightness}%,${alpha})`
+    }
+
+    // Custom tooltip element — bypasses Plotly's rotated hover label for horizontal boxes.
+    const tipEl = document.createElement('div')
+    tipEl.style.cssText = [
+      'position:fixed', 'display:none',
+      'background:rgba(28,48,66,0.92)', 'color:#fff',
+      'font-size:12px', 'padding:6px 10px',
+      'border-radius:0', 'pointer-events:none',
+      'z-index:9999', 'line-height:1.6', 'white-space:nowrap',
+    ].join(';')
+    document.body.appendChild(tipEl)
+    document.addEventListener('mousemove', e => {
+      if (tipEl.style.display !== 'none') {
+        tipEl.style.left = (e.clientX + 14) + 'px'
+        tipEl.style.top  = (e.clientY - 14) + 'px'
+      }
+    })
+
+    function render() {
+      const suffix = state.cached === 'all' ? '' : '_non_cached'
+      const isEnergy = state.metric === 'energy'
+      const unit = isEnergy ? 'Wh' : 'g CO\u2082e'
+      const axisTitle = isEnergy ? 'Energy consumption (Wh)' : 'CO\u2082e emissions (g)'
+
+      // Sort ascending (smallest \u2192 bottom, largest \u2192 top in horizontal chart).
+      const keys = state.sorted
+        ? [...allProcessKeys].sort((a, b) => {
+            const aVals = window.data.summary[a][`${state.metric}${suffix}`] ?? []
+            const bVals = window.data.summary[b][`${state.metric}${suffix}`] ?? []
+            return arrMedian(aVals) - arrMedian(bVals)
+          })
+        : [...allProcessKeys]
+
+      const displayNames = keys.map(k => summaryDisplayName.get(k) ?? k)
+      const maxLabelLen = Math.max(...displayNames.map(l => l.length), 4)
+      const leftMargin = Math.max(80, maxLabelLen * 7 + 12)
+
+      const traces = keys.map((key, i) => {
+        const vals = (window.data.summary[key][`${state.metric}${suffix}`] ?? [])
+          .map(v => isEnergy ? v * 1000 : v)
+        const name = displayNames[i]
+        return {
+          type: 'box',
+          orientation: 'h',
+          name,
+          x: vals,
+          y: Array(vals.length).fill(name),
+          boxmean: true,
+          boxpoints: 'all',
+          jitter: 0.4,
+          pointpos: 0,
+          marker: { size: 5, color: colorFromName(name, 46, 0.75) },
+          line: { color: colorFromName(name, 38, 1.0) },
+          fillcolor: colorFromName(name, 70, 0.30),
+          hoveron: 'boxes',
+          hoverinfo: 'none',
+        }
+      })
+
+      Plotly.react('process-emissions-plot', traces, {
+        ...commonBg,
+        showlegend: false,
+        hovermode: 'closest',
+        xaxis: { title: { text: axisTitle }, rangemode: 'tozero' },
+        yaxis: {
+          automargin: true,
+          ...(state.sorted ? { categoryorder: 'array', categoryarray: displayNames } : {}),
+        },
+        margin: { l: leftMargin, r: 40, t: 20, b: 60 },
+      }).then(() => {
+        const plotDiv = document.getElementById('process-emissions-plot')
+        plotDiv.removeAllListeners('plotly_hover')
+        plotDiv.removeAllListeners('plotly_unhover')
+
+        plotDiv.on('plotly_hover', evt => {
+          const pt = evt.points[0]
+          if (!pt) return
+          const vals = [...pt.data.x].sort((a, b) => a - b)
+          const n = vals.length
+          const med = n % 2 ? vals[Math.floor(n / 2)] : (vals[n / 2 - 1] + vals[n / 2]) / 2
+          const mean = pt.data.x.reduce((a, b) => a + b, 0) / n
+          const q1 = vals[Math.floor(n * 0.25)]
+          const q3 = vals[Math.min(Math.floor(n * 0.75), n - 1)]
+          const fmt = v => String(Number(v.toPrecision(4)))
+          tipEl.innerHTML = [
+            `<b>${pt.data.name}</b>`,
+            `Median: ${fmt(med)} ${unit}`,
+            `Mean: ${fmt(mean)} ${unit}`,
+            `Q1\u2013Q3: ${fmt(q1)}\u2013${fmt(q3)} ${unit}`,
+          ].join('<br>')
+          tipEl.style.display = 'block'
+        })
+
+        plotDiv.on('plotly_unhover', () => { tipEl.style.display = 'none' })
+      })
+    }
+
+    function setActive(cls, activeId) {
+      document.querySelectorAll('.' + cls).forEach(el => {
+        el.classList.toggle('btn-primary', el.id === activeId)
+        el.classList.toggle('btn-secondary', el.id !== activeId)
+      })
+    }
+
+    document.getElementById('pe-btn-co2e').addEventListener('click', () => { state.metric = 'co2e'; setActive('pe-metric-btn', 'pe-btn-co2e'); render() })
+    document.getElementById('pe-btn-energy').addEventListener('click', () => { state.metric = 'energy'; setActive('pe-metric-btn', 'pe-btn-energy'); render() })
+    document.getElementById('pe-btn-all').addEventListener('click', () => { state.cached = 'all'; setActive('pe-cached-btn', 'pe-btn-all'); render() })
+    document.getElementById('pe-btn-noncached').addEventListener('click', () => { state.cached = 'non_cached'; setActive('pe-cached-btn', 'pe-btn-noncached'); render() })
+    document.getElementById('pe-btn-sort').addEventListener('click', () => {
+      state.sorted = !state.sorted
+      const btn = document.getElementById('pe-btn-sort')
+      btn.classList.toggle('btn-primary', state.sorted)
+      btn.classList.toggle('btn-secondary', !state.sorted)
+      render()
+    })
+
+    render()
   }
 
   plot_resource_usage()
@@ -316,19 +426,19 @@ $(function () {
       previousValue = value
     }
 
+    const ciColor = '#0D6A8A'
+    const energyColor = '#F4A21F'
+
     // Add CI trace to plot
     ci_plot_data.push(
       {
         name: "Carbon intensity",
         x: timestamps, y: ciValues,
         type: "scatter",
-        mode: "lines+markers",
-        line: { color: "grey" },
-        marker: { color: "grey" },
-        line: { shape: "hv", width: 2, color: "grey" },
+        mode: "lines",
+        line: { shape: "hv", width: 3, color: ciColor },
         // Clean hover with units; x is formatted by hoverformat in layout
-        hovertemplate:
-          "CI: %{y:.1f} g/kWh<extra></extra>",
+        hovertemplate: "<b>Carbon intensity</b><br>%{y:.1f} g/kWh<extra></extra>",
       }
     )
 
@@ -339,53 +449,437 @@ $(function () {
         x: timeSteps, y: totalEnergy,
         type: "scatter",
         fill: "tozeroy", yaxis: "y2",
-        line: { shape: "hv", width: 2, color: "#FFCC00" },
-        hovertemplate:
-          "Energy: %{y:.4f} kWh<extra></extra>",
+        fillcolor: 'rgba(244, 162, 31, 0.24)',
+        line: { shape: "hv", width: 1.8, color: energyColor },
+        hovertemplate: "<b>Energy</b><br>%{y:.4f} kWh<extra></extra>",
       }
     )
 
     // Layout:
     var ci_layout = {
       title: { text: "Carbon intensity & energy over time" },
-      margin: { l: 70, r: 70, t: 60, b: 60 },
+      margin: { l: 140, r: 100, t: 40, b: 60 },
+      plot_bgcolor: '#FCFEFF',
+      paper_bgcolor: '#FFFFFF',
       legend: {
-        x: 1.05,
-        y: 1,
-        xanchor: "left",
+        x: 0.99,
+        y: 0.99,
+        xanchor: "right",
         yanchor: "top",
+        bgcolor: 'rgba(255,255,255,0.80)',
+        bordercolor: 'rgba(36,64,87,0.20)',
+        borderwidth: 1,
       },
       xaxis: {
-        title: { text: "Time" },
+        title: { text: "Time", font: { color: '#000000' } },
         range: [tasksStart, tasksEnd],
         ticklabelstandoff: 10,
+        showgrid: true,
+        gridcolor: 'rgba(36,64,87,0.08)',
         // Nice for long workflows:
-        rangeslider: { visible: true, thickness: 0.08 },
+        rangeslider: {
+          visible: false,
+          thickness: 0.055,
+          bgcolor: 'rgba(36,64,87,0.06)',
+          bordercolor: 'rgba(36,64,87,0.15)',
+        },
         // Controls timestamp formatting in hover:
         hoverformat: "%Y-%m-%d %H:%M",
       },
       yaxis: {
-        title: { text: "Carbon intensity (g/kWh)" },
+        title: { text: "Carbon intensity (g/kWh)", font: { color: '#000000' } },
         rangemode: "tozero",
         zeroline: true,
+        gridcolor: 'hsla(195, 83%, 30%, 0.12)',
       },
       yaxis2: {
-        title: { text: "Energy (kWh)" },
+        title: { text: "Energy (kWh)", font: { color: '#000000' } },
         rangemode: "tozero",
         overlaying: "y",
         side: "right",
+        automargin: true,
         showgrid: false,
         zeroline: false,
       },
       // Cleaner hover box:
       hovermode: "x unified",
-      hoverlabel: { align: "left" },
+      hoverlabel: {
+        bgcolor: 'rgba(28, 48, 66, 0.92)',
+        bordercolor: 'rgba(28, 48, 66, 0.0)',
+        font: { size: 12, color: '#FFFFFF' },
+        align: 'left',
+      },
     }
 
     // Create plot:
-    Plotly.newPlot("ci-plot", ci_plot_data, ci_layout, { responsive: true })
+    return Plotly.newPlot("ci-plot", ci_plot_data, ci_layout, { responsive: true })
+  }
+
+  function ensure_process_swimlane_container() {
+    var existingPlot = document.getElementById('process-swimlane-plot')
+    if (existingPlot) {
+      return existingPlot
+    }
+
+    var ciPlot = document.getElementById('ci-plot')
+    if (!ciPlot) {
+      return null
+    }
+
+    var sectionContainer = ciPlot.closest('.container') || ciPlot.parentElement
+    if (!sectionContainer) {
+      return null
+    }
+
+    var heading = document.createElement('h3')
+    heading.id = 'process-swimlanes'
+    heading.className = 'mt-4'
+    heading.textContent = 'Process task timeline'
+
+    var plotDiv = document.createElement('div')
+    plotDiv.id = 'process-swimlane-plot'
+
+    var description = document.createElement('p')
+    description.className = 'mt-3 mb-3'
+    description.textContent = 'This Gantt-style swimlane plot shows task runtime windows grouped by process. Each horizontal bar corresponds to one task execution interval.'
+
+    sectionContainer.appendChild(heading)
+    sectionContainer.appendChild(plotDiv)
+    sectionContainer.appendChild(description)
+
+    return plotDiv
+  }
+
+  function make_process_swimlane_plot() {
+    if (!window.data.trace || window.data.trace.length === 0) {
+      return null
+    }
+
+    var swimlanePlotContainer = ensure_process_swimlane_container()
+    if (!swimlanePlotContainer) {
+      return null
+    }
+
+    function normalizeTaskField(value) {
+      if (value == null) {
+        return ''
+      }
+      if (typeof value === 'string') {
+        return value
+      }
+      if (typeof value === 'number' || typeof value === 'boolean') {
+        return String(value)
+      }
+      if (typeof value === 'object') {
+        if (value.report != null) {
+          return String(value.report)
+        }
+        if (value.readable != null) {
+          return String(value.readable)
+        }
+        if (value.raw != null) {
+          if (typeof value.raw === 'object' && value.raw.value != null) {
+            return String(value.raw.value)
+          }
+          return String(value.raw)
+        }
+      }
+      return String(value)
+    }
+
+    const tasksByProcess = new Map()
+    let timelineStart = null
+    let timelineEnd = null
+    for (const task of window.data.trace) {
+      // Use the full process path as the grouping key to avoid collisions
+      // between processes that share only their last segment (e.g. A:B:FASTQ vs C:D:FASTQ).
+      const processKey = normalizeTaskField(task.process) || 'unknown'
+      const start = new Date(task.start?.raw?.value)
+      const complete = new Date(task.complete?.raw?.value)
+
+      if (Number.isNaN(start.getTime()) || Number.isNaN(complete.getTime()) || complete < start) {
+        continue
+      }
+
+      if (!tasksByProcess.has(processKey)) {
+        tasksByProcess.set(processKey, [])
+      }
+
+      tasksByProcess.get(processKey).push({
+        task_id: normalizeTaskField(task.task_id) || 'n/a',
+        status: normalizeTaskField(task.status) || 'n/a',
+        start: start,
+        complete: complete,
+      })
+
+      if (timelineStart == null || start < timelineStart) {
+        timelineStart = start
+      }
+      if (timelineEnd == null || complete > timelineEnd) {
+        timelineEnd = complete
+      }
+    }
+
+    const processFirstStart = new Map()
+    for (const [key, tasks] of tasksByProcess) {
+      processFirstStart.set(key, Math.min(...tasks.map(t => t.start.getTime())))
+    }
+    // Full process paths sorted chronologically
+    const processKeys = [...tasksByProcess.keys()].sort(
+      (a, b) => processFirstStart.get(a) - processFirstStart.get(b)
+    )
+    if (processKeys.length === 0) {
+      return null
+    }
+
+    // Build the shortest suffix per process that is unique across all process paths.
+    // e.g. ["A:B:C:FASTQ", "D:E:F:FASTQ"] → ["C:FASTQ", "F:FASTQ"]
+    // e.g. ["A:FASTQ", "B:FASTQ"]           → ["A:FASTQ", "B:FASTQ"] (1 segment already unique)
+    const processDisplayName = new Map()
+    for (const key of processKeys) {
+      const parts = key.split(':')
+      let depth = 1
+      let label = parts[parts.length - 1]
+      while (
+        depth < parts.length &&
+        processKeys.filter(k => k.endsWith(':' + label) || k === label).length > 1
+      ) {
+        depth++
+        label = parts.slice(parts.length - depth).join(':')
+      }
+      processDisplayName.set(key, label)
+    }
+    // Convenience alias for y-axis tick labels
+    const processNames = processKeys.map(k => processDisplayName.get(k))
+
+    function colorFromProcessName(name, alpha = 1.0) {
+      let hash = 0
+      for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash)
+      }
+      const hue = Math.abs(hash) % 360
+      return `hsla(${hue}, 62%, 46%, ${alpha})`
+    }
+
+    const swimlaneData = []
+    for (const [processIndex, processKey] of processKeys.entries()) {
+      const displayName = processDisplayName.get(processKey)
+      const processTasks = tasksByProcess.get(processKey).sort((a, b) => a.start - b.start)
+      const laneEndTimes = []
+      const laneAssignments = []
+
+      // Greedy interval partitioning: overlapping tasks go to different sub-lanes.
+      for (const task of processTasks) {
+        let lane = -1
+        for (let laneIndex = 0; laneIndex < laneEndTimes.length; laneIndex++) {
+          if (task.start >= laneEndTimes[laneIndex]) {
+            lane = laneIndex
+            break
+          }
+        }
+
+        if (lane === -1) {
+          lane = laneEndTimes.length
+          laneEndTimes.push(task.complete)
+        } else {
+          laneEndTimes[lane] = task.complete
+        }
+
+        laneAssignments.push(lane)
+      }
+
+      const laneCount = Math.max(1, laneEndTimes.length)
+      const laneBandHalfHeight = 0.34
+      const laneStep = laneCount === 1 ? 0 : (2 * laneBandHalfHeight) / (laneCount - 1)
+
+      for (const [taskIndex, task] of processTasks.entries()) {
+        const durationMinutes = (task.complete - task.start) / 60000.0
+        const lane = laneAssignments[taskIndex]
+        const laneY = laneCount === 1
+          ? processIndex
+          : processIndex - laneBandHalfHeight + lane * laneStep
+        const hoverData = [
+          task.task_id ?? 'n/a',
+          task.status ?? 'n/a',
+          durationMinutes,
+        ]
+
+        // Add midpoint so hover fires over the full width of the bar, not just endpoints.
+        const midTime = new Date((task.start.getTime() + task.complete.getTime()) / 2)
+        // Per-task traces with alpha make parallel overlap visually darker.
+        swimlaneData.push({
+          name: displayName,
+          x: [task.start, midTime, task.complete],
+          y: [laneY, laneY, laneY],
+          customdata: [hoverData, hoverData, hoverData],
+          type: 'scatter',
+          mode: 'lines+markers',
+          line: { width: 8, color: colorFromProcessName(displayName, 0.42) },
+          marker: {
+            size: 4,
+            color: colorFromProcessName(displayName, 0.9),
+            symbol: 'line-ns-open',
+          },
+          connectgaps: false,
+          showlegend: false,
+          hoverinfo: 'none',
+        })
+      }
+    }
+
+    const swimlaneLayout = {
+      title: { text: 'Task execution swimlanes by process' },
+      margin: { l: 140, r: 100, t: 40, b: 50 },
+      height: Math.max(360, Math.min(1200, 150 + processNames.length * 28)),
+      plot_bgcolor: '#FCFEFF',
+      paper_bgcolor: '#FFFFFF',
+      xaxis: {
+        title: { text: 'Time' },
+        type: 'date',
+        range: timelineStart && timelineEnd ? [timelineStart, timelineEnd] : undefined,
+        showgrid: true,
+        gridcolor: 'rgba(36,64,87,0.08)',
+        zeroline: false,
+        showline: false,
+        hoverformat: '%Y-%m-%d %H:%M',
+      },
+      yaxis: {
+        title: { text: 'Process' },
+        tickmode: 'array',
+        tickvals: processNames.map((_, index) => index),
+        ticktext: processNames,
+        range: [-0.5, processNames.length - 0.5],
+        autorange: 'reversed',
+        showgrid: true,
+        gridcolor: 'rgba(36,64,87,0.08)',
+        zeroline: false,
+        showline: false,
+        automargin: true,
+      },
+      hovermode: 'closest',
+    }
+
+    // Custom tooltip — same style as the box plot, avoids Plotly's native label issues.
+    const swimTipEl = document.createElement('div')
+    swimTipEl.style.cssText = [
+      'position:fixed', 'display:none',
+      'background:rgba(28,48,66,0.92)', 'color:#fff',
+      'font-size:12px', 'padding:6px 10px',
+      'border-radius:0', 'pointer-events:none',
+      'z-index:9999', 'line-height:1.6', 'white-space:nowrap',
+    ].join(';')
+    document.body.appendChild(swimTipEl)
+    document.addEventListener('mousemove', e => {
+      if (swimTipEl.style.display !== 'none') {
+        swimTipEl.style.left = (e.clientX + 14) + 'px'
+        swimTipEl.style.top  = (e.clientY - 14) + 'px'
+      }
+    })
+
+    const swimPlotPromise = Plotly.newPlot(swimlanePlotContainer, swimlaneData, swimlaneLayout, { responsive: true })
+    swimPlotPromise.then(graphDiv => {
+      graphDiv.on('plotly_hover', evt => {
+        const pt = evt.points[0]
+        if (!pt) return
+        const [taskId, status, duration] = pt.customdata
+        swimTipEl.innerHTML = [
+          `<b>${pt.data.name}</b>`,
+          `Task ID: ${taskId}`,
+          `Status: ${status}`,
+          `Duration: ${Number(duration).toFixed(1)} min`,
+        ].join('<br>')
+        swimTipEl.style.display = 'block'
+      })
+      graphDiv.on('plotly_unhover', () => { swimTipEl.style.display = 'none' })
+    })
+    return swimPlotPromise
+  }
+
+  function link_timeline_xaxis(ciGraphDiv, swimlaneGraphDiv) {
+    if (!ciGraphDiv || !swimlaneGraphDiv) {
+      return
+    }
+
+    if (ciGraphDiv._nfTimelineSyncAttached || swimlaneGraphDiv._nfTimelineSyncAttached) {
+      return
+    }
+
+    ciGraphDiv._nfTimelineSyncAttached = true
+    swimlaneGraphDiv._nfTimelineSyncAttached = true
+
+    let syncInProgress = false
+
+    const initialRange = ciGraphDiv.layout?.xaxis?.range
+    if (Array.isArray(initialRange) && initialRange.length === 2) {
+      Plotly.relayout(swimlaneGraphDiv, { 'xaxis.range': initialRange })
+    }
+
+    function mirrorRelayout(targetGraphDiv, eventData) {
+      if (syncInProgress || !eventData) {
+        return
+      }
+
+      if (eventData['xaxis.autorange']) {
+        syncInProgress = true
+        Plotly.relayout(targetGraphDiv, { 'xaxis.autorange': true })
+          .then(() => {
+            syncInProgress = false
+          })
+          .catch(() => {
+            syncInProgress = false
+          })
+        return
+      }
+
+      let range0 = eventData['xaxis.range[0]']
+      let range1 = eventData['xaxis.range[1]']
+      if ((range0 === undefined || range1 === undefined) && Array.isArray(eventData['xaxis.range'])) {
+        range0 = eventData['xaxis.range'][0]
+        range1 = eventData['xaxis.range'][1]
+      }
+
+      if (range0 !== undefined && range1 !== undefined) {
+        syncInProgress = true
+        Plotly.relayout(targetGraphDiv, { 'xaxis.range': [range0, range1] })
+          .then(() => {
+            syncInProgress = false
+          })
+          .catch(() => {
+            syncInProgress = false
+          })
+      }
+    }
+
+    ciGraphDiv.on('plotly_relayout', (eventData) => {
+      mirrorRelayout(swimlaneGraphDiv, eventData)
+    })
+    ciGraphDiv.on('plotly_doubleclick', () => {
+      if (!syncInProgress) {
+        syncInProgress = true
+        Plotly.relayout(swimlaneGraphDiv, { 'xaxis.autorange': true })
+          .then(() => { syncInProgress = false })
+          .catch(() => { syncInProgress = false })
+      }
+    })
+
+    swimlaneGraphDiv.on('plotly_relayout', (eventData) => {
+      mirrorRelayout(ciGraphDiv, eventData)
+    })
+    swimlaneGraphDiv.on('plotly_doubleclick', () => {
+      if (!syncInProgress) {
+        syncInProgress = true
+        Plotly.relayout(ciGraphDiv, { 'xaxis.autorange': true })
+          .then(() => { syncInProgress = false })
+          .catch(() => { syncInProgress = false })
+      }
+    })
   }
 
   // Executor for ci plot generation
-  make_ci_plot()
+  Promise.all([
+    Promise.resolve(make_ci_plot()),
+    Promise.resolve(make_process_swimlane_plot()),
+  ]).then(([ciGraphDiv, swimlaneGraphDiv]) => {
+    link_timeline_xaxis(ciGraphDiv, swimlaneGraphDiv)
+  })
 })
