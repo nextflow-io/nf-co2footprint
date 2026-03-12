@@ -698,20 +698,11 @@ $(function () {
         const laneY = laneCount === 1
           ? processIndex
           : processIndex - laneBandHalfHeight + lane * laneStep
-        const hoverData = [
-          task.task_id ?? 'n/a',
-          task.status ?? 'n/a',
-          durationMinutes,
-        ]
-
-        // Add midpoint so hover fires over the full width of the bar, not just endpoints.
-        const midTime = new Date((task.start.getTime() + task.complete.getTime()) / 2)
         // Per-task traces with alpha make parallel overlap visually darker.
         swimlaneData.push({
           name: displayName,
-          x: [task.start, midTime, task.complete],
-          y: [laneY, laneY, laneY],
-          customdata: [hoverData, hoverData, hoverData],
+          x: [task.start, task.complete],
+          y: [laneY, laneY],
           type: 'scatter',
           mode: 'lines+markers',
           line: { width: 8, color: colorFromProcessName(displayName, 0.42) },
@@ -722,7 +713,13 @@ $(function () {
           },
           connectgaps: false,
           showlegend: false,
-          hoverinfo: 'none',
+          hovertemplate: [
+            `<b>${displayName}</b>`,
+            `Task ID: ${task.task_id ?? 'n/a'}`,
+            `Status: ${task.status ?? 'n/a'}`,
+            `Duration: ${durationMinutes.toFixed(1)} min`,
+            '<extra></extra>',
+          ].join('<br>'),
         })
       }
     }
@@ -757,42 +754,10 @@ $(function () {
         automargin: true,
       },
       hovermode: 'closest',
+      hoverlabel: { bgcolor: 'rgba(28,48,66,0.92)', bordercolor: 'rgba(28,48,66,0.0)', font: { size: 12, color: '#FFFFFF' }, align: 'left' },
     }
 
-    // Custom tooltip — same style as the box plot, avoids Plotly's native label issues.
-    const swimTipEl = document.createElement('div')
-    swimTipEl.style.cssText = [
-      'position:fixed', 'display:none',
-      'background:rgba(28,48,66,0.92)', 'color:#fff',
-      'font-size:12px', 'padding:6px 10px',
-      'border-radius:0', 'pointer-events:none',
-      'z-index:9999', 'line-height:1.6', 'white-space:nowrap',
-    ].join(';')
-    document.body.appendChild(swimTipEl)
-    document.addEventListener('mousemove', e => {
-      if (swimTipEl.style.display !== 'none') {
-        swimTipEl.style.left = (e.clientX + 14) + 'px'
-        swimTipEl.style.top  = (e.clientY - 14) + 'px'
-      }
-    })
-
-    const swimPlotPromise = Plotly.newPlot(swimlanePlotContainer, swimlaneData, swimlaneLayout, { responsive: true })
-    swimPlotPromise.then(graphDiv => {
-      graphDiv.on('plotly_hover', evt => {
-        const pt = evt.points[0]
-        if (!pt) return
-        const [taskId, status, duration] = pt.customdata
-        swimTipEl.innerHTML = [
-          `<b>${pt.data.name}</b>`,
-          `Task ID: ${taskId}`,
-          `Status: ${status}`,
-          `Duration: ${Number(duration).toFixed(1)} min`,
-        ].join('<br>')
-        swimTipEl.style.display = 'block'
-      })
-      graphDiv.on('plotly_unhover', () => { swimTipEl.style.display = 'none' })
-    })
-    return swimPlotPromise
+    return Plotly.newPlot(swimlanePlotContainer, swimlaneData, swimlaneLayout, { responsive: true })
   }
 
   function link_timeline_xaxis(ciGraphDiv, swimlaneGraphDiv) {
