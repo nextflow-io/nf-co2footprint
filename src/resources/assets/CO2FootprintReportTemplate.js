@@ -85,6 +85,10 @@ $(function () {
       return `hsla(${hue},62%,${lightness}%,${alpha})`
     }
 
+    function truncateLabel(s) {
+      return s.length > 28 ? '\u2026' + s.slice(-27) : s
+    }
+
     // Custom tooltip element — bypasses Plotly's rotated hover label for horizontal boxes.
     const tipEl = document.createElement('div')
     tipEl.style.cssText = [
@@ -118,19 +122,22 @@ $(function () {
         : [...allProcessKeys]
 
       const displayNames = keys.map(k => summaryDisplayName.get(k) ?? k)
-      const maxLabelLen = Math.max(...displayNames.map(l => l.length), 4)
+      const shortNames = displayNames.map(truncateLabel)
+      const maxLabelLen = Math.max(...shortNames.map(l => l.length), 4)
       const leftMargin = Math.max(80, maxLabelLen * 7 + 12)
 
       const traces = keys.map((key, i) => {
         const vals = (window.data.summary[key][`${state.metric}${suffix}`] ?? [])
           .map(v => isEnergy ? v * 1000 : v)
         const name = displayNames[i]
+        const shortName = shortNames[i]
         return {
           type: 'box',
           orientation: 'h',
-          name,
+          name: shortName,
+          _fullName: name,
           x: vals,
-          y: Array(vals.length).fill(name),
+          y: Array(vals.length).fill(shortName),
           boxmean: true,
           boxpoints: 'all',
           jitter: 0.4,
@@ -150,7 +157,7 @@ $(function () {
         xaxis: { title: { text: axisTitle }, rangemode: 'tozero' },
         yaxis: {
           automargin: true,
-          ...(state.sorted ? { categoryorder: 'array', categoryarray: displayNames } : {}),
+          ...(state.sorted ? { categoryorder: 'array', categoryarray: shortNames } : {}),
         },
         margin: { l: leftMargin, r: 40, t: 20, b: 60 },
       }).then(() => {
@@ -169,7 +176,7 @@ $(function () {
           const q3 = vals[Math.min(Math.floor(n * 0.75), n - 1)]
           const fmt = v => String(Number(v.toPrecision(4)))
           tipEl.innerHTML = [
-            `<b>${pt.data.name}</b>`,
+            `<b>${pt.data._fullName || pt.data.name}</b>`,
             `Median: ${fmt(med)} ${unit}`,
             `Mean: ${fmt(mean)} ${unit}`,
             `Q1\u2013Q3: ${fmt(q1)}\u2013${fmt(q3)} ${unit}`,
@@ -661,6 +668,10 @@ $(function () {
       return `hsla(${hue}, 62%, 46%, ${alpha})`
     }
 
+    function truncateLabel(s) {
+      return s.length > 28 ? '\u2026' + s.slice(-27) : s
+    }
+
     const swimlaneData = []
     for (const [processIndex, processKey] of processKeys.entries()) {
       const displayName = processDisplayName.get(processKey)
@@ -726,7 +737,7 @@ $(function () {
 
     const swimlaneLayout = {
       title: { text: 'Task execution swimlanes by process' },
-      margin: { l: 140, r: 100, t: 40, b: 50 },
+      margin: { l: 140, r: 100, t: 40, b: 80 },
       height: Math.max(360, Math.min(1200, 150 + processNames.length * 28)),
       plot_bgcolor: '#FCFEFF',
       paper_bgcolor: '#FFFFFF',
@@ -744,7 +755,7 @@ $(function () {
         title: { text: 'Process' },
         tickmode: 'array',
         tickvals: processNames.map((_, index) => index),
-        ticktext: processNames,
+        ticktext: processNames.map(truncateLabel),
         range: [-0.5, processNames.length - 0.5],
         autorange: 'reversed',
         showgrid: true,
