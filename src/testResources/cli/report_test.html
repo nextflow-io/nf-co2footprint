@@ -631,13 +631,33 @@
     
     
     
-    // JavaScript used to power the Nextflow Report Template output.
+    // JavaScript used to power the CO₂ Footprint HTML Report.
+    //
+    // Dependencies (loaded by the report HTML template):
+    //   - jQuery      — DOM manipulation, DataTables integration
+    //   - Plotly.js   — all charts (per-process emissions, CI/energy, swimlane)
+    //   - DataTables  — task and options tables
+    //   - moment.js   — human-readable "completed X ago" timestamp
+    //
+    // Data contract (injected into window by the Groovy template renderer):
+    //   window.data.trace    — array of per-task trace records
+    //   window.data.summary  — per-process aggregated values (co2e, energy, …)
+    //   window.ciRecords     — timestamped carbon-intensity readings
+    //   window.options       — plugin configuration key/value pairs
+    
+    // ─────────────────────────────────────────────────────────────────────────────
+    // MODULE-LEVEL SHARED UTILITIES
+    // These are used by multiple plot/table functions and are defined here once
+    // to avoid duplication.
+    // ─────────────────────────────────────────────────────────────────────────────
+    
     /**
-     * Decides whether raw or readable values are to be displayed
+     * Decides whether raw numeric or human-readable values are displayed in tables.
+     * Called by DataTables' `render` callback for every cell.
      *
-     * @param {*} data The data
-     * @param {*} type Type of the data
-     * @returns
+     * @param {object} data - Cell data with `.raw.value`, optional `.readable` / `.report`
+     * @param {string} type - DataTables render type ('sort', 'display', 'filter', …)
+     * @returns {*} The value to render
      */
     function rawOrReadable(data, type) {
       if (type === 'sort' || $('#nf-table-humanreadable').val() == 'false') {
@@ -649,7 +669,86 @@
       return data['readable']
     }
     
-    // Map for collecting statistics by process
+    /**
+     * Derives a deterministic HSL color from a process name string via a simple
+     * djb2-style hash.  The same name always produces the same hue, so colors are
+     * consistent across the per-process boxplot and the swimlane chart.
+     *
+     * @param {string} name      - Input string (typically a process name)
+     * @param {number} lightness - HSL lightness percentage (0–100)
+     * @param {number} alpha     - CSS opacity (0.0–1.0)
+     * @returns {string} A CSS `hsla(…)` color string
+     */
+    function colorFromName(name, lightness, alpha) {
+      let hash = 0
+      for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash)
+      }
+      const hue = Math.abs(hash) % 360
+      return `hsla(${hue},62%,${lightness}%,${alpha})`
+    }
+    
+    /**
+     * Truncates a label to at most 28 characters, prepending '…' when trimmed.
+     * The *end* of the string is preserved because process names typically carry
+     * the unique/meaningful part in their last colon-separated segment.
+     *
+     * @param {string} s - Input label
+     * @returns {string} Possibly-truncated label
+     */
+    function truncateLabel(s) {
+      return s.length > 28 ? '\u2026' + s.slice(-27) : s
+    }
+    
+    /**
+     * Given an array of colon-separated process keys (e.g. "PIPELINE:SUB:PROCESS"),
+     * returns a Map from each full key to the *shortest unique suffix* that
+     * distinguishes it from all other keys in the array.
+     *
+     * Examples:
+     *   ["A:B:FASTQ", "C:D:FASTQ"] → { "A:B:FASTQ" → "B:FASTQ",
+     *                                    "C:D:FASTQ" → "D:FASTQ" }
+     *   ["A:TRIM",    "B:ALIGN"]   → { "A:TRIM" → "TRIM",
+     *                                    "B:ALIGN" → "ALIGN" }
+     *
+     * @param {string[]} keys - Array of full process-path strings
+     * @returns {Map<string, string>} key → shortest-unique display label
+     */
+    function buildUniqueLabels(keys) {
+      const labelMap = new Map()
+      for (const key of keys) {
+        const parts = key.split(':')
+        let depth = 1
+        let label = parts[parts.length - 1]
+        while (
+          depth < parts.length &&
+          keys.filter(k => k === label || k.endsWith(':' + label)).length > 1
+        ) {
+          depth++
+          label = parts.slice(parts.length - depth).join(':')
+        }
+        labelMap.set(key, label)
+      }
+      return labelMap
+    }
+    
+    /**
+     * Shared Plotly `hoverlabel` config applied to all charts.
+     * Dark navy background with white text for high contrast.
+     */
+    const HOVERLABEL = {
+      bgcolor: 'rgba(28,48,66,0.92)',
+      bordercolor: 'rgba(28,48,66,0.0)',
+      font: { size: 12, color: '#FFFFFF' },
+      align: 'left',
+    }
+    
+    /**
+     * Shared Plotly background colors for a clean off-white appearance.
+     */
+    const PLOT_BG = { plot_bgcolor: '#FCFEFF', paper_bgcolor: '#FFFFFF' }
+    
+    // Map for collecting statistics by process (legacy, kept for compatibility)
     window.statsByProcess = {};
     
     //
@@ -662,9 +761,8 @@
         $(this).toggleClass('short')
       })
     
-      $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-      })
+      // Initialise Bootstrap tooltips on any element with data-toggle="tooltip".
+      $('[data-toggle="tooltip"]').tooltip()
     
       // Completed date from now
       var completed_date = moment($('#workflow_complete').text(), "ddd MMM DD HH:mm:ss .* YYYY")
@@ -672,26 +770,22 @@
         $('#completed_fromnow').html('completed ' + completed_date.fromNow() + ', ')
       }
     
-      // Plot per-process emissions (CO₂e or energy, distribution or composition)
+      // ───────────────────────────────────────────────────────────────────────────
+      // PER-PROCESS EMISSIONS PLOT
+      // Renders horizontal box plots of CO₂e or energy per process.
+      // Buttons above the chart let the user switch metric, filter cached tasks,
+      // and sort processes by median value.
+      // ───────────────────────────────────────────────────────────────────────────
       function plot_resource_usage() {
     
-        // Build minimum-unique-suffix display labels for all process keys.
+        // Build unique display labels for all process keys in window.data.summary.
         const allProcessKeys = Object.keys(window.data.summary)
-        const summaryDisplayName = new Map()
-        for (const key of allProcessKeys) {
-          const parts = key.split(':')
-          let depth = 1
-          let label = parts[parts.length - 1]
-          while (
-            depth < parts.length &&
-            allProcessKeys.filter(k => k === label || k.endsWith(':' + label)).length > 1
-          ) {
-            depth++
-            label = parts.slice(parts.length - depth).join(':')
-          }
-          summaryDisplayName.set(key, label)
-        }
+        const summaryDisplayName = buildUniqueLabels(allProcessKeys)
     
+        /**
+         * Returns the median of a numeric array, or 0 for empty arrays.
+         * Used to sort processes by their emissions when the sort button is active.
+         */
         function arrMedian(arr) {
           if (!arr || arr.length === 0) return 0
           const s = [...arr].sort((a, b) => a - b)
@@ -699,30 +793,15 @@
           return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2
         }
     
-        const commonHoverlabel = {
-          bgcolor: 'rgba(28, 48, 66, 0.92)',
-          bordercolor: 'rgba(28, 48, 66, 0.0)',
-          font: { size: 12, color: '#FFFFFF' },
-          align: 'left',
-        }
-        const commonBg = { plot_bgcolor: '#FCFEFF', paper_bgcolor: '#FFFFFF' }
-    
+        // Tracks the currently active toggle states for the three button groups.
         const state = { metric: 'co2e', cached: 'all', sorted: false }
+        // Mutable: updated at the start of every render() call so the y-axis zoom
+        // listener always restores to the correct full height for the latest render.
+        let peFullHeight = 0
     
-        function colorFromName(name, lightness, alpha) {
-          let hash = 0
-          for (let i = 0; i < name.length; i++) {
-            hash = name.charCodeAt(i) + ((hash << 5) - hash)
-          }
-          const hue = Math.abs(hash) % 360
-          return `hsla(${hue},62%,${lightness}%,${alpha})`
-        }
-    
-        function truncateLabel(s) {
-          return s.length > 28 ? '\u2026' + s.slice(-27) : s
-        }
-    
-        // Custom tooltip element — bypasses Plotly's rotated hover label for horizontal boxes.
+        // Custom tooltip <div> — Plotly's built-in hover labels rotate along the
+        // bar axis for horizontal box plots (known rendering bug).  We suppress
+        // Plotly's labels (hoverinfo: 'none') and drive our own fixed <div> instead.
         const tipEl = document.createElement('div')
         tipEl.style.cssText = [
           'position:fixed', 'display:none',
@@ -732,6 +811,7 @@
           'z-index:9999', 'line-height:1.6', 'white-space:nowrap',
         ].join(';')
         document.body.appendChild(tipEl)
+        // Keep the tooltip positioned just to the right of the cursor as it moves.
         document.addEventListener('mousemove', e => {
           if (tipEl.style.display !== 'none') {
             tipEl.style.left = (e.clientX + 14) + 'px'
@@ -739,13 +819,19 @@
           }
         })
     
+        /**
+         * (Re-)renders the plot with the current toggle state.
+         * Called on page load and whenever a toggle button is clicked.
+         * Uses Plotly.react() so subsequent calls animate rather than redraw.
+         */
         function render() {
           const suffix = state.cached === 'all' ? '' : '_non_cached'
           const isEnergy = state.metric === 'energy'
           const unit = isEnergy ? 'Wh' : 'g CO\u2082e'
           const axisTitle = isEnergy ? 'Energy consumption (Wh)' : 'CO\u2082e emissions (g)'
     
-          // Sort ascending (smallest \u2192 bottom, largest \u2192 top in horizontal chart).
+          // When sorting is active, order process keys ascending by their median
+          // value so the largest emitter appears at the top of the horizontal chart.
           const keys = state.sorted
             ? [...allProcessKeys].sort((a, b) => {
                 const aVals = window.data.summary[a][`${state.metric}${suffix}`] ?? []
@@ -755,10 +841,14 @@
             : [...allProcessKeys]
     
           const displayNames = keys.map(k => summaryDisplayName.get(k) ?? k)
+          // Truncate labels that are too long to fit comfortably on the y-axis;
+          // the full name is preserved in _fullName and shown in the tooltip.
           const shortNames = displayNames.map(truncateLabel)
+          // Estimate left margin from the longest visible label (7 px per char).
           const maxLabelLen = Math.max(...shortNames.map(l => l.length), 4)
           const leftMargin = Math.max(80, maxLabelLen * 7 + 12)
     
+          // One box-plot trace per process.
           const traces = keys.map((key, i) => {
             const vals = (window.data.summary[key][`${state.metric}${suffix}`] ?? [])
               .map(v => isEnergy ? v * 1000 : v)
@@ -783,10 +873,14 @@
             }
           })
     
+          // Height scales with the number of visible processes (42 px per row).
+          peFullHeight = Math.max(200, Math.min(1000, 80 + keys.length * 42))
+    
           Plotly.react('process-emissions-plot', traces, {
-            ...commonBg,
+            ...PLOT_BG,
             showlegend: false,
             hovermode: 'closest',
+            height: peFullHeight,
             xaxis: { title: { text: axisTitle }, rangemode: 'tozero' },
             yaxis: {
               automargin: true,
@@ -798,16 +892,51 @@
             plotDiv.removeAllListeners('plotly_hover')
             plotDiv.removeAllListeners('plotly_unhover')
     
+            // Shrink/grow plot height as the user zooms the y-axis.
+            // Attached only once; the listener closes over peFullHeight so it always
+            // sees the value set by the most recent render() call.
+            if (!plotDiv._nfYHeightSyncAttached) {
+              plotDiv._nfYHeightSyncAttached = true
+              let heightSyncInProgress = false
+              plotDiv.on('plotly_relayout', eventData => {
+                if (heightSyncInProgress) return
+                if (eventData['yaxis.autorange']) {
+                  // Double-click zoom-reset — restore to full height.
+                  heightSyncInProgress = true
+                  Plotly.relayout(plotDiv, { height: peFullHeight })
+                    .then(() => { heightSyncInProgress = false })
+                    .catch(() => { heightSyncInProgress = false })
+                  return
+                }
+                const y0 = eventData['yaxis.range[0]'] !== undefined ? eventData['yaxis.range[0]']
+                  : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][0] : undefined)
+                const y1 = eventData['yaxis.range[1]'] !== undefined ? eventData['yaxis.range[1]']
+                  : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][1] : undefined)
+                if (y0 !== undefined && y1 !== undefined) {
+                  const visibleCount = Math.max(1, Math.round(Math.abs(y1 - y0)))
+                  const newHeight = Math.max(120, Math.min(1000, 80 + visibleCount * 42))
+                  heightSyncInProgress = true
+                  Plotly.relayout(plotDiv, { height: newHeight })
+                    .then(() => { heightSyncInProgress = false })
+                    .catch(() => { heightSyncInProgress = false })
+                }
+              })
+            }
+    
             plotDiv.on('plotly_hover', evt => {
               const pt = evt.points[0]
               if (!pt) return
+              // Recompute statistics from raw data points because Plotly does not
+              // expose its internal quartile values via the hover event object.
               const vals = [...pt.data.x].sort((a, b) => a - b)
               const n = vals.length
               const med = n % 2 ? vals[Math.floor(n / 2)] : (vals[n / 2 - 1] + vals[n / 2]) / 2
               const mean = pt.data.x.reduce((a, b) => a + b, 0) / n
               const q1 = vals[Math.floor(n * 0.25)]
               const q3 = vals[Math.min(Math.floor(n * 0.75), n - 1)]
+              // toPrecision(4) keeps 4 significant figures; Number() strips trailing zeros.
               const fmt = v => String(Number(v.toPrecision(4)))
+              // Show the full (un-truncated) process name in the tooltip header.
               tipEl.innerHTML = [
                 `<b>${pt.data._fullName || pt.data.name}</b>`,
                 `Median: ${fmt(med)} ${unit}`,
@@ -821,6 +950,13 @@
           })
         }
     
+        /**
+         * Marks one button in a group as active (btn-primary) and all others
+         * as inactive (btn-secondary). Used by the metric and cached toggles.
+         *
+         * @param {string} cls      - Shared CSS class of the button group
+         * @param {string} activeId - id of the button that should be active
+         */
         function setActive(cls, activeId) {
           document.querySelectorAll('.' + cls).forEach(el => {
             el.classList.toggle('btn-primary', el.id === activeId)
@@ -828,6 +964,7 @@
           })
         }
     
+        // Wire up toggle buttons — each click updates state and re-renders.
         document.getElementById('pe-btn-co2e').addEventListener('click', () => { state.metric = 'co2e'; setActive('pe-metric-btn', 'pe-btn-co2e'); render() })
         document.getElementById('pe-btn-energy').addEventListener('click', () => { state.metric = 'energy'; setActive('pe-metric-btn', 'pe-btn-energy'); render() })
         document.getElementById('pe-btn-all').addEventListener('click', () => { state.cached = 'all'; setActive('pe-cached-btn', 'pe-btn-all'); render() })
@@ -840,6 +977,7 @@
           render()
         })
     
+        // Initial render on page load.
         render()
       }
     
@@ -1190,6 +1328,12 @@
         return plotDiv
       }
     
+      // ───────────────────────────────────────────────────────────────────────────
+      // PROCESS TASK TIMELINE (SWIMLANE / GANTT) PLOT
+      // Renders one horizontal bar per task, grouped by process on the y-axis.
+      // Parallel tasks within the same process are stacked into sub-lanes.
+      // The x-axis is linked to the CI/energy plot and zooms in sync.
+      // ───────────────────────────────────────────────────────────────────────────
       function make_process_swimlane_plot() {
         if (!window.data.trace || window.data.trace.length === 0) {
           return null
@@ -1200,6 +1344,14 @@
           return null
         }
     
+        /**
+         * Extracts a plain string from a task field which may be a raw string,
+         * a number, or the structured object format used by Nextflow's trace data
+         * (e.g. { raw: { value: … }, readable: '…', report: '…' }).
+         *
+         * @param {*} value - Raw field value from a trace record
+         * @returns {string}
+         */
         function normalizeTaskField(value) {
           if (value == null) {
             return ''
@@ -1211,12 +1363,8 @@
             return String(value)
           }
           if (typeof value === 'object') {
-            if (value.report != null) {
-              return String(value.report)
-            }
-            if (value.readable != null) {
-              return String(value.readable)
-            }
+            if (value.report != null)   return String(value.report)
+            if (value.readable != null) return String(value.readable)
             if (value.raw != null) {
               if (typeof value.raw === 'object' && value.raw.value != null) {
                 return String(value.raw.value)
@@ -1227,12 +1375,13 @@
           return String(value)
         }
     
+        // ── Step 1: group tasks by their full process path ──────────────────────
+        // We key on the *full* colon-joined path (e.g. "PIPELINE:SUB:PROCESS") to
+        // avoid collisions between processes sharing only the last segment.
         const tasksByProcess = new Map()
         let timelineStart = null
         let timelineEnd = null
         for (const task of window.data.trace) {
-          // Use the full process path as the grouping key to avoid collisions
-          // between processes that share only their last segment (e.g. A:B:FASTQ vs C:D:FASTQ).
           const processKey = normalizeTaskField(task.process) || 'unknown'
           const start = new Date(task.start?.raw?.value)
           const complete = new Date(task.complete?.raw?.value)
@@ -1260,11 +1409,11 @@
           }
         }
     
+        // ── Step 2: sort processes chronologically by their first task start ─────
         const processFirstStart = new Map()
         for (const [key, tasks] of tasksByProcess) {
           processFirstStart.set(key, Math.min(...tasks.map(t => t.start.getTime())))
         }
-        // Full process paths sorted chronologically
         const processKeys = [...tasksByProcess.keys()].sort(
           (a, b) => processFirstStart.get(a) - processFirstStart.get(b)
         )
@@ -1272,47 +1421,25 @@
           return null
         }
     
-        // Build the shortest suffix per process that is unique across all process paths.
-        // e.g. ["A:B:C:FASTQ", "D:E:F:FASTQ"] → ["C:FASTQ", "F:FASTQ"]
-        // e.g. ["A:FASTQ", "B:FASTQ"]           → ["A:FASTQ", "B:FASTQ"] (1 segment already unique)
-        const processDisplayName = new Map()
-        for (const key of processKeys) {
-          const parts = key.split(':')
-          let depth = 1
-          let label = parts[parts.length - 1]
-          while (
-            depth < parts.length &&
-            processKeys.filter(k => k.endsWith(':' + label) || k === label).length > 1
-          ) {
-            depth++
-            label = parts.slice(parts.length - depth).join(':')
-          }
-          processDisplayName.set(key, label)
-        }
-        // Convenience alias for y-axis tick labels
+        // ── Step 3: build shortest unique display labels via shared utility ────
+        const processDisplayName = buildUniqueLabels(processKeys)
+        // Flat array of display names in the same order as processKeys (used for
+        // y-axis ticktext and height calculation).
         const processNames = processKeys.map(k => processDisplayName.get(k))
     
-        function colorFromProcessName(name, alpha = 1.0) {
-          let hash = 0
-          for (let i = 0; i < name.length; i++) {
-            hash = name.charCodeAt(i) + ((hash << 5) - hash)
-          }
-          const hue = Math.abs(hash) % 360
-          return `hsla(${hue}, 62%, 46%, ${alpha})`
-        }
-    
-        function truncateLabel(s) {
-          return s.length > 28 ? '\u2026' + s.slice(-27) : s
-        }
-    
+        // ── Step 4: build one Plotly scatter trace per task ──────────────────────
+        // Each task is a horizontal line from task.start to task.complete at its
+        // assigned y position.  Parallel tasks within the same process are spread
+        // across sub-lanes (fractional y offsets within ±laneBandHalfHeight).
         const swimlaneData = []
         for (const [processIndex, processKey] of processKeys.entries()) {
           const displayName = processDisplayName.get(processKey)
           const processTasks = tasksByProcess.get(processKey).sort((a, b) => a.start - b.start)
-          const laneEndTimes = []
-          const laneAssignments = []
+          const laneEndTimes = []   // tracks the latest end-time per sub-lane
+          const laneAssignments = [] // sub-lane index for each task
     
-          // Greedy interval partitioning: overlapping tasks go to different sub-lanes.
+          // Greedy interval partitioning: assign each task to the first sub-lane
+          // that has finished (no overlap), or open a new sub-lane if all are busy.
           for (const task of processTasks) {
             let lane = -1
             for (let laneIndex = 0; laneIndex < laneEndTimes.length; laneIndex++) {
@@ -1333,6 +1460,8 @@
           }
     
           const laneCount = Math.max(1, laneEndTimes.length)
+          // Sub-lanes are evenly spread within ±0.34 y-units around the process row.
+          // With only one sub-lane the task sits exactly on the process center line.
           const laneBandHalfHeight = 0.34
           const laneStep = laneCount === 1 ? 0 : (2 * laneBandHalfHeight) / (laneCount - 1)
     
@@ -1342,17 +1471,21 @@
             const laneY = laneCount === 1
               ? processIndex
               : processIndex - laneBandHalfHeight + lane * laneStep
-            // Per-task traces with alpha make parallel overlap visually darker.
+            // Each task is a single scatter trace (lines+markers).  Using separate
+            // traces rather than one combined trace per process means the tooltip
+            // always shows exactly the hovered task's data.
             swimlaneData.push({
               name: displayName,
               x: [task.start, task.complete],
               y: [laneY, laneY],
               type: 'scatter',
               mode: 'lines+markers',
-              line: { width: 8, color: colorFromProcessName(displayName, 0.42) },
+              // colorFromName is the shared hash-based color utility; lightness 46
+              // gives a medium-dark shade for the bar, 0.9 alpha for the endpoints.
+              line: { width: 8, color: colorFromName(displayName, 46, 0.42) },
               marker: {
                 size: 4,
-                color: colorFromProcessName(displayName, 0.9),
+                color: colorFromName(displayName, 46, 0.9),
                 symbol: 'line-ns-open',
               },
               connectgaps: false,
@@ -1370,10 +1503,11 @@
     
         const swimlaneLayout = {
           title: { text: 'Task execution swimlanes by process' },
+          // Bottom margin is generous to avoid overlap with the CI plot title below.
           margin: { l: 140, r: 100, t: 40, b: 80 },
+          // Height scales with the number of processes; capped to avoid excessive scroll.
           height: Math.max(360, Math.min(1200, 150 + processNames.length * 28)),
-          plot_bgcolor: '#FCFEFF',
-          paper_bgcolor: '#FFFFFF',
+          ...PLOT_BG,
           xaxis: {
             title: { text: 'Time' },
             type: 'date',
@@ -1398,48 +1532,100 @@
             automargin: true,
           },
           hovermode: 'closest',
-          hoverlabel: { bgcolor: 'rgba(28,48,66,0.92)', bordercolor: 'rgba(28,48,66,0.0)', font: { size: 12, color: '#FFFFFF' }, align: 'left' },
+          hoverlabel: HOVERLABEL,
         }
     
         return Plotly.newPlot(swimlanePlotContainer, swimlaneData, swimlaneLayout, { responsive: true })
+          .then(graphDiv => {
+            // Shrink/grow the swimlane height when the user zooms the y-axis.
+            // swimlaneLayout.height is the full height for all processes; the listener
+            // scales it down proportionally to the number of visible process rows.
+            const slFullHeight = swimlaneLayout.height
+            const SL_PX_PER_ROW = 28
+            const SL_BASE_HEIGHT = 150
+            let heightSyncInProgress = false
+    
+            graphDiv.on('plotly_relayout', eventData => {
+              if (heightSyncInProgress) return
+              if (eventData['yaxis.autorange']) {
+                // Double-click zoom-reset — restore to full height.
+                heightSyncInProgress = true
+                Plotly.relayout(graphDiv, { height: slFullHeight })
+                  .then(() => { heightSyncInProgress = false })
+                  .catch(() => { heightSyncInProgress = false })
+                return
+              }
+              const y0 = eventData['yaxis.range[0]'] !== undefined ? eventData['yaxis.range[0]']
+                : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][0] : undefined)
+              const y1 = eventData['yaxis.range[1]'] !== undefined ? eventData['yaxis.range[1]']
+                : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][1] : undefined)
+              if (y0 !== undefined && y1 !== undefined) {
+                const visibleCount = Math.max(1, Math.round(Math.abs(y1 - y0)))
+                const newHeight = Math.max(120, Math.min(1200, SL_BASE_HEIGHT + visibleCount * SL_PX_PER_ROW))
+                if (Math.abs(newHeight - (graphDiv.layout.height ?? slFullHeight)) > 2) {
+                  heightSyncInProgress = true
+                  Plotly.relayout(graphDiv, { height: newHeight })
+                    .then(() => { heightSyncInProgress = false })
+                    .catch(() => { heightSyncInProgress = false })
+                }
+              }
+            })
+            return graphDiv
+          })
       }
     
+      // ───────────────────────────────────────────────────────────────────────────
+      // X-AXIS SYNCHRONISATION BETWEEN CI PLOT AND SWIMLANE PLOT
+      // Panning or zooming either plot mirrors the new x-range onto the other so
+      // both always show the same time window.
+      // ───────────────────────────────────────────────────────────────────────────
       function link_timeline_xaxis(ciGraphDiv, swimlaneGraphDiv) {
         if (!ciGraphDiv || !swimlaneGraphDiv) {
           return
         }
     
+        // Guard against double-attaching listeners if this function is called again.
         if (ciGraphDiv._nfTimelineSyncAttached || swimlaneGraphDiv._nfTimelineSyncAttached) {
           return
         }
-    
         ciGraphDiv._nfTimelineSyncAttached = true
         swimlaneGraphDiv._nfTimelineSyncAttached = true
     
+        // syncInProgress prevents the two plots from triggering each other in an
+        // infinite loop when one relayout causes a relayout in the other.
         let syncInProgress = false
     
+        // Bootstrap the swimlane to match the CI plot's initial x-axis range.
         const initialRange = ciGraphDiv.layout?.xaxis?.range
         if (Array.isArray(initialRange) && initialRange.length === 2) {
           Plotly.relayout(swimlaneGraphDiv, { 'xaxis.range': initialRange })
         }
     
+        /**
+         * Propagates a relayout event from one plot to the other.
+         * Handles both the array form ('xaxis.range') and the indexed form
+         * ('xaxis.range[0]' / 'xaxis.range[1]') that Plotly emits depending on
+         * the interaction type.
+         *
+         * @param {object} targetGraphDiv - The plot div to update
+         * @param {object} eventData      - The relayout event payload
+         */
         function mirrorRelayout(targetGraphDiv, eventData) {
           if (syncInProgress || !eventData) {
             return
           }
     
           if (eventData['xaxis.autorange']) {
+            // User double-clicked to reset zoom — propagate the autorange reset.
             syncInProgress = true
             Plotly.relayout(targetGraphDiv, { 'xaxis.autorange': true })
-              .then(() => {
-                syncInProgress = false
-              })
-              .catch(() => {
-                syncInProgress = false
-              })
+              .then(() => { syncInProgress = false })
+              .catch(() => { syncInProgress = false })
             return
           }
     
+          // Plotly can deliver the range as either an array property or two indexed
+          // properties — normalise both forms to range0 / range1.
           let range0 = eventData['xaxis.range[0]']
           let range1 = eventData['xaxis.range[1]']
           if ((range0 === undefined || range1 === undefined) && Array.isArray(eventData['xaxis.range'])) {
@@ -1450,12 +1636,8 @@
           if (range0 !== undefined && range1 !== undefined) {
             syncInProgress = true
             Plotly.relayout(targetGraphDiv, { 'xaxis.range': [range0, range1] })
-              .then(() => {
-                syncInProgress = false
-              })
-              .catch(() => {
-                syncInProgress = false
-              })
+              .then(() => { syncInProgress = false })
+              .catch(() => { syncInProgress = false })
           }
         }
     

@@ -8,9 +8,9 @@
     "num_lines": 30
   },
   "report_test.html": {
-    "checksum": "fb0dbe8231d3827c4b96de56752b814e",
-    "excluded_lines": [1497, 1498],
-    "num_lines": 1780
+    "checksum": "d83d8577fbb7dda655b7458b49470b2b",
+    "excluded_lines": [1679, 1680],
+    "num_lines": 1962
   },
   "data_test.yaml": {
     "checksum": "d65bb67459cea786b515d25b2c4d44d4",
