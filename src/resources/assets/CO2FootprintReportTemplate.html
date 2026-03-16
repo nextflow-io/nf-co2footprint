@@ -261,34 +261,27 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
     <!-- CO₂ footprint metrics plot -->
     <div class="container">
       <h3 id="metrics-plot">Per process emissions</h3>
-      <ul class="nav nav-tabs mb-3" id="co2eplot_tabs" role="tablist">
-        <li class="nav-item">
-          <a class="nav-link active" id="co2e-total-plot_tablink" data-toggle="tab" href="#co2e-total-plot_tabpanel" role="tab" aria-controls="co2e-total-plot_tabpanel" aria-expanded="false">
-            All tasks
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="co2e-non-cached-plot_tablink" data-toggle="tab" href="#co2e-non-cached-plot_tabpanel" role="tab" aria-controls="co2e-non-cached-plot_tabpanel" aria-expanded="false">
-            Without cached tasks
-          </a>
-        </li>
-      </ul>
-      <div class="tab-content" id="co2eplot_tabcontent">
-        <div class="tab-pane fade show active" id="co2e-total-plot_tabpanel" role="tabpanel">
-          <div id="co2e-total-plot"></div>
+      <div class="d-flex flex-wrap align-items-center mb-3">
+        <div class="btn-group btn-group-sm mr-2 mb-1" role="group">
+          <button type="button" class="btn btn-primary pe-metric-btn" id="pe-btn-co2e">CO&#x2082;e emissions</button>
+          <button type="button" class="btn btn-secondary pe-metric-btn" id="pe-btn-energy">Energy</button>
         </div>
-        <div class="tab-pane fade" id="co2e-non-cached-plot_tabpanel" role="tabpanel">
-          <div id="co2e-non-cached-plot"></div>
+        <div class="btn-group btn-group-sm mr-2 mb-1" role="group">
+          <button type="button" class="btn btn-primary pe-cached-btn" id="pe-btn-all">All tasks</button>
+          <button type="button" class="btn btn-secondary pe-cached-btn" id="pe-btn-noncached">Without cached</button>
         </div>
+        <button type="button" class="btn btn-sm btn-secondary mb-1" id="pe-btn-sort">&#x2193; Sort by value</button>
       </div>
-      <p class="mt-3">The plot shows the distribution of CO₂e emissions and corresponding energy consumptions for each workflow process. The values that are displayed when hovering over the plot refer to the CO<sub>2</sub>e emissions.</p>
+      <div id="process-emissions-plot"></div>
+      <p class="mt-3">Box plots show the distribution of CO&#x2082;e or energy values per process across all tasks. Individual task values are shown as scatter points. Toggle between CO&#x2082;e and energy, include or exclude cached tasks, and sort processes by their total contribution.</p>
     </div>
 
-    <!-- CI records plot -->
+    <!-- Task timeline: process swimlane + CI/energy plot (linked x-axis) -->
     <div class="container">
-      <h3 id="ci-records">Carbon intensity & energy usage timeline</h3>
+      <h3 id="ci-records">Task timeline</h3>
+      <div id="process-swimlane-plot"></div>
       <div id="ci-plot"></div>
-      <p class="mt-3 mb-3">This plot shows the fluctuation of carbon intensity (CI) during workflow computation and the energy consumption of individual tasks. Together, these two factors determine the emitted CO₂e.</p>
+      <p class="mt-3 mb-3">The upper panel shows each task's execution window grouped by process. The lower panel shows the carbon intensity (CI) and energy consumption over the same timeline. Both panels are linked — zoom or pan one to update the other.</p>
     </div>
 
     <!-- Tasks table -->
