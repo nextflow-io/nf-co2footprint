@@ -2,6 +2,7 @@
 ## Bug Fixes:
 - Plot display of titles and axes names in report
 - Accumulation of dates
+- Total values from workflow in report
 
 ## Misc:
 - Improved the testing of log messages
