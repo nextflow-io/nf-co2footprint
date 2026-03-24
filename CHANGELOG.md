@@ -2,6 +2,7 @@
 ## Bug Fixes:
 - Plot display of titles and axes names in report
 - Accumulation of dates
+- Never initialized observer called for session emissions on CLI command
 
 ## Misc:
 - Improved the testing of log messages
