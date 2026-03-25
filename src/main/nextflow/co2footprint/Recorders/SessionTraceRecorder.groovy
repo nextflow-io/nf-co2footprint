@@ -130,7 +130,7 @@ class SessionTraceRecorder {
     }
 
     /**
-     * Sample memory information.
+     * Sample memory information and update children.
      */
     void sample() {
         process.updateAttributes()
@@ -143,8 +143,8 @@ class SessionTraceRecorder {
                     timestamp: System.currentTimeMillis(),
 
                     // Memory
-                    rssBytes: process.residentSetSize,
-                    virtualMemoryBytes: process.virtualSize,
+                    rssBytes: process.residentSetSize + (descendantProcesses.values().collect({ OSProcess p -> p.residentSetSize}).sum() as Long),
+                    virtualMemoryBytes: process.virtualSize + (descendantProcesses.values().collect({ OSProcess p -> p.virtualSize}).sum() as Long),
             )
 
             samples.add(sample)
