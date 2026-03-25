@@ -30,7 +30,7 @@ class SessionTraceRecorder {
     // Process information
     private int pid
     private OSProcess process
-    private Map<Integer, OSProcess> descendantProcesses = [:].asSynchronized()
+    private Map<Integer, OSProcess> allProcesses = [(pid): process].asSynchronized()
 
     // Aggregation
     final List<MemorySample> samples = [].asSynchronized() as List<MemorySample>
@@ -83,37 +83,34 @@ class SessionTraceRecorder {
      * Create a finalized session specific {@link TraceRecord} from the current samples.
      */
     TraceRecord report() {
-        long endTime = System.currentTimeMillis()
+        long endTimestamp = System.currentTimeMillis()
 
-        process.updateAttributes()
-        double processLoad = process.getProcessCpuLoadCumulative()
-        descendantProcesses.each { Integer pid, OSProcess child ->
-            child.updateAttributes()
-            processLoad += child.getProcessCpuLoadCumulative()
-        }
+        // Reduce the process to values
+        List<OSProcess> processList = allProcesses.values() as List<OSProcess>
+        processList.each({ OSProcess p -> p.updateAttributes() })
 
         sessionRecord.putAll(
                 [
                         status:         'COMPLETED',
-                        complete:       endTime,
-                        duration:       endTime - (sessionRecord.get('submit') as long),
+                        complete:       endTimestamp,
+                        duration:       endTimestamp - (sessionRecord.get('submit') as long),
                         realtime:       runtimeBean.uptime,
                         memory:         Runtime.getRuntime().maxMemory(),
-                        '%cpu':         processLoad * 100,
-                        read_bytes:     process.bytesRead,
-                        write_bytes:    process.bytesWritten,
-                        vol_ctxt:       process.minorFaults,
-                        inv_ctxt:       process.majorFaults,
-                ]
+                        '%cpu':         (processList.sum({ OSProcess p -> p.getProcessCpuLoadCumulative() }) as double) * 100,
+                        read_bytes:     processList.sum({ OSProcess p -> p.bytesRead}) as Long,
+                        write_bytes:    processList.sum({ OSProcess p -> p.bytesWritten}) as Long,
+                        vol_ctxt:       processList.sum({ OSProcess p -> p.minorFaults}) as Long,
+                        inv_ctxt:       processList.sum({ OSProcess p -> p.majorFaults}) as Long,
+                ] 
         )
 
         if (samples) {
             sessionRecord.putAll(
                     [
-                            rss:            samples.collect({ MemorySample sample -> sample.rssBytes}).average() as Long,
-                            vmem:           samples.collect({ MemorySample sample -> sample.virtualMemoryBytes}).average() as Long,
-                            peak_rss:       samples.collect({ MemorySample sample -> sample.rssBytes}).max(),
-                            peak_vmem:      samples.collect({ MemorySample sample -> sample.virtualMemoryBytes}).max(),
+                            rss:            samples.average({ MemorySample sample -> sample.rssBytes}) as Long,
+                            vmem:           samples.average({ MemorySample sample -> sample.virtualMemoryBytes}) as Long,
+                            peak_rss:       samples.max({ MemorySample sample -> sample.rssBytes}),
+                            peak_vmem:      samples.max({ MemorySample sample -> sample.virtualMemoryBytes}),
                     ]
             )
         }
@@ -133,18 +130,23 @@ class SessionTraceRecorder {
      * Sample memory information and update children.
      */
     void sample() {
+        // Update root process information
         process.updateAttributes()
-        os.getDescendantProcesses(process.processID, null, null, 0)?.each { child ->
-            descendantProcesses[child.processID] = child
-        }
+
+        // Collect active descendant processes
+        List<OSProcess> activeDescendants = os.getDescendantProcesses(pid, null, null, 0)
+        List<OSProcess> activeProcesses = [process] + activeDescendants
+
+        // Enter the active descendants into the map
+        activeDescendants.each({ OSProcess p -> allProcesses[p.processID] = p })
 
         if (process != null) {
             MemorySample sample = new MemorySample(
                     timestamp: System.currentTimeMillis(),
 
                     // Memory
-                    rssBytes: process.residentSetSize + (descendantProcesses.values().collect({ OSProcess p -> p.residentSetSize}).sum() as Long),
-                    virtualMemoryBytes: process.virtualSize + (descendantProcesses.values().collect({ OSProcess p -> p.virtualSize}).sum() as Long),
+                    rssBytes: activeProcesses.sum({ OSProcess p -> p.residentSetSize}) as Long,
+                    virtualMemoryBytes: activeProcesses.sum({ OSProcess p -> p.virtualSize}) as Long,
             )
 
             samples.add(sample)
