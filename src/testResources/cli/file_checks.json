@@ -8,12 +8,12 @@
     "num_lines": 30
   },
   "report_test.html": {
-    "checksum": "20f7b9dc9ef61fa1ecf2756f2a085923",
-    "excluded_lines": [1027, 1028],
-    "num_lines": 1317
+    "checksum": "f6a728219eadc55905b332e84241d96c",
+    "excluded_lines": [1533, 1534],
+    "num_lines": 1816
   },
   "data_test.yaml": {
-    "checksum": "d65bb67459cea786b515d25b2c4d44d4",
+    "checksum": "7dd82429ebd8eb1e04bac46b43ebcdc2",
     "excluded_lines": [13, 17, 21, 111, 115, 119, 242, 246, 250],
     "num_lines": 341
   }

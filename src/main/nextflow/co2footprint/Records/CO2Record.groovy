@@ -144,12 +144,12 @@ class CO2Record extends TraceRecord {
         }
 
         // Weighted average by time for CPU usage
-        else if (key == 'cpuUsage') {
+        else if (key in ['cpuUsage', '%cpu', '%mem', 'vmem', 'rss', 'cpus']) {
             return Calculator.weightedAverage([thisValue, newValue], [store['time'], record.store['time']])
         }
 
         // For memory and CPU count and completion time, keep the maximum
-        else if (key in ['memory', 'cpus', 'complete']) {
+        else if (key in ['memory', 'cpus', 'complete', 'attempt', 'peak_vmem', 'peak_rss']) {
             return Calculator.max(thisValue, newValue)
         }
 

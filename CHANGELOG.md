@@ -3,6 +3,8 @@
 - Plot display of titles and axes names in report
 - Accumulation of dates
 - Never initialized observer called for session emissions on CLI command
+- Included descendant processes into session tracking
+- Total values from workflow in report
 
 ## Misc:
 - Improved the testing of log messages
