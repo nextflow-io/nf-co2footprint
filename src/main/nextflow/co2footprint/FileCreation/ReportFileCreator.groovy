@@ -262,6 +262,13 @@ class ReportFileCreator extends BaseFileCreator{
         if (res == null) {
             throw new FileNotFoundException("Template not found at path: $path")
         }
-        return new BufferedReader(new InputStreamReader(res, "UTF-8")).text
+
+        List<String> lines = new BufferedReader(new InputStreamReader(res, "UTF-8")).readLines()
+
+        // Filter out lines starting with "//"
+        List<String> cleanLines = lines.findAll { line -> !line.trim().startsWith("//") }
+
+        // Join back into a single string
+        return cleanLines.join("\n")
     }
 }
