@@ -9,6 +9,7 @@ import nextflow.script.dsl.Description
 @ScopeName('co2footprint.dataFile')
 @Description('The `co2footprint.dataFile` scope allows you to configure the data/machine-actionable file of the `nf-co2footprint` plugin.')
 class DataFileConfig extends BaseFileConfig implements ConfigScope {
+    DataFileConfig() { super() }
 
     @ConfigOption
     @Description('Whether only emission metrics should be reported in the data file.')

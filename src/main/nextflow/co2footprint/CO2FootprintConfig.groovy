@@ -118,6 +118,12 @@ class CO2FootprintConfig implements ConfigScope {
     final List<Number> cpuPowerModel
 
     /**
+     * No-arg constructor required by Nextflow's v2 config parser to
+     * discover and validate config options at parse time.
+     */
+    CO2FootprintConfig() {}
+
+    /**
      * Loads configuration from a map and sets up defaults and fallbacks.
      * Also sets up CPU and CI data sources and assigns machine type and PUE.
      *

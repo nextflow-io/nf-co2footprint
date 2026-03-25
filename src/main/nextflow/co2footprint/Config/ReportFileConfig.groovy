@@ -9,6 +9,7 @@ import nextflow.script.dsl.Description
 @ScopeName('co2footprint.report')
 @Description('The `co2footprint.report` scope allows you to configure the report file of the `nf-co2footprint` plugin.')
 class ReportFileConfig extends BaseFileConfig implements ConfigScope{
+    ReportFileConfig() { super() }
 
     @ConfigOption
     @Description('The number of maximum tasks that is displayed in the report.')

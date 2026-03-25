@@ -33,6 +33,12 @@ class BaseFileConfig {
     protected final LinkedHashSet<String> usedKeys = [] as LinkedHashSet<String>
 
     /**
+     * No-arg constructor required by Nextflow's v2 config parser for
+     * subclasses that implement ConfigScope.
+     */
+    protected BaseFileConfig() {}
+
+    /**
      * Parses a file-based sub-configuration for nf-co2footprint and sets up defaults and fallbacks.
      *
      * @param fileConfigMap  User-provided configuration options
