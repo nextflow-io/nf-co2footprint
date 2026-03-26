@@ -18,7 +18,7 @@ class BaseFileConfig {
     final String name
     final String ending
 
-    @ConfigOption(types=[String, GString])
+    @ConfigOption
     @Description('Path to the file.')
     final Path file
 
@@ -31,12 +31,6 @@ class BaseFileConfig {
     final Boolean overwrite
 
     protected final LinkedHashSet<String> usedKeys = [] as LinkedHashSet<String>
-
-    /**
-     * No-arg constructor required by Nextflow's v2 config parser for
-     * subclasses that implement ConfigScope.
-     */
-    protected BaseFileConfig() {}
 
     /**
      * Parses a file-based sub-configuration for nf-co2footprint and sets up defaults and fallbacks.
