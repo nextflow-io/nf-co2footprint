@@ -130,7 +130,7 @@ class LoggingAdapter {
                 // Changing encoder to desired layout
                 Encoder encoder = appender.getEncoder() as LayoutWrappingEncoder
                 encoder.stop()
-                encoder.setLayout(layout)
+                encoder.setLayout(defineLayout(pattern + '{}%n'))
                 encoder.start()
 
                 appender.setEncoder(encoder)
