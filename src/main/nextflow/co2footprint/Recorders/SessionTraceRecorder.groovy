@@ -99,23 +99,20 @@ class SessionTraceRecorder {
         List<OSProcess> processList = allProcesses.values() as List<OSProcess>
         processList.each({ OSProcess p -> p.updateAttributes() })
 
-        Map<ProcessStat.PidStat, Long> pidStats = getPidStats(pid)
+        Map<ProcessStat.PidStat, Long> rootStats = getPidStats(pid)
 
         // Determine CPU usage
         Double cpuUsage
-        if (pidStats != null) {
-            Long cpuTime = pidStats.get(ProcessStat.PidStat.UTIME) + pidStats.get(ProcessStat.PidStat.STIME) +
-                    pidStats.get(ProcessStat.PidStat.CUTIME) + pidStats.get(ProcessStat.PidStat.CSTIME)
-            cpuTime = (cpuTime * 1000 / LinuxOperatingSystem.getHz()) as Long // Convert from jiffies to ms
-            log.info("CPU time for PID ${pid}: ${cpuTime} ms")
+        if (rootStats != null) {
+            // Accumulate the running ticks of root including waiting time for children
+            Long cpuTime = rootStats.get(ProcessStat.PidStat.UTIME) + rootStats.get(ProcessStat.PidStat.STIME) +
+                    rootStats.get(ProcessStat.PidStat.CUTIME) + rootStats.get(ProcessStat.PidStat.CSTIME)
+            // Convert from jiffies to ms
+            cpuTime = (cpuTime * 1000 / LinuxOperatingSystem.getHz()) as Long
             Long elapsedTime = endTimestamp - process.startTime
-            log.info("Start CPU ticks: ${process.startTime}")
-            log.info("System CPU ticks: ${endTimestamp} ms")
-            log.info("Elapsed time for PID ${pid}: ${elapsedTime} ms")
 
             cpuUsage = cpuTime / elapsedTime
-            log.info("Calculated CPU usage for PID ${pid}: ${cpuUsage * 100}%")
-            log.info("Other CPU usage: ${processList.collect({ OSProcess p -> p.getProcessCpuLoadCumulative() }).sum() as double}")
+            log.debug("Calculated CPU usage for PID ${pid}: ${cpuUsage}")
         }
         else {
             cpuUsage = processList.collect({ OSProcess p -> p.getProcessCpuLoadCumulative() }).sum() as double
