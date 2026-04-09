@@ -109,6 +109,8 @@ class SessionTraceRecorder {
                     rootStats.get(ProcessStat.PidStat.CUTIME) + rootStats.get(ProcessStat.PidStat.CSTIME)
             // Convert from jiffies to ms
             cpuTime = (cpuTime * 1000 / LinuxOperatingSystem.getHz()) as Long
+
+            // Calculate elapsed time since process start
             Long elapsedTime = endTimestamp - process.startTime
 
             cpuUsage = cpuTime / elapsedTime
