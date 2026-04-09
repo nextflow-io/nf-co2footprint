@@ -14,6 +14,7 @@
 - Added recommendation for market-based CI usage
 - Single values in process summary plot
 - Numbers that are not in Double format are now accepted for config values
+- Aligned Session tracking with Nextflow's trace tracking
 
 ## Features:
 - Updated the config syntax inline with standard Nextflow style
