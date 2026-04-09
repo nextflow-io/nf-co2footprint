@@ -90,9 +90,6 @@ class LoggingAdapter {
             String pattern='%customHighlight(%level - [nf-co2footprint] %msg)',
             String scope='nextflow.co2footprint'
     ) {
-        // Logback implementation
-        PatternLayout layout = defineLayout(pattern)
-
         // Define logger and add appender
         Logger co2FootprintLogger = loggerContext.getLogger(scope)
 
@@ -113,7 +110,7 @@ class LoggingAdapter {
                 appender.start()
 
                 // Replace with custom logger
-                CustomCaptureAppender customCaptureAppender = new CustomCaptureAppender(session, layout)
+                CustomCaptureAppender customCaptureAppender = new CustomCaptureAppender(session, defineLayout(pattern))
                 for (Filter filter : appender.getCopyOfAttachedFiltersList()) {
                     customCaptureAppender.addFilter(filter)
                 }
@@ -130,7 +127,7 @@ class LoggingAdapter {
                 // Changing encoder to desired layout
                 Encoder encoder = appender.getEncoder() as LayoutWrappingEncoder
                 encoder.stop()
-                encoder.setLayout(layout)
+                encoder.setLayout(defineLayout(pattern + '{}%n'))
                 encoder.start()
 
                 appender.setEncoder(encoder)

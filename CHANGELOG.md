@@ -5,6 +5,7 @@
 - Never initialized observer called for session emissions on CLI command
 - Included descendant processes into session tracking
 - Total values from workflow in report
+- Missing newlines in non-ANSI logging
 
 ## Misc:
 - Improved the testing of log messages
