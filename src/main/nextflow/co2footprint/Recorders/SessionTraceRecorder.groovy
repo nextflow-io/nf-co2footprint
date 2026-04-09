@@ -1,11 +1,15 @@
 package nextflow.co2footprint.Recorders
 
+import groovy.util.logging.Slf4j
 import nextflow.Session
 import nextflow.trace.TraceRecord
 import oshi.SystemInfo
+import oshi.driver.linux.proc.ProcessStat
 import oshi.hardware.CentralProcessor
 import oshi.software.os.OSProcess
 import oshi.software.os.OperatingSystem
+import oshi.util.GlobalConfig.PropertyException
+import oshi.util.tuples.Triplet
 
 import java.lang.management.ManagementFactory
 import java.lang.management.RuntimeMXBean
@@ -16,6 +20,7 @@ import com.sun.management.OperatingSystemMXBean
  * A Recorder of trace values for a Nextflow session, which can be attached after startup
  * to capture timepoints before workflow invocation.
  */
+@Slf4j
 class SessionTraceRecorder {
     // OSHI info handles
     private final RuntimeMXBean          runtimeBean = ManagementFactory.getRuntimeMXBean()
@@ -89,6 +94,25 @@ class SessionTraceRecorder {
         List<OSProcess> processList = allProcesses.values() as List<OSProcess>
         processList.each({ OSProcess p -> p.updateAttributes() })
 
+        Map<ProcessStat.PidStat, Long> pidStats = getPidStats()
+
+        // Determine CPU usage
+        Double cpuUsage
+        if (pidStats != null) {
+
+            Long cpuTime = pidStats.get(ProcessStat.PidStat.UTIME) + pidStats.get(ProcessStat.PidStat.STIME) +
+                    pidStats.get(ProcessStat.PidStat.CUTIME) + pidStats.get(ProcessStat.PidStat.CSTIME)
+            log.info("CPU time for PID ${pid}: ${cpuTime} jiffies")
+            Long elapsedTime = processor.getSystemCpuLoadTicks().sum() - pidStats.get(ProcessStat.PidStat.STARTTIME)
+            log.info("End CPU ticks: ${processor.getSystemCpuLoadTicks().sum()} ms")
+            log.info("Elapsed time for PID ${pid}: ${elapsedTime} jiffies")
+            cpuUsage = cpuTime / elapsedTime
+            log.info("Calculated CPU usage for PID ${pid}: ${cpuUsage * 100}%")
+        }
+        else {
+            cpuUsage = processList.sum({ OSProcess p -> p.getProcessCpuLoadCumulative() }) as double
+        }
+
         sessionRecord.putAll(
                 [
                         status:         'COMPLETED',
@@ -96,7 +120,7 @@ class SessionTraceRecorder {
                         duration:       endTimestamp - (sessionRecord.get('submit') as long),
                         realtime:       runtimeBean.uptime,
                         memory:         Runtime.getRuntime().maxMemory(),
-                        '%cpu':         (processList.sum({ OSProcess p -> p.getProcessCpuLoadCumulative() }) as double) * 100,
+                        '%cpu':         cpuUsage * 100,
                         read_bytes:     processList.sum({ OSProcess p -> p.bytesRead}) as Long,
                         write_bytes:    processList.sum({ OSProcess p -> p.bytesWritten}) as Long,
                         vol_ctxt:       processList.sum({ OSProcess p -> p.minorFaults}) as Long,
@@ -124,6 +148,23 @@ class SessionTraceRecorder {
     void stop() {
         timer.cancel()
         timer.purge()
+    }
+
+    /**
+     * Attempts to fetch the PID stats for the current process.
+     *
+     * @return Map of PID stats, or null if the information could not be retrieved (e.g. due to permissions or OS)
+     */
+    Map<ProcessStat.PidStat, Long> getPidStats() {
+        try {
+            Triplet<String, Character, Map<ProcessStat.PidStat, Long>> stats = ProcessStat.getPidStats(pid)
+            return stats.getC()
+        }
+        catch (PropertyException propertyException) {
+            log.trace("Failed to get process stats for PID ${pid}: ${propertyException.message}")
+        }
+
+        return null
     }
 
     /**
