@@ -4,15 +4,11 @@ import groovy.util.logging.Slf4j
 import nextflow.Session
 import nextflow.trace.TraceRecord
 import oshi.SystemInfo
-import oshi.driver.linux.proc.CpuStat
 import oshi.driver.linux.proc.ProcessStat
 import oshi.hardware.CentralProcessor
 import oshi.software.os.OSProcess
 import oshi.software.os.OperatingSystem
-import oshi.software.os.linux.LinuxOSProcess
 import oshi.software.os.linux.LinuxOperatingSystem
-import oshi.util.GlobalConfig.PropertyException
-import oshi.util.ProcUtil
 import oshi.util.tuples.Triplet
 
 import java.lang.management.ManagementFactory
@@ -163,13 +159,16 @@ class SessionTraceRecorder {
      * @param pid The PID for which to fetch the stats
      * @return Map of PID stats, or null if the information could not be retrieved (e.g. due to permissions or OS)
      */
-    static Map<ProcessStat.PidStat, Long> getPidStats(Integer pid) {
-        try {
-            Triplet<String, Character, Map<ProcessStat.PidStat, Long>> stats = ProcessStat.getPidStats(pid)
-            return stats.getC()
-        }
-        catch (PropertyException propertyException) {
-            log.trace("Failed to get process stats for PID ${pid}: ${propertyException.message}")
+    Map<ProcessStat.PidStat, Long> getPidStats(Integer pid) {
+        LinuxOperatingSystem
+        if (os instanceof LinuxOperatingSystem) {
+            try {
+                Triplet<String, Character, Map<ProcessStat.PidStat, Long>> stats = ProcessStat.getPidStats(pid)
+                return stats.getC()
+            }
+            catch (Exception e) {
+                log.trace("Failed to get process stats for PID ${pid}: ${e.message}")
+            }
         }
 
         return null
