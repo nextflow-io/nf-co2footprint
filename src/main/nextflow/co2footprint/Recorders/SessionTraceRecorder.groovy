@@ -4,11 +4,15 @@ import groovy.util.logging.Slf4j
 import nextflow.Session
 import nextflow.trace.TraceRecord
 import oshi.SystemInfo
+import oshi.driver.linux.proc.CpuStat
 import oshi.driver.linux.proc.ProcessStat
 import oshi.hardware.CentralProcessor
 import oshi.software.os.OSProcess
 import oshi.software.os.OperatingSystem
+import oshi.software.os.linux.LinuxOSProcess
+import oshi.software.os.linux.LinuxOperatingSystem
 import oshi.util.GlobalConfig.PropertyException
+import oshi.util.ProcUtil
 import oshi.util.tuples.Triplet
 
 import java.lang.management.ManagementFactory
@@ -35,7 +39,7 @@ class SessionTraceRecorder {
     // Process information
     private int pid
     private OSProcess process
-    private Map<Integer, OSProcess> allProcesses = [(pid): process].asSynchronized()
+    private Map<Integer, OSProcess> allProcesses = [:].asSynchronized()
 
     // Aggregation
     final List<MemorySample> samples = [].asSynchronized() as List<MemorySample>
@@ -47,6 +51,7 @@ class SessionTraceRecorder {
     void start() {
         pid = runtimeBean.pid as int
         process = os.getProcess(pid)
+        allProcesses.put(pid, process)
 
         sessionRecord.putAll(
                 [
@@ -94,23 +99,26 @@ class SessionTraceRecorder {
         List<OSProcess> processList = allProcesses.values() as List<OSProcess>
         processList.each({ OSProcess p -> p.updateAttributes() })
 
-        Map<ProcessStat.PidStat, Long> pidStats = getPidStats()
+        Map<ProcessStat.PidStat, Long> pidStats = getPidStats(pid)
 
         // Determine CPU usage
         Double cpuUsage
         if (pidStats != null) {
-
             Long cpuTime = pidStats.get(ProcessStat.PidStat.UTIME) + pidStats.get(ProcessStat.PidStat.STIME) +
                     pidStats.get(ProcessStat.PidStat.CUTIME) + pidStats.get(ProcessStat.PidStat.CSTIME)
-            log.info("CPU time for PID ${pid}: ${cpuTime} jiffies")
-            Long elapsedTime = processor.getSystemCpuLoadTicks().sum() - pidStats.get(ProcessStat.PidStat.STARTTIME)
-            log.info("End CPU ticks: ${processor.getSystemCpuLoadTicks().sum()} ms")
-            log.info("Elapsed time for PID ${pid}: ${elapsedTime} jiffies")
+            cpuTime = (cpuTime * 1000 / LinuxOperatingSystem.getHz()) as Long // Convert from jiffies to ms
+            log.info("CPU time for PID ${pid}: ${cpuTime} ms")
+            Long elapsedTime = endTimestamp - process.startTime
+            log.info("Start CPU ticks: ${process.startTime}")
+            log.info("System CPU ticks: ${endTimestamp} ms")
+            log.info("Elapsed time for PID ${pid}: ${elapsedTime} ms")
+
             cpuUsage = cpuTime / elapsedTime
             log.info("Calculated CPU usage for PID ${pid}: ${cpuUsage * 100}%")
+            log.info("Other CPU usage: ${processList.collect({ OSProcess p -> p.getProcessCpuLoadCumulative() }).sum() as double}")
         }
         else {
-            cpuUsage = processList.sum({ OSProcess p -> p.getProcessCpuLoadCumulative() }) as double
+            cpuUsage = processList.collect({ OSProcess p -> p.getProcessCpuLoadCumulative() }).sum() as double
         }
 
         sessionRecord.putAll(
@@ -121,20 +129,20 @@ class SessionTraceRecorder {
                         realtime:       runtimeBean.uptime,
                         memory:         Runtime.getRuntime().maxMemory(),
                         '%cpu':         cpuUsage * 100,
-                        read_bytes:     processList.sum({ OSProcess p -> p.bytesRead}) as Long,
-                        write_bytes:    processList.sum({ OSProcess p -> p.bytesWritten}) as Long,
-                        vol_ctxt:       processList.sum({ OSProcess p -> p.minorFaults}) as Long,
-                        inv_ctxt:       processList.sum({ OSProcess p -> p.majorFaults}) as Long,
+                        read_bytes:     processList.collect({ OSProcess p -> p.bytesRead}).sum() as Long,
+                        write_bytes:    processList.collect({ OSProcess p -> p.bytesWritten}).sum() as Long,
+                        vol_ctxt:       processList.collect({ OSProcess p -> p.minorFaults}).sum() as Long,
+                        inv_ctxt:       processList.collect({ OSProcess p -> p.majorFaults}).sum() as Long,
                 ] 
         )
 
         if (samples) {
             sessionRecord.putAll(
                     [
-                            rss:            samples.average({ MemorySample sample -> sample.rssBytes}) as Long,
-                            vmem:           samples.average({ MemorySample sample -> sample.virtualMemoryBytes}) as Long,
-                            peak_rss:       samples.max({ MemorySample sample -> sample.rssBytes}),
-                            peak_vmem:      samples.max({ MemorySample sample -> sample.virtualMemoryBytes}),
+                            rss:            samples.collect({ MemorySample sample -> sample.rssBytes}).average() as Long,
+                            vmem:           samples.collect({ MemorySample sample -> sample.virtualMemoryBytes}).average() as Long,
+                            peak_rss:       samples.collect({ MemorySample sample -> sample.rssBytes}).max() as Long,
+                            peak_vmem:      samples.collect({ MemorySample sample -> sample.virtualMemoryBytes}).max() as Long,
                     ]
             )
         }
@@ -153,9 +161,10 @@ class SessionTraceRecorder {
     /**
      * Attempts to fetch the PID stats for the current process.
      *
+     * @param pid The PID for which to fetch the stats
      * @return Map of PID stats, or null if the information could not be retrieved (e.g. due to permissions or OS)
      */
-    Map<ProcessStat.PidStat, Long> getPidStats() {
+    static Map<ProcessStat.PidStat, Long> getPidStats(Integer pid) {
         try {
             Triplet<String, Character, Map<ProcessStat.PidStat, Long>> stats = ProcessStat.getPidStats(pid)
             return stats.getC()
@@ -186,8 +195,8 @@ class SessionTraceRecorder {
                     timestamp: System.currentTimeMillis(),
 
                     // Memory
-                    rssBytes: activeProcesses.sum({ OSProcess p -> p.residentSetSize}) as Long,
-                    virtualMemoryBytes: activeProcesses.sum({ OSProcess p -> p.virtualSize}) as Long,
+                    rssBytes: activeProcesses.collect({ OSProcess p -> p.residentSetSize}).sum() as Long,
+                    virtualMemoryBytes: activeProcesses.collect({ OSProcess p -> p.virtualSize}).sum() as Long,
             )
 
             samples.add(sample)
