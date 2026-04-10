@@ -1,0 +1,8 @@
+task_id	status	name	energy_consumption	CO2e	CO2e_market	carbon_intensity	%cpu	memory	realtime	cpus	powerdraw_cpu	cpu_model	raw_energy_processor	raw_energy_memory
+3	COMPLETED	NFCORE_DEMO:DEMO:SEQTK_TRIM (SAMPLE2_PE)	17.85 mWh	5 mg	-	280 gCO₂e/kWh	88.2 %	4 GB	3s 1000ms	2	12.32 W	VirtualApple @ 2.50GHz	12.07 mWh	1.66 mWh
+4	COMPLETED	NFCORE_DEMO:DEMO:SEQTK_TRIM (SAMPLE3_SE)	21.33 mWh	5.97 mg	-	280 gCO₂e/kWh	83.8 %	4 GB	5s 0ms	2	12.32 W	VirtualApple @ 2.50GHz	14.34 mWh	2.07 mWh
+1	COMPLETED	NFCORE_DEMO:DEMO:SEQTK_TRIM (SAMPLE1_PE)	31.82 mWh	8.91 mg	-	280 gCO₂e/kWh	77.3 %	4 GB	7s 1000ms	2	12.32 W	VirtualApple @ 2.50GHz	21.16 mWh	3.31 mWh
+2	COMPLETED	NFCORE_DEMO:DEMO:FASTQC (SAMPLE1_PE)	110.49 mWh	30.94 mg	-	280 gCO₂e/kWh	134 %	4 GB	16s 1000ms	2	12.32 W	VirtualApple @ 2.50GHz	77.96 mWh	7.04 mWh
+5	COMPLETED	NFCORE_DEMO:DEMO:FASTQC (SAMPLE2_PE)	103.91 mWh	29.1 mg	-	280 gCO₂e/kWh	125.3 %	4 GB	16s 1000ms	2	12.32 W	VirtualApple @ 2.50GHz	72.9 mWh	7.04 mWh
+6	COMPLETED	NFCORE_DEMO:DEMO:FASTQC (SAMPLE3_SE)	104.76 mWh	29.33 mg	-	280 gCO₂e/kWh	156.1 %	4 GB	14s 0ms	2	12.32 W	VirtualApple @ 2.50GHz	74.79 mWh	5.79 mWh
+7	COMPLETED	NFCORE_DEMO:DEMO:MULTIQC	99.09 mWh	27.74 mg	-	280 gCO₂e/kWh	142.5 %	4 GB	14s 407ms	2	12.32 W	VirtualApple @ 2.50GHz	70.26 mWh	5.96 mWh
