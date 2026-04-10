@@ -2,6 +2,10 @@
 ## Bug Fixes:
 - Plot display of titles and axes names in report
 - Accumulation of dates
+- Never initialized observer called for session emissions on CLI command
+- Included descendant processes into session tracking
+- Total values from workflow in report
+- Missing newlines in non-ANSI logging
 
 ## Misc:
 - Improved the testing of log messages
@@ -10,6 +14,7 @@
 - Added recommendation for market-based CI usage
 - Single values in process summary plot
 - Numbers that are not in Double format are now accepted for config values
+- Aligned Session tracking with Nextflow's trace tracking
 
 ## Features:
 - Updated the config syntax inline with standard Nextflow style

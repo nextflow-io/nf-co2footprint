@@ -1,12 +1,15 @@
 package nextflow.co2footprint.Recorders
 
+import groovy.util.logging.Slf4j
 import nextflow.Session
-import nextflow.processor.TaskRun
 import nextflow.trace.TraceRecord
 import oshi.SystemInfo
+import oshi.driver.linux.proc.ProcessStat
 import oshi.hardware.CentralProcessor
 import oshi.software.os.OSProcess
 import oshi.software.os.OperatingSystem
+import oshi.software.os.linux.LinuxOperatingSystem
+import oshi.util.tuples.Triplet
 
 import java.lang.management.ManagementFactory
 import java.lang.management.RuntimeMXBean
@@ -17,6 +20,7 @@ import com.sun.management.OperatingSystemMXBean
  * A Recorder of trace values for a Nextflow session, which can be attached after startup
  * to capture timepoints before workflow invocation.
  */
+@Slf4j
 class SessionTraceRecorder {
     // OSHI info handles
     private final RuntimeMXBean          runtimeBean = ManagementFactory.getRuntimeMXBean()
@@ -25,24 +29,26 @@ class SessionTraceRecorder {
     private final CentralProcessor       processor   = systemInfo.hardware.processor
     private final OperatingSystem        os          = systemInfo.operatingSystem
 
-    // CPU ticks snapshot
-    private long[] ticks_t0 = processor.systemCpuLoadTicks
-
     // Sampling settings
     private final Timer timer = new Timer('session-trace-recorder', true)
 
     // Process information
     private int pid
-    private OSProcess process_t0
+    private OSProcess process
+    private Map<Integer, OSProcess> allProcesses = [:].asSynchronized()
 
     // Aggregation
-    final List<RecordSample> samples = [].asSynchronized() as List<RecordSample>
+    final List<MemorySample> samples = [].asSynchronized() as List<MemorySample>
     final TraceRecord sessionRecord = new TraceRecord()
 
     /**
      * Start the recording of a session.
      */
     void start() {
+        pid = runtimeBean.pid as int
+        process = os.getProcess(pid)
+        allProcesses.put(pid, process)
+
         sessionRecord.putAll(
                 [
                         container:      'JVM',
@@ -62,9 +68,8 @@ class SessionTraceRecorder {
      * @param session The current Nextflow session
      */
     void attachSession(Session session) {
-        pid = runtimeBean.pid as int
-
-        timer.scheduleAtFixedRate(new TimerTask() { void run() { sample(pid) } } , 0, 500)
+        // Start sampling for memory
+        timer.scheduleAtFixedRate(new TimerTask() { void run() { sample() } } , 0, 500)
 
         sessionRecord.putAll(
                 [
@@ -85,27 +90,54 @@ class SessionTraceRecorder {
      */
     TraceRecord report() {
         long endTimestamp = System.currentTimeMillis()
+
+        // Reduce the process to values
+        List<OSProcess> processList = allProcesses.values() as List<OSProcess>
+        processList.each({ OSProcess p -> p.updateAttributes() })
+
+        Map<ProcessStat.PidStat, Long> rootStats = getPidStats(pid)
+
+        // Determine CPU usage
+        Double cpuUsage
+        if (rootStats != null) {
+            // Accumulate the running ticks of root including waiting time for children
+            Long cpuTime = rootStats.get(ProcessStat.PidStat.UTIME) + rootStats.get(ProcessStat.PidStat.STIME) +
+                    rootStats.get(ProcessStat.PidStat.CUTIME) + rootStats.get(ProcessStat.PidStat.CSTIME)
+            // Convert from jiffies to ms
+            cpuTime = (cpuTime * 1000 / LinuxOperatingSystem.getHz()) as Long
+
+            // Calculate elapsed time since process start
+            Long elapsedTime = endTimestamp - process.startTime
+
+            cpuUsage = cpuTime / elapsedTime
+            log.debug("Calculated CPU usage for PID ${pid}: ${cpuUsage}")
+        }
+        else {
+            cpuUsage = processList.collect({ OSProcess p -> p.getProcessCpuLoadCumulative() }).sum() as double
+        }
+
         sessionRecord.putAll(
                 [
                         status:         'COMPLETED',
                         complete:       endTimestamp,
                         duration:       endTimestamp - (sessionRecord.get('submit') as long),
                         realtime:       runtimeBean.uptime,
-                ]
+                        memory:         Runtime.getRuntime().maxMemory(),
+                        '%cpu':         cpuUsage * 100,
+                        read_bytes:     processList.collect({ OSProcess p -> p.bytesRead}).sum() as Long,
+                        write_bytes:    processList.collect({ OSProcess p -> p.bytesWritten}).sum() as Long,
+                        vol_ctxt:       processList.collect({ OSProcess p -> p.minorFaults}).sum() as Long,
+                        inv_ctxt:       processList.collect({ OSProcess p -> p.majorFaults}).sum() as Long,
+                ] 
         )
+
         if (samples) {
             sessionRecord.putAll(
                     [
-                            memory:         Runtime.getRuntime().maxMemory(),
-                            '%cpu':         samples.collect({RecordSample sample -> sample.cpuUsage}).average() * 100,
-                            rss:            samples.collect({RecordSample sample -> sample.rssBytes}).average() as Long,
-                            vmem:           samples.collect({RecordSample sample -> sample.virtualMemoryBytes}).average() as Long,
-                            peak_rss:       samples.collect({RecordSample sample -> sample.rssBytes}).max(),
-                            peak_vmem:      samples.collect({RecordSample sample -> sample.virtualMemoryBytes}).max(),
-                            read_bytes:     samples.collect({RecordSample sample -> sample.readBytes}).sum(),
-                            write_bytes:    samples.collect({RecordSample sample -> sample.writeBytes}).sum(),
-                            vol_ctxt:       samples.last().voluntaryContextSwitches - samples.first().voluntaryContextSwitches,
-                            inv_ctxt:       samples.last().involuntaryContextSwitches - samples.first().involuntaryContextSwitches,
+                            rss:            samples.collect({ MemorySample sample -> sample.rssBytes}).average() as Long,
+                            vmem:           samples.collect({ MemorySample sample -> sample.virtualMemoryBytes}).average() as Long,
+                            peak_rss:       samples.collect({ MemorySample sample -> sample.rssBytes}).max() as Long,
+                            peak_vmem:      samples.collect({ MemorySample sample -> sample.virtualMemoryBytes}).max() as Long,
                     ]
             )
         }
@@ -122,40 +154,50 @@ class SessionTraceRecorder {
     }
 
     /**
-     * Start sampling utilization information samples about a process in a fixed interval.
+     * Attempts to fetch the PID stats for the current process.
      *
-     * @param pid Process ID of the surveiled process
+     * @param pid The PID for which to fetch the stats
+     * @return Map of PID stats, or null if the information could not be retrieved (e.g. due to permissions or OS)
      */
-    void sample(int pid) {
-        process_t0 = os.getProcess(pid)
+    Map<ProcessStat.PidStat, Long> getPidStats(Integer pid) {
+        LinuxOperatingSystem
+        if (os instanceof LinuxOperatingSystem) {
+            try {
+                Triplet<String, Character, Map<ProcessStat.PidStat, Long>> stats = ProcessStat.getPidStats(pid)
+                return stats.getC()
+            }
+            catch (Exception e) {
+                log.trace("Failed to get process stats for PID ${pid}: ${e.message}")
+            }
+        }
 
-        long[] ticks_t1 = processor.systemCpuLoadTicks
-        OSProcess process_t1 = os.getProcess(pid)
+        return null
+    }
 
-        if (process_t1 != null) {
-            RecordSample sample = new RecordSample(
+    /**
+     * Sample memory information and update children.
+     */
+    void sample() {
+        // Update root process information
+        process.updateAttributes()
+
+        // Collect active descendant processes
+        List<OSProcess> activeDescendants = os.getDescendantProcesses(pid, null, null, 0)
+        List<OSProcess> activeProcesses = [process] + activeDescendants
+
+        // Enter the active descendants into the map
+        activeDescendants.each({ OSProcess p -> allProcesses[p.processID] = p })
+
+        if (process != null) {
+            MemorySample sample = new MemorySample(
                     timestamp: System.currentTimeMillis(),
 
-                    // CPU — delta between two ticks
-                    cpuUsage:   process_t1.getProcessCpuLoadBetweenTicks(process_t0),
-                    systemCpu:  processor.getSystemCpuLoadBetweenTicks(ticks_t0),
-
                     // Memory
-                    rssBytes: process_t1.residentSetSize,
-                    virtualMemoryBytes: process_t1.virtualSize,
-
-                    // I/O (cumulative — diff yourself if you want per-interval)
-                    readBytes:    process_t1.bytesRead,
-                    writeBytes:   process_t1.bytesWritten,
-
-                    // Context switches (cumulative)
-                    voluntaryContextSwitches:   process_t1.minorFaults,
-                    involuntaryContextSwitches:  process_t1.majorFaults,
+                    rssBytes: activeProcesses.collect({ OSProcess p -> p.residentSetSize}).sum() as Long,
+                    virtualMemoryBytes: activeProcesses.collect({ OSProcess p -> p.virtualSize}).sum() as Long,
             )
 
             samples.add(sample)
-            ticks_t0 = ticks_t1
-            process_t0 = process_t1
         }
     }
 }

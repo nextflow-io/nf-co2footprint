@@ -26,14 +26,14 @@ values:
     raw: {value: 1500, type: Duration, unit: ms, scale: ''}
     readable: 1s 500ms
   '%cpu':
-    raw: {value: 192.4, type: Percentage, unit: '', scale: '%'}
-    readable: 192.4%
+    raw: {value: 95.93333333333332, type: Percentage, unit: '', scale: '%'}
+    readable: 95.9%
   peak_rss:
-    raw: {value: 35651584, type: Bytes, unit: B, scale: ''}
-    readable: 34 MB
+    raw: {value: 29884416, type: Bytes, unit: B, scale: ''}
+    readable: 28.5 MB
   peak_vmem:
-    raw: {value: 45813760, type: Bytes, unit: B, scale: ''}
-    readable: 43.7 MB
+    raw: {value: 34975744, type: Bytes, unit: B, scale: ''}
+    readable: 33.4 MB
   rchar:
     raw: {value: 8927732, type: Bytes, unit: B, scale: ''}
     readable: 8.5 MB
@@ -47,8 +47,8 @@ values:
     raw: {value: 16384, type: Bytes, unit: B, scale: ''}
     readable: 16 KB
   cpus:
-    raw: {value: 2, type: Number, unit: '', scale: ''}
-    readable: '2'
+    raw: {value: 2.0, type: Number, unit: '', scale: ''}
+    readable: '2.0'
   memory:
     raw: {value: 12884901888, type: Bytes, unit: B, scale: ''}
     readable: 12 GB

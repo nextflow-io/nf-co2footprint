@@ -20,8 +20,8 @@ values:
     raw: {value: 7200000.0000, type: Duration, unit: ms, scale: ''}
     readable: 2h
   cpus:
-    raw: {value: 1, type: Number, unit: '', scale: ''}
-    readable: '1'
+    raw: {value: 1.0, type: Number, unit: '', scale: ''}
+    readable: '1.0'
   powerdrawCPU:
     raw: {value: 7.0, type: Number, unit: W, scale: ''}
     readable: 7 W

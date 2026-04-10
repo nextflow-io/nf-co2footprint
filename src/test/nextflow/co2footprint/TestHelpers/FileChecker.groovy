@@ -31,8 +31,16 @@ class FileChecker {
     // Directory with files to check
     private Path checksDirectory
 
+    // Directory with recorded files in build test resources
+    private Path buildChecksDirectory
+
     // Checksums to compare to
     private Path checksInfoPath
+
+    // Folder for files with failed checks
+    private Path failPath
+
+    // Parsed check information
     private Map<String, Map<String, ?>> checksInfo
 
     // Collect errors or throw directly?
@@ -40,9 +48,6 @@ class FileChecker {
 
     // Error store
     List<Throwable> errors = []
-
-    // Folder for files with failed checks
-    private Path failPath
 
     /**
      * Checksum checker from a given path, relative to `testResources`.
@@ -52,19 +57,22 @@ class FileChecker {
      * @param collectErrors Whether or not to collect errors or raise them directly
      */
     FileChecker(String checksDirectory='.', boolean collectErrors=false) {
-        this.checksDirectory = Path.of(this.class.getResource(checksDirectory).toURI())
+        Path projectRoot = Path.of(System.getProperty('user.dir'))
+        String relativeChecksPath = checksDirectory.startsWith('/') ? checksDirectory.substring(1) : checksDirectory
+        this.checksDirectory = projectRoot.resolve('src/testResources').resolve(relativeChecksPath)
 
         this.checksInfoPath = this.checksDirectory.resolve('file_checks.json')
         this.checksInfo = checksInfoPath.isFile() ? loadChecksInfo(checksInfoPath) : null
 
         this.collectErrors = collectErrors
 
-        failPath = this.checksDirectory.resolve('failed')
+        buildChecksDirectory = projectRoot.resolve('build/resources/test').resolve(relativeChecksPath)
+        failPath = buildChecksDirectory.resolve('failed')
         failPath.createDirIfNotExists()
     }
 
     /**
-     * Adds a new error if it should be collected, otherwise throws it
+     * Adds a new error if it should be collected, otherwise throws it‚
      *
      * @param error
      */
@@ -270,7 +278,7 @@ class FileChecker {
         checkIsFile(path)
 
         // Get Infos to check for
-        recordPath ?= checksDirectory.resolve(path.getFileName())
+        recordPath ?= buildChecksDirectory.resolve(path.getFileName())
         Map<String, Object> checksInfo = this.checksInfo.get(recordPath.getFileName() as String, [:])
 
         // Prepare new file check infos
@@ -305,9 +313,9 @@ class FileChecker {
 
         // Throw errors if existent
         if (errors) {
-            Path newPath = failPath.resolve(path.fileName)
+            Path failedSnapshotPath = failPath.resolve(path.fileName)
             // Copy snapshot
-            Files.copy(path, newPath, StandardCopyOption.REPLACE_EXISTING)
+            Files.copy(path, failedSnapshotPath, StandardCopyOption.REPLACE_EXISTING)
 
             errors.eachWithIndex { Throwable error, Integer i->
                 System.err.println("----------------- File Checker Error ${i}:")
@@ -320,7 +328,7 @@ class FileChecker {
                 "❌ File checks for '${path}' failed,\n\n" +
                 "🔎 The actual error messages can be found above as a list.\n" +
                 "ℹ️ You may want to have a look at the difference between the new and recorded file:\n" +
-                "NEW: ${newPath} <-> RECORDED: ${recordPath}.\n" +
+                "NEW: ${failedSnapshotPath} <-> RECORDED: ${recordPath}.\n" +
                 "💡 Suggested new fileCheck configuration (apply this to `${checksInfoPath}`):\n" +
                 "${newCheckInfos}\n" +
                 "⚠️ Pay attention to the excluded_lines, as they may differ from the suggested ones depending on your changes.\n"

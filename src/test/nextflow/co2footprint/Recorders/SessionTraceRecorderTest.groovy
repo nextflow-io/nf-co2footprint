@@ -31,19 +31,13 @@ class SessionTraceRecorderTest extends Specification{
     def 'test accumulation'() {
         setup:
         SessionTraceRecorder sessionTraceRecorder = new SessionTraceRecorder()
-        RecordSample sample1 = new RecordSample(
+        MemorySample sample1 = new MemorySample(
                 timestamp: System.currentTimeMillis(),
-                cpuUsage:   1.0, systemCpu:  0.5,
                 rssBytes: 1024, virtualMemoryBytes: 1024,
-                readBytes:    0, writeBytes:   0,
-                voluntaryContextSwitches:   0, involuntaryContextSwitches:  0
         )
-        RecordSample sample2 = new RecordSample(
+        MemorySample sample2 = new MemorySample(
                 timestamp: System.currentTimeMillis(),
-                cpuUsage:   1.0, systemCpu:  0.5,
                 rssBytes: 1024, virtualMemoryBytes: 3072,
-                readBytes:    0, writeBytes:   0,
-                voluntaryContextSwitches:   0, involuntaryContextSwitches:  0
         )
 
         when:
