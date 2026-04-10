@@ -241,7 +241,7 @@ $(function () {
       })
 
       // Height scales with the number of visible processes (42 px per row).
-      peFullHeight = Math.max(200, Math.min(1000, 80 + keys.length * 42))
+      peFullHeight = Math.max(200, Math.min(900, 80 + keys.length * 42))
 
       Plotly.react('process-emissions-plot', traces, {
         ...PLOT_BG,
@@ -281,7 +281,7 @@ $(function () {
               : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][1] : undefined)
             if (y0 !== undefined && y1 !== undefined) {
               const visibleCount = Math.max(1, Math.round(Math.abs(y1 - y0)))
-              const newHeight = Math.max(120, Math.min(1000, 80 + visibleCount * 42))
+              const newHeight = Math.max(120, Math.min(900, 80 + visibleCount * 42))
               heightSyncInProgress = true
               Plotly.relayout(plotDiv, { height: newHeight })
                 .then(() => { heightSyncInProgress = false })
@@ -872,8 +872,9 @@ $(function () {
       title: { text: 'Task execution swimlanes by process' },
       // Bottom margin is generous to avoid overlap with the CI plot title below.
       margin: { l: 140, r: 100, t: 40, b: 80 },
-      // Height scales with the number of processes; capped to avoid excessive scroll.
-      height: Math.max(360, Math.min(1200, 150 + processNames.length * 28)),
+      // Height scales with the number of visible processes, matching the
+      // per-process emissions plot sizing rules for a consistent feel.
+      height: Math.max(200, Math.min(900, 80 + processNames.length * 42)),
       ...PLOT_BG,
       xaxis: {
         title: { text: 'Time' },
@@ -908,8 +909,8 @@ $(function () {
         // swimlaneLayout.height is the full height for all processes; the listener
         // scales it down proportionally to the number of visible process rows.
         const slFullHeight = swimlaneLayout.height
-        const SL_PX_PER_ROW = 28
-        const SL_BASE_HEIGHT = 150
+        const SL_PX_PER_ROW = 42
+        const SL_BASE_HEIGHT = 80
         let heightSyncInProgress = false
 
         graphDiv.on('plotly_relayout', eventData => {
@@ -928,7 +929,7 @@ $(function () {
             : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][1] : undefined)
           if (y0 !== undefined && y1 !== undefined) {
             const visibleCount = Math.max(1, Math.round(Math.abs(y1 - y0)))
-            const newHeight = Math.max(120, Math.min(1200, SL_BASE_HEIGHT + visibleCount * SL_PX_PER_ROW))
+            const newHeight = Math.max(120, Math.min(900, SL_BASE_HEIGHT + visibleCount * SL_PX_PER_ROW))
             if (Math.abs(newHeight - (graphDiv.layout.height ?? slFullHeight)) > 2) {
               heightSyncInProgress = true
               Plotly.relayout(graphDiv, { height: newHeight })

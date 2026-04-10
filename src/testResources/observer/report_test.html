@@ -821,7 +821,7 @@
             }
           })
     
-          peFullHeight = Math.max(200, Math.min(1000, 80 + keys.length * 42))
+          peFullHeight = Math.max(200, Math.min(900, 80 + keys.length * 42))
     
           Plotly.react('process-emissions-plot', traces, {
             ...PLOT_BG,
@@ -857,7 +857,7 @@
                   : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][1] : undefined)
                 if (y0 !== undefined && y1 !== undefined) {
                   const visibleCount = Math.max(1, Math.round(Math.abs(y1 - y0)))
-                  const newHeight = Math.max(120, Math.min(1000, 80 + visibleCount * 42))
+                  const newHeight = Math.max(120, Math.min(900, 80 + visibleCount * 42))
                   heightSyncInProgress = true
                   Plotly.relayout(plotDiv, { height: newHeight })
                     .then(() => { heightSyncInProgress = false })
@@ -1378,7 +1378,7 @@
         const swimlaneLayout = {
           title: { text: 'Task execution swimlanes by process' },
           margin: { l: 140, r: 100, t: 40, b: 80 },
-          height: Math.max(360, Math.min(1200, 150 + processNames.length * 28)),
+          height: Math.max(200, Math.min(900, 80 + processNames.length * 42)),
           ...PLOT_BG,
           xaxis: {
             title: { text: 'Time' },
@@ -1410,8 +1410,8 @@
         return Plotly.newPlot(swimlanePlotContainer, swimlaneData, swimlaneLayout, { responsive: true })
           .then(graphDiv => {
             const slFullHeight = swimlaneLayout.height
-            const SL_PX_PER_ROW = 28
-            const SL_BASE_HEIGHT = 150
+            const SL_PX_PER_ROW = 42
+            const SL_BASE_HEIGHT = 80
             let heightSyncInProgress = false
     
             graphDiv.on('plotly_relayout', eventData => {
@@ -1429,7 +1429,7 @@
                 : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][1] : undefined)
               if (y0 !== undefined && y1 !== undefined) {
                 const visibleCount = Math.max(1, Math.round(Math.abs(y1 - y0)))
-                const newHeight = Math.max(120, Math.min(1200, SL_BASE_HEIGHT + visibleCount * SL_PX_PER_ROW))
+                const newHeight = Math.max(120, Math.min(900, SL_BASE_HEIGHT + visibleCount * SL_PX_PER_ROW))
                 if (Math.abs(newHeight - (graphDiv.layout.height ?? slFullHeight)) > 2) {
                   heightSyncInProgress = true
                   Plotly.relayout(graphDiv, { height: newHeight })
@@ -1531,7 +1531,7 @@
     })
 
     window.data = {"trace":[{"task_id":{"raw":{"value":"111","type":"str"},"readable":"111"},"hash":{"raw":{"value":null,"type":"str"},"readable":"-","report":"<div class=\"script_block short\"><code>-</code></div>"},"native_id":{"raw":{"value":null,"type":"str"},"readable":"-"},"process":{"raw":{"value":"observerTestProcess","type":"str"},"readable":"observerTestProcess"},"module":{"raw":{"value":null,"type":"str"},"readable":"-"},"container":{"raw":{"value":null,"type":"str"},"readable":"-"},"tag":{"raw":{"value":null,"type":"str"},"readable":"-"},"name":{"raw":{"value":null,"type":"str"},"readable":"-"},"status":{"raw":{"value":"COMPLETED","type":"str"},"readable":"COMPLETED","report":"<span class=\"badge badge-success\">COMPLETED</span>"},"exit":{"raw":{"value":null,"type":"str"},"readable":"-"},"submit":{"raw":{"value":null,"type":"DateTime","unit":"ms","description":"Unix time"},"readable":"-"},"start":{"raw":{"value":null,"type":"DateTime","unit":"ms","description":"Unix time"},"readable":"-"},"complete":{"raw":{"value":null,"type":"DateTime","unit":"ms","description":"Unix time"},"readable":"-"},"duration":{"raw":{"value":null,"type":"Duration","unit":"ms"},"readable":"-"},"realtime":{"raw":{"value":3600000,"type":"Duration","unit":"ms","scale":""},"readable":"1h","report":"1h"},"%cpu":{"raw":{"value":100.0,"type":"Percentage","unit":"","scale":"%"},"readable":"100.0%"},"%mem":{"raw":{"value":null,"type":"Percentage","unit":"%"},"readable":"-"},"rss":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"vmem":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"peak_rss":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"peak_vmem":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"rchar":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"wchar":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"syscr":{"raw":{"value":null,"type":"Number"},"readable":"-"},"syscw":{"raw":{"value":null,"type":"Number"},"readable":"-"},"read_bytes":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"write_bytes":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"attempt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"workdir":{"raw":{"value":null,"type":"str"},"readable":"-"},"script":{"raw":{"value":null,"type":"str"},"readable":"-"},"scratch":{"raw":{"value":null,"type":"str"},"readable":"-"},"queue":{"raw":{"value":null,"type":"str"},"readable":"-"},"cpus":{"raw":{"value":1,"type":"Number","unit":"","scale":""},"readable":"1"},"memory":{"raw":{"value":7516192768,"type":"Bytes","unit":"B","scale":""},"readable":"7 GB"},"disk":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"time":{"raw":{"value":3600000.0000,"type":"Duration","unit":"ms","scale":""},"readable":"1h","report":"1h"},"env":{"raw":{"value":null,"type":"str"},"readable":"-"},"error_action":{"raw":{"value":null,"type":"str"},"readable":"-"},"vol_ctxt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"inv_ctxt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"hostname":{"raw":{"value":null,"type":"str"},"readable":"-"},"cpu_model":{"raw":{"value":"Unknown model","type":"str"},"readable":"Unknown model"},"energy":{"raw":{"value":14.0175,"type":"Number","unit":"Wh","scale":""},"readable":"14.02 Wh"},"co2e":{"raw":{"value":6.7284,"type":"Number","unit":"g","scale":""},"readable":"6.73 g"},"co2eMarket":{"raw":{"value":null,"type":"Number","unit":"g"},"readable":"-"},"ci":{"raw":{"value":480.0,"type":"Number","unit":"gCO\u2082e/kWh","scale":""},"readable":"480 gCO\u2082e/kWh"},"cpuUsage":{"raw":{"value":100.0,"type":"Percentage","unit":"","scale":"%"},"readable":"100 %"},"powerdrawCPU":{"raw":{"value":11.41,"type":"Number","unit":"W","scale":""},"readable":"11.41 W"},"rawEnergyProcessor":{"raw":{"value":11.41,"type":"Number","unit":"Wh","scale":""},"readable":"11.41 Wh"},"rawEnergyMemory":{"raw":{"value":2.6075,"type":"Number","unit":"Wh","scale":""},"readable":"2.61 Wh"}}],"summary":{"observerTestProcess":{"co2e":[6.7284],"energy":[0.0140175],"co2e_non_cached":[6.7284],"energy_non_cached":[0.0140175]}}};
-    window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"dataFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir469634793391609633/data_test.yaml"},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir469634793391609633/report_test.html"},{"option":"summaryFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir469634793391609633/summary_test.txt"},{"option":"traceFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir469634793391609633/trace_test.txt"}];
+    window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"dataFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir4961875996631029161/data_test.yaml"},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir4961875996631029161/report_test.html"},{"option":"summaryFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir4961875996631029161/summary_test.txt"},{"option":"traceFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir4961875996631029161/trace_test.txt"}];
     window.ciRecords = {};
   </script>
 
@@ -1582,7 +1582,7 @@
       <dl>
         <dt>Run times</dt>
         <dd>
-          <span id="workflow_start">25-Mar-2026 14:34:00</span> - <span id="workflow_complete">25-Mar-2026 14:34:00</span>
+          <span id="workflow_start">10-Apr-2026 13:48:36</span> - <span id="workflow_complete">10-Apr-2026 13:48:36</span>
           (<span id="completed_fromnow"></span>duration: <strong>null</strong>)
         </dd>
 

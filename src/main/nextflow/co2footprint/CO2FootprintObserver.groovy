@@ -293,7 +293,8 @@ class CO2FootprintObserver implements TraceObserver {
 
         // Event was triggered by a stored task, ignore it
         if (trace == null) { return }
-
+        
+        recordStarted(trace) // add also cashed tasks to the runningTasks to be able to report them in the output files
         aggregateRecords(trace)
     }
 
