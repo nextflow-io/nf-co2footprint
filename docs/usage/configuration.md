@@ -13,7 +13,7 @@ To customize the plugin settings to your computing environment and preferences, 
 ???+ example
     ```groovy title="nextflow.config"
     plugins {
-      id 'nf-co2footprint@1.2.0'
+      id 'nf-co2footprint@1.2.1'
     }
     
     // Optional example config settings for CO₂ reporting:
@@ -124,7 +124,7 @@ For more information, see [Parameters](parameters.md).
 ???+ example
     ```groovy title="nextflow_cloud.config"
     plugins {
-      id 'nf-co2footprint@1.2.0'
+      id 'nf-co2footprint@1.2.1'
     }
     
     params {
