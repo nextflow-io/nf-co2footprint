@@ -4,7 +4,6 @@ import groovy.json.JsonOutput
 import groovy.text.GStringTemplateEngine
 import groovy.text.Template
 import groovy.util.logging.Slf4j
-import nextflow.Session
 import nextflow.co2footprint.CO2FootprintCalculator
 import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.CO2FootprintPlugin
@@ -14,6 +13,7 @@ import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.co2footprint.Records.CiRecordCollector
+import nextflow.script.WorkflowMetadata
 import nextflow.trace.TraceHelper
 
 /**
@@ -31,8 +31,8 @@ class ReportFileCreator extends BaseFileCreator{
     private CO2RecordTree stats
     private CO2FootprintCalculator co2FootprintComputer
     private CO2FootprintConfig config
-    private Session session
     private CiRecordCollector timeCiRecordCollector
+    Map workflowMetadata
 
     // Writer for the HTML file
     private BufferedWriter writer
@@ -51,7 +51,7 @@ class ReportFileCreator extends BaseFileCreator{
             this.metaClass.write = { -> null }
             this.metaClass.close = { -> null }
             this.metaClass.addEntries = {
-                CO2RecordTree X, CO2FootprintCalculator Y, CO2FootprintConfig Z, Session A, CiRecordCollector B -> null
+                CO2RecordTree X, CO2FootprintCalculator Y, CO2FootprintConfig Z, WorkflowMetadata A, CiRecordCollector B -> null
             }
         }
     }
@@ -62,19 +62,19 @@ class ReportFileCreator extends BaseFileCreator{
      * @param stats         The {@link CO2RecordTree} with all stats.
      * @param config        Plugin configuration
      * @param timeCiRecordCollector   Time & CI Record collector that contains a map of all carbon intensities at different times
-     * @param session       Nextflow session
+     * @param workflowMetadata       Nextflow session workflow metadata
      */
     void addEntries(
             CO2RecordTree stats,
             CO2FootprintCalculator co2FootprintComputer,
             CO2FootprintConfig config,
             CiRecordCollector timeCiRecordCollector,
-            Session session = null
+            WorkflowMetadata workflowMetadata = null
     ) {
         this.stats = stats
         this.co2FootprintComputer = co2FootprintComputer
         this.config = config
-        this.session = session
+        this.workflowMetadata = workflowMetadata ? workflowMetadata.toMap() : [:]
         this.timeCiRecordCollector = timeCiRecordCollector
     }
 
@@ -115,7 +115,7 @@ class ReportFileCreator extends BaseFileCreator{
                 // Plugin information
                 // Metadata
                 plugin_version: CO2FootprintPlugin.version,
-                workflow : session?.getWorkflowMetadata() ?: [:],
+                workflow : workflowMetadata,
                 options : renderOptionsJson(),
 
                 // Data

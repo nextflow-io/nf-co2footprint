@@ -75,7 +75,9 @@ class TraceFileParser {
             }
 
             // Add additional entries
-            traceRecord.put('process', traceRecord.get('name'))
+            if (!traceRecord.get('process')) {
+                traceRecord.put('process', traceRecord.get('name'))
+            }
 
             // Add to collection of trace records
             traceRecords.add(traceRecord)
