@@ -10,9 +10,18 @@ values:
   ci:
     raw: {value: 480.00000000000006, type: Number, unit: gCO₂e/kWh, scale: ''}
     readable: 480 gCO₂e/kWh
-  cpuUsage:
+  '%cpu':
     raw: {value: 95.93333333333332, type: Percentage, unit: '', scale: '%'}
     readable: 95.93 %
+  memory:
+    raw: {value: 12884901888, type: Bytes, unit: B, scale: ''}
+    readable: 12 GB
+  time:
+    raw: {value: 1500.0001200000000, type: Duration, unit: ms, scale: ''}
+    readable: 1s 500ms
+  cpus:
+    raw: {value: 2.0, type: Number, unit: '', scale: ''}
+    readable: '2.0'
   powerdrawCPU:
     raw: {value: 11.409999999999998, type: Number, unit: W, scale: ''}
     readable: 11.41 W
@@ -40,7 +49,7 @@ children:
     ci: &id004
       raw: {value: 480.0, type: Number, unit: gCO₂e/kWh, scale: ''}
       readable: 480 gCO₂e/kWh
-    cpuUsage: &id005
+    '%cpu': &id005
       raw: {value: 97.0, type: Percentage, unit: '', scale: '%'}
       readable: 97 %
     memory: &id006
@@ -69,7 +78,7 @@ children:
       energy: *id002
       co2e: *id003
       ci: *id004
-      cpuUsage: *id005
+      '%cpu': *id005
       memory: *id006
       time: *id007
       cpus: *id008
@@ -94,7 +103,7 @@ children:
     ci: &id015
       raw: {value: 480.0, type: Number, unit: gCO₂e/kWh, scale: ''}
       readable: 480 gCO₂e/kWh
-    cpuUsage: &id016
+    '%cpu': &id016
       raw: {value: 95.4, type: Percentage, unit: '', scale: '%'}
       readable: 95.4 %
     memory: &id017
@@ -123,7 +132,7 @@ children:
       energy: *id013
       co2e: *id014
       ci: *id015
-      cpuUsage: *id016
+      '%cpu': *id016
       memory: *id017
       time: *id018
       cpus: *id019

@@ -10,7 +10,7 @@ values:
   ci:
     raw: {value: 100.0, type: Number, unit: gCO₂e/kWh, scale: ''}
     readable: 100 gCO₂e/kWh
-  cpuUsage:
+  '%cpu':
     raw: {value: 1.0, type: Percentage, unit: '', scale: '%'}
     readable: 1 %
   memory:
@@ -47,7 +47,7 @@ children:
     ci: &id003
       raw: {value: 100.0, type: Number, unit: gCO₂e/kWh, scale: ''}
       readable: 100 gCO₂e/kWh
-    cpuUsage: &id004
+    '%cpu': &id004
       raw: {value: 1.0, type: Percentage, unit: '', scale: '%'}
       readable: 1 %
     memory: &id005
@@ -78,7 +78,7 @@ children:
       energy: *id001
       co2e: *id002
       ci: *id003
-      cpuUsage: *id004
+      '%cpu': *id004
       memory: *id005
       time: *id006
       cpus: *id007
@@ -93,7 +93,7 @@ children:
     energy: *id001
     co2e: *id002
     ci: *id003
-    cpuUsage: *id004
+    '%cpu': *id004
     memory: *id005
     time: *id006
     cpus: *id007
@@ -108,7 +108,7 @@ children:
       energy: *id001
       co2e: *id002
       ci: *id003
-      cpuUsage: *id004
+      '%cpu': *id004
       memory: *id005
       time: *id006
       cpus: *id007

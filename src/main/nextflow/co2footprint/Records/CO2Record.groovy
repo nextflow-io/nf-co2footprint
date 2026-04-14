@@ -23,7 +23,7 @@ class CO2Record extends TraceRecord {
                         co2e:               'num',
                         co2eMarket:         'num',
                         ci:                 'num',
-                        cpuUsage:           'perc',
+                        '%cpu':             'perc',
                         time:               'time',
                         cpus:               'num',
                         memory:             'mem',
@@ -37,7 +37,7 @@ class CO2Record extends TraceRecord {
 
     // Stores keys that are related to the CO2 calculation
     final List<String> co2Keys = [
-            'name', 'energy', 'co2e', 'co2eMarket', 'ci', 'cpuUsage', 'memory', 'time',
+            'name', 'energy', 'co2e', 'co2eMarket', 'ci', '%cpu', 'memory', 'time',
             'cpus', 'powerdrawCPU', 'cpu_model', 'rawEnergyProcessor', 'rawEnergyMemory'
     ]
 
@@ -94,7 +94,7 @@ class CO2Record extends TraceRecord {
             'co2e':                     co2e,
             'co2eMarket':               co2eMarket,
             'ci':                       ci,
-            'cpuUsage':                 cpuUsage,
+            '%cpu':                     cpuUsage,
             'memory':                   memory,
             'time':                     time,
             'cpus':                     cpus,
@@ -144,7 +144,7 @@ class CO2Record extends TraceRecord {
         }
 
         // Weighted average by time for CPU usage
-        else if (key in ['cpuUsage', '%cpu', '%mem', 'vmem', 'rss', 'cpus']) {
+        else if (key in ['%cpu', '%mem', 'vmem', 'rss', 'cpus']) {
             return Calculator.weightedAverage([thisValue, newValue], [store['time'], record.store['time']])
         }
 
@@ -189,7 +189,7 @@ class CO2Record extends TraceRecord {
      * Numerical values are scaled to their base units.
      * If no value is provided, the method falls back to the stored entry for the given key.
      *
-     * @param key   The entry key (e.g. "energy", "co2e", "time", "cpuUsage")
+     * @param key   The entry key (e.g. "energy", "co2e", "time", "%cpu")
      * @param value Optional value to convert; defaults to the stored value for the key
      * @return      The raw metric with all information as a map
      */
@@ -201,7 +201,7 @@ class CO2Record extends TraceRecord {
              case 'time' -> Duration.of(value, 'h').scale('ms').toMap()
              case 'ci' -> Quantity.of(value, '', 'gCO₂e/kWh').toMap()
              case 'powerdrawCPU' -> Quantity.of(value, '', 'W').toMap()
-             case 'cpuUsage' -> Percentage.of(value).toMap()
+             case '%cpu' -> Percentage.of(value).toMap()
              case 'memory' -> Bytes.of(value, 'G').scale('').toMap()
              case 'rawEnergyProcessor' -> Quantity.of(value, 'k', 'Wh').scale('').toMap()
              case 'rawEnergyMemory' -> Quantity.of(value, 'k', 'Wh').scale('').toMap()
@@ -226,7 +226,7 @@ class CO2Record extends TraceRecord {
      * (e.g. Wh, g, %, GB). Non-numerical values are returned as strings.
      * If no value is provided, the method falls back to the stored entry for the given key.
      *
-     * @param key   The entry key (e.g. "energy", "co2e", "time", "cpuUsage")
+     * @param key   The entry key (e.g. "energy", "co2e", "time", "%cpu")
      * @param value Optional value to convert; defaults to the stored value for the key
      * @return      A human-readable string, or null if no conversion is possible
      */
@@ -239,7 +239,7 @@ class CO2Record extends TraceRecord {
             case 'time' ->  new Duration(value, 'h').toReadable( 'ms', 'years')
             case 'ci' -> new Quantity(value, '', 'gCO₂e/kWh').toReadable()
             case 'powerdrawCPU' ->  new Quantity(value, '', 'W').toReadable()
-            case 'cpuUsage' ->  new Percentage(value).toReadable()
+            case '%cpu' ->  new Percentage(value).toReadable()
             case 'memory' ->  new Bytes(value, 'G', 'B').toReadable()
             case 'realtime' -> new Duration(value, 'ms').toReadable('ms', 'years')
             case 'rawEnergyProcessor' ->  new Quantity(value, 'k', 'Wh').toReadable()
@@ -252,7 +252,7 @@ class CO2Record extends TraceRecord {
      * Converts a CO₂ record entry into a String that is to be included into the report.
      * Returns `null`, if it does not differ from normal readable instance.
      *
-     * @param key   The entry key (e.g. "energy", "co2e", "time", "cpuUsage")
+     * @param key   The entry key (e.g. "energy", "co2e", "time", "%cpu")
      * @param value Optional value to convert; defaults to the stored value for the key
      * @return      A human-readable string, or null if no conversion is possible
      */

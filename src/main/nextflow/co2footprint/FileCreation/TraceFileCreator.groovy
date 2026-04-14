@@ -22,7 +22,7 @@ class TraceFileCreator extends BaseFileCreator {
 
     // Execution & CO2-footprint trace keys that are included into trace file
     private List<String> entryKeys = [
-            'task_id', 'status', 'name', 'energy', 'co2e', 'co2eMarket', 'ci', 'cpuUsage', 'memory', 'time', 'cpus',
+            'task_id', 'status', 'name', 'energy', 'co2e', 'co2eMarket', 'ci', '%cpu', 'memory', 'time', 'cpus',
             'powerdrawCPU', 'cpu_model', 'rawEnergyProcessor', 'rawEnergyMemory'
     ]
 
@@ -30,7 +30,7 @@ class TraceFileCreator extends BaseFileCreator {
     private final Map<String, String> keyHeaderMapping = [
         task_id: 'task_id', status: 'status',
         name:'name', energy: 'energy_consumption', co2e: 'CO2e', co2eMarket: 'CO2e_market', ci: 'carbon_intensity',
-        cpuUsage: '%cpu', memory: 'memory', time: 'realtime', cpus: 'cpus', powerdrawCPU: 'powerdraw_cpu',
+        '%cpu': '%cpu', memory: 'memory', time: 'realtime', cpus: 'cpus', powerdrawCPU: 'powerdraw_cpu',
         cpu_model: 'cpu_model', rawEnergyProcessor: 'raw_energy_processor', rawEnergyMemory: 'raw_energy_memory'
     ]
 

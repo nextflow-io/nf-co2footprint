@@ -390,7 +390,7 @@ $(function () {
         { title: `${co2EmissionsTitle} (market)`, data: 'co2eMarket' },
         { title: 'carbon intensity', data: 'ci' },
         { title: 'allocated cpus', data: 'cpus' },
-        { title: '%cpu', data: 'cpuUsage' },
+        { title: '%cpu', data: '%cpu' },
         { title: 'allocated memory', data: 'memory' },
         { title: 'realtime', data: 'time' },
         { title: 'power draw (in W/core)', data: 'powerdrawCPU' },
