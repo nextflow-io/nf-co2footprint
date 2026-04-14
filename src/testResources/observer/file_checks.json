@@ -7,8 +7,8 @@
     "checksum": "0dc67adc56f265489942c5124795f9eb",
     "num_lines": 1816
   },
-  "data_test.yaml": {
-    "checksum": "58892de4111387d2d7df27552b2f7aa5",
-    "num_lines": 92
+  "provenance_test.yaml": {
+    "checksum": "ce058ad7ce7c4e63e56620b44ae7a729",
+    "num_lines": 67
   }
 }

@@ -24,7 +24,7 @@ nf-co2footprint options:
   powerdrawMem: 0.3725
   pue: 1.3
   customCpuTdpFile: null
-  dataFile: out/pipeline_info/co2footprint_data_2026-03-06_13-25-02.yaml
+  provenanceFile: out/pipeline_info/co2footprint_data_2026-03-06_13-25-02.yaml
   reportFile: out/pipeline_info/co2footprint_report_2026-03-06_13-25-02.html
   summaryFile: out/pipeline_info/co2footprint_summary_2026-03-06_13-25-02.txt
   traceFile: out/pipeline_info/co2footprint_trace_2026-03-06_13-25-02.txt

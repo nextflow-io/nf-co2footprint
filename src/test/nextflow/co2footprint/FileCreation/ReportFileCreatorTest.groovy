@@ -2,7 +2,7 @@ package nextflow.co2footprint.FileCreation
 
 import nextflow.Session
 import nextflow.co2footprint.CO2FootprintCalculator
-import nextflow.co2footprint.Config.DataFileConfig
+import nextflow.co2footprint.Config.ProvenanceFileConfig
 import nextflow.co2footprint.Config.ReportFileConfig
 import nextflow.co2footprint.Config.SummaryFileConfig
 import nextflow.co2footprint.Config.TraceFileConfig
@@ -38,7 +38,7 @@ class ReportFileCreatorTest extends Specification{
                         'trace': ['enabled': true, 'file': tempPath],
                         'summary': ['enabled': true, 'file': tempPath],
                         'report': ['enabled': true, 'file': reportPath],
-                        'dataFile': [enabled: true, file: tempPath],
+                        'provenance': [enabled: true, file: tempPath],
                         'ci': 475.0
                 ],
                 Mock(TDPDataMatrix),
@@ -68,7 +68,7 @@ class ReportFileCreatorTest extends Specification{
                     'trace': new TraceFileConfig(['enabled': true, 'file': tempPath]),
                     'summary': new SummaryFileConfig(['enabled': true, 'file': tempPath]),
                     'report': new ReportFileConfig(['enabled': true, 'file': reportPath]),
-                    'dataFile': new DataFileConfig([enabled: true, file: tempPath]),
+                    'provenance': new ProvenanceFileConfig([enabled: true, file: tempPath]),
                     'ci': 475.0
                 ]
             ]
@@ -152,12 +152,12 @@ class ReportFileCreatorTest extends Specification{
                     '{"option":"ci","value":"475.0"},'+
                     '{"option":"ciMarket","value":null},' +
                     '{"option":"customCpuTdpFile","value":null},' +
-                    "{\"option\":\"dataFile\",\"value\":\"${tempPath}\"}," +
                     '{"option":"ignoreCpuModel","value":"false"},' +
                     '{"option":"location","value":null},' +
                     '{"option":"machineType","value":null},' +
                     '{"option":"powerdrawCpuDefault","value":null},' +
                     '{"option":"powerdrawMem","value":"0.3725"},' +
+                    "{\"option\":\"provenanceFile\",\"value\":\"${tempPath}\"}," +
                     '{"option":"pue","value":"1.0"},' +
                     "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
                     "{\"option\":\"summaryFile\",\"value\":\"${tempPath}\"}," +

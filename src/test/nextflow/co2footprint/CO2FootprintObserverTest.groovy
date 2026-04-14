@@ -53,14 +53,14 @@ class CO2FootprintObserverTest extends Specification{
     /**
      * Helper to create a mock session with a specific CI value.
      */
-    private Session mockSessionWithCI(Path tracePath, Path summaryPath, Path reportPath, Path dataPath, double ciValue) {
+    private Session mockSessionWithCI(Path tracePath, Path summaryPath, Path reportPath, Path provenancePath, double ciValue) {
         return Mock(Session) {
             getConfig() >> [
                 co2footprint: [
                     'trace': ['enabled': true, 'file': tracePath],
                     'summary': ['enabled': true, 'file': summaryPath],
                     'report': ['enabled': true, 'file': reportPath],
-                    'dataFile': [enabled: true, file: dataPath],
+                    'provenance': [enabled: true, file: provenancePath],
                     'ci': ciValue
                 ]
             ]
@@ -96,10 +96,10 @@ class CO2FootprintObserverTest extends Specification{
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
-        Path dataPath = tempPath.resolve('data_test.yaml')
+        Path provenancePath = tempPath.resolve('provenance_test.yaml')
 
         // Use helper to mock session with CI value 475.0
-        Session session = mockSessionWithCI(tracePath, summaryPath, reportPath, dataPath, 475.0)
+        Session session = mockSessionWithCI(tracePath, summaryPath, reportPath, provenancePath, 475.0)
 
         // Create task and handler
         TaskRun task = new TaskRun(id: TaskId.of(111))
@@ -131,10 +131,10 @@ class CO2FootprintObserverTest extends Specification{
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
-        Path dataPath = tempPath.resolve('data_test.yaml')
+        Path provenancePath = tempPath.resolve('provenance_test.yaml')
 
         // Use helper to mock session with CI value 475.0
-        Session session = mockSessionWithCI(tracePath, summaryPath, reportPath, dataPath, 475.0)
+        Session session = mockSessionWithCI(tracePath, summaryPath, reportPath, provenancePath, 475.0)
 
         // Create task and handler
         TaskRun task = new TaskRun(id: traceRecord.getTaskId())
@@ -172,7 +172,7 @@ class CO2FootprintObserverTest extends Specification{
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
-        Path dataPath = tempPath.resolve('data_test.yaml')
+        Path provenancePath = tempPath.resolve('provenance_test.yaml')
 
         // Mock Session
         Session session = Mock(Session)
@@ -182,7 +182,7 @@ class CO2FootprintObserverTest extends Specification{
                     'trace': [enabled: true, file: tracePath],
                     'summary': [enabled: true, file: summaryPath],
                     'report': [enabled: true, file: reportPath],
-                    'dataFile': [enabled: true, file: dataPath]
+                    'provenance': [enabled: true, file: provenancePath]
                 ]
         ]
         session.getExecService() >> Executors.newFixedThreadPool(1)
@@ -237,7 +237,7 @@ class CO2FootprintObserverTest extends Specification{
         fileChecker.runChecks(
                 summaryPath,
                 [
-                        27: "  dataFile: ${dataPath}",
+                        27: "  provenanceFile: ${provenancePath}",
                         28: "  reportFile: ${reportPath}",
                         29: "  summaryFile: ${summaryPath}",
                         30: "  traceFile: ${tracePath}"
@@ -252,12 +252,12 @@ class CO2FootprintObserverTest extends Specification{
                         '{"option":"ci","value":"480.0"},'+
                         '{"option":"ciMarket","value":null},' +
                         '{"option":"customCpuTdpFile","value":null},' +
-                        "{\"option\":\"dataFile\",\"value\":\"${dataPath}\"}," +
                         '{"option":"ignoreCpuModel","value":"false"},' +
                         '{"option":"location","value":null},' +
                         '{"option":"machineType","value":null},' +
                         '{"option":"powerdrawCpuDefault","value":null},' +
                         '{"option":"powerdrawMem","value":"0.3725"},' +
+                        "{\"option\":\"provenanceFile\",\"value\":\"${provenancePath}\"}," +
                         '{"option":"pue","value":"1.0"},' +
                         "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
                         "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
@@ -268,6 +268,6 @@ class CO2FootprintObserverTest extends Specification{
             ]
         )
 
-        fileChecker.runChecks(dataPath)
+        fileChecker.runChecks(provenancePath)
     }
 }

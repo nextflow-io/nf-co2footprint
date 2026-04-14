@@ -19,7 +19,7 @@ class CO2FootprintExtensionTest extends Specification {
         Path tracePath = tempPath.resolve('trace_extension_test.txt')
         Path summaryPath = tempPath.resolve('summary_extension_test.txt')
         Path reportPath = tempPath.resolve('report_extension_test.html')
-        Path dataPath = tempPath.resolve('data_extension_test.yaml')
+        Path provenancePath = tempPath.resolve('provenance_extension_test.yaml')
 
         return new Session(
             [ co2footprint:
@@ -28,7 +28,7 @@ class CO2FootprintExtensionTest extends Specification {
                       trace: [file: tracePath],
                       summary: [file: summaryPath],
                       report: [file: reportPath],
-                      dataFile: [file: dataPath, enabled: true]
+                      provenance: [file: provenancePath, enabled: true]
                   ]
             ]
         )
@@ -54,7 +54,7 @@ class CO2FootprintExtensionTest extends Specification {
         fileChecker.checkIsFile(output.config.trace.file)
         fileChecker.checkIsFile(output.config.summary.file)
         fileChecker.checkIsFile(output.config.report.file)
-        fileChecker.checkIsFile(output.config.dataFile.file)
+        fileChecker.checkIsFile(output.config.provenance.file)
     }
 
     def 'Should modify the output paths'() {

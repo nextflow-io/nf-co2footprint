@@ -4,7 +4,7 @@
     "num_lines": 3
   },
   "summary_test.txt": {
-    "checksum": "ee1b98adb1d9e7be133e2f92b85dcb49",
+    "checksum": "1ade3b308537e2d04ec5beb5d0a7b210",
     "num_lines": 30
   },
   "report_test.html": {
@@ -12,9 +12,8 @@
     "excluded_lines": [1533, 1534],
     "num_lines": 1816
   },
-  "data_test.yaml": {
-    "checksum": "7dd82429ebd8eb1e04bac46b43ebcdc2",
-    "excluded_lines": [13, 17, 21, 111, 115, 119, 242, 246, 250],
-    "num_lines": 341
+  "provenance_test.yaml": {
+    "checksum": "551cd98e7c981c70dc14f7f297dfad69",
+    "num_lines": 142
   }
 }
