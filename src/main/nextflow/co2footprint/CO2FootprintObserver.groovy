@@ -143,7 +143,7 @@ class CO2FootprintObserver implements TraceObserver {
         return co2Record
     }
 
-    void renderFiles(CO2RecordTree co2RecordTree=workflowStats, WorkflowMetadata workflowMetadata = session?.workflowMetadata) {
+    void renderFiles(CO2RecordTree co2RecordTree=workflowStats, WorkflowMetadata workflowMetadata=session?.workflowMetadata) {
         // Catch unfinished tasks
         runningTasks.each { TaskId taskId, TraceRecord traceRecord -> aggregateRecords(traceRecord) }
 

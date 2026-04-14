@@ -87,13 +87,15 @@ class CO2FootprintCLI {
         if (parsedArgs.containsKey('config')) {
             metadata.commandLine += " --config ${parsedArgs.get('config')}"
         }
+
+        // Extract minimum start and maximum complete for workflow start and end approximation
         Long start = null
         Long complete = null
         traceRecords.each { TraceRecord traceRecord ->
             Long currentStart = traceRecord.get('start') as Long
             Long currentComplete = traceRecord.get('complete') as Long
-            if (currentStart != null && (start == null || start > currentStart)){ start = currentStart}
-            if (currentComplete != null && (complete == null || complete > currentComplete)){ complete = currentComplete}
+            if (currentStart != null && (start == null || start > currentStart)){ start = currentStart }
+            if (currentComplete != null && (complete == null || complete > currentComplete)){ complete = currentComplete }
         }
         if (start != null){
             metadata.start =  Instant.ofEpochMilli(start).atOffset(ZoneOffset.UTC) ?: null
