@@ -85,7 +85,6 @@ class CO2RecordTreeTest extends Specification {
                 co2e:[0.0, 1.0, 2.0],
                 co2eMarket:[null, null, null],
                 ci:[475.0, 475.0, 475.0],
-                time:[1.0, 1.0, 1.0],
                 powerdrawCPU:[12.0, 12.0, 12.0],
                 rawEnergyProcessor:[5.0, 5.0, 5.0],
                 rawEnergyMemory:[5.0, 5.0, 5.0],

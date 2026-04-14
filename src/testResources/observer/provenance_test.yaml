@@ -16,7 +16,7 @@ values:
   memory: &id005
     raw: {value: 7516192768, type: Bytes, unit: B, scale: ''}
     readable: 7 GB
-  time: &id006
+  realtime: &id006
     raw: {value: 3600000.0000, type: Duration, unit: ms, scale: ''}
     readable: 1h
   cpus: &id007
@@ -43,7 +43,7 @@ children:
     ci: *id003
     '%cpu': *id004
     memory: *id005
-    time: *id006
+    realtime: *id006
     cpus: *id007
     powerdrawCPU: *id008
     cpu_model: *id009
@@ -58,7 +58,7 @@ children:
       ci: *id003
       '%cpu': *id004
       memory: *id005
-      time: *id006
+      realtime: *id006
       cpus: *id007
       powerdrawCPU: *id008
       cpu_model: *id009

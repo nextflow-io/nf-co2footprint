@@ -11,17 +11,17 @@ values:
     raw: {value: 480.00000000000006, type: Number, unit: gCO₂e/kWh, scale: ''}
     readable: 480 gCO₂e/kWh
   '%cpu':
-    raw: {value: 95.93333333333332, type: Percentage, unit: '', scale: '%'}
+    raw: {value: 95.93333333333334, type: Percentage, unit: '', scale: '%'}
     readable: 95.93 %
   memory:
     raw: {value: 12884901888, type: Bytes, unit: B, scale: ''}
     readable: 12 GB
-  time:
+  realtime:
     raw: {value: 1500.0001200000000, type: Duration, unit: ms, scale: ''}
     readable: 1s 500ms
   cpus:
-    raw: {value: 2.0, type: Number, unit: '', scale: ''}
-    readable: '2.0'
+    raw: {value: !!float '2', type: Number, unit: '', scale: ''}
+    readable: '2'
   powerdrawCPU:
     raw: {value: 11.409999999999998, type: Number, unit: W, scale: ''}
     readable: 11.41 W
@@ -55,7 +55,7 @@ children:
     memory: &id006
       raw: {value: 12884901888, type: Bytes, unit: B, scale: ''}
       readable: 12 GB
-    time: &id007
+    realtime: &id007
       raw: {value: 500.0000400000000, type: Duration, unit: ms, scale: ''}
       readable: 500ms
     cpus: &id008
@@ -80,7 +80,7 @@ children:
       ci: *id004
       '%cpu': *id005
       memory: *id006
-      time: *id007
+      realtime: *id007
       cpus: *id008
       powerdrawCPU: *id009
       rawEnergyProcessor: *id010
@@ -109,7 +109,7 @@ children:
     memory: &id017
       raw: {value: 12884901888, type: Bytes, unit: B, scale: ''}
       readable: 12 GB
-    time: &id018
+    realtime: &id018
       raw: {value: 1000.0000800000000, type: Duration, unit: ms, scale: ''}
       readable: 1s 0ms
     cpus: &id019
@@ -134,7 +134,7 @@ children:
       ci: *id015
       '%cpu': *id016
       memory: *id017
-      time: *id018
+      realtime: *id018
       cpus: *id019
       powerdrawCPU: *id020
       rawEnergyProcessor: *id021

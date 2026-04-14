@@ -11,7 +11,6 @@ class Percentage extends Quantity {
      */
     Percentage(Object value, String unit='', String type='Percentage', String description = null) {
         super(value, '%', unit, type, description)
-        scalingFactor = 1024
     }
 
     /**

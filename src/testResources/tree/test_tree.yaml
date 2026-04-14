@@ -16,12 +16,12 @@ values:
   memory:
     raw: {value: 10737418240, type: Bytes, unit: B, scale: ''}
     readable: 10 GB
-  time:
+  realtime:
     raw: {value: 7200000.0000, type: Duration, unit: ms, scale: ''}
     readable: 2h
   cpus:
-    raw: {value: 1.0, type: Number, unit: '', scale: ''}
-    readable: '1.0'
+    raw: {value: !!float '1', type: Number, unit: '', scale: ''}
+    readable: '1'
   powerdrawCPU:
     raw: {value: 7.0, type: Number, unit: W, scale: ''}
     readable: 7 W
@@ -53,7 +53,7 @@ children:
     memory: &id005
       raw: {value: 10737418240, type: Bytes, unit: B, scale: ''}
       readable: 10 GB
-    time: &id006
+    realtime: &id006
       raw: {value: 3600000.0000, type: Duration, unit: ms, scale: ''}
       readable: 1h
     cpus: &id007
@@ -80,7 +80,7 @@ children:
       ci: *id003
       '%cpu': *id004
       memory: *id005
-      time: *id006
+      realtime: *id006
       cpus: *id007
       powerdrawCPU: *id008
       cpu_model: *id009
@@ -95,7 +95,7 @@ children:
     ci: *id003
     '%cpu': *id004
     memory: *id005
-    time: *id006
+    realtime: *id006
     cpus: *id007
     powerdrawCPU: *id008
     cpu_model: *id009
@@ -110,7 +110,7 @@ children:
       ci: *id003
       '%cpu': *id004
       memory: *id005
-      time: *id006
+      realtime: *id006
       cpus: *id007
       powerdrawCPU: *id008
       cpu_model: *id009

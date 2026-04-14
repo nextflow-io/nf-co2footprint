@@ -24,7 +24,7 @@ class CO2Record extends TraceRecord {
                         co2eMarket:         'num',
                         ci:                 'num',
                         '%cpu':             'perc',
-                        time:               'time',
+                        realtime:           'time',
                         cpus:               'num',
                         memory:             'mem',
                         powerdrawCPU:       'num',
@@ -37,7 +37,7 @@ class CO2Record extends TraceRecord {
 
     // Stores keys that are related to the CO2 calculation
     final List<String> co2Keys = [
-            'name', 'energy', 'co2e', 'co2eMarket', 'ci', '%cpu', 'memory', 'time',
+            'name', 'energy', 'co2e', 'co2eMarket', 'ci', '%cpu', 'memory', 'realtime',
             'cpus', 'powerdrawCPU', 'cpu_model', 'rawEnergyProcessor', 'rawEnergyMemory'
     ]
 
@@ -96,7 +96,7 @@ class CO2Record extends TraceRecord {
             'ci':                       ci,
             '%cpu':                     cpuUsage,
             'memory':                   memory,
-            'time':                     time,
+            'realtime':                 Duration.of(time, 'h').scale('ms').value,
             'cpus':                     cpus,
             'powerdrawCPU':             powerdrawCPU,
             'cpu_model':                cpu_model,
@@ -145,7 +145,7 @@ class CO2Record extends TraceRecord {
 
         // Weighted average by time for CPU usage
         else if (key in ['%cpu', '%mem', 'vmem', 'rss', 'cpus']) {
-            return Calculator.weightedAverage([thisValue, newValue], [store['time'], record.store['time']])
+            return Calculator.weightedAverage([thisValue, newValue], [store['realtime'], record.store['realtime']])
         }
 
         // For memory and CPU count and completion time, keep the maximum
@@ -198,7 +198,7 @@ class CO2Record extends TraceRecord {
              case 'energy' -> Quantity.of(value, 'k', 'Wh').scale('').toMap()
              case 'co2e' -> Quantity.of(value, '', 'g').toMap()
              case 'co2eMarket' -> Quantity.of(value, '', 'g').toMap()
-             case 'time' -> Duration.of(value, 'h').scale('ms').toMap()
+             case 'realtime' -> Duration.of(value, 'ms').scale('ms').toMap()
              case 'ci' -> Quantity.of(value, '', 'gCO₂e/kWh').toMap()
              case 'powerdrawCPU' -> Quantity.of(value, '', 'W').toMap()
              case '%cpu' -> Percentage.of(value).toMap()
@@ -236,12 +236,11 @@ class CO2Record extends TraceRecord {
             case 'energy' ->  new Quantity(value, 'k', 'Wh').toReadable()
             case 'co2e' ->  new Quantity(value, '', 'g').toReadable()
             case 'co2eMarket' ->  new Quantity(value, '', 'g').toReadable()
-            case 'time' ->  new Duration(value, 'h').toReadable( 'ms', 'years')
+            case 'realtime' ->  new Duration(value, 'ms').toReadable( 'ms', 'years')
             case 'ci' -> new Quantity(value, '', 'gCO₂e/kWh').toReadable()
             case 'powerdrawCPU' ->  new Quantity(value, '', 'W').toReadable()
             case '%cpu' ->  new Percentage(value).toReadable()
             case 'memory' ->  new Bytes(value, 'G', 'B').toReadable()
-            case 'realtime' -> new Duration(value, 'ms').toReadable('ms', 'years')
             case 'rawEnergyProcessor' ->  new Quantity(value, 'k', 'Wh').toReadable()
             case 'rawEnergyMemory' ->  new Quantity(value, 'k', 'Wh').toReadable()
             default -> getFmtStr(key)
@@ -252,7 +251,7 @@ class CO2Record extends TraceRecord {
      * Converts a CO₂ record entry into a String that is to be included into the report.
      * Returns `null`, if it does not differ from normal readable instance.
      *
-     * @param key   The entry key (e.g. "energy", "co2e", "time", "%cpu")
+     * @param key   The entry key (e.g. "energy", "co2e", "realtime", "%cpu")
      * @param value Optional value to convert; defaults to the stored value for the key
      * @return      A human-readable string, or null if no conversion is possible
      */
@@ -270,7 +269,6 @@ class CO2Record extends TraceRecord {
                 Map<String, String> colors = [COMPLETED: 'success', CACHED: 'secondary', ABORTED: 'danger', FAILED: 'danger']
                 "<span class=\"badge badge-${colors[value]}\">${value}</span>"
             }
-            case 'time' -> toReadable(key, value).split(' ')[0]
             case 'realtime' -> toReadable(key, value).split(' ')[0]
             default -> null
         }
