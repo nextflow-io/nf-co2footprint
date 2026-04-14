@@ -14,9 +14,12 @@ The plugin provides some [extension points](https://nextflow.io/docs/latest/plug
     }
     ```
 
+!!! info
+
+    All workflow metadata in the report is derived from the trace file and therefore may not match a HTML report that is created via an integrated plugin run.
+
 #### From the command line
-The command line functionality utilizes Nextflow configs, like the regular plugin (see [parameters.md](./pa
-rameters.md)).
+The command line functionality utilizes Nextflow configs, like the regular plugin (see [parameters.md](./parameters.md)).
 It is recommended to set the output paths and a fixed carbon intensity value (`ci`) in the config.
 ```bash
 nextflow plugin nf-co2footprint:postRun --config <path_to_nextflow.config> --tracePath <path_to_execution_trace.txt>
