@@ -18,7 +18,7 @@ class BaseFileConfig {
     final String name
     final String ending
 
-    @ConfigOption(types=[String, GString])
+    @ConfigOption
     @Description('Path to the file.')
     final Path file
 
