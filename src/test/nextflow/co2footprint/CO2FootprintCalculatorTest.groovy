@@ -48,7 +48,7 @@ class CO2FootprintCalculatorTest extends Specification{
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(traceRecord, timeCiRecordCollector)
 
         expect:
-        round(co2Record.store.energy*1000 as Double) == expectedEnergy
+        round(co2Record.store.energy_consumption*1000 as Double) == expectedEnergy
         round(co2Record.store.CO2e as Double) == expectedCO2
 
         where:

@@ -7,13 +7,13 @@ values:
   status: &id002
     raw: {value: COMPLETED, type: str}
     readable: COMPLETED
-  energy: &id003
+  energy_consumption: &id003
     raw: {value: 14.0175, type: Number, unit: Wh, scale: ''}
     readable: 14.02 Wh
   CO2e: &id004
     raw: {value: 6.7284, type: Number, unit: g, scale: ''}
     readable: 6.73 g
-  ci: &id005
+  carbon_intensity: &id005
     raw: {value: 480.0, type: Number, unit: gCO₂e/kWh, scale: ''}
     readable: 480 gCO₂e/kWh
   '%cpu': &id006
@@ -28,16 +28,16 @@ values:
   cpus: &id009
     raw: {value: 1, type: Number, unit: '', scale: ''}
     readable: '1'
-  powerdrawCPU: &id010
+  powerdraw_cpu: &id010
     raw: {value: 11.41, type: Number, unit: W, scale: ''}
     readable: 11.41 W
   cpu_model: &id011
     raw: {value: Unknown model, type: str}
     readable: Unknown model
-  rawEnergyProcessor: &id012
+  raw_energy_processor: &id012
     raw: {value: 11.41, type: Number, unit: Wh, scale: ''}
     readable: 11.41 Wh
-  rawEnergyMemory: &id013
+  raw_energy_memory: &id013
     raw: {value: 2.6075, type: Number, unit: Wh, scale: ''}
     readable: 2.61 Wh
 children:
@@ -46,32 +46,32 @@ children:
   values:
     task_id: *id001
     status: *id002
-    energy: *id003
+    energy_consumption: *id003
     CO2e: *id004
-    ci: *id005
+    carbon_intensity: *id005
     '%cpu': *id006
     memory: *id007
     realtime: *id008
     cpus: *id009
-    powerdrawCPU: *id010
+    powerdraw_cpu: *id010
     cpu_model: *id011
-    rawEnergyProcessor: *id012
-    rawEnergyMemory: *id013
+    raw_energy_processor: *id012
+    raw_energy_memory: *id013
   children:
   - name: '111'
     metaData: {level: task}
     values:
       task_id: *id001
       status: *id002
-      energy: *id003
+      energy_consumption: *id003
       CO2e: *id004
-      ci: *id005
+      carbon_intensity: *id005
       '%cpu': *id006
       memory: *id007
       realtime: *id008
       cpus: *id009
-      powerdrawCPU: *id010
+      powerdraw_cpu: *id010
       cpu_model: *id011
-      rawEnergyProcessor: *id012
-      rawEnergyMemory: *id013
+      raw_energy_processor: *id012
+      raw_energy_memory: *id013
     children: []

@@ -8,7 +8,7 @@
 //
 // Data contract (injected into window by the Groovy template renderer):
 //   window.data.trace    — array of per-task trace records
-//   window.data.summary  — per-process aggregated values (CO2e, energy, …)
+//   window.data.summary  — per-process aggregated values (CO2e, energy_consumption, …)
 //   window.ciRecords     — timestamped carbon-intensity readings
 //   window.options       — plugin configuration key/value pairs
 
@@ -193,7 +193,7 @@ $(function () {
      */
     function render() {
       const suffix = state.cached === 'all' ? '' : '_non_cached'
-      const isEnergy = state.metric === 'energy'
+      const isEnergy = state.metric === 'energy_consumption'
       const unit = isEnergy ? 'Wh' : 'g CO\u2082e'
       const axisTitle = isEnergy ? 'Energy consumption (Wh)' : 'CO\u2082e emissions (g)'
 
@@ -333,7 +333,7 @@ $(function () {
 
     // Wire up toggle buttons — each click updates state and re-renders.
     document.getElementById('pe-btn-co2e').addEventListener('click', () => { state.metric = 'CO2e'; setActive('pe-metric-btn', 'pe-btn-co2e'); render() })
-    document.getElementById('pe-btn-energy').addEventListener('click', () => { state.metric = 'energy'; setActive('pe-metric-btn', 'pe-btn-energy'); render() })
+    document.getElementById('pe-btn-energy').addEventListener('click', () => { state.metric = 'energy_consumption'; setActive('pe-metric-btn', 'pe-btn-energy'); render() })
     document.getElementById('pe-btn-all').addEventListener('click', () => { state.cached = 'all'; setActive('pe-cached-btn', 'pe-btn-all'); render() })
     document.getElementById('pe-btn-noncached').addEventListener('click', () => { state.cached = 'non_cached'; setActive('pe-cached-btn', 'pe-btn-noncached'); render() })
     document.getElementById('pe-btn-sort').addEventListener('click', () => {
@@ -383,17 +383,17 @@ $(function () {
         { title: 'tag', data: 'tag' },
         { title: 'status', data: 'status' },
         { title: 'hash', data: 'hash' },
-        { title: energyConsumptionTitle, data: 'energy' },
-        { title: energyConsumptionProcessorTitle, data: 'rawEnergyProcessor' },
-        { title: energyConsumptionMemoryTitle, data: 'rawEnergyMemory' },
+        { title: energyConsumptionTitle, data: 'energy_consumption' },
+        { title: energyConsumptionProcessorTitle, data: 'raw_energy_processor' },
+        { title: energyConsumptionMemoryTitle, data: 'raw_energy_memory' },
         { title: co2EmissionsTitle, data: 'CO2e' },
         { title: `${co2EmissionsTitle} (market)`, data: 'CO2e_market' },
-        { title: 'carbon intensity', data: 'ci' },
+        { title: 'carbon intensity', data: 'carbon_intensity' },
         { title: 'allocated cpus', data: 'cpus' },
         { title: '%cpu', data: '%cpu' },
         { title: 'allocated memory', data: 'memory' },
         { title: 'realtime', data: 'time' },
-        { title: 'power draw (in W/core)', data: 'powerdrawCPU' },
+        { title: 'power draw (in W/core)', data: 'powerdraw_cpu' },
         { title: 'cpu model', data: 'cpu_model' },
       ],
       deferRender: true,
@@ -521,7 +521,7 @@ $(function () {
       let total = 0
       for (const task of window.data.trace) {
         if (task.start.time <= t0 && task.complete.time >= t1) {
-          total += task.energy.raw.value
+          total += task.energy_consumption.raw.value
         }
       }
 

@@ -220,7 +220,7 @@ class CO2FootprintObserver implements TraceObserver {
         workflowStats.summarize()
 
         log.info(
-            "🌱 The workflow run used ${workflowStats.co2Record.toReadable('energy')} of electricity, " +
+            "🌱 The workflow run used ${workflowStats.co2Record.toReadable('energy_consumption')} of electricity, " +
             "resulting in the release of ${workflowStats.co2Record.toReadable('CO2e')} of CO₂ equivalents into the atmosphere."
         )
     }

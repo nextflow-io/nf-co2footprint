@@ -4,13 +4,13 @@ values:
   status:
     raw: {value: COMPLETED, type: str}
     readable: COMPLETED
-  energy:
+  energy_consumption:
     raw: {value: 0.006423331069422, type: Number, unit: Wh, scale: ''}
     readable: 6.42 mWh
   CO2e:
     raw: {value: 0.0030831989133225596, type: Number, unit: g, scale: ''}
     readable: 3.08 mg
-  ci:
+  carbon_intensity:
     raw: {value: 480.00000000000006, type: Number, unit: gCO₂e/kWh, scale: ''}
     readable: 480 gCO₂e/kWh
   '%cpu':
@@ -25,13 +25,13 @@ values:
   cpus:
     raw: {value: !!float '2', type: Number, unit: '', scale: ''}
     readable: '2'
-  powerdrawCPU:
+  powerdraw_cpu:
     raw: {value: 11.409999999999998, type: Number, unit: W, scale: ''}
     readable: 11.41 W
-  rawEnergyProcessor:
+  raw_energy_processor:
     raw: {value: 0.004560830920422, type: Number, unit: Wh, scale: ''}
     readable: 4.56 mWh
-  rawEnergyMemory:
+  raw_energy_memory:
     raw: {value: 0.0018625001489999998, type: Number, unit: Wh, scale: ''}
     readable: 1.86 mWh
 children:
@@ -49,13 +49,13 @@ children:
           (RAP1_UNINDUCED_REP1)', type: str}
       readable: NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT
         (RAP1_UNINDUCED_REP1)
-    energy: &id004
+    energy_consumption: &id004
       raw: {value: 0.00215801406153, type: Number, unit: Wh, scale: ''}
       readable: 2.16 mWh
     CO2e: &id005
       raw: {value: 0.0010358467495344, type: Number, unit: g, scale: ''}
       readable: 1.04 mg
-    ci: &id006
+    carbon_intensity: &id006
       raw: {value: 480.0, type: Number, unit: gCO₂e/kWh, scale: ''}
       readable: 480 gCO₂e/kWh
     '%cpu': &id007
@@ -70,13 +70,13 @@ children:
     cpus: &id010
       raw: {value: 2, type: Number, unit: '', scale: ''}
       readable: '2'
-    powerdrawCPU: &id011
+    powerdraw_cpu: &id011
       raw: {value: 11.41, type: Number, unit: W, scale: ''}
       readable: 11.41 W
-    rawEnergyProcessor: &id012
+    raw_energy_processor: &id012
       raw: {value: 0.00153718067853, type: Number, unit: Wh, scale: ''}
       readable: 1.54 mWh
-    rawEnergyMemory: &id013
+    raw_energy_memory: &id013
       raw: {value: 0.000620833383, type: Number, unit: Wh, scale: ''}
       readable: 620.83 uWh
   children:
@@ -86,16 +86,16 @@ children:
       task_id: *id001
       status: *id002
       name: *id003
-      energy: *id004
+      energy_consumption: *id004
       CO2e: *id005
-      ci: *id006
+      carbon_intensity: *id006
       '%cpu': *id007
       memory: *id008
       realtime: *id009
       cpus: *id010
-      powerdrawCPU: *id011
-      rawEnergyProcessor: *id012
-      rawEnergyMemory: *id013
+      powerdraw_cpu: *id011
+      raw_energy_processor: *id012
+      raw_energy_memory: *id013
     children: []
 - name: NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (WT_REP2)
   metaData: {level: process}
@@ -111,13 +111,13 @@ children:
           (WT_REP2)', type: str}
       readable: NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT
         (WT_REP2)
-    energy: &id017
+    energy_consumption: &id017
       raw: {value: 0.004265317007892, type: Number, unit: Wh, scale: ''}
       readable: 4.27 mWh
     CO2e: &id018
       raw: {value: 0.00204735216378816, type: Number, unit: g, scale: ''}
       readable: 2.05 mg
-    ci: &id019
+    carbon_intensity: &id019
       raw: {value: 480.0, type: Number, unit: gCO₂e/kWh, scale: ''}
       readable: 480 gCO₂e/kWh
     '%cpu': &id020
@@ -132,13 +132,13 @@ children:
     cpus: &id023
       raw: {value: 2, type: Number, unit: '', scale: ''}
       readable: '2'
-    powerdrawCPU: &id024
+    powerdraw_cpu: &id024
       raw: {value: 11.41, type: Number, unit: W, scale: ''}
       readable: 11.41 W
-    rawEnergyProcessor: &id025
+    raw_energy_processor: &id025
       raw: {value: 0.003023650241892, type: Number, unit: Wh, scale: ''}
       readable: 3.02 mWh
-    rawEnergyMemory: &id026
+    raw_energy_memory: &id026
       raw: {value: 0.001241666766, type: Number, unit: Wh, scale: ''}
       readable: 1.24 mWh
   children:
@@ -148,14 +148,14 @@ children:
       task_id: *id014
       status: *id015
       name: *id016
-      energy: *id017
+      energy_consumption: *id017
       CO2e: *id018
-      ci: *id019
+      carbon_intensity: *id019
       '%cpu': *id020
       memory: *id021
       realtime: *id022
       cpus: *id023
-      powerdrawCPU: *id024
-      rawEnergyProcessor: *id025
-      rawEnergyMemory: *id026
+      powerdraw_cpu: *id024
+      raw_energy_processor: *id025
+      raw_energy_memory: *id026
     children: []

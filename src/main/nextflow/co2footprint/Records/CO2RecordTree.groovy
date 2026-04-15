@@ -87,10 +87,10 @@ class CO2RecordTree {
      */
     CO2RecordTree collectAdditionalMetrics(
             Map<String, Closure> metricTransformers = [
-                    CO2e_non_cached: { CO2Record record -> record.store.status != 'CACHED' ? record.CO2e : null },
-                    energy_non_cached: { CO2Record record -> record.store.status != 'CACHED' ? record.energy : null },
-                    CO2e_market: { CO2Record record -> record.CO2e_market },
-                    energy_market: { CO2Record record -> record.energy },
+                    CO2e_non_cached: { CO2Record record -> record.store.status != 'CACHED' ? record.store.CO2e : null },
+                    energy_consumption_non_cached: { CO2Record record -> record.store.status != 'CACHED' ? record.store.energy_consumption : null },
+                    CO2e_market: { CO2Record record -> record.store.CO2e_market },
+                    energy_consumption_market: { CO2Record record -> record.store.energy_consumption },
             ]
     ) {
         metricTransformers.each{ String name, Closure transformer ->
@@ -115,16 +115,16 @@ class CO2RecordTree {
         List<Object> values = []
 
         // Catch special suffixes
-        String suffix = '_' + key.split('_').drop(1).join('_')
+        String caseSuffix = null
+        if (key.endsWith('_non_cached')) { caseSuffix = '_non_cached' }
+
         String croppedKey = key
-        if (suffix == '_non_cached') {
-            croppedKey = key.replace(suffix, '')
-        }
+        if (caseSuffix) { croppedKey = key.replace(caseSuffix, '') }
 
         // Extract information
         if (!children && co2Record?.store?.containsKey(croppedKey)) {
             Object val = co2Record.store[croppedKey]
-            if (suffix == '_non_cached' && (co2Record?.store?.status == 'CACHED')) {
+            if (caseSuffix == '_non_cached' && (co2Record?.store?.status == 'CACHED')) {
                 // do nothing
             }
             else {

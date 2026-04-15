@@ -74,20 +74,20 @@ class CO2RecordTreeTest extends Specification {
         'workflow'  || null                 || [workflow: [
                 task_id:['111', '111', '111'],
                 process:['testProcess', 'testProcess', 'testProcess'],
-                realtime:[3600000, 3600000, 3600000],
+                realtime:[3600000.0000, 3600000.0000, 3600000.0000],
                 cpus:[1, 1, 1],
                 cpu_model:['Unknown model', 'Unknown model', 'Unknown model'],
                 '%cpu':[100.0, 100.0, 100.0],
                 memory:[1073741824, 1073741824, 1073741824],
                 status:['COMPLETED', 'COMPLETED', 'CACHED'],
                 name:['task_1', 'task_2', 'task_3'],
-                energy:[0.0, 1.0, 2.0],
+                energy_consumption:[0.0, 1.0, 2.0],
                 CO2e:[0.0, 1.0, 2.0],
                 CO2e_market:[null, null, null],
-                ci:[475.0, 475.0, 475.0],
-                powerdrawCPU:[12.0, 12.0, 12.0],
-                rawEnergyProcessor:[5.0, 5.0, 5.0],
-                rawEnergyMemory:[5.0, 5.0, 5.0],
+                carbon_intensity:[475.0, 475.0, 475.0],
+                powerdraw_cpu:[12.0, 12.0, 12.0],
+                raw_energy_processor:[5.0, 5.0, 5.0],
+                raw_energy_memory:[5.0, 5.0, 5.0],
         ]]
     }
 

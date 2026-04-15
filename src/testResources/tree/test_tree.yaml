@@ -7,13 +7,13 @@ values:
   status:
     raw: {value: COMPLETED, type: str}
     readable: COMPLETED
-  energy:
+  energy_consumption:
     raw: {value: 4000.0, type: Number, unit: Wh, scale: ''}
     readable: 4 kWh
   CO2e:
     raw: {value: 400.0, type: Number, unit: g, scale: ''}
     readable: 400 g
-  ci:
+  carbon_intensity:
     raw: {value: 100.0, type: Number, unit: gCO₂e/kWh, scale: ''}
     readable: 100 gCO₂e/kWh
   '%cpu':
@@ -28,16 +28,16 @@ values:
   cpus:
     raw: {value: !!float '1', type: Number, unit: '', scale: ''}
     readable: '1'
-  powerdrawCPU:
+  powerdraw_cpu:
     raw: {value: 7.0, type: Number, unit: W, scale: ''}
     readable: 7 W
   cpu_model:
     raw: {value: Some model, type: str}
     readable: Some model
-  rawEnergyProcessor:
+  raw_energy_processor:
     raw: {value: 10000.0, type: Number, unit: Wh, scale: ''}
     readable: 10 kWh
-  rawEnergyMemory:
+  raw_energy_memory:
     raw: {value: 10000.0, type: Number, unit: Wh, scale: ''}
     readable: 10 kWh
 children:
@@ -50,13 +50,13 @@ children:
     status: &id002
       raw: {value: COMPLETED, type: str}
       readable: COMPLETED
-    energy: &id003
+    energy_consumption: &id003
       raw: {value: 2000.0, type: Number, unit: Wh, scale: ''}
       readable: 2 kWh
     CO2e: &id004
       raw: {value: 200.0, type: Number, unit: g, scale: ''}
       readable: 200 g
-    ci: &id005
+    carbon_intensity: &id005
       raw: {value: 100.0, type: Number, unit: gCO₂e/kWh, scale: ''}
       readable: 100 gCO₂e/kWh
     '%cpu': &id006
@@ -71,16 +71,16 @@ children:
     cpus: &id009
       raw: {value: 1, type: Number, unit: '', scale: ''}
       readable: '1'
-    powerdrawCPU: &id010
+    powerdraw_cpu: &id010
       raw: {value: 7.0, type: Number, unit: W, scale: ''}
       readable: 7 W
     cpu_model: &id011
       raw: {value: Some model, type: str}
       readable: Some model
-    rawEnergyProcessor: &id012
+    raw_energy_processor: &id012
       raw: {value: 5000.0, type: Number, unit: Wh, scale: ''}
       readable: 5 kWh
-    rawEnergyMemory: &id013
+    raw_energy_memory: &id013
       raw: {value: 5000.0, type: Number, unit: Wh, scale: ''}
       readable: 5 kWh
   children:
@@ -89,49 +89,49 @@ children:
     values:
       task_id: *id001
       status: *id002
-      energy: *id003
+      energy_consumption: *id003
       CO2e: *id004
-      ci: *id005
+      carbon_intensity: *id005
       '%cpu': *id006
       memory: *id007
       realtime: *id008
       cpus: *id009
-      powerdrawCPU: *id010
+      powerdraw_cpu: *id010
       cpu_model: *id011
-      rawEnergyProcessor: *id012
-      rawEnergyMemory: *id013
+      raw_energy_processor: *id012
+      raw_energy_memory: *id013
     children: []
 - name: test2
   metaData: {level: process}
   values:
     task_id: *id001
     status: *id002
-    energy: *id003
+    energy_consumption: *id003
     CO2e: *id004
-    ci: *id005
+    carbon_intensity: *id005
     '%cpu': *id006
     memory: *id007
     realtime: *id008
     cpus: *id009
-    powerdrawCPU: *id010
+    powerdraw_cpu: *id010
     cpu_model: *id011
-    rawEnergyProcessor: *id012
-    rawEnergyMemory: *id013
+    raw_energy_processor: *id012
+    raw_energy_memory: *id013
   children:
   - name: '2'
     metaData: {level: task}
     values:
       task_id: *id001
       status: *id002
-      energy: *id003
+      energy_consumption: *id003
       CO2e: *id004
-      ci: *id005
+      carbon_intensity: *id005
       '%cpu': *id006
       memory: *id007
       realtime: *id008
       cpus: *id009
-      powerdrawCPU: *id010
+      powerdraw_cpu: *id010
       cpu_model: *id011
-      rawEnergyProcessor: *id012
-      rawEnergyMemory: *id013
+      raw_energy_processor: *id012
+      raw_energy_memory: *id013
     children: []

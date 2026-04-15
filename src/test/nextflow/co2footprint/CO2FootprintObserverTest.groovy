@@ -117,7 +117,7 @@ class CO2FootprintObserverTest extends Specification{
 
         expect:
         Double total_co2 =  observer.workflowStats.co2Record.store.CO2e as Double
-        Double total_energy =  observer.workflowStats.co2Record.store.energy as Double
+        Double total_energy =  observer.workflowStats.co2Record.store.energy_consumption as Double
         // With TDP = 11.45 (default global)
         // Energy consumption converted to Wh
         round(total_energy*1000) == 14.02
