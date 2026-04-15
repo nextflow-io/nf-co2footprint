@@ -6,9 +6,14 @@ import nextflow.co2footprint.Parsers.TraceFileParser
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.plugin.extension.Function
 import nextflow.plugin.extension.PluginExtensionPoint
+import nextflow.script.ScriptFile
+import nextflow.script.WorkflowMetadata
 import nextflow.trace.TraceRecord
+import nextflow.util.Duration
 
 import java.nio.file.Path
+import java.time.Instant
+import java.time.ZoneOffset
 
 /**
  * A {@link PluginExtensionPoint} to interact with core functionalities of the plugin.
@@ -74,7 +79,39 @@ class CO2FootprintExtension extends PluginExtensionPoint {
             observer.recordStarted(traceRecord)
             co2Records.add(observer.aggregateRecords(traceRecord))
         }
-        observer.renderFiles()
+
+        // Define workflow metadata
+        Session session = new Session()
+        session.runName = 'Extension estimation'
+        WorkflowMetadata metadata = new WorkflowMetadata(session, new ScriptFile( tracePath ) )
+        metadata.scriptName = 'nf-co2footprint Extension'
+        metadata.projectName = 'nf-co2footprint Extension post-run'
+        metadata.success = true
+        metadata.commandLine = 'Executed from within workflow'
+
+
+        // Extract minimum start and maximum complete for workflow start and end approximation
+        Long start = null
+        Long complete = null
+        traceRecords.each { TraceRecord traceRecord ->
+            Long currentStart = traceRecord.get('start') as Long
+            Long currentComplete = traceRecord.get('complete') as Long
+            if (currentStart != null && (start == null || start > currentStart)){ start = currentStart }
+            if (currentComplete != null && (complete == null || complete > currentComplete)){ complete = currentComplete }
+        }
+        if (start != null){
+            metadata.start =  Instant.ofEpochMilli(start).atOffset(ZoneOffset.UTC) ?: null
+        }
+        if (complete != null) {
+            metadata.complete = Instant.ofEpochMilli(complete).atOffset(ZoneOffset.UTC) ?: null
+        }
+        if (metadata.start != null && metadata.complete != null) {
+            metadata.duration = Duration.between(metadata.start, metadata.complete)
+        }
+
+        // Render files
+        observer.renderFiles(observer.workflowStats, metadata)
+
 
         return new Output(co2Records, config)
     }
