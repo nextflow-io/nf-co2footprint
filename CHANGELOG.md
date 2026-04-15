@@ -15,7 +15,7 @@
 - Single values in process summary plot
 - Numbers that are not in Double format are now accepted for config values
 - Aligned Session tracking with Nextflow's trace tracking
-- Improved workflow reporting form extension/CLI
+- Improved workflow reporting form extension/CLI by deriving and injecting workflow metadata from the provided trace file
 
 ## Features:
 - Updated the config syntax inline with standard Nextflow style
