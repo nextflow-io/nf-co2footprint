@@ -16,7 +16,7 @@ The plugin provides some [extension points](https://nextflow.io/docs/latest/plug
 
 !!! info
 
-    All workflow metadata in the report is derived from the trace file and therefore may not match a HTML report that is created via an integrated plugin run.
+    In CLI/extension post-run mode, workflow metadata is reconstructed using the trace file (e.g., start/end time, duration) and synthetic/runtime values (e.g., run name, command line), and may differ from reports generated during an integrated plugin run.
 
 #### From the command line
 The command line functionality utilizes Nextflow configs, like the regular plugin (see [parameters.md](./parameters.md)).
