@@ -87,9 +87,9 @@ class CO2RecordTree {
      */
     CO2RecordTree collectAdditionalMetrics(
             Map<String, Closure> metricTransformers = [
-                    co2e_non_cached: { CO2Record record -> record.store.status != 'CACHED' ? record.co2e : null },
+                    CO2e_non_cached: { CO2Record record -> record.store.status != 'CACHED' ? record.CO2e : null },
                     energy_non_cached: { CO2Record record -> record.store.status != 'CACHED' ? record.energy : null },
-                    co2e_market: { CO2Record record -> record.co2eMarket },
+                    CO2e_market: { CO2Record record -> record.CO2e_market },
                     energy_market: { CO2Record record -> record.energy },
             ]
     ) {
@@ -198,15 +198,15 @@ class CO2RecordTree {
     /**
      * Convert this record tree to a map.
      *
-     * @param onlyCO2parameters Whether all parameters should be included, or only the ones that are nf-co2 plugin-specific
+     * @param emissionMetricsOnly Whether all parameters should be included, or only the ones that are nf-co2 plugin-specific
      * @param includeNulls Whether to include parameters that have `null` as a raw value
      * @param includeReportValues Whether to include 'report' values of entries
      * @return A map representation of this Record Tree
      */
-    Map<String, Object> toMap(boolean onlyCO2parameters=false, boolean includeNulls=true, boolean includeReportValues=true) {
+    Map<String, Object> toMap(boolean emissionMetricsOnly=false, boolean includeNulls=true, boolean includeReportValues=true) {
         Map<String, Map<String, Object>> recordMap = [:]
         if (co2Record) {
-            (onlyCO2parameters ? co2Record.co2Keys : co2Record.keySet()).each { String key ->
+            (emissionMetricsOnly ? co2Record.emissionMetrics : co2Record.keySet()).each { String key ->
                 Map<String, Object> value = co2Record.representationMap.get(key)
                 if (includeNulls || value['raw']['value'] != null) {
                     if (!includeReportValues) {
@@ -220,7 +220,7 @@ class CO2RecordTree {
             name: name,
             metaData: metaData,
             values: recordMap,
-            children: children.collect({ CO2RecordTree child -> child.toMap(onlyCO2parameters, includeNulls, includeReportValues) }),
+            children: children.collect({ CO2RecordTree child -> child.toMap(emissionMetricsOnly, includeNulls, includeReportValues) }),
         ]
     }
 

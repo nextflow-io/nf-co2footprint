@@ -20,8 +20,8 @@ class CO2Record extends TraceRecord {
         FIELDS.putAll(
                 [
                         energy:             'mem',
-                        co2e:               'num',
-                        co2eMarket:         'num',
+                        CO2e:               'num',
+                        CO2e_market:        'num',
                         ci:                 'num',
                         '%cpu':             'perc',
                         realtime:           'time',
@@ -36,8 +36,8 @@ class CO2Record extends TraceRecord {
     }
 
     // Stores keys that are related to the CO2 calculation
-    final List<String> co2Keys = [
-            'name', 'energy', 'co2e', 'co2eMarket', 'ci', '%cpu', 'memory', 'realtime',
+    final List<String> emissionMetrics = [
+            'task_id', 'status', 'name', 'energy', 'CO2e', 'CO2e_market', 'ci', '%cpu', 'memory', 'realtime',
             'cpus', 'powerdrawCPU', 'cpu_model', 'rawEnergyProcessor', 'rawEnergyMemory'
     ]
 
@@ -58,7 +58,7 @@ class CO2Record extends TraceRecord {
      * @param store Map with all objects to be stores in this CO2Record
      */
     CO2Record(Map<String, Object> store) {
-        traceKeys = store.keySet().findAll({ String key -> key !in co2Keys }) as List<String>
+        traceKeys = store.keySet().findAll({ String key -> key !in emissionMetrics }) as List<String>
         putAll(store)
     }
 
@@ -91,8 +91,8 @@ class CO2Record extends TraceRecord {
         // Define CO2-specific storage
         Map<String, Object> store = new LinkedHashMap<>([
             'energy':                   energy,
-            'co2e':                     co2e,
-            'co2eMarket':               co2eMarket,
+            'CO2e':                     co2e,
+            'CO2e_market':              co2eMarket,
             'ci':                       ci,
             '%cpu':                     cpuUsage,
             'memory':                   memory,
@@ -189,15 +189,15 @@ class CO2Record extends TraceRecord {
      * Numerical values are scaled to their base units.
      * If no value is provided, the method falls back to the stored entry for the given key.
      *
-     * @param key   The entry key (e.g. "energy", "co2e", "time", "%cpu")
+     * @param key   The entry key (e.g. "energy", "CO2e", "time", "%cpu")
      * @param value Optional value to convert; defaults to the stored value for the key
      * @return      The raw metric with all information as a map
      */
     Map<String, ? extends Object> toRaw(String key, Object value=store[key]) {
          Map<String, ? extends Object> rawValue = switch (key) {
              case 'energy' -> Quantity.of(value, 'k', 'Wh').scale('').toMap()
-             case 'co2e' -> Quantity.of(value, '', 'g').toMap()
-             case 'co2eMarket' -> Quantity.of(value, '', 'g').toMap()
+             case 'CO2e' -> Quantity.of(value, '', 'g').toMap()
+             case 'CO2e_market' -> Quantity.of(value, '', 'g').toMap()
              case 'realtime' -> Duration.of(value, 'ms').scale('ms').toMap()
              case 'ci' -> Quantity.of(value, '', 'gCO₂e/kWh').toMap()
              case 'powerdrawCPU' -> Quantity.of(value, '', 'W').toMap()
@@ -226,7 +226,7 @@ class CO2Record extends TraceRecord {
      * (e.g. Wh, g, %, GB). Non-numerical values are returned as strings.
      * If no value is provided, the method falls back to the stored entry for the given key.
      *
-     * @param key   The entry key (e.g. "energy", "co2e", "time", "%cpu")
+     * @param key   The entry key (e.g. "energy", "CO2e", "time", "%cpu")
      * @param value Optional value to convert; defaults to the stored value for the key
      * @return      A human-readable string, or null if no conversion is possible
      */
@@ -234,8 +234,8 @@ class CO2Record extends TraceRecord {
         if (value == null) { return NA }
         return switch (key) {
             case 'energy' ->  new Quantity(value, 'k', 'Wh').toReadable()
-            case 'co2e' ->  new Quantity(value, '', 'g').toReadable()
-            case 'co2eMarket' ->  new Quantity(value, '', 'g').toReadable()
+            case 'CO2e' ->  new Quantity(value, '', 'g').toReadable()
+            case 'CO2e_market' ->  new Quantity(value, '', 'g').toReadable()
             case 'realtime' ->  new Duration(value, 'ms').toReadable( 'ms', 'years')
             case 'ci' -> new Quantity(value, '', 'gCO₂e/kWh').toReadable()
             case 'powerdrawCPU' ->  new Quantity(value, '', 'W').toReadable()
@@ -251,7 +251,7 @@ class CO2Record extends TraceRecord {
      * Converts a CO₂ record entry into a String that is to be included into the report.
      * Returns `null`, if it does not differ from normal readable instance.
      *
-     * @param key   The entry key (e.g. "energy", "co2e", "realtime", "%cpu")
+     * @param key   The entry key (e.g. "energy", "CO2e", "realtime", "%cpu")
      * @param value Optional value to convert; defaults to the stored value for the key
      * @return      A human-readable string, or null if no conversion is possible
      */
@@ -281,7 +281,7 @@ class CO2Record extends TraceRecord {
      *              and the order in which they appear (defaults to all keys in the order of this.store).
      * @return List of readable Entries
      */
-    List<String> getReadableEntries(List<String> order=co2Keys as List) {
+    List<String> getReadableEntries(List<String> order=emissionMetrics as List) {
         return order.collect { String key -> toReadable(key) }
     }
 

@@ -127,10 +127,10 @@ class ReportFileCreatorTest extends Specification{
         totalsJson == totalsJsonResult
         where:
         co2e                || totalsJsonResult
-        0.01d               || [co2e: '10 mg', energy:'100 kWh', car: '5.71E-5', tree: '28.69s', plane_percent: '2.00E-5 %', plane_flights: null,
-                                co2e_non_cached:'10 mg', energy_non_cached:'100 kWh', car_non_cached: '5.71E-5', tree_non_cached: '28.69s', plane_percent_non_cached: '2.00E-5 %', plane_flights_non_cached: null]
-        10_000_000.0d       || [co2e: '10 Mg', energy:'100 kWh', car: '5.71E4', tree: '908years 9months 3days 19h 38min 55.88s', plane_percent: null, plane_flights: '200',
-                                co2e_non_cached:'10 Mg', energy_non_cached:'100 kWh', car_non_cached: '5.71E4', tree_non_cached: '908years 9months 3days 19h 38min 55.88s', plane_percent_non_cached: null, plane_flights_non_cached: '200']
+        0.01d               || [CO2e: '10 mg', energy:'100 kWh', car: '5.71E-5', tree: '28.69s', plane_percent: '2.00E-5 %', plane_flights: null,
+                                CO2e_non_cached:'10 mg', energy_non_cached:'100 kWh', car_non_cached: '5.71E-5', tree_non_cached: '28.69s', plane_percent_non_cached: '2.00E-5 %', plane_flights_non_cached: null]
+        10_000_000.0d       || [CO2e: '10 Mg', energy:'100 kWh', car: '5.71E4', tree: '908years 9months 3days 19h 38min 55.88s', plane_percent: null, plane_flights: '200',
+                                CO2e_non_cached:'10 Mg', energy_non_cached:'100 kWh', car_non_cached: '5.71E4', tree_non_cached: '908years 9months 3days 19h 38min 55.88s', plane_percent_non_cached: null, plane_flights_non_cached: '200']
     }
 
     def 'Test data JSON generation' () {
@@ -174,13 +174,13 @@ class ReportFileCreatorTest extends Specification{
         then:
         totalsJson ==
             [
-                co2e: "10 g",
+                CO2e: "10 g",
                 energy:  "100 kWh",
                 car: "0.057",
                 tree: "7h 58min 10.08s",
                 plane_percent: "0.02 %",
                 plane_flights: null,
-                co2e_non_cached: "10 g",
+                CO2e_non_cached: "10 g",
                 energy_non_cached:  "100 kWh",
                 car_non_cached: "0.057",
                 tree_non_cached: "7h 58min 10.08s",

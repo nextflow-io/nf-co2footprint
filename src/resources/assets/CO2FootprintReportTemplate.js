@@ -8,7 +8,7 @@
 //
 // Data contract (injected into window by the Groovy template renderer):
 //   window.data.trace    — array of per-task trace records
-//   window.data.summary  — per-process aggregated values (co2e, energy, …)
+//   window.data.summary  — per-process aggregated values (CO2e, energy, …)
 //   window.ciRecords     — timestamped carbon-intensity readings
 //   window.options       — plugin configuration key/value pairs
 
@@ -161,7 +161,7 @@ $(function () {
     }
 
     // Tracks the currently active toggle states for the three button groups.
-    const state = { metric: 'co2e', cached: 'all', sorted: false }
+    const state = { metric: 'CO2e', cached: 'all', sorted: false }
     // Mutable: updated at the start of every render() call so the y-axis zoom
     // listener always restores to the correct full height for the latest render.
     let peFullHeight = 0
@@ -332,7 +332,7 @@ $(function () {
     }
 
     // Wire up toggle buttons — each click updates state and re-renders.
-    document.getElementById('pe-btn-co2e').addEventListener('click', () => { state.metric = 'co2e'; setActive('pe-metric-btn', 'pe-btn-co2e'); render() })
+    document.getElementById('pe-btn-co2e').addEventListener('click', () => { state.metric = 'CO2e'; setActive('pe-metric-btn', 'pe-btn-co2e'); render() })
     document.getElementById('pe-btn-energy').addEventListener('click', () => { state.metric = 'energy'; setActive('pe-metric-btn', 'pe-btn-energy'); render() })
     document.getElementById('pe-btn-all').addEventListener('click', () => { state.cached = 'all'; setActive('pe-cached-btn', 'pe-btn-all'); render() })
     document.getElementById('pe-btn-noncached').addEventListener('click', () => { state.cached = 'non_cached'; setActive('pe-cached-btn', 'pe-btn-noncached'); render() })
@@ -386,8 +386,8 @@ $(function () {
         { title: energyConsumptionTitle, data: 'energy' },
         { title: energyConsumptionProcessorTitle, data: 'rawEnergyProcessor' },
         { title: energyConsumptionMemoryTitle, data: 'rawEnergyMemory' },
-        { title: co2EmissionsTitle, data: 'co2e' },
-        { title: `${co2EmissionsTitle} (market)`, data: 'co2eMarket' },
+        { title: co2EmissionsTitle, data: 'CO2e' },
+        { title: `${co2EmissionsTitle} (market)`, data: 'CO2e_market' },
         { title: 'carbon intensity', data: 'ci' },
         { title: 'allocated cpus', data: 'cpus' },
         { title: '%cpu', data: '%cpu' },

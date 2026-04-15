@@ -116,7 +116,7 @@ class CO2FootprintObserverTest extends Specification{
         observer.onFlowComplete()
 
         expect:
-        Double total_co2 =  observer.workflowStats.co2Record.store.co2e as Double
+        Double total_co2 =  observer.workflowStats.co2Record.store.CO2e as Double
         Double total_energy =  observer.workflowStats.co2Record.store.energy as Double
         // With TDP = 11.45 (default global)
         // Energy consumption converted to Wh
@@ -125,7 +125,7 @@ class CO2FootprintObserverTest extends Specification{
         round(total_co2) == 6.66
     }
 
-    def 'test full run with co2e equivalences calculation and specific CI' () {
+    def 'test full run with CO2e equivalences calculation and specific CI' () {
         given:
         Path tempPath = Files.createTempDirectory('tmpdir')
         Path tracePath = tempPath.resolve('trace_test.txt')
@@ -152,7 +152,7 @@ class CO2FootprintObserverTest extends Specification{
 
         CO2EquivalencesRecord co2EquivalencesRecord = observer
             .getCO2FootprintCalculator()
-            .computeCO2footprintEquivalences(observer.workflowStats.co2Record.store.co2e as Double)
+            .computeCO2footprintEquivalences(observer.workflowStats.co2Record.store.CO2e as Double)
 
         expect:
         // Values compared to result from www.green-algorithms.org (1h, 1core, TDP=11.45, CI:475)

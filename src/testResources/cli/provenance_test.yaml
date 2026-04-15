@@ -1,10 +1,13 @@
 name: Unknown workflow
 metaData: {level: workflow}
 values:
+  status:
+    raw: {value: COMPLETED, type: str}
+    readable: COMPLETED
   energy:
     raw: {value: 0.006423331069422, type: Number, unit: Wh, scale: ''}
     readable: 6.42 mWh
-  co2e:
+  CO2e:
     raw: {value: 0.0030831989133225596, type: Number, unit: g, scale: ''}
     readable: 3.08 mg
   ci:
@@ -35,108 +38,124 @@ children:
 - name: NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (RAP1_UNINDUCED_REP1)
   metaData: {level: process}
   values:
-    name: &id001
+    task_id: &id001
+      raw: {value: '6', type: str}
+      readable: '6'
+    status: &id002
+      raw: {value: COMPLETED, type: str}
+      readable: COMPLETED
+    name: &id003
       raw: {value: 'NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT
           (RAP1_UNINDUCED_REP1)', type: str}
       readable: NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT
         (RAP1_UNINDUCED_REP1)
-    energy: &id002
+    energy: &id004
       raw: {value: 0.00215801406153, type: Number, unit: Wh, scale: ''}
       readable: 2.16 mWh
-    co2e: &id003
+    CO2e: &id005
       raw: {value: 0.0010358467495344, type: Number, unit: g, scale: ''}
       readable: 1.04 mg
-    ci: &id004
+    ci: &id006
       raw: {value: 480.0, type: Number, unit: gCO₂e/kWh, scale: ''}
       readable: 480 gCO₂e/kWh
-    '%cpu': &id005
+    '%cpu': &id007
       raw: {value: 97.0, type: Percentage, unit: '', scale: '%'}
       readable: 97 %
-    memory: &id006
+    memory: &id008
       raw: {value: 12884901888, type: Bytes, unit: B, scale: ''}
       readable: 12 GB
-    realtime: &id007
+    realtime: &id009
       raw: {value: 500.0000400000000, type: Duration, unit: ms, scale: ''}
       readable: 500ms
-    cpus: &id008
+    cpus: &id010
       raw: {value: 2, type: Number, unit: '', scale: ''}
       readable: '2'
-    powerdrawCPU: &id009
+    powerdrawCPU: &id011
       raw: {value: 11.41, type: Number, unit: W, scale: ''}
       readable: 11.41 W
-    rawEnergyProcessor: &id010
+    rawEnergyProcessor: &id012
       raw: {value: 0.00153718067853, type: Number, unit: Wh, scale: ''}
       readable: 1.54 mWh
-    rawEnergyMemory: &id011
+    rawEnergyMemory: &id013
       raw: {value: 0.000620833383, type: Number, unit: Wh, scale: ''}
       readable: 620.83 uWh
   children:
   - name: '6'
     metaData: {level: task}
     values:
-      name: *id001
-      energy: *id002
-      co2e: *id003
-      ci: *id004
-      '%cpu': *id005
-      memory: *id006
-      realtime: *id007
-      cpus: *id008
-      powerdrawCPU: *id009
-      rawEnergyProcessor: *id010
-      rawEnergyMemory: *id011
+      task_id: *id001
+      status: *id002
+      name: *id003
+      energy: *id004
+      CO2e: *id005
+      ci: *id006
+      '%cpu': *id007
+      memory: *id008
+      realtime: *id009
+      cpus: *id010
+      powerdrawCPU: *id011
+      rawEnergyProcessor: *id012
+      rawEnergyMemory: *id013
     children: []
 - name: NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (WT_REP2)
   metaData: {level: process}
   values:
-    name: &id012
+    task_id: &id014
+      raw: {value: '4', type: str}
+      readable: '4'
+    status: &id015
+      raw: {value: COMPLETED, type: str}
+      readable: COMPLETED
+    name: &id016
       raw: {value: 'NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT
           (WT_REP2)', type: str}
       readable: NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT
         (WT_REP2)
-    energy: &id013
+    energy: &id017
       raw: {value: 0.004265317007892, type: Number, unit: Wh, scale: ''}
       readable: 4.27 mWh
-    co2e: &id014
+    CO2e: &id018
       raw: {value: 0.00204735216378816, type: Number, unit: g, scale: ''}
       readable: 2.05 mg
-    ci: &id015
+    ci: &id019
       raw: {value: 480.0, type: Number, unit: gCO₂e/kWh, scale: ''}
       readable: 480 gCO₂e/kWh
-    '%cpu': &id016
+    '%cpu': &id020
       raw: {value: 95.4, type: Percentage, unit: '', scale: '%'}
       readable: 95.4 %
-    memory: &id017
+    memory: &id021
       raw: {value: 12884901888, type: Bytes, unit: B, scale: ''}
       readable: 12 GB
-    realtime: &id018
+    realtime: &id022
       raw: {value: 1000.0000800000000, type: Duration, unit: ms, scale: ''}
       readable: 1s 0ms
-    cpus: &id019
+    cpus: &id023
       raw: {value: 2, type: Number, unit: '', scale: ''}
       readable: '2'
-    powerdrawCPU: &id020
+    powerdrawCPU: &id024
       raw: {value: 11.41, type: Number, unit: W, scale: ''}
       readable: 11.41 W
-    rawEnergyProcessor: &id021
+    rawEnergyProcessor: &id025
       raw: {value: 0.003023650241892, type: Number, unit: Wh, scale: ''}
       readable: 3.02 mWh
-    rawEnergyMemory: &id022
+    rawEnergyMemory: &id026
       raw: {value: 0.001241666766, type: Number, unit: Wh, scale: ''}
       readable: 1.24 mWh
   children:
   - name: '4'
     metaData: {level: task}
     values:
-      name: *id012
-      energy: *id013
-      co2e: *id014
-      ci: *id015
-      '%cpu': *id016
-      memory: *id017
-      realtime: *id018
-      cpus: *id019
-      powerdrawCPU: *id020
-      rawEnergyProcessor: *id021
-      rawEnergyMemory: *id022
+      task_id: *id014
+      status: *id015
+      name: *id016
+      energy: *id017
+      CO2e: *id018
+      ci: *id019
+      '%cpu': *id020
+      memory: *id021
+      realtime: *id022
+      cpus: *id023
+      powerdrawCPU: *id024
+      rawEnergyProcessor: *id025
+      rawEnergyMemory: *id026
     children: []

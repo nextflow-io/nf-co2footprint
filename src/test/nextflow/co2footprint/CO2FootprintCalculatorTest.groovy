@@ -49,7 +49,7 @@ class CO2FootprintCalculatorTest extends Specification{
 
         expect:
         round(co2Record.store.energy*1000 as Double) == expectedEnergy
-        round(co2Record.store.co2e as Double) == expectedCO2
+        round(co2Record.store.CO2e as Double) == expectedCO2
 
         where:
         cpuModel           | configMap                      || expectedEnergy   | expectedCO2
@@ -63,7 +63,7 @@ class CO2FootprintCalculatorTest extends Specification{
 
     // ------ Equivalences Calculation ------
 
-    def 'test co2e equivalences calculation' () {
+    def 'test CO2e equivalences calculation' () {
         given:
         CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, ciDataMatrix, [:])
         CO2FootprintCalculator co2FootprintComputer = new CO2FootprintCalculator(tdpDataMatrix, config)

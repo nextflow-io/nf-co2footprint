@@ -47,8 +47,8 @@ class CO2FootprintExtensionTest extends Specification {
 
         then:
         output.co2Records.size() == 8
-        output.co2Records[7].getReadableEntries() == ['VALUE_TESTING', '3.27 mWh', '327.29 ug', '-', '100 gCO₂e/kWh', '100 %', '1 GB', '1s 0ms', '1', '11.41 W', '-', '3.17 mWh', '103.47 uWh']
-        output.co2Records[7].additionalMetrics == [co2e_non_cached:3.2729169285E-4, energy_non_cached:3.2729169285E-6, co2e_market:null, energy_market:3.2729169285E-6]
+        output.co2Records[7].getReadableEntries() == ['8', 'COMPLETED', 'VALUE_TESTING', '3.27 mWh', '327.29 ug', '-', '100 gCO₂e/kWh', '100 %', '1 GB', '1s 0ms', '1', '11.41 W', '-', '3.17 mWh', '103.47 uWh']
+        output.co2Records[7].additionalMetrics == [CO2e_non_cached:3.2729169285E-4, energy_non_cached:3.2729169285E-6, CO2e_market:null, energy_market:3.2729169285E-6]
 
         // Check whether all files exist
         fileChecker.checkIsFile(output.config.trace.file)
@@ -73,8 +73,8 @@ class CO2FootprintExtensionTest extends Specification {
 
         then:
         output.co2Records.size() == 8
-        output.co2Records[7].getReadableEntries() == ['VALUE_TESTING', '3.27 mWh', '327.29 ug', '-', '100 gCO₂e/kWh', '100 %', '1 GB', '1s 0ms', '1', '11.41 W', '-', '3.17 mWh', '103.47 uWh']
-        output.co2Records[7].additionalMetrics == [co2e_non_cached:3.2729169285E-4, energy_non_cached:3.2729169285E-6, co2e_market:null, energy_market:3.2729169285E-6]
+        output.co2Records[7].getReadableEntries() == ['8', 'COMPLETED', 'VALUE_TESTING', '3.27 mWh', '327.29 ug', '-', '100 gCO₂e/kWh', '100 %', '1 GB', '1s 0ms', '1', '11.41 W', '-', '3.17 mWh', '103.47 uWh']
+        output.co2Records[7].additionalMetrics == [CO2e_non_cached:3.2729169285E-4, energy_non_cached:3.2729169285E-6, CO2e_market:null, energy_market:3.2729169285E-6]
         fileChecker.checkIsFile(tracePath)
     }
 }

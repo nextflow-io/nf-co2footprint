@@ -185,13 +185,13 @@ class ReportFileCreator extends BaseFileCreator{
         ).sum() as CO2Record
 
         // Retrieve total CO₂ emissions and energy consumption for the given suffix
-        Double co2e = workflowRecord.get("co2e${suffix}") as Double
+        Double co2e = workflowRecord.get("CO2e${suffix}") as Double
         Double energy = workflowRecord.get("energy${suffix}") as Double
 
         if (co2e != null) {
             CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(co2e)
             return [
-                ("co2e${suffix}" as String): new Quantity(co2e,'', 'g').toReadable(),
+                ("CO2e${suffix}" as String): new Quantity(co2e,'', 'g').toReadable(),
                 ("energy${suffix}" as String): new Quantity(energy,'k','Wh').toReadable(),
                 ("car${suffix}" as String): equivalences.getCarKilometersReadable(),
                 ("tree${suffix}" as String): equivalences.getTreeMonthsReadable(),
@@ -237,7 +237,7 @@ class ReportFileCreator extends BaseFileCreator{
      */
     protected Map<String, Object> collectSummary(CO2RecordTree stats=this.stats) {
         // Add an empty map if the process is not already present
-        return stats.collectByLevel('process', ['co2e', 'energy', 'co2e_non_cached', 'energy_non_cached'])
+        return stats.collectByLevel('process', ['CO2e', 'energy', 'CO2e_non_cached', 'energy_non_cached'])
     }
 
 

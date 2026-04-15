@@ -68,9 +68,9 @@ class CO2RecordTreeTest extends Specification {
 
         where:
         level       || valueKeys            || expectedRecordsMap
-        'workflow'  || ['co2e']             || [workflow: [co2e: [0.0, 1.0, 2.0]]]
-        'process'   || ['co2e']             || [process1: [co2e:[0.0, 1.0]], process2: [co2e:[2.0]]]
-        'process'   || ['co2e_non_cached']  || [process1: [co2e_non_cached:[0.0, 1.0]]]
+        'workflow'  || ['CO2e']             || [workflow: [CO2e: [0.0, 1.0, 2.0]]]
+        'process'   || ['CO2e']             || [process1: [CO2e:[0.0, 1.0]], process2: [CO2e:[2.0]]]
+        'process'   || ['CO2e_non_cached']  || [process1: [CO2e_non_cached:[0.0, 1.0]]]
         'workflow'  || null                 || [workflow: [
                 task_id:['111', '111', '111'],
                 process:['testProcess', 'testProcess', 'testProcess'],
@@ -82,8 +82,8 @@ class CO2RecordTreeTest extends Specification {
                 status:['COMPLETED', 'COMPLETED', 'CACHED'],
                 name:['task_1', 'task_2', 'task_3'],
                 energy:[0.0, 1.0, 2.0],
-                co2e:[0.0, 1.0, 2.0],
-                co2eMarket:[null, null, null],
+                CO2e:[0.0, 1.0, 2.0],
+                CO2e_market:[null, null, null],
                 ci:[475.0, 475.0, 475.0],
                 powerdrawCPU:[12.0, 12.0, 12.0],
                 rawEnergyProcessor:[5.0, 5.0, 5.0],
