@@ -38,8 +38,7 @@ class Calculator {
         if (o1 == null && o2 == null) { return null }
         else if (o1 == null) { return o2 }
         else if (o2 == null) { return o1 }
-        else {
-            return o1 + o2 }
+        else { return o1 + o2 }
     }
 
     /**

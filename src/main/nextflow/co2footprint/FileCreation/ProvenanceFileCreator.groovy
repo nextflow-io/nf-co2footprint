@@ -1,12 +1,12 @@
 package nextflow.co2footprint.FileCreation
 
 import groovyx.gpars.agent.Agent
-import nextflow.co2footprint.Config.DataFileConfig
+import nextflow.co2footprint.Config.ProvenanceFileConfig
 import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.trace.TraceHelper
 import org.yaml.snakeyaml.Yaml
 
-class DataFileCreator extends BaseFileCreator {
+class ProvenanceFileCreator extends BaseFileCreator {
     // Yaml string creator
     Yaml yaml = new Yaml()
 
@@ -19,9 +19,9 @@ class DataFileCreator extends BaseFileCreator {
     /**
      * Constructor for the data/machine-readable file.
      *
-     * @param config A {@link DataFileConfig} that defines the created file.
+     * @param config A {@link ProvenanceFileConfig} that defines the created file.
      */
-    DataFileCreator(DataFileConfig config) {
+    ProvenanceFileCreator(ProvenanceFileConfig config) {
         super(config)
 
         emissionMetricsOnly = config.emissionMetricsOnly

@@ -50,7 +50,7 @@ class SummaryFileCreator extends BaseFileCreator {
     /**
      * Write the summary file with totals and options.
      *
-     * @param totalStats             Map containing total energy ('energy') in Wh and total CO₂ emissions ('co2e') in grams.
+     * @param totalStats             Map containing total energy ('energy_consumption') in Wh and total CO₂ emissions ('CO2e') in grams.
      * @param co2FootprintComputer   CO2FootprintCalculator instance for calculating equivalences.
      * @param config                 CO2FootprintConfig instance with plugin configuration.
      */
@@ -61,13 +61,13 @@ class SummaryFileCreator extends BaseFileCreator {
         // Launch the agent (for thread safety, though only one write is performed)
         summaryWriter = new Agent<PrintWriter>(file)
 
-        CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(totalStats['co2e'] as Double)
+        CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(totalStats['CO2e'] as Double)
 
         String outText = """\
         Total CO₂e footprint measures of this workflow run (including cached tasks):
-          CO₂e emissions: ${new Quantity(totalStats['co2e'],'', 'g').round().toReadable() }
-          Energy consumption: ${new Quantity(totalStats['energy'], 'k', 'Wh').toReadable() }
-          CO₂e emissions (market): ${totalStats['co2eMarket'] ? new Quantity(totalStats['co2eMarket'], '', 'g').toReadable() : "-"}
+          CO₂e emissions: ${new Quantity(totalStats['CO2e'],'', 'g').round().toReadable() }
+          Energy consumption: ${new Quantity(totalStats['energy_consumption'], 'k', 'Wh').toReadable() }
+          CO₂e emissions (market): ${totalStats['CO2e_market'] ? new Quantity(totalStats['CO2e_market'], '', 'g').toReadable() : "-"}
 
         """.stripIndent()
         List<String> readableEquivalences = equivalences.getReadableEquivalences()

@@ -3,7 +3,7 @@ package nextflow.co2footprint
 import groovy.transform.PackageScope
 import groovy.util.logging.Slf4j
 import nextflow.Session
-import nextflow.co2footprint.FileCreation.DataFileCreator
+import nextflow.co2footprint.FileCreation.ProvenanceFileCreator
 import nextflow.co2footprint.FileCreation.ReportFileCreator
 import nextflow.co2footprint.FileCreation.SummaryFileCreator
 import nextflow.co2footprint.FileCreation.TraceFileCreator
@@ -38,7 +38,7 @@ class CO2FootprintObserver implements TraceObserver {
     final TraceFileCreator traceFile
     final SummaryFileCreator summaryFile
     final ReportFileCreator reportFile
-    final DataFileCreator dataFile
+    final ProvenanceFileCreator provenanceFile
 
     // Plugin configuration
     CO2FootprintConfig config
@@ -77,9 +77,9 @@ class CO2FootprintObserver implements TraceObserver {
         this.traceFile = new TraceFileCreator(config.trace)
         this.summaryFile = new SummaryFileCreator(config.summary)
         this.reportFile = new ReportFileCreator(config.report)
-        this.dataFile = new DataFileCreator(config.dataFile)
+        this.provenanceFile = new ProvenanceFileCreator(config.provenance)
 
-        if (!config.trace.enabled && !config.summary.enabled && !config.report.enabled && !config.dataFile.enabled) {
+        if (!config.trace.enabled && !config.summary.enabled && !config.report.enabled && !config.provenance.enabled) {
             log.warn('No output files are enabled - to enable, set `enabled: true` in the sections `trace`, `summary` or `report`.')
         }
 
@@ -164,15 +164,15 @@ class CO2FootprintObserver implements TraceObserver {
             reportFile.write()
         }
         if (co2RecordTree) {
-            dataFile.create()
-            dataFile.write(co2RecordTree)
+            provenanceFile.create()
+            provenanceFile.write(co2RecordTree)
         }
 
         // Close all files (writes remaining tasks in the trace file)
         traceFile.close(runningTasks)
         summaryFile.close()
         reportFile.close()
-        dataFile.close()
+        provenanceFile.close()
     }
 
     // ------ OBSERVER METHODS ------
@@ -221,8 +221,8 @@ class CO2FootprintObserver implements TraceObserver {
         workflowStats.summarize()
 
         log.info(
-            "🌱 The workflow run used ${workflowStats.co2Record.toReadable('energy')} of electricity, " +
-            "resulting in the release of ${workflowStats.co2Record.toReadable('co2e')} of CO₂ equivalents into the atmosphere."
+            "🌱 The workflow run used ${workflowStats.co2Record.toReadable('energy_consumption')} of electricity, " +
+            "resulting in the release of ${workflowStats.co2Record.toReadable('CO2e')} of CO₂ equivalents into the atmosphere."
         )
     }
 
