@@ -94,7 +94,7 @@ class ReportFileCreatorTest extends Specification{
         // Define report file
         ReportFileConfig reportFileConfig = new ReportFileConfig([file: reportPath])
         co2FootprintReport = new ReportFileCreator(reportFileConfig)
-        co2FootprintReport.addEntries(sessionStats, calculator, config, timeCiRecordCollector, session)
+        co2FootprintReport.addEntries(sessionStats, calculator, config, timeCiRecordCollector)
 
         sessionStats.summarize()
         sessionStats.collectAdditionalMetrics()

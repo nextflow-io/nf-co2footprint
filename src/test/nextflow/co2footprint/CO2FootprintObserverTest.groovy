@@ -187,10 +187,12 @@ class CO2FootprintObserverTest extends Specification{
         ]
         session.getExecService() >> Executors.newFixedThreadPool(1)
         WorkflowMetadata meta = Mock(WorkflowMetadata)
-        meta.scriptId >> 'MOCK'
-        meta.start >> time
-        meta.complete >> time
-        meta.nextflow >> NextflowMeta.instance
+        meta.toMap() >> [
+                scriptId: 'MOCK',
+                start: time,
+                complete: time,
+                nextflow: NextflowMeta.instance
+        ]
         session.getWorkflowMetadata() >> meta
 
         // Create task

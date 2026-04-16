@@ -13,6 +13,7 @@ import nextflow.co2footprint.Records.CiRecordCollector
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskId
 import nextflow.processor.TaskProcessor
+import nextflow.script.WorkflowMetadata
 import nextflow.trace.TraceObserver
 import nextflow.trace.TraceRecord
 
@@ -142,7 +143,7 @@ class CO2FootprintObserver implements TraceObserver {
         return co2Record
     }
 
-    void renderFiles(CO2RecordTree co2RecordTree=workflowStats) {
+    void renderFiles(CO2RecordTree co2RecordTree=workflowStats, WorkflowMetadata workflowMetadata=session?.workflowMetadata) {
         // Catch unfinished tasks
         runningTasks.each { TaskId taskId, TraceRecord traceRecord -> aggregateRecords(traceRecord) }
 
@@ -159,7 +160,7 @@ class CO2FootprintObserver implements TraceObserver {
             summaryFile.write(co2RecordTree, co2FootprintCalculator, config)
 
             reportFile.create()
-            reportFile.addEntries(co2RecordTree, co2FootprintCalculator, config, timeCiRecordCollector, session)
+            reportFile.addEntries(co2RecordTree, co2FootprintCalculator, config, timeCiRecordCollector, workflowMetadata)
             reportFile.write()
         }
         if (co2RecordTree) {
