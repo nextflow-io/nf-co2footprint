@@ -19,10 +19,10 @@
   <!-- Metadata & Icons -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="Nextflow workflow report for run id [null]">
+  <meta name="description" content="Nextflow workflow report for run id [CLI estimation]">
   <meta name="author" content="Sabrina Krakau">
   <link rel="icon" type="image/png" href="https://www.nextflow.io/img/favicon.png" />
-  <title>[null] Nextflow CO₂e Footprint Report</title>
+  <title>[CLI estimation] Nextflow CO₂e Footprint Report</title>
 
   <!-- Combined CSS-styles -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -754,7 +754,7 @@
           return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2
         }
     
-        const state = { metric: 'co2e', cached: 'all', sorted: false }
+        const state = { metric: 'CO2e', cached: 'all', sorted: false }
         let peFullHeight = 0
     
         const tipEl = document.createElement('div')
@@ -780,7 +780,7 @@
          */
         function render() {
           const suffix = state.cached === 'all' ? '' : '_non_cached'
-          const isEnergy = state.metric === 'energy'
+          const isEnergy = state.metric === 'energy_consumption'
           const unit = isEnergy ? 'Wh' : 'g CO\u2082e'
           const axisTitle = isEnergy ? 'Energy consumption (Wh)' : 'CO\u2082e emissions (g)'
     
@@ -821,7 +821,7 @@
             }
           })
     
-          peFullHeight = Math.max(200, Math.min(1000, 80 + keys.length * 42))
+          peFullHeight = Math.max(200, Math.min(900, 80 + keys.length * 42))
     
           Plotly.react('process-emissions-plot', traces, {
             ...PLOT_BG,
@@ -857,7 +857,7 @@
                   : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][1] : undefined)
                 if (y0 !== undefined && y1 !== undefined) {
                   const visibleCount = Math.max(1, Math.round(Math.abs(y1 - y0)))
-                  const newHeight = Math.max(120, Math.min(1000, 80 + visibleCount * 42))
+                  const newHeight = Math.max(120, Math.min(900, 80 + visibleCount * 42))
                   heightSyncInProgress = true
                   Plotly.relayout(plotDiv, { height: newHeight })
                     .then(() => { heightSyncInProgress = false })
@@ -903,8 +903,8 @@
           })
         }
     
-        document.getElementById('pe-btn-co2e').addEventListener('click', () => { state.metric = 'co2e'; setActive('pe-metric-btn', 'pe-btn-co2e'); render() })
-        document.getElementById('pe-btn-energy').addEventListener('click', () => { state.metric = 'energy'; setActive('pe-metric-btn', 'pe-btn-energy'); render() })
+        document.getElementById('pe-btn-co2e').addEventListener('click', () => { state.metric = 'CO2e'; setActive('pe-metric-btn', 'pe-btn-co2e'); render() })
+        document.getElementById('pe-btn-energy').addEventListener('click', () => { state.metric = 'energy_consumption'; setActive('pe-metric-btn', 'pe-btn-energy'); render() })
         document.getElementById('pe-btn-all').addEventListener('click', () => { state.cached = 'all'; setActive('pe-cached-btn', 'pe-btn-all'); render() })
         document.getElementById('pe-btn-noncached').addEventListener('click', () => { state.cached = 'non_cached'; setActive('pe-cached-btn', 'pe-btn-noncached'); render() })
         document.getElementById('pe-btn-sort').addEventListener('click', () => {
@@ -948,17 +948,17 @@
             { title: 'tag', data: 'tag' },
             { title: 'status', data: 'status' },
             { title: 'hash', data: 'hash' },
-            { title: energyConsumptionTitle, data: 'energy' },
-            { title: energyConsumptionProcessorTitle, data: 'rawEnergyProcessor' },
-            { title: energyConsumptionMemoryTitle, data: 'rawEnergyMemory' },
-            { title: co2EmissionsTitle, data: 'co2e' },
-            { title: `${co2EmissionsTitle} (market)`, data: 'co2eMarket' },
-            { title: 'carbon intensity', data: 'ci' },
+            { title: energyConsumptionTitle, data: 'energy_consumption' },
+            { title: energyConsumptionProcessorTitle, data: 'raw_energy_processor' },
+            { title: energyConsumptionMemoryTitle, data: 'raw_energy_memory' },
+            { title: co2EmissionsTitle, data: 'CO2e' },
+            { title: `${co2EmissionsTitle} (market)`, data: 'CO2e_market' },
+            { title: 'carbon intensity', data: 'carbon_intensity' },
             { title: 'allocated cpus', data: 'cpus' },
-            { title: '%cpu', data: 'cpuUsage' },
+            { title: '%cpu', data: '%cpu' },
             { title: 'allocated memory', data: 'memory' },
             { title: 'realtime', data: 'time' },
-            { title: 'power draw (in W/core)', data: 'powerdrawCPU' },
+            { title: 'power draw (in W/core)', data: 'powerdraw_cpu' },
             { title: 'cpu model', data: 'cpu_model' },
           ],
           deferRender: true,
@@ -1066,7 +1066,7 @@
           let total = 0
           for (const task of window.data.trace) {
             if (task.start.time <= t0 && task.complete.time >= t1) {
-              total += task.energy.raw.value
+              total += task.energy_consumption.raw.value
             }
           }
     
@@ -1378,7 +1378,7 @@
         const swimlaneLayout = {
           title: { text: 'Task execution swimlanes by process' },
           margin: { l: 140, r: 100, t: 40, b: 80 },
-          height: Math.max(360, Math.min(1200, 150 + processNames.length * 28)),
+          height: Math.max(200, Math.min(900, 80 + processNames.length * 42)),
           ...PLOT_BG,
           xaxis: {
             title: { text: 'Time' },
@@ -1410,8 +1410,8 @@
         return Plotly.newPlot(swimlanePlotContainer, swimlaneData, swimlaneLayout, { responsive: true })
           .then(graphDiv => {
             const slFullHeight = swimlaneLayout.height
-            const SL_PX_PER_ROW = 28
-            const SL_BASE_HEIGHT = 150
+            const SL_PX_PER_ROW = 42
+            const SL_BASE_HEIGHT = 80
             let heightSyncInProgress = false
     
             graphDiv.on('plotly_relayout', eventData => {
@@ -1429,7 +1429,7 @@
                 : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][1] : undefined)
               if (y0 !== undefined && y1 !== undefined) {
                 const visibleCount = Math.max(1, Math.round(Math.abs(y1 - y0)))
-                const newHeight = Math.max(120, Math.min(1200, SL_BASE_HEIGHT + visibleCount * SL_PX_PER_ROW))
+                const newHeight = Math.max(120, Math.min(900, SL_BASE_HEIGHT + visibleCount * SL_PX_PER_ROW))
                 if (Math.abs(newHeight - (graphDiv.layout.height ?? slFullHeight)) > 2) {
                   heightSyncInProgress = true
                   Plotly.relayout(graphDiv, { height: newHeight })
@@ -1530,8 +1530,8 @@
       })
     })
 
-    window.data = {"trace":[{"task_id":{"raw":{"value":"6","type":"str"},"readable":"6"},"hash":{"raw":{"value":"c6/d3ff54","type":"str"},"readable":"c6/d3ff54","report":"<div class=\"script_block short\"><code>c6/d3ff54</code></div>"},"native_id":{"raw":{"value":"117703","type":"str"},"readable":"117703"},"process":{"raw":{"value":"NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (RAP1_UNINDUCED_REP1)","type":"str"},"readable":"NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (RAP1_UNINDUCED_REP1)"},"module":{"raw":{"value":null,"type":"str"},"readable":"-"},"container":{"raw":{"value":null,"type":"str"},"readable":"-"},"tag":{"raw":{"value":null,"type":"str"},"readable":"-"},"name":{"raw":{"value":"NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (RAP1_UNINDUCED_REP1)","type":"str"},"readable":"NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (RAP1_UNINDUCED_REP1)"},"status":{"raw":{"value":"COMPLETED","type":"str"},"readable":"COMPLETED","report":"<span class=\"badge badge-success\">COMPLETED</span>"},"exit":{"raw":{"value":"0","type":"str"},"readable":"0"},"submit":{"raw":{"value":1759849601467,"type":"DateTime","unit":"ms","description":"Unix time","scale":""},"readable":"2025-10-07 17:06:41.467"},"start":{"raw":{"value":1759849601546,"type":"DateTime","unit":"ms","description":"Unix time","scale":""},"readable":"2025-10-07 17:06:41.546"},"complete":{"raw":{"value":1759849601991,"type":"DateTime","unit":"ms","description":"Unix time","scale":""},"readable":"2025-10-07 17:06:41.991"},"duration":{"raw":{"value":524,"type":"Duration","unit":"ms","scale":""},"readable":"524ms"},"realtime":{"raw":{"value":500,"type":"Duration","unit":"ms","scale":""},"readable":"500ms","report":"500ms"},"%cpu":{"raw":{"value":97.0,"type":"Percentage","unit":"","scale":"%"},"readable":"97.0%"},"%mem":{"raw":{"value":null,"type":"Percentage","unit":"%"},"readable":"-"},"rss":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"vmem":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"peak_rss":{"raw":{"value":5767168,"type":"Bytes","unit":"B","scale":""},"readable":"5.5 MB"},"peak_vmem":{"raw":{"value":10838016,"type":"Bytes","unit":"B","scale":""},"readable":"10.3 MB"},"rchar":{"raw":{"value":2358732,"type":"Bytes","unit":"B","scale":""},"readable":"2.2 MB"},"wchar":{"raw":{"value":1533,"type":"Bytes","unit":"B","scale":""},"readable":"1.5 KB"},"syscr":{"raw":{"value":null,"type":"Number"},"readable":"-"},"syscw":{"raw":{"value":null,"type":"Number"},"readable":"-"},"read_bytes":{"raw":{"value":2625536,"type":"Bytes","unit":"B","scale":""},"readable":"2.5 MB"},"write_bytes":{"raw":{"value":8192,"type":"Bytes","unit":"B","scale":""},"readable":"8 KB"},"attempt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"workdir":{"raw":{"value":null,"type":"str"},"readable":"-"},"script":{"raw":{"value":null,"type":"str"},"readable":"-"},"scratch":{"raw":{"value":null,"type":"str"},"readable":"-"},"queue":{"raw":{"value":null,"type":"str"},"readable":"-"},"cpus":{"raw":{"value":2,"type":"Number","unit":"","scale":""},"readable":"2"},"memory":{"raw":{"value":12884901888,"type":"Bytes","unit":"B","scale":""},"readable":"12 GB"},"disk":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"time":{"raw":{"value":500.0000400000000,"type":"Duration","unit":"ms","scale":""},"readable":"500ms","report":"500ms"},"env":{"raw":{"value":null,"type":"str"},"readable":"-"},"error_action":{"raw":{"value":null,"type":"str"},"readable":"-"},"vol_ctxt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"inv_ctxt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"hostname":{"raw":{"value":null,"type":"str"},"readable":"-"},"cpu_model":{"raw":{"value":null,"type":"str"},"readable":"-"},"energy":{"raw":{"value":0.00215801406153,"type":"Number","unit":"Wh","scale":""},"readable":"2.16 mWh"},"co2e":{"raw":{"value":0.0010358467495344,"type":"Number","unit":"g","scale":""},"readable":"1.04 mg"},"co2eMarket":{"raw":{"value":null,"type":"Number","unit":"g"},"readable":"-"},"ci":{"raw":{"value":480.0,"type":"Number","unit":"gCO\u2082e/kWh","scale":""},"readable":"480 gCO\u2082e/kWh"},"cpuUsage":{"raw":{"value":97.0,"type":"Percentage","unit":"","scale":"%"},"readable":"97 %"},"powerdrawCPU":{"raw":{"value":11.41,"type":"Number","unit":"W","scale":""},"readable":"11.41 W"},"rawEnergyProcessor":{"raw":{"value":0.00153718067853,"type":"Number","unit":"Wh","scale":""},"readable":"1.54 mWh"},"rawEnergyMemory":{"raw":{"value":0.000620833383,"type":"Number","unit":"Wh","scale":""},"readable":"620.83 uWh"}},{"task_id":{"raw":{"value":"4","type":"str"},"readable":"4"},"hash":{"raw":{"value":"06/805ff2","type":"str"},"readable":"06/805ff2","report":"<div class=\"script_block short\"><code>06/805ff2</code></div>"},"native_id":{"raw":{"value":"118020","type":"str"},"readable":"118020"},"process":{"raw":{"value":"NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (WT_REP2)","type":"str"},"readable":"NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (WT_REP2)"},"module":{"raw":{"value":null,"type":"str"},"readable":"-"},"container":{"raw":{"value":null,"type":"str"},"readable":"-"},"tag":{"raw":{"value":null,"type":"str"},"readable":"-"},"name":{"raw":{"value":"NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (WT_REP2)","type":"str"},"readable":"NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (WT_REP2)"},"status":{"raw":{"value":"COMPLETED","type":"str"},"readable":"COMPLETED","report":"<span class=\"badge badge-success\">COMPLETED</span>"},"exit":{"raw":{"value":"0","type":"str"},"readable":"0"},"submit":{"raw":{"value":1759849601756,"type":"DateTime","unit":"ms","description":"Unix time","scale":""},"readable":"2025-10-07 17:06:41.756"},"start":{"raw":{"value":1759849601847,"type":"DateTime","unit":"ms","description":"Unix time","scale":""},"readable":"2025-10-07 17:06:41.847"},"complete":{"raw":{"value":1759849602787,"type":"DateTime","unit":"ms","description":"Unix time","scale":""},"readable":"2025-10-07 17:06:42.787"},"duration":{"raw":{"value":1031,"type":"Duration","unit":"ms","scale":""},"readable":"1s"},"realtime":{"raw":{"value":1000,"type":"Duration","unit":"ms","scale":""},"readable":"1s","report":"1s"},"%cpu":{"raw":{"value":95.4,"type":"Percentage","unit":"","scale":"%"},"readable":"95.4%"},"%mem":{"raw":{"value":null,"type":"Percentage","unit":"%"},"readable":"-"},"rss":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"vmem":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"peak_rss":{"raw":{"value":29884416,"type":"Bytes","unit":"B","scale":""},"readable":"28.5 MB"},"peak_vmem":{"raw":{"value":34975744,"type":"Bytes","unit":"B","scale":""},"readable":"33.4 MB"},"rchar":{"raw":{"value":6569000,"type":"Bytes","unit":"B","scale":""},"readable":"6.3 MB"},"wchar":{"raw":{"value":1901,"type":"Bytes","unit":"B","scale":""},"readable":"1.9 KB"},"syscr":{"raw":{"value":null,"type":"Number"},"readable":"-"},"syscw":{"raw":{"value":null,"type":"Number"},"readable":"-"},"read_bytes":{"raw":{"value":0,"type":"Bytes","unit":"B","scale":""},"readable":"0"},"write_bytes":{"raw":{"value":8192,"type":"Bytes","unit":"B","scale":""},"readable":"8 KB"},"attempt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"workdir":{"raw":{"value":null,"type":"str"},"readable":"-"},"script":{"raw":{"value":null,"type":"str"},"readable":"-"},"scratch":{"raw":{"value":null,"type":"str"},"readable":"-"},"queue":{"raw":{"value":null,"type":"str"},"readable":"-"},"cpus":{"raw":{"value":2,"type":"Number","unit":"","scale":""},"readable":"2"},"memory":{"raw":{"value":12884901888,"type":"Bytes","unit":"B","scale":""},"readable":"12 GB"},"disk":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"time":{"raw":{"value":1000.0000800000000,"type":"Duration","unit":"ms","scale":""},"readable":"1s 0ms","report":"1s"},"env":{"raw":{"value":null,"type":"str"},"readable":"-"},"error_action":{"raw":{"value":null,"type":"str"},"readable":"-"},"vol_ctxt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"inv_ctxt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"hostname":{"raw":{"value":null,"type":"str"},"readable":"-"},"cpu_model":{"raw":{"value":null,"type":"str"},"readable":"-"},"energy":{"raw":{"value":0.004265317007892,"type":"Number","unit":"Wh","scale":""},"readable":"4.27 mWh"},"co2e":{"raw":{"value":0.00204735216378816,"type":"Number","unit":"g","scale":""},"readable":"2.05 mg"},"co2eMarket":{"raw":{"value":null,"type":"Number","unit":"g"},"readable":"-"},"ci":{"raw":{"value":480.0,"type":"Number","unit":"gCO\u2082e/kWh","scale":""},"readable":"480 gCO\u2082e/kWh"},"cpuUsage":{"raw":{"value":95.4,"type":"Percentage","unit":"","scale":"%"},"readable":"95.4 %"},"powerdrawCPU":{"raw":{"value":11.41,"type":"Number","unit":"W","scale":""},"readable":"11.41 W"},"rawEnergyProcessor":{"raw":{"value":0.003023650241892,"type":"Number","unit":"Wh","scale":""},"readable":"3.02 mWh"},"rawEnergyMemory":{"raw":{"value":0.001241666766,"type":"Number","unit":"Wh","scale":""},"readable":"1.24 mWh"}}],"summary":{"NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (RAP1_UNINDUCED_REP1)":{"co2e":[0.0010358467495344],"energy":[2.15801406153E-6],"co2e_non_cached":[0.0010358467495344],"energy_non_cached":[2.15801406153E-6]},"NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (WT_REP2)":{"co2e":[0.00204735216378816],"energy":[4.265317007892E-6],"co2e_non_cached":[0.00204735216378816],"energy_non_cached":[4.265317007892E-6]}}};
-    window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"dataFile","value":"build/classes/groovy/test/nextflow/co2footprint/cli/out/data_test.yaml"},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"build/classes/groovy/test/nextflow/co2footprint/cli/out/report_test.html"},{"option":"summaryFile","value":"build/classes/groovy/test/nextflow/co2footprint/cli/out/summary_test.txt"},{"option":"traceFile","value":"build/classes/groovy/test/nextflow/co2footprint/cli/out/trace_test.txt"}];
+    window.data = {"trace":[{"task_id":{"raw":{"value":"6","type":"str"},"readable":"6"},"hash":{"raw":{"value":"c6/d3ff54","type":"str"},"readable":"c6/d3ff54","report":"<div class=\"script_block short\"><code>c6/d3ff54</code></div>"},"native_id":{"raw":{"value":"117703","type":"str"},"readable":"117703"},"process":{"raw":{"value":"NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT","type":"str"},"readable":"NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT"},"module":{"raw":{"value":null,"type":"str"},"readable":"-"},"container":{"raw":{"value":null,"type":"str"},"readable":"-"},"tag":{"raw":{"value":null,"type":"str"},"readable":"-"},"name":{"raw":{"value":"NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (RAP1_UNINDUCED_REP1)","type":"str"},"readable":"NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (RAP1_UNINDUCED_REP1)"},"status":{"raw":{"value":"COMPLETED","type":"str"},"readable":"COMPLETED","report":"<span class=\"badge badge-success\">COMPLETED</span>"},"exit":{"raw":{"value":"0","type":"str"},"readable":"0"},"submit":{"raw":{"value":1759849601467,"type":"DateTime","unit":"ms","description":"Unix time","scale":""},"readable":"2025-10-07 17:06:41.467"},"start":{"raw":{"value":1759849601546,"type":"DateTime","unit":"ms","description":"Unix time","scale":""},"readable":"2025-10-07 17:06:41.546"},"complete":{"raw":{"value":1759849601991,"type":"DateTime","unit":"ms","description":"Unix time","scale":""},"readable":"2025-10-07 17:06:41.991"},"duration":{"raw":{"value":524,"type":"Duration","unit":"ms","scale":""},"readable":"524ms"},"realtime":{"raw":{"value":500.0000400000000,"type":"Duration","unit":"ms","scale":""},"readable":"500ms","report":"500ms"},"%cpu":{"raw":{"value":97.0,"type":"Percentage","unit":"","scale":"%"},"readable":"97 %"},"%mem":{"raw":{"value":null,"type":"Percentage","unit":"%"},"readable":"-"},"rss":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"vmem":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"peak_rss":{"raw":{"value":5767168,"type":"Bytes","unit":"B","scale":""},"readable":"5.5 MB"},"peak_vmem":{"raw":{"value":10838016,"type":"Bytes","unit":"B","scale":""},"readable":"10.3 MB"},"rchar":{"raw":{"value":2358732,"type":"Bytes","unit":"B","scale":""},"readable":"2.2 MB"},"wchar":{"raw":{"value":1533,"type":"Bytes","unit":"B","scale":""},"readable":"1.5 KB"},"syscr":{"raw":{"value":null,"type":"Number"},"readable":"-"},"syscw":{"raw":{"value":null,"type":"Number"},"readable":"-"},"read_bytes":{"raw":{"value":2625536,"type":"Bytes","unit":"B","scale":""},"readable":"2.5 MB"},"write_bytes":{"raw":{"value":8192,"type":"Bytes","unit":"B","scale":""},"readable":"8 KB"},"attempt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"workdir":{"raw":{"value":null,"type":"str"},"readable":"-"},"script":{"raw":{"value":null,"type":"str"},"readable":"-"},"scratch":{"raw":{"value":null,"type":"str"},"readable":"-"},"queue":{"raw":{"value":null,"type":"str"},"readable":"-"},"cpus":{"raw":{"value":2,"type":"Number","unit":"","scale":""},"readable":"2"},"memory":{"raw":{"value":12884901888,"type":"Bytes","unit":"B","scale":""},"readable":"12 GB"},"disk":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"time":{"raw":{"value":null,"type":"Duration","unit":"ms"},"readable":"-"},"env":{"raw":{"value":null,"type":"str"},"readable":"-"},"error_action":{"raw":{"value":null,"type":"str"},"readable":"-"},"vol_ctxt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"inv_ctxt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"hostname":{"raw":{"value":null,"type":"str"},"readable":"-"},"cpu_model":{"raw":{"value":null,"type":"str"},"readable":"-"},"energy_consumption":{"raw":{"value":0.00215801406153,"type":"Number","unit":"Wh","scale":""},"readable":"2.16 mWh"},"CO2e":{"raw":{"value":0.0010358467495344,"type":"Number","unit":"g","scale":""},"readable":"1.04 mg"},"CO2e_market":{"raw":{"value":null,"type":"Number","unit":"g"},"readable":"-"},"carbon_intensity":{"raw":{"value":480.0,"type":"Number","unit":"gCO\u2082e/kWh","scale":""},"readable":"480 gCO\u2082e/kWh"},"powerdraw_cpu":{"raw":{"value":11.41,"type":"Number","unit":"W","scale":""},"readable":"11.41 W"},"raw_energy_processor":{"raw":{"value":0.00153718067853,"type":"Number","unit":"Wh","scale":""},"readable":"1.54 mWh"},"raw_energy_memory":{"raw":{"value":0.000620833383,"type":"Number","unit":"Wh","scale":""},"readable":"620.83 uWh"}},{"task_id":{"raw":{"value":"4","type":"str"},"readable":"4"},"hash":{"raw":{"value":"06/805ff2","type":"str"},"readable":"06/805ff2","report":"<div class=\"script_block short\"><code>06/805ff2</code></div>"},"native_id":{"raw":{"value":"118020","type":"str"},"readable":"118020"},"process":{"raw":{"value":"NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT","type":"str"},"readable":"NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT"},"module":{"raw":{"value":null,"type":"str"},"readable":"-"},"container":{"raw":{"value":null,"type":"str"},"readable":"-"},"tag":{"raw":{"value":null,"type":"str"},"readable":"-"},"name":{"raw":{"value":"NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (WT_REP2)","type":"str"},"readable":"NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (WT_REP2)"},"status":{"raw":{"value":"COMPLETED","type":"str"},"readable":"COMPLETED","report":"<span class=\"badge badge-success\">COMPLETED</span>"},"exit":{"raw":{"value":"0","type":"str"},"readable":"0"},"submit":{"raw":{"value":1759849601756,"type":"DateTime","unit":"ms","description":"Unix time","scale":""},"readable":"2025-10-07 17:06:41.756"},"start":{"raw":{"value":1759849601847,"type":"DateTime","unit":"ms","description":"Unix time","scale":""},"readable":"2025-10-07 17:06:41.847"},"complete":{"raw":{"value":1759849602787,"type":"DateTime","unit":"ms","description":"Unix time","scale":""},"readable":"2025-10-07 17:06:42.787"},"duration":{"raw":{"value":1031,"type":"Duration","unit":"ms","scale":""},"readable":"1s"},"realtime":{"raw":{"value":1000.0000800000000,"type":"Duration","unit":"ms","scale":""},"readable":"1s 0ms","report":"1s"},"%cpu":{"raw":{"value":95.4,"type":"Percentage","unit":"","scale":"%"},"readable":"95.4 %"},"%mem":{"raw":{"value":null,"type":"Percentage","unit":"%"},"readable":"-"},"rss":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"vmem":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"peak_rss":{"raw":{"value":29884416,"type":"Bytes","unit":"B","scale":""},"readable":"28.5 MB"},"peak_vmem":{"raw":{"value":34975744,"type":"Bytes","unit":"B","scale":""},"readable":"33.4 MB"},"rchar":{"raw":{"value":6569000,"type":"Bytes","unit":"B","scale":""},"readable":"6.3 MB"},"wchar":{"raw":{"value":1901,"type":"Bytes","unit":"B","scale":""},"readable":"1.9 KB"},"syscr":{"raw":{"value":null,"type":"Number"},"readable":"-"},"syscw":{"raw":{"value":null,"type":"Number"},"readable":"-"},"read_bytes":{"raw":{"value":0,"type":"Bytes","unit":"B","scale":""},"readable":"0"},"write_bytes":{"raw":{"value":8192,"type":"Bytes","unit":"B","scale":""},"readable":"8 KB"},"attempt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"workdir":{"raw":{"value":null,"type":"str"},"readable":"-"},"script":{"raw":{"value":null,"type":"str"},"readable":"-"},"scratch":{"raw":{"value":null,"type":"str"},"readable":"-"},"queue":{"raw":{"value":null,"type":"str"},"readable":"-"},"cpus":{"raw":{"value":2,"type":"Number","unit":"","scale":""},"readable":"2"},"memory":{"raw":{"value":12884901888,"type":"Bytes","unit":"B","scale":""},"readable":"12 GB"},"disk":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"time":{"raw":{"value":null,"type":"Duration","unit":"ms"},"readable":"-"},"env":{"raw":{"value":null,"type":"str"},"readable":"-"},"error_action":{"raw":{"value":null,"type":"str"},"readable":"-"},"vol_ctxt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"inv_ctxt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"hostname":{"raw":{"value":null,"type":"str"},"readable":"-"},"cpu_model":{"raw":{"value":null,"type":"str"},"readable":"-"},"energy_consumption":{"raw":{"value":0.004265317007892,"type":"Number","unit":"Wh","scale":""},"readable":"4.27 mWh"},"CO2e":{"raw":{"value":0.00204735216378816,"type":"Number","unit":"g","scale":""},"readable":"2.05 mg"},"CO2e_market":{"raw":{"value":null,"type":"Number","unit":"g"},"readable":"-"},"carbon_intensity":{"raw":{"value":480.0,"type":"Number","unit":"gCO\u2082e/kWh","scale":""},"readable":"480 gCO\u2082e/kWh"},"powerdraw_cpu":{"raw":{"value":11.41,"type":"Number","unit":"W","scale":""},"readable":"11.41 W"},"raw_energy_processor":{"raw":{"value":0.003023650241892,"type":"Number","unit":"Wh","scale":""},"readable":"3.02 mWh"},"raw_energy_memory":{"raw":{"value":0.001241666766,"type":"Number","unit":"Wh","scale":""},"readable":"1.24 mWh"}}],"summary":{"NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT":{"CO2e":[0.0010358467495344],"energy_consumption":[2.15801406153E-6],"CO2e_non_cached":[0.0010358467495344]},"NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT":{"CO2e":[0.00204735216378816],"energy_consumption":[4.265317007892E-6],"CO2e_non_cached":[0.00204735216378816]}}};
+    window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"provenanceFile","value":"build/classes/groovy/test/nextflow/co2footprint/cli/out/provenance_test.yaml"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"build/classes/groovy/test/nextflow/co2footprint/cli/out/report_test.html"},{"option":"summaryFile","value":"build/classes/groovy/test/nextflow/co2footprint/cli/out/summary_test.txt"},{"option":"traceFile","value":"build/classes/groovy/test/nextflow/co2footprint/cli/out/trace_test.txt"}];
     window.ciRecords = {};
   </script>
 
@@ -1557,7 +1557,7 @@
       </ul>
     </div>
     <code class="d-none d-md-inline navbar-text">
-        [null]
+        [CLI estimation]
     </code>
     </div>
   </nav>
@@ -1568,34 +1568,31 @@
     <!-- Execution report -->
     <div class="container">
       <h1 class="display-3">Nextflow CO₂e Footprint Report</h1>
-      <h2 class="text-muted mb-4"><samp>[null]</samp> </h2>
+      <h2 class="text-muted mb-4"><samp>[CLI estimation]</samp> </h2>
 
       
-          <div class="alert alert-danger mb-4">
-              <h4>Workflow execution completed unsuccessfully!</h4>
-              <p>The exit status of the task that caused the workflow execution to fail was: <code>null</code>.</p>
-              <p>The full error message was:</p>
-              <pre>null</pre>
+          <div class="alert alert-success mb-4">
+              Workflow execution completed successfully!
           </div>
       
 
       <dl>
         <dt>Run times</dt>
         <dd>
-          <span id="workflow_start">null</span> - <span id="workflow_complete">null</span>
-          (<span id="completed_fromnow"></span>duration: <strong>null</strong>)
+          <span id="workflow_start">07-Oct-2025 15:06:41</span> - <span id="workflow_complete">07-Oct-2025 15:06:41</span>
+          (<span id="completed_fromnow"></span>duration: <strong>445ms</strong>)
         </dd>
 
         <dt>Nextflow command</dt>
-        <dd><pre class="nfcommand"><code>null</code></pre></dd>
+        <dd><pre class="nfcommand"><code>nextflow plugin nf-co2footprint:postRun --tracePath /Users/josuacarl/Codespace/test/nf-co2footprint-fork/build/resources/test/execution-trace-raw.tsv --config /Users/josuacarl/Codespace/test/nf-co2footprint-fork/build/resources/test/cli/test.config</code></pre></dd>
       </dl>
 
       <dl>
         <dt>Nextflow version</dt>
-        <dd>version null, build null (null)</dd>
+        <dd>version 25.10.0, build 10289 (22-10-2025 16:26 UTC)</dd>
 
         <dt>nf-co2footprint plugin version</dt>
-        <dd>version 1.2.0</dd>
+        <dd>version 1.2.1</dd>
       </dl>
     </div>
 
@@ -1809,7 +1806,7 @@
   <!-- Footer -->
   <footer>
     <div class="container-fluid">
-      Generated by <a href="https://www.nextflow.io" target="_blank">Nextflow</a>, version null
+      Generated by <a href="https://www.nextflow.io" target="_blank">Nextflow</a>, version 25.10.0
     </div>
   </footer>
 </body>

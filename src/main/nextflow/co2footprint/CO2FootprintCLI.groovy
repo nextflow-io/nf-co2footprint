@@ -1,15 +1,25 @@
 package nextflow.co2footprint
 
 import groovy.util.logging.Slf4j
+import nextflow.BuildInfo
+import nextflow.Session
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Parsers.TraceFileParser
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.config.ConfigParser
 import nextflow.config.ConfigParserFactory
+import nextflow.script.ScriptFile
+import nextflow.script.WorkflowMetadata
 import nextflow.trace.TraceRecord
+import nextflow.util.Duration
+import nextflow.util.VersionNumber
 
 import java.nio.file.Path
+import java.nio.file.Paths
+import java.time.Instant
+import java.time.OffsetDateTime
+import java.time.ZoneOffset
 
 /**
  * A class for the command line interface (CLI) of the plugin.
@@ -65,7 +75,39 @@ class CO2FootprintCLI {
             observer.recordStarted(traceRecord)
             co2Records.add(observer.aggregateRecords(traceRecord))
         }
-        observer.renderFiles()
+
+        // Define workflow metadata
+        Session session = new Session()
+        session.runName = 'CLI estimation'
+        WorkflowMetadata metadata = new WorkflowMetadata(session, new ScriptFile( tracePath ) )
+        metadata.scriptName = 'nf-co2footprint CLI'
+        metadata.projectName = 'nf-co2footprint CLI post-run'
+        metadata.success = true
+        metadata.commandLine = "nextflow plugin nf-co2footprint:postRun --tracePath ${tracePath.toString()}"
+        if (parsedArgs.containsKey('config')) {
+            metadata.commandLine += " --config ${parsedArgs.get('config')}"
+        }
+
+        // Extract minimum start and maximum complete for workflow start and end approximation
+        Long start = null
+        Long complete = null
+        traceRecords.each { TraceRecord traceRecord ->
+            Long currentStart = traceRecord.get('start') as Long
+            Long currentComplete = traceRecord.get('complete') as Long
+            if (currentStart != null && (start == null || start > currentStart)){ start = currentStart }
+            if (currentComplete != null && (complete == null || complete > currentComplete)){ complete = currentComplete }
+        }
+        if (start != null){
+            metadata.start =  Instant.ofEpochMilli(start).atOffset(ZoneOffset.UTC) ?: null
+        }
+        if (complete != null) {
+            metadata.complete = Instant.ofEpochMilli(complete).atOffset(ZoneOffset.UTC) ?: null
+        }
+        if (metadata.start != null && metadata.complete != null) {
+            metadata.duration = Duration.between(metadata.start, metadata.complete)
+        }
+        // Render files
+        observer.renderFiles(observer.workflowStats, metadata)
 
         return 0
     }

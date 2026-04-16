@@ -77,8 +77,8 @@ class CO2FootprintPluginTest extends Specification{
     /**
      * @return A list with booleans indicating the existence of files
      */
-    List<Boolean> filesExist(Path tracePath, Path summaryPath,Path reportPath, Path dataPath) {
-        return [tracePath, summaryPath, reportPath, dataPath].collect({ Path path -> path.isFile() })
+    List<Boolean> filesExist(Path tracePath, Path summaryPath,Path reportPath, Path provenancePath) {
+        return [tracePath, summaryPath, reportPath, provenancePath].collect({ Path path -> path.isFile() })
     }
 
     /**
@@ -105,7 +105,7 @@ class CO2FootprintPluginTest extends Specification{
         String pluginVersion = CO2FootprintPlugin.readPluginVersion()
 
         then:
-        pluginVersion == "1.2.0"
+        pluginVersion == "1.2.1"
     }
 
     def 'Empty configuration'() {
@@ -123,13 +123,13 @@ class CO2FootprintPluginTest extends Specification{
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
-        Path dataPath = tempPath.resolve('data_test.yaml')
+        Path provenancePath = tempPath.resolve('provenance_test.yaml')
         Map config = [
             co2footprint: [
                 'trace': ['enabled': true, 'file': tracePath],
                 'summary': ['enabled': true, 'file': summaryPath],
                 'report': ['enabled': true, 'file': reportPath],
-                'dataFile': [enabled: true, file: dataPath]
+                'provenance': [enabled: true, file: provenancePath]
             ]
         ]
         Session session = mockSession(config)
@@ -138,7 +138,7 @@ class CO2FootprintPluginTest extends Specification{
 
         then:
         observers.size() == 1
-        filesExist(tracePath, summaryPath, reportPath, dataPath) == [true, true, true, true]
+        filesExist(tracePath, summaryPath, reportPath, provenancePath) == [true, true, true, true]
     }
 
     def 'Creation of some files'() {
@@ -147,13 +147,13 @@ class CO2FootprintPluginTest extends Specification{
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
-        Path dataPath = tempPath.resolve('data_test.yaml')
+        Path provenancePath = tempPath.resolve('provenance_test.yaml')
         Map config = [
                 co2footprint: [
                         'trace': ['enabled': true, 'file': tracePath],
                         'summary': ['enabled': false, 'file': summaryPath],
                         'report': ['enabled': true, 'file': reportPath],
-                        'dataFile': [enabled: false, file: dataPath]
+                        'provenance': [enabled: false, file: provenancePath]
                 ]
         ]
         Session session = mockSession(config)
@@ -162,7 +162,7 @@ class CO2FootprintPluginTest extends Specification{
 
         then:
         observers.size() == 1
-        filesExist(tracePath, summaryPath, reportPath, dataPath) == [true, false, true, false]
+        filesExist(tracePath, summaryPath, reportPath, provenancePath) == [true, false, true, false]
     }
 
     def 'Creation of no files'() {
@@ -174,13 +174,13 @@ class CO2FootprintPluginTest extends Specification{
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
-        Path dataPath = tempPath.resolve('data_test.yaml')
+        Path provenancePath = tempPath.resolve('provenance_test.yaml')
         Map config = [
                 co2footprint: [
                         'trace': ['enabled': false, 'file': tracePath],
                         'summary': ['enabled': false, 'file': summaryPath],
                         'report': ['enabled': false, 'file': reportPath],
-                        'dataFile': [enabled: false, file: dataPath]
+                        'provenance': [enabled: false, file: provenancePath]
                 ]
         ]
         Session session = mockSession(config)
@@ -189,7 +189,7 @@ class CO2FootprintPluginTest extends Specification{
 
         then:
         observers.size() == 1
-        filesExist(tracePath, summaryPath, reportPath, dataPath) == [false, false, false, false]
+        filesExist(tracePath, summaryPath, reportPath, provenancePath) == [false, false, false, false]
         logChecker.checkLogs(null, [
             'No output files are enabled - to enable, set `enabled: true` in the sections `trace`, `summary` or `report`.'
         ])

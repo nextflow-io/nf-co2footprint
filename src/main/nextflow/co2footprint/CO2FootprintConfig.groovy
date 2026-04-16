@@ -1,7 +1,7 @@
 package nextflow.co2footprint
 
 import groovy.util.logging.Slf4j
-import nextflow.co2footprint.Config.DataFileConfig
+import nextflow.co2footprint.Config.ProvenanceFileConfig
 import nextflow.co2footprint.Config.ReportFileConfig
 import nextflow.co2footprint.Config.SummaryFileConfig
 import nextflow.co2footprint.Config.TraceFileConfig
@@ -70,8 +70,8 @@ class CO2FootprintConfig implements ConfigScope {
     final ReportFileConfig report
 
     @ConfigOption(types=[Map])
-    @Description('Configuration for the data/machine-readable file.')
-    final DataFileConfig dataFile
+    @Description('Configuration for the provenance data/machine-readable file.')
+    final ProvenanceFileConfig provenance
 
     @ConfigOption(types=[GString])
     @Description('Location GeoCode from Electricity maps.')
@@ -136,7 +136,7 @@ class CO2FootprintConfig implements ConfigScope {
         trace = new TraceFileConfig(getCollect('trace', configMap, usedKeys) as Map ?: [:], timestamp)
         summary = new SummaryFileConfig(getCollect('summary', configMap, usedKeys) as Map ?: [:], timestamp)
         report = new ReportFileConfig(getCollect('report', configMap, usedKeys) as Map ?: [:], timestamp)
-        dataFile = new DataFileConfig(getCollect('dataFile', configMap, usedKeys) as Map ?: [:], timestamp)
+        provenance = new ProvenanceFileConfig(getCollect('provenance', configMap, usedKeys) as Map ?: [:], timestamp)
 
         // Location
         location = getCollect('location', configMap, usedKeys) as String ?: getLocationFromAWSRegion()
@@ -317,7 +317,7 @@ class CO2FootprintConfig implements ConfigScope {
             reportFile: report.file,
             summaryFile: summary.file,
             traceFile: trace.file,
-            dataFile: dataFile.file
+            provenanceFile: provenance.file
         ].sort() as SortedMap
     }
 

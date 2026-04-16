@@ -8,7 +8,7 @@
 //
 // Data contract (injected into window by the Groovy template renderer):
 //   window.data.trace    — array of per-task trace records
-//   window.data.summary  — per-process aggregated values (co2e, energy, …)
+//   window.data.summary  — per-process aggregated values (CO2e, energy_consumption, …)
 //   window.ciRecords     — timestamped carbon-intensity readings
 //   window.options       — plugin configuration key/value pairs
 
@@ -161,7 +161,7 @@ $(function () {
     }
 
     // Tracks the currently active toggle states for the three button groups.
-    const state = { metric: 'co2e', cached: 'all', sorted: false }
+    const state = { metric: 'CO2e', cached: 'all', sorted: false }
     // Mutable: updated at the start of every render() call so the y-axis zoom
     // listener always restores to the correct full height for the latest render.
     let peFullHeight = 0
@@ -193,7 +193,7 @@ $(function () {
      */
     function render() {
       const suffix = state.cached === 'all' ? '' : '_non_cached'
-      const isEnergy = state.metric === 'energy'
+      const isEnergy = state.metric === 'energy_consumption'
       const unit = isEnergy ? 'Wh' : 'g CO\u2082e'
       const axisTitle = isEnergy ? 'Energy consumption (Wh)' : 'CO\u2082e emissions (g)'
 
@@ -241,7 +241,7 @@ $(function () {
       })
 
       // Height scales with the number of visible processes (42 px per row).
-      peFullHeight = Math.max(200, Math.min(1000, 80 + keys.length * 42))
+      peFullHeight = Math.max(200, Math.min(900, 80 + keys.length * 42))
 
       Plotly.react('process-emissions-plot', traces, {
         ...PLOT_BG,
@@ -281,7 +281,7 @@ $(function () {
               : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][1] : undefined)
             if (y0 !== undefined && y1 !== undefined) {
               const visibleCount = Math.max(1, Math.round(Math.abs(y1 - y0)))
-              const newHeight = Math.max(120, Math.min(1000, 80 + visibleCount * 42))
+              const newHeight = Math.max(120, Math.min(900, 80 + visibleCount * 42))
               heightSyncInProgress = true
               Plotly.relayout(plotDiv, { height: newHeight })
                 .then(() => { heightSyncInProgress = false })
@@ -332,8 +332,8 @@ $(function () {
     }
 
     // Wire up toggle buttons — each click updates state and re-renders.
-    document.getElementById('pe-btn-co2e').addEventListener('click', () => { state.metric = 'co2e'; setActive('pe-metric-btn', 'pe-btn-co2e'); render() })
-    document.getElementById('pe-btn-energy').addEventListener('click', () => { state.metric = 'energy'; setActive('pe-metric-btn', 'pe-btn-energy'); render() })
+    document.getElementById('pe-btn-co2e').addEventListener('click', () => { state.metric = 'CO2e'; setActive('pe-metric-btn', 'pe-btn-co2e'); render() })
+    document.getElementById('pe-btn-energy').addEventListener('click', () => { state.metric = 'energy_consumption'; setActive('pe-metric-btn', 'pe-btn-energy'); render() })
     document.getElementById('pe-btn-all').addEventListener('click', () => { state.cached = 'all'; setActive('pe-cached-btn', 'pe-btn-all'); render() })
     document.getElementById('pe-btn-noncached').addEventListener('click', () => { state.cached = 'non_cached'; setActive('pe-cached-btn', 'pe-btn-noncached'); render() })
     document.getElementById('pe-btn-sort').addEventListener('click', () => {
@@ -383,17 +383,17 @@ $(function () {
         { title: 'tag', data: 'tag' },
         { title: 'status', data: 'status' },
         { title: 'hash', data: 'hash' },
-        { title: energyConsumptionTitle, data: 'energy' },
-        { title: energyConsumptionProcessorTitle, data: 'rawEnergyProcessor' },
-        { title: energyConsumptionMemoryTitle, data: 'rawEnergyMemory' },
-        { title: co2EmissionsTitle, data: 'co2e' },
-        { title: `${co2EmissionsTitle} (market)`, data: 'co2eMarket' },
-        { title: 'carbon intensity', data: 'ci' },
+        { title: energyConsumptionTitle, data: 'energy_consumption' },
+        { title: energyConsumptionProcessorTitle, data: 'raw_energy_processor' },
+        { title: energyConsumptionMemoryTitle, data: 'raw_energy_memory' },
+        { title: co2EmissionsTitle, data: 'CO2e' },
+        { title: `${co2EmissionsTitle} (market)`, data: 'CO2e_market' },
+        { title: 'carbon intensity', data: 'carbon_intensity' },
         { title: 'allocated cpus', data: 'cpus' },
-        { title: '%cpu', data: 'cpuUsage' },
+        { title: '%cpu', data: '%cpu' },
         { title: 'allocated memory', data: 'memory' },
         { title: 'realtime', data: 'time' },
-        { title: 'power draw (in W/core)', data: 'powerdrawCPU' },
+        { title: 'power draw (in W/core)', data: 'powerdraw_cpu' },
         { title: 'cpu model', data: 'cpu_model' },
       ],
       deferRender: true,
@@ -521,7 +521,7 @@ $(function () {
       let total = 0
       for (const task of window.data.trace) {
         if (task.start.time <= t0 && task.complete.time >= t1) {
-          total += task.energy.raw.value
+          total += task.energy_consumption.raw.value
         }
       }
 
@@ -872,8 +872,9 @@ $(function () {
       title: { text: 'Task execution swimlanes by process' },
       // Bottom margin is generous to avoid overlap with the CI plot title below.
       margin: { l: 140, r: 100, t: 40, b: 80 },
-      // Height scales with the number of processes; capped to avoid excessive scroll.
-      height: Math.max(360, Math.min(1200, 150 + processNames.length * 28)),
+      // Height scales with the number of visible processes, matching the
+      // per-process emissions plot sizing rules for a consistent feel.
+      height: Math.max(200, Math.min(900, 80 + processNames.length * 42)),
       ...PLOT_BG,
       xaxis: {
         title: { text: 'Time' },
@@ -908,8 +909,8 @@ $(function () {
         // swimlaneLayout.height is the full height for all processes; the listener
         // scales it down proportionally to the number of visible process rows.
         const slFullHeight = swimlaneLayout.height
-        const SL_PX_PER_ROW = 28
-        const SL_BASE_HEIGHT = 150
+        const SL_PX_PER_ROW = 42
+        const SL_BASE_HEIGHT = 80
         let heightSyncInProgress = false
 
         graphDiv.on('plotly_relayout', eventData => {
@@ -928,7 +929,7 @@ $(function () {
             : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][1] : undefined)
           if (y0 !== undefined && y1 !== undefined) {
             const visibleCount = Math.max(1, Math.round(Math.abs(y1 - y0)))
-            const newHeight = Math.max(120, Math.min(1200, SL_BASE_HEIGHT + visibleCount * SL_PX_PER_ROW))
+            const newHeight = Math.max(120, Math.min(900, SL_BASE_HEIGHT + visibleCount * SL_PX_PER_ROW))
             if (Math.abs(newHeight - (graphDiv.layout.height ?? slFullHeight)) > 2) {
               heightSyncInProgress = true
               Plotly.relayout(graphDiv, { height: newHeight })
