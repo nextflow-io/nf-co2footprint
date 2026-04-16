@@ -50,10 +50,16 @@ class CO2PluginFullTest extends Specification {
 
         int runExitCode = run.waitFor()
         println("-Run-")
-        println("STDERR: ${run.err.text}")
+        String runErrors = run.err.text
+        println("STDERR: ${runErrors}")
         println("STDOUT: ${run.text}")
 
         println("Output directory: ${outPath.listFiles()}")
+
+        if(runErrors) {
+            println("Nextflow log:")
+            println(tempPath.resolve('nextflow.log').readLines())
+        }
 
         then:
         // check whether the scripts ran as expected
