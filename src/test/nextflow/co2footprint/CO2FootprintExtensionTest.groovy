@@ -19,7 +19,7 @@ class CO2FootprintExtensionTest extends Specification {
         Path tracePath = tempPath.resolve('trace_extension_test.txt')
         Path summaryPath = tempPath.resolve('summary_extension_test.txt')
         Path reportPath = tempPath.resolve('report_extension_test.html')
-        Path provenancePath = tempPath.resolve('provenance_extension_test.yaml')
+        Path provenancePath = tempPath.resolve('provenance_extension_test.json')
 
         return new Session(
             [ co2footprint:

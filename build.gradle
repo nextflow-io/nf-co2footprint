@@ -72,6 +72,7 @@ dependencies {
 
     // add here plugins dependencies
     implementation(group: 'com.github.oshi', name: 'oshi-core', version: '6.10.0')
+    implementation(group: 'com.github.jsonld-java', name: 'jsonld-java', version: '0.13.4')
 
     // test configuration
     testImplementation "org.apache.groovy:groovy-nio:$groovyVersion"

@@ -123,7 +123,7 @@ class CO2FootprintPluginTest extends Specification{
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
-        Path provenancePath = tempPath.resolve('provenance_test.yaml')
+        Path provenancePath = tempPath.resolve('provenance_test.json')
         Map config = [
             co2footprint: [
                 'trace': ['enabled': true, 'file': tracePath],
@@ -147,7 +147,7 @@ class CO2FootprintPluginTest extends Specification{
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
-        Path provenancePath = tempPath.resolve('provenance_test.yaml')
+        Path provenancePath = tempPath.resolve('provenance_test.json')
         Map config = [
                 co2footprint: [
                         'trace': ['enabled': true, 'file': tracePath],
@@ -174,7 +174,7 @@ class CO2FootprintPluginTest extends Specification{
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
-        Path provenancePath = tempPath.resolve('provenance_test.yaml')
+        Path provenancePath = tempPath.resolve('provenance_test.json')
         Map config = [
                 co2footprint: [
                         'trace': ['enabled': false, 'file': tracePath],

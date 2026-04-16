@@ -96,7 +96,7 @@ class CO2FootprintObserverTest extends Specification{
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
-        Path provenancePath = tempPath.resolve('provenance_test.yaml')
+        Path provenancePath = tempPath.resolve('provenance_test.json')
 
         // Use helper to mock session with CI value 475.0
         Session session = mockSessionWithCI(tracePath, summaryPath, reportPath, provenancePath, 475.0)
@@ -131,7 +131,7 @@ class CO2FootprintObserverTest extends Specification{
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
-        Path provenancePath = tempPath.resolve('provenance_test.yaml')
+        Path provenancePath = tempPath.resolve('provenance_test.json')
 
         // Use helper to mock session with CI value 475.0
         Session session = mockSessionWithCI(tracePath, summaryPath, reportPath, provenancePath, 475.0)
@@ -172,7 +172,7 @@ class CO2FootprintObserverTest extends Specification{
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
-        Path provenancePath = tempPath.resolve('provenance_test.yaml')
+        Path provenancePath = tempPath.resolve('provenance_test.json')
 
         // Mock Session
         Session session = Mock(Session)
