@@ -4,6 +4,7 @@
 # Check if Java is installed
 if command -v java &> /dev/null; then
     echo "Java is installed: $(java -version 2>&1 | head -n 1)"
+    echo "JAVA_HOME=$JAVA_HOME"
 else
     echo "Java is not installed. Please install Java to run the tests."
     exit 1
@@ -28,9 +29,4 @@ fi
 
 
 # Install plugin
-# Remove old plugin installation if exists
-rm -rf ~/.nextflow/plugins/nf-co2footprint-*
-
-echo $(pwd)
-./gradlew compileGroovy
-./gradlew install
+./gradlew assemble

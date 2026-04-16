@@ -20,40 +20,43 @@ class CO2PluginFullTest extends Specification {
         Path tracePath = outPath.resolve('trace_test.txt')
         Path summaryPath = outPath.resolve('summary_test.txt')
         Path reportPath = outPath.resolve('report_test.html')
-        Path dataPath = outPath.resolve('data_test.yaml')
+        Path dataPath = outPath.resolve('data_test.json')
 
         // Set permissions and run preparation script
         Process permissions = [
                 "chmod", "+x", preparationPath.toString()
         ].execute()
         permissions.waitFor()
-        print(permissions.err.text)
-        print(permissions.text)
+        println("-Permissions-")
+        println("STDERR: ${permissions.err.text}")
+        println("STDOUT: ${permissions.text}")
 
         Process preparation = [
                 "bash", "-c", preparationPath.toString()
         ].execute()
         int preparationExitCode = preparation.waitFor()
-        print(preparation.err.text)
-        print(preparation.text)
+        println("-Preparation-")
+        println("STDERR: ${preparation.err.text}")
+        String preparationText = preparation.text
+        println("STDOUT: ${preparationText}")
 
         when:
-        print("Attempting run in directory: ${tempPath.toString()}")
-        // TODO: Use local plugin build, instead of global to avoid interference with user environment !!!
-        ProcessBuilder runBuilder = new ProcessBuilder(
-                "nextflow", "run", "nf-core/demo", "-r", "1.1.0", "-profile", "test,docker", "--outdir", "out", "-c", configPath.toString()
-        ).inheritIO()
-        runBuilder.directory(tempPath.toFile())
-        Process run = runBuilder.start()
+        println("Attempting run in directory: ${tempPath.toString()}")
+        ProcessBuilder processBuilder = new ProcessBuilder(["nextflow", "run", "nf-core/demo", "-r", "1.1.0", "-profile", "test,docker", "--outdir", "out", "-c", configPath.toString()])
+        processBuilder.directory(tempPath.toFile())
+        Map<String, String> env = processBuilder.environment()
+        env.put( 'NXF_PLUGINS_DEV', Path.of( this.class.getResource('/').toURI() ).resolve( Path.of("..", "..") ).complete().toString() )
+        Process run = processBuilder.start()
 
         int runExitCode = run.waitFor()
-        print(run.err.text)
-        print(run.text)
+        println("-Run-")
+        println("STDERR: ${run.err.text}")
+        println("STDOUT: ${run.text}")
 
         then:
         // check whether the scripts ran as expected
         preparationExitCode in [0, 1] // Allow for exit code 1 if permissions were already set
-        runExitCode in [0, 1] // Allow for exit code 1 for Nextflow if the run was unsuccessful (e.g. due to missing dependencies), as long as the expected output files are generated
+        runExitCode == 0
 
 
         // Check all files exist
@@ -64,7 +67,7 @@ class CO2PluginFullTest extends Specification {
         // Check line count
         fileChecker.compareNumLines(tracePath, 8)
         fileChecker.compareNumLines(summaryPath, 30)
-        fileChecker.compareNumLines(reportPath, 1816)
-        fileChecker.compareNumLines(dataPath, 1117)
+        fileChecker.compareNumLines(reportPath, 1863)
+        fileChecker.compareNumLines(dataPath, 1667)
     }
 }
