@@ -1,11 +1,12 @@
-
-
+import nextflow.co2footprint.CO2FootprintPlugin
 import nextflow.co2footprint.TestHelpers.FileChecker
 import spock.lang.Shared
 import spock.lang.Specification
 
 import java.nio.file.Files
 import java.nio.file.Path
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
 
 class CO2PluginFullTest extends Specification {
     @Shared
@@ -13,9 +14,14 @@ class CO2PluginFullTest extends Specification {
 
     def "Test the complete execution of a workflow run via bash"() {
         given:
-        Path configPath = Path.of(this.class.getResource('/integration/nextflow.config').toURI()).complete()
+        Path pluginPath = Path.of( this.class.getResource('/').toURI() ).resolve( Path.of("..", "..", '..', '..') ).complete()
+        Path distributionPath = pluginPath.resolve( Path.of('build', 'distributions') )
+
+        Path configPath = Path.of( this.class.getResource('/integration/nextflow.config').toURI() ).complete()
         Path preparationPath = Path.of(this.class.getResource('/integration/prepare-environment.sh').toURI()).complete()
+
         Path tempPath = Files.createTempDirectory('tmpdir')
+        Path pluginsPath = tempPath.resolve('plugins')
         Path outPath = tempPath.resolve(Path.of('out', 'pipeline_info'))
         Path tracePath = outPath.resolve('trace_test.txt')
         Path summaryPath = outPath.resolve('summary_test.txt')
@@ -40,12 +46,21 @@ class CO2PluginFullTest extends Specification {
         String preparationText = preparation.text
         println("STDOUT: ${preparationText}")
 
+        // Copy newest version of plugin into plugins path
+        pluginsPath.toFile().mkdirs()
+        String pluginName = "nf-co2footprint-${CO2FootprintPlugin.readPluginVersion()}"
+        distributionPath.resolve("${pluginName}.zip").copyTo(pluginsPath)
+        Path nfco2footprintPath = pluginsPath.resolve(pluginName)
+        nfco2footprintPath.toFile().mkdirs()
+        unzip(pluginsPath.resolve("${pluginName}.zip"), nfco2footprintPath)
+
         when:
         println("Attempting run in directory: ${tempPath.toString()}")
         ProcessBuilder processBuilder = new ProcessBuilder(["nextflow", "run", "nf-core/demo", "-r", "1.1.0", "-profile", "test,docker", "--outdir", "out", "-c", configPath.toString()])
         processBuilder.directory(tempPath.toFile())
         Map<String, String> env = processBuilder.environment()
-        env.put( 'NXF_PLUGINS_DEV', Path.of( this.class.getResource('/').toURI() ).resolve( Path.of("..", "..") ).complete().toString() )
+        env.put( 'NXF_PLUGINS_MODE', 'prod')
+        env.put( 'NXF_PLUGINS_DIR', pluginsPath.toString())
         Process run = processBuilder.start()
 
         int runExitCode = run.waitFor()
@@ -76,5 +91,35 @@ class CO2PluginFullTest extends Specification {
         fileChecker.compareNumLines(reportPath, 1863)
         long lines = dataPath.countLines()
         lines in [1666l, 1667l, 1668l]
+    }
+
+    def unzip(Path inZip, Path outputDir){
+        byte[] buffer = new byte[1024]
+        ZipInputStream zis = new ZipInputStream(new FileInputStream(inZip.toFile()))
+        ZipEntry zipEntry = zis.getNextEntry()
+        while (zipEntry != null) {
+            File newFile = outputDir.resolve(zipEntry.name).toFile()
+            if (zipEntry.isDirectory()) {
+                if (!newFile.isDirectory() && !newFile.mkdirs()) {
+                    throw new IOException("Failed to create directory " + newFile)
+                }
+            } else {
+                // fix for Windows-created archives
+                File parent = newFile.parentFile
+                if (!parent.isDirectory() && !parent.mkdirs()) {
+                    throw new IOException("Failed to create directory " + parent)
+                }
+                // write file content
+                FileOutputStream fos = new FileOutputStream(newFile)
+                int len = 0
+                while ((len = zis.read(buffer)) > 0) {
+                    fos.write(buffer, 0, len)
+                }
+                fos.close()
+            }
+            zipEntry = zis.getNextEntry()
+        }
+        zis.closeEntry()
+        zis.close()
     }
 }
