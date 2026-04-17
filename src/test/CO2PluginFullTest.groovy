@@ -57,9 +57,7 @@ class CO2PluginFullTest extends Specification {
         println("Output directory: ${outPath.listFiles()}")
 
         println("Nextflow log:")
-        tempPath.resolve('nextflow.log').readLines().each { String line ->
-            println(line)
-        }
+        tempPath.resolve('.nextflow.log').readLines().each { String line -> println(line) }
 
         then:
         // check whether the scripts ran as expected
