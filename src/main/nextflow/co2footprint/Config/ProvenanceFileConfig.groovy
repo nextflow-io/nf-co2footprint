@@ -11,11 +11,11 @@ import nextflow.script.dsl.Description
 class ProvenanceFileConfig extends BaseFileConfig implements ConfigScope {
 
     @ConfigOption
-    @Description('Whether only emission metrics should be reported in the data file.')
+    @Description('Whether only emission metrics should be reported in the provenance file.')
     final boolean emissionMetricsOnly
 
     ProvenanceFileConfig(Map provenanceFileConfig, String timestamp=null) {
-        super(provenanceFileConfig, timestamp, 'data', 'yaml', false)
+        super(provenanceFileConfig, timestamp, 'provenance', 'json', false)
 
         emissionMetricsOnly = provenanceFileConfig.containsKey('emissionMetricsOnly') ?
                 CO2FootprintConfig.getCollect('emissionMetricsOnly', provenanceFileConfig, usedKeys) as boolean :

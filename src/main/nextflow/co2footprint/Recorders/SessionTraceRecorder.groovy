@@ -76,8 +76,8 @@ class SessionTraceRecorder {
                         task_id:        '-1',
                         hash:           session.hashCode(),
                         native_id:      pid as String,
-                        process:        session.getScriptName(),
-                        name:           session.getRunName(),
+                        process:        'session',
+                        name:           session.getRunName() + '-session',
                         status:         'STARTED',
                         start:          System.currentTimeMillis(),
                         attempt:        sessionRecord.store.get('attempt', 0) + 1

@@ -76,7 +76,7 @@ class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
             observer.timeCiRecordCollector.stop()
 
             CO2RecordTree sessionStats = new CO2RecordTree(
-                    observer.session?.runName,
+                    sessionCO2Record.store.get('name', null),
                     [level: 'session'],
                     sessionCO2Record,
                     null,

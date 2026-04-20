@@ -24,7 +24,7 @@ nf-co2footprint options:
   powerdrawMem: 0.3725
   pue: 1.0
   customCpuTdpFile: null
-  provenanceFile: build/classes/groovy/test/nextflow/co2footprint/cli/out/provenance_test.yaml
+  provenanceFile: build/classes/groovy/test/nextflow/co2footprint/cli/out/provenance_test.json
   reportFile: build/classes/groovy/test/nextflow/co2footprint/cli/out/report_test.html
   summaryFile: build/classes/groovy/test/nextflow/co2footprint/cli/out/summary_test.txt
   traceFile: build/classes/groovy/test/nextflow/co2footprint/cli/out/trace_test.txt
