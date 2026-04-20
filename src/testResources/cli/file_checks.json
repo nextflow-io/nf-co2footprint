@@ -4,17 +4,16 @@
     "num_lines": 3
   },
   "summary_test.txt": {
-    "checksum": "1ade3b308537e2d04ec5beb5d0a7b210",
+    "checksum": "7012ecb98c61b9c8bee01ab048e34bc0",
     "num_lines": 30
   },
   "report_test.html": {
-    "checksum": "7b8fa6b3a4e689d7066f1a77504c070d",
+    "checksum": "cfe77917897ef2b0fc7c772532fb5df5",
     "excluded_lines": [1533, 1587],
     "num_lines": 1813
   },
-  "data_test.yaml": {
-    "checksum": "da3692041d89a71e56cdc0b7ada15f72",
-    "excluded_lines": [17, 21, 25, 143, 147, 151, 240, 244, 248],
-    "num_lines": 306
+  "provenance_test.json": {
+    "checksum": "efd8942c8d4fd86ed3bfb578578410f2",
+    "num_lines": 400
   }
 }
