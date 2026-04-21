@@ -8,6 +8,13 @@ import java.nio.file.Path
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
+/**
+ * End-to-end integration test for the nf-co2footprint plugin.
+ *
+ * Runs the nf-core/demo pipeline with a locally built plugin and verifies
+ * successful execution as well as the presence and basic integrity of all
+ * expected output files (trace, summary, report, data).
+ */
 class CO2PluginFullTest extends Specification {
     @Shared
     FileChecker fileChecker = new FileChecker('/integration')

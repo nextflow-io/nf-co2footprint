@@ -3,8 +3,6 @@
 
 ## Misc:
 - Improved workflow reporting form extension/CLI by deriving and injecting workflow metadata from the provided trace file
-- Aligned Session tracking with Nextflow's trace tracking
-- Improved workflow reporting form extension/CLI by deriving and injecting workflow metadata from the provided trace file
 - Added full integration test
 
 ## Features:
