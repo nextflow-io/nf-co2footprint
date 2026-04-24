@@ -2,6 +2,7 @@ package nextflow.co2footprint
 
 import nextflow.Session
 import nextflow.co2footprint.Records.CO2Record
+import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.co2footprint.TestHelpers.FileChecker
 import nextflow.trace.TraceRecord
 import spock.lang.Shared
@@ -46,9 +47,10 @@ class CO2FootprintExtensionTest extends Specification {
         )
 
         then:
-        output.co2Records.size() == 8
-        output.co2Records[7].getReadableEntries() == ['8', 'COMPLETED', 'VALUE_TESTING', '3.27 mWh', '327.29 ug', '-', '100 gCO₂e/kWh', '100 %', '1 GB', '1s 0ms', '1', '11.41 W', '-', '3.17 mWh', '103.47 uWh']
-        output.co2Records[7].additionalMetrics == [CO2e_non_cached:3.2729169285E-4, energy_consumption_non_cached:3.2729169285E-6, CO2e_market:null, energy_consumption_market:3.2729169285E-6]
+        List<CO2Record> co2Records = output.co2RecordTree.descentTo('task').collect( { CO2RecordTree tree -> tree.co2Record } )
+        co2Records.size() == 8
+        co2Records[7].getReadableEntries() == ['8', 'COMPLETED', 'VALUE_TESTING', '3.27 mWh', '327.29 ug', '-', '100 gCO₂e/kWh', '100 %', '1 GB', '1s 0ms', '1', '11.41 W', '-', '3.17 mWh', '103.47 uWh']
+        co2Records[7].additionalMetrics == [CO2e_non_cached:3.2729169285E-4, energy_consumption_non_cached:3.2729169285E-6, CO2e_market:null, energy_consumption_market:3.2729169285E-6]
 
         // Check whether all files exist
         fileChecker.checkIsFile(output.config.trace.file)
@@ -72,9 +74,12 @@ class CO2FootprintExtensionTest extends Specification {
         )
 
         then:
-        output.co2Records.size() == 8
-        output.co2Records[7].getReadableEntries() == ['8', 'COMPLETED', 'VALUE_TESTING', '3.27 mWh', '327.29 ug', '-', '100 gCO₂e/kWh', '100 %', '1 GB', '1s 0ms', '1', '11.41 W', '-', '3.17 mWh', '103.47 uWh']
-        output.co2Records[7].additionalMetrics == [CO2e_non_cached:3.2729169285E-4, energy_consumption_non_cached:3.2729169285E-6, CO2e_market:null, energy_consumption_market:3.2729169285E-6]
+        List<CO2Record> co2Records = output.co2RecordTree.descentTo('task').collect( { CO2RecordTree tree -> tree.co2Record } )
+        co2Records.size() == 8
+        co2Records[7].getReadableEntries() == ['8', 'COMPLETED', 'VALUE_TESTING', '3.27 mWh', '327.29 ug', '-', '100 gCO₂e/kWh', '100 %', '1 GB', '1s 0ms', '1', '11.41 W', '-', '3.17 mWh', '103.47 uWh']
+        co2Records[7].additionalMetrics == [CO2e_non_cached:3.2729169285E-4, energy_consumption_non_cached:3.2729169285E-6, CO2e_market:null, energy_consumption_market:3.2729169285E-6]
         fileChecker.checkIsFile(tracePath)
     }
+
+    // TODO: Test provenance post run
 }

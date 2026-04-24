@@ -1,25 +1,15 @@
 package nextflow.co2footprint
 
 import groovy.util.logging.Slf4j
-import nextflow.BuildInfo
 import nextflow.Session
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
-import nextflow.co2footprint.Parsers.TraceFileParser
-import nextflow.co2footprint.Records.CO2Record
 import nextflow.config.ConfigParser
 import nextflow.config.ConfigParserFactory
 import nextflow.script.ScriptFile
 import nextflow.script.WorkflowMetadata
-import nextflow.trace.TraceRecord
-import nextflow.util.Duration
-import nextflow.util.VersionNumber
 
 import java.nio.file.Path
-import java.nio.file.Paths
-import java.time.Instant
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 
 /**
  * A class for the command line interface (CLI) of the plugin.
@@ -29,21 +19,67 @@ class CO2FootprintCLI {
     /**
      * Post run estimations of footprint from the CLI.
      *
-     * @param parsedArgs Parsed arguments as a map
-     * @return
+     * @param parsedArgs Parsed arguments as a map, expected keys: `tracePath` or `provenancePath` and optionally `config`
+     * @return Exit code of the CLI execution, 0 if successful
      */
     static int postRun(Map<String, Object> parsedArgs) {
         // Define trace path
-        assert parsedArgs.containsKey('tracePath') && (parsedArgs.get('tracePath') instanceof String)
-        Path tracePath = Path.of(parsedArgs.get('tracePath') as String)
+        Path tracePath = parsedArgs.containsKey('tracePath') ? Path.of(parsedArgs.get('tracePath') as String) : null
+        Path provenancePath = parsedArgs.containsKey('provenancePath') ? Path.of(parsedArgs.get('provenancePath') as String) : null
+        assert tracePath || provenancePath, 'Please provide either a trace file path via the `tracePath` argument or a provenance file path via the `provenancePath` argument.'
+        assert !(tracePath && provenancePath), 'Please provide only one of the following arguments: `tracePath` or `provenancePath`.'
 
+        CO2FootprintObserver observer = defineObserver(
+                parsedArgs.containsKey('config') ?
+                Path.of(parsedArgs.get('config') as String) :
+                null
+        )
+
+        // Create trace file
+        observer.traceFile.create()
+
+        // Define workflow metadata
+        Session session = new Session()
+        session.runName = 'CLI estimation'
+        WorkflowMetadata metadata = new WorkflowMetadata(session, new ScriptFile( tracePath ? tracePath : provenancePath ))
+        metadata.scriptName = 'nf-co2footprint CLI'
+        metadata.projectName = 'nf-co2footprint CLI post-run'
+        metadata.success = true
+        metadata.commandLine = tracePath ?
+                "nextflow plugin nf-co2footprint:postRun --tracePath ${tracePath.toString()}" :
+                "nextflow plugin nf-co2footprint:postRun --provenancePath ${provenancePath.toString()}"
+        if (parsedArgs.containsKey('config')) {
+            metadata.commandLine += " --config ${parsedArgs.get('config')}"
+        }
+
+        // Call on extension function to parse trace or provenance file and estimate footprint
+        if (tracePath) {
+            CO2FootprintExtension.tracePostRun(tracePath, observer, metadata)
+        }
+        else if (provenancePath) {
+            CO2FootprintExtension.provenancePostRun(provenancePath, observer, metadata)
+        }
+
+        // Render files
+        observer.renderFiles(observer.workflowStats, metadata)
+
+        return 0
+    }
+
+    /**
+     * Define an observer based on a config file if provided, otherwise with default values.
+     *
+     * @param configPath Path to the config file, optional
+     * @return A CO2FootprintObserver instance with the given config or default values
+     */
+    static CO2FootprintObserver defineObserver(Path configPath=null) {
         // Define config
         Map<String, Object> co2Config = [:]
         Map<String, Object> processConfig = [:]
-        if(parsedArgs.get('config') instanceof String) {
-            Path configPath = Path.of(parsedArgs.get('config') as String)
+
+        if (configPath) {
             ConfigParser configParser = ConfigParserFactory.create()
-            co2Config = configParser.parse(configPath).navigate('co2footprint') as Map?: [:]
+            co2Config = configParser.parse(configPath).navigate('co2footprint') as Map ?: [:]
             if (co2Config.containsKey('emApiKey') && !co2Config.get('emApiKey')) {
                 log.warn(
                         'Empty value discovered for `emApiKey` in config.' +
@@ -52,63 +88,18 @@ class CO2FootprintCLI {
                 )
                 co2Config.remove('emApiKey')
             }
-            configParser.parse(configPath).navigate('process') as Map?: [:]
+            configParser.parse(configPath).navigate('process') as Map ?: [:]
         }
 
-        // Define separate observer
         CO2FootprintConfig config = new CO2FootprintConfig(
                 co2Config, TDPDataMatrix.tdpDataMatrix,
                 CIDataMatrix.ciDataMatrix, processConfig
         )
+
+        // Define computer
         CO2FootprintCalculator computer = new CO2FootprintCalculator(TDPDataMatrix.tdpDataMatrix, config)
-        CO2FootprintObserver observer = new CO2FootprintObserver(config, computer)
 
-        // Parse the trace file
-        List<TraceRecord> traceRecords = TraceFileParser.parseExecutionTraceFile(tracePath)
-
-        // Create trace file
-        observer.traceFile.create()
-
-        // Collect CO2Records from traces & optionally write the corresponding files
-        List<CO2Record> co2Records = []
-        traceRecords.each { TraceRecord traceRecord ->
-            observer.recordStarted(traceRecord)
-            co2Records.add(observer.aggregateRecords(traceRecord))
-        }
-
-        // Define workflow metadata
-        Session session = new Session()
-        session.runName = 'CLI estimation'
-        WorkflowMetadata metadata = new WorkflowMetadata(session, new ScriptFile( tracePath ) )
-        metadata.scriptName = 'nf-co2footprint CLI'
-        metadata.projectName = 'nf-co2footprint CLI post-run'
-        metadata.success = true
-        metadata.commandLine = "nextflow plugin nf-co2footprint:postRun --tracePath ${tracePath.toString()}"
-        if (parsedArgs.containsKey('config')) {
-            metadata.commandLine += " --config ${parsedArgs.get('config')}"
-        }
-
-        // Extract minimum start and maximum complete for workflow start and end approximation
-        Long start = null
-        Long complete = null
-        traceRecords.each { TraceRecord traceRecord ->
-            Long currentStart = traceRecord.get('start') as Long
-            Long currentComplete = traceRecord.get('complete') as Long
-            if (currentStart != null && (start == null || start > currentStart)){ start = currentStart }
-            if (currentComplete != null && (complete == null || complete > currentComplete)){ complete = currentComplete }
-        }
-        if (start != null){
-            metadata.start =  Instant.ofEpochMilli(start).atOffset(ZoneOffset.UTC) ?: null
-        }
-        if (complete != null) {
-            metadata.complete = Instant.ofEpochMilli(complete).atOffset(ZoneOffset.UTC) ?: null
-        }
-        if (metadata.start != null && metadata.complete != null) {
-            metadata.duration = Duration.between(metadata.start, metadata.complete)
-        }
-        // Render files
-        observer.renderFiles(observer.workflowStats, metadata)
-
-        return 0
+        // Return observer
+        return new CO2FootprintObserver(config, computer)
     }
 }

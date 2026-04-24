@@ -40,4 +40,7 @@ class CO2FootprintCLITest extends  Specification {
         }
 
     }
+
+
+    // TODO: Test provenance post run
 }
