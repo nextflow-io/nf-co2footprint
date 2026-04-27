@@ -17,7 +17,7 @@ class TraceFileParserTest extends Specification {
     def 'Test parsing of regular trace file.'() {
         when:
         List<TraceRecord> traceRecords = TraceFileParser.parseExecutionTraceFile(
-                this.class.getResource('/execution-trace-regular.tsv').path as Path
+                this.class.getResource('/cli/execution-trace-regular.tsv').path as Path
         )
         then:
         assert traceRecords.size() == 8
@@ -33,7 +33,7 @@ class TraceFileParserTest extends Specification {
     def 'Test parsing of raw trace file.' () {
         when:
         List<TraceRecord> traceRecords = TraceFileParser.parseExecutionTraceFile(
-                this.class.getResource('/execution-trace-raw.tsv').path as Path
+                this.class.getResource('/cli/execution-trace-raw.tsv').path as Path
         )
         then:
         assert traceRecords.size() == 2

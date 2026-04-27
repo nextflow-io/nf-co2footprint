@@ -27,7 +27,7 @@ class CO2FootprintCLITest extends  Specification {
     def 'test CLI post run'() {
         when:
         Map<String, Object> parsedArgs = [
-                tracePath: Path.of(this.class.getResource('/execution-trace-raw.tsv').toURI()).complete().toString(),
+                tracePath: Path.of(this.class.getResource('/cli/execution-trace-raw.tsv').toURI()).complete().toString(),
                 config: Path.of(this.class.getResource('/cli/test.config').toURI()).complete().toString()
         ]
         int exitCode = CO2FootprintCLI.postRun(parsedArgs)

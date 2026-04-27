@@ -15,5 +15,9 @@
   "provenance_test.json": {
     "checksum": "efd8942c8d4fd86ed3bfb578578410f2",
     "num_lines": 400
+  },
+  "provenance-hello.json": {
+    "checksum": "x",
+    "num_lines": 2138
   }
 }

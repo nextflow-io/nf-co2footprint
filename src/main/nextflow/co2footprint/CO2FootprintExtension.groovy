@@ -84,17 +84,18 @@ class CO2FootprintExtension extends PluginExtensionPoint {
         metadata.success = true
         metadata.commandLine = 'Executed from within workflow'
 
+        CO2RecordTree workflowStats = null
         if (mode == 'trace') {
-            tracePostRun(filePath, observer, metadata)
+            workflowStats = tracePostRun(filePath, observer, metadata)
         }
         else if (mode == 'provenance') {
-            provenancePostRun(filePath, observer, metadata)
+            workflowStats = provenancePostRun(filePath, observer, metadata)
         }
 
         // Render files
-        observer.renderFiles(observer.workflowStats, metadata)
+        observer.renderFiles(workflowStats, metadata)
 
-        return new Output(observer.workflowStats, config)
+        return new Output(workflowStats, config)
     }
 
     /**
@@ -128,7 +129,7 @@ class CO2FootprintExtension extends PluginExtensionPoint {
      * @param metadata WorkflowMetadata instance to fill with workflow metadata based on the trace file
      * @return A Tuple2 containing the CO2FootprintObserver instance and the WorkflowMetadata instance with filled metadata
      */
-    static void tracePostRun (Path tracePath, CO2FootprintObserver observer, WorkflowMetadata metadata) {
+    static CO2RecordTree tracePostRun(Path tracePath, CO2FootprintObserver observer, WorkflowMetadata metadata) {
         // Parse the trace file
         List<TraceRecord> traceRecords = TraceFileParser.parseExecutionTraceFile(tracePath)
 
@@ -148,6 +149,8 @@ class CO2FootprintExtension extends PluginExtensionPoint {
             if (currentComplete != null && (complete == null || complete > currentComplete)){ complete = currentComplete }
         }
         metadata = defineTimeMetadata(metadata, start, complete)
+
+        return observer.workflowStats
     }
 
     /**
@@ -157,7 +160,7 @@ class CO2FootprintExtension extends PluginExtensionPoint {
      * @param observer A CO2FootprintObserver instance to use for the estimation
      * @param metadata WorkflowMetadata instance to fill with workflow metadata based on the provenance file
      */
-    static void provenancePostRun (Path provenancePath, CO2FootprintObserver observer, WorkflowMetadata metadata) {
+    static CO2RecordTree provenancePostRun(Path provenancePath, CO2FootprintObserver observer, WorkflowMetadata metadata) {
         // Parse provenance file
         CO2RecordTree co2RecordTree = ProvenanceFileCreator.read(provenancePath)
 
@@ -170,6 +173,22 @@ class CO2FootprintExtension extends PluginExtensionPoint {
         Long start = co2RecordTree.co2Record.store.get('start') as Long
         Long complete = co2RecordTree.co2Record.store.get('complete') as Long
         metadata = defineTimeMetadata(metadata, start, complete)
+
+        // Consider that session is not integrated within tasks -> Create a separate CO2Record and put as new tree root
+        CO2RecordTree newCo2RecordTree
+        if (co2RecordTree.metaData.get('level') == 'session') {
+            newCo2RecordTree = new CO2RecordTree(
+                    co2RecordTree.name,
+                    co2RecordTree.metaData,
+                    observer.createCO2Record(co2RecordTree.co2Record)
+            )
+            newCo2RecordTree.addChild(observer.workflowStats)
+        }
+        else {
+            newCo2RecordTree = observer.workflowStats
+        }
+
+        return newCo2RecordTree
     }
 
     /**
