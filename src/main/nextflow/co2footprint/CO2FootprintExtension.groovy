@@ -97,7 +97,7 @@ class CO2FootprintExtension extends PluginExtensionPoint {
             Long currentStart = traceRecord.get('start') as Long
             Long currentComplete = traceRecord.get('complete') as Long
             if (currentStart != null && (start == null || start > currentStart)){ start = currentStart }
-            if (currentComplete != null && (complete == null || complete > currentComplete)){ complete = currentComplete }
+            if (currentComplete != null && (complete == null || complete < currentComplete)){ complete = currentComplete }
         }
         if (start != null){
             metadata.start =  Instant.ofEpochMilli(start).atOffset(ZoneOffset.UTC) ?: null

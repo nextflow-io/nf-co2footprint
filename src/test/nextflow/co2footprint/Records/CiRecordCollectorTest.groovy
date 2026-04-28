@@ -53,4 +53,28 @@ class CiRecordCollectorTest extends Specification {
         then:
         weightedCI == 20.0
     }
+
+    def 'Test CI value computation with uneven intervals' () {
+        setup:
+        CiRecordCollector timeCiRecordCollector = new CiRecordCollector(Mock(CO2FootprintConfig))
+        TraceRecord traceRecord = Mock(TraceRecord)
+
+        when:
+        LocalDateTime time_10_00_00 = LocalDateTime.of(2025, 8, 20, 10, 0, 0)
+        LocalDateTime time_10_10_00 = LocalDateTime.of(2025, 8, 20, 10, 10, 0)
+        LocalDateTime time_10_59_00 = LocalDateTime.of(2025, 8, 20, 10, 59, 0)
+        LocalDateTime time_11_00_00 = LocalDateTime.of(2025, 8, 20, 11, 0, 0)
+
+        timeCiRecordCollector.add(new CiRecord(100.0, null, null, null, time_10_00_00))
+        timeCiRecordCollector.add(new CiRecord(500.0, null, null, null, time_10_10_00))
+        timeCiRecordCollector.add(new CiRecord(200.0, null, null, null, time_10_59_00))
+
+        traceRecord.get('start') >> time_10_00_00.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        traceRecord.get('complete') >> time_11_00_00.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+        Double weightedCI = timeCiRecordCollector.getWeightedCI(traceRecord)
+
+        then:
+        Math.round(weightedCI * 100) / 100 == 428.33d
+    }
 }
