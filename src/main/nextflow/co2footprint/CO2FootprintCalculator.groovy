@@ -200,7 +200,7 @@ class CO2FootprintCalculator {
                     dedupKey
             )
         }
-        return value ?: defaultValue
+        return value != null ? value : defaultValue
     }
 
     /**

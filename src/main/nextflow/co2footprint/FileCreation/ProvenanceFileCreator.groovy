@@ -121,7 +121,7 @@ class ProvenanceFileCreator extends BaseFileCreator {
                 }
                 else if (raw.type == 'DateTime') {
                     ldMap[key] = [
-                            '@type': 'schema:DataTime',
+                            '@type': 'schema:DateTime',
                             'value':  Instant.ofEpochMilli(raw.value as Long).toString() ,
                             'unitText': raw.scale + raw.unit
                     ]
