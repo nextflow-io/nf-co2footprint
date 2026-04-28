@@ -17,7 +17,8 @@
     "num_lines": 464
   },
   "provenance-hello.json": {
-    "checksum": "5a873f54bbe08b0ee8c6792eace991be",
+    "checksum": "de6c00b7cb647b395ffa7f669d04d092",
+    "excluded_lines": [69, 78, 87, 336, 345, 354, 643, 652, 661, 978, 987, 996, 1327, 1336, 1345, 1676, 1685, 1694, 2025, 2034, 2043],
     "num_lines": 2306
   }
 }

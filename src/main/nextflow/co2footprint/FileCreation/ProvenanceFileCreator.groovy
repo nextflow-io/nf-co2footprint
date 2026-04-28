@@ -145,7 +145,7 @@ class ProvenanceFileCreator extends BaseFileCreator {
                 }
                 else if (raw.type == 'DateTime') {
                     ldMap[key] = [
-                            '@type': 'schema:DataTime',
+                            '@type': 'schema:DateTime',
                             'value':  Instant.ofEpochMilli(raw.value as Long).toString() ,
                             'unitText': raw.scale + raw.unit
                     ]
@@ -225,7 +225,7 @@ class ProvenanceFileCreator extends BaseFileCreator {
             else if (value['@type'] == 'schema:Duration') {
                 store[key] = Duration.parse(value['value'] as String).toMillis()
             }
-            else if (value['@type'] == 'schema:DataTime') {
+            else if (value['@type'] == 'schema:DateTime') {
                 store[key] = Instant.parse(value['value'] as String).toEpochMilli()
             }
             else if(value['@type'] == 'schema:ItemList') {
