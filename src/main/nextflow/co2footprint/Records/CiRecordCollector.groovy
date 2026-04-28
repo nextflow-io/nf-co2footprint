@@ -132,8 +132,7 @@ class CiRecordCollector {
         }
 
         if (!timestamps) {
-            String message = "Found no timestamps in timeCIs '${timeCIs}' that are " +
-                    "before, during or after the frame of the traceRecord: '${trace}' (${start}-${end})."
+            String message = "No carbon intensity timestamps are available in timeCIs for traceRecord '${trace}' (${start}-${end})."
             log.error(message)
             throw new MissingValueException(message)
         }
