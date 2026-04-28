@@ -3,9 +3,11 @@
 
 ## Misc:
 - Improved workflow reporting form extension/CLI by deriving and injecting workflow metadata from the provided trace file
+- Added more calculation metrics to provenance and trace file to enhance reproducibility
 
 ## Features:
 - Transformation of data file to provenance file with schema.org / bioschemas.org type annotation in JSON-LD data format
+- Added post-run functionality with provenance file
 
 # 1.2.1
 ## Bug Fixes:

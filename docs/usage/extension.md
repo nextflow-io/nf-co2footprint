@@ -14,6 +14,10 @@ The plugin provides some [extension points](https://nextflow.io/docs/latest/plug
     }
     ```
 
+!!! warning
+    
+    While provenance file are optimized for reproducibility, re-calculations can deviate by a small marging due to rounding.
+
 !!! info
 
     In CLI/extension post-run mode, workflow metadata is reconstructed using the trace file (e.g., start/end time, duration) and synthetic/runtime values (e.g., run name, command line), and may differ from reports generated during an integrated plugin run.
@@ -22,7 +26,7 @@ The plugin provides some [extension points](https://nextflow.io/docs/latest/plug
 The command line functionality utilizes Nextflow configs, like the regular plugin (see [parameters.md](./parameters.md)).
 It is recommended to set the output paths and a fixed carbon intensity value (`ci`) in the config.
 ```bash
-nextflow plugin nf-co2footprint:postRun --config <path_to_nextflow.config> --tracePath <path_to_execution_trace.txt>
+nextflow plugin nf-co2footprint:postRun --config <path_to_nextflow.config> [--tracePath <path_to_execution_trace.txt> | --provenancePath <path_to_provenance_file.json>]
 ```
 
 
@@ -44,6 +48,7 @@ process calculate_CO2 {
         trace: [file: './out/pipeline_info/post-run_trace.txt'],
         summary: [file: './out/pipeline_info/post-run_summary.txt'],
         report: [file: './out/pipeline_info/post-run_report.html'],
+        provenance: [file: './out/pipeline_info/post-run_provenance.json', enabled: true]
       ]
   )
   """
@@ -69,9 +74,12 @@ Parse the trace file into a list of TraceRecord instances.
 ###### `calculateCO2`
 Can be used to calculate the emissions of a trace.
 
-- **tracePath**:
-  Path to the trace file 
+- **filePath**:
+  Path to the trace or provenance file 
 
 - **configModifications**:
   Temporarily overrides parameters in the `co2footprint` block of the current Nextflow configuration for a single extension function call. The provided map is merged with the existing configuration and does not affect the overall workflow run. Can be used to adjust settings such as output paths or carbon intensity for post-run estimations. Defaults to [:].  
   Example: `[trace: [file: <Path_to_your_output_trace_file>], ci: <Your_carbon_intensity>]`
+
+- **mode**:
+  Either 'trace' or 'provenance' to indicate which file was passed along. Defaults to `'trace'`.
