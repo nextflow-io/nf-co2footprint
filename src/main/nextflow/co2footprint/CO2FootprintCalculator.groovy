@@ -4,6 +4,7 @@ import groovy.util.logging.Slf4j
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Logging.Markers
 import nextflow.co2footprint.Metrics.Bytes
+import nextflow.co2footprint.Metrics.Duration
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CiRecordCollector
@@ -64,7 +65,8 @@ class CO2FootprintCalculator {
         final String cpuModel = config.ignoreCpuModel ? 'default' : trace.get('cpu_model') as String
 
         // Runtime [h]
-        final BigDecimal runtime_h = (getTraceOrDefault(trace, trace.taskId, 'realtime', 0, 'missing-realtime') as BigDecimal) / (1000 * 60 * 60)
+        final BigDecimal runtime_ms = getTraceOrDefault(trace, trace.taskId, 'realtime', 0, 'missing-realtime')
+        final BigDecimal runtime_h = Duration.of(runtime_ms, 'ms').scale('h').value as BigDecimal
 
         // Number of CPU cores
         Integer numberOfCores = getTraceOrDefault(trace, trace.taskId, 'cpus', 1, 'missing-cpus') as Integer
@@ -173,7 +175,7 @@ class CO2FootprintCalculator {
             ciMarket,
             cpuUsage,
             memory as Long,
-            runtime_h,
+            runtime_ms,
             numberOfCores as Integer,
             pue,
             powerdrawPerCore,

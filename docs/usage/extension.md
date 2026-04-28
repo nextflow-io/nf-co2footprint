@@ -14,10 +14,6 @@ The plugin provides some [extension points](https://nextflow.io/docs/latest/plug
     }
     ```
 
-!!! warning
-    
-    While provenance file are optimized for reproducibility, re-calculations can deviate by a small marging due to rounding.
-
 !!! info
 
     In CLI/extension post-run mode, workflow metadata is reconstructed using the trace file (e.g., start/end time, duration) and synthetic/runtime values (e.g., run name, command line), and may differ from reports generated during an integrated plugin run.

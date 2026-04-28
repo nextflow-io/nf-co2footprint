@@ -1,3 +1,3 @@
 task_id	status	name	energy_consumption	CO2e	CO2e_market	carbon_intensity	carbon_intensity_market	%cpu	memory	realtime	cpus	pue	powerdraw_cpu	powerdraw_memory	cpu_power_model	cpu_model	raw_energy_processor	raw_energy_memory
 6	COMPLETED	NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (RAP1_UNINDUCED_REP1)	2.16 mWh	1.04 mg	-	480 gCO₂e/kWh	-	97 %	12 GB	500ms	2	1	11.41 W	372.5 mW	-	-	1.54 mWh	620.83 uWh
-4	COMPLETED	NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (WT_REP2)	4.27 mWh	2.05 mg	-	480 gCO₂e/kWh	-	95.4 %	12 GB	1s 0ms	2	1	11.41 W	372.5 mW	-	-	3.02 mWh	1.24 mWh
+4	COMPLETED	NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (WT_REP2)	4.27 mWh	2.05 mg	-	480 gCO₂e/kWh	-	95.4 %	12 GB	1s	2	1	11.41 W	372.5 mW	-	-	3.02 mWh	1.24 mWh

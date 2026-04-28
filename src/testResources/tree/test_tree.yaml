@@ -23,7 +23,7 @@ values:
     raw: {value: 10737418240, type: Bytes, unit: B, scale: ''}
     readable: 10 GB
   realtime:
-    raw: {value: 7200000.0000, type: Duration, unit: ms, scale: ''}
+    raw: {value: 7200000.0, type: Duration, unit: ms, scale: ''}
     readable: 2h
   cpus:
     raw: {value: !!float '1', type: Number, unit: '', scale: ''}
@@ -72,7 +72,7 @@ children:
       raw: {value: 10737418240, type: Bytes, unit: B, scale: ''}
       readable: 10 GB
     realtime: &id008
-      raw: {value: 3600000.0000, type: Duration, unit: ms, scale: ''}
+      raw: {value: 3600000.0, type: Duration, unit: ms, scale: ''}
       readable: 1h
     cpus: &id009
       raw: {value: 1, type: Number, unit: '', scale: ''}

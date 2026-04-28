@@ -105,7 +105,7 @@ class CO2Record extends TraceRecord {
             'carbon_intensity_market':  ciMarket,
             '%cpu':                     cpuUsage,
             'memory':                   memory,
-            'realtime':                 Duration.of(time, 'h').scale('ms').value,
+            'realtime':                 time,
             'cpus':                     cpus,
             'pue':                      pue,
             'powerdraw_cpu':            powerdrawCPU,
