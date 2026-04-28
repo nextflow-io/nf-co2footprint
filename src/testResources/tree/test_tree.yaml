@@ -28,9 +28,15 @@ values:
   cpus:
     raw: {value: !!float '1', type: Number, unit: '', scale: ''}
     readable: '1'
+  pue:
+    raw: {value: 1.0, type: Number, unit: '', scale: ''}
+    readable: '1'
   powerdraw_cpu:
     raw: {value: 7.0, type: Number, unit: W, scale: ''}
     readable: 7 W
+  powerdraw_memory:
+    raw: {value: 0.3725, type: Number, unit: W, scale: ''}
+    readable: 372.5 mW
   cpu_model:
     raw: {value: Some model, type: str}
     readable: Some model
@@ -71,16 +77,22 @@ children:
     cpus: &id009
       raw: {value: 1, type: Number, unit: '', scale: ''}
       readable: '1'
-    powerdraw_cpu: &id010
+    pue: &id010
+      raw: {value: 1.0, type: Number, unit: '', scale: ''}
+      readable: '1'
+    powerdraw_cpu: &id011
       raw: {value: 7.0, type: Number, unit: W, scale: ''}
       readable: 7 W
-    cpu_model: &id011
+    powerdraw_memory: &id012
+      raw: {value: 0.3725, type: Number, unit: W, scale: ''}
+      readable: 372.5 mW
+    cpu_model: &id013
       raw: {value: Some model, type: str}
       readable: Some model
-    raw_energy_processor: &id012
+    raw_energy_processor: &id014
       raw: {value: 5000.0, type: Number, unit: Wh, scale: ''}
       readable: 5 kWh
-    raw_energy_memory: &id013
+    raw_energy_memory: &id015
       raw: {value: 5000.0, type: Number, unit: Wh, scale: ''}
       readable: 5 kWh
   children:
@@ -96,10 +108,12 @@ children:
       memory: *id007
       realtime: *id008
       cpus: *id009
-      powerdraw_cpu: *id010
-      cpu_model: *id011
-      raw_energy_processor: *id012
-      raw_energy_memory: *id013
+      pue: *id010
+      powerdraw_cpu: *id011
+      powerdraw_memory: *id012
+      cpu_model: *id013
+      raw_energy_processor: *id014
+      raw_energy_memory: *id015
     children: []
 - name: test2
   metaData: {level: process}
@@ -113,10 +127,12 @@ children:
     memory: *id007
     realtime: *id008
     cpus: *id009
-    powerdraw_cpu: *id010
-    cpu_model: *id011
-    raw_energy_processor: *id012
-    raw_energy_memory: *id013
+    pue: *id010
+    powerdraw_cpu: *id011
+    powerdraw_memory: *id012
+    cpu_model: *id013
+    raw_energy_processor: *id014
+    raw_energy_memory: *id015
   children:
   - name: '2'
     metaData: {level: task}
@@ -130,8 +146,10 @@ children:
       memory: *id007
       realtime: *id008
       cpus: *id009
-      powerdraw_cpu: *id010
-      cpu_model: *id011
-      raw_energy_processor: *id012
-      raw_energy_memory: *id013
+      pue: *id010
+      powerdraw_cpu: *id011
+      powerdraw_memory: *id012
+      cpu_model: *id013
+      raw_energy_processor: *id014
+      raw_energy_memory: *id015
     children: []

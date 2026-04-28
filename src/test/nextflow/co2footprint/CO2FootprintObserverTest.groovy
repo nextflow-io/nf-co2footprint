@@ -152,7 +152,7 @@ class CO2FootprintObserverTest extends Specification{
 
         CO2EquivalencesRecord co2EquivalencesRecord = observer
             .getCO2FootprintCalculator()
-            .computeCO2footprintEquivalences(observer.workflowStats.co2Record.store.CO2e as Double)
+            .computeCO2footprintEquivalences(observer.workflowStats.co2Record.store.CO2e as BigDecimal)
 
         expect:
         // Values compared to result from www.green-algorithms.org (1h, 1core, TDP=11.45, CI:475)
@@ -224,15 +224,16 @@ class CO2FootprintObserverTest extends Specification{
         headers.size() == values.size()
 
         headers == [
-                'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'carbon_intensity', '%cpu',
-                'memory', 'realtime', 'cpus', 'powerdraw_cpu', 'cpu_model', 'raw_energy_processor', 'raw_energy_memory',
+                'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'carbon_intensity', 'carbon_intensity_market', '%cpu',
+                'memory', 'realtime', 'cpus', 'pue', 'powerdraw_cpu', 'powerdraw_memory', 'cpu_power_model', 'cpu_model', 'raw_energy_processor', 'raw_energy_memory',
         ]
+
         values == [
-            '111', 'COMPLETED', '-', '14.02 Wh', '6.73 g', '-', '480 gCO₂e/kWh', '100 %',
-            '7 GB', '1h', '1', '11.41 W', 'Unknown model', '11.41 Wh', '2.61 Wh',
+            '111', 'COMPLETED', '-', '14.02 Wh', '6.73 g', '-', '480 gCO₂e/kWh', '-', '100 %',
+            '7 GB', '1h', '1', '1', '11.41 W', '372.5 mW', '-', 'Unknown model', '11.41 Wh', '2.61 Wh'
         ] // GA: CO₂e is 6.94g with CI of 475 gCO₂eq/kWh
 
-        fileChecker.compareChecksums(tracePath, '935b64980306aa449d4057d3d752fdf3')
+        fileChecker.compareChecksums(tracePath, 'ae7105e5f28afd6a8a1919ed5e2d7c45')
 
 
         // Check Summary File

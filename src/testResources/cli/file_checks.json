@@ -1,6 +1,6 @@
 {
   "trace_test.txt": {
-    "checksum": "150a81dbbfb35fb9fcbebeab7b55ba14",
+    "checksum": "ab6efa786b9f0d2accbf062f8ede70b5",
     "num_lines": 3
   },
   "summary_test.txt": {
@@ -13,8 +13,8 @@
     "num_lines": 1813
   },
   "provenance_test.json": {
-    "checksum": "efd8942c8d4fd86ed3bfb578578410f2",
-    "num_lines": 400
+    "checksum": "9b13bc52d235deeb31c11b8571548e38",
+    "num_lines": 464
   },
   "provenance-hello.json": {
     "checksum": "x",

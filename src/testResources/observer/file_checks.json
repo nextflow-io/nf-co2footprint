@@ -4,11 +4,11 @@
     "num_lines": 30
   },
   "report_test.html": {
-    "checksum": "ea459452409e10aec3441cf890005ab7",
+    "checksum": "7c8b17bbf4dffbd97f592019c0858844",
     "num_lines": 1816
   },
   "provenance_test.json": {
-    "checksum": "f3395d683e5070af6f2ef0418d32d1a1",
-    "num_lines": 323
+    "checksum": "995e87d60a117f1912456b3245b3a687",
+    "num_lines": 371
   }
 }

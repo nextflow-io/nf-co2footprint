@@ -17,17 +17,19 @@ class ProvenanceFileCreatorTest extends Specification{
                 new CO2Record([
                         task_id: '111',
                         status: 'COMPLETED',
-                        energy_consumption: 14.0175,
-                        CO2e: 6.7284,
-                        carbon_intensity: 480.0,
-                        '%cpu': 100.0,
-                        memory: (7 as Long) * (1024**3 as Long), // 7 GB
+                        energy_consumption: 14.0175 as BigDecimal,
+                        CO2e: 6.7284 as BigDecimal,
+                        carbon_intensity: 480.0 as BigDecimal,
+                        '%cpu': 100.0 as BigDecimal,
+                        memory: (7 as Long) * (1024**3 as Long) , // 7 GB
                         realtime: (1 as Long) * (3600000 as Long), // 1 h
                         cpus: 1,
-                        powerdraw_cpu: 11.41,
+                        powerdraw_cpu: 11.41 as BigDecimal,
                         cpu_model: "Unknown model",
-                        raw_energy_processor: 11.41,
-                        raw_energy_memory: 2.6075
+                        raw_energy_processor: 11.41 as BigDecimal,
+                        raw_energy_memory: 2.6075 as BigDecimal,
+                        pue: 1.0,
+                        powerdraw_memory: 0.3725,
                 ]),
         )
         CO2RecordTree expectedProcessTree = new CO2RecordTree('observerTestProcess', [level: 'process'], null, null, [expectedTaskTree])
@@ -39,6 +41,6 @@ class ProvenanceFileCreatorTest extends Specification{
         CO2RecordTree provenanceTree = ProvenanceFileCreator.read(jsonLdPath)
 
         then:
-        provenanceTree.toMap(true, false, false) == expectedWorkflowTree.toMap(true, false, false)
+        expectedWorkflowTree.toMap(true, false, false) == provenanceTree.toMap(true, false, false)
     }
 }

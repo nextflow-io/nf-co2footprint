@@ -48,7 +48,7 @@ class CiRecordCollectorTest extends Specification {
         traceRecord.get('start') >> time_10_00_00.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         traceRecord.get('complete') >> time_10_02_00.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
 
-        Double weightedCI = timeCiRecordCollector.getWeightedCI(traceRecord)
+        BigDecimal weightedCI = timeCiRecordCollector.getWeightedCI(traceRecord)
 
         then:
         weightedCI == 20.0

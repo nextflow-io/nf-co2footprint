@@ -82,7 +82,7 @@ class CIDataMatrix extends DataMatrix {
      */
     CIMatch findCiInMatrix(String targetZone, String fallbackZone=null) throws IllegalStateException {
         if (rowIndex.containsKey(targetZone)){
-            Number ci = get(targetZone, this.ciColumn) as Double
+            Number ci = get(targetZone, this.ciColumn) as BigDecimal
             return new CIMatch(targetZone, ci)
         }
         else if (fallbackZone != null) {

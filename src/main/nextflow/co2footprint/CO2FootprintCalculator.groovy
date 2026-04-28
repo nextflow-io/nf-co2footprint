@@ -54,9 +54,10 @@ class CO2FootprintCalculator {
     *
     * @param trace   The TraceRecord containing task resource usage.
     * @param timeCiRecords Collector for carbon intensity records.
+    * @param postRun Whether the computation is performed after the run (true) or during the run (false). Used to determine whether previous values are used if not set explicitly otherwise.
     * @return        CO2Record with energy consumption, CO₂ emissions, and task/resource details.
     */
-    CO2Record computeTaskCO2footprint(TraceRecord trace, CiRecordCollector timeCiRecords) {
+    CO2Record computeTaskCO2footprint(TraceRecord trace, CiRecordCollector timeCiRecords, boolean postRun=false) {
 
         /* ===== CPU Information ===== */
 
@@ -81,8 +82,24 @@ class CO2FootprintCalculator {
         final BigDecimal coreUsage = cpuUsage / (100.0 * numberOfCores)
 
         // Per-core power draw: either custom polynomial model or TDP lookup [W/core]
-        final List<Number> cpuPowerModel = config.cpuPowerModel
-        final BigDecimal powerdrawPerCore = cpuPowerModel ? getPowerDrawFromModel(cpuPowerModel, coreUsage) : tdpDataMatrix.matchModel(cpuModel).getLogicalCoreTDP()
+        final List<Number> cpuPowerModel = useConfiguredOrPrevious(
+                config, ['cpuPowerModel'], config.cpuPowerModel,
+                trace, 'cpu_power_model', postRun
+        )
+
+        // Assigns powerdraw per core in the following order: 1. Custom polynomial model 2. TDP lookup based on CPU model 3. Previous value from trace
+        final BigDecimal powerdrawPerCore
+        if (cpuPowerModel) {
+            powerdrawPerCore = getPowerDrawFromModel(cpuPowerModel, coreUsage)
+        }
+        else {
+            if (postRun && !tdpDataMatrix.matchModel(cpuModel, false) && trace.containsKey('powerdraw_cpu')) {
+                powerdrawPerCore = trace.get('powerdraw_cpu') as BigDecimal
+            }
+            else {
+                powerdrawPerCore = tdpDataMatrix.matchModel(cpuModel).getLogicalCoreTDP()
+            }
+        }
 
         /* ===== Memory Information ===== */
 
@@ -110,18 +127,30 @@ class CO2FootprintCalculator {
             throw new MissingValueException(message)
         }
 
-        final BigDecimal powerdrawMem  = config.powerdrawMem // [W per GB]
+        final BigDecimal powerdrawMem  = useConfiguredOrPrevious(
+                config, ['powerdrawMem'], config.powerdrawMem,
+                trace, 'powerdraw_memory', postRun
+        ) // [W per GB]
 
         /* ===== Data Center Effectiveness and Carbon Intensity ===== */
 
          // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
-        final BigDecimal pue = config.pue
+        final BigDecimal pue = useConfiguredOrPrevious(
+                config, ['pue'], config.pue,
+                trace, 'pue', postRun
+        )
 
         // CI: carbon intensity [gCO₂e kWh−1]
-        final BigDecimal ci = timeCiRecords.getCi(trace)
+        final BigDecimal ci = useConfiguredOrPrevious(
+                config, ['ci', 'emApiKey'], timeCiRecords.getCi(trace),
+                trace, 'carbon_intensity', postRun
+        )
 
         // Personal energy mix based carbon intensity
-        final Double ciMarket = config.ciMarket
+        final BigDecimal ciMarket = useConfiguredOrPrevious(
+                config, ['ciMarket'], config.ciMarket,
+                trace, 'carbon_intensity_market', postRun
+        )
 
 
         /* ===== Energy & Emission Calculation ===== */
@@ -141,11 +170,15 @@ class CO2FootprintCalculator {
             co2e,
             co2eMarket,
             ci,
+            ciMarket,
             cpuUsage,
             memory as Long,
             runtime_h,
             numberOfCores as Integer,
+            pue,
             powerdrawPerCore,
+            powerdrawMem,
+            cpuPowerModel as String,
             config.ignoreCpuModel ? 'Custom value' : cpuModel,
             rawEnergyProcessor,
             rawEnergyMemory,
@@ -161,7 +194,7 @@ class CO2FootprintCalculator {
      * @param totalCO2 Total CO₂ equivalents that were emitted
      * @return CO2EquivalencesRecord with estimations for sensible comparisons
      */
-    static CO2EquivalencesRecord computeCO2footprintEquivalences(Double totalCO2) {
+    static CO2EquivalencesRecord computeCO2footprintEquivalences(BigDecimal totalCO2) {
         final BigDecimal carKilometers = totalCO2 / 175
         final BigDecimal treeMonths = totalCO2 / 917
         final BigDecimal planePercent = totalCO2 * 100 / 50000
@@ -204,6 +237,28 @@ class CO2FootprintCalculator {
     }
 
     /**
+     * Utility method to use the from the trace value from a previous run if the entry was not explicitly set in the config.
+     *
+     * @param config The CO2FootprintConfig object containing the configuration for the current run
+     * @param configKeys The entry keys in the config that trigger the value to be set explicitly
+     * @param configValue The current config value
+     * @param trace TraceRecord or CO2Record, potentially with values from previous runs
+     * @param traceKey The entry key in the trace
+     * @return The value from the trace if the config entry was not explicitly set and the trace contains the value, otherwise the current config value
+     */
+    static <T> T useConfiguredOrPrevious(
+            CO2FootprintConfig config, List<String> configKeys, T configValue,
+            TraceRecord trace, String traceKey, boolean postRun
+    ){
+        if (postRun && (!configKeys.collect({ String configKey -> configKey in config.usedKeys }).any()) && trace.containsKey(traceKey)) {
+            return trace.get(traceKey) as T
+        }
+        else {
+            return configValue
+        }
+    }
+
+    /**
     * Computes CPU power draw using the configured polynomial model.
     *
     * @param coefficients List of polynomial coefficients (highest degree first), as Double or BigDecimal.
@@ -220,5 +275,4 @@ class CO2FootprintCalculator {
 
         return power
     }
-
 }

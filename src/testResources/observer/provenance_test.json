@@ -29,7 +29,7 @@
     },
     "CO2e": {
         "@type": "schema:QuantitativeValue",
-        "value": 6.7284,
+        "value": 6.728400000,
         "unitText": "g",
         "additionalProperty": {
             "readable": "6.73 g"
@@ -75,12 +75,28 @@
             "readable": "1"
         }
     },
+    "pue": {
+        "@type": "schema:QuantitativeValue",
+        "value": 1.0,
+        "unitText": "",
+        "additionalProperty": {
+            "readable": "1"
+        }
+    },
     "powerdraw_cpu": {
         "@type": "schema:QuantitativeValue",
         "value": 11.41,
         "unitText": "W",
         "additionalProperty": {
             "readable": "11.41 W"
+        }
+    },
+    "powerdraw_memory": {
+        "@type": "schema:QuantitativeValue",
+        "value": 0.3725,
+        "unitText": "W",
+        "additionalProperty": {
+            "readable": "372.5 mW"
         }
     },
     "cpu_model": {
@@ -134,7 +150,7 @@
             },
             "CO2e": {
                 "@type": "schema:QuantitativeValue",
-                "value": 6.7284,
+                "value": 6.728400000,
                 "unitText": "g",
                 "additionalProperty": {
                     "readable": "6.73 g"
@@ -180,12 +196,28 @@
                     "readable": "1"
                 }
             },
+            "pue": {
+                "@type": "schema:QuantitativeValue",
+                "value": 1.0,
+                "unitText": "",
+                "additionalProperty": {
+                    "readable": "1"
+                }
+            },
             "powerdraw_cpu": {
                 "@type": "schema:QuantitativeValue",
                 "value": 11.41,
                 "unitText": "W",
                 "additionalProperty": {
                     "readable": "11.41 W"
+                }
+            },
+            "powerdraw_memory": {
+                "@type": "schema:QuantitativeValue",
+                "value": 0.3725,
+                "unitText": "W",
+                "additionalProperty": {
+                    "readable": "372.5 mW"
                 }
             },
             "cpu_model": {
@@ -239,7 +271,7 @@
                     },
                     "CO2e": {
                         "@type": "schema:QuantitativeValue",
-                        "value": 6.7284,
+                        "value": 6.728400000,
                         "unitText": "g",
                         "additionalProperty": {
                             "readable": "6.73 g"
@@ -285,12 +317,28 @@
                             "readable": "1"
                         }
                     },
+                    "pue": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 1.0,
+                        "unitText": "",
+                        "additionalProperty": {
+                            "readable": "1"
+                        }
+                    },
                     "powerdraw_cpu": {
                         "@type": "schema:QuantitativeValue",
                         "value": 11.41,
                         "unitText": "W",
                         "additionalProperty": {
                             "readable": "11.41 W"
+                        }
+                    },
+                    "powerdraw_memory": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 0.3725,
+                        "unitText": "W",
+                        "additionalProperty": {
+                            "readable": "372.5 mW"
                         }
                     },
                     "cpu_model": {

@@ -46,7 +46,7 @@ class CiRecordCollector {
     /**
      * Returns the time CIs map.
      *
-     * @return ConcurrentHashMap of LocalDateTime to Double representing carbon intensity values
+     * @return ConcurrentHashMap of LocalDateTime to BigDecimal representing carbon intensity values
      */
     ConcurrentHashMap<LocalDateTime, Number> getTimeCIs() { timeCIs }
 
@@ -63,7 +63,7 @@ class CiRecordCollector {
     /**
      * Adds time CI pairs to CI record
      *
-     * @param timeCi Map of LocalDateTime and Double that is added to the CI record
+     * @param timeCi Map of LocalDateTime and BigDecimal that is added to the CI record
      */
     protected void add(CiRecord ciRecord=this.config.ci) {
         ciRecord.update()
@@ -106,11 +106,11 @@ class CiRecordCollector {
     * - If no suitable CI values are found, a MissingValueException is thrown.
     *
     * @param trace   The TraceRecord containing the task's start and end times (in milliseconds since epoch)
-    * @param timeCIs Map of LocalDateTime to Double representing timestamped CI values (defaults to this.timeCIs)
+    * @param timeCIs Map of LocalDateTime to BigDecimal representing timestamped CI values (defaults to this.timeCIs)
     * @return        The weighted average carbon intensity for the task's runtime
     * @throws        MissingValueException if no CI values are available for the task's time window
     */
-    Double getWeightedCI(TraceRecord trace, Map<LocalDateTime, Number> timeCIs=this.timeCIs) {
+    BigDecimal getWeightedCI(TraceRecord trace, Map<LocalDateTime, Number> timeCIs=this.timeCIs) {
 
         // Obtain recorded star, end, and duration
         LocalDateTime start = LocalDateTime.ofInstant(
@@ -135,12 +135,12 @@ class CiRecordCollector {
         /**
          * Return the weight of as the covered fraction of the total duration
          */
-        Closure<Double> getWeight = { LocalDateTime time1, LocalDateTime time2 ->
+        Closure<BigDecimal> getWeight = { LocalDateTime time1, LocalDateTime time2 ->
             (time1.until(time2, ChronoUnit.MILLIS)) / duration
         }
 
         // Calculation of average carbon intensity
-        Double averageCi = 0d
+        BigDecimal averageCi = 0d
 
         if (during) {
             if (before) {

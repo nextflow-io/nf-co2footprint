@@ -1,5 +1,6 @@
 package nextflow.co2footprint.FileCreation
 
+import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 import groovyx.gpars.agent.Agent
@@ -7,7 +8,6 @@ import nextflow.co2footprint.Config.ProvenanceFileConfig
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.trace.TraceHelper
-import groovy.json.JsonBuilder
 
 import java.nio.file.Path
 import java.time.Duration
@@ -109,6 +109,25 @@ class ProvenanceFileCreator extends BaseFileCreator {
                             'value': raw.value,
                     ]
                 }
+                else if (raw.type == 'list') {
+                    List<Map<String, Object>> itemElements = []
+                    itemElements(raw.value as List).eachWithIndex { Object item, int index ->
+                        itemElements.add(
+                                ['@type': 'schema:ListItem',
+                                'position': index + 1,
+                                'item': [
+                                      '@type': 'schema:PropertyValue',
+                                      'value': item
+                                    ]
+                                ]
+                        )
+                    }
+                    ldMap[key] = [
+                            '@type': 'schema:ItemList',
+                            'itemListElement': itemElements,
+                            'numberOfItems': itemElements.size()
+                    ]
+                }
                 else if (raw.type as String in ['Number', 'Percentage', 'Bytes']) {
                     ldMap[key] = [
                             '@type': 'schema:QuantitativeValue',
@@ -208,6 +227,12 @@ class ProvenanceFileCreator extends BaseFileCreator {
             }
             else if (value['@type'] == 'schema:DataTime') {
                 store[key] = Instant.parse(value['value'] as String).toEpochMilli()
+            }
+            else if(value['@type'] == 'schema:ItemList') {
+                List<Object> items = (value['itemListElement'] as List<Map<String, Object>>).collect { Map<String, Object> itemElement ->
+                    itemElement['item']['value']
+                }
+                store[key] = items
             }
             else {
                 String errorMessage = "Unknown @type ${value['@type']} for key ${key}, skipping value."

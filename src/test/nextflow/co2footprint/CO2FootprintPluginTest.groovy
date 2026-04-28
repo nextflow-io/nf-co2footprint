@@ -11,7 +11,6 @@ import nextflow.processor.TaskRun
 import nextflow.script.WorkflowMetadata
 import nextflow.trace.TraceObserver
 import nextflow.trace.TraceRecord
-
 import spock.lang.Shared
 import spock.lang.Specification
 

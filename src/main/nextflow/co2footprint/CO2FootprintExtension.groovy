@@ -46,6 +46,7 @@ class CO2FootprintExtension extends PluginExtensionPoint {
      * @param delimiter Delimiter of the trace file, default: \t
      * @return A list of all task-specific trace records inferred from the trace file
      */
+    // Don't make this method static or it will not work within the extension!
     @Function
     List<TraceRecord> parseTraceFile(Path tracePath, String delimiter='\t') {
         return TraceFileParser.parseExecutionTraceFile(tracePath, delimiter)
@@ -136,7 +137,7 @@ class CO2FootprintExtension extends PluginExtensionPoint {
         // Collect CO2Records from traces & optionally write the corresponding files
         traceRecords.each { TraceRecord traceRecord ->
             observer.recordStarted(traceRecord)
-            observer.aggregateRecords(traceRecord)
+            observer.aggregateRecords(traceRecord, true)
         }
 
         // Extract minimum start and maximum complete for workflow start and end approximation
@@ -164,9 +165,10 @@ class CO2FootprintExtension extends PluginExtensionPoint {
         // Parse provenance file
         CO2RecordTree co2RecordTree = ProvenanceFileCreator.read(provenancePath)
 
+        observer.workflowStats.name = co2RecordTree.descentTo('workflow')[0].name
         for (CO2RecordTree taskTree : co2RecordTree.descentTo('task')) {
             observer.recordStarted(taskTree.co2Record)
-            observer.aggregateRecords(taskTree.co2Record)
+            observer.aggregateRecords(taskTree.co2Record, true)
         }
 
         // Extract start and complete from provenance
@@ -180,7 +182,7 @@ class CO2FootprintExtension extends PluginExtensionPoint {
             newCo2RecordTree = new CO2RecordTree(
                     co2RecordTree.name,
                     co2RecordTree.metaData,
-                    observer.createCO2Record(co2RecordTree.co2Record)
+                    observer.createCO2Record(co2RecordTree.co2Record, true)
             )
             newCo2RecordTree.addChild(observer.workflowStats)
         }
