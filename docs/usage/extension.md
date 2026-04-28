@@ -52,7 +52,7 @@ process calculate_CO2 {
 }
 
 workflow {
-  calculate_CO2('<Path_to_your_execution_trace>')
+  calculate_CO2('<Path_to_your_execution_trace>', <config_modifications>, <delimiter>)
 }
 ```
 
@@ -75,3 +75,6 @@ Can be used to calculate the emissions of a trace.
 - **configModifications**:
   Temporarily overrides parameters in the `co2footprint` block of the current Nextflow configuration for a single extension function call. The provided map is merged with the existing configuration and does not affect the overall workflow run. Can be used to adjust settings such as output paths or carbon intensity for post-run estimations. Defaults to [:].  
   Example: `[trace: [file: <Path_to_your_output_trace_file>], ci: <Your_carbon_intensity>]`
+
+- **delimiter**:
+  Delimiter that is used withing execution trace file. Defaults to `'\t'`.

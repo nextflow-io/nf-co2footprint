@@ -60,7 +60,8 @@ class CO2FootprintExtension extends PluginExtensionPoint {
     @Function
     Output calculateCO2(
             Path tracePath,
-            Map<String, Object> configModifications=null
+            Map<String, Object> configModifications=null,
+            String delimiter = '\t'
     ){
         // Define separate observer
         CO2FootprintConfig config = factory.defineConfig(configModifications, session)
@@ -68,7 +69,7 @@ class CO2FootprintExtension extends PluginExtensionPoint {
         CO2FootprintObserver observer = new CO2FootprintObserver(config, calculator)
 
         // Parse the trace file
-        List<TraceRecord> traceRecords = parseTraceFile(tracePath)
+        List<TraceRecord> traceRecords = parseTraceFile(tracePath, delimiter)
 
         // Create trace file
         observer.traceFile.create()
