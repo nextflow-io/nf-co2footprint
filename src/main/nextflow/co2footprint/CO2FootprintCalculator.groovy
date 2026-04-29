@@ -65,7 +65,7 @@ class CO2FootprintCalculator {
         final String cpuModel = config.ignoreCpuModel ? 'default' : trace.get('cpu_model') as String
 
         // Runtime [h]
-        final BigDecimal runtime_ms = getTraceOrDefault(trace, trace.taskId, 'realtime', 0, 'missing-realtime')
+        final BigDecimal runtime_ms = getTraceOrDefault(trace, trace.taskId, 'realtime', 0, 'missing-realtime') as BigDecimal
         final BigDecimal runtime_h = Duration.of(runtime_ms, 'ms').scale('h').value as BigDecimal
 
         // Number of CPU cores
