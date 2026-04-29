@@ -64,7 +64,8 @@ class CO2FootprintExtension extends PluginExtensionPoint {
     Output calculateCO2(
             Path filePath,
             Map<String, Object> configModifications=null,
-            String mode='trace'
+            String mode='trace',
+            String delimiter = '\t'
     ){
         assert mode in ['trace', 'provenance'], 'Please provide a valid mode, either `trace` or `provenance`.'
 
@@ -87,7 +88,7 @@ class CO2FootprintExtension extends PluginExtensionPoint {
 
         CO2RecordTree workflowStats = null
         if (mode == 'trace') {
-            workflowStats = tracePostRun(filePath, observer, metadata)
+            workflowStats = tracePostRun(filePath, observer, metadata, delimiter)
         }
         else if (mode == 'provenance') {
             workflowStats = provenancePostRun(filePath, observer, metadata)
@@ -130,9 +131,9 @@ class CO2FootprintExtension extends PluginExtensionPoint {
      * @param metadata WorkflowMetadata instance to fill with workflow metadata based on the trace file
      * @return A Tuple2 containing the CO2FootprintObserver instance and the WorkflowMetadata instance with filled metadata
      */
-    static CO2RecordTree tracePostRun(Path tracePath, CO2FootprintObserver observer, WorkflowMetadata metadata) {
+    static CO2RecordTree tracePostRun(Path tracePath, CO2FootprintObserver observer, WorkflowMetadata metadata, String delimiter) {
         // Parse the trace file
-        List<TraceRecord> traceRecords = TraceFileParser.parseExecutionTraceFile(tracePath)
+        List<TraceRecord> traceRecords = TraceFileParser.parseExecutionTraceFile(tracePath, delimiter)
 
         // Collect CO2Records from traces & optionally write the corresponding files
         traceRecords.each { TraceRecord traceRecord ->
@@ -147,7 +148,7 @@ class CO2FootprintExtension extends PluginExtensionPoint {
             Long currentStart = traceRecord.get('start') as Long
             Long currentComplete = traceRecord.get('complete') as Long
             if (currentStart != null && (start == null || start > currentStart)){ start = currentStart }
-            if (currentComplete != null && (complete == null || complete > currentComplete)){ complete = currentComplete }
+            if (currentComplete != null && (complete == null || complete < currentComplete)){ complete = currentComplete }
         }
         metadata = defineTimeMetadata(metadata, start, complete)
 

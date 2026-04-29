@@ -1,8 +1,10 @@
 # New
 ## Bug Fixes:
+- Unintended report value removal
 
 ## Misc:
 - Improved workflow reporting form extension/CLI by deriving and injecting workflow metadata from the provided trace file
+- Added full integration test
 - Added more calculation metrics to provenance and trace file to enhance reproducibility
 
 ## Features:

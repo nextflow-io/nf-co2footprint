@@ -169,4 +169,15 @@ class CO2FootprintCalculatorTest extends Specification{
         150.0   | 1    | 2
     }
 
+    def "getTraceOrDefault preserves zero values"() {
+        given:
+        def traceRecord = new TraceRecord()
+        traceRecord.realtime = 0L
+        traceRecord.'%cpu' = 0.0d
+
+        expect:
+        CO2FootprintCalculator.getTraceOrDefault(traceRecord, null, 'realtime', 123L, 'missing-realtime') == 0L
+        CO2FootprintCalculator.getTraceOrDefault(traceRecord, null, '%cpu', 100.0d, 'missing-%cpu') == 0.0d
+    }
+
 }

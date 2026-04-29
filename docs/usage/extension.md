@@ -44,7 +44,6 @@ process calculate_CO2 {
         trace: [file: './out/pipeline_info/post-run_trace.txt'],
         summary: [file: './out/pipeline_info/post-run_summary.txt'],
         report: [file: './out/pipeline_info/post-run_report.html'],
-        provenance: [file: './out/pipeline_info/post-run_provenance.json', enabled: true]
       ]
   )
   """
@@ -53,7 +52,7 @@ process calculate_CO2 {
 }
 
 workflow {
-  calculate_CO2('<Path_to_your_execution_trace>')
+  calculate_CO2('<Path_to_your_execution_trace>', <config_modifications>, <delimiter>)
 }
 ```
 
@@ -79,3 +78,6 @@ Can be used to calculate the emissions of a trace.
 
 - **mode**:
   Either 'trace' or 'provenance' to indicate which file was passed along. Defaults to `'trace'`.
+
+- **delimiter**:
+  Delimiter that is used withing execution trace file. Defaults to `'\t'`.

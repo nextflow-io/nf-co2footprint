@@ -50,32 +50,32 @@ children:
 - name: test1
   metaData: {level: process}
   values:
-    task_id: &id001
-      raw: {value: '111', type: str}
+    task_id:
+      raw: &id001 {value: '111', type: str}
       readable: '111'
-    status: &id002
-      raw: {value: COMPLETED, type: str}
+    status:
+      raw: &id002 {value: COMPLETED, type: str}
       readable: COMPLETED
-    energy_consumption: &id003
-      raw: {value: 2000.0, type: Number, unit: Wh, scale: ''}
+    energy_consumption:
+      raw: &id003 {value: 2000.0, type: Number, unit: Wh, scale: ''}
       readable: 2 kWh
-    CO2e: &id004
-      raw: {value: 200.0, type: Number, unit: g, scale: ''}
+    CO2e:
+      raw: &id004 {value: 200.0, type: Number, unit: g, scale: ''}
       readable: 200 g
-    carbon_intensity: &id005
-      raw: {value: 100.0, type: Number, unit: gCO₂e/kWh, scale: ''}
+    carbon_intensity:
+      raw: &id005 {value: 100.0, type: Number, unit: gCO₂e/kWh, scale: ''}
       readable: 100 gCO₂e/kWh
-    '%cpu': &id006
-      raw: {value: 1.0, type: Percentage, unit: '', scale: '%'}
+    '%cpu':
+      raw: &id006 {value: 1.0, type: Percentage, unit: '', scale: '%'}
       readable: 1 %
-    memory: &id007
-      raw: {value: 10737418240, type: Bytes, unit: B, scale: ''}
+    memory:
+      raw: &id007 {value: 10737418240, type: Bytes, unit: B, scale: ''}
       readable: 10 GB
     realtime: &id008
       raw: {value: 3600000.0, type: Duration, unit: ms, scale: ''}
       readable: 1h
-    cpus: &id009
-      raw: {value: 1, type: Number, unit: '', scale: ''}
+    cpus:
+      raw: &id009 {value: 1, type: Number, unit: '', scale: ''}
       readable: '1'
     pue: &id010
       raw: {value: 1.0, type: Number, unit: '', scale: ''}

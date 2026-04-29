@@ -78,7 +78,7 @@ class AWSRegionsDataMatrix extends DataMatrix{
         }
 
         if (region) {
-            region?.trim()
+            region = region.trim()
         } else {
             log.debug('Region could not be fetched via `aws configure get region` command.')
             log.debug('No region found.')

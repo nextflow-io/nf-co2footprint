@@ -54,7 +54,7 @@ class CO2FootprintCLI {
 
         // Call on extension function to parse trace or provenance file and estimate footprint
         if (tracePath) {
-            CO2FootprintExtension.tracePostRun(tracePath, observer, metadata)
+            CO2FootprintExtension.tracePostRun(tracePath, observer, metadata, parsedArgs.get('delimiter', '\t') as String)
         }
         else if (provenancePath) {
             CO2FootprintExtension.provenancePostRun(provenancePath, observer, metadata)

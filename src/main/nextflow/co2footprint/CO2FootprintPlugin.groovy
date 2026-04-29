@@ -103,7 +103,7 @@ class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
      * @param manifest URL to the manifest
      * @param tryFallback Whether a fallback in the form of a search of all MANIFESTS from the class loader should be attempted
      */
-    protected static String readPluginVersion(
+    static String readPluginVersion(
             URL manifest=CO2FootprintPlugin.class.getResource('/META-INF/MANIFEST.MF'),
             boolean tryFallback=true
     ) {
