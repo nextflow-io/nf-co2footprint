@@ -1,5 +1,6 @@
 # New
 ## Bug Fixes:
+- CPU power model now applied correctly
 - Unintended report value removal
 
 ## Misc:

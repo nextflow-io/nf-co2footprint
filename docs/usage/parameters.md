@@ -154,12 +154,12 @@ The following parameters are currently available:
     
     !!! warning "Experimental feature"
         The `cpuPowerModel` parameter is experimental and may change in future releases.
+
+    A power model function that takes the parameter `coreUsage`.
     
-    Polynomial coefficients for a custom CPU power model (highest degree first).
+    If specified, this overrides TDP-based power draw estimation for CPU cores. The function returns the **per-core power draw** (in Watts) as a function of core utilization (0–1).
     
-    If specified, this overrides TDP-based power draw estimation for CPU cores. The coefficients define a function that returns the **per-core power draw** (in Watts) as a function of core utilization (0–1).
-    
-    **Example**: `[0.5, 10.0]` defines the model `0.5 × coreUsage + 10`
+    **Example**: `{coreUsage -> 0.5 * coreUsage + 10.0}`
     
     **Example visualization**:
     
