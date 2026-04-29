@@ -3,6 +3,7 @@
 
 ## Misc:
 - Improved workflow reporting form extension/CLI by deriving and injecting workflow metadata from the provided trace file
+- Added full integration test
 
 ## Features:
 - Transformation of data file to provenance file with schema.org / bioschemas.org type annotation in JSON-LD data format
