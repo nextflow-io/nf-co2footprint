@@ -279,7 +279,7 @@ class FileChecker {
 
         // Get Infos to check for
         recordPath ?= buildChecksDirectory.resolve(path.getFileName())
-        Map<String, Object> checksInfo = this.checksInfo.get(recordPath.getFileName() as String, [:])
+        Map<String, Object> checksInfo = this.checksInfo.get(recordPath.getFileName() as String, [:]).deepClone()
 
         // Prepare new file check infos
         Map<String, Object> newCheckInfos = [:]

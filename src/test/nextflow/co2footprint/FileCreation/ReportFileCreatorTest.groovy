@@ -2,12 +2,12 @@ package nextflow.co2footprint.FileCreation
 
 import nextflow.Session
 import nextflow.co2footprint.CO2FootprintCalculator
+import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.Config.ProvenanceFileConfig
 import nextflow.co2footprint.Config.ReportFileConfig
 import nextflow.co2footprint.Config.SummaryFileConfig
 import nextflow.co2footprint.Config.TraceFileConfig
 import nextflow.co2footprint.DataContainers.CIDataMatrix
-import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordTree
@@ -78,8 +78,8 @@ class ReportFileCreatorTest extends Specification{
         timeCiRecordCollector = new CiRecordCollector(config)
 
         CO2Record co2Record = new CO2Record(
-            traceRecord, 100.0d, 10.0d, null, 475.0, 100.0, 7,
-            1.0d, 1, 12, 'Unknown model', 0.5d, 0.5d
+            traceRecord, 100.0, 10.0, null, 475.0, null, 100.0, 7,
+                1.0 * 3600000, 1, 1.0, 12.0, 0.3725, null, 'Unknown model', 0.5, 0.5
         )
 
         // Define Record treee
@@ -112,7 +112,7 @@ class ReportFileCreatorTest extends Specification{
         CO2RecordTree processTree =  workflowStats.addChild(new CO2RecordTree('process', [level: 'process']))
         CO2Record co2Record = new CO2Record(
                 new TraceRecord(), 100.0, co2e,
-                null, null, null, null, null, null, null, null, null, null
+                null, null, null, null, null, null, null, null, null, null, null, null, null, null
         )
 
         processTree.addChild(new CO2RecordTree('task', [level: 'task'], co2Record))
@@ -127,10 +127,10 @@ class ReportFileCreatorTest extends Specification{
         totalsJson == totalsJsonResult
         where:
         co2e                || totalsJsonResult
-        0.01d               || [CO2e: '10 mg', energy_consumption:'100 kWh', car: '5.71E-5', tree: '28.69s', plane_percent: '2.00E-5 %', plane_flights: null,
+        0.01                || [CO2e: '10 mg', energy_consumption:'100 kWh', car: '5.71E-5', tree: '28.69s', plane_percent: '2.00E-5 %', plane_flights: null,
                                 CO2e_non_cached:'10 mg', energy_consumption_non_cached:'100 kWh', car_non_cached: '5.71E-5', tree_non_cached: '28.69s', plane_percent_non_cached: '2.00E-5 %', plane_flights_non_cached: null]
-        10_000_000.0d       || [CO2e: '10 Mg', energy_consumption:'100 kWh', car: '5.71E4', tree: '908years 9months 3days 19h 38min 55.88s', plane_percent: null, plane_flights: '200',
-                                CO2e_non_cached:'10 Mg', energy_consumption_non_cached:'100 kWh', car_non_cached: '5.71E4', tree_non_cached: '908years 9months 3days 19h 38min 55.88s', plane_percent_non_cached: null, plane_flights_non_cached: '200']
+        10_000_000.0        || [CO2e: '10 Mg', energy_consumption:'100 kWh', car: '5.71E4', tree: '908years 9months 3days 19h 38min 55.87s', plane_percent: null, plane_flights: '200',
+                                CO2e_non_cached:'10 Mg', energy_consumption_non_cached:'100 kWh', car_non_cached: '5.71E4', tree_non_cached: '908years 9months 3days 19h 38min 55.87s', plane_percent_non_cached: null, plane_flights_non_cached: '200']
     }
 
     def 'Test data JSON generation' () {

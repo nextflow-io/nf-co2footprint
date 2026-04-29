@@ -22,7 +22,7 @@ The plugin provides some [extension points](https://nextflow.io/docs/latest/plug
 The command line functionality utilizes Nextflow configs, like the regular plugin (see [parameters.md](./parameters.md)).
 It is recommended to set the output paths and a fixed carbon intensity value (`ci`) in the config.
 ```bash
-nextflow plugin nf-co2footprint:postRun --config <path_to_nextflow.config> --tracePath <path_to_execution_trace.txt>
+nextflow plugin nf-co2footprint:postRun --config <path_to_nextflow.config> [--tracePath <path_to_execution_trace.txt> | --provenancePath <path_to_provenance_file.json>]
 ```
 
 
@@ -69,12 +69,15 @@ Parse the trace file into a list of TraceRecord instances.
 ###### `calculateCO2`
 Can be used to calculate the emissions of a trace.
 
-- **tracePath**:
-  Path to the trace file 
+- **filePath**:
+  Path to the trace or provenance file 
 
 - **configModifications**:
   Temporarily overrides parameters in the `co2footprint` block of the current Nextflow configuration for a single extension function call. The provided map is merged with the existing configuration and does not affect the overall workflow run. Can be used to adjust settings such as output paths or carbon intensity for post-run estimations. Defaults to [:].  
   Example: `[trace: [file: <Path_to_your_output_trace_file>], ci: <Your_carbon_intensity>]`
+
+- **mode**:
+  Either 'trace' or 'provenance' to indicate which file was passed along. Defaults to `'trace'`.
 
 - **delimiter**:
   Delimiter that is used withing execution trace file. Defaults to `'\t'`.

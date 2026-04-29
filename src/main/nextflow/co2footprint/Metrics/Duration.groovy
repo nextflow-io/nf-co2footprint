@@ -87,7 +87,7 @@ class Duration extends Quantity {
     String toReadable(
             String smallestUnit = 's',
             String largestUnit = 'years',
-            Double threshold = 0.0
+            BigDecimal threshold = 0.0
     ) {
         BigDecimal value = new BigDecimal(value)
         // Ordered list of supported time units

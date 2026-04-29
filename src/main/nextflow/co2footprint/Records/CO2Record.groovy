@@ -19,26 +19,30 @@ class CO2Record extends TraceRecord {
      static {
          FIELDS.putAll(
                  [
-                         energy_consumption:    'mem',
-                         CO2e:                  'num',
-                         CO2e_market:           'num',
-                         carbon_intensity:      'num',
-                         '%cpu':                'perc',
-                         realtime:              'time',
-                         cpus:                  'num',
-                         memory:                'mem',
-                         powerdraw_cpu:         'num',
-                         cpu_model:             'str',
-                         raw_energy_processor:  'num',
-                         raw_energy_memory:     'num',
+                         energy_consumption:        'mem',
+                         CO2e:                      'num',
+                         CO2e_market:               'num',
+                         carbon_intensity:          'num',
+                         carbon_intensity_market:   'num',
+                         '%cpu':                    'perc',
+                         realtime:                  'time',
+                         cpus:                      'num',
+                         memory:                    'mem',
+                         pue:                       'num',
+                         powerdraw_cpu:             'num',
+                         powerdraw_memory:          'num',
+                         cpu_power_model:           'str',
+                         cpu_model:                 'str',
+                         raw_energy_processor:      'num',
+                         raw_energy_memory:         'num',
                  ]
          )
      }
 
     // Stores keys that are related to the CO2 calculation
     final static List<String> emissionMetrics = [
-            'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'carbon_intensity', '%cpu', 'memory', 'realtime',
-            'cpus', 'powerdraw_cpu', 'cpu_model', 'raw_energy_processor', 'raw_energy_memory'
+            'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'carbon_intensity', 'carbon_intensity_market',
+            '%cpu', 'memory', 'realtime', 'cpus', 'pue', 'powerdraw_cpu', 'powerdraw_memory', 'cpu_power_model', 'cpu_model', 'raw_energy_processor', 'raw_energy_memory'
     ]
 
     // Stores non-CO₂ keys from the trace record and store them as traceKeys
@@ -70,19 +74,23 @@ class CO2Record extends TraceRecord {
     * @param co2e          CO₂ equivalent emissions (g) based on location-based carbon intensity
     * @param co2eMarket    CO₂ equivalent emissions (g) based on market-based (personal energy mix) carbon intensity
     * @param ci            Location-based carbon intensity used for calculation (gCO₂eq/kWh)
+    * @param ciMarket      Market-based carbon intensity used for calculation (gCO₂eq/kWh)
     * @param cpuUsage      CPU usage percentage during the task (%)
     * @param memory        Memory used by the task (bytes)
     * @param time          Time spent on the task (ms)
     * @param cpus          Number of CPU cores used
+    * @param pue           Power Usage Effectiveness of the data center where the task was executed
     * @param powerdrawCPU  Power draw (TDP) of the CPU (W)
+    * @param powerdrawMem  Power draw per GB of memory (W/GB)
+    * @param cpuPowerModel Coefficients of the polynomial model to calculate CPU power draw based on usage, if provided in config (W/core)
     * @param cpu_model     CPU model name
     * @param rawEnergyProcessor Processor-specific energy consumed by the task (kWh)
     * @param rawEnergyMemory    Memory-specific energy consumed by the task (kWh)
     */
     CO2Record(
-        TraceRecord traceRecord, Double energy, Double co2e, Double co2eMarket, Double ci,
-        Double cpuUsage, Long memory, Double time,  Integer cpus, Double powerdrawCPU,
-        String cpu_model, Double rawEnergyProcessor, Double rawEnergyMemory
+        TraceRecord traceRecord, BigDecimal energy, BigDecimal co2e, BigDecimal co2eMarket, BigDecimal ci, BigDecimal ciMarket,
+        BigDecimal cpuUsage, Long memory, BigDecimal time,  Integer cpus, BigDecimal pue, BigDecimal powerdrawCPU, BigDecimal powerdrawMem,
+        String cpuPowerModel, String cpu_model, BigDecimal rawEnergyProcessor, BigDecimal rawEnergyMemory
     ) {
         // Add trace Record values
         traceKeys = traceRecord.store.keySet() as List<String>
@@ -94,11 +102,15 @@ class CO2Record extends TraceRecord {
             'CO2e':                     co2e,
             'CO2e_market':              co2eMarket,
             'carbon_intensity':         ci,
+            'carbon_intensity_market':  ciMarket,
             '%cpu':                     cpuUsage,
             'memory':                   memory,
-            'realtime':                 Duration.of(time, 'h').scale('ms').value,
+            'realtime':                 time,
             'cpus':                     cpus,
+            'pue':                      pue,
             'powerdraw_cpu':            powerdrawCPU,
+            'powerdraw_memory':         powerdrawMem,
+            'cpu_power_model':          cpuPowerModel,
             'cpu_model':                cpu_model,
             'raw_energy_processor':     rawEnergyProcessor,
             'raw_energy_memory':        rawEnergyMemory,
@@ -139,12 +151,12 @@ class CO2Record extends TraceRecord {
         Object thisValue = this.store[key]
 
         // Weighted average by energy for carbon intensity and CPU power draw
-        if (key in ['carbon_intensity', 'powerdraw_cpu']) {
+        if (key in ['carbon_intensity', 'powerdraw_cpu', 'carbon_intensity_market', 'powerdraw_memory']) {
             return Calculator.weightedAverage([thisValue, newValue], [store['energy_consumption'], record.store['energy_consumption']])
         }
 
         // Weighted average by time for CPU usage
-        else if (key in ['%cpu', '%mem', 'vmem', 'rss', 'cpus']) {
+        else if (key in ['%cpu', '%mem', 'vmem', 'rss', 'cpus', 'pue']) {
             return Calculator.weightedAverage([thisValue, newValue], [store['realtime'], record.store['realtime']])
         }
 
@@ -159,7 +171,7 @@ class CO2Record extends TraceRecord {
         }
 
         // For string/date-like fields, store all unique values in a Set
-        else if ((key in ['cpu_model', 'status', 'name']) || (FIELDS.get(key) in ['str'])) {
+        else if ((key in ['cpu_model', 'status', 'name', 'cpu_power_model']) || (FIELDS.get(key) in ['str'])) {
             return thisValue == newValue ? thisValue : null
         }
 
@@ -200,7 +212,9 @@ class CO2Record extends TraceRecord {
              case 'CO2e_market' -> Quantity.of(value, '', 'g').toMap()
              case 'realtime' -> Duration.of(value, 'ms').scale('ms').toMap()
              case 'carbon_intensity' -> Quantity.of(value, '', 'gCO₂e/kWh').toMap()
+             case 'carbon_intensity_market' -> Quantity.of(value, '', 'gCO₂e/kWh').toMap()
              case 'powerdraw_cpu' -> Quantity.of(value, '', 'W').toMap()
+             case 'powerdraw_memory' -> Quantity.of(value, '', 'W').toMap()
              case '%cpu' -> Percentage.of(value).toMap()
              case 'memory' -> Bytes.of(value, 'G').scale('').toMap()
              case 'raw_energy_processor' -> Quantity.of(value, 'k', 'Wh').scale('').toMap()
@@ -238,7 +252,10 @@ class CO2Record extends TraceRecord {
             case 'CO2e_market' ->  new Quantity(value, '', 'g').toReadable()
             case 'realtime' ->  new Duration(value, 'ms').toReadable( 'ms', 'years')
             case 'carbon_intensity' -> new Quantity(value, '', 'gCO₂e/kWh').toReadable()
+            case 'carbon_intensity_market' -> new Quantity(value, '', 'gCO₂e/kWh').toReadable()
             case 'powerdraw_cpu' ->  new Quantity(value, '', 'W').toReadable()
+            case 'powerdraw_memory' ->  new Quantity(value, '', 'W').toReadable()
+            case 'pue' ->  new Quantity(value).toReadable()
             case '%cpu' ->  new Percentage(value).toReadable()
             case 'memory' ->  new Bytes(value, 'G', 'B').toReadable()
             case 'raw_energy_processor' ->  new Quantity(value, 'k', 'Wh').toReadable()

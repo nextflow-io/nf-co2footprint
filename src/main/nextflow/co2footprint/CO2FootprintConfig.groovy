@@ -6,14 +6,14 @@ import nextflow.co2footprint.Config.ReportFileConfig
 import nextflow.co2footprint.Config.SummaryFileConfig
 import nextflow.co2footprint.Config.TraceFileConfig
 import nextflow.co2footprint.DataContainers.AWSRegionsDataMatrix
-import nextflow.co2footprint.DataContainers.MachineTypeDataMatrix
-import nextflow.config.spec.ScopeName
-import nextflow.config.spec.ConfigScope
-import nextflow.config.spec.ConfigOption
-import nextflow.script.dsl.Description
 import nextflow.co2footprint.DataContainers.CIDataMatrix
+import nextflow.co2footprint.DataContainers.MachineTypeDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CiRecord
+import nextflow.config.spec.ConfigOption
+import nextflow.config.spec.ConfigScope
+import nextflow.config.spec.ScopeName
+import nextflow.script.dsl.Description
 import nextflow.trace.TraceHelper
 
 import java.nio.file.Path
@@ -56,6 +56,7 @@ class CO2FootprintConfig implements ConfigScope {
     )
     private final String timestamp = TraceHelper.launchTimestampFmt()
     private final String executor
+    final LinkedHashSet<String> usedKeys = [] as LinkedHashSet<String>
 
     @ConfigOption(types=[Map])
     @Description('Configuration for the trace file.')
@@ -129,8 +130,6 @@ class CO2FootprintConfig implements ConfigScope {
     CO2FootprintConfig(Map<String, Object> configMap, TDPDataMatrix cpuData, CIDataMatrix ciData, Map<String, Object> processMap) {
         // Ensure configMap is not null
         configMap ?= [:]
-
-        LinkedHashSet<String> usedKeys = [] as LinkedHashSet<String>
 
         // File parameters (sub-scopes)
         trace = new TraceFileConfig(getCollect('trace', configMap, usedKeys) as Map ?: [:], timestamp)

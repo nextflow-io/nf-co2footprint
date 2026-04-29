@@ -1,16 +1,13 @@
 package nextflow.co2footprint
 
+import groovy.transform.CompileStatic
+import groovy.transform.PackageScope
+import groovy.transform.PackageScopeTarget
+import groovy.util.logging.Slf4j
+import nextflow.Session
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Logging.LoggingAdapter
-
-import groovy.transform.PackageScope
-import groovy.transform.PackageScopeTarget
-import groovy.transform.CompileStatic
-
-import groovy.util.logging.Slf4j
-
-import nextflow.Session
 import nextflow.trace.TraceObserver
 import nextflow.trace.TraceObserverFactory
 

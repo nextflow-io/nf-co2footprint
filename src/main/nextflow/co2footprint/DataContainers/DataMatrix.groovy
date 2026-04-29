@@ -382,11 +382,11 @@ class DataMatrix implements Matrix {
 
     /**
      * Infer simple numeric data types from a String.
-     * Tries Integer, then Double, otherwise returns the original String.
+     * Tries Integer, then BigDecimal, otherwise returns the original String.
      */
     private static def inferTypeOfString(String str) {
         try { return Integer.parseInt(str) } catch(NumberFormatException ignore){ }
-        try { return Double.parseDouble(str) } catch(NumberFormatException ignore){ }
+        try { return new BigDecimal(str) } catch(NumberFormatException ignore){ }
         return str
     }
 

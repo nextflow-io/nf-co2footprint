@@ -116,22 +116,26 @@ class CO2FootprintObserver implements TraceObserver {
     /**
      * Calculate the CO2 emissions in form of a {@link CO2Record} from a {@link TraceRecord}
      * in conjunction with the current CI Record collector.
+     *
+     * @param traceRecord the TraceRecord of the task for which the CO2Record should be created
+     * @param postRun whether the CO2Record is created post run or during runtime
      */
-    CO2Record createCO2Record(TraceRecord traceRecord) {
-        return co2FootprintCalculator.computeTaskCO2footprint(traceRecord, timeCiRecordCollector)
+    CO2Record createCO2Record(TraceRecord traceRecord, boolean postRun=false) {
+        return co2FootprintCalculator.computeTaskCO2footprint(traceRecord, timeCiRecordCollector, postRun)
     }
 
     /**
      * Aggregates the trace and CO₂ records of a finished task.
      *
      * @param trace TraceRecord of the finished task
+     * @param postRun whether the aggregation is happening post run or during runtime
      */
-    synchronized CO2Record aggregateRecords(TraceRecord traceRecord) {
+    synchronized CO2Record aggregateRecords(TraceRecord traceRecord, boolean postRun=false) {
         // Remove task from set of running tasks
         runningTasks.remove(traceRecord.taskId)
 
         // Compute CO₂ footprint for this task
-        final CO2Record co2Record = createCO2Record(traceRecord)
+        final CO2Record co2Record = createCO2Record(traceRecord, postRun)
 
         // Optionally write to trace file
         this.traceFile.write(co2Record)

@@ -1,14 +1,19 @@
 package nextflow.co2footprint.FileCreation
 
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
+import groovy.util.logging.Slf4j
 import groovyx.gpars.agent.Agent
 import nextflow.co2footprint.Config.ProvenanceFileConfig
+import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.trace.TraceHelper
-import groovy.json.JsonBuilder
 
+import java.nio.file.Path
 import java.time.Duration
 import java.time.Instant
 
+@Slf4j
 class ProvenanceFileCreator extends BaseFileCreator {
     // Agent for thread-safe writing to the data file
     private Agent<PrintWriter> dataWriter
@@ -64,8 +69,8 @@ class ProvenanceFileCreator extends BaseFileCreator {
      * @param original The original map from CO2RecordTree.toMap()
      * @return The transformed map with JSON-LD elements
      */
-    private Map transformToJsonLd(Map<String, Object> treeMap, boolean root=true) {
-        Map ldMap = [:]
+    private Map<String, Object> transformToJsonLd(Map<String, Object> treeMap, boolean root=true) {
+        Map<String, Object> ldMap = [:]
 
         // Add @context at root level
         if(root) {
@@ -102,6 +107,25 @@ class ProvenanceFileCreator extends BaseFileCreator {
                     ldMap[key] = [
                             '@type': 'schema:PropertyValue',
                             'value': raw.value,
+                    ]
+                }
+                else if (raw.type == 'list') {
+                    List<Map<String, Object>> itemElements = []
+                    itemElements(raw.value as List).eachWithIndex { Object item, int index ->
+                        itemElements.add(
+                                ['@type': 'schema:ListItem',
+                                'position': index + 1,
+                                'item': [
+                                      '@type': 'schema:PropertyValue',
+                                      'value': item
+                                    ]
+                                ]
+                        )
+                    }
+                    ldMap[key] = [
+                            '@type': 'schema:ItemList',
+                            'itemListElement': itemElements,
+                            'numberOfItems': itemElements.size()
                     ]
                 }
                 else if (raw.type as String in ['Number', 'Percentage', 'Bytes']) {
@@ -152,5 +176,89 @@ class ProvenanceFileCreator extends BaseFileCreator {
         }
 
         return ldMap
+    }
+
+    static CO2RecordTree read(Path path) {
+        String jsonString = path.toFile().text
+        Map<String, Object> jsonMap = new JsonSlurper().parseText(jsonString) as Map<String, Object>
+        return readJsonLd(jsonMap)
+    }
+
+    /**
+     * Recursively read a JSON-LD map and transform it back to the original CO2RecordTree map structure.
+     * This is the inverse of transformToJsonLd, and assumes the same JSON-LD structure as produced by that function.
+     *
+     * @param treeMap The JSON-LD map to transform back to the original structure
+     * @param root Whether this is the root level of the tree, used to determine the level of the root node
+     */
+    static CO2RecordTree readJsonLd(Map<String, Object> ldMap, boolean root=true) {
+
+        // Extracts children recursively
+        List<CO2RecordTree> children = []
+        if (ldMap.containsKey('hasPart')){
+            children = (ldMap.remove('hasPart') as List<Map<String, Object>>).collect { Map<String, Object> childLdMap ->
+                readJsonLd(childLdMap, false)
+            }
+        }
+
+        // Constructs CO2Record
+        Map<String, Object> store = [:]
+        for (Map.Entry<String, Object> entry: (ldMap).entrySet()){
+            String key = entry.getKey()
+            Object value = entry.getValue()
+
+            // Skip JSON-LD elements
+            if (key in ['@context', '@id', '@type'] || !(value instanceof Map && value.containsKey('value')) ) {
+                continue
+            }
+
+            // Only record value with content
+
+
+            // Adjust record according to type
+            if (value['@type'] == 'schema:PropertyValue') {
+                 store[key] = value['value']
+            }
+            else if (value['@type'] == 'schema:QuantitativeValue'){
+                store[key] = value['value']
+            }
+            else if (value['@type'] == 'schema:Duration') {
+                store[key] = Duration.parse(value['value'] as String).toMillis()
+            }
+            else if (value['@type'] == 'schema:DateTime') {
+                store[key] = Instant.parse(value['value'] as String).toEpochMilli()
+            }
+            else if(value['@type'] == 'schema:ItemList') {
+                List<Object> items = (value['itemListElement'] as List<Map<String, Object>>).collect { Map<String, Object> itemElement ->
+                    itemElement['item']['value']
+                }
+                store[key] = items
+            }
+            else {
+                String errorMessage = "Unknown @type ${value['@type']} for key ${key}, skipping value."
+                log.error(errorMessage)
+                throw new IllegalArgumentException(errorMessage)
+            }
+        }
+        CO2Record co2Record = new CO2Record(store)
+
+        // Construct a new tree with the name extracted from the @id (removing the "urn:co2footprint:" prefix)
+        CO2RecordTree co2RecordTree = new CO2RecordTree((ldMap['@id'] as String).drop(17), [:], co2Record, null, children)
+
+
+        // Add @type based on metaData.level
+        if (ldMap['@type'] == 'schema:SoftwareApplication' && root) {
+            co2RecordTree.metaData['level'] = 'session'
+        }
+        else {
+            co2RecordTree.metaData['level'] = switch (ldMap['@type']) {
+                case 'bioschemas:ComputationalWorkflow' -> 'workflow'
+                case 'schema:SoftwareApplication' -> 'process'
+                case 'schema:Action' -> 'task'
+                default -> 'unknown'
+            }
+        }
+
+        return co2RecordTree
     }
 }

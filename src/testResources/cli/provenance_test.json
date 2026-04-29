@@ -22,7 +22,7 @@
     },
     "CO2e": {
         "@type": "schema:QuantitativeValue",
-        "value": 0.0030831989133225596,
+        "value": 0.00308319891332256000,
         "unitText": "g",
         "additionalProperty": {
             "readable": "3.08 mg"
@@ -30,7 +30,7 @@
     },
     "carbon_intensity": {
         "@type": "schema:QuantitativeValue",
-        "value": 480.00000000000006,
+        "value": 480.0,
         "unitText": "gCO\u2082e/kWh",
         "additionalProperty": {
             "readable": "480 gCO\u2082e/kWh"
@@ -38,7 +38,7 @@
     },
     "%cpu": {
         "@type": "schema:QuantitativeValue",
-        "value": 95.93333333333334,
+        "value": 95.9333333333,
         "unitText": "%",
         "additionalProperty": {
             "readable": "95.93 %"
@@ -68,12 +68,28 @@
             "readable": "2"
         }
     },
+    "pue": {
+        "@type": "schema:QuantitativeValue",
+        "value": 1.0,
+        "unitText": "",
+        "additionalProperty": {
+            "readable": "1"
+        }
+    },
     "powerdraw_cpu": {
         "@type": "schema:QuantitativeValue",
-        "value": 11.409999999999998,
+        "value": 11.41,
         "unitText": "W",
         "additionalProperty": {
             "readable": "11.41 W"
+        }
+    },
+    "powerdraw_memory": {
+        "@type": "schema:QuantitativeValue",
+        "value": 0.3725,
+        "unitText": "W",
+        "additionalProperty": {
+            "readable": "372.5 mW"
         }
     },
     "raw_energy_processor": {
@@ -113,7 +129,7 @@
             },
             "CO2e": {
                 "@type": "schema:QuantitativeValue",
-                "value": 0.0030831989133225596,
+                "value": 0.00308319891332256000,
                 "unitText": "g",
                 "additionalProperty": {
                     "readable": "3.08 mg"
@@ -121,7 +137,7 @@
             },
             "carbon_intensity": {
                 "@type": "schema:QuantitativeValue",
-                "value": 480.00000000000006,
+                "value": 480.0,
                 "unitText": "gCO\u2082e/kWh",
                 "additionalProperty": {
                     "readable": "480 gCO\u2082e/kWh"
@@ -129,7 +145,7 @@
             },
             "%cpu": {
                 "@type": "schema:QuantitativeValue",
-                "value": 95.93333333333334,
+                "value": 95.9333333333,
                 "unitText": "%",
                 "additionalProperty": {
                     "readable": "95.93 %"
@@ -159,12 +175,28 @@
                     "readable": "2"
                 }
             },
+            "pue": {
+                "@type": "schema:QuantitativeValue",
+                "value": 1.0,
+                "unitText": "",
+                "additionalProperty": {
+                    "readable": "1"
+                }
+            },
             "powerdraw_cpu": {
                 "@type": "schema:QuantitativeValue",
-                "value": 11.409999999999998,
+                "value": 11.41,
                 "unitText": "W",
                 "additionalProperty": {
                     "readable": "11.41 W"
+                }
+            },
+            "powerdraw_memory": {
+                "@type": "schema:QuantitativeValue",
+                "value": 0.3725,
+                "unitText": "W",
+                "additionalProperty": {
+                    "readable": "372.5 mW"
                 }
             },
             "raw_energy_processor": {
@@ -218,7 +250,7 @@
                     },
                     "CO2e": {
                         "@type": "schema:QuantitativeValue",
-                        "value": 0.0010358467495344,
+                        "value": 0.00103584674953440000,
                         "unitText": "g",
                         "additionalProperty": {
                             "readable": "1.04 mg"
@@ -264,12 +296,28 @@
                             "readable": "2"
                         }
                     },
+                    "pue": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 1.0,
+                        "unitText": "",
+                        "additionalProperty": {
+                            "readable": "1"
+                        }
+                    },
                     "powerdraw_cpu": {
                         "@type": "schema:QuantitativeValue",
                         "value": 11.41,
                         "unitText": "W",
                         "additionalProperty": {
                             "readable": "11.41 W"
+                        }
+                    },
+                    "powerdraw_memory": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 0.3725,
+                        "unitText": "W",
+                        "additionalProperty": {
+                            "readable": "372.5 mW"
                         }
                     },
                     "raw_energy_processor": {
@@ -323,7 +371,7 @@
                     },
                     "CO2e": {
                         "@type": "schema:QuantitativeValue",
-                        "value": 0.00204735216378816,
+                        "value": 0.00204735216378816000,
                         "unitText": "g",
                         "additionalProperty": {
                             "readable": "2.05 mg"
@@ -358,7 +406,7 @@
                         "value": "PT1S",
                         "unitText": "ms",
                         "additionalProperty": {
-                            "readable": "1s 0ms"
+                            "readable": "1s"
                         }
                     },
                     "cpus": {
@@ -369,12 +417,28 @@
                             "readable": "2"
                         }
                     },
+                    "pue": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 1.0,
+                        "unitText": "",
+                        "additionalProperty": {
+                            "readable": "1"
+                        }
+                    },
                     "powerdraw_cpu": {
                         "@type": "schema:QuantitativeValue",
                         "value": 11.41,
                         "unitText": "W",
                         "additionalProperty": {
                             "readable": "11.41 W"
+                        }
+                    },
+                    "powerdraw_memory": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 0.3725,
+                        "unitText": "W",
+                        "additionalProperty": {
+                            "readable": "372.5 mW"
                         }
                     },
                     "raw_energy_processor": {

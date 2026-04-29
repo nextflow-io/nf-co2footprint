@@ -1,5 +1,6 @@
 package nextflow.co2footprint.Recorders
 
+import com.sun.management.OperatingSystemMXBean
 import groovy.util.logging.Slf4j
 import nextflow.Session
 import nextflow.trace.TraceRecord
@@ -13,8 +14,6 @@ import oshi.util.tuples.Triplet
 
 import java.lang.management.ManagementFactory
 import java.lang.management.RuntimeMXBean
-
-import com.sun.management.OperatingSystemMXBean
 
 /**
  * A Recorder of trace values for a Nextflow session, which can be attached after startup
@@ -98,7 +97,7 @@ class SessionTraceRecorder {
         Map<ProcessStat.PidStat, Long> rootStats = getPidStats(pid)
 
         // Determine CPU usage
-        Double cpuUsage
+        BigDecimal cpuUsage
         if (rootStats != null) {
             // Accumulate the running ticks of root including waiting time for children
             Long cpuTime = rootStats.get(ProcessStat.PidStat.UTIME) + rootStats.get(ProcessStat.PidStat.STIME) +
