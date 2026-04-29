@@ -64,7 +64,7 @@ class CO2FootprintCLI {
         CO2FootprintObserver observer = new CO2FootprintObserver(config, computer)
 
         // Parse the trace file
-        List<TraceRecord> traceRecords = TraceFileParser.parseExecutionTraceFile(tracePath)
+        List<TraceRecord> traceRecords = TraceFileParser.parseExecutionTraceFile(tracePath, parsedArgs.get('delimiter', '\t') as String)
 
         // Create trace file
         observer.traceFile.create()
