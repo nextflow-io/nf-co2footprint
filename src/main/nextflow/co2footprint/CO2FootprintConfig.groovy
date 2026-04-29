@@ -114,8 +114,8 @@ class CO2FootprintConfig implements ConfigScope {
     String machineType
 
     @ConfigOption
-    @Description('Polynomial coefficients for CPU power model (highest degree first).')
-    final List<Number> cpuPowerModel
+    @Description('A power model function that takes the parameter `coreUsage`.')
+    final Closure<Number> cpuPowerModel
 
     /**
      * Loads configuration from a map and sets up defaults and fallbacks.
@@ -149,12 +149,9 @@ class CO2FootprintConfig implements ConfigScope {
         ciMarket = getCollect('ciMarket', configMap, usedKeys) as BigDecimal
 
         // Power model
-        cpuPowerModel = getCollect('cpuPowerModel', configMap, usedKeys) as List<BigDecimal>
+        cpuPowerModel = getCollect('cpuPowerModel', configMap, usedKeys) as Closure<BigDecimal>
         if (cpuPowerModel != null) {
-            Integer degree = cpuPowerModel.size() - 1
-            List<String> terms = []
-            cpuPowerModel.eachWithIndex { Number c, Integer i -> terms.add("${c}*x^${degree - i}") }
-            log.info("Using custom CPU power model: f(x) = " + terms.join(" + "))
+            log.info("Using custom CPU power model.")
         }
 
         // Powerdraw factors

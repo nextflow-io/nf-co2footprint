@@ -1,5 +1,6 @@
 # New
 ## Bug Fixes:
+- CPU power model now applied correctly
 
 ## Misc:
 - Improved workflow reporting form extension/CLI by deriving and injecting workflow metadata from the provided trace file
