@@ -127,7 +127,7 @@ class CO2FootprintConfigTest extends Specification {
 
     def 'should log custom CPU power model as polynomial'() {
         given:
-        def configMap = [cpuPowerModel: {x -> 2.5 * x**2 + 1.3 * x + 0.7}, machineType: 'local']
+        def configMap = [cpuEnergyFunction: '2.5 * coreUsage**2 + 1.3 * coreUsage + 0.7', machineType: 'local']
         def processMap = [:]
 
         // Set up log capturing
@@ -141,12 +141,12 @@ class CO2FootprintConfigTest extends Specification {
 
         then:
         List<String> logMessages = listAppender.list*.formattedMessage
-        logMessages.any {String message -> message.contains("Using custom CPU power model.") }
+        logMessages.any {String message -> message.contains("Using custom CPU energy function: 2.5 * coreUsage**2 + 1.3 * coreUsage + 0.7.") }
     }
 
     // Helper method to validate default properties
     private static void validateDefaultProperties(CO2FootprintConfig config) {
-        assert config.powerdrawMem == 0.3725
+        assert config.memoryEnergyFunction == null
         assert config.pue == 1.0
     }
 }

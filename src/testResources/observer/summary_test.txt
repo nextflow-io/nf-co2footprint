@@ -17,13 +17,15 @@ nf-co2footprint plugin version: 1.2.1
 nf-co2footprint options:
   ci: 480.0
   ciMarket: null
+  cpuEnergyFunction: null
   ignoreCpuModel: false
   location: null
   machineType: null
+  memoryEnergyFunction: null
   powerdrawCpuDefault: null
-  powerdrawMem: 0.3725
   pue: 1.0
   customCpuTdpFile: null
-  reportFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir4983784543560255214/report_test.html
-  summaryFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir4983784543560255214/summary_test.txt
-  traceFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir4983784543560255214/trace_test.txt
+  provenanceFile: /var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir2597033176542890936/provenance_test.json
+  reportFile: /var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir2597033176542890936/report_test.html
+  summaryFile: /var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir2597033176542890936/summary_test.txt
+  traceFile: /var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir2597033176542890936/trace_test.txt

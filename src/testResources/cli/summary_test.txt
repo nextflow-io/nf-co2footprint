@@ -17,11 +17,12 @@ nf-co2footprint plugin version: 1.2.1
 nf-co2footprint options:
   ci: 480.0
   ciMarket: null
+  cpuEnergyFunction: null
   ignoreCpuModel: false
   location: null
   machineType: null
+  memoryEnergyFunction: null
   powerdrawCpuDefault: null
-  powerdrawMem: 0.3725
   pue: 1.0
   customCpuTdpFile: null
   provenanceFile: build/classes/groovy/test/nextflow/co2footprint/cli/out/provenance_test.json

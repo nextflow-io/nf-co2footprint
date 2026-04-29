@@ -19,18 +19,20 @@ class CO2Record extends TraceRecord {
      static {
          FIELDS.putAll(
                  [
-                         energy_consumption:    'mem',
-                         CO2e:                  'num',
-                         CO2e_market:           'num',
-                         carbon_intensity:      'num',
-                         '%cpu':                'perc',
-                         realtime:              'time',
-                         cpus:                  'num',
-                         memory:                'mem',
-                         powerdraw_cpu:         'num',
-                         cpu_model:             'str',
-                         raw_energy_processor:  'num',
-                         raw_energy_memory:     'num',
+                         energy_consumption:        'mem',
+                         CO2e:                      'num',
+                         CO2e_market:               'num',
+                         carbon_intensity:          'num',
+                         '%cpu':                    'perc',
+                         realtime:                  'time',
+                         cpus:                      'num',
+                         memory:                    'mem',
+                         powerdraw_cpu:             'num',
+                         cpu_model:                 'str',
+                         raw_energy_processor:      'num',
+                         raw_energy_memory:         'num',
+                         cpu_energy_function:       'str',
+                         memory_energy_function:    'str',
                  ]
          )
      }
@@ -38,7 +40,7 @@ class CO2Record extends TraceRecord {
     // Stores keys that are related to the CO2 calculation
     final static List<String> emissionMetrics = [
             'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'carbon_intensity', '%cpu', 'memory', 'realtime',
-            'cpus', 'powerdraw_cpu', 'cpu_model', 'raw_energy_processor', 'raw_energy_memory'
+            'cpus', 'powerdraw_cpu', 'cpu_model', 'raw_energy_processor', 'raw_energy_memory', 'cpu_energy_function', 'memory_energy_function'
     ]
 
     // Stores non-CO₂ keys from the trace record and store them as traceKeys
@@ -82,7 +84,8 @@ class CO2Record extends TraceRecord {
     CO2Record(
         TraceRecord traceRecord, Double energy, Double co2e, Double co2eMarket, Double ci,
         Double cpuUsage, Long memory, Double time,  Integer cpus, Double powerdrawCPU,
-        String cpu_model, Double rawEnergyProcessor, Double rawEnergyMemory
+        String cpu_model, Double rawEnergyProcessor, Double rawEnergyMemory,
+        String cpuEnergyFunction, String memoryEnergyFunction
     ) {
         // Add trace Record values
         traceKeys = traceRecord.store.keySet() as List<String>
@@ -102,6 +105,8 @@ class CO2Record extends TraceRecord {
             'cpu_model':                cpu_model,
             'raw_energy_processor':     rawEnergyProcessor,
             'raw_energy_memory':        rawEnergyMemory,
+            cpu_energy_function:        cpuEnergyFunction,
+            memory_energy_function:     memoryEnergyFunction,
         ])
 
         // Add CO2-specific values to store + overwrite duplicate values
