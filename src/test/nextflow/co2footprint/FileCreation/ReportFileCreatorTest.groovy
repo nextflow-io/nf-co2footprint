@@ -79,7 +79,7 @@ class ReportFileCreatorTest extends Specification{
 
         CO2Record co2Record = new CO2Record(
             traceRecord, 100.0d, 10.0d, null, 475.0, 100.0, 7,
-            1.0d, 1, 12, 'Unknown model', 0.5d, 0.5d
+            1.0d, 1, 12, 'Unknown model', 0.5d, 0.5d, '', ''
         )
 
         // Define Record treee
@@ -112,7 +112,7 @@ class ReportFileCreatorTest extends Specification{
         CO2RecordTree processTree =  workflowStats.addChild(new CO2RecordTree('process', [level: 'process']))
         CO2Record co2Record = new CO2Record(
                 new TraceRecord(), 100.0, co2e,
-                null, null, null, null, null, null, null, null, null, null
+                null, null, null, null, null, null, null, null, null, null, null, null
         )
 
         processTree.addChild(new CO2RecordTree('task', [level: 'task'], co2Record))
@@ -151,12 +151,13 @@ class ReportFileCreatorTest extends Specification{
                 '[' +
                     '{"option":"ci","value":"475.0"},'+
                     '{"option":"ciMarket","value":null},' +
+                    '{"option":"cpuEnergyFunction","value":null},' +
                     '{"option":"customCpuTdpFile","value":null},' +
                     '{"option":"ignoreCpuModel","value":"false"},' +
                     '{"option":"location","value":null},' +
                     '{"option":"machineType","value":null},' +
+                    '{"option":"memoryEnergyFunction","value":null},' +
                     '{"option":"powerdrawCpuDefault","value":null},' +
-                    '{"option":"powerdrawMem","value":"0.3725"},' +
                     "{\"option\":\"provenanceFile\",\"value\":\"${tempPath}\"}," +
                     '{"option":"pue","value":"1.0"},' +
                     "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +

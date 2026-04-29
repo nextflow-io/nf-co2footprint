@@ -92,6 +92,20 @@
             "readable": "1.86 mWh"
         }
     },
+    "cpu_energy_function": {
+        "@type": "schema:PropertyValue",
+        "value": "runtime_h * numberOfCores * powerdrawPerCore * coreUsage",
+        "additionalProperty": {
+            "readable": "runtime_h * numberOfCores * powerdrawPerCore * coreUsage"
+        }
+    },
+    "memory_energy_function": {
+        "@type": "schema:PropertyValue",
+        "value": "runtime_h * memory * 0.3725",
+        "additionalProperty": {
+            "readable": "runtime_h * memory * 0.3725"
+        }
+    },
     "hasPart": [
         {
             "@id": "urn:co2footprint:NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT",
@@ -181,6 +195,20 @@
                 "unitText": "Wh",
                 "additionalProperty": {
                     "readable": "1.86 mWh"
+                }
+            },
+            "cpu_energy_function": {
+                "@type": "schema:PropertyValue",
+                "value": "runtime_h * numberOfCores * powerdrawPerCore * coreUsage",
+                "additionalProperty": {
+                    "readable": "runtime_h * numberOfCores * powerdrawPerCore * coreUsage"
+                }
+            },
+            "memory_energy_function": {
+                "@type": "schema:PropertyValue",
+                "value": "runtime_h * memory * 0.3725",
+                "additionalProperty": {
+                    "readable": "runtime_h * memory * 0.3725"
                 }
             },
             "hasPart": [
@@ -287,6 +315,20 @@
                         "additionalProperty": {
                             "readable": "620.83 uWh"
                         }
+                    },
+                    "cpu_energy_function": {
+                        "@type": "schema:PropertyValue",
+                        "value": "runtime_h * numberOfCores * powerdrawPerCore * coreUsage",
+                        "additionalProperty": {
+                            "readable": "runtime_h * numberOfCores * powerdrawPerCore * coreUsage"
+                        }
+                    },
+                    "memory_energy_function": {
+                        "@type": "schema:PropertyValue",
+                        "value": "runtime_h * memory * 0.3725",
+                        "additionalProperty": {
+                            "readable": "runtime_h * memory * 0.3725"
+                        }
                     }
                 },
                 {
@@ -391,6 +433,20 @@
                         "unitText": "Wh",
                         "additionalProperty": {
                             "readable": "1.24 mWh"
+                        }
+                    },
+                    "cpu_energy_function": {
+                        "@type": "schema:PropertyValue",
+                        "value": "runtime_h * numberOfCores * powerdrawPerCore * coreUsage",
+                        "additionalProperty": {
+                            "readable": "runtime_h * numberOfCores * powerdrawPerCore * coreUsage"
+                        }
+                    },
+                    "memory_energy_function": {
+                        "@type": "schema:PropertyValue",
+                        "value": "runtime_h * memory * 0.3725",
+                        "additionalProperty": {
+                            "readable": "runtime_h * memory * 0.3725"
                         }
                     }
                 }

@@ -106,6 +106,20 @@
             "readable": "2.61 Wh"
         }
     },
+    "cpu_energy_function": {
+        "@type": "schema:PropertyValue",
+        "value": "runtime_h * numberOfCores * powerdrawPerCore * coreUsage",
+        "additionalProperty": {
+            "readable": "runtime_h * numberOfCores * powerdrawPerCore * coreUsage"
+        }
+    },
+    "memory_energy_function": {
+        "@type": "schema:PropertyValue",
+        "value": "runtime_h * memory * 0.3725",
+        "additionalProperty": {
+            "readable": "runtime_h * memory * 0.3725"
+        }
+    },
     "hasPart": [
         {
             "@id": "urn:co2footprint:observerTestProcess",
@@ -211,6 +225,20 @@
                     "readable": "2.61 Wh"
                 }
             },
+            "cpu_energy_function": {
+                "@type": "schema:PropertyValue",
+                "value": "runtime_h * numberOfCores * powerdrawPerCore * coreUsage",
+                "additionalProperty": {
+                    "readable": "runtime_h * numberOfCores * powerdrawPerCore * coreUsage"
+                }
+            },
+            "memory_energy_function": {
+                "@type": "schema:PropertyValue",
+                "value": "runtime_h * memory * 0.3725",
+                "additionalProperty": {
+                    "readable": "runtime_h * memory * 0.3725"
+                }
+            },
             "hasPart": [
                 {
                     "@id": "urn:co2footprint:111",
@@ -314,6 +342,20 @@
                         "unitText": "Wh",
                         "additionalProperty": {
                             "readable": "2.61 Wh"
+                        }
+                    },
+                    "cpu_energy_function": {
+                        "@type": "schema:PropertyValue",
+                        "value": "runtime_h * numberOfCores * powerdrawPerCore * coreUsage",
+                        "additionalProperty": {
+                            "readable": "runtime_h * numberOfCores * powerdrawPerCore * coreUsage"
+                        }
+                    },
+                    "memory_energy_function": {
+                        "@type": "schema:PropertyValue",
+                        "value": "runtime_h * memory * 0.3725",
+                        "additionalProperty": {
+                            "readable": "runtime_h * memory * 0.3725"
                         }
                     }
                 }

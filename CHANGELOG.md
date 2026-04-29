@@ -1,11 +1,13 @@
 # New
 ## Bug Fixes:
+- CPU power model now applied correctly
 
 ## Misc:
 - Improved workflow reporting form extension/CLI by deriving and injecting workflow metadata from the provided trace file
 
 ## Features:
 - Transformation of data file to provenance file with schema.org / bioschemas.org type annotation in JSON-LD data format
+- Added functionality to apply fully custom memory and CPU power functions
 
 # 1.2.1
 ## Bug Fixes:

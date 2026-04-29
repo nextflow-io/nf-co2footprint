@@ -226,23 +226,25 @@ class CO2FootprintObserverTest extends Specification{
         headers == [
                 'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'carbon_intensity', '%cpu',
                 'memory', 'realtime', 'cpus', 'powerdraw_cpu', 'cpu_model', 'raw_energy_processor', 'raw_energy_memory',
+                'cpu_energy_function', 'memory_energy_function'
         ]
         values == [
             '111', 'COMPLETED', '-', '14.02 Wh', '6.73 g', '-', '480 gCO₂e/kWh', '100 %',
             '7 GB', '1h', '1', '11.41 W', 'Unknown model', '11.41 Wh', '2.61 Wh',
+            'runtime_h * numberOfCores * powerdrawPerCore * coreUsage', 'runtime_h * memory * 0.3725'
         ] // GA: CO₂e is 6.94g with CI of 475 gCO₂eq/kWh
 
-        fileChecker.compareChecksums(tracePath, '935b64980306aa449d4057d3d752fdf3')
+        fileChecker.compareChecksums(tracePath, '9acab80252d85c61de9759ec6f8e61cd')
 
 
         // Check Summary File
         fileChecker.runChecks(
                 summaryPath,
                 [
-                        27: "  provenanceFile: ${provenancePath}",
-                        28: "  reportFile: ${reportPath}",
-                        29: "  summaryFile: ${summaryPath}",
-                        30: "  traceFile: ${tracePath}"
+                        28: "  provenanceFile: ${provenancePath}",
+                        29: "  reportFile: ${reportPath}",
+                        30: "  summaryFile: ${summaryPath}",
+                        31: "  traceFile: ${tracePath}"
                 ]
         )
 
@@ -253,12 +255,13 @@ class CO2FootprintObserverTest extends Specification{
                 1534: '    window.options = [' +
                         '{"option":"ci","value":"480.0"},'+
                         '{"option":"ciMarket","value":null},' +
+                        '{"option":"cpuEnergyFunction","value":null},' +
                         '{"option":"customCpuTdpFile","value":null},' +
                         '{"option":"ignoreCpuModel","value":"false"},' +
                         '{"option":"location","value":null},' +
                         '{"option":"machineType","value":null},' +
+                        '{"option":"memoryEnergyFunction","value":null},' +
                         '{"option":"powerdrawCpuDefault","value":null},' +
-                        '{"option":"powerdrawMem","value":"0.3725"},' +
                         "{\"option\":\"provenanceFile\",\"value\":\"${provenancePath}\"}," +
                         '{"option":"pue","value":"1.0"},' +
                         "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +

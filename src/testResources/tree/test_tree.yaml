@@ -40,6 +40,12 @@ values:
   raw_energy_memory:
     raw: {value: 10000.0, type: Number, unit: Wh, scale: ''}
     readable: 10 kWh
+  cpu_energy_function:
+    raw: {value: '', type: str}
+    readable: '-'
+  memory_energy_function:
+    raw: {value: '', type: str}
+    readable: '-'
 children:
 - name: test1
   metaData: {level: process}
@@ -83,6 +89,12 @@ children:
     raw_energy_memory: &id013
       raw: {value: 5000.0, type: Number, unit: Wh, scale: ''}
       readable: 5 kWh
+    cpu_energy_function: &id014
+      raw: {value: '', type: str}
+      readable: '-'
+    memory_energy_function: &id015
+      raw: {value: '', type: str}
+      readable: '-'
   children:
   - name: '1'
     metaData: {level: task}
@@ -100,6 +112,8 @@ children:
       cpu_model: *id011
       raw_energy_processor: *id012
       raw_energy_memory: *id013
+      cpu_energy_function: *id014
+      memory_energy_function: *id015
     children: []
 - name: test2
   metaData: {level: process}
@@ -117,6 +131,8 @@ children:
     cpu_model: *id011
     raw_energy_processor: *id012
     raw_energy_memory: *id013
+    cpu_energy_function: *id014
+    memory_energy_function: *id015
   children:
   - name: '2'
     metaData: {level: task}
@@ -134,4 +150,6 @@ children:
       cpu_model: *id011
       raw_energy_processor: *id012
       raw_energy_memory: *id013
+      cpu_energy_function: *id014
+      memory_energy_function: *id015
     children: []
