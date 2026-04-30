@@ -1,18 +1,15 @@
 package nextflow.co2footprint
 
+import groovy.transform.CompileStatic
+import groovy.transform.PackageScope
+import groovy.transform.PackageScopeTarget
+import groovy.util.logging.Slf4j
+import nextflow.Session
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Logging.LoggingAdapter
-
-import groovy.transform.PackageScope
-import groovy.transform.PackageScopeTarget
-import groovy.transform.CompileStatic
-
-import groovy.util.logging.Slf4j
-
-import nextflow.Session
-import nextflow.trace.TraceObserver
-import nextflow.trace.TraceObserverFactory
+import nextflow.trace.TraceObserverFactoryV2
+import nextflow.trace.TraceObserverV2
 
 /**
  * Factory class for creating the CO2Footprint trace observer.
@@ -25,7 +22,7 @@ import nextflow.trace.TraceObserverFactory
 @Slf4j
 @CompileStatic
 @PackageScope(PackageScopeTarget.FIELDS)
-class CO2FootprintFactory implements TraceObserverFactory {
+class CO2FootprintFactory implements TraceObserverFactoryV2 {
     // Nextflow Session
     private Session session = null
 
@@ -71,10 +68,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
      * Loads configuration, sets up the observer, and injects all required data.
      *
      * @param session The Nextflow session
-     * @return Collection of TraceObserver (with one CO2FootprintObserver)
+     * @return Collection of TraceObserverV2 (with one CO2FootprintObserver)
      */
     @Override
-    Collection<TraceObserver> create(Session session) {
+    Collection<TraceObserverV2> create(Session session) {
         this.session = session
         adaptLogging()
 
@@ -85,10 +82,10 @@ class CO2FootprintFactory implements TraceObserverFactory {
         CO2FootprintCalculator co2FootprintCalculator = new CO2FootprintCalculator(TDPDataMatrix.tdpDataMatrix, config)
 
         // Define list of observers
-        TraceObserver observer = new CO2FootprintObserver(config, co2FootprintCalculator)
+        TraceObserverV2 observer = new CO2FootprintObserver(config, co2FootprintCalculator)
         CO2FootprintPlugin co2FootprintPlugin = CO2FootprintPlugin.getPlugin()
         co2FootprintPlugin?.observer = observer
-        final ArrayList<TraceObserver> result = [ observer ]
+        final ArrayList<TraceObserverV2> result = [ observer ]
         return result
     }
 }

@@ -9,17 +9,19 @@ import nextflow.processor.TaskId
 import nextflow.processor.TaskProcessor
 import nextflow.processor.TaskRun
 import nextflow.script.WorkflowMetadata
-import nextflow.trace.TraceObserver
+import nextflow.trace.TraceObserverV2
 import nextflow.trace.TraceRecord
-
+import nextflow.trace.event.TaskEvent
 import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.Stepwise
 
 import java.nio.file.Files
 import java.nio.file.Path
 import java.time.OffsetDateTime
 import java.util.concurrent.Executors
 
+@Stepwise
 class CO2FootprintPluginTest extends Specification{
     @Shared
     CO2FootprintFactory factory = new CO2FootprintFactory()
@@ -86,14 +88,14 @@ class CO2FootprintPluginTest extends Specification{
      *
      * @return The list of observers
      */
-    List<TraceObserver> createFiles(Session session) {
-        List<TraceObserver> observers = factory.create(session)
+    List<TraceObserverV2> createFiles(Session session) {
+        List<TraceObserverV2> observers = factory.create(session)
         CO2FootprintObserver observer = observers[0] as CO2FootprintObserver
 
         // Run necessary observer steps
         observer.onFlowCreate(session)
-        observer.onProcessStart(taskHandler, traceRecord)
-        observer.onProcessComplete(taskHandler, traceRecord)
+        observer.onTaskStart(new TaskEvent(taskHandler, traceRecord))
+        observer.onTaskComplete(new TaskEvent(taskHandler, traceRecord))
         observer.onFlowComplete()
         observer.renderFiles()
 
@@ -111,7 +113,7 @@ class CO2FootprintPluginTest extends Specification{
     def 'Empty configuration'() {
         when:
         Session session = mockSession()
-        Collection<TraceObserver> observers = factory.create(session)
+        Collection<TraceObserverV2> observers = factory.create(session)
 
         then:
         observers.size() == 1
@@ -134,7 +136,7 @@ class CO2FootprintPluginTest extends Specification{
         ]
         Session session = mockSession(config)
 
-        Collection<TraceObserver> observers = createFiles(session)
+        Collection<TraceObserverV2> observers = createFiles(session)
 
         then:
         observers.size() == 1
@@ -158,7 +160,7 @@ class CO2FootprintPluginTest extends Specification{
         ]
         Session session = mockSession(config)
 
-        Collection<TraceObserver> observers = createFiles(session)
+        Collection<TraceObserverV2> observers = createFiles(session)
 
         then:
         observers.size() == 1
@@ -185,7 +187,7 @@ class CO2FootprintPluginTest extends Specification{
         ]
         Session session = mockSession(config)
 
-        Collection<TraceObserver> observers = createFiles(session)
+        Collection<TraceObserverV2> observers = createFiles(session)
 
         then:
         observers.size() == 1

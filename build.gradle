@@ -58,7 +58,7 @@ sourceSets {
 
 // Versioning of important packages
 ext {
-    nextflowVersion = '24.10.6'
+    nextflowVersion = '26.04.0'
 }
 String groovyVersion = '4.0.27'
 String pf4jVersion = '3.13.0'
