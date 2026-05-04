@@ -1,5 +1,12 @@
 # New
 ## Bug Fixes:
+
+## Misc:
+
+## Features:
+
+# 1.3.0
+## Bug Fixes:
 - CPU power model now applied correctly
 - Unintended report value removal
 - Fixed floating point error for numerical conversion division

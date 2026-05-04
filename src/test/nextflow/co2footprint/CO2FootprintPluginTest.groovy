@@ -107,7 +107,7 @@ class CO2FootprintPluginTest extends Specification{
         String pluginVersion = CO2FootprintPlugin.readPluginVersion()
 
         then:
-        pluginVersion == "1.2.1"
+        pluginVersion == "1.3.0"
     }
 
     def 'Empty configuration'() {
