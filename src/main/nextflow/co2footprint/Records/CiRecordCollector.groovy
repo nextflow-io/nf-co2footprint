@@ -124,13 +124,6 @@ class CiRecordCollector {
         Long duration = start.until(end, ChronoUnit.MILLIS)
         List<LocalDateTime> timestamps = timeCIs.keySet().toList().sort()
 
-        /**
-         * Return the weight of as the covered fraction of the total duration
-         */
-        Closure<Double> getWeight = { LocalDateTime time1, LocalDateTime time2 ->
-            (time1.until(time2, ChronoUnit.MILLIS)) / duration
-        }
-
         if (!timestamps) {
             String message = "No carbon intensity timestamps are available in timeCIs for traceRecord '${trace}' (${start}-${end})."
             log.error(message)
@@ -140,6 +133,14 @@ class CiRecordCollector {
         LocalDateTime activeTimestamp = timestamps.findAll { LocalDateTime time -> time <= start }.max()
         if (activeTimestamp == null) {
             activeTimestamp = timestamps.min()
+        }
+
+        if (duration == 0) {
+            return timeCIs.get(activeTimestamp) as Double
+        }
+
+        Closure<Double> getWeight = { LocalDateTime time1, LocalDateTime time2 ->
+            (time1.until(time2, ChronoUnit.MILLIS)) / duration
         }
 
         List<LocalDateTime> changesDuringRun = timestamps.findAll { LocalDateTime time -> time > start && time < end }
