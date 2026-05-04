@@ -18,6 +18,13 @@ The plugin provides some [extension points](https://nextflow.io/docs/latest/plug
 
     In CLI/extension post-run mode, workflow metadata is reconstructed using the trace file (e.g., start/end time, duration) and synthetic/runtime values (e.g., run name, command line), and may differ from reports generated during an integrated plugin run.
 
+#### Shared arguments
+
+Both modes accept the following arguments:
+
+- **tracePath** *(required)*: Path to the execution trace file.
+- **delimiter**: Column separator used in the trace file. Defaults to `'\t'`.
+
 #### From the command line
 The command line functionality utilizes Nextflow configs, like the regular plugin (see [parameters.md](./parameters.md)).
 It is recommended to set the output paths and a fixed carbon intensity value (`ci`) in the config.
@@ -25,16 +32,9 @@ It is recommended to set the output paths and a fixed carbon intensity value (`c
 nextflow plugin nf-co2footprint:postRun --tracePath <path_to_execution_trace.txt> [--config <path_to_nextflow.config>] [--delimiter <delimiter>]
 ```
 
-- **--tracePath** *(required)*:
-  Path to the execution trace file.
+In addition to the [shared arguments](#shared-arguments):
 
-- **--config**:
-  Path to a Nextflow config file (output paths, carbon intensity, etc.).
-
-- **--delimiter**:
-  Column separator used in the trace file. Defaults to `'\t'`.
-
-
+- **--config**: Path to a Nextflow config file (output paths, carbon intensity, etc.).
 
 #### Within a workflow through functions
 The interaction follows the [Nextflow extension function schema](https://nextflow.io/docs/latest/plugins/developing-plugins.html#functions).
@@ -67,23 +67,10 @@ workflow {
 
 ##### Functions
 ###### `parseTraceFile`
-Parse the trace file into a list of TraceRecord instances.
-
-- **tracePath**:
-  Path to a trace file
-
-- **delimiter**:
-  Deliming character of the tabular trace file. Defaults to `'\t'`.
+Parse the trace file into a list of TraceRecord instances. Accepts the [shared arguments](#shared-arguments).
 
 ###### `calculateCO2`
-Can be used to calculate the emissions of a trace.
+Calculate the emissions of a trace. Accepts the [shared arguments](#shared-arguments), plus:
 
-- **tracePath**:
-  Path to the trace file 
-
-- **configModifications**:
-  Temporarily overrides parameters in the `co2footprint` block of the current Nextflow configuration for a single extension function call. The provided map is merged with the existing configuration and does not affect the overall workflow run. Can be used to adjust settings such as output paths or carbon intensity for post-run estimations. Defaults to [:].  
+- **configModifications**: Temporarily overrides parameters in the `co2footprint` block of the current Nextflow configuration for this call. The provided map is merged with the existing configuration and does not affect the overall workflow run. Defaults to `[:]`.  
   Example: `[trace: [file: <Path_to_your_output_trace_file>], ci: <Your_carbon_intensity>]`
-
-- **delimiter**:
-  Delimiter that is used withing execution trace file. Defaults to `'\t'`.
