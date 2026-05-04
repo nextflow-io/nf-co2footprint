@@ -25,11 +25,12 @@ class TraceFileParserTest extends Specification {
                 task_id:'3', hash:'cb/c73296', native_id:'72563',
                 name   :'NFCORE_DEMO:DEMO:SEQTK_TRIM (SAMPLE2_PE)', status:'COMPLETED', exit:'0',
                 submit : convertEpochMillisToLocalZone(1760017742707, 'Europe/Berlin'),
-                duration:29500, realtime:14000, '%cpu':121.7d, peak_rss:9332326, peak_vmem:20342374,
-                rchar  :33764147, wchar:33344716, process:'NFCORE_DEMO:DEMO:SEQTK_TRIM (SAMPLE2_PE)'
+                duration:29500, realtime:14000, '%cpu':121.7d, peak_rss:8900000, peak_vmem:19400000, 
+                rchar  :32200000, wchar:31800000, process:'NFCORE_DEMO:DEMO:SEQTK_TRIM (SAMPLE2_PE)'
         ]
     }
-
+    
+    // The difference between raw and regular is expected, because Nextflow reports scaled Bytes with the wrong prefixes (GB instead of GiB)
     def 'Test parsing of raw trace file.' () {
         when:
         List<TraceRecord> traceRecords = TraceFileParser.parseExecutionTraceFile(

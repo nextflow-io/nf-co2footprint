@@ -8,7 +8,7 @@ values:
     raw: {value: COMPLETED, type: str}
     readable: COMPLETED
   energy_consumption:
-    raw: {value: 4000.0, type: Number, unit: Wh, scale: ''}
+    raw: {value: 4.0E+3, type: Number, unit: Wh, scale: ''}
     readable: 4 kWh
   CO2e:
     raw: {value: 400.0, type: Number, unit: g, scale: ''}
@@ -20,7 +20,7 @@ values:
     raw: {value: 1.0, type: Percentage, unit: '', scale: '%'}
     readable: 1 %
   memory:
-    raw: {value: 10737418240, type: Bytes, unit: B, scale: ''}
+    raw: {value: 1E+10, type: Bytes, unit: B, scale: ''}
     readable: 10 GB
   realtime:
     raw: {value: 7200000.0000, type: Duration, unit: ms, scale: ''}
@@ -35,10 +35,10 @@ values:
     raw: {value: Some model, type: str}
     readable: Some model
   raw_energy_processor:
-    raw: {value: 10000.0, type: Number, unit: Wh, scale: ''}
+    raw: {value: 1.0E+4, type: Number, unit: Wh, scale: ''}
     readable: 10 kWh
   raw_energy_memory:
-    raw: {value: 10000.0, type: Number, unit: Wh, scale: ''}
+    raw: {value: 1.0E+4, type: Number, unit: Wh, scale: ''}
     readable: 10 kWh
 children:
 - name: test1
@@ -51,7 +51,7 @@ children:
       raw: &id002 {value: COMPLETED, type: str}
       readable: COMPLETED
     energy_consumption:
-      raw: &id003 {value: 2000.0, type: Number, unit: Wh, scale: ''}
+      raw: &id003 {value: 2.0E+3, type: Number, unit: Wh, scale: ''}
       readable: 2 kWh
     CO2e:
       raw: &id004 {value: 200.0, type: Number, unit: g, scale: ''}
@@ -63,7 +63,7 @@ children:
       raw: &id006 {value: 1.0, type: Percentage, unit: '', scale: '%'}
       readable: 1 %
     memory:
-      raw: &id007 {value: 10737418240, type: Bytes, unit: B, scale: ''}
+      raw: &id007 {value: 1E+10, type: Bytes, unit: B, scale: ''}
       readable: 10 GB
     realtime:
       raw: &id008 {value: 3600000.0000, type: Duration, unit: ms, scale: ''}
@@ -78,10 +78,10 @@ children:
       raw: &id011 {value: Some model, type: str}
       readable: Some model
     raw_energy_processor:
-      raw: &id012 {value: 5000.0, type: Number, unit: Wh, scale: ''}
+      raw: &id012 {value: 5E+3, type: Number, unit: Wh, scale: ''}
       readable: 5 kWh
     raw_energy_memory:
-      raw: &id013 {value: 5000.0, type: Number, unit: Wh, scale: ''}
+      raw: &id013 {value: 5E+3, type: Number, unit: Wh, scale: ''}
       readable: 5 kWh
   children:
   - name: '1'

@@ -30,7 +30,7 @@ class CO2RecordTreeTest extends Specification {
             'cpus'     : 1,
             'cpu_model': "Unknown model",
             '%cpu'     : 100.0,
-            'memory'   : (7 as Long) * (1024**3 as Long), // 7 GB
+            'memory'   : (7 as Long) * (1000**3 as Long), // 7 GB
             'status'   : 'COMPLETED'
         ])
 
@@ -53,7 +53,7 @@ class CO2RecordTreeTest extends Specification {
             process.addChild(new CO2RecordTree("task_${counter}", [level: 'task'],
                 new CO2Record(
                     traceRecord2, value, value, null, 475.0,
-                    100.0, 1024**3, 1.0d, 1, 12, 'Unknown model', 5.0d, 5.0d
+                    100.0, 1000**3, 1.0d, 1, 12, 'Unknown model', 5.0d, 5.0d
                 )
             ))
         }
@@ -78,7 +78,7 @@ class CO2RecordTreeTest extends Specification {
                 cpus:[1, 1, 1],
                 cpu_model:['Unknown model', 'Unknown model', 'Unknown model'],
                 '%cpu':[100.0, 100.0, 100.0],
-                memory:[1073741824, 1073741824, 1073741824],
+                memory:[1000000000, 1000000000, 1000000000],
                 status:['COMPLETED', 'COMPLETED', 'CACHED'],
                 name:['task_1', 'task_2', 'task_3'],
                 energy_consumption:[0.0, 1.0, 2.0],

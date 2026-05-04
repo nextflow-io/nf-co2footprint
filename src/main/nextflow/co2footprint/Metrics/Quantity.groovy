@@ -12,7 +12,10 @@ class Quantity extends Metric<BigDecimal> {
     String scale
     boolean integerType
     String separator = ' '
-    int scalingFactor = 1000
+
+    // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa (decimal 1000 scale)
+    List<List<String>> scalingLists = [['p', 'n', 'u', 'm', '', 'k', 'M', 'G', 'T', 'P', 'E']]
+    List<Integer> scalingFactors = [1000]
 
     /**
      * Creator of a Quantity, combining the tracking and reporting of a number, associated with a unit.
@@ -83,15 +86,16 @@ class Quantity extends Metric<BigDecimal> {
      * Converts a numeric value to the closest or given scale with SI prefixes.
      * Scales the value up or down by a given factor and adjusts the scale prefix accordingly.
      *
+     * @param value The value that is to be converted
+     * @param currentScale The current scale
+     * @param scales The scales that are available
+     * @param scalingFactor The scaling factor between the units
      * @param targetScale The scale that should be converted to (e.g. G), default of null (optional)
-     * @return Converted quantity with appropriate scale
+     * @return Converted value
      */
-    Quantity scale(String targetScale=null) {
+    static ScaledValue applyScale(BigDecimal value, String currentScale, List<String> scales, int scalingFactor, String targetScale=null) {
         if (value) {
-
-            final List<String> scales = ['p', 'n', 'u', 'm', '', 'k', 'M', 'G', 'T', 'P', 'E']
-            // Units: pico, nano, micro, milli, 0, Kilo, Mega, Giga, Tera, Peta, Exa
-            int scaleIndex = getIdx(scale, scales)
+            int scaleIndex = getIdx(currentScale, scales)
 
             int targetScaleIndex
             int difference
@@ -108,11 +112,45 @@ class Quantity extends Metric<BigDecimal> {
                 ))
                 targetScaleIndex = scaleIndex + difference
             }
-            value = (value / scalingFactor**difference) as BigDecimal
+            value = value.divide(scalingFactor**difference)
             targetScale = scales[targetScaleIndex]
         }
 
-        scale = targetScale
+        return new ScaledValue(value, targetScale)
+    }
+
+    /**
+     * Converts a numeric value to the closest or given scale with SI prefixes.
+     * Scales the value up or down by a given factor and adjusts the scale prefix accordingly.
+     *
+     * @param targetScale The scale that should be converted to (e.g. G), default of null (optional)
+     * @return Converted quantity with appropriate scale
+     */
+    Quantity scale(String targetScale=null) {
+        // Search for scales in the available lists
+        int scalePos = scalingLists.findIndexOf { List<String> scalingList -> scalingList.contains(scale) }
+        int targetScalePos = scalingLists.findIndexOf { List<String> scalingList -> scalingList.contains(targetScale) }
+        
+        // Define current scaling list and factor
+        List<String> scalingList = scalingLists[scalePos]
+        Integer scalingFactor = scalingFactors[scalePos]
+        
+        ScaledValue scaledValue
+        if(targetScale == null || scalePos == targetScalePos) {
+            scaledValue = applyScale(value, scale, scalingList, scalingFactor, targetScale)
+        }
+        else {
+            // Define target scaling list and factor
+            List<String> targetScalingList = scalingLists[targetScalePos]
+            Integer targetScalingFactor  = scalingFactors[targetScalePos]
+            
+            // Convert to base value and then to target scale
+            scaledValue = applyScale(value, scale, scalingList, scalingFactor, '')
+            scaledValue = applyScale(scaledValue.value, scaledValue.scale, targetScalingList, targetScalingFactor, targetScale)
+        }
+
+        value = scaledValue.value 
+        scale = scaledValue.scale
         return this
     }
 
@@ -183,5 +221,18 @@ class Quantity extends Metric<BigDecimal> {
         Map<String, Object> map = super.toMap() + [unit: unit, scale: scale]
         map['value'] = returnValue()
         return map
+    }
+
+    /**
+     * Container class for a scaled value
+     */
+    static class ScaledValue {
+        BigDecimal value
+        String scale
+        
+        ScaledValue(BigDecimal value, String scale) {
+            this.value = value
+            this.scale = scale
+        }
     }
 }
