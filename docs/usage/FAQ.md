@@ -32,3 +32,16 @@
     
     For more information see our documentation on [power draw parameters](./parameters.md#hardware-power-draw). You can additionally
     report the model with the ["Missing chip" GitHub issue](https://github.com/nextflow-io/nf-co2footprint/issues/new?template=missing_chip.yaml).
+
+
+<a id="differing-memory"></a>
+??? faq "Differing memory values"
+
+    The conversion of `Byte`-type units, such as `memory` is done in accordance with [SI standard, decimal-based naming](https://en.wikipedia.org/wiki/Metric_prefix#List_of_SI_prefixes), rather than [Nextflows binary-based system](https://en.wikipedia.org/wiki/Byte#Multiple-byte_units).
+    In essence, we use: 1 GB = 1 000 000 000 bytes (1 * 1000^3), while Nextflow uses: 1 GB = 1 073 741 824 bytes (1 * 1024^3), which should be 1 GiB (Gibibyte).
+    
+    Example: <br>
+        -> You request `process.memory = 12 GB` <br>
+        -> Nextflow converts it to 12884901888 bytes and passes the restriction onto the executor  <br>
+        -> 12.88 GB = 12 GiB are allocated for the process  <br>
+        -> The plugin uses the the former to proceed with calculations and reporting, while Nextflow reports using the latter  <br>
