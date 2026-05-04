@@ -1,10 +1,10 @@
 package nextflow.co2footprint.FileCreation
 
+import groovy.json.JsonBuilder
 import groovyx.gpars.agent.Agent
 import nextflow.co2footprint.Config.ProvenanceFileConfig
 import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.trace.TraceHelper
-import groovy.json.JsonBuilder
 
 import java.time.Duration
 import java.time.Instant

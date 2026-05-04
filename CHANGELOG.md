@@ -7,6 +7,7 @@
 ## Misc:
 - Improved workflow reporting form extension/CLI by deriving and injecting workflow metadata from the provided trace file
 - Added full integration test
+- Adapted to Nextflow 26
 - Reworked `Bytes`, such that it can take binary and decimal-based values
 
 ## Features:

@@ -11,8 +11,9 @@ import nextflow.processor.TaskId
 import nextflow.processor.TaskProcessor
 import nextflow.processor.TaskRun
 import nextflow.script.WorkflowMetadata
-import nextflow.trace.TraceObserver
+import nextflow.trace.TraceObserverV2
 import nextflow.trace.TraceRecord
+import nextflow.trace.event.TaskEvent
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -72,7 +73,7 @@ class CO2FootprintObserverTest extends Specification{
     def 'should return observer' () {
         when:
         Session session = Mock(Session) { getConfig() >> [:] }
-        List<TraceObserver> result = new CO2FootprintFactory().create(session)
+        List<TraceObserverV2> result = new CO2FootprintFactory().create(session)
 
         then:
         result.size() == 1
@@ -111,8 +112,8 @@ class CO2FootprintObserverTest extends Specification{
         CO2FootprintObserver observer = factory.create(session)[0] as CO2FootprintObserver
 
         observer.onFlowCreate(session)
-        observer.onProcessStart(handler, traceRecord)
-        observer.onProcessComplete(handler, traceRecord)
+        observer.onTaskStart(new TaskEvent(handler, traceRecord))
+        observer.onTaskComplete(new TaskEvent(handler, traceRecord))
         observer.onFlowComplete()
 
         expect:
@@ -146,8 +147,8 @@ class CO2FootprintObserverTest extends Specification{
         CO2FootprintObserver observer = factory.create(session)[0] as CO2FootprintObserver
 
         observer.onFlowCreate(session)
-        observer.onProcessStart(handler, traceRecord)
-        observer.onProcessComplete(handler, traceRecord)
+        observer.onTaskStart(new TaskEvent(handler, traceRecord))
+        observer.onTaskComplete(new TaskEvent(handler, traceRecord))
         observer.onFlowComplete()
 
         CO2EquivalencesRecord co2EquivalencesRecord = observer
@@ -206,8 +207,8 @@ class CO2FootprintObserverTest extends Specification{
         when:
         // Run necessary observer steps
         observer.onFlowCreate(session)
-        observer.onProcessStart(taskHandler, traceRecord)
-        observer.onProcessComplete(taskHandler, traceRecord)
+        observer.onTaskStart(new TaskEvent(taskHandler, traceRecord))
+        observer.onTaskComplete(new TaskEvent(taskHandler, traceRecord))
         observer.onFlowComplete()
         observer.renderFiles()
 

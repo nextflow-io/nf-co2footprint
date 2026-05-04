@@ -68,6 +68,7 @@ class CO2PluginFullTest extends Specification {
         Map<String, String> env = processBuilder.environment()
         env.put( 'NXF_PLUGINS_MODE', 'prod')
         env.put( 'NXF_PLUGINS_DIR', pluginsPath.toString())
+        env.put( 'NXF_VER', '26.04.0')
         Process run = processBuilder.start()
 
         int runExitCode = run.waitFor()

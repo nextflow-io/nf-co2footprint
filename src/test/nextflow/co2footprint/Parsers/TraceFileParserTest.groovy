@@ -5,7 +5,6 @@ import spock.lang.Specification
 
 import java.nio.file.Path
 import java.time.Instant
-import java.time.LocalDate
 import java.time.ZoneId
 
 class TraceFileParserTest extends Specification {

@@ -1,7 +1,6 @@
 package nextflow.co2footprint
 
 import groovy.util.logging.Slf4j
-import nextflow.BuildInfo
 import nextflow.Session
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
@@ -13,12 +12,9 @@ import nextflow.script.ScriptFile
 import nextflow.script.WorkflowMetadata
 import nextflow.trace.TraceRecord
 import nextflow.util.Duration
-import nextflow.util.VersionNumber
 
 import java.nio.file.Path
-import java.nio.file.Paths
 import java.time.Instant
-import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
 /**
@@ -72,7 +68,6 @@ class CO2FootprintCLI {
         // Collect CO2Records from traces & optionally write the corresponding files
         List<CO2Record> co2Records = []
         traceRecords.each { TraceRecord traceRecord ->
-            observer.recordStarted(traceRecord)
             co2Records.add(observer.aggregateRecords(traceRecord))
         }
 

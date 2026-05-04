@@ -4,6 +4,7 @@ import groovy.util.logging.Slf4j
 import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.config.spec.ConfigOption
 import nextflow.script.dsl.Description
+
 import java.nio.file.Path
 
 /**

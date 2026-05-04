@@ -1,5 +1,6 @@
 package nextflow.co2footprint.Recorders
 
+import com.sun.management.OperatingSystemMXBean
 import groovy.util.logging.Slf4j
 import nextflow.Session
 import nextflow.trace.TraceRecord
@@ -13,8 +14,6 @@ import oshi.util.tuples.Triplet
 
 import java.lang.management.ManagementFactory
 import java.lang.management.RuntimeMXBean
-
-import com.sun.management.OperatingSystemMXBean
 
 /**
  * A Recorder of trace values for a Nextflow session, which can be attached after startup
