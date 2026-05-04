@@ -14,7 +14,8 @@ class BytesTest extends Specification {
 
         where:
         value   || scale    || targetScale  || expected || expectedScale
-        1024    || ''       || null         ||  1       || 'k'
+        1000    || ''       || 'k'         ||  1       || 'k'
+        1024    || ''       || 'Ki'         ||  1       || 'Ki'
     }
 
     def 'Should convert bytes to readable Strings'() {
@@ -26,7 +27,7 @@ class BytesTest extends Specification {
 
         where:
         value   || scale    || targetScale  || precision    || expected
-        1024    || ''       || null         || 0            || '1 kB'
-        1024**3 || ''       || null         || 0            || '1 GB'
+        1000    || ''       || null         || 0            || '1 kB'
+        1000**3 || ''       || null         || 0            || '1 GB'
     }
 }

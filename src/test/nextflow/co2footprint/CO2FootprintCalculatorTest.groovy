@@ -40,7 +40,7 @@ class CO2FootprintCalculatorTest extends Specification{
         traceRecord.cpus = 2
         traceRecord.cpu_model = cpuModel
         traceRecord.'%cpu' = 100.0
-        traceRecord.memory = (7 as Long) * (1024**3 as Long)
+        traceRecord.memory = (7 as Long) * (1000**3 as Long)
 
         CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdpDataMatrix, ciDataMatrix, [:])
         CO2FootprintCalculator co2FootprintComputer = new CO2FootprintCalculator(tdpDataMatrix, config)
@@ -101,18 +101,18 @@ class CO2FootprintCalculatorTest extends Specification{
 
         when:
         // Try to compute the CO2 footprint, catching any exceptions
-        def result = null
-        def caught = null
+        CO2Record result = null
+        Exception caught = null
         try {
             result = co2FootprintComputer.computeTaskCO2footprint(traceRecord, timeCiRecordCollector)
-        } catch (Exception e) {
+        } catch (MissingValueException e) {
             caught = e
         }
 
         then:
         // If we expect an exception, assert it was thrown
-        if (expectException) {
-            assert caught instanceof MissingValueException
+        if (caught) {
+                assert expectException
         } else {
             // Otherwise, check that the computed memory matches the expected value (in GB)
             assert result.store.memory == expectedMemory
@@ -120,9 +120,9 @@ class CO2FootprintCalculatorTest extends Specification{
 
         where:
         memory             | peak_rss           | expectException | expectedMemory
-        8L*1024**3         | 4L*1024**3         | false           | 8L              // requested memory used
-        null               | 4L*1024**3         | false           | 4L              // peak_rss used (requested null)
-        4L*1024**3         | null               | false           | 4L              // requested used (required null)
+        8L*1000**3         | 4L*1000**3         | false           | 8L              // requested memory used
+        null               | 4L*1000**3         | false           | 4L              // peak_rss used (requested null)
+        4L*1000**3         | null               | false           | 4L              // requested used (required null)
         null               | null               | true            | null            // throws error (both null)
     }
     
@@ -134,7 +134,7 @@ class CO2FootprintCalculatorTest extends Specification{
         traceRecord.cpus = cpus
         traceRecord.cpu_model = "Some model"
         traceRecord.'%cpu' = pCpu
-        traceRecord.memory = (7 as Long) * (1024**3 as Long)
+        traceRecord.memory = (7 as Long) * (1000**3 as Long)
 
         CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, ciDataMatrix, [:])
         CO2FootprintCalculator co2FootprintComputer = new CO2FootprintCalculator(tdpDataMatrix, config)

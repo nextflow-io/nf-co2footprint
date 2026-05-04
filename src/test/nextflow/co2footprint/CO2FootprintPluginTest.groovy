@@ -50,7 +50,7 @@ class CO2FootprintPluginTest extends Specification{
                         'cpus': 1,
                         'cpu_model': "Unknown model",
                         '%cpu': 100.0,
-                        'memory': (7 as Long) * (1024**3 as Long), // 7 GB
+                        'memory': (7 as Long) * (1000**3 as Long), // 7 GB
                         'status': 'COMPLETED'
                 ]
         )

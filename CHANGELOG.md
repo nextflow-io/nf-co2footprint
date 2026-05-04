@@ -2,11 +2,13 @@
 ## Bug Fixes:
 - CPU power model now applied correctly
 - Unintended report value removal
+- Fixed floating point error for numerical conversion division
 
 ## Misc:
 - Improved workflow reporting form extension/CLI by deriving and injecting workflow metadata from the provided trace file
 - Added full integration test
 - Adapted to Nextflow 26
+- Reworked `Bytes`, such that it can take binary and decimal-based values
 
 ## Features:
 - Transformation of data file to provenance file with schema.org / bioschemas.org type annotation in JSON-LD data format

@@ -57,7 +57,7 @@ class ReportFileCreatorTest extends Specification{
                 '%cpu': 100.0,
                 'hash': 'ca/372f78',
                 'status': 'COMPLETED',
-                'memory': (7 as Long) * (1024**3 as Long), // 7 GB
+                'memory': (7 as Long) * (1000**3 as Long), // 7 GB
                 'name': 'testTask'
             ]
         )

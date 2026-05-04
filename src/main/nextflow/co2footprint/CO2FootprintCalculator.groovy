@@ -85,8 +85,8 @@ class CO2FootprintCalculator {
 
         /* ===== Memory Information ===== */
 
-        final Long requestedMemory = trace.get('memory') as Long        // [bytes]
-        final Long maxRequiredMemory = trace.get('peak_rss') as Long    // [bytes]
+        final BigInteger requestedMemory = trace.get('memory') as BigInteger        // [bytes]
+        final BigInteger maxRequiredMemory = trace.get('peak_rss') as BigInteger    // [bytes]
 
         // Assign the final memory value
         final BigDecimal memory
@@ -120,7 +120,7 @@ class CO2FootprintCalculator {
         final BigDecimal ci = timeCiRecords.getCi(trace)
 
         // Personal energy mix based carbon intensity
-        final Double ciMarket = config.ciMarket
+        final BigDecimal ciMarket = config.ciMarket
 
 
         /* ===== Energy & Emission Calculation ===== */
@@ -147,9 +147,9 @@ class CO2FootprintCalculator {
             co2eMarket,
             ci,
             cpuUsage,
-            memory as Long,
+            memory,
             runtime_h,
-            numberOfCores as Integer,
+            numberOfCores,
             powerdrawPerCore,
             config.ignoreCpuModel ? 'Custom value' : cpuModel,
             rawEnergyProcessor,

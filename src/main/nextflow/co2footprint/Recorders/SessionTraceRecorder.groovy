@@ -131,12 +131,14 @@ class SessionTraceRecorder {
         )
 
         if (samples) {
+            List<Long> rss = samples.collect({ MemorySample sample -> sample.rssBytes})
+            List<Long> vmem = samples.collect({ MemorySample sample -> sample.virtualMemoryBytes})
             sessionRecord.putAll(
                     [
-                            rss:            samples.collect({ MemorySample sample -> sample.rssBytes}).average() as Long,
-                            vmem:           samples.collect({ MemorySample sample -> sample.virtualMemoryBytes}).average() as Long,
-                            peak_rss:       samples.collect({ MemorySample sample -> sample.rssBytes}).max() as Long,
-                            peak_vmem:      samples.collect({ MemorySample sample -> sample.virtualMemoryBytes}).max() as Long,
+                            rss:            rss.average(),
+                            vmem:           vmem.average(),
+                            peak_rss:       rss.max(),
+                            peak_vmem:      vmem.max(),
                     ]
             )
         }
