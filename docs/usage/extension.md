@@ -22,8 +22,17 @@ The plugin provides some [extension points](https://nextflow.io/docs/latest/plug
 The command line functionality utilizes Nextflow configs, like the regular plugin (see [parameters.md](./parameters.md)).
 It is recommended to set the output paths and a fixed carbon intensity value (`ci`) in the config.
 ```bash
-nextflow plugin nf-co2footprint:postRun --config <path_to_nextflow.config> --tracePath <path_to_execution_trace.txt>
+nextflow plugin nf-co2footprint:postRun --tracePath <path_to_execution_trace.txt> [--config <path_to_nextflow.config>] [--delimiter <delimiter>]
 ```
+
+- **--tracePath** *(required)*:
+  Path to the execution trace file.
+
+- **--config**:
+  Path to a Nextflow config file (output paths, carbon intensity, etc.).
+
+- **--delimiter**:
+  Column separator used in the trace file. Defaults to `'\t'`.
 
 
 
