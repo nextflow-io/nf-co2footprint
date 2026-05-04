@@ -1,10 +1,10 @@
 {
   "summary_test.txt": {
-    "checksum": "8ac4032a5c7c8ba5f3580cad3c353f91",
+    "checksum": "45a60513edc252cd47d85e1c6e4b3dde",
     "num_lines": 30
   },
   "report_test.html": {
-    "checksum": "f2314dd1055429897ff2b9b9c9544c41",
+    "checksum": "3d337b8a28a001a379f7ca614c5b6ed8",
     "num_lines": 1816
   },
   "provenance_test.json": {
