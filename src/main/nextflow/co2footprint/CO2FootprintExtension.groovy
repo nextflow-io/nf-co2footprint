@@ -77,7 +77,6 @@ class CO2FootprintExtension extends PluginExtensionPoint {
         // Collect CO2Records from traces & optionally write the corresponding files
         List<CO2Record> co2Records = []
         traceRecords.each { TraceRecord traceRecord ->
-            observer.recordStarted(traceRecord)
             co2Records.add(observer.aggregateRecords(traceRecord))
         }
 

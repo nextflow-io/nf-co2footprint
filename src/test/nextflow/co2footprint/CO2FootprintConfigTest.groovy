@@ -1,16 +1,17 @@
 package nextflow.co2footprint
 
-import nextflow.co2footprint.DataContainers.DataMatrix
-import nextflow.co2footprint.DataContainers.TDPDataMatrix
-import nextflow.co2footprint.DataContainers.CIDataMatrix
-import nextflow.co2footprint.Records.CiRecord
-import spock.lang.Specification
-import groovy.util.logging.Slf4j
-import java.util.concurrent.ConcurrentHashMap
 import ch.qos.logback.classic.Logger
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.read.ListAppender
+import groovy.util.logging.Slf4j
+import nextflow.co2footprint.DataContainers.CIDataMatrix
+import nextflow.co2footprint.DataContainers.DataMatrix
+import nextflow.co2footprint.DataContainers.TDPDataMatrix
+import nextflow.co2footprint.Records.CiRecord
 import org.slf4j.LoggerFactory
+import spock.lang.Specification
+
+import java.util.concurrent.ConcurrentHashMap
 
 @Slf4j
 class CO2FootprintConfigTest extends Specification {

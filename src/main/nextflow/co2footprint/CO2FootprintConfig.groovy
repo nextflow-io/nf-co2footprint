@@ -6,14 +6,14 @@ import nextflow.co2footprint.Config.ReportFileConfig
 import nextflow.co2footprint.Config.SummaryFileConfig
 import nextflow.co2footprint.Config.TraceFileConfig
 import nextflow.co2footprint.DataContainers.AWSRegionsDataMatrix
-import nextflow.co2footprint.DataContainers.MachineTypeDataMatrix
-import nextflow.config.spec.ScopeName
-import nextflow.config.spec.ConfigScope
-import nextflow.config.spec.ConfigOption
-import nextflow.script.dsl.Description
 import nextflow.co2footprint.DataContainers.CIDataMatrix
+import nextflow.co2footprint.DataContainers.MachineTypeDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CiRecord
+import nextflow.config.spec.ConfigOption
+import nextflow.config.spec.ConfigScope
+import nextflow.config.spec.ScopeName
+import nextflow.script.dsl.Description
 import nextflow.trace.TraceHelper
 
 import java.nio.file.Path

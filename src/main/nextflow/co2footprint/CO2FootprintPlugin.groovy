@@ -19,9 +19,8 @@ package nextflow.co2footprint
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import nextflow.cli.PluginAbstractExec
-
-import nextflow.co2footprint.Recorders.SessionTraceRecorder
 import nextflow.co2footprint.Parsers.ArgsParser
+import nextflow.co2footprint.Recorders.SessionTraceRecorder
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.plugin.BasePlugin

@@ -10,12 +10,11 @@ import nextflow.co2footprint.FileCreation.TraceFileCreator
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.co2footprint.Records.CiRecordCollector
-import nextflow.processor.TaskHandler
 import nextflow.processor.TaskId
-import nextflow.processor.TaskProcessor
 import nextflow.script.WorkflowMetadata
-import nextflow.trace.TraceObserver
+import nextflow.trace.TraceObserverV2
 import nextflow.trace.TraceRecord
+import nextflow.trace.event.TaskEvent
 
 import java.util.concurrent.ConcurrentHashMap
 
@@ -30,7 +29,7 @@ import java.util.concurrent.ConcurrentHashMap
  *         Josua Carl <josua.carl@uni-tuebingen.de>
  */
 @Slf4j
-class CO2FootprintObserver implements TraceObserver {
+class CO2FootprintObserver implements TraceObserverV2 {
     // Holds workflow session
     Session session
 
@@ -97,20 +96,15 @@ class CO2FootprintObserver implements TraceObserver {
     boolean enableMetrics() { return true }
 
     // ------ HELPER METHODS ------
-
+    
     /**
      * Records the start of a task by storing its {@link TraceRecord}.
      *
      * @param trace the TraceRecord of the task that just started
      */
-    synchronized void recordStarted(TraceRecord traceRecord) {
+    synchronized void recordStartedTask(TraceRecord traceRecord) {
         // Keep started tasks
         runningTasks[traceRecord.taskId] = traceRecord
-
-        // Add a process node under the workflow if it doesn’t exist yet
-        if(!workflowStats.getChild(traceRecord.processName)) {
-            workflowStats.addChild(new CO2RecordTree(traceRecord.processName, [level: 'process']))
-        }
     }
 
     /**
@@ -136,8 +130,13 @@ class CO2FootprintObserver implements TraceObserver {
         // Optionally write to trace file
         this.traceFile.write(co2Record)
 
-        // Add a task node with its CO2Record to the corresponding process
+        // Add a process node under the workflow if it doesn’t exist yet
         CO2RecordTree processNode = workflowStats.getChild(traceRecord.processName)
+        if(!processNode) {
+            processNode = workflowStats.addChild(new CO2RecordTree(traceRecord.processName, [level: 'process']))
+        }
+
+        // Add a task node with its CO2Record to the corresponding process
         processNode.addChild(new CO2RecordTree(traceRecord.taskId, [level: 'task'], co2Record))
 
         return co2Record
@@ -155,15 +154,14 @@ class CO2FootprintObserver implements TraceObserver {
         co2RecordTree.collectAdditionalMetrics()
 
         // Create report and summary if any content exists to write to the file
-        if (workflowStats) {
+        if (co2RecordTree) {
             summaryFile.create()
             summaryFile.write(co2RecordTree, co2FootprintCalculator, config)
 
             reportFile.create()
             reportFile.addEntries(co2RecordTree, co2FootprintCalculator, config, timeCiRecordCollector, workflowMetadata)
             reportFile.write()
-        }
-        if (co2RecordTree) {
+
             provenanceFile.create()
             provenanceFile.write(co2RecordTree)
         }
@@ -226,77 +224,68 @@ class CO2FootprintObserver implements TraceObserver {
         )
     }
 
-
-    // ---- PROCESS LEVEL ----
-
-    /**
-     * This method is invoked when a process is created
-     *
-     * @param process The process created ({@link nextflow.processor.TaskProcessor})
-     */
-    @Override
-    void onProcessCreate(TaskProcessor process) {}
+    // ---- TASK LEVEL ----
 
     /**
-     * This method is invoked before a process run is going to be submitted.
+     * Invoked when a task is submitted by an executor to the
+     * underlying execution backend.
      *
-     * @param handler The task handler ({@link nextflow.processor.TaskHandler})
-     * @param trace   The trace record for the task ({@link nextflow.trace.TraceRecord})
+     * @param event A task event containing the ({@link nextflow.processor.TaskHandler})
+     *              and ({@link nextflow.trace.TraceRecord}) for the task
      */
     @Override
-    void onProcessSubmit(TaskHandler handler, TraceRecord trace) {
-        log.trace("Trace report - submit process > ${handler}")
+    void onTaskSubmit(TaskEvent event) {
+        log.trace("Trace report - submit process > ${event.handler}")
 
-        recordStarted(trace)
+        recordStartedTask(event.trace)
     }
 
     /**
-     * This method is invoked when a process run is going to start.
+     * Invoked when a task is running in the underlying execution backend.
      *
-     * @param handler The task handler ({@link nextflow.processor.TaskHandler})
-     * @param trace   The trace record for the task ({@link nextflow.trace.TraceRecord})
+     * @param event A task event containing the ({@link nextflow.processor.TaskHandler})
+     *              and ({@link nextflow.trace.TraceRecord}) for the task
      */
-    @Override
-    void onProcessStart(TaskHandler handler, TraceRecord trace) {
-        log.trace("Trace report - start process > ${handler}")
+    void onTaskStart(TaskEvent event) {
+        log.trace("Trace report - start process > ${event.handler}")
 
-        recordStarted(trace)
+        recordStartedTask(event.trace)
     }
 
     /**
-     * This method is invoked when a process run completes.
+     * Invoked when a task completes.
      *
-     * @param handler The task handler ({@link nextflow.processor.TaskHandler})
-     * @param trace   The trace record for the task ({@link nextflow.trace.TraceRecord})
+     * @param event A task event containing the ({@link nextflow.processor.TaskHandler})
+     *              and ({@link nextflow.trace.TraceRecord}) for the task
      */
     @Override
-    void onProcessComplete(TaskHandler handler, TraceRecord trace) {
-        log.trace("Trace report - complete process > ${handler}")
+    void onTaskComplete(TaskEvent event) {
+        log.trace("Trace report - complete process > ${event.handler}")
 
         // Ensure the presence of a Trace BaseRecord
-        if (!trace) {
-            log.warn("Unable to find TraceRecord for task with id: ${handler.task.id}")
+        if (!event.trace) {
+            log.warn("Unable to find TraceRecord for task with id: ${event.handler.task.id}")
             return
         }
 
-        aggregateRecords(trace)
+        aggregateRecords(event.trace)
     }
 
     /**
-     * This method is invoked when a process was cached.
+     * Invoked when a task execution is skipped because the result is cached (already computed)
+     * or stored (using the `storeDir` directive).
      *
-     * @param handler The task handler ({@link nextflow.processor.TaskHandler})
-     * @param trace   The trace record for the task ({@link nextflow.trace.TraceRecord})
+     * @param event A task event containing the ({@link nextflow.processor.TaskHandler})
+     *              and ({@link nextflow.trace.TraceRecord}) for the task
      */
     @Override
-    void onProcessCached(TaskHandler handler, TraceRecord trace) {
-        log.trace("Trace report - cached process > ${handler}")
+    void onTaskCached(TaskEvent event) {
+        log.trace("Trace report - cached process > ${event.handler}")
 
         // Event was triggered by a stored task, ignore it
-        if (trace == null) { return }
-        
-        recordStarted(trace) // add also cashed tasks to the runningTasks to be able to report them in the output files
-        aggregateRecords(trace)
-    }
+        if (event.trace == null) { return }
 
+        recordStartedTask(event.trace) // add also cashed tasks to the runningTasks to be able to report them in the output files
+        aggregateRecords(event.trace)
+    }
 }
