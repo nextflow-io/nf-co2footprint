@@ -41,7 +41,7 @@
     In essence, we use: 1 GB = 1 000 000 000 bytes (1 * 1000^3), while Nextflow uses: 1 GB = 1 073 741 824 bytes (1 * 1024^3), which should be 1 GiB (Gibibyte).
     
     Example: <br>
-        -> You request `process.memory = 12 GB` <br>
-        -> Nextflow converts it to 12884901888 bytes and passes the restriction onto the executor  <br>
-        -> 12.88 GB = 12 GiB are allocated for the process  <br>
-        -> The plugin uses the the former to proceed with calculations and reporting, while Nextflow reports using the latter  <br>
+    &emsp;    -> You request `process.memory = 12 GB` <br>
+    &emsp;    -> Nextflow converts it to 12884901888 bytes and passes the restriction onto the executor <br>
+    &emsp;&emsp;        => 12.88 GB = 12 GiB are allocated for the process <br>
+    &emsp;    -> The plugin uses the the former to proceed with calculations and reporting, while Nextflow (incorrectly) reports using the latter <br>
