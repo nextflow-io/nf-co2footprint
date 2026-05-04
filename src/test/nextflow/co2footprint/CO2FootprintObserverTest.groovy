@@ -11,8 +11,9 @@ import nextflow.processor.TaskId
 import nextflow.processor.TaskProcessor
 import nextflow.processor.TaskRun
 import nextflow.script.WorkflowMetadata
-import nextflow.trace.TraceObserver
+import nextflow.trace.TraceObserverV2
 import nextflow.trace.TraceRecord
+import nextflow.trace.event.TaskEvent
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -40,7 +41,7 @@ class CO2FootprintObserverTest extends Specification{
                  'cpus': 1,
                  'cpu_model': "Unknown model",
                  '%cpu': 100.0,
-                 'memory': (7 as Long) * (1024**3 as Long), // 7 GB
+                 'memory': (7 as Long) * (1000**3 as Long), // 7 GB
                  'status': 'COMPLETED'
             ]
         )
@@ -53,14 +54,14 @@ class CO2FootprintObserverTest extends Specification{
     /**
      * Helper to create a mock session with a specific CI value.
      */
-    private Session mockSessionWithCI(Path tracePath, Path summaryPath, Path reportPath, Path dataPath, double ciValue) {
+    private Session mockSessionWithCI(Path tracePath, Path summaryPath, Path reportPath, Path provenancePath, double ciValue) {
         return Mock(Session) {
             getConfig() >> [
                 co2footprint: [
                     'trace': ['enabled': true, 'file': tracePath],
                     'summary': ['enabled': true, 'file': summaryPath],
                     'report': ['enabled': true, 'file': reportPath],
-                    'dataFile': [enabled: true, file: dataPath],
+                    'provenance': [enabled: true, file: provenancePath],
                     'ci': ciValue
                 ]
             ]
@@ -72,7 +73,7 @@ class CO2FootprintObserverTest extends Specification{
     def 'should return observer' () {
         when:
         Session session = Mock(Session) { getConfig() >> [:] }
-        List<TraceObserver> result = new CO2FootprintFactory().create(session)
+        List<TraceObserverV2> result = new CO2FootprintFactory().create(session)
 
         then:
         result.size() == 1
@@ -96,10 +97,10 @@ class CO2FootprintObserverTest extends Specification{
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
-        Path dataPath = tempPath.resolve('data_test.yaml')
+        Path provenancePath = tempPath.resolve('provenance_test.json')
 
         // Use helper to mock session with CI value 475.0
-        Session session = mockSessionWithCI(tracePath, summaryPath, reportPath, dataPath, 475.0)
+        Session session = mockSessionWithCI(tracePath, summaryPath, reportPath, provenancePath, 475.0)
 
         // Create task and handler
         TaskRun task = new TaskRun(id: TaskId.of(111))
@@ -111,13 +112,13 @@ class CO2FootprintObserverTest extends Specification{
         CO2FootprintObserver observer = factory.create(session)[0] as CO2FootprintObserver
 
         observer.onFlowCreate(session)
-        observer.onProcessStart(handler, traceRecord)
-        observer.onProcessComplete(handler, traceRecord)
+        observer.onTaskStart(new TaskEvent(handler, traceRecord))
+        observer.onTaskComplete(new TaskEvent(handler, traceRecord))
         observer.onFlowComplete()
 
         expect:
-        Double total_co2 =  observer.workflowStats.co2Record.store.co2e as Double
-        Double total_energy =  observer.workflowStats.co2Record.store.energy as Double
+        Double total_co2 =  observer.workflowStats.co2Record.store.CO2e as Double
+        Double total_energy =  observer.workflowStats.co2Record.store.energy_consumption as Double
         // With TDP = 11.45 (default global)
         // Energy consumption converted to Wh
         round(total_energy*1000) == 14.02
@@ -125,16 +126,16 @@ class CO2FootprintObserverTest extends Specification{
         round(total_co2) == 6.66
     }
 
-    def 'test full run with co2e equivalences calculation and specific CI' () {
+    def 'test full run with CO2e equivalences calculation and specific CI' () {
         given:
         Path tempPath = Files.createTempDirectory('tmpdir')
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
-        Path dataPath = tempPath.resolve('data_test.yaml')
+        Path provenancePath = tempPath.resolve('provenance_test.json')
 
         // Use helper to mock session with CI value 475.0
-        Session session = mockSessionWithCI(tracePath, summaryPath, reportPath, dataPath, 475.0)
+        Session session = mockSessionWithCI(tracePath, summaryPath, reportPath, provenancePath, 475.0)
 
         // Create task and handler
         TaskRun task = new TaskRun(id: traceRecord.getTaskId())
@@ -146,13 +147,13 @@ class CO2FootprintObserverTest extends Specification{
         CO2FootprintObserver observer = factory.create(session)[0] as CO2FootprintObserver
 
         observer.onFlowCreate(session)
-        observer.onProcessStart(handler, traceRecord)
-        observer.onProcessComplete(handler, traceRecord)
+        observer.onTaskStart(new TaskEvent(handler, traceRecord))
+        observer.onTaskComplete(new TaskEvent(handler, traceRecord))
         observer.onFlowComplete()
 
         CO2EquivalencesRecord co2EquivalencesRecord = observer
             .getCO2FootprintCalculator()
-            .computeCO2footprintEquivalences(observer.workflowStats.co2Record.store.co2e as Double)
+            .computeCO2footprintEquivalences(observer.workflowStats.co2Record.store.CO2e as Double)
 
         expect:
         // Values compared to result from www.green-algorithms.org (1h, 1core, TDP=11.45, CI:475)
@@ -172,7 +173,7 @@ class CO2FootprintObserverTest extends Specification{
         Path tracePath = tempPath.resolve('trace_test.txt')
         Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
-        Path dataPath = tempPath.resolve('data_test.yaml')
+        Path provenancePath = tempPath.resolve('provenance_test.json')
 
         // Mock Session
         Session session = Mock(Session)
@@ -182,15 +183,17 @@ class CO2FootprintObserverTest extends Specification{
                     'trace': [enabled: true, file: tracePath],
                     'summary': [enabled: true, file: summaryPath],
                     'report': [enabled: true, file: reportPath],
-                    'dataFile': [enabled: true, file: dataPath]
+                    'provenance': [enabled: true, file: provenancePath]
                 ]
         ]
         session.getExecService() >> Executors.newFixedThreadPool(1)
         WorkflowMetadata meta = Mock(WorkflowMetadata)
-        meta.scriptId >> 'MOCK'
-        meta.start >> time
-        meta.complete >> time
-        meta.nextflow >> NextflowMeta.instance
+        meta.toMap() >> [
+                scriptId: 'MOCK',
+                start: time,
+                complete: time,
+                nextflow: NextflowMeta.instance
+        ]
         session.getWorkflowMetadata() >> meta
 
         // Create task
@@ -204,8 +207,8 @@ class CO2FootprintObserverTest extends Specification{
         when:
         // Run necessary observer steps
         observer.onFlowCreate(session)
-        observer.onProcessStart(taskHandler, traceRecord)
-        observer.onProcessComplete(taskHandler, traceRecord)
+        observer.onTaskStart(new TaskEvent(taskHandler, traceRecord))
+        observer.onTaskComplete(new TaskEvent(taskHandler, traceRecord))
         observer.onFlowComplete()
         observer.renderFiles()
 
@@ -237,7 +240,7 @@ class CO2FootprintObserverTest extends Specification{
         fileChecker.runChecks(
                 summaryPath,
                 [
-                        27: "  dataFile: ${dataPath}",
+                        27: "  provenanceFile: ${provenancePath}",
                         28: "  reportFile: ${reportPath}",
                         29: "  summaryFile: ${summaryPath}",
                         30: "  traceFile: ${tracePath}"
@@ -252,12 +255,12 @@ class CO2FootprintObserverTest extends Specification{
                         '{"option":"ci","value":"480.0"},'+
                         '{"option":"ciMarket","value":null},' +
                         '{"option":"customCpuTdpFile","value":null},' +
-                        "{\"option\":\"dataFile\",\"value\":\"${dataPath}\"}," +
                         '{"option":"ignoreCpuModel","value":"false"},' +
                         '{"option":"location","value":null},' +
                         '{"option":"machineType","value":null},' +
                         '{"option":"powerdrawCpuDefault","value":null},' +
                         '{"option":"powerdrawMem","value":"0.3725"},' +
+                        "{\"option\":\"provenanceFile\",\"value\":\"${provenancePath}\"}," +
                         '{"option":"pue","value":"1.0"},' +
                         "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
                         "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
@@ -268,6 +271,6 @@ class CO2FootprintObserverTest extends Specification{
             ]
         )
 
-        fileChecker.runChecks(dataPath)
+        fileChecker.runChecks(provenancePath)
     }
 }

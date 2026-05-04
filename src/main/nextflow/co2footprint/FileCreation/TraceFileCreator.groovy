@@ -20,20 +20,6 @@ class TraceFileCreator extends BaseFileCreator {
     // Agent for thread-safe writing to the trace file
     private Agent<PrintWriter> traceWriter
 
-    // Execution & CO2-footprint trace keys that are included into trace file
-    private List<String> entryKeys = [
-            'task_id', 'status', 'name', 'energy', 'co2e', 'co2eMarket', 'ci', 'cpuUsage', 'memory', 'time', 'cpus',
-            'powerdrawCPU', 'cpu_model', 'rawEnergyProcessor', 'rawEnergyMemory'
-    ]
-
-    // Mapping of entry keys to the CO2-footprint trace file header
-    private final Map<String, String> keyHeaderMapping = [
-        task_id: 'task_id', status: 'status',
-        name:'name', energy: 'energy_consumption', co2e: 'CO2e', co2eMarket: 'CO2e_market', ci: 'carbon_intensity',
-        cpuUsage: '%cpu', memory: 'memory', time: 'realtime', cpus: 'cpus', powerdrawCPU: 'powerdraw_cpu',
-        cpu_model: 'cpu_model', rawEnergyProcessor: 'raw_energy_processor', rawEnergyMemory: 'raw_energy_memory'
-    ]
-
     /**
      * Constructor for the trace file.
      *
@@ -63,11 +49,8 @@ class TraceFileCreator extends BaseFileCreator {
         // Launch the agent for thread-safe writing
         traceWriter = new Agent<PrintWriter>(file)
 
-        // Write the header line to the trace file
-        List<String> headers = entryKeys.collect { String entryName -> keyHeaderMapping.get(entryName) }
-
         traceWriter.send {
-            file.println( String.join('\t', headers) )
+            file.println( String.join('\t', CO2Record.emissionMetrics) )
             file.flush()
         }
     }
@@ -81,7 +64,7 @@ class TraceFileCreator extends BaseFileCreator {
     void write(CO2Record co2Record){
         if (!created) { return }
 
-        List<String> recordedEntries = co2Record.getReadableEntries(entryKeys)
+        List<String> recordedEntries = co2Record.getReadableEntries(CO2Record.emissionMetrics)
 
         traceWriter.send { PrintWriter writer ->
             writer.println( String.join('\t', recordedEntries) )

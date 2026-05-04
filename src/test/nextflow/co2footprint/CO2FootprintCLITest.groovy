@@ -17,7 +17,7 @@ class CO2FootprintCLITest extends  Specification {
             outPath.resolve('trace_test.txt'),
             outPath.resolve('summary_test.txt'),
             outPath.resolve('report_test.html'),
-            outPath.resolve('data_test.yaml')
+            outPath.resolve('provenance_test.json')
     ]
 
     def cleanup() {
@@ -28,7 +28,8 @@ class CO2FootprintCLITest extends  Specification {
         when:
         Map<String, Object> parsedArgs = [
                 tracePath: Path.of(this.class.getResource('/execution-trace-raw.tsv').toURI()).complete().toString(),
-                config: Path.of(this.class.getResource('/cli/test.config').toURI()).complete().toString()
+                config: Path.of(this.class.getResource('/cli/test.config').toURI()).complete().toString(),
+                delimiter: '\t'
         ]
         int exitCode = CO2FootprintCLI.postRun(parsedArgs)
 

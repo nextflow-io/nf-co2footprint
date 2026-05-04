@@ -87,10 +87,10 @@ class CO2RecordTree {
      */
     CO2RecordTree collectAdditionalMetrics(
             Map<String, Closure> metricTransformers = [
-                    co2e_non_cached: { CO2Record record -> record.store.status != 'CACHED' ? record.co2e : null },
-                    energy_non_cached: { CO2Record record -> record.store.status != 'CACHED' ? record.energy : null },
-                    co2e_market: { CO2Record record -> record.co2eMarket },
-                    energy_market: { CO2Record record -> record.energy },
+                    CO2e_non_cached: { CO2Record record -> record.store.status != 'CACHED' ? record.store.CO2e : null },
+                    energy_consumption_non_cached: { CO2Record record -> record.store.status != 'CACHED' ? record.store.energy_consumption : null },
+                    CO2e_market: { CO2Record record -> record.store.CO2e_market },
+                    energy_consumption_market: { CO2Record record -> record.store.energy_consumption },
             ]
     ) {
         metricTransformers.each{ String name, Closure transformer ->
@@ -115,16 +115,16 @@ class CO2RecordTree {
         List<Object> values = []
 
         // Catch special suffixes
-        String suffix = '_' + key.split('_').drop(1).join('_')
+        String caseSuffix = null
+        if (key.endsWith('_non_cached')) { caseSuffix = '_non_cached' }
+
         String croppedKey = key
-        if (suffix == '_non_cached') {
-            croppedKey = key.replace(suffix, '')
-        }
+        if (caseSuffix) { croppedKey = key.replace(caseSuffix, '') }
 
         // Extract information
         if (!children && co2Record?.store?.containsKey(croppedKey)) {
             Object val = co2Record.store[croppedKey]
-            if (suffix == '_non_cached' && (co2Record?.store?.status == 'CACHED')) {
+            if (caseSuffix == '_non_cached' && (co2Record?.store?.status == 'CACHED')) {
                 // do nothing
             }
             else {
@@ -198,16 +198,16 @@ class CO2RecordTree {
     /**
      * Convert this record tree to a map.
      *
-     * @param onlyCO2parameters Whether all parameters should be included, or only the ones that are nf-co2 plugin-specific
+     * @param emissionMetricsOnly Whether all parameters should be included, or only the ones that are nf-co2 plugin-specific
      * @param includeNulls Whether to include parameters that have `null` as a raw value
      * @param includeReportValues Whether to include 'report' values of entries
      * @return A map representation of this Record Tree
      */
-    Map<String, Object> toMap(boolean onlyCO2parameters=false, boolean includeNulls=true, boolean includeReportValues=true) {
+    Map<String, Object> toMap(boolean emissionMetricsOnly=false, boolean includeNulls=true, boolean includeReportValues=true) {
         Map<String, Map<String, Object>> recordMap = [:]
         if (co2Record) {
-            (onlyCO2parameters ? co2Record.co2Keys : co2Record.keySet()).each { String key ->
-                Map<String, Object> value = co2Record.representationMap.get(key)
+            (emissionMetricsOnly ? co2Record.emissionMetrics : co2Record.keySet()).each { String key ->
+                Map<String, Object> value = co2Record.representationMap.get(key).clone() as Map<String, Object>
                 if (includeNulls || value['raw']['value'] != null) {
                     if (!includeReportValues) {
                         value.remove('report')
@@ -220,7 +220,7 @@ class CO2RecordTree {
             name: name,
             metaData: metaData,
             values: recordMap,
-            children: children.collect({ CO2RecordTree child -> child.toMap(onlyCO2parameters, includeNulls, includeReportValues) }),
+            children: children.collect({ CO2RecordTree child -> child.toMap(emissionMetricsOnly, includeNulls, includeReportValues) }),
         ]
     }
 

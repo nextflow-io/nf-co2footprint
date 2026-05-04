@@ -37,10 +37,10 @@ class CO2FootprintCalculatorTest extends Specification{
         def traceRecord = new TraceRecord()
         traceRecord.task_id = '1'
         traceRecord.realtime = (1 as Long) * (3600000 as Long)
-        traceRecord.cpus = 1
+        traceRecord.cpus = 2
         traceRecord.cpu_model = cpuModel
         traceRecord.'%cpu' = 100.0
-        traceRecord.memory = (7 as Long) * (1024**3 as Long)
+        traceRecord.memory = (7 as Long) * (1000**3 as Long)
 
         CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdpDataMatrix, ciDataMatrix, [:])
         CO2FootprintCalculator co2FootprintComputer = new CO2FootprintCalculator(tdpDataMatrix, config)
@@ -48,22 +48,22 @@ class CO2FootprintCalculatorTest extends Specification{
         CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(traceRecord, timeCiRecordCollector)
 
         expect:
-        round(co2Record.store.energy*1000 as Double) == expectedEnergy
-        round(co2Record.store.co2e as Double) == expectedCO2
+        round(co2Record.store.energy_consumption*1000 as Double) == expectedEnergy
+        round(co2Record.store.CO2e as Double) == expectedCO2
 
         where:
-        cpuModel           | configMap                      || expectedEnergy   | expectedCO2
-        "Unknown model"    | [:]                            || 14.06            | 6.75
-        "AMD EPYC 7251"    | [:]                            || 10.11            | 4.85
-        "Unknown model"    | [pue: 1.4]                     || 19.68            | 9.45
-        "Unknown model"    | [location: 'DE']               || 14.06            | 4.69
-        "Unknown model"    | [ci: 338.66]                   || 14.06            | 4.76
-        "AMD EPYC 7251"    | [cpuPowerModel: [0.5d, 10.0d]] || 13.11            | 6.29
+        cpuModel           | configMap                                              || expectedEnergy   | expectedCO2
+        "Unknown model"    | [:]                                                    || 14.06            | 6.75
+        "AMD EPYC 7251"    | [:]                                                    || 10.11            | 4.85
+        "Unknown model"    | [pue: 1.4]                                             || 19.68            | 9.45
+        "Unknown model"    | [location: 'DE']                                       || 14.06            | 4.69
+        "Unknown model"    | [ci: 338.66]                                           || 14.06            | 4.76
+        "AMD EPYC 7251"    | [cpuPowerModel: {coreUsage -> 0.5 * coreUsage + 10.0}] || 23.11            | 11.09
     }
 
     // ------ Equivalences Calculation ------
 
-    def 'test co2e equivalences calculation' () {
+    def 'test CO2e equivalences calculation' () {
         given:
         CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, ciDataMatrix, [:])
         CO2FootprintCalculator co2FootprintComputer = new CO2FootprintCalculator(tdpDataMatrix, config)
@@ -101,18 +101,18 @@ class CO2FootprintCalculatorTest extends Specification{
 
         when:
         // Try to compute the CO2 footprint, catching any exceptions
-        def result = null
-        def caught = null
+        CO2Record result = null
+        Exception caught = null
         try {
             result = co2FootprintComputer.computeTaskCO2footprint(traceRecord, timeCiRecordCollector)
-        } catch (Exception e) {
+        } catch (MissingValueException e) {
             caught = e
         }
 
         then:
         // If we expect an exception, assert it was thrown
-        if (expectException) {
-            assert caught instanceof MissingValueException
+        if (caught) {
+                assert expectException
         } else {
             // Otherwise, check that the computed memory matches the expected value (in GB)
             assert result.store.memory == expectedMemory
@@ -120,30 +120,12 @@ class CO2FootprintCalculatorTest extends Specification{
 
         where:
         memory             | peak_rss           | expectException | expectedMemory
-        8L*1024**3         | 4L*1024**3         | false           | 8L              // requested memory used
-        null               | 4L*1024**3         | false           | 4L              // peak_rss used (requested null)
-        4L*1024**3         | null               | false           | 4L              // requested used (required null)
+        8L*1000**3         | 4L*1000**3         | false           | 8L              // requested memory used
+        null               | 4L*1000**3         | false           | 4L              // peak_rss used (requested null)
+        4L*1000**3         | null               | false           | 4L              // requested used (required null)
         null               | null               | true            | null            // throws error (both null)
     }
-
-    def 'test power draw from polynomial model'() {
-        given:
-        def computer = new CO2FootprintCalculator(null, null)
-
-        expect:
-        computer.getPowerDrawFromModel(coeffs, usage as BigDecimal).round(6) == expected
-
-        where:
-        coeffs                     | usage || expected
-        [2.0, 5.0]                 | 0     || 5.0       // 2*x + 5 at x=0
-        [2.0, 5.0]                 | 50    || 105.0     // 2*50 + 5
-        [2.0, 5.0]                 | 100   || 205.0     // 2*100 + 5
-        [1.0, 0.0, 0.0]            | 2     || 4.0       // x² at x=2
-        [1.0, 0.0, 0.0]            | 5     || 25.0      // x² at x=5
-        [0.5, 10.0]                | 20    || 20.0      // 0.5*20 + 10
-        [BigDecimal.valueOf(1), 5] | 3     || 8.0       // supports BigDecimal coeffs too
-    }
-
+    
     def "Determination of number of CPUs"() {
         given:
         def traceRecord = new TraceRecord()
@@ -152,7 +134,7 @@ class CO2FootprintCalculatorTest extends Specification{
         traceRecord.cpus = cpus
         traceRecord.cpu_model = "Some model"
         traceRecord.'%cpu' = pCpu
-        traceRecord.memory = (7 as Long) * (1024**3 as Long)
+        traceRecord.memory = (7 as Long) * (1000**3 as Long)
 
         CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, ciDataMatrix, [:])
         CO2FootprintCalculator co2FootprintComputer = new CO2FootprintCalculator(tdpDataMatrix, config)
@@ -167,6 +149,17 @@ class CO2FootprintCalculatorTest extends Specification{
         100.0   | 1    | 1
         100.0   | 2    | 2
         150.0   | 1    | 2
+    }
+
+    def "getTraceOrDefault preserves zero values"() {
+        given:
+        def traceRecord = new TraceRecord()
+        traceRecord.realtime = 0L
+        traceRecord.'%cpu' = 0.0d
+
+        expect:
+        CO2FootprintCalculator.getTraceOrDefault(traceRecord, null, 'realtime', 123L, 'missing-realtime') == 0L
+        CO2FootprintCalculator.getTraceOrDefault(traceRecord, null, '%cpu', 100.0d, 'missing-%cpu') == 0.0d
     }
 
 }

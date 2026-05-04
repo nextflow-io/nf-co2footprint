@@ -1,18 +1,18 @@
 Total CO₂e footprint measures of this workflow run (including cached tasks):
   CO₂e emissions: 0 g
-  Energy consumption: 6.42 mWh
+  Energy consumption: 6.56 mWh
   CO₂e emissions (market): -
 
 Which equals:
-  - 1.76E-5 km travelled by car
-  - It takes one tree 8.85s to sequester the equivalent amount of CO₂ from the atmosphere
-  - 6.17E-6 % of a flight from Paris to London
+  - 1.80E-5 km travelled by car
+  - It takes one tree 9.03s to sequester the equivalent amount of CO₂ from the atmosphere
+  - 6.30E-6 % of a flight from Paris to London
 
 The calculation of these values is based on the carbon footprint computation method developed in the Green Algorithms project:
   Lannelongue, L., Grealey, J., Inouye, M., Green Algorithms: Quantifying the Carbon Footprint of Computation.
   Adv. Sci. 2021, 2100707. https://doi.org/10.1002/advs.202100707
 
-nf-co2footprint plugin version: 1.2.1
+nf-co2footprint plugin version: 1.3.0
 
 nf-co2footprint options:
   ci: 480.0
@@ -24,7 +24,7 @@ nf-co2footprint options:
   powerdrawMem: 0.3725
   pue: 1.0
   customCpuTdpFile: null
-  dataFile: build/classes/groovy/test/nextflow/co2footprint/cli/out/co2footprint_data_test.yaml
-  reportFile: build/classes/groovy/test/nextflow/co2footprint/cli/out/co2footprint_report_test.html
-  summaryFile: build/classes/groovy/test/nextflow/co2footprint/cli/out/co2footprint_summary_test.txt
-  traceFile: build/classes/groovy/test/nextflow/co2footprint/cli/out/co2footprint_trace_test.txt
+  provenanceFile: build/classes/groovy/test/nextflow/co2footprint/cli/out/provenance_test.json
+  reportFile: build/classes/groovy/test/nextflow/co2footprint/cli/out/report_test.html
+  summaryFile: build/classes/groovy/test/nextflow/co2footprint/cli/out/summary_test.txt
+  traceFile: build/classes/groovy/test/nextflow/co2footprint/cli/out/trace_test.txt

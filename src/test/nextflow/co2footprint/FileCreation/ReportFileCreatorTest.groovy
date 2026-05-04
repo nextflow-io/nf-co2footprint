@@ -2,12 +2,12 @@ package nextflow.co2footprint.FileCreation
 
 import nextflow.Session
 import nextflow.co2footprint.CO2FootprintCalculator
-import nextflow.co2footprint.Config.DataFileConfig
+import nextflow.co2footprint.CO2FootprintConfig
+import nextflow.co2footprint.Config.ProvenanceFileConfig
 import nextflow.co2footprint.Config.ReportFileConfig
 import nextflow.co2footprint.Config.SummaryFileConfig
 import nextflow.co2footprint.Config.TraceFileConfig
 import nextflow.co2footprint.DataContainers.CIDataMatrix
-import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordTree
@@ -38,7 +38,7 @@ class ReportFileCreatorTest extends Specification{
                         'trace': ['enabled': true, 'file': tempPath],
                         'summary': ['enabled': true, 'file': tempPath],
                         'report': ['enabled': true, 'file': reportPath],
-                        'dataFile': [enabled: true, file: tempPath],
+                        'provenance': [enabled: true, file: tempPath],
                         'ci': 475.0
                 ],
                 Mock(TDPDataMatrix),
@@ -57,7 +57,7 @@ class ReportFileCreatorTest extends Specification{
                 '%cpu': 100.0,
                 'hash': 'ca/372f78',
                 'status': 'COMPLETED',
-                'memory': (7 as Long) * (1024**3 as Long), // 7 GB
+                'memory': (7 as Long) * (1000**3 as Long), // 7 GB
                 'name': 'testTask'
             ]
         )
@@ -68,7 +68,7 @@ class ReportFileCreatorTest extends Specification{
                     'trace': new TraceFileConfig(['enabled': true, 'file': tempPath]),
                     'summary': new SummaryFileConfig(['enabled': true, 'file': tempPath]),
                     'report': new ReportFileConfig(['enabled': true, 'file': reportPath]),
-                    'dataFile': new DataFileConfig([enabled: true, file: tempPath]),
+                    'provenance': new ProvenanceFileConfig([enabled: true, file: tempPath]),
                     'ci': 475.0
                 ]
             ]
@@ -94,7 +94,7 @@ class ReportFileCreatorTest extends Specification{
         // Define report file
         ReportFileConfig reportFileConfig = new ReportFileConfig([file: reportPath])
         co2FootprintReport = new ReportFileCreator(reportFileConfig)
-        co2FootprintReport.addEntries(sessionStats, calculator, config, timeCiRecordCollector, session)
+        co2FootprintReport.addEntries(sessionStats, calculator, config, timeCiRecordCollector)
 
         sessionStats.summarize()
         sessionStats.collectAdditionalMetrics()
@@ -127,10 +127,10 @@ class ReportFileCreatorTest extends Specification{
         totalsJson == totalsJsonResult
         where:
         co2e                || totalsJsonResult
-        0.01d               || [co2e: '10 mg', energy:'100 kWh', car: '5.71E-5', tree: '28.69s', plane_percent: '2.00E-5 %', plane_flights: null,
-                                co2e_non_cached:'10 mg', energy_non_cached:'100 kWh', car_non_cached: '5.71E-5', tree_non_cached: '28.69s', plane_percent_non_cached: '2.00E-5 %', plane_flights_non_cached: null]
-        10_000_000.0d       || [co2e: '10 Mg', energy:'100 kWh', car: '5.71E4', tree: '908years 9months 3days 19h 38min 55.88s', plane_percent: null, plane_flights: '200',
-                                co2e_non_cached:'10 Mg', energy_non_cached:'100 kWh', car_non_cached: '5.71E4', tree_non_cached: '908years 9months 3days 19h 38min 55.88s', plane_percent_non_cached: null, plane_flights_non_cached: '200']
+        0.01d               || [CO2e: '10 mg', energy_consumption:'100 kWh', car: '5.71E-5', tree: '28.69s', plane_percent: '2.00E-5 %', plane_flights: null,
+                                CO2e_non_cached:'10 mg', energy_consumption_non_cached:'100 kWh', car_non_cached: '5.71E-5', tree_non_cached: '28.69s', plane_percent_non_cached: '2.00E-5 %', plane_flights_non_cached: null]
+        10_000_000.0d       || [CO2e: '10 Mg', energy_consumption:'100 kWh', car: '5.71E4', tree: '908years 9months 3days 19h 38min 55.88s', plane_percent: null, plane_flights: '200',
+                                CO2e_non_cached:'10 Mg', energy_consumption_non_cached:'100 kWh', car_non_cached: '5.71E4', tree_non_cached: '908years 9months 3days 19h 38min 55.88s', plane_percent_non_cached: null, plane_flights_non_cached: '200']
     }
 
     def 'Test data JSON generation' () {
@@ -152,12 +152,12 @@ class ReportFileCreatorTest extends Specification{
                     '{"option":"ci","value":"475.0"},'+
                     '{"option":"ciMarket","value":null},' +
                     '{"option":"customCpuTdpFile","value":null},' +
-                    "{\"option\":\"dataFile\",\"value\":\"${tempPath}\"}," +
                     '{"option":"ignoreCpuModel","value":"false"},' +
                     '{"option":"location","value":null},' +
                     '{"option":"machineType","value":null},' +
                     '{"option":"powerdrawCpuDefault","value":null},' +
                     '{"option":"powerdrawMem","value":"0.3725"},' +
+                    "{\"option\":\"provenanceFile\",\"value\":\"${tempPath}\"}," +
                     '{"option":"pue","value":"1.0"},' +
                     "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
                     "{\"option\":\"summaryFile\",\"value\":\"${tempPath}\"}," +
@@ -174,14 +174,14 @@ class ReportFileCreatorTest extends Specification{
         then:
         totalsJson ==
             [
-                co2e: "10 g",
-                energy:  "100 kWh",
+                CO2e: "10 g",
+                energy_consumption:  "100 kWh",
                 car: "0.057",
                 tree: "7h 58min 10.08s",
                 plane_percent: "0.02 %",
                 plane_flights: null,
-                co2e_non_cached: "10 g",
-                energy_non_cached:  "100 kWh",
+                CO2e_non_cached: "10 g",
+                energy_consumption_non_cached:  "100 kWh",
                 car_non_cached: "0.057",
                 tree_non_cached: "7h 58min 10.08s",
                 plane_percent_non_cached: '0.02 %',

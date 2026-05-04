@@ -81,13 +81,12 @@ class CO2FootprintCalculator {
         final BigDecimal coreUsage = cpuUsage / (100.0 * numberOfCores)
 
         // Per-core power draw: either custom polynomial model or TDP lookup [W/core]
-        final List<Number> cpuPowerModel = config.cpuPowerModel
-        final BigDecimal powerdrawPerCore = cpuPowerModel ? getPowerDrawFromModel(cpuPowerModel, coreUsage) : tdpDataMatrix.matchModel(cpuModel).getLogicalCoreTDP()
+        final BigDecimal powerdrawPerCore = tdpDataMatrix.matchModel(cpuModel).getLogicalCoreTDP()
 
         /* ===== Memory Information ===== */
 
-        final Long requestedMemory = trace.get('memory') as Long        // [bytes]
-        final Long maxRequiredMemory = trace.get('peak_rss') as Long    // [bytes]
+        final BigInteger requestedMemory = trace.get('memory') as BigInteger        // [bytes]
+        final BigInteger maxRequiredMemory = trace.get('peak_rss') as BigInteger    // [bytes]
 
         // Assign the final memory value
         final BigDecimal memory
@@ -121,13 +120,19 @@ class CO2FootprintCalculator {
         final BigDecimal ci = timeCiRecords.getCi(trace)
 
         // Personal energy mix based carbon intensity
-        final Double ciMarket = config.ciMarket
+        final BigDecimal ciMarket = config.ciMarket
 
 
         /* ===== Energy & Emission Calculation ===== */
 
         // Energy consumption [kWh]
-        BigDecimal rawEnergyProcessor = runtime_h * numberOfCores * powerdrawPerCore * coreUsage * 0.001
+        BigDecimal rawEnergyProcessor
+        if (config.cpuPowerModel) {
+            rawEnergyProcessor = runtime_h * numberOfCores * config.cpuPowerModel(coreUsage) * 0.001
+        }
+        else {
+            rawEnergyProcessor = runtime_h * numberOfCores * powerdrawPerCore * coreUsage * 0.001
+        }
         BigDecimal rawEnergyMemory = runtime_h * memory * powerdrawMem * 0.001
         BigDecimal energy = pue * (rawEnergyProcessor + rawEnergyMemory)
 
@@ -142,9 +147,9 @@ class CO2FootprintCalculator {
             co2eMarket,
             ci,
             cpuUsage,
-            memory as Long,
+            memory,
             runtime_h,
-            numberOfCores as Integer,
+            numberOfCores,
             powerdrawPerCore,
             config.ignoreCpuModel ? 'Custom value' : cpuModel,
             rawEnergyProcessor,
@@ -200,25 +205,6 @@ class CO2FootprintCalculator {
                     dedupKey
             )
         }
-        return value ?: defaultValue
+        return value != null ? value : defaultValue
     }
-
-    /**
-    * Computes CPU power draw using the configured polynomial model.
-    *
-    * @param coefficients List of polynomial coefficients (highest degree first), as Double or BigDecimal.
-    * @param coreUsage CPU usage as a fraction between 0 and 1.
-    * @return Estimated power draw [W/core], or null if no model configured.
-    */
-    static BigDecimal getPowerDrawFromModel(List<Number> coefficients, BigDecimal coreUsage) {
-        BigDecimal power = 0.0
-        Integer degree = coefficients.size() - 1
-
-        coefficients.eachWithIndex { Number c, Integer i ->
-            power += (c as BigDecimal) * coreUsage ** (degree - i)
-        }
-
-        return power
-    }
-
 }

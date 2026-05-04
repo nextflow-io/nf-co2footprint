@@ -43,7 +43,7 @@ class TraceFileParser {
                     value = switch (TraceRecord.FIELDS.get(key)) {
                         case 'mem' -> if (value.endsWith('B')) {
                             List<String> split = value.split(' ')
-                            Metric<BigDecimal> bytes = Bytes.of(split[0].toDouble(), split[1].dropRight(1)).scale('')
+                            Metric<BigDecimal> bytes = Bytes.of(split[0] as BigDecimal, split[1].dropRight(1)).scale('')
                             bytes.value.toLong()
                         } else {
                             value.toLong()
@@ -75,7 +75,9 @@ class TraceFileParser {
             }
 
             // Add additional entries
-            traceRecord.put('process', traceRecord.get('name'))
+            if (!traceRecord.get('process')) {
+                traceRecord.put('process', traceRecord.get('name'))
+            }
 
             // Add to collection of trace records
             traceRecords.add(traceRecord)

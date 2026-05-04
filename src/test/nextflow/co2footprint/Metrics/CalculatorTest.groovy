@@ -16,5 +16,7 @@ class CalculatorTest extends Specification {
         [null, 2]       || [null, 2]        || 2.0
         [null, null]    || [null, null]     || null
         [1.0, 1.0, 1.0] || [0.1, 0.5, 0.4]  || 1.0
+        [50.0, 80.0]    || [0, 0]           || null
+        [50.0]          || [0]              || null
     }
 }

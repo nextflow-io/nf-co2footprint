@@ -1,0 +1,400 @@
+{
+    "@context": {
+        "schema": "https://schema.org/",
+        "bioschemas": "https://bioschemas.org"
+    },
+    "@id": "urn:co2footprint:Unknown workflow",
+    "@type": "bioschemas:ComputationalWorkflow",
+    "status": {
+        "@type": "schema:PropertyValue",
+        "value": "COMPLETED",
+        "additionalProperty": {
+            "readable": "COMPLETED"
+        }
+    },
+    "energy_consumption": {
+        "@type": "schema:QuantitativeValue",
+        "value": 0.006560675227609531776000,
+        "unitText": "Wh",
+        "additionalProperty": {
+            "readable": "6.56 mWh"
+        }
+    },
+    "CO2e": {
+        "@type": "schema:QuantitativeValue",
+        "value": 0.0031491241092525752524800000,
+        "unitText": "g",
+        "additionalProperty": {
+            "readable": "3.15 mg"
+        }
+    },
+    "carbon_intensity": {
+        "@type": "schema:QuantitativeValue",
+        "value": 480.0,
+        "unitText": "gCO\u2082e/kWh",
+        "additionalProperty": {
+            "readable": "480 gCO\u2082e/kWh"
+        }
+    },
+    "%cpu": {
+        "@type": "schema:QuantitativeValue",
+        "value": 95.93333333333333,
+        "unitText": "%",
+        "additionalProperty": {
+            "readable": "95.93 %"
+        }
+    },
+    "memory": {
+        "@type": "schema:QuantitativeValue",
+        "value": 12884901888,
+        "unitText": "B",
+        "additionalProperty": {
+            "readable": "12.88 GB"
+        }
+    },
+    "realtime": {
+        "@type": "schema:Duration",
+        "value": "PT1.5S",
+        "unitText": "ms",
+        "additionalProperty": {
+            "readable": "1s 500ms"
+        }
+    },
+    "cpus": {
+        "@type": "schema:QuantitativeValue",
+        "value": 2,
+        "unitText": "",
+        "additionalProperty": {
+            "readable": "2"
+        }
+    },
+    "powerdraw_cpu": {
+        "@type": "schema:QuantitativeValue",
+        "value": 11.41,
+        "unitText": "W",
+        "additionalProperty": {
+            "readable": "11.41 W"
+        }
+    },
+    "raw_energy_processor": {
+        "@type": "schema:QuantitativeValue",
+        "value": 0.004560830920422,
+        "unitText": "Wh",
+        "additionalProperty": {
+            "readable": "4.56 mWh"
+        }
+    },
+    "raw_energy_memory": {
+        "@type": "schema:QuantitativeValue",
+        "value": 0.00199984430718753177600,
+        "unitText": "Wh",
+        "additionalProperty": {
+            "readable": "2 mWh"
+        }
+    },
+    "hasPart": [
+        {
+            "@id": "urn:co2footprint:NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT",
+            "@type": "schema:SoftwareApplication",
+            "status": {
+                "@type": "schema:PropertyValue",
+                "value": "COMPLETED",
+                "additionalProperty": {
+                    "readable": "COMPLETED"
+                }
+            },
+            "energy_consumption": {
+                "@type": "schema:QuantitativeValue",
+                "value": 0.006560675227609531776000,
+                "unitText": "Wh",
+                "additionalProperty": {
+                    "readable": "6.56 mWh"
+                }
+            },
+            "CO2e": {
+                "@type": "schema:QuantitativeValue",
+                "value": 0.0031491241092525752524800000,
+                "unitText": "g",
+                "additionalProperty": {
+                    "readable": "3.15 mg"
+                }
+            },
+            "carbon_intensity": {
+                "@type": "schema:QuantitativeValue",
+                "value": 480.0,
+                "unitText": "gCO\u2082e/kWh",
+                "additionalProperty": {
+                    "readable": "480 gCO\u2082e/kWh"
+                }
+            },
+            "%cpu": {
+                "@type": "schema:QuantitativeValue",
+                "value": 95.93333333333333,
+                "unitText": "%",
+                "additionalProperty": {
+                    "readable": "95.93 %"
+                }
+            },
+            "memory": {
+                "@type": "schema:QuantitativeValue",
+                "value": 12884901888,
+                "unitText": "B",
+                "additionalProperty": {
+                    "readable": "12.88 GB"
+                }
+            },
+            "realtime": {
+                "@type": "schema:Duration",
+                "value": "PT1.5S",
+                "unitText": "ms",
+                "additionalProperty": {
+                    "readable": "1s 500ms"
+                }
+            },
+            "cpus": {
+                "@type": "schema:QuantitativeValue",
+                "value": 2,
+                "unitText": "",
+                "additionalProperty": {
+                    "readable": "2"
+                }
+            },
+            "powerdraw_cpu": {
+                "@type": "schema:QuantitativeValue",
+                "value": 11.41,
+                "unitText": "W",
+                "additionalProperty": {
+                    "readable": "11.41 W"
+                }
+            },
+            "raw_energy_processor": {
+                "@type": "schema:QuantitativeValue",
+                "value": 0.004560830920422,
+                "unitText": "Wh",
+                "additionalProperty": {
+                    "readable": "4.56 mWh"
+                }
+            },
+            "raw_energy_memory": {
+                "@type": "schema:QuantitativeValue",
+                "value": 0.00199984430718753177600,
+                "unitText": "Wh",
+                "additionalProperty": {
+                    "readable": "2 mWh"
+                }
+            },
+            "hasPart": [
+                {
+                    "@id": "urn:co2footprint:6",
+                    "@type": "schema:Action",
+                    "task_id": {
+                        "@type": "schema:PropertyValue",
+                        "value": "6",
+                        "additionalProperty": {
+                            "readable": "6"
+                        }
+                    },
+                    "status": {
+                        "@type": "schema:PropertyValue",
+                        "value": "COMPLETED",
+                        "additionalProperty": {
+                            "readable": "COMPLETED"
+                        }
+                    },
+                    "name": {
+                        "@type": "schema:PropertyValue",
+                        "value": "NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (RAP1_UNINDUCED_REP1)",
+                        "additionalProperty": {
+                            "readable": "NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (RAP1_UNINDUCED_REP1)"
+                        }
+                    },
+                    "energy_consumption": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 0.002203795447592510592000,
+                        "unitText": "Wh",
+                        "additionalProperty": {
+                            "readable": "2.2 mWh"
+                        }
+                    },
+                    "CO2e": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 0.0010578218148444050841600000,
+                        "unitText": "g",
+                        "additionalProperty": {
+                            "readable": "1.06 mg"
+                        }
+                    },
+                    "carbon_intensity": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 480.0,
+                        "unitText": "gCO\u2082e/kWh",
+                        "additionalProperty": {
+                            "readable": "480 gCO\u2082e/kWh"
+                        }
+                    },
+                    "%cpu": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 97.0,
+                        "unitText": "%",
+                        "additionalProperty": {
+                            "readable": "97 %"
+                        }
+                    },
+                    "memory": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 12884901888,
+                        "unitText": "B",
+                        "additionalProperty": {
+                            "readable": "12.88 GB"
+                        }
+                    },
+                    "realtime": {
+                        "@type": "schema:Duration",
+                        "value": "PT0.5S",
+                        "unitText": "ms",
+                        "additionalProperty": {
+                            "readable": "500ms"
+                        }
+                    },
+                    "cpus": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 2,
+                        "unitText": "",
+                        "additionalProperty": {
+                            "readable": "2"
+                        }
+                    },
+                    "powerdraw_cpu": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 11.41,
+                        "unitText": "W",
+                        "additionalProperty": {
+                            "readable": "11.41 W"
+                        }
+                    },
+                    "raw_energy_processor": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 0.001537180678530,
+                        "unitText": "Wh",
+                        "additionalProperty": {
+                            "readable": "1.54 mWh"
+                        }
+                    },
+                    "raw_energy_memory": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 0.00066661476906251059200,
+                        "unitText": "Wh",
+                        "additionalProperty": {
+                            "readable": "666.61 uWh"
+                        }
+                    }
+                },
+                {
+                    "@id": "urn:co2footprint:4",
+                    "@type": "schema:Action",
+                    "task_id": {
+                        "@type": "schema:PropertyValue",
+                        "value": "4",
+                        "additionalProperty": {
+                            "readable": "4"
+                        }
+                    },
+                    "status": {
+                        "@type": "schema:PropertyValue",
+                        "value": "COMPLETED",
+                        "additionalProperty": {
+                            "readable": "COMPLETED"
+                        }
+                    },
+                    "name": {
+                        "@type": "schema:PropertyValue",
+                        "value": "NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (WT_REP2)",
+                        "additionalProperty": {
+                            "readable": "NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (WT_REP2)"
+                        }
+                    },
+                    "energy_consumption": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 0.004356879780017021184000,
+                        "unitText": "Wh",
+                        "additionalProperty": {
+                            "readable": "4.36 mWh"
+                        }
+                    },
+                    "CO2e": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 0.0020913022944081701683200000,
+                        "unitText": "g",
+                        "additionalProperty": {
+                            "readable": "2.09 mg"
+                        }
+                    },
+                    "carbon_intensity": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 480.0,
+                        "unitText": "gCO\u2082e/kWh",
+                        "additionalProperty": {
+                            "readable": "480 gCO\u2082e/kWh"
+                        }
+                    },
+                    "%cpu": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 95.4,
+                        "unitText": "%",
+                        "additionalProperty": {
+                            "readable": "95.4 %"
+                        }
+                    },
+                    "memory": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 12884901888,
+                        "unitText": "B",
+                        "additionalProperty": {
+                            "readable": "12.88 GB"
+                        }
+                    },
+                    "realtime": {
+                        "@type": "schema:Duration",
+                        "value": "PT1S",
+                        "unitText": "ms",
+                        "additionalProperty": {
+                            "readable": "1s 0ms"
+                        }
+                    },
+                    "cpus": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 2,
+                        "unitText": "",
+                        "additionalProperty": {
+                            "readable": "2"
+                        }
+                    },
+                    "powerdraw_cpu": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 11.41,
+                        "unitText": "W",
+                        "additionalProperty": {
+                            "readable": "11.41 W"
+                        }
+                    },
+                    "raw_energy_processor": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 0.003023650241892,
+                        "unitText": "Wh",
+                        "additionalProperty": {
+                            "readable": "3.02 mWh"
+                        }
+                    },
+                    "raw_energy_memory": {
+                        "@type": "schema:QuantitativeValue",
+                        "value": 0.00133322953812502118400,
+                        "unitText": "Wh",
+                        "additionalProperty": {
+                            "readable": "1.33 mWh"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

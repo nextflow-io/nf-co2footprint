@@ -38,8 +38,7 @@ class Calculator {
         if (o1 == null && o2 == null) { return null }
         else if (o1 == null) { return o2 }
         else if (o2 == null) { return o1 }
-        else {
-            return o1 + o2 }
+        else { return o1 + o2 }
     }
 
     /**
@@ -62,6 +61,8 @@ class Calculator {
         if (values.isEmpty() || weights.isEmpty()) { return null }
 
         Number norm = weights.sum() as Number
+        if (norm == 0) { return null }
+
         Number total = new BigDecimal(0)
         values.eachWithIndex { Object value, Integer index ->
             total += value * weights[index]

@@ -122,56 +122,40 @@ class CiRecordCollector {
                 ZoneId.systemDefault()
         )
         Long duration = start.until(end, ChronoUnit.MILLIS)
+        List<LocalDateTime> timestamps = timeCIs.keySet().toList().sort()
 
-        // Construct before, during and after key sets
-        Set<LocalDateTime> during = new HashSet<LocalDateTime>(timeCIs.keySet())
+        if (!timestamps) {
+            String message = "No carbon intensity timestamps are available in timeCIs for traceRecord '${trace}' (${start}-${end})."
+            log.error(message)
+            throw new MissingValueException(message)
+        }
 
-        // Remove values from before & after out of the fully covered CI values
-        Set<LocalDateTime> before = during.findAll {LocalDateTime time -> time <= start}
-        during.removeAll(before)
-        Set<LocalDateTime> after = during.findAll {LocalDateTime time -> time >= end}
-        during.removeAll(after)
+        LocalDateTime activeTimestamp = timestamps.findAll { LocalDateTime time -> time <= start }.max()
+        if (activeTimestamp == null) {
+            activeTimestamp = timestamps.min()
+        }
 
-        /**
-         * Return the weight of as the covered fraction of the total duration
-         */
+        if (duration == 0) {
+            return timeCIs.get(activeTimestamp) as Double
+        }
+
         Closure<Double> getWeight = { LocalDateTime time1, LocalDateTime time2 ->
             (time1.until(time2, ChronoUnit.MILLIS)) / duration
         }
 
+        List<LocalDateTime> changesDuringRun = timestamps.findAll { LocalDateTime time -> time > start && time < end }
+
         // Calculation of average carbon intensity
         Double averageCi = 0d
+        LocalDateTime segmentStart = start
 
-        if (during) {
-            if (before) {
-                averageCi += timeCIs.get(before.max()) * getWeight(start, during.min())
-            }
-            else {
-                averageCi += timeCIs.get(during.min()) * getWeight(start, during.min())
-            }
+        changesDuringRun.each { LocalDateTime changeTime ->
+            averageCi += (timeCIs.get(activeTimestamp) as Double) * getWeight(segmentStart, changeTime)
+            segmentStart = changeTime
+            activeTimestamp = changeTime
+        }
 
-            LocalDateTime last = during.max()
-            during.remove(last)
-            if (during) {
-                // Add weighted average of fully covered duration
-                averageCi += timeCIs.subMap(during).values().average() * getWeight(during.min(), last)
-            }
-
-            // Add overhang
-            averageCi += timeCIs.get(last) * getWeight(last, end)
-        }
-        else if (before) {
-            averageCi += timeCIs.get(before.max()) * getWeight(start, end)
-        }
-        else if (after) {
-            averageCi += timeCIs.get(after.min()) * getWeight(start, end)
-        }
-        else {
-            String message = "Found no timestamps in timeCIs '${timeCIs}' that are " +
-                    "before, during or after the frame of the traceRecord: '${trace}' (${start}-${end})."
-            log.error(message)
-            throw new MissingValueException(message)
-        }
+        averageCi += (timeCIs.get(activeTimestamp) as Double) * getWeight(segmentStart, end)
 
         return averageCi
     }

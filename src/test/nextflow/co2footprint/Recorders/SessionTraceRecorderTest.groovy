@@ -33,11 +33,11 @@ class SessionTraceRecorderTest extends Specification{
         SessionTraceRecorder sessionTraceRecorder = new SessionTraceRecorder()
         MemorySample sample1 = new MemorySample(
                 timestamp: System.currentTimeMillis(),
-                rssBytes: 1024, virtualMemoryBytes: 1024,
+                rssBytes: 1000, virtualMemoryBytes: 1000,
         )
         MemorySample sample2 = new MemorySample(
                 timestamp: System.currentTimeMillis(),
-                rssBytes: 1024, virtualMemoryBytes: 3072,
+                rssBytes: 1000, virtualMemoryBytes: 3000,
         )
 
         when:

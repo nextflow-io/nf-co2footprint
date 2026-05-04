@@ -19,9 +19,8 @@ package nextflow.co2footprint
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import nextflow.cli.PluginAbstractExec
-
-import nextflow.co2footprint.Recorders.SessionTraceRecorder
 import nextflow.co2footprint.Parsers.ArgsParser
+import nextflow.co2footprint.Recorders.SessionTraceRecorder
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.plugin.BasePlugin
@@ -76,7 +75,7 @@ class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
             observer.timeCiRecordCollector.stop()
 
             CO2RecordTree sessionStats = new CO2RecordTree(
-                    observer.session?.runName,
+                    sessionCO2Record.store.get('name', null),
                     [level: 'session'],
                     sessionCO2Record,
                     null,
@@ -104,7 +103,7 @@ class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
      * @param manifest URL to the manifest
      * @param tryFallback Whether a fallback in the form of a search of all MANIFESTS from the class loader should be attempted
      */
-    protected static String readPluginVersion(
+    static String readPluginVersion(
             URL manifest=CO2FootprintPlugin.class.getResource('/META-INF/MANIFEST.MF'),
             boolean tryFallback=true
     ) {

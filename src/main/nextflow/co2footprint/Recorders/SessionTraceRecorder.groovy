@@ -1,5 +1,6 @@
 package nextflow.co2footprint.Recorders
 
+import com.sun.management.OperatingSystemMXBean
 import groovy.util.logging.Slf4j
 import nextflow.Session
 import nextflow.trace.TraceRecord
@@ -13,8 +14,6 @@ import oshi.util.tuples.Triplet
 
 import java.lang.management.ManagementFactory
 import java.lang.management.RuntimeMXBean
-
-import com.sun.management.OperatingSystemMXBean
 
 /**
  * A Recorder of trace values for a Nextflow session, which can be attached after startup
@@ -76,8 +75,8 @@ class SessionTraceRecorder {
                         task_id:        '-1',
                         hash:           session.hashCode(),
                         native_id:      pid as String,
-                        process:        session.getScriptName(),
-                        name:           session.getRunName(),
+                        process:        'session',
+                        name:           session.getRunName() + '-session',
                         status:         'STARTED',
                         start:          System.currentTimeMillis(),
                         attempt:        sessionRecord.store.get('attempt', 0) + 1
@@ -132,12 +131,14 @@ class SessionTraceRecorder {
         )
 
         if (samples) {
+            List<Long> rss = samples.collect({ MemorySample sample -> sample.rssBytes})
+            List<Long> vmem = samples.collect({ MemorySample sample -> sample.virtualMemoryBytes})
             sessionRecord.putAll(
                     [
-                            rss:            samples.collect({ MemorySample sample -> sample.rssBytes}).average() as Long,
-                            vmem:           samples.collect({ MemorySample sample -> sample.virtualMemoryBytes}).average() as Long,
-                            peak_rss:       samples.collect({ MemorySample sample -> sample.rssBytes}).max() as Long,
-                            peak_vmem:      samples.collect({ MemorySample sample -> sample.virtualMemoryBytes}).max() as Long,
+                            rss:            rss.average(),
+                            vmem:           vmem.average(),
+                            peak_rss:       rss.max(),
+                            peak_vmem:      vmem.max(),
                     ]
             )
         }
