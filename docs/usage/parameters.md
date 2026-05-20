@@ -15,14 +15,6 @@ The following parameters are currently available:
 
     **Default**: `[enabled: true, file: co2footprint_trace_<timestamp>.txt, overwrite: true]`
 
-- **`summary`**  
-  Map containing:
-    - `enabled`: Whether to produce this file
-    - `file`: Name of the `.txt` carbon footprint summary file containing the total energy consumption and total estimated CO₂ emission of the pipeline run.
-    - `overwrite`: Whether to overwrite the file, if it already exists.
-
-    **Default**: `[enabled: true, file: co2footprint_summary_<timestamp>.txt, overwrite: true]`
-
 - **`report`**  
   Map containing:
     - `enabled`: Whether to produce this file

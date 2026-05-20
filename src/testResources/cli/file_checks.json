@@ -3,10 +3,6 @@
     "checksum": "eea8e83888fcd15aef201580d8179af4",
     "num_lines": 3
   },
-  "summary_test.txt": {
-    "checksum": "932404f57f1efcd1906209e52193c10e",
-    "num_lines": 30
-  },
   "report_test.html": {
     "checksum": "c33eaa5998e0d0b56f18aacd7e624fe6",
     "excluded_lines": [1533, 1587],

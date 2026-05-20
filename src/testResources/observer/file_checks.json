@@ -1,8 +1,4 @@
 {
-  "summary_test.txt": {
-    "checksum": "45a60513edc252cd47d85e1c6e4b3dde",
-    "num_lines": 30
-  },
   "report_test.html": {
     "checksum": "bf569b0b1edb9fab3840e596eb284ea2",
     "num_lines": 1816

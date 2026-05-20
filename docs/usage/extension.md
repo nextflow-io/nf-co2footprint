@@ -51,7 +51,6 @@ process calculate_CO2 {
       Path.of(executionTracePath),
       [
         trace: [file: './out/pipeline_info/post-run_trace.txt'],
-        summary: [file: './out/pipeline_info/post-run_summary.txt'],
         report: [file: './out/pipeline_info/post-run_report.html'],
       ]
   )
