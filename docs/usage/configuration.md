@@ -27,11 +27,6 @@ To customize the plugin settings to your computing environment and preferences, 
       trace {
         file = "${params.outdir}/pipeline_info/co2footprint_trace_${params.trace_report_suffix}.txt"
       }
-    
-      summary {
-        file = "${params.outdir}/pipeline_info/co2footprint_summary_${params.trace_report_suffix}.txt"
-      }
-    
       report {
         file = "${params.outdir}/pipeline_info/co2footprint_report_${params.trace_report_suffix}.html"
       }
@@ -136,11 +131,6 @@ For more information, see [Parameters](parameters.md).
       trace {
         file = "${params.outdir}/pipeline_info/co2footprint_trace_${params.trace_report_suffix}.txt"
       }
-    
-      summary {
-        file = "${params.outdir}/pipeline_info/co2footprint_summary_${params.trace_report_suffix}.txt"
-      }
-    
       report {
         file = "${params.outdir}/pipeline_info/co2footprint_report_${params.trace_report_suffix}.html"
       }

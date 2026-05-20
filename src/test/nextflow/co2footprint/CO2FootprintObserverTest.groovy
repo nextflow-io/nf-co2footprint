@@ -54,12 +54,11 @@ class CO2FootprintObserverTest extends Specification{
     /**
      * Helper to create a mock session with a specific CI value.
      */
-    private Session mockSessionWithCI(Path tracePath, Path summaryPath, Path reportPath, Path provenancePath, double ciValue) {
+    private Session mockSessionWithCI(Path tracePath, Path reportPath, Path provenancePath, double ciValue) {
         return Mock(Session) {
             getConfig() >> [
                 co2footprint: [
                     'trace': ['enabled': true, 'file': tracePath],
-                    'summary': ['enabled': true, 'file': summaryPath],
                     'report': ['enabled': true, 'file': reportPath],
                     'provenance': [enabled: true, file: provenancePath],
                     'ci': ciValue
@@ -95,12 +94,11 @@ class CO2FootprintObserverTest extends Specification{
         given:
         Path tempPath = Files.createTempDirectory('tmpdir')
         Path tracePath = tempPath.resolve('trace_test.txt')
-        Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
         Path provenancePath = tempPath.resolve('provenance_test.json')
 
         // Use helper to mock session with CI value 475.0
-        Session session = mockSessionWithCI(tracePath, summaryPath, reportPath, provenancePath, 475.0)
+        Session session = mockSessionWithCI(tracePath, reportPath, provenancePath, 475.0)
 
         // Create task and handler
         TaskRun task = new TaskRun(id: TaskId.of(111))
@@ -130,12 +128,11 @@ class CO2FootprintObserverTest extends Specification{
         given:
         Path tempPath = Files.createTempDirectory('tmpdir')
         Path tracePath = tempPath.resolve('trace_test.txt')
-        Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
         Path provenancePath = tempPath.resolve('provenance_test.json')
 
         // Use helper to mock session with CI value 475.0
-        Session session = mockSessionWithCI(tracePath, summaryPath, reportPath, provenancePath, 475.0)
+        Session session = mockSessionWithCI(tracePath, reportPath, provenancePath, 475.0)
 
         // Create task and handler
         TaskRun task = new TaskRun(id: traceRecord.getTaskId())
@@ -165,13 +162,12 @@ class CO2FootprintObserverTest extends Specification{
 
     // ------ FILE CREATION TESTS ------
 
-    def 'Should create correct trace, summary and report files' () {
+    def 'Should create correct trace and report files' () {
         given:
         // Define temporary variables
         OffsetDateTime time = OffsetDateTime.now()
         Path tempPath = Files.createTempDirectory('tmpdir')
         Path tracePath = tempPath.resolve('trace_test.txt')
-        Path summaryPath = tempPath.resolve('summary_test.txt')
         Path reportPath = tempPath.resolve('report_test.html')
         Path provenancePath = tempPath.resolve('provenance_test.json')
 
@@ -181,7 +177,6 @@ class CO2FootprintObserverTest extends Specification{
             co2footprint:
                 [
                     'trace': [enabled: true, file: tracePath],
-                    'summary': [enabled: true, file: summaryPath],
                     'report': [enabled: true, file: reportPath],
                     'provenance': [enabled: true, file: provenancePath]
                 ]
@@ -235,18 +230,6 @@ class CO2FootprintObserverTest extends Specification{
 
         fileChecker.compareChecksums(tracePath, '935b64980306aa449d4057d3d752fdf3')
 
-
-        // Check Summary File
-        fileChecker.runChecks(
-                summaryPath,
-                [
-                        27: "  provenanceFile: ${provenancePath}",
-                        28: "  reportFile: ${reportPath}",
-                        29: "  summaryFile: ${summaryPath}",
-                        30: "  traceFile: ${tracePath}"
-                ]
-        )
-
         // Check Report File
         fileChecker.runChecks(
             reportPath,
@@ -263,7 +246,6 @@ class CO2FootprintObserverTest extends Specification{
                         "{\"option\":\"provenanceFile\",\"value\":\"${provenancePath}\"}," +
                         '{"option":"pue","value":"1.0"},' +
                         "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
-                        "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
                         "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];",
                 1585: '          ' +
                         "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +

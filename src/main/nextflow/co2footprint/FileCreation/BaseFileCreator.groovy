@@ -8,7 +8,7 @@ import java.nio.file.Path
 /**
  * Base class for CO₂ footprint file writers.
  *
- * Handles file path and overwrite logic for output files (trace, summary, report).
+ * Handles file path and overwrite logic for output files (trace, report).
  */
 class BaseFileCreator {
 

@@ -18,6 +18,7 @@
 - Added full integration test
 - Adapted to Nextflow 26
 - Reworked `Bytes`, such that it can take binary and decimal-based values
+- Updated Nextflow's plugin helper plugin
 
 ## Features:
 - Transformation of data file to provenance file with schema.org / bioschemas.org type annotation in JSON-LD data format

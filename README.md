@@ -42,7 +42,7 @@ More details are available in the Nextflow [plugin documentation](https://www.ne
 The plugin also provides a CLI command for post-run carbon footprint calculations from Nextflow's execution trace files, as well as a function that can be included in Nextflow pipelines. For more information, see the [extension manual](usage/extension.md).
 
 ## Output
-The plugin generates three files, a [detailed report](assets/co2footprint_report_sample.html), a [text summary](assets/co2footprint_summary_sample.txt), and a [trace file](assets/co2footprint_trace_sample.txt).  
+The plugin generates three files, a [detailed report](assets/co2footprint_report_sample.html), and a [trace file](assets/co2footprint_trace_sample.txt).  
 For more details, see the [output documentation](usage/output.md).
 
 ## Contributing
