@@ -31,7 +31,7 @@ import java.nio.file.Path
  *       enabled = true,
  *       file = "co2footprint_trace.txt"
  *     }
- *     report = {
+ *     report {
  *       enabled: true,
  *       file: "co2footprint_report.html"
  *     }
