@@ -15,7 +15,6 @@ class CO2FootprintCLITest extends  Specification {
 
     List<Path> outPaths = [
             outPath.resolve('trace_test.txt'),
-            outPath.resolve('summary_test.txt'),
             outPath.resolve('report_test.html'),
             outPath.resolve('provenance_test.json')
     ]

@@ -3,7 +3,7 @@ package nextflow.co2footprint
 import groovy.util.logging.Slf4j
 import nextflow.co2footprint.Config.ProvenanceFileConfig
 import nextflow.co2footprint.Config.ReportFileConfig
-import nextflow.co2footprint.Config.SummaryFileConfig
+
 import nextflow.co2footprint.Config.TraceFileConfig
 import nextflow.co2footprint.DataContainers.AWSRegionsDataMatrix
 import nextflow.co2footprint.DataContainers.CIDataMatrix
@@ -31,9 +31,6 @@ import java.nio.file.Path
  *       enabled = true,
  *       file = "co2footprint_trace.txt"
  *     }
- *     summary {
- *       file = "co2footprint_summary.txt"
- *     }
  *     report = {
  *       enabled: true,
  *       file: "co2footprint_report.html"
@@ -59,9 +56,6 @@ class CO2FootprintConfig implements ConfigScope {
 
     @Description('Configuration for the trace file.')
     final TraceFileConfig trace
-
-    @Description('Configuration for the summary file.')
-    final SummaryFileConfig summary
 
     @Description('Configuration for the report file.')
     final ReportFileConfig report
@@ -136,7 +130,6 @@ class CO2FootprintConfig implements ConfigScope {
 
         // File parameters (sub-scopes)
         trace = new TraceFileConfig(getCollect('trace', configMap, usedKeys) as Map ?: [:], timestamp)
-        summary = new SummaryFileConfig(getCollect('summary', configMap, usedKeys) as Map ?: [:], timestamp)
         report = new ReportFileConfig(getCollect('report', configMap, usedKeys) as Map ?: [:], timestamp)
         provenance = new ProvenanceFileConfig(getCollect('provenance', configMap, usedKeys) as Map ?: [:], timestamp)
 
@@ -314,7 +307,6 @@ class CO2FootprintConfig implements ConfigScope {
     SortedMap<String, Object> collectOutputFileOptions() {
         return [
             reportFile: report.file,
-            summaryFile: summary.file,
             traceFile: trace.file,
             provenanceFile: provenance.file
         ].sort() as SortedMap

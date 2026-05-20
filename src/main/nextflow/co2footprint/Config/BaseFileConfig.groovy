@@ -7,7 +7,7 @@ import java.nio.file.Path
 /**
  * Base configuration class for file-based outputs of the nf-co2footprint plugin. Stores
  * `enabled` and `file` parameters, and declares a `name` field in subclasses to control
- * the default output file name for trace, summary and report files.
+ * the default output file name for trace and report files.
  *
  * @author Murray Wham <murray.wham@ed.ac.uk>
  */

@@ -13,7 +13,7 @@ import java.util.zip.ZipInputStream
  *
  * Runs the nf-core/demo pipeline with a locally built plugin and verifies
  * successful execution as well as the presence and basic integrity of all
- * expected output files (trace, summary, report, data).
+ * expected output files (trace, report, data).
  */
 class CO2PluginFullTest extends Specification {
     @Shared
@@ -31,7 +31,6 @@ class CO2PluginFullTest extends Specification {
         Path pluginsPath = tempPath.resolve('plugins')
         Path outPath = tempPath.resolve(Path.of('out', 'pipeline_info'))
         Path tracePath = outPath.resolve('trace_test.txt')
-        Path summaryPath = outPath.resolve('summary_test.txt')
         Path reportPath = outPath.resolve('report_test.html')
         Path dataPath = outPath.resolve('data_test.json')
 
@@ -89,13 +88,12 @@ class CO2PluginFullTest extends Specification {
 
 
         // Check all files exist
-        [tracePath, summaryPath, reportPath, dataPath].each { path ->
+        [tracePath, reportPath, dataPath].each { path ->
             fileChecker.checkIsFile(path)
         }
 
         // Check line count
         fileChecker.compareNumLines(tracePath, 8)
-        fileChecker.compareNumLines(summaryPath, 30)
         fileChecker.compareNumLines(reportPath, 1863)
         long lines = dataPath.countLines()
         lines == 3918

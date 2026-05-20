@@ -5,7 +5,7 @@ import nextflow.co2footprint.CO2FootprintCalculator
 import nextflow.co2footprint.CO2FootprintConfig
 import nextflow.co2footprint.Config.ProvenanceFileConfig
 import nextflow.co2footprint.Config.ReportFileConfig
-import nextflow.co2footprint.Config.SummaryFileConfig
+
 import nextflow.co2footprint.Config.TraceFileConfig
 import nextflow.co2footprint.DataContainers.CIDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
@@ -36,7 +36,6 @@ class ReportFileCreatorTest extends Specification{
         CO2FootprintConfig config = new CO2FootprintConfig(
                 [
                         'trace': ['enabled': true, 'file': tempPath],
-                        'summary': ['enabled': true, 'file': tempPath],
                         'report': ['enabled': true, 'file': reportPath],
                         'provenance': [enabled: true, file: tempPath],
                         'ci': 475.0
@@ -66,7 +65,6 @@ class ReportFileCreatorTest extends Specification{
             getConfig() >> [
                 co2footprint: [
                     'trace': new TraceFileConfig(['enabled': true, 'file': tempPath]),
-                    'summary': new SummaryFileConfig(['enabled': true, 'file': tempPath]),
                     'report': new ReportFileConfig(['enabled': true, 'file': reportPath]),
                     'provenance': new ProvenanceFileConfig([enabled: true, file: tempPath]),
                     'ci': 475.0
@@ -160,7 +158,6 @@ class ReportFileCreatorTest extends Specification{
                     "{\"option\":\"provenanceFile\",\"value\":\"${tempPath}\"}," +
                     '{"option":"pue","value":"1.0"},' +
                     "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
-                    "{\"option\":\"summaryFile\",\"value\":\"${tempPath}\"}," +
                     "{\"option\":\"traceFile\",\"value\":\"${tempPath}\"}" +
                 ']'
     }

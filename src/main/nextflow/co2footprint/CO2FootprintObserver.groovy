@@ -5,7 +5,7 @@ import groovy.util.logging.Slf4j
 import nextflow.Session
 import nextflow.co2footprint.FileCreation.ProvenanceFileCreator
 import nextflow.co2footprint.FileCreation.ReportFileCreator
-import nextflow.co2footprint.FileCreation.SummaryFileCreator
+
 import nextflow.co2footprint.FileCreation.TraceFileCreator
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordTree
@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap
  * Observer for CO₂ footprint reporting in Nextflow workflows.
  *
  * Tracks task execution, collects resource usage, computes CO₂ emissions,
- * and writes trace, summary, and HTML report files.
+ * and writes trace, and HTML report files.
  *
  * @author Júlia Mir Pedrol <mirp.julia@gmail.com>,
  *         Sabrina Krakau <sabrinakrakau@gmail.com>,
@@ -35,7 +35,6 @@ class CO2FootprintObserver implements TraceObserverV2 {
 
     // Output file objects
     final TraceFileCreator traceFile
-    final SummaryFileCreator summaryFile
     final ReportFileCreator reportFile
     final ProvenanceFileCreator provenanceFile
 
@@ -74,12 +73,11 @@ class CO2FootprintObserver implements TraceObserverV2 {
 
         // Make file instances
         this.traceFile = new TraceFileCreator(config.trace)
-        this.summaryFile = new SummaryFileCreator(config.summary)
         this.reportFile = new ReportFileCreator(config.report)
         this.provenanceFile = new ProvenanceFileCreator(config.provenance)
 
-        if (!config.trace.enabled && !config.summary.enabled && !config.report.enabled && !config.provenance.enabled) {
-            log.warn('No output files are enabled - to enable, set `enabled: true` in the sections `trace`, `summary` or `report`.')
+        if (!config.trace.enabled && !config.report.enabled && !config.provenance.enabled) {
+            log.warn('No output files are enabled - to enable, set `enabled: true` in the sections `trace` or `report`.')
         }
 
         this.co2FootprintCalculator = co2FootprintCalculator
@@ -153,11 +151,8 @@ class CO2FootprintObserver implements TraceObserverV2 {
         co2RecordTree.summarize()
         co2RecordTree.collectAdditionalMetrics()
 
-        // Create report and summary if any content exists to write to the file
+        // Create report if any content exists to write to the file
         if (co2RecordTree) {
-            summaryFile.create()
-            summaryFile.write(co2RecordTree, co2FootprintCalculator, config)
-
             reportFile.create()
             reportFile.addEntries(co2RecordTree, co2FootprintCalculator, config, timeCiRecordCollector, workflowMetadata)
             reportFile.write()
@@ -168,7 +163,6 @@ class CO2FootprintObserver implements TraceObserverV2 {
 
         // Close all files (writes remaining tasks in the trace file)
         traceFile.close(runningTasks)
-        summaryFile.close()
         reportFile.close()
         provenanceFile.close()
     }
@@ -195,8 +189,8 @@ class CO2FootprintObserver implements TraceObserverV2 {
         this.workflowStats.name = session.runName
 
         // we wouldn't expect a config where all output files are turned off, so warn the user
-        if (!traceFile && !summaryFile && !reportFile) {
-            log.warn('No output files are enabled - to enable, set `enabled: true` in the sections `trace`, `summary` or `report`.')
+        if (!traceFile && !reportFile) {
+            log.warn('No output files are enabled - to enable, set `enabled: true` in the sections `trace` or `report`.')
         }
 
         // Start hourly CI updating
