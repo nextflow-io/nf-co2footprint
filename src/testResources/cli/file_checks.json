@@ -1,19 +1,19 @@
 {
   "trace_test.txt": {
-    "checksum": "eea8e83888fcd15aef201580d8179af4",
+    "checksum": "3f7553e2afc6bcfc2e17ef166afebde8",
     "num_lines": 3
   },
   "summary_test.txt": {
-    "checksum": "935d2586dca8cb1b2a958b967caad968",
+    "checksum": "5ab87db0ef1bbafd8ea49f3246d09540",
     "num_lines": 31
   },
   "report_test.html": {
-    "checksum": "d83ce554933e9f3709135e2dd509e2ce",
+    "checksum": "bab5bfc8933d8d1655d331a1becfe4e9",
     "excluded_lines": [1533, 1587],
     "num_lines": 1813
   },
   "provenance_test.json": {
-    "checksum": "05e029a3c2547ef2c806138b48eff08c",
+    "checksum": "a58a0c22320bb1f4553a3811ab1d9357",
     "num_lines": 456
   }
 }

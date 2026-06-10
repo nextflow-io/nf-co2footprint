@@ -1,14 +1,14 @@
 {
   "summary_test.txt": {
-    "checksum": "e9458d9e1a7275fb5ec3632a3ef1900a",
+    "checksum": "61d0d8cc16a28d50b06e2c524929a870",
     "num_lines": 31
   },
   "report_test.html": {
-    "checksum": "bf569b0b1edb9fab3840e596eb284ea2",
+    "checksum": "55291041a1b22b6ca1a72097ac034883",
     "num_lines": 1816
   },
   "provenance_test.json": {
-    "checksum": "89da9d2ef6873c1d18e84591e7d52192",
+    "checksum": "9bccb21e646b423afae1725caea6ff3e",
     "num_lines": 365
   }
 }

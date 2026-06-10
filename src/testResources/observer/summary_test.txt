@@ -25,7 +25,7 @@ nf-co2footprint options:
   powerdrawCpuDefault: null
   pue: 1.0
   customCpuTdpFile: null
-  provenanceFile: /var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir2597033176542890936/provenance_test.json
-  reportFile: /var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir2597033176542890936/report_test.html
-  summaryFile: /var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir2597033176542890936/summary_test.txt
-  traceFile: /var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir2597033176542890936/trace_test.txt
+  provenanceFile: /var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir17311931619716779372/provenance_test.json
+  reportFile: /var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir17311931619716779372/report_test.html
+  summaryFile: /var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir17311931619716779372/summary_test.txt
+  traceFile: /var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir17311931619716779372/trace_test.txt
