@@ -1,9 +1,7 @@
 package nextflow.co2footprint
 
 import nextflow.Session
-import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.TestHelpers.FileChecker
-import nextflow.trace.TraceRecord
 import spock.lang.Shared
 import spock.lang.Specification
 

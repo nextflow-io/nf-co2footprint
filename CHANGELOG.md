@@ -1,9 +1,24 @@
 # New
 ## Bug Fixes:
+
+## Misc:
+
+## Features:
+
+# 1.3.0
+## Bug Fixes:
 - CPU power model now applied correctly
+- Unintended report value removal
+- Fixed floating point error for numerical conversion division
+- Eliminated `Unrecognized config option` warnings under Nextflow's v2 syntax parser by registering `CO2FootprintConfig` as an extension point and aligning the nested file-config scopes with the v2 `ConfigScope` discovery rules
+- Fixed missing ci plot in post-run feature
 
 ## Misc:
 - Improved workflow reporting form extension/CLI by deriving and injecting workflow metadata from the provided trace file
+- Added full integration test
+- Adapted to Nextflow 26
+- Reworked `Bytes`, such that it can take binary and decimal-based values
+- Updated Nextflow's plugin helper plugin
 
 ## Features:
 - Transformation of data file to provenance file with schema.org / bioschemas.org type annotation in JSON-LD data format

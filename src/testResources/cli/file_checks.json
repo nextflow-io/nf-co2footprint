@@ -1,6 +1,6 @@
 {
   "trace_test.txt": {
-    "checksum": "f892c9598f5fcc3eb994f4e399bf1a41",
+    "checksum": "eea8e83888fcd15aef201580d8179af4",
     "num_lines": 3
   },
   "summary_test.txt": {
@@ -8,7 +8,7 @@
     "num_lines": 31
   },
   "report_test.html": {
-    "checksum": "13b4c3be56c0089592f1bba42735e52f",
+    "checksum": "d83ce554933e9f3709135e2dd509e2ce",
     "excluded_lines": [1533, 1587],
     "num_lines": 1813
   },

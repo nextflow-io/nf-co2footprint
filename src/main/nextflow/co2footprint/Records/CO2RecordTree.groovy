@@ -207,7 +207,7 @@ class CO2RecordTree {
         Map<String, Map<String, Object>> recordMap = [:]
         if (co2Record) {
             (emissionMetricsOnly ? co2Record.emissionMetrics : co2Record.keySet()).each { String key ->
-                Map<String, Object> value = co2Record.representationMap.get(key)
+                Map<String, Object> value = co2Record.representationMap.get(key).clone() as Map<String, Object>
                 if (includeNulls || value['raw']['value'] != null) {
                     if (!includeReportValues) {
                         value.remove('report')

@@ -61,6 +61,8 @@ class Calculator {
         if (values.isEmpty() || weights.isEmpty()) { return null }
 
         Number norm = weights.sum() as Number
+        if (norm == 0) { return null }
+
         Number total = new BigDecimal(0)
         values.eachWithIndex { Object value, Integer index ->
             total += value * weights[index]

@@ -6,14 +6,14 @@ import nextflow.co2footprint.Config.ReportFileConfig
 import nextflow.co2footprint.Config.SummaryFileConfig
 import nextflow.co2footprint.Config.TraceFileConfig
 import nextflow.co2footprint.DataContainers.AWSRegionsDataMatrix
-import nextflow.co2footprint.DataContainers.MachineTypeDataMatrix
-import nextflow.config.spec.ScopeName
-import nextflow.config.spec.ConfigScope
-import nextflow.config.spec.ConfigOption
-import nextflow.script.dsl.Description
 import nextflow.co2footprint.DataContainers.CIDataMatrix
+import nextflow.co2footprint.DataContainers.MachineTypeDataMatrix
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Records.CiRecord
+import nextflow.config.spec.ConfigOption
+import nextflow.config.spec.ConfigScope
+import nextflow.config.spec.ScopeName
+import nextflow.script.dsl.Description
 import nextflow.trace.TraceHelper
 
 import java.nio.file.Path
@@ -56,23 +56,19 @@ class CO2FootprintConfig implements ConfigScope {
     private final String timestamp = TraceHelper.launchTimestampFmt()
     private final String executor
 
-    @ConfigOption(types=[Map])
     @Description('Configuration for the trace file.')
     final TraceFileConfig trace
 
-    @ConfigOption(types=[Map])
     @Description('Configuration for the summary file.')
     final SummaryFileConfig summary
 
-    @ConfigOption(types=[Map])
     @Description('Configuration for the report file.')
     final ReportFileConfig report
 
-    @ConfigOption(types=[Map])
     @Description('Configuration for the provenance data/machine-readable file.')
     final ProvenanceFileConfig provenance
 
-    @ConfigOption(types=[GString])
+    @ConfigOption
     @Description('Location GeoCode from Electricity maps.')
     final String location
 
@@ -80,31 +76,35 @@ class CO2FootprintConfig implements ConfigScope {
     @Description('Location-based carbon intensity (CI).')
     final CiRecord ci
 
-    @ConfigOption(types=[Number])
+    @ConfigOption
     @Description('Market-based carbon intensity (CI).')
     final BigDecimal ciMarket
 
-    @ConfigOption(types=[GString])
+    @ConfigOption
     @Description('Electricity-maps API token.')
     final String emApiKey
 
-    @ConfigOption(types=[Number])
+    @ConfigOption
     @Description('Power usage effectiveness (PUE) of the data centre.')
     BigDecimal pue
+
+    @ConfigOption
+    @Description('Power draw of memory [W per GB].')
+    final BigDecimal powerdrawMem
 
     @ConfigOption
     @Description('Turns off pattern matching of CPU names.')
     final Boolean ignoreCpuModel
 
-    @ConfigOption(types=[Number])
+    @ConfigOption
     @Description('Default powerdraw of the CPU.')
     final BigDecimal powerdrawCpuDefault
 
-    @ConfigOption(types=[String, GString])
+    @ConfigOption
     @Description('Path to a custom CPU TDP file.')
     final Path customCpuTdpFile
 
-    @ConfigOption(types=[GString])
+    @ConfigOption
     @Description('Type of computer on which the workflow is run [\'local\', \'compute cluster\', \'\'].')
     String machineType
 
@@ -115,6 +115,12 @@ class CO2FootprintConfig implements ConfigScope {
     @ConfigOption
     @Description('A customizable energy function that can take the following variables: memory.')
     final String memoryEnergyFunction
+
+    /**
+     * No-arg constructor required by Nextflow's v2 config parser to
+     * discover and validate config options at parse time.
+     */
+    CO2FootprintConfig() {}
 
     /**
      * Loads configuration from a map and sets up defaults and fallbacks.

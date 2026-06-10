@@ -5,7 +5,7 @@ import ch.qos.logback.classic.PatternLayout
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.AppenderBase
 import nextflow.Session
-import nextflow.trace.AnsiLogObserver
+import nextflow.trace.LogObserver
 import nextflow.util.LoggerHelper
 
 /**
@@ -14,6 +14,7 @@ import nextflow.util.LoggerHelper
 class CustomCaptureAppender extends AppenderBase<ILoggingEvent> {
     final Session session
     final PatternLayout layout
+    LogObserver renderer
 
     CustomCaptureAppender(Session session, PatternLayout layout) {
         super()
@@ -28,6 +29,8 @@ class CustomCaptureAppender extends AppenderBase<ILoggingEvent> {
     void start() {
         super.start()
         layout.start()
+        
+        renderer = session?.logObserver
     }
 
     /**
@@ -40,9 +43,8 @@ class CustomCaptureAppender extends AppenderBase<ILoggingEvent> {
         try {
             // Format message with Layout
             final String message = layout.doLayout(event)
-
+            
             // Render the results
-            final AnsiLogObserver renderer = session?.ansiLogObserver
             if( !renderer || !renderer.started || renderer.stopped ) {
                 System.out.println(message)
             }

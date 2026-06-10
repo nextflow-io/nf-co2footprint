@@ -17,7 +17,7 @@
 package nextflow.co2footprint
 
 import nextflow.Session
-import nextflow.trace.TraceObserver
+import nextflow.trace.TraceObserverV2
 import spock.lang.Specification
 
 /**
@@ -33,7 +33,7 @@ class CO2FootprintFactoryTest extends Specification {
     def 'create observer' () {
         when:
         Session session = Mock(Session) { getConfig() >>  [:] }
-        List<TraceObserver> observers = new CO2FootprintFactory().create(session)
+        List<TraceObserverV2> observers = new CO2FootprintFactory().create(session)
 
         then:
         observers[0] instanceof  CO2FootprintObserver

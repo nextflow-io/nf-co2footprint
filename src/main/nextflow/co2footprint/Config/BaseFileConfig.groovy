@@ -2,8 +2,6 @@ package nextflow.co2footprint.Config
 
 import groovy.util.logging.Slf4j
 import nextflow.co2footprint.CO2FootprintConfig
-import nextflow.config.spec.ConfigOption
-import nextflow.script.dsl.Description
 import java.nio.file.Path
 
 /**
@@ -17,36 +15,51 @@ import java.nio.file.Path
 class BaseFileConfig {
     final String name
     final String ending
-
-    @ConfigOption(types=[String, GString])
-    @Description('Path to the file.')
-    final Path file
-
-    @ConfigOption
-    @Description('Whether to enable the file creation.')
-    final Boolean enabled
-
-    @ConfigOption
-    @Description('Whether to overwrite a file if it already exists.')
-    final Boolean overwrite
+    final boolean defaultEnabled
 
     protected final LinkedHashSet<String> usedKeys = [] as LinkedHashSet<String>
+
 
     /**
      * Parses a file-based sub-configuration for nf-co2footprint and sets up defaults and fallbacks.
      *
-     * @param fileConfigMap  User-provided configuration options
-     * @param timestamp      Timestamp for generating default filenames
      * @param subConfigName  Name of the configuration scope
      * @param fileEnding     Output file extension (default: txt)
-     * @param defaultEnabled Whether to enable the file by default (default: true)
      */
-    BaseFileConfig(Map<String, Object> fileConfigMap, String timestamp, String subConfigName, String fileEnding='txt', boolean defaultEnabled=true){
+    BaseFileConfig(String subConfigName, String fileEnding, boolean defaultEnabled=true){
         this.name = subConfigName
         this.ending = fileEnding ?: 'txt'
+        this.defaultEnabled = defaultEnabled
+    }
 
-        file = Path.of(CO2FootprintConfig.getCollect('file', fileConfigMap, usedKeys) as String ?: "co2footprint_${name}_${timestamp}.${ending}")
-        enabled =  fileConfigMap.containsKey('enabled') ? CO2FootprintConfig.getCollect('enabled', fileConfigMap, usedKeys) : defaultEnabled
-        overwrite = fileConfigMap.containsKey('overwrite') ? CO2FootprintConfig.getCollect('overwrite', fileConfigMap, usedKeys) : true
+    /**
+     * Define a file path from the given config map and timestamp, as well as predefined variables.
+     *
+     * @param fileConfig The general config of this file.
+     * @param timestamp A timestamp string.
+     * @return The path to the file.
+     */
+    protected Path defineFile(Map<String, Object> fileConfig, String timestamp) {
+        return Path.of(CO2FootprintConfig.getCollect('file', fileConfig, usedKeys) as String ?: "co2footprint_${name}_${timestamp}.${ending}")
+    }
+
+    /**
+     * Define whether the construction of this file is enabled.
+     *
+     * @param fileConfig The general config of this file.
+     * @return Whether or not to write the file.
+     */
+    protected boolean defineEnabled(Map<String, Object> fileConfig) {
+        return fileConfig.containsKey('enabled') ? CO2FootprintConfig.getCollect('enabled', fileConfig, usedKeys) : defaultEnabled
+    }
+
+    /**
+     * Define whether an existing file should be overwritten.
+     *
+     * @param fileConfig The general config of this file.
+     * @return Whether or not to overwrite the file.
+     */
+    protected boolean defineOverwrite(Map<String, Object> fileConfig) {
+        return fileConfig.containsKey('overwrite') ? CO2FootprintConfig.getCollect('overwrite', fileConfig, usedKeys) : true
     }
 }

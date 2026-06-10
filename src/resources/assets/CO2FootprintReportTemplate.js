@@ -542,8 +542,8 @@ $(function () {
     ciRecords = new Map([...ciRecords.entries()].sort((a, b) => a[0] - b[0]))
 
     if (ciRecords.size == 0) {
-      ciRecords.set(tasksStart, window.data.trace[0].ci.raw.value)
-      ciRecords.set(tasksEnd, window.data.trace[0].ci.raw.value)
+      ciRecords.set(tasksStart, window.data.trace[0].carbon_intensity.raw.value)
+      ciRecords.set(tasksEnd, window.data.trace[0].carbon_intensity.raw.value)
     }
     else {
       const times = [...ciRecords.keys()]
