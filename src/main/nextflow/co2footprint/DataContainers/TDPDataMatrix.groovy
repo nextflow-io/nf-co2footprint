@@ -39,7 +39,7 @@ class TDPDataMatrix extends DataMatrix {
     Object fallbackModel = 'default'
 
     // Optional override values
-    Double tdp = null
+    BigDecimal tdp = null
     Integer physicalCores = null
     Integer logicalCores = null
     
@@ -57,7 +57,7 @@ class TDPDataMatrix extends DataMatrix {
     TDPDataMatrix(
             List<List> data = [], LinkedHashSet<String> columnIndex = [], LinkedHashSet<String> rowIndex = [],
             Object fallbackModel='default',
-            Double tdp=null, Integer physicalCores=null, Integer logicalCores=null
+            BigDecimal tdp=null, Integer physicalCores=null, Integer logicalCores=null
     ) {
         // Initialize DataMatrix without non-ASCII characters in indices
         super(
@@ -84,7 +84,7 @@ class TDPDataMatrix extends DataMatrix {
      */
     TDPDataMatrix(
             DataMatrix dataMatrix, Object fallbackModel='default',
-            Double tdp=null, Integer physicalCores=null, Integer logicalCores=null
+            BigDecimal tdp=null, Integer physicalCores=null, Integer logicalCores=null
     ) {
         // Initialize DataMatrix without non-ASCII characters in indices
         super(
@@ -183,14 +183,14 @@ class TDPDataMatrix extends DataMatrix {
      * @param rowIdx Index of the respective row (default: 0, ignored if rowID is given)
      * @return       TDP value (W)
      */
-    Double getTDP(DataMatrix dm=null, Object rowID=null, Integer rowIdx=0) {
+    BigDecimal getTDP(DataMatrix dm=null, Object rowID=null, Integer rowIdx=0) {
         dm = dm ?: this
         if (this.tdp) {
             return this.tdp
         } else if (rowID) {
-            return dm.get(rowID, this.tdpID) as Double
+            return dm.get(rowID, this.tdpID) as BigDecimal
         } else {
-            return dm.get(rowIdx, this.tdpID, true) as Double
+            return dm.get(rowIdx, this.tdpID, true) as BigDecimal
         }
     }
 
@@ -242,7 +242,7 @@ class TDPDataMatrix extends DataMatrix {
      * @param rowID  ID of the respective row (default: null)
      * @return       TDP per core (W)
      */
-    Double getPhysicalCoreTDP(DataMatrix dm=null, Integer rowIdx=0, Object rowID=null) {
+    BigDecimal getPhysicalCoreTDP(DataMatrix dm=null, Integer rowIdx=0, Object rowID=null) {
         dm = dm ?: this
         return getTDP(dm, rowID, rowIdx) / getPhysicalCores(dm, rowID, rowIdx)
     }
@@ -255,7 +255,7 @@ class TDPDataMatrix extends DataMatrix {
      * @param rowID  ID of the respective row (default: null)
      * @return       TDP per thread (W)
      */
-    Double getLogicalCoreTDP(DataMatrix dm=null, Integer rowIdx=0, Object rowID=null) {
+    BigDecimal getLogicalCoreTDP(DataMatrix dm=null, Integer rowIdx=0, Object rowID=null) {
         dm = dm ?: this
         return getTDP(dm, rowID, rowIdx) / getLogicalCores(dm, rowID, rowIdx)
     }

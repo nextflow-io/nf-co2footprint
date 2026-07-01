@@ -4,6 +4,7 @@ import groovy.util.logging.Slf4j
 import nextflow.co2footprint.DataContainers.TDPDataMatrix
 import nextflow.co2footprint.Logging.Markers
 import nextflow.co2footprint.Metrics.Bytes
+import nextflow.co2footprint.Metrics.Duration
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CiRecordCollector
@@ -54,16 +55,18 @@ class CO2FootprintCalculator {
     *
     * @param trace   The TraceRecord containing task resource usage.
     * @param timeCiRecords Collector for carbon intensity records.
+    * @param isPostRun Whether the computation is performed after the run (true) or during the run (false). Used to determine whether previous values are used if not set explicitly otherwise.
     * @return        CO2Record with energy consumption, CO₂ emissions, and task/resource details.
     */
-    CO2Record computeTaskCO2footprint(TraceRecord trace, CiRecordCollector timeCiRecords) {
+    CO2Record computeTaskCO2footprint(TraceRecord trace, CiRecordCollector timeCiRecords, boolean isPostRun=false) {
 
         /* ===== CPU Information ===== */
 
         final String cpuModel = config.ignoreCpuModel ? 'default' : trace.get('cpu_model') as String
 
         // Runtime [h]
-        final BigDecimal runtime_h = (getTraceOrDefault(trace, trace.taskId, 'realtime', 0, 'missing-realtime') as BigDecimal) / (1000 * 60 * 60)
+        final BigDecimal runtime_ms = getTraceOrDefault(trace, trace.taskId, 'realtime', 0, 'missing-realtime') as BigDecimal
+        final BigDecimal runtime_h = Duration.of(runtime_ms, 'ms').scale('h').value as BigDecimal
 
         // Number of CPU cores
         Integer numberOfCores = getTraceOrDefault(trace, trace.taskId, 'cpus', 1, 'missing-cpus') as Integer
@@ -80,8 +83,14 @@ class CO2FootprintCalculator {
         numberOfCores = Math.max( Math.ceil(cpuUsage / 100), numberOfCores) as Integer // Ensure that the number of cores is at least ceil(%cpu/100)
         final BigDecimal coreUsage = cpuUsage / (100.0 * numberOfCores)
 
-        // Per-core power draw: either custom polynomial model or TDP lookup [W/core]
-        final BigDecimal powerdrawPerCore = tdpDataMatrix.matchModel(cpuModel).getLogicalCoreTDP()
+        // Assigns powerdraw per core in the following order: 1. Custom polynomial model 2. TDP lookup based on CPU model 3. Previous value from trace
+        final BigDecimal powerdrawPerCore
+        if (isPostRun && !tdpDataMatrix.matchModel(cpuModel, false, false) && trace.containsKey('powerdraw_cpu')) {
+            powerdrawPerCore = trace.get('powerdraw_cpu') as BigDecimal
+        }
+        else {
+            powerdrawPerCore = tdpDataMatrix.matchModel(cpuModel).getLogicalCoreTDP()
+        }
 
         /* ===== Memory Information ===== */
 
@@ -109,16 +118,30 @@ class CO2FootprintCalculator {
             throw new MissingValueException(message)
         }
 
+        final BigDecimal powerdrawMem  = useConfiguredOrPrevious(
+                config, ['powerdrawMem'], config.powerdrawMem,
+                trace, 'powerdraw_memory', isPostRun
+        ) // [W per GB]
+
         /* ===== Data Center Effectiveness and Carbon Intensity ===== */
 
          // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
-        final BigDecimal pue = config.pue
+        final BigDecimal pue = useConfiguredOrPrevious(
+                config, ['pue'], config.pue,
+                trace, 'pue', isPostRun
+        )
 
         // CI: carbon intensity [gCO₂e kWh−1]
-        final BigDecimal ci = timeCiRecords.getCi(trace)
+        final BigDecimal ci = useConfiguredOrPrevious(
+                config, ['ci', 'emApiKey'], timeCiRecords.getCi(trace),
+                trace, 'carbon_intensity', isPostRun
+        )
 
         // Personal energy mix based carbon intensity
-        final BigDecimal ciMarket = config.ciMarket
+        final BigDecimal ciMarket = useConfiguredOrPrevious(
+                config, ['ciMarket'], config.ciMarket,
+                trace, 'carbon_intensity_market', isPostRun
+        )
 
 
         /* ===== Energy & Emission Calculation ===== */
@@ -148,10 +171,12 @@ class CO2FootprintCalculator {
             co2e,
             co2eMarket,
             ci,
+            ciMarket,
             cpuUsage,
             memory,
-            runtime_h,
+            runtime_ms,
             numberOfCores,
+            pue,
             powerdrawPerCore,
             config.ignoreCpuModel ? 'Custom value' : cpuModel,
             rawEnergyProcessor,
@@ -170,7 +195,7 @@ class CO2FootprintCalculator {
      * @param totalCO2 Total CO₂ equivalents that were emitted
      * @return CO2EquivalencesRecord with estimations for sensible comparisons
      */
-    static CO2EquivalencesRecord computeCO2footprintEquivalences(Double totalCO2) {
+    static CO2EquivalencesRecord computeCO2footprintEquivalences(BigDecimal totalCO2) {
         final BigDecimal carKilometers = totalCO2 / 175
         final BigDecimal treeMonths = totalCO2 / 917
         final BigDecimal planePercent = totalCO2 * 100 / 50000
@@ -210,6 +235,41 @@ class CO2FootprintCalculator {
             )
         }
         return value != null ? value : defaultValue
+    }
+
+    /**
+     * Resolves a calculation parameter by choosing between the current config and a value
+     * stored in a previous run's trace output.
+     *
+     * In post-run mode, the input trace may be a CO2Record from a prior plugin run that already
+     * contains the parameter values used in the original calculation (e.g. PUE, carbon intensity).
+     * This method preserves those original values — unless the user explicitly overrides them
+     * in the current config.
+     *
+     * In normal (integrated) mode, always returns the current config value.
+     *
+     * Example: a prior run used PUE=1.4, stored in the trace. If the user re-runs post-run
+     * estimation without setting 'pue' in config, this returns 1.4 from the trace. If the user
+     * explicitly sets pue=1.2 in config, this returns 1.2.
+     *
+     * @param config      Plugin configuration for the current run
+     * @param configKeys  Config keys that, if explicitly set by the user, force using the config value
+     * @param configValue The value from the current config (used when not in post-run, or when overridden)
+     * @param trace       The input trace record, potentially containing values from a previous run
+     * @param traceKey    The field name in the trace to look up the previous value
+     * @param isPostRun   Whether we are in post-run mode
+     * @return The previous run's value if in post-run mode and not overridden, otherwise the config value
+     */
+    static <T> T useConfiguredOrPrevious(
+            CO2FootprintConfig config, List<String> configKeys, T configValue,
+            TraceRecord trace, String traceKey, boolean isPostRun
+    ){
+        if (isPostRun && (!configKeys.collect({ String configKey -> configKey in config.usedKeys }).any()) && trace.containsKey(traceKey)) {
+            return trace.get(traceKey) as T
+        }
+        else {
+            return configValue
+        }
     }
 
     /**

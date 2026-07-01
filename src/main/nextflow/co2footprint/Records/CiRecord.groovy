@@ -105,7 +105,7 @@ class CiRecord {
             Map json = jsonSlurper.parse(ciApiConnection.inputStream) as Map
 
             this.time = Instant.parse(json['datetime'] as String).atZone(ZoneId.systemDefault()).toLocalDateTime()
-            this.value = json['carbonIntensity'] as Double
+            this.value = json['carbonIntensity'] as BigDecimal
             log.info(
                     Markers.unique,
                     "API call successful. " +

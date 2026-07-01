@@ -97,8 +97,7 @@ class CO2PluginFullTest extends Specification {
         fileChecker.compareNumLines(tracePath, 8)
         fileChecker.compareNumLines(summaryPath, 31)
         fileChecker.compareNumLines(reportPath, 1863)
-        long lines = dataPath.countLines()
-        lines == 4086
+        fileChecker.compareNumLines(dataPath, 4374)
     }
 
     def unzip(Path inZip, Path outputDir){

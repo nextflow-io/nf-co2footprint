@@ -61,7 +61,7 @@ class SummaryFileCreator extends BaseFileCreator {
         // Launch the agent (for thread safety, though only one write is performed)
         summaryWriter = new Agent<PrintWriter>(file)
 
-        CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(totalStats['CO2e'] as Double)
+        CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(totalStats['CO2e'] as BigDecimal)
 
         String outText = """\
         Total CO₂e footprint measures of this workflow run (including cached tasks):

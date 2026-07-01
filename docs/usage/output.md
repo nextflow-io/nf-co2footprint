@@ -16,10 +16,22 @@ The nf-co2footprint plugin creates three output files:
 - **`report`** ([sample](../assets/co2footprint_report_sample.html))  
   The HTML report contains information about the carbon footprint of the whole pipeline run as well as plots showing the distributions of the CO₂ emissions for the different processes. The CO₂ emissions are separated into newly generated (i.e. from non-cached tasks) and total (including cached tasks). Additionally, it contains a table with the metrics for all individual tasks. The table is limited to 10000 entries by default. It finishes up with an overview plot of the carbon intensities during the workflow execution.
 
-- **`provenance`**
-  The provenance file contains all trace information contributing to the emission calculation in a tree structure with the levels in descending order `session -> workflow -> process -> task`. Example: A workflow consists of multiple processes / has multiple `process` level children.
-  The file design adheres to the javascript object notation linked-data (JSON-LD) format with type context definitions from schema.org and bioschemas.org.
-  The total session emission estimation includes everything from the point of plugin start to stop in a similar manner to how Nextflow defines a `TraceRecord`, but through the Java-native OSHI library.
+- **`provenance`**  
+  The provenance file contains all trace information contributing to the emission calculation in a tree structure with the levels in descending order `session -> workflow -> process -> task`. The file design adheres to the javascript object notation linked-data (JSON-LD) format with type context definitions from schema.org and bioschemas.org.  
+  *Example:* A workflow consists of multiple processes / has multiple `process` level children, which are listed under `isPart`.  
+  <br>
+  **Accumulation of provenance values:**
+    - The total session emission estimation includes everything from the point of plugin start to stop in a similar manner to how Nextflow defines a `TraceRecord`, but through the Java-native OSHI library.  
+    - The value accumulation from `tasks` over `process` to `workflow` level happens differently for different values:
+        - Weighted average
+          - In relation to energy: `carbon_intensity`, `powerdraw_cpu`, `carbon_intensity_market`, `powerdraw_memory`
+          - In relation to runtime: `%cpu`, `%mem`, `vmem`, `rss`, `cpus`, `pue`
+        - Maximum: `memory`, `cpus`, `complete`, `attempt`, `peak_vmem`, `peak_rss`
+        - Minimum: `submit`, `start`
+        - Accumulation in set: `cpu_model`, `status`, `name`, `cpu_power_model`
+        - All other values are added up
+  
+    We hope that the accumulation style provides sensible values at every level and valuable insights for you. You can always suggest changes at our [Github issue page](https://github.com/nextflow-io/nf-co2footprint/issues).
   
     !!! note "Comparison session vs. workflow"
         The tracking of resource usage, such as `%cpu` and `memory` differs slightly from the way Nextflow determines trace values. Therefore, it might not be 100% comparable. It is not guaranteed that workflow emissions are bigger than session emissions.

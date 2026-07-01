@@ -16,6 +16,12 @@ import nextflow.trace.TraceRecord
  */
 @Slf4j
 class TraceFileCreator extends BaseFileCreator {
+    
+    // Metrics that are written to the trace file
+    private List<String> traceMetrics = [
+        'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'raw_energy_processor', 'raw_energy_memory', 
+        'carbon_intensity', '%cpu', 'memory', 'realtime', 'cpus', 'powerdraw_cpu', 'cpu_model'
+    ]
 
     // Agent for thread-safe writing to the trace file
     private Agent<PrintWriter> traceWriter
@@ -50,7 +56,7 @@ class TraceFileCreator extends BaseFileCreator {
         traceWriter = new Agent<PrintWriter>(file)
 
         traceWriter.send {
-            file.println( String.join('\t', CO2Record.emissionMetrics) )
+            file.println( String.join('\t', traceMetrics) )
             file.flush()
         }
     }
@@ -64,7 +70,7 @@ class TraceFileCreator extends BaseFileCreator {
     void write(CO2Record co2Record){
         if (!created) { return }
 
-        List<String> recordedEntries = co2Record.getReadableEntries(CO2Record.emissionMetrics)
+        List<String> recordedEntries = co2Record.getReadableEntries(traceMetrics)
 
         traceWriter.send { PrintWriter writer ->
             writer.println( String.join('\t', recordedEntries) )

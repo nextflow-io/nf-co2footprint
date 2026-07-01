@@ -55,6 +55,7 @@ class CO2FootprintConfig implements ConfigScope {
     )
     private final String timestamp = TraceHelper.launchTimestampFmt()
     private final String executor
+    final LinkedHashSet<String> usedKeys = [] as LinkedHashSet<String>
 
     @Description('Configuration for the trace file.')
     final TraceFileConfig trace
@@ -134,8 +135,6 @@ class CO2FootprintConfig implements ConfigScope {
     CO2FootprintConfig(Map<String, Object> configMap, TDPDataMatrix cpuData, CIDataMatrix ciData, Map<String, Object> processMap) {
         // Ensure configMap is not null
         configMap ?= [:]
-
-        LinkedHashSet<String> usedKeys = [] as LinkedHashSet<String>
 
         // File parameters (sub-scopes)
         trace = new TraceFileConfig(getCollect('trace', configMap, usedKeys) as Map ?: [:], timestamp)

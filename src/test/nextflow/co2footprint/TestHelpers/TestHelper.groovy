@@ -38,4 +38,37 @@ class TestHelper {
             result.text = content
         return result
     }
+
+    static String printify(Object object) {
+        StringBuilder sb = new StringBuilder()
+        if (object == null) {
+            return 'null'
+        }
+        else if (object instanceof Map) {
+            sb.append('[')
+            if (object) {
+                object.each{ Object key, Object value -> sb.append(printify(key)).append(':').append(printify(value)).append(', ') }
+                sb.delete(sb.length() - 2, sb.length())
+            }
+            sb.append(']')
+        }
+        else if (object instanceof List) {
+            sb.append('[')
+            if (object) {
+                object.each{ Object item ->
+                    sb.append(printify(item)).append(', ')
+                }
+                sb.delete(sb.length() - 2, sb.length())
+            }
+            sb.append(']')
+        }
+        else if(object instanceof String) {
+            return "'${object}'"
+        }
+        else {
+            return object.toString()
+        }
+
+        return sb.toString()
+    }
 }

@@ -13,9 +13,9 @@ import nextflow.co2footprint.Metrics.Quantity
  * - Percent of a Paris-London flight
  */
 class CO2EquivalencesRecord {
-    private final Double carKilometers
-    private final Double treeMonths
-    private final Double planePercent
+    private final BigDecimal carKilometers
+    private final BigDecimal treeMonths
+    private final BigDecimal planePercent
 
     /**
      * Create a record of CO₂ Equivalences
@@ -24,19 +24,19 @@ class CO2EquivalencesRecord {
      * @param treeMonths     Months for a tree
      * @param planePercent   Percent of a flight
      */
-    CO2EquivalencesRecord(Double carKilometers=null, Double treeMonths=null, Double planePercent=null) {
+    CO2EquivalencesRecord(BigDecimal carKilometers=null, BigDecimal treeMonths=null, BigDecimal planePercent=null) {
         this.carKilometers = carKilometers
         this.treeMonths = treeMonths
         this.planePercent = planePercent
     }
 
-    Double getCarKilometers() { carKilometers }
+    BigDecimal getCarKilometers() { carKilometers }
     String getCarKilometersReadable() { new Quantity(carKilometers).toScientificNotation() }
 
-    Double getTreeMonths() { treeMonths }
-    String getTreeMonthsReadable() { new Duration(treeMonths, 'months').toReadable('s', 'years', 0) }
+    BigDecimal getTreeMonths() { treeMonths }
+    String getTreeMonthsReadable() { new Duration(treeMonths, 'months').toReadable('s', 'years', 0.0) }
 
-    Double getPlanePercent() { planePercent }
+    BigDecimal getPlanePercent() { planePercent }
     String getPlanePercentReadable() { new Percentage(planePercent).toScientificNotation() }
 
     Integer getPlaneFlights() { planePercent / 100 as Integer }

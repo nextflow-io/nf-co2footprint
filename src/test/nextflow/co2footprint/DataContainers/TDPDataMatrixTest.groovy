@@ -70,7 +70,7 @@ class TDPDataMatrixTest extends Specification {
         setup:
         Matrix df2 = new TDPDataMatrix(
                 df.data, df.getOrderedColumnKeys(), df.getOrderedRowKeys(),
-                'default', 20, 2, 4
+                'default', 20.0, 2, 4
         )
 
         expect:
@@ -96,7 +96,7 @@ class TDPDataMatrixTest extends Specification {
         setup:
         Matrix df2 = new TDPDataMatrix(
                 df.data, df.getOrderedColumnKeys(), df.getOrderedRowKeys(),
-                'default', 20, 2, 4
+                'default', 20.0, 2, 4
         )
 
         when:
@@ -112,7 +112,7 @@ class TDPDataMatrixTest extends Specification {
         df2TDPPerThread == 5.0
         logChecker.checkLogs(1,  [
                 'Could not find CPU model "Non-existent" in given TDP data table. ' +
-                'Using default CPU power draw value (100.0 W).\n' +
+                'Using default CPU power draw value (100 W).\n' +
                 '\t🔖 To fix this warning, please refer to https://nextflow-io.github.io/nf-co2footprint/usage/faq/#cpu-model.'
         ])
     }
@@ -189,7 +189,7 @@ class TDPDataMatrixTest extends Specification {
         df.matchModel('Non-existent2').getData() == [[100, 4, 8]]
         logChecker.checkLogs(null, [
                 'Could not find CPU model "Non-existent2" in given TDP data table. ' +
-                'Using default CPU power draw value (100.0 W).\n' +
+                'Using default CPU power draw value (100 W).\n' +
                 '\t🔖 To fix this warning, please refer to https://nextflow-io.github.io/nf-co2footprint/usage/faq/#cpu-model.'
         ])
         logChecker.clear()
@@ -198,7 +198,7 @@ class TDPDataMatrixTest extends Specification {
         df.matchModel('Indel® i3-Fantasy(TM) 10Trillion GW').getData() == [[100, 4, 8]]
         logChecker.checkLogs(null, [
                 'Could not find CPU model "Indel® i3-Fantasy(TM) 10Trillion GW" in given TDP data table. ' +
-                'Using default CPU power draw value (100.0 W).\n' +
+                'Using default CPU power draw value (100 W).\n' +
                 '\t🔖 To fix this warning, please refer to https://nextflow-io.github.io/nf-co2footprint/usage/faq/#cpu-model.'
         ])
     }

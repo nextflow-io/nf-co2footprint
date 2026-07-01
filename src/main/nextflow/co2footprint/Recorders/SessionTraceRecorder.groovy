@@ -97,7 +97,7 @@ class SessionTraceRecorder {
         Map<ProcessStat.PidStat, Long> rootStats = getPidStats(pid)
 
         // Determine CPU usage
-        Double cpuUsage
+        BigDecimal cpuUsage
         if (rootStats != null) {
             // Accumulate the running ticks of root including waiting time for children
             Long cpuTime = rootStats.get(ProcessStat.PidStat.UTIME) + rootStats.get(ProcessStat.PidStat.STIME) +

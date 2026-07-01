@@ -185,8 +185,8 @@ class ReportFileCreator extends BaseFileCreator{
         ).sum() as CO2Record
 
         // Retrieve total CO₂ emissions and energy consumption for the given suffix
-        Double co2e = workflowRecord.get("CO2e${suffix}") as Double
-        Double energy = workflowRecord.get("energy_consumption${suffix}") as Double
+        BigDecimal co2e = workflowRecord.get("CO2e${suffix}") as Double
+        BigDecimal energy = workflowRecord.get("energy_consumption${suffix}") as Double
 
         if (co2e != null) {
             CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(co2e)

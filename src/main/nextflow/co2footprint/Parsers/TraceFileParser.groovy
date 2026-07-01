@@ -64,8 +64,8 @@ class TraceFileParser {
                                 time
                             }
                         }
-                        case 'perc' -> value.replace('%', '').toDouble()
-                        case 'num' -> value.toDouble()
+                        case 'perc' -> value.replace('%', '') as BigDecimal
+                        case 'num' -> value as BigDecimal
                         default -> value
                     }
                 }
