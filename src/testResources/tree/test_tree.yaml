@@ -34,9 +34,6 @@ values:
   powerdraw_cpu:
     raw: {value: 7.0, type: Number, unit: W, scale: ''}
     readable: 7 W
-  powerdraw_memory:
-    raw: {value: 0.3725, type: Number, unit: W, scale: ''}
-    readable: 372.5 mW
   cpu_model:
     raw: {value: Some model, type: str}
     readable: Some model
@@ -89,9 +86,6 @@ children:
     powerdraw_cpu:
       raw: &id011 {value: 7.0, type: Number, unit: W, scale: ''}
       readable: 7 W
-    powerdraw_memory:
-      raw: &id012 {value: 0.3725, type: Number, unit: W, scale: ''}
-      readable: 372.5 mW
     cpu_model:
       raw: &id013 {value: Some model, type: str}
       readable: Some model
@@ -144,9 +138,6 @@ children:
       powerdraw_cpu:
         raw: *id011
         readable: 7 W
-      powerdraw_memory:
-        raw: *id012
-        readable: 372.5 mW
       cpu_model:
         raw: *id013
         readable: Some model
@@ -199,9 +190,6 @@ children:
     powerdraw_cpu:
       raw: *id011
       readable: 7 W
-    powerdraw_memory:
-      raw: *id012
-      readable: 372.5 mW
     cpu_model:
       raw: *id013
       readable: Some model
@@ -254,9 +242,6 @@ children:
       powerdraw_cpu:
         raw: *id011
         readable: 7 W
-      powerdraw_memory:
-        raw: *id012
-        readable: 372.5 mW
       cpu_model:
         raw: *id013
         readable: Some model

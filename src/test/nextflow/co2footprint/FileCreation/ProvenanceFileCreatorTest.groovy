@@ -32,7 +32,8 @@ class ProvenanceFileCreatorTest extends Specification {
                         raw_energy_processor: 11.41 as BigDecimal,
                         raw_energy_memory: 2.6075 as BigDecimal,
                         pue: 1.0,
-                        powerdraw_memory: 0.3725,
+                        cpu_energy_function: 'runtime_h * numberOfCores * powerdrawPerCore * coreUsage',
+                        memory_energy_function:'runtime_h * memory * 0.3725',
                 ]),
         )
         CO2RecordTree expectedProcessTree = new CO2RecordTree('observerTestProcess', [level: 'process'], null, null, [expectedTaskTree])

@@ -84,14 +84,6 @@
             "readable": "11.41 W"
         }
     },
-    "powerdraw_memory": {
-        "@type": "schema:QuantitativeValue",
-        "value": 0.3725,
-        "unitText": "W",
-        "additionalProperty": {
-            "readable": "372.5 mW"
-        }
-    },
     "raw_energy_processor": {
         "@type": "schema:QuantitativeValue",
         "value": 0.004560830920422,
@@ -203,14 +195,6 @@
                 "unitText": "W",
                 "additionalProperty": {
                     "readable": "11.41 W"
-                }
-            },
-            "powerdraw_memory": {
-                "@type": "schema:QuantitativeValue",
-                "value": 0.3725,
-                "unitText": "W",
-                "additionalProperty": {
-                    "readable": "372.5 mW"
                 }
             },
             "raw_energy_processor": {
@@ -340,14 +324,6 @@
                             "readable": "11.41 W"
                         }
                     },
-                    "powerdraw_memory": {
-                        "@type": "schema:QuantitativeValue",
-                        "value": 0.3725,
-                        "unitText": "W",
-                        "additionalProperty": {
-                            "readable": "372.5 mW"
-                        }
-                    },
                     "raw_energy_processor": {
                         "@type": "schema:QuantitativeValue",
                         "value": 0.001537180678530,
@@ -473,14 +449,6 @@
                         "unitText": "W",
                         "additionalProperty": {
                             "readable": "11.41 W"
-                        }
-                    },
-                    "powerdraw_memory": {
-                        "@type": "schema:QuantitativeValue",
-                        "value": 0.3725,
-                        "unitText": "W",
-                        "additionalProperty": {
-                            "readable": "372.5 mW"
                         }
                     },
                     "raw_energy_processor": {

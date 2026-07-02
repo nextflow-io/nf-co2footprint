@@ -90,10 +90,6 @@ class CO2FootprintConfig implements ConfigScope {
     BigDecimal pue
 
     @ConfigOption
-    @Description('Power draw of memory [W per GB].')
-    final BigDecimal powerdrawMem
-
-    @ConfigOption
     @Description('Turns off pattern matching of CPU names.')
     final Boolean ignoreCpuModel
 

@@ -1,6 +1,6 @@
 {
   "trace_test.txt": {
-    "checksum": "3f7553e2afc6bcfc2e17ef166afebde8",
+    "checksum": "72b7a33fa1558340cf0361ccf0a0eaf8",
     "num_lines": 3
   },
   "summary_test.txt": {
@@ -13,12 +13,12 @@
     "num_lines": 1813
   },
   "provenance_test.json": {
-    "checksum": "a58a0c22320bb1f4553a3811ab1d9357",
-    "num_lines": 464
+    "checksum": "f5c302fd9dd2492b6ce4e37d29f277e7",
+    "num_lines": 488
   },
   "provenance-hello.json": {
-    "checksum": "04776df78086b941bcf591417a7a02b8",
-    "excluded_lines": [69, 78, 87, 336, 345, 354, 643, 652, 661, 978, 987, 996, 1327, 1336, 1345, 1676, 1685, 1694, 2025, 2034, 2043],
-    "num_lines": 2306
+    "checksum": "c53a753d3b883395c39fc3c0861d5644",
+    "excluded_lines": [69, 78, 87, 342, 351, 360, 655, 664, 673, 996, 1005, 1014, 1351, 1360, 1369, 1706, 1715, 1724, 2061, 2070, 2079],
+    "num_lines": 2348
   }
 }

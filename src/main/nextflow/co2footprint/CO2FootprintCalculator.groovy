@@ -118,11 +118,6 @@ class CO2FootprintCalculator {
             throw new MissingValueException(message)
         }
 
-        final BigDecimal powerdrawMem  = useConfiguredOrPrevious(
-                config, ['powerdrawMem'], config.powerdrawMem,
-                trace, 'powerdraw_memory', isPostRun
-        ) // [W per GB]
-
         /* ===== Data Center Effectiveness and Carbon Intensity ===== */
 
          // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
