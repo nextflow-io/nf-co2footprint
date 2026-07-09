@@ -24,6 +24,7 @@ nf-co2footprint options:
   powerdrawMem: 0.3725
   pue: 1.0
   customCpuTdpFile: null
-  reportFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir4983784543560255214/report_test.html
-  summaryFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir4983784543560255214/summary_test.txt
-  traceFile: /var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir4983784543560255214/trace_test.txt
+  provenanceFile: /FAntasy/PAth45
+  reportFile: /FAntasy/PAth1
+  summaryFile: /FAntasy/PAth2
+  traceFile: /FAntasy/PAth4
