@@ -5,6 +5,7 @@ import nextflow.NextflowMeta
 import nextflow.Session
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.TestHelpers.FileChecker
+import nextflow.co2footprint.TestHelpers.Regexes
 import nextflow.executor.NopeExecutor
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskId
@@ -218,20 +219,17 @@ class CO2FootprintObserverTest extends Specification{
                 'summary': [
                         path: summaryPath,
                         replacements: [
-                                'provenanceFile: (.+)$': [provenancePath.toString()],
-                                'reportFile: (.+)$': [reportPath.toString()],
-                                'summaryFile: (.+)$': [summaryPath.toString()],
-                                'traceFile: (.+)$': [tracePath.toString()],
+                                (Regexes.summaryProvenanceFile): [provenancePath.toString()],
+                                (Regexes.summaryReportFile): [reportPath.toString()],
+                                (Regexes.summarySummaryFile): [summaryPath.toString()],
+                                (Regexes.summaryTraceFile): [tracePath.toString()],
                         ]
                 ],
                 'report': [
                         path: reportPath,
                         replacements: [
-                                ('\\{"option":"provenanceFile","value":"([^"]*)"\\}.*?\\{"option":"reportFile","value":"([^"]*)"\\}.*?' +
-                                        '\\{"option":"summaryFile","value":"([^"]*)"\\}.*?\\{"option":"traceFile","value":"([^"]*)"\\}'): [
-                                        provenancePath.toString(), reportPath.toString(), summaryPath.toString(), tracePath.toString()
-                                ],
-                                '<span id="workflow_start">(.*?)</span> - <span id="workflow_complete">(.*?)</span>' : [
+                                (Regexes.filesReportFile): [ provenancePath, reportPath, summaryPath, tracePath ] as List<String>,
+                                (Regexes.workflowStartEndReportFile) : [
                                         time.format('dd-MMM-YYYY HH:mm:ss'), time.format('dd-MMM-YYYY HH:mm:ss')
                                 ]
                         ]

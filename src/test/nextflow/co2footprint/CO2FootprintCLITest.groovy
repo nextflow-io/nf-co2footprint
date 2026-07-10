@@ -1,6 +1,7 @@
 package nextflow.co2footprint
 
 import nextflow.co2footprint.TestHelpers.FileChecker
+import nextflow.co2footprint.TestHelpers.Regexes
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
@@ -43,14 +44,8 @@ class CO2FootprintCLITest extends  Specification {
                 'trace': [path: tracePath],
                 'report': [
                     path: reportPath,
-                    replacements: [
-                        '<dd><pre class="nfcommand"><code>nextflow plugin nf-co2footprint:postRun --tracePath (.+?) --config (.+?)</code></pre></dd>' : [
-                                tracePath2, configPath
-                        ]
-                    ],
-                    exclusions: [
-                        /"type":"DateTime","unit":"ms","description":"Unix time","scale":""\},"readable":("\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.?\d*")}/
-                    ]
+                    replacements: [ (Regexes.traceConfigPostRun): [tracePath2, configPath] ],
+                    exclusions: [ Regexes.readAbleDateTimeReport ]
                 ],
                 'provenance': [path: provenancePath],
         ]
@@ -76,14 +71,8 @@ class CO2FootprintCLITest extends  Specification {
             'trace': [path: tracePath],
             'report': [
                 path: reportPath,
-                replacements: [
-                    '<dd><pre class="nfcommand"><code>nextflow plugin nf-co2footprint:postRun --tracePath (.+?) --config (.+?)</code></pre></dd>' : [
-                        tracePath2, configPath
-                    ]
-                ],
-                exclusions: [
-                    /"type":"DateTime","unit":"ms","description":"Unix time","scale":""\},"readable":("\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.?\d*")}/
-                ]
+                replacements: [ (Regexes.traceConfigPostRun): [tracePath2, configPath] ],
+                exclusions: [ Regexes.readAbleDateTimeReport ]
             ],
             'provenance': [path: provenancePath],
         ]
