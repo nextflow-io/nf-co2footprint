@@ -38,19 +38,20 @@ class CO2FootprintCLITest extends  Specification {
 
         then:
         exitCode == 0
-
-        // Check Trace File
-        fileChecker.runChecks(tracePath)
-
-        // Check Report File
-        fileChecker.runChecks(reportPath, [
-                '<dd><pre class="nfcommand"><code>nextflow plugin nf-co2footprint:postRun --tracePath (.+?) --config (.+?)</code></pre></dd>' : [
-                        tracePath2, configPath
-                ]
-        ])
-
-        // Check provenance file
-        fileChecker.runChecks(provenancePath)
+        
+        Map multFileCheckConfig = [
+                'trace': [path: tracePath],
+                'report': [
+                    path: reportPath,
+                    replacements: [
+                        '<dd><pre class="nfcommand"><code>nextflow plugin nf-co2footprint:postRun --tracePath (.+?) --config (.+?)</code></pre></dd>' : [
+                                tracePath2, configPath
+                        ]
+                    ]
+                ],
+                'provenance': [path: provenancePath],
+        ]
+        fileChecker.runMultiFileChecks(multFileCheckConfig)
     }
 
     def 'test CLI post other delimiter'() {
@@ -67,18 +68,19 @@ class CO2FootprintCLITest extends  Specification {
 
         then:
         exitCode == 0
-        
-        // Check Trace File
-        fileChecker.runChecks(tracePath)
 
-        // Check Report File
-        fileChecker.runChecks(reportPath, [
-                '<dd><pre class="nfcommand"><code>nextflow plugin nf-co2footprint:postRun --tracePath (.+?) --config (.+?)</code></pre></dd>' : [
+        Map multFileCheckConfig = [
+            'trace': [path: tracePath],
+            'report': [
+                path: reportPath,
+                replacements: [
+                    '<dd><pre class="nfcommand"><code>nextflow plugin nf-co2footprint:postRun --tracePath (.+?) --config (.+?)</code></pre></dd>' : [
                         tracePath2, configPath
+                    ]
                 ]
-        ])
-
-        // Check provenance file
-        fileChecker.runChecks(provenancePath)
+            ],
+            'provenance': [path: provenancePath],
+        ]
+        fileChecker.runMultiFileChecks(multFileCheckConfig)
     }
 }

@@ -20,6 +20,7 @@ import groovy.yaml.YamlSlurper
 import org.opentest4j.AssertionFailedError
 import org.yaml.snakeyaml.Yaml
 
+import java.lang.reflect.Field
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
@@ -202,7 +203,7 @@ class FileChecker {
         return errorFound
     }
 
-    void runChecks(Path path, Map<String, List<String>> replacements=[:], Path recordedPath=null){
+    void runChecks(Path path, Map<String, List<String>> replacements=[:], List<String> exclusions=[], Path recordedPath=null){
         // Set errors to collection
         this.collectErrors = true
 
@@ -220,8 +221,8 @@ class FileChecker {
         replacements.putAll(checkInfoReplacements)
         
         // Define check file instances
-        CheckFile checkFile = CheckFile.of(path, [:], excludedLines, 1)
-        CheckFile recordedCheckFile = CheckFile.of(recordedPath, replacements, excludedLines, 1)
+        CheckFile checkFile = CheckFile.of(path, [:], exclusions, excludedLines, 1)
+        CheckFile recordedCheckFile = CheckFile.of(recordedPath, replacements, exclusions, excludedLines, 1)
 
         // Prepare new file check infos
         Map<String, Object> newCheckInfos = [:]
@@ -247,13 +248,18 @@ class FileChecker {
 
         // Perform full line by line comparison, if checksum did not match
         if (newChecksum) {
-            compareFiles(checkFile, recordedCheckFile)
+            String message = "The generated checksum `${newChecksum}` does not match with the recorded `${checksum}`"
+            boolean errorFound = compareFiles(checkFile, recordedCheckFile)
+            if (!errorFound) {
+                message += '\nℹ️ The line-by-line match revealed no difference, the checksum should be updated.'
+            }
+            addError( new AssertionFailedError(message) )
         }
         
         // Append additional info to new check JSON
         if (excludedLines) {
             Integer lineDifference = recordedCheckFile.lines.size() - checkFile.lines.size()
-            newCheckInfos['excluded_lines'] = excludedLines.collect { Integer excludedLine -> excludedLines - lineDifference }
+            newCheckInfos['excluded_lines'] = excludedLines.collect { Integer excludedLine -> excludedLine - lineDifference }
         }
 
         // Reset error collection
@@ -264,19 +270,13 @@ class FileChecker {
             Path failedSnapshotPath = failPath.resolve(path.fileName)
             // Copy snapshot
             Files.copy(path, failedSnapshotPath, StandardCopyOption.REPLACE_EXISTING)
-
-            errors.eachWithIndex { Throwable error, Integer i->
-                System.err.println("----------------- File Checker Error ${i}:")
-                error.printStackTrace()
-                System.err.println()
-            }
             
             Object finalConfig = [(recordedPath.getBaseName()): newCheckInfos]
             String yamlString = yaml.dump(finalConfig)
             // Print info to adopt the changes
             String message =
                 "\n❌ File checks for '${path}' failed,\n" +
-                "🔎 The actual error messages can be found above as a list.\n" +
+                "🔎 The actual error messages can be found below as a list.\n" +
                 "ℹ️ You may want to have a look at the difference between the new and recorded file:\n" +
                 "NEW: ${failedSnapshotPath} <-> RECORDED: ${recordedPath}.\n" +
                 "💡 Suggested new fileCheck configuration (apply this to `${checksInfoPath}`):\n" +
@@ -284,7 +284,47 @@ class FileChecker {
                 "⚠️ Pay attention to the replacements, as they may differ from the suggested ones depending on your changes.\n"
 
             Exception checkFailedException = new Exception(message)
+            
+            // Add errors to general error
+            errors.eachWithIndex { Throwable error, Integer i->
+                Throwable numberError = new Error("----------------- File Checker Error ${i}:\n")
+                numberError.addSuppressed(error)
+                checkFailedException.addSuppressed(numberError)
+            }
+            errors = []
             throw checkFailedException
         }
+    }
+
+    /**
+     * Check multiple files in a single scoop.
+     * 
+     * @param fileCheckMap Map with all options assigned to a name.
+     */
+    void runMultiFileChecks(Map<String, Map<String, Object>> fileCheckMap) {
+        Map<String, Throwable> errorsMulti = [:]
+        fileCheckMap.each { String runName, Map<String, Object> options ->
+            try {
+                runChecks(
+                        options['path'] as Path,
+                        options.get('replacements', [:]) as Map<String, List<String>>,
+                        options.get('searchExclusions', []) as List<String>,
+                        options.get('recordedPath') as Path
+                )
+            }
+            catch (Throwable error) {
+                errorsMulti[runName] = error
+            }
+        }
+        
+        if(errorsMulti) {
+            String message = "\n❌ File checks failed for the following: ${errorsMulti.keySet()}\n"
+            Exception checkFailedExceptionMulti = new Exception(message)
+            
+            errorsMulti.each { String name, Throwable error -> checkFailedExceptionMulti.addSuppressed(error)}
+            
+            throw checkFailedExceptionMulti
+        }
+        
     }
 }

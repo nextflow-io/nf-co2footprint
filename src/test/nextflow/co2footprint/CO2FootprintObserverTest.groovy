@@ -213,29 +213,31 @@ class CO2FootprintObserverTest extends Specification{
         observer.renderFiles()
 
         then:
-        // Check Trace File
-        fileChecker.runChecks(tracePath)
-        
-        // Check Summary File
-        fileChecker.runChecks(summaryPath, [
-                'provenanceFile: (.+)$': [provenancePath.toString()],
-                'reportFile: (.+)$': [reportPath.toString()],
-                'summaryFile: (.+)$': [summaryPath.toString()],
-                'traceFile: (.+)$': [tracePath.toString()],
-        ])
-
-        // Check Report File
-        fileChecker.runChecks(reportPath, [
-                ('\\{"option":"provenanceFile","value":"([^"]*)"\\}.*?\\{"option":"reportFile","value":"([^"]*)"\\}.*?' + 
-                 '\\{"option":"summaryFile","value":"([^"]*)"\\}.*?\\{"option":"traceFile","value":"([^"]*)"\\}'): [
-                        provenancePath.toString(), reportPath.toString(), summaryPath.toString(), tracePath.toString()
+        Map multFileCheckConfig = [
+                'trace': [path: tracePath],
+                'summary': [
+                        path: summaryPath,
+                        replacements: [
+                                'provenanceFile: (.+)$': [provenancePath.toString()],
+                                'reportFile: (.+)$': [reportPath.toString()],
+                                'summaryFile: (.+)$': [summaryPath.toString()],
+                                'traceFile: (.+)$': [tracePath.toString()],
+                        ]
                 ],
-                '<span id="workflow_start">(.*?)</span> - <span id="workflow_complete">(.*?)</span>' : [
-                        time.format('dd-MMM-YYYY HH:mm:ss'), time.format('dd-MMM-YYYY HH:mm:ss')
-                ]
-        ])
-        
-        // Check provenance file
-        fileChecker.runChecks(provenancePath)
+                'report': [
+                        path: reportPath,
+                        replacements: [
+                                ('\\{"option":"provenanceFile","value":"([^"]*)"\\}.*?\\{"option":"reportFile","value":"([^"]*)"\\}.*?' +
+                                        '\\{"option":"summaryFile","value":"([^"]*)"\\}.*?\\{"option":"traceFile","value":"([^"]*)"\\}'): [
+                                        provenancePath.toString(), reportPath.toString(), summaryPath.toString(), tracePath.toString()
+                                ],
+                                '<span id="workflow_start">(.*?)</span> - <span id="workflow_complete">(.*?)</span>' : [
+                                        time.format('dd-MMM-YYYY HH:mm:ss'), time.format('dd-MMM-YYYY HH:mm:ss')
+                                ]
+                        ]
+                ],
+                'provenance': [path: provenancePath],
+        ]
+        fileChecker.runMultiFileChecks(multFileCheckConfig)
     }
 }

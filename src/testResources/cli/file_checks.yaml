@@ -14,7 +14,6 @@ provenance_test.json:
   num_lines: 508
 
 provenance-hello.json:
-  checksum: "aac3fccc7107308b14c22bc4bbff4538"
-  excluded_lines: [38, 47, 56, 368, 377, 386, 653, 662, 671, 978, 987, 996, 1317, 1326, 1335, 1670, 1679, 1688, 2023, 2032, 2041, 2376, 2385, 2394]
+  checksum: "9000313b1192ff88737c730c0b2caa4c"
   num_lines: 2657
 

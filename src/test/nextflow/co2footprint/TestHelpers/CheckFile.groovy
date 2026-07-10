@@ -2,8 +2,6 @@ package nextflow.co2footprint.TestHelpers
 
 import java.nio.file.Path
 import java.security.MessageDigest
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 /**
  * A class to create files that can be easily checked in tests.
@@ -13,7 +11,7 @@ class CheckFile {
     final String content
     final List<String> lines
     final List<Integer> excludedLines
-    String checksum = null
+    String checksum
 
     /**
      * Prepare file so it is easier checkable by replacing some of its content and remove some lines.
@@ -23,15 +21,19 @@ class CheckFile {
      * @param excludedLines
      * @param excludedLineShift
      */
-    CheckFile(List<String> lines, Map<String, List<String>> replacements, List<Integer> excludedLines, Integer excludedLineShift) {
+    CheckFile(List<String> lines, Map<String, List<String>> replacements, List<String> exclusions, List<Integer> excludedLines, Integer excludedLineShift) {
         this.excludedLines = excludedLines
         lines = excludeLines(lines, excludedLines, excludedLineShift)
+        lines = replaceInTemplate(lines, exclusions.collectEntries({ String regex -> [regex, ''] }))
         this.lines = replaceInTemplate(lines, replacements)
         this.content = this.lines.join(System.lineSeparator())
     }
     
     String getChecksum() {
-        return checksum ?: calculateMD5(content)
+        if (checksum == null) {
+            checksum = calculateMD5(content)
+        }
+        return checksum
     }
     
     /**
@@ -41,15 +43,16 @@ class CheckFile {
      * @param replacements - A map with grouped regular expressions and their replacements
      * @return The lines with replacements as a String
      */
-    static List<String> replaceInTemplate(List<String> lines, Map<String, List<String>> replacements) {
+    static List<String> replaceInTemplate(List<String> lines, Map<String, Object> replacements) {
         List<String> newLines = []
         if (replacements.size() > 0) {
             lines.each { String line ->
                 String currentLine = line
-                replacements.each { String regex, List<String> replacementList ->
-                    line.eachMatch(regex) {
-                        replacementList.eachWithIndex { String replacement, int i ->
-                            currentLine = currentLine.replace(it[i+1], replacement)
+                replacements.each { String regex, def replacementList ->
+                    line.eachMatch(regex) { 
+                        it.drop(1).eachWithIndex { String group, int i ->
+                            String replacement = replacementList instanceof String ? replacementList : replacementList[i]
+                            currentLine = currentLine.replace(group, replacement)
                         }
                     }
                 }
@@ -77,20 +80,20 @@ class CheckFile {
         return lines
     }
 
-    static CheckFile of(List<String> lines, Map<String, List<String>> replacements, List<Integer> excludedLines = [], Integer excludedLineShift=0) {
-        return new CheckFile(lines, replacements, excludedLines, excludedLineShift)
+    static CheckFile of(List<String> lines, Map<String, List<String>> replacements, List<String> exclusions, List<Integer> excludedLines = [], Integer excludedLineShift=0) {
+        return new CheckFile(lines, replacements, exclusions, excludedLines, excludedLineShift)
     }
 
-    static CheckFile of(String content, Map<String, List<String>> replacements, List<Integer> excludedLines = [], Integer excludedLineShift=0) {
-        return new CheckFile(content.readLines(), replacements, excludedLines, excludedLineShift)
+    static CheckFile of(String content, Map<String, List<String>> replacements, List<String> exclusions, List<Integer> excludedLines = [], Integer excludedLineShift=0) {
+        return of(content.readLines(), replacements, exclusions, excludedLines, excludedLineShift)
     }
 
-    static CheckFile of(Path path, Map<String, List<String>> replacements, List<Integer> excludedLines = [], Integer excludedLineShift=0) {
-        return new CheckFile(path.readLines(), replacements, excludedLines, excludedLineShift)
+    static CheckFile of(Path path, Map<String, List<String>> replacements, List<String> exclusions, List<Integer> excludedLines = [], Integer excludedLineShift=0) {
+        return of(path.readLines(), replacements, exclusions, excludedLines, excludedLineShift)
     }
 
-    static CheckFile of(File file, Map<String, List<String>> replacements, List<Integer> excludedLines = [], Integer excludedLineShift=0) {
-        return new CheckFile(file.readLines(), replacements, excludedLines, excludedLineShift)
+    static CheckFile of(File file, Map<String, List<String>> replacements, List<String> exclusions, List<Integer> excludedLines = [], Integer excludedLineShift=0) {
+        return of(file.readLines(), replacements, exclusions, excludedLines, excludedLineShift)
     }
 
     /**
@@ -136,8 +139,8 @@ class CheckFile {
      * @return Returns other checksum if they do not match
      */
     String compareChecksums(String otherChecksum){
-       if(checksum != otherChecksum) { 
-            return otherChecksum
+       if(getChecksum() != otherChecksum) { 
+            return getChecksum()
        }
        return null
     }
@@ -149,7 +152,7 @@ class CheckFile {
      * @return New checksum
      */
     String compareChecksums(CheckFile otherCheckFile){
-        return compareChecksums(otherCheckFile.checksum)
+        return compareChecksums(otherCheckFile.getChecksum())
     }
 
     /**
