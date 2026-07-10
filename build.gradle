@@ -98,7 +98,7 @@ dependencies {
 }
 
 // Plugin version
-version = '1.3.0'
+version = '1.4.0'
 
 nextflowPlugin {
     // Minimum Nextflow version

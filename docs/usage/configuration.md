@@ -10,11 +10,11 @@ The following table explains since which plugin version a new minimum Nextflow v
 
 | nf-co2footprint version | Nextflow version |
 |-------------------------|------------------|
-| 1.3.0                   | >= 26.04.0       |
-| 1.0.0-rc.1              | >= 24.10.6       |
-| 1.0.0-rc                | >= 24.10.5       |
-| 1.0.0-beta1             | >= 24.08.0-edge  |
-| 1.0.0-beta              | >= 23.07.0-edge  |
+| >=1.3.0                 | >= 26.04.0       |
+| >=1.0.0-rc.1            | >= 24.10.6       |
+| >=1.0.0-rc              | >= 24.10.5       |
+| >=1.0.0-beta1           | >= 24.08.0-edge  |
+| >=1.0.0-beta            | >= 23.07.0-edge  |
 
 ## General usage
 To test if the plugin works on your system please follow the quick start guide ([Quick Start](https://nextflow-io.github.io/nf-co2footprint/#quick-start)) on a small pipeline like [nextflow-io/hello](https://github.com/nextflow-io/hello).
@@ -24,7 +24,7 @@ To customize the plugin settings to your computing environment and preferences, 
 ???+ example
     ```groovy title="nextflow.config"
     plugins {
-      id 'nf-co2footprint@1.3.0'
+      id 'nf-co2footprint@1.4.0'
     }
     
     // Optional example config settings for CO₂ reporting:
@@ -135,7 +135,7 @@ For more information, see [Parameters](parameters.md).
 ???+ example
     ```groovy title="nextflow_cloud.config"
     plugins {
-      id 'nf-co2footprint@1.3.0'
+      id 'nf-co2footprint@1.4.0'
     }
     
     params {

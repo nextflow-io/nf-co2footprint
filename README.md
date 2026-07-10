@@ -27,7 +27,7 @@ Declare the plugin in your Nextflow pipeline configuration file:
 
 ```groovy title="nextflow.config"
 plugins {
-  id 'nf-co2footprint@1.3.0'
+  id 'nf-co2footprint@1.4.0'
 }
 ```
 
@@ -79,7 +79,7 @@ We additionally thank the following people for their extensive assistance in the
 
 ### How to cite:
 ```text
-J. Carl, N. Volkmann, J. Mir-Pedrol, P. Ewels, S. Nahnsen, S. Krakau nextflow-io/nf-co2footprint v1.3.0. (Mar., 2026). nextflow-io. Available: https://github.com/nextflow-io/nf-co2footprint
+J. Carl, N. Volkmann, J. Mir-Pedrol, P. Ewels, S. Nahnsen, S. Krakau nextflow-io/nf-co2footprint v1.4.0. (Mar., 2026). nextflow-io. Available: https://github.com/nextflow-io/nf-co2footprint
 ```
 ```Bibtex
 @software{nf_co2footprint_plugin,
@@ -93,7 +93,7 @@ J. Carl, N. Volkmann, J. Mir-Pedrol, P. Ewels, S. Nahnsen, S. Krakau nextflow-io
     month   =   {March}
     year    =   {2026}
     publisher = {Nextflow-io}
-    version =   {v1.3.0}
+    version =   {v1.4.0}
     url     =   {https://doi.org/10.5281/zenodo.14622304}
     doi     =   {10.5281/zenodo.14622304}
 }

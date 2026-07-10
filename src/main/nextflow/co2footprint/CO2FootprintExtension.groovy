@@ -37,6 +37,7 @@ class CO2FootprintExtension extends PluginExtensionPoint {
     void init(Session session) {
         factory = new CO2FootprintFactory()
         this.session = session
+        CO2FootprintFactory.adaptLogging()
     }
 
     /**

@@ -519,7 +519,7 @@ $(function () {
         { title: 'allocated cpus', data: 'cpus' },
         { title: '%cpu', data: '%cpu' },
         { title: 'allocated memory', data: 'memory' },
-        { title: 'realtime', data: 'time' },
+        { title: 'realtime', data: 'realtime' },
         { title: 'power draw (in W/core)', data: 'powerdraw_cpu' },
         { title: 'cpu model', data: 'cpu_model' },
       ],
