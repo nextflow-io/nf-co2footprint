@@ -51,7 +51,7 @@ class CheckFile {
                 replacements.each { String regex, def replacementList ->
                     line.eachMatch(regex) { 
                         it.drop(1).eachWithIndex { String group, int i ->
-                            String replacement = replacementList instanceof String ? replacementList : replacementList[i]
+                            String replacement = replacementList instanceof List ? replacementList[i] : replacementList
                             currentLine = currentLine.replace(group, replacement)
                         }
                     }

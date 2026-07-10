@@ -77,6 +77,9 @@ class CO2FootprintCLITest extends  Specification {
                     '<dd><pre class="nfcommand"><code>nextflow plugin nf-co2footprint:postRun --tracePath (.+?) --config (.+?)</code></pre></dd>' : [
                         tracePath2, configPath
                     ]
+                ],
+                exclusions: [
+                    /"type":"DateTime","unit":"ms","description":"Unix time","scale":""\},"readable":("\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.?\d*")}/
                 ]
             ],
             'provenance': [path: provenancePath],

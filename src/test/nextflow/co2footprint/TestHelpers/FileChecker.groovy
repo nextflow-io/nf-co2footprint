@@ -308,7 +308,7 @@ class FileChecker {
                 runChecks(
                         options['path'] as Path,
                         options.get('replacements', [:]) as Map<String, List<String>>,
-                        options.get('searchExclusions', []) as List<String>,
+                        options.get('exclusions', []) as List<String>,
                         options.get('recordedPath') as Path
                 )
             }
