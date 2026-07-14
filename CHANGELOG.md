@@ -3,7 +3,7 @@
 - 
 
 ## Bug Fixes:
--
+- Lack of display for memory optimization total energy consumption save
 
 ## Misc:
 - 

@@ -88,9 +88,9 @@ function buildUniqueLabels(keys) {
     let depth = 1
     let label = parts[parts.length - 1]
     while (
-      depth < parts.length &&
-      keys.filter(k => k === label || k.endsWith(':' + label)).length > 1
-    ) {
+        depth < parts.length &&
+        keys.filter(k => k === label || k.endsWith(':' + label)).length > 1
+        ) {
       depth++
       label = parts.slice(parts.length - depth).join(':')
     }
@@ -132,14 +132,14 @@ function findValue(obj) {
  * Extracts a process-level field from the data summary by key.
  * @param {object} list - The list object
  * @param {string} key - The field name (e.g. 'peak_rss', 'memory')
- * @returns List of selected 
+ * @returns List of selected
  */
 function selectEntryRawValue(list, key) {
   let newList = []
   for(const entry of list) {
     newList.push(entry[key].raw.value)
   }
-  
+
   return newList
 }
 
@@ -187,13 +187,13 @@ function sortTasksAndProcesses() {
     task.start.time = new Date(task.start.raw.value)
     task.complete.time = new Date(task.complete.raw.value)
   })
-  
+
   // Sort tasks by start time
   window.data.trace = window.data.trace.sort( (a, b) => a.start.time - b.start.time )
 
   window.data.workflowStart = window.data.trace[0].start.time
   window.data.workflowEnd = null
-  
+
   // Insert tasks by start to a process (also sorted by start through insertion)
   for (const task of window.data.trace) {
     // Create entry in process
@@ -201,16 +201,16 @@ function sortTasksAndProcesses() {
     if (!sortedTasksInProcesses.has(processKey)) {
       sortedTasksInProcesses.set(processKey, [])
     }
-    
+
     // Add task in starting order to process
     sortedTasksInProcesses.get(processKey).push(task)
-    
+
     // Search for workflow completion time
     if (window.data.workflowEnd == null || task.complete.time > window.data.workflowEnd) {
       window.data.workflowEnd = task.complete.time
     }
   }
-  
+
   return sortedTasksInProcesses
 }
 
@@ -260,7 +260,7 @@ $(function () {
 
   // ── Build shortest unique display labels via shared utility ────
   window.data.processDisplayNames = buildUniqueLabels(Array.from(sortedTasksInProcesses.keys()))
-  
+
   // Must be executed after sortTasksAndProcesses()
   collect_task_time_steps()
 
@@ -327,12 +327,12 @@ $(function () {
       // When sorting is active, order process keys ascending by their median
       // value so the largest emitter appears at the top of the horizontal chart.
       const keys = state.sorted
-        ? [...allProcessKeys].sort((a, b) => {
+          ? [...allProcessKeys].sort((a, b) => {
             const aVals = window.data.summary[a][`${state.metric}${suffix}`] ?? []
             const bVals = window.data.summary[b][`${state.metric}${suffix}`] ?? []
             return arrMedian(aVals) - arrMedian(bVals)
           })
-        : [...allProcessKeys]
+          : [...allProcessKeys]
 
       const displayNames = keys.map(k => summaryDisplayName.get(k) ?? k)
       // Truncate labels that are too long to fit comfortably on the y-axis;
@@ -345,7 +345,7 @@ $(function () {
       // One box-plot trace per process.
       const traces = keys.map((key, i) => {
         const vals = (window.data.summary[key][`${state.metric}${suffix}`] ?? [])
-          .map(v => isEnergy ? v * 1000 : v)
+            .map(v => isEnergy ? v * 1000 : v)
         const name = displayNames[i]
         const shortName = shortNames[i]
         return {
@@ -398,21 +398,21 @@ $(function () {
               // Double-click zoom-reset — restore to full height.
               heightSyncInProgress = true
               Plotly.relayout(plotDiv, { height: peFullHeight })
-                .then(() => { heightSyncInProgress = false })
-                .catch(() => { heightSyncInProgress = false })
+                  .then(() => { heightSyncInProgress = false })
+                  .catch(() => { heightSyncInProgress = false })
               return
             }
             const y0 = eventData['yaxis.range[0]'] !== undefined ? eventData['yaxis.range[0]']
-              : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][0] : undefined)
+                : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][0] : undefined)
             const y1 = eventData['yaxis.range[1]'] !== undefined ? eventData['yaxis.range[1]']
-              : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][1] : undefined)
+                : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][1] : undefined)
             if (y0 !== undefined && y1 !== undefined) {
               const visibleCount = Math.max(1, Math.round(Math.abs(y1 - y0)))
               const newHeight = Math.max(120, Math.min(900, 80 + visibleCount * 42))
               heightSyncInProgress = true
               Plotly.relayout(plotDiv, { height: newHeight })
-                .then(() => { heightSyncInProgress = false })
-                .catch(() => { heightSyncInProgress = false })
+                  .then(() => { heightSyncInProgress = false })
+                  .catch(() => { heightSyncInProgress = false })
             }
           })
         }
@@ -534,9 +534,9 @@ $(function () {
         { className: "metrics", "targets": [5, 6] }
       ],
       dom:
-        "<'row'<'col-auto'l><'col text-center'B><'col-auto'f>>" +
-        "<'row'<'col-12'tr>>" +
-        "<'row'<'col'i><'col-auto'p>>",
+          "<'row'<'col-auto'l><'col text-center'B><'col-auto'f>>" +
+          "<'row'<'col-12'tr>>" +
+          "<'row'<'col'i><'col-auto'p>>",
       buttons: [
         {
           extend: 'colvisGroup',
@@ -631,7 +631,7 @@ $(function () {
       }
       accumulated.push(current)
     })
-    
+
     return accumulated
   }
 
@@ -642,8 +642,8 @@ $(function () {
   function make_ci_plot() {
     let ci_plot_data = []
 
-    // Tasks:
-    const accumulatedEnergyList= accumulate_over_tasks('energy_consumption')
+    // Energy consumption in kWh:
+    const accumulatedEnergyList= accumulate_over_tasks('energy_consumption').map( num => num /1000)
 
     // CI Records:
     let ciRecords = new Map()
@@ -689,28 +689,28 @@ $(function () {
 
     // Add CI trace to plot
     ci_plot_data.push(
-      {
-        name: "Carbon intensity",
-        x: timestamps, y: ciValues,
-        type: "scatter",
-        mode: "lines",
-        line: { shape: "hv", width: 3, color: ciColor },
-        // Clean hover with units; x is formatted by hoverformat in layout
-        hovertemplate: "<b>Carbon intensity</b><br>%{y:.1f} g/kWh<extra></extra>",
-      }
+        {
+          name: "Carbon intensity",
+          x: timestamps, y: ciValues,
+          type: "scatter",
+          mode: "lines",
+          line: { shape: "hv", width: 3, color: ciColor },
+          // Clean hover with units; x is formatted by hoverformat in layout
+          hovertemplate: "<b>Carbon intensity</b><br>%{y:.1f} g/kWh<extra></extra>",
+        }
     )
 
     // Add energy trace to plot
     ci_plot_data.push(
-      {
-        name: "Energy consumption",
-        x: window.data.timeStepsList, y: accumulatedEnergyList,
-        type: "scatter",
-        fill: "tozeroy", yaxis: "y2",
-        fillcolor: 'rgba(244, 162, 31, 0.24)',
-        line: { shape: "hv", width: 1.8, color: energyColor },
-        hovertemplate: "<b>Energy</b><br>%{y:.4f} kWh<extra></extra>",
-      }
+        {
+          name: "Energy consumption",
+          x: window.data.timeStepsList, y: accumulatedEnergyList,
+          type: "scatter",
+          fill: "tozeroy", yaxis: "y2",
+          fillcolor: 'rgba(244, 162, 31, 0.24)',
+          line: { shape: "hv", width: 1.8, color: energyColor },
+          hovertemplate: "<b>Energy</b><br>%{y:.4f} kWh<extra></extra>",
+        }
     )
 
     // Layout:
@@ -818,7 +818,7 @@ $(function () {
     if (!window.data.trace || window.data.trace.length === 0) {
       return null
     }
-    
+
     let swimlanePlotContainer = ensure_process_swimlane_container()
     if (!swimlanePlotContainer || sortedTasksInProcesses.size === 0) {
       return null
@@ -871,8 +871,8 @@ $(function () {
         const durationMinutes = (task.complete.time - task.start.time) / 60000.0
         const lane = laneAssignments[taskIndex]
         const laneY = laneCount === 1
-          ? processIndex
-          : processIndex - laneBandHalfHeight + lane * laneStep
+            ? processIndex
+            : processIndex - laneBandHalfHeight + lane * laneStep
         // Each task is a single scatter trace (lines+markers).  Using separate
         // traces rather than one combined trace per process means the tooltip
         // always shows exactly the hovered task's data.
@@ -939,42 +939,42 @@ $(function () {
     }
 
     return Plotly.newPlot(swimlanePlotContainer, swimlaneData, swimlaneLayout, { responsive: true })
-      .then(graphDiv => {
-        // Shrink/grow the swimlane height when the user zooms the y-axis.
-        // swimlaneLayout.height is the full height for all processes; the listener
-        // scales it down proportionally to the number of visible process rows.
-        const slFullHeight = swimlaneLayout.height
-        const SL_PX_PER_ROW = 42
-        const SL_BASE_HEIGHT = 80
-        let heightSyncInProgress = false
+        .then(graphDiv => {
+          // Shrink/grow the swimlane height when the user zooms the y-axis.
+          // swimlaneLayout.height is the full height for all processes; the listener
+          // scales it down proportionally to the number of visible process rows.
+          const slFullHeight = swimlaneLayout.height
+          const SL_PX_PER_ROW = 42
+          const SL_BASE_HEIGHT = 80
+          let heightSyncInProgress = false
 
-        graphDiv.on('plotly_relayout', eventData => {
-          if (heightSyncInProgress) return
-          if (eventData['yaxis.autorange']) {
-            // Double-click zoom-reset — restore to full height.
-            heightSyncInProgress = true
-            Plotly.relayout(graphDiv, { height: slFullHeight })
-              .then(() => { heightSyncInProgress = false })
-              .catch(() => { heightSyncInProgress = false })
-            return
-          }
-          const y0 = eventData['yaxis.range[0]'] !== undefined ? eventData['yaxis.range[0]']
-            : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][0] : undefined)
-          const y1 = eventData['yaxis.range[1]'] !== undefined ? eventData['yaxis.range[1]']
-            : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][1] : undefined)
-          if (y0 !== undefined && y1 !== undefined) {
-            const visibleCount = Math.max(1, Math.round(Math.abs(y1 - y0)))
-            const newHeight = Math.max(120, Math.min(900, SL_BASE_HEIGHT + visibleCount * SL_PX_PER_ROW))
-            if (Math.abs(newHeight - (graphDiv.layout.height ?? slFullHeight)) > 2) {
+          graphDiv.on('plotly_relayout', eventData => {
+            if (heightSyncInProgress) return
+            if (eventData['yaxis.autorange']) {
+              // Double-click zoom-reset — restore to full height.
               heightSyncInProgress = true
-              Plotly.relayout(graphDiv, { height: newHeight })
-                .then(() => { heightSyncInProgress = false })
-                .catch(() => { heightSyncInProgress = false })
+              Plotly.relayout(graphDiv, { height: slFullHeight })
+                  .then(() => { heightSyncInProgress = false })
+                  .catch(() => { heightSyncInProgress = false })
+              return
             }
-          }
+            const y0 = eventData['yaxis.range[0]'] !== undefined ? eventData['yaxis.range[0]']
+                : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][0] : undefined)
+            const y1 = eventData['yaxis.range[1]'] !== undefined ? eventData['yaxis.range[1]']
+                : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][1] : undefined)
+            if (y0 !== undefined && y1 !== undefined) {
+              const visibleCount = Math.max(1, Math.round(Math.abs(y1 - y0)))
+              const newHeight = Math.max(120, Math.min(900, SL_BASE_HEIGHT + visibleCount * SL_PX_PER_ROW))
+              if (Math.abs(newHeight - (graphDiv.layout.height ?? slFullHeight)) > 2) {
+                heightSyncInProgress = true
+                Plotly.relayout(graphDiv, { height: newHeight })
+                    .then(() => { heightSyncInProgress = false })
+                    .catch(() => { heightSyncInProgress = false })
+              }
+            }
+          })
+          return graphDiv
         })
-        return graphDiv
-      })
   }
 
   /**
@@ -1005,13 +1005,13 @@ $(function () {
     if (!window.data.timedTaskEvents || window.data.timedTaskEvents.length === 0) {
       return null
     }
-    
+
     // Collect constant powerdraw of memory
     let powerdrawMem = findValue(window.data.trace[0].powerdraw_memory)
-    
+
     // Track saved energy
     let savedEnergy = 0.0
-    
+
     // Make more complex accumulated lists
     // -> Accumulates memory energy and its hypothetical counterpart
     let timeStepsList = []
@@ -1028,38 +1028,39 @@ $(function () {
       if (recommendedMemory) {
         let runtimeH = ((findValue(taskEvent.task.complete) || 0) - (findValue(taskEvent.task.start) || 0)) / 3_600_000
         let hypotheticalMemoryEnergy = powerdrawMem * recommendedMemory * runtimeH
+        let memoryEnergy = findValue(taskEvent.task.raw_energy_memory)
         let taskId = findValue(taskEvent.task.task_id)
-        
+
         // Push previous values
         timeStepsList.push(taskEvent.time)
         customDataList.push({task_id: taskId, process: processName})
         accumulatedMemoryEnergyList.push(currentMemoryEnergy)
         accumulatedHypotheticalMemoryEnergyList.push(currentHypotheticalMemoryEnergy)
-        
+
         // Add or subtract current value
         if (taskEvent.eventType === 'start') {
-          currentMemoryEnergy += findValue(taskEvent.task.raw_energy_memory)
+          currentMemoryEnergy += memoryEnergy
           currentHypotheticalMemoryEnergy += hypotheticalMemoryEnergy
         }
         else if (taskEvent.eventType === 'complete') {
-          currentMemoryEnergy -= findValue(taskEvent.task.raw_energy_memory)
+          currentMemoryEnergy -= memoryEnergy
           currentHypotheticalMemoryEnergy -= hypotheticalMemoryEnergy
+
+          // Track saved Energy
+          savedEnergy += memoryEnergy - hypotheticalMemoryEnergy
         }
-        
+
         // Push updated values
         timeStepsList.push(taskEvent.time)
         customDataList.push({task_id: taskId, process: processName})
         accumulatedMemoryEnergyList.push(currentMemoryEnergy)
         accumulatedHypotheticalMemoryEnergyList.push(currentHypotheticalMemoryEnergy)
-        
-        // Track saved Energy
-        savedEnergy += currentMemoryEnergy-currentHypotheticalMemoryEnergy
       }
-      
+
     })
 
     if (timeStepsList.length === 0) return null
-    
+
     const memory_plot_data = [
       {
         name: "Allocated energy consumption",
@@ -1072,7 +1073,7 @@ $(function () {
         color: '#E76F51'
       }
     ]
-    
+
     // Apply shared trace defaults
     memory_plot_data.forEach( trace => {
       trace.type = 'scatter'
@@ -1122,12 +1123,12 @@ $(function () {
       hoverlabel: HOVERLABEL,
     }
 
-    return Plotly.newPlot('memory-optimization-plot', memory_plot_data, layout, { responsive: true }), savedEnergy
+    return [Plotly.newPlot('memory-optimization-plot', memory_plot_data, layout, { responsive: true }), savedEnergy]
   }
 
   // Variable to block re-editing loop
   let blockRelayout = false
-  
+
   /**
    * Propagates a relayout event from one plot to the other.
    * Handles both the array form ('xaxis.range') and the indexed form
@@ -1139,7 +1140,7 @@ $(function () {
    */
   function mirrorLayout(targetPlotDiv, eventData) {
     if (!blockRelayout && eventData) {
-      
+
       // Actual Plotly relayout function that is called around a guard variable
       // otherwise it would trigger an endless loop
       function doRelayout(update) {
@@ -1157,7 +1158,7 @@ $(function () {
         if (eventData['yaxis.autorange']) {
           doRelayout({ 'yaxis.autorange': true })
         }
-        
+
         // X-axis edit case
         let range0 = eventData['xaxis.range[0]'] || eventData['xaxis.range']?.at(0)
         let range1 = eventData['xaxis.range[1]'] || eventData['xaxis.range']?.at(1)
@@ -1217,7 +1218,7 @@ $(function () {
     configElement.textContent = configLines.join('\n')
 
     detailsElement.append(summaryElement, configElement)
-    
+
     return [detailsElement]
   }
 
@@ -1230,17 +1231,18 @@ $(function () {
     let memoryOptimizationDiv = document.createElement('h3')
     memoryOptimizationDiv.id = 'optimization-memory'
     memoryOptimizationDiv.textContent = 'Memory'
-    
+
     // <div id="memory-optimization-plot"></div>
     let memoryOptimizationPlot = document.createElement('div')
     memoryOptimizationPlot.id = 'memory-optimization-plot'
-    
+
     // <p class="mt-3 mb-3">The primary trace (<b>raw_energy_memory</b>) shows the actual memory-attributed energy consumption per task (in Wh). The alternative trace (<b>hypothetical energy</b>) shows what the energy would be if each task used the maximum RSS observed by any task in its process plus and additional 20% to account for variation.</p>
     let memoryOptimizationText = document.createElement('p')
+    memoryOptimizationText.id = 'memory-optimization-text'
     memoryOptimizationText.classList.add('mt-3', 'mb-3')
     memoryOptimizationText.innerHTML = 'The primary trace (' + 'raw_energy_memory'.italics() + ') shows the actual memory-attributed energy consumption per task (in Wh).' +
         'The alternative trace (' + 'hypothetical energy'.italics() + ') shows what the energy would be if each task used the maximum RSS observed by any task in its process plus and additional 20% to account for variation.'
-  
+
     return [memoryOptimizationDiv, memoryOptimizationPlot, memoryOptimizationText]
   }
 
@@ -1257,21 +1259,21 @@ $(function () {
     }
 
     if (optimizationElements.length > 0) {
-      
+
       // <h2 id="optimization" className="section">Optimization</h2>
       let optimizationHeader = document.createElement('h2')
       optimizationHeader.id = 'optimization'
       optimizationHeader.className = 'section'
       optimizationHeader.textContent = 'Optimization'
-      
+
       // <p>The recommendations below are suggestions and may not apply to every case.</p>
       let optimizationText = document.createElement('p')
       optimizationText.textContent = 'The recommendations below are suggestions and may not apply to every case'
-      
+
       // Add heading elements and recommended configuration
       optimizationElements.unshift(optimizationHeader, optimizationText)
       optimizationElements.push(...make_optimization_config())
-      
+
       // Add all elements to optimization container <div>
       let optimizationContainer = document.getElementById('optimization-container')
       optimizationElements.forEach( optimizationElement => {
@@ -1283,13 +1285,13 @@ $(function () {
 
     // Memory optimization plots
     if (window.data.memoryRecommendations?.size > 0) {
-      let memoryOptimizationPlot, savedEnergy = make_memory_optimization_plot()
-      optimizationPromises.push( memoryOptimizationPlot )
-      
+      let memoryOptimizationPlotResults = make_memory_optimization_plot()
+      optimizationPromises.push( memoryOptimizationPlotResults[0] )
+
       // Add summary of saved values
-      document.getElementById('memory-optimization-text').innerHTML += ' Applying the following config can save up to ' + Math.round(savedEnergy * 1000) / 1000 + ' Wh of energy:'
+      document.getElementById('memory-optimization-text').innerHTML += ' Applying the following config can save up to ' + Math.round(memoryOptimizationPlotResults[1] * 1000) / 1000 + ' Wh of energy:'
     }
-    
+
     return optimizationPromises
   }
 
@@ -1299,7 +1301,7 @@ $(function () {
   function generateRecommendations() {
     generateMemoryRecommendations()
   }
-  
+
   generateRecommendations()
 
   // Executor for ci plot generation
