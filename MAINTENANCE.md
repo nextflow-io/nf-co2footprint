@@ -15,9 +15,21 @@
   - This will generate an automated message in the nf-co2footprint Slack channel
 - Post a message to Slack with the highlights of the release
 
-## Nextflow
+## Versioning
+Versioning happens mostly in the `build.gradle` file, but also documentation and tests may have to be adjusted.
+
+### Nextflow
 Sometimes Nextflow changes core code or deprecates older methods. Aim to support the newest version with new releases. Older versions can always use an older plugin version as well.
 Setting `NXF_SYNTAX_PARSER=v1` can help to run some older pipelines with a newer Nextflow versions.
+
+### Plugin
+The plugin follows syntactic versioning guidelines in the style `MAJOR.MINOR.PATCH`
+- A patch should only include fixes and small stylistic adjustments
+- A minor version changes behavior of the plugin, but leaves core functions intact
+- A major version introduces breaking changes on a large scope or completely reworks large parts of the code
+
+### Dependencies
+Dependencies should be updated from time to time to avoid vulnerabilities and profit from better code. However, please avoid experimental versions.
 
 ## Tests
 
