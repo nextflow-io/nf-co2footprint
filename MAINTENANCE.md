@@ -15,6 +15,10 @@
   - This will generate an automated message in the nf-co2footprint Slack channel
 - Post a message to Slack with the highlights of the release
 
+## Nextflow
+Sometimes Nextflow changes core code or deprecates older methods. Aim to support the newest version with new releases. Older versions can always use an older plugin version as well.
+Setting `NXF_SYNTAX_PARSER=v1` can help to run some older pipelines with a newer Nextflow versions.
+
 ## Tests
 
 ### Run
