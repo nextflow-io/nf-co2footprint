@@ -3,7 +3,7 @@
 - 
 
 ## Bug Fixes:
--
+- Support for empty runs
 
 ## Misc:
 - 
