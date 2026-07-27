@@ -16,9 +16,11 @@
  */
 package nextflow.co2footprint.TestHelpers
 
-import groovy.json.JsonSlurper
+import groovy.yaml.YamlSlurper
 import org.opentest4j.AssertionFailedError
+import org.yaml.snakeyaml.Yaml
 
+import java.lang.reflect.Field
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardCopyOption
@@ -28,6 +30,9 @@ import java.security.MessageDigest
  * Checksum checker to compare and generate checksums (for files) and more
  */
 class FileChecker {
+    // YAML Slurper
+    Yaml yaml = new Yaml()
+
     // Directory with files to check
     private Path checksDirectory
 
@@ -61,7 +66,10 @@ class FileChecker {
         String relativeChecksPath = checksDirectory.startsWith('/') ? checksDirectory.substring(1) : checksDirectory
         this.checksDirectory = projectRoot.resolve('src/testResources').resolve(relativeChecksPath)
 
-        this.checksInfoPath = this.checksDirectory.resolve('file_checks.json')
+        this.checksInfoPath = this.checksDirectory.resolve('file_checks.yaml')
+        if(!checksInfoPath.isFile()) {
+            this.checksInfoPath = this.checksDirectory.resolve('file_checks.json')
+        }
         this.checksInfo = checksInfoPath.isFile() ? loadChecksInfo(checksInfoPath) : null
 
         this.collectErrors = collectErrors
@@ -86,34 +94,37 @@ class FileChecker {
     }
 
     /**
-     * Calculates the MD5 checksum for a file
+     * Load a YAML file with checksums.
      *
-     * @param file File to be calculated the checksum to
-     * @param excludedLines Lines to be excluded in the checksum calculation
-     * @return The checksum of the file as a String
+     * @param path Path to the YAML file with checksums
+     * @return The checksums as a Map with String keys and values
      */
-    static String calculateMD5(File file, List<Integer> excludedLines=[]) {
-        MessageDigest md = MessageDigest.getInstance("MD5")
-        int position = 0
-        file.eachLine("UTF-8") { line ->
-            if (!excludedLines.contains(position)) {
-                byte[] bytes = (line + System.lineSeparator()).getBytes("UTF-8")
-                md.update(bytes)
-            }
-            position += 1
-        }
-        md.digest().encodeHex().toString()
+    static Map<String, Map<String, ?>> loadChecksInfo(Path yamlPath) {
+        YamlSlurper yamlSlurper = new YamlSlurper()
+        return yamlSlurper.parse(yamlPath) as Map<String, Map<String, ?>>
     }
 
     /**
-     * Load a JSON file with checksums.
-     *
-     * @param jsonPath Path to the JSON file with checksums
-     * @return The checksums as a Map with String keys and values
+     * Raises an error when lines mismatch.
+     * @param lineMismatches - A list with all mismatched lines
      */
-    static Map<String, Map<String, ?>> loadChecksInfo(Path jsonPath) {
-        JsonSlurper jsonSlurper = new JsonSlurper()
-        return jsonSlurper.parse(jsonPath) as Map<String, Map<String, ?>>
+    void raiseLineMismatchError(Map<Integer, List<String>> lineMismatches) {
+        if (lineMismatches.size() > 0) {
+            StringBuilder stringBuilder = new StringBuilder()
+            lineMismatches.each { Integer pos, List<String> mismatchLines ->
+                if (mismatchLines.any( {String line -> line.size() > 10000} )){
+                    stringBuilder.append("${pos}:\tLine too long to display, please refer to file comparison.\n")
+                }
+                else{
+                    stringBuilder.append("${pos}:\t|${mismatchLines.join('<->')}|\n")
+                }
+            }
+            Throwable assertionError = new AssertionFailedError(
+                "The following ${lineMismatches.size()} line mismatches were found (|<Actual><-><Recorded>|):\n" +
+                stringBuilder.toString()
+            )
+            addError(assertionError)
+        }
     }
 
     /**
@@ -148,129 +159,51 @@ class FileChecker {
     }
 
     /**
-     * Compare select lines against recorded lines
-     *
-     * @param path Path to file
-     * @param lineRecords Map of paired line positions and line content
-     * @return A list of the already checked lines
-     */
-    List<Integer> compareLines(Path path, def lineRecords) {
-        List<String> lines  = path.readLines()
-        String line
-        List<Integer> visitedPositions = []
-        if (lineRecords in Map<Integer, String> ) {
-            lineRecords.each { Integer linePos, String lineRecord ->
-                visitedPositions.add(linePos)
-                // Change from 1 to 0-based
-                line = lines[linePos - 1]
-                try {
-                    assert line == lineRecord
-                }
-                catch (Throwable throwable) {
-                    addError(throwable)
-                }
-            }
-        }
-        else if (lineRecords in List<String>){
-            lineRecords.eachWithIndex{ String lineRecord, int i ->
-                visitedPositions.add(i + 1)
-                try {
-                    assert lines[i] == lineRecord
-                }
-                catch (Throwable throwable) {
-                    addError(throwable)
-                }
-            }
-        }
-        return visitedPositions
-    }
-
-    /**
      * Compare two files line by line
      *
      * @param path Path to the new file
      * @param recordPath Path to the recorded File
-     * @param excludedLines Lines that are not compared (useful for excluding timestamps and other non comparable stuff)
      */
-    boolean compareFiles(Path path, Path recordPath, List<Integer> excludedLines=[]) {
+    boolean compareFiles(CheckFile newCheckFile, CheckFile recordCheckFile) {
         boolean errorFound = false
 
-        int linePosition = 0
-        path.withReader { Reader readerNew ->
-            recordPath.withReader { Reader readerRecord ->
-                String lineNew, lineRecord
-                while ((lineNew = readerNew.readLine()) != null & (lineRecord = readerRecord.readLine()) != null) {
-                    if (!excludedLines.contains(linePosition)) {
-                        if (lineNew.size() < 10000 & lineRecord.size() < 10000){
-                            try {
-                                assert lineNew == lineRecord, "Mismatch in line ${linePosition + 1}"
-                            }
-                            catch (Throwable error) {
-                                errorFound = true
-                                addError(error)
-                            }
-                        } else if (lineNew != lineRecord) {
-                            errorFound = true
-                            addError(
-                                    new AssertionFailedError(
-                                    "Mismatching new line: ${lineNew}\n" +
-                                    "Mismatch in line ${linePosition + 1}. Output too long, omitting recorded line."
-                                    )
-                            )
-                        }
-                    }
-                    linePosition += 1
-                }
+        Map<Integer, List<String>> lineMismatches = [:]
+        List<String> newLines = newCheckFile.lines
+        List<String> recordedLines = recordCheckFile.lines
 
-                // Check for extra lines:
-                if (readerNew.readLine() != null) {
-                    errorFound = true
-                    addError( new AssertionFailedError("New file has extra lines") )
+        // Check for missing lines
+        Integer lineDifference = recordedLines.size() - newLines.size()
+        if (lineDifference > 0) {
+            errorFound = true
+            addError( new AssertionFailedError("Newly generated file is missing ${lineDifference} lines.") )
+        }
+        // Check for extra lines
+        else if (lineDifference < 0) {
+            errorFound = true
+            addError( new AssertionFailedError("Newly generated file has ${lineDifference * -1} extra lines.") )
+        }
+        else {
+            String lineNew, lineRecord
+            for (i in 0..<newLines.size()) {
+    
+                lineNew = newLines[i]
+                lineRecord = recordedLines[i]
+                try {
+                    assert lineNew == lineRecord
                 }
-                // Check for extra lines:
-                if (readerRecord.readLine() != null) {
+                catch (Throwable ignore) {
                     errorFound = true
-                    addError( new AssertionFailedError("Recorded file has extra lines at the end.") )
+                    lineMismatches[i + 1] = [lineNew, lineRecord]
                 }
             }
         }
+        
+        raiseLineMismatchError(lineMismatches)
+
         return errorFound
     }
 
-    /**
-     * Compare the recorded checksum to the new checksum of a file.
-     *
-     * @param path Path to the file for the checksum calculation
-     * @param recordedChecksum  The expected checksum to verify against. If null, the method will
-     *                          attempt to retrieve it from the class checksum map.
-     * @param excludedLines Lines to be excluded in the checksum calculation (1-based)
-     * @param recordedPath Path with the complete file to compare to when the checksums don't match
-     * @return New checksum
-     */
-    String compareChecksums(Path path, String recordedChecksum, List<Integer> excludedLines=[], Path recordPath=null){
-        // Change from 1 based to 0-based numbers
-        excludedLines = excludedLines.collect {Integer line -> line - 1}
-        String newChecksum = calculateMD5(path.toFile(), excludedLines)
-
-        try {
-            assert recordedChecksum == newChecksum
-        }
-        catch (AssertionError assertionError) {
-            if(recordPath) {
-                boolean errorFound = compareFiles(path, recordPath, excludedLines)
-                String message = "Recorded checksum '${recordedChecksum}' and new checksum '${newChecksum}' did not match."
-                if (!errorFound) {
-                    message += ' ℹ️ The line-by-line comparison showed no difference. Checksum may be outdated.'
-                }
-                addError(new AssertionFailedError(message))
-            } else {
-                addError(assertionError)
-            }
-        }
-        return newChecksum
-    }
-
-    void runChecks(Path path, Map<Integer, String> explicitLines=[:], Path recordPath=null){
+    void runChecks(Path path, Map<String, List<String>> replacements=[:], List<String> exclusions=[], Path recordedPath=null){
         // Set errors to collection
         this.collectErrors = true
 
@@ -278,34 +211,55 @@ class FileChecker {
         checkIsFile(path)
 
         // Get Infos to check for
-        recordPath ?= buildChecksDirectory.resolve(path.getFileName())
-        Map<String, Object> checksInfo = this.checksInfo.get(recordPath.getFileName() as String, [:]).deepClone()
+        recordedPath ?= buildChecksDirectory.resolve(path.getFileName())
+        
+        Map<String, Object> checksInfo = this.checksInfo.get(recordedPath.getFileName() as String, [:]).deepClone()
+        
+        // Check replacements and excluded lines
+        List<Integer> excludedLines = checksInfo.remove('excluded_lines') as List<Integer> ?: []
+        Map<String, String> checkInfoReplacements = checksInfo.remove('replacements') as Map<String, String> ?: [:]
+        replacements.putAll(checkInfoReplacements)
+        
+        // Define check file instances
+        CheckFile checkFile = CheckFile.of(path, [:], exclusions, excludedLines, 1)
+        CheckFile recordedCheckFile = CheckFile.of(recordedPath, replacements, exclusions, excludedLines, 1)
 
         // Prepare new file check infos
         Map<String, Object> newCheckInfos = [:]
+        
+        // Perform checksum testing
+        String checksum = checksInfo.remove('checksum')
+        String newChecksum
+        if (checksum) {
+            newChecksum = checkFile.compareChecksums(checksum)
+            newCheckInfos['checksum'] = newChecksum ?: checksum
+        }
+        else {
+            newChecksum = checkFile.compareChecksums(recordedCheckFile)
+        }
 
-        // Check explicitly given or excluded lines
-        Set<Integer> excludedLines = compareLines(path, explicitLines)
-        Set<Integer> additionalExclusions = checksInfo.remove('excluded_lines') as Set<Integer> ?: []
-        excludedLines.addAll(additionalExclusions)
+        // Perform line count check
+        Integer numLines = checksInfo.remove('num_lines')
+        Long newNumLines
+        if (numLines) {
+            newNumLines = compareNumLines(path, numLines)
+            newCheckInfos['num_lines'] = newNumLines
+        }
 
-        // Perform all checks
-        checksInfo.each { String checkType, Object value ->
-            switch (checkType) {
-                case 'checksum' -> {
-                    String newChecksum = compareChecksums(path, value as String, excludedLines as List, recordPath)
-                    newCheckInfos.put(checkType, newChecksum)
-                }
-                case 'num_lines' -> {
-                    value = value as Integer
-                    Long newNumLines = compareNumLines(path, value) as Long
-                    newCheckInfos.put(checkType, newNumLines)
-                    if(additionalExclusions) {
-                        Long diffLines = newNumLines - value
-                        newCheckInfos.put('excluded_lines', additionalExclusions.collect { Integer line -> line + diffLines })
-                    }
-                }
+        // Perform full line by line comparison, if checksum did not match
+        if (newChecksum) {
+            String message = "The generated checksum `${newChecksum}` does not match with the recorded `${checksum}`"
+            boolean errorFound = compareFiles(checkFile, recordedCheckFile)
+            if (!errorFound) {
+                message += '\nℹ️ The line-by-line match revealed no difference, the checksum should be updated.'
             }
+            addError( new AssertionFailedError(message) )
+        }
+        
+        // Append additional info to new check JSON
+        if (excludedLines) {
+            Integer lineDifference = recordedCheckFile.lines.size() - checkFile.lines.size()
+            newCheckInfos['excluded_lines'] = excludedLines.collect { Integer excludedLine -> excludedLine - lineDifference }
         }
 
         // Reset error collection
@@ -316,25 +270,61 @@ class FileChecker {
             Path failedSnapshotPath = failPath.resolve(path.fileName)
             // Copy snapshot
             Files.copy(path, failedSnapshotPath, StandardCopyOption.REPLACE_EXISTING)
-
-            errors.eachWithIndex { Throwable error, Integer i->
-                System.err.println("----------------- File Checker Error ${i}:")
-                error.printStackTrace()
-                System.err.println()
-            }
-
+            
+            Object finalConfig = [(recordedPath.getBaseName()): newCheckInfos]
+            String yamlString = yaml.dump(finalConfig)
             // Print info to adopt the changes
             String message =
-                "❌ File checks for '${path}' failed,\n\n" +
-                "🔎 The actual error messages can be found above as a list.\n" +
+                "\n❌ File checks for '${path}' failed,\n" +
+                "🔎 The actual error messages can be found below as a list.\n" +
                 "ℹ️ You may want to have a look at the difference between the new and recorded file:\n" +
-                "NEW: ${failedSnapshotPath} <-> RECORDED: ${recordPath}.\n" +
+                "NEW: ${failedSnapshotPath} <-> RECORDED: ${recordedPath}.\n" +
                 "💡 Suggested new fileCheck configuration (apply this to `${checksInfoPath}`):\n" +
-                "${newCheckInfos}\n" +
-                "⚠️ Pay attention to the excluded_lines, as they may differ from the suggested ones depending on your changes.\n"
+                "\n${yamlString}\n" +
+                "⚠️ Pay attention to the replacements, as they may differ from the suggested ones depending on your changes.\n"
 
             Exception checkFailedException = new Exception(message)
+            
+            // Add errors to general error
+            errors.eachWithIndex { Throwable error, Integer i->
+                Throwable numberError = new Error("----------------- File Checker Error ${i}:\n")
+                numberError.addSuppressed(error)
+                checkFailedException.addSuppressed(numberError)
+            }
+            errors = []
             throw checkFailedException
         }
+    }
+
+    /**
+     * Check multiple files in a single scoop.
+     * 
+     * @param fileCheckMap Map with all options assigned to a name.
+     */
+    void runMultiFileChecks(Map<String, Map<String, Object>> fileCheckMap) {
+        Map<String, Throwable> errorsMulti = [:]
+        fileCheckMap.each { String runName, Map<String, Object> options ->
+            try {
+                runChecks(
+                        options['path'] as Path,
+                        options.get('replacements', [:]) as Map<String, List<String>>,
+                        options.get('exclusions', []) as List<String>,
+                        options.get('recordedPath') as Path
+                )
+            }
+            catch (Throwable error) {
+                errorsMulti[runName] = error
+            }
+        }
+        
+        if(errorsMulti) {
+            String message = "\n❌ File checks failed for the following: ${errorsMulti.keySet()}\n"
+            Exception checkFailedExceptionMulti = new Exception(message)
+            
+            errorsMulti.each { String name, Throwable error -> checkFailedExceptionMulti.addSuppressed(error)}
+            
+            throw checkFailedExceptionMulti
+        }
+        
     }
 }

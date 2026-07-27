@@ -5,6 +5,10 @@
     },
     "@id": "urn:co2footprint:null",
     "@type": "bioschemas:ComputationalWorkflow",
+    "workflowLevel": {
+        "@type": "schema:PropertyValue",
+        "value": "workflow"
+    },
     "task_id": {
         "@type": "schema:PropertyValue",
         "value": "111",
@@ -133,6 +137,10 @@
         {
             "@id": "urn:co2footprint:observerTestProcess",
             "@type": "schema:SoftwareApplication",
+            "workflowLevel": {
+                "@type": "schema:PropertyValue",
+                "value": "process"
+            },
             "task_id": {
                 "@type": "schema:PropertyValue",
                 "value": "111",
@@ -261,6 +269,10 @@
                 {
                     "@id": "urn:co2footprint:111",
                     "@type": "schema:Action",
+                    "workflowLevel": {
+                        "@type": "schema:PropertyValue",
+                        "value": "task"
+                    },
                     "task_id": {
                         "@type": "schema:PropertyValue",
                         "value": "111",

@@ -97,7 +97,10 @@ class CO2FootprintExtensionTest extends Specification {
         )
 
         then:
-        fileChecker.runChecks(provenancePath)
+        List searchExclusions = [
+                /"readable": ("\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.?\d*")/
+        ]
+        fileChecker.runChecks(provenancePath, [:], searchExclusions)
     }
 
     def 'Should calculate the CO2Footprint from a provenance file with changes'() {

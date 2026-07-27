@@ -1,0 +1,13 @@
+trace_test.txt:
+  checksum: "c69577c73031114286fef83336b9ae78"
+  num_lines: 2
+
+summary_test:
+  num_lines: 30
+
+report_test.html:
+  num_lines: 1795
+
+provenance_test.json:
+  checksum: "ac4186c40cc0292ee5ddaa6935e63830"
+  num_lines: 404
