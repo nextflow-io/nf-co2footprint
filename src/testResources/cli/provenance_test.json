@@ -5,6 +5,10 @@
     },
     "@id": "urn:co2footprint:Unknown workflow",
     "@type": "bioschemas:ComputationalWorkflow",
+    "workflowLevel": {
+        "@type": "schema:PropertyValue",
+        "value": "workflow"
+    },
     "task_id": {
         "@type": "schema:PropertyValue",
         "value": "-1",
@@ -126,6 +130,10 @@
         {
             "@id": "urn:co2footprint:NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT",
             "@type": "schema:SoftwareApplication",
+            "workflowLevel": {
+                "@type": "schema:PropertyValue",
+                "value": "process"
+            },
             "task_id": {
                 "@type": "schema:PropertyValue",
                 "value": "-1",
@@ -247,6 +255,10 @@
                 {
                     "@id": "urn:co2footprint:6",
                     "@type": "schema:Action",
+                    "workflowLevel": {
+                        "@type": "schema:PropertyValue",
+                        "value": "task"
+                    },
                     "task_id": {
                         "@type": "schema:PropertyValue",
                         "value": "6",
@@ -368,6 +380,10 @@
                 {
                     "@id": "urn:co2footprint:4",
                     "@type": "schema:Action",
+                    "workflowLevel": {
+                        "@type": "schema:PropertyValue",
+                        "value": "task"
+                    },
                     "task_id": {
                         "@type": "schema:PropertyValue",
                         "value": "4",
