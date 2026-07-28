@@ -17,7 +17,7 @@ class CO2RecordTree {
      * Each node represents one element in the workflow hierarchy (e.g. workflow, process, or task).
      *
      * @param name       identifier of the node (e.g. run name, process name, or task ID)
-     * @param metaData   metadata of the node (e.g. level: 'workflow' | 'process' | 'task')
+     * @param metaData   metadata of the node (e.g. workflowLevel: 'workflow' | 'process' | 'task' | 'head')
      * @param co2Record      optional CO2Record containing the metrics for this node
      * @param parent     parent node in the hierarchy (null for the root)
      * @param children   list of child nodes (empty list by default)
@@ -75,6 +75,8 @@ class CO2RecordTree {
         if (!co2Record?.respondsTo('plus')) {
             co2Record = children.collect({ CO2RecordTree child -> child.co2Record }).sum() as CO2Record
         }
+        
+        if(co2Record?.get('name') == null) { co2Record?.put('name', name) }
 
         return this
     }
@@ -90,17 +92,26 @@ class CO2RecordTree {
                     CO2e_non_cached: { CO2Record record -> record.store.status != 'CACHED' ? record.store.CO2e : null },
                     energy_consumption_non_cached: { CO2Record record -> record.store.status != 'CACHED' ? record.store.energy_consumption : null },
                     CO2e_market: { CO2Record record -> record.store.CO2e_market },
-                    energy_consumption_market: { CO2Record record -> record.store.energy_consumption },
+                    energy_consumption_market: { CO2Record record -> record.store.energy_consumption }
             ]
     ) {
-        metricTransformers.each{ String name, Closure transformer ->
-            List<Object> childMetrics = children.collect{ CO2RecordTree child ->
+        metricTransformers.each { String name, Closure transformer ->
+            List<Object> childMetrics = []
+            children.each { CO2RecordTree child ->
                 child.collectAdditionalMetrics(metricTransformers)
-                child.co2Record.additionalMetrics.get(name)
+                
+                Object value = child.co2Record?.additionalMetrics?.get(name)
+                if (value != null) {
+                    childMetrics.add(value)
+                }
             }
-            childMetrics.removeAll([null])
-            Object attribute = childMetrics ? childMetrics.sum() : transformer(co2Record)
-            co2Record.additionalMetrics.put(name , attribute)
+
+            // Fill with either sum of children or calculate from scratch if children don't contain this metric
+            if (co2Record) {
+                Object attribute = childMetrics ? childMetrics.sum() : transformer(co2Record)
+                co2Record.additionalMetrics.put(name, attribute)
+                return
+            }
         }
         return this
     }
@@ -161,7 +172,7 @@ class CO2RecordTree {
         valueKeys ?= collectKeys().toList()
 
         // Start value collection at specified level
-        if (metaData?.level === level) {
+        if (metaData?.workflowLevel === level) {
             Map<String, Object> values = [:]
             valueKeys.forEach { String valueKey ->
                 List<Object> vals = collectValues(valueKey)
@@ -187,7 +198,7 @@ class CO2RecordTree {
      * @return A list of record trees at the specified level.
      */
     List<CO2RecordTree> descentTo(String level) {
-        if (metaData?.level === level) {
+        if (metaData?.workflowLevel == level) {
             return [this]
         }
         else {

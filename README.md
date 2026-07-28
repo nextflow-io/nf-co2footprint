@@ -27,7 +27,7 @@ Declare the plugin in your Nextflow pipeline configuration file:
 
 ```groovy title="nextflow.config"
 plugins {
-  id 'nf-co2footprint@1.3.0'
+  id 'nf-co2footprint@1.4.0'
 }
 ```
 
@@ -42,8 +42,11 @@ More details are available in the Nextflow [plugin documentation](https://www.ne
 The plugin also provides a CLI command for post-run carbon footprint calculations from Nextflow's execution trace files, as well as a function that can be included in Nextflow pipelines. For more information, see the [extension manual](usage/extension.md).
 
 ## Output
-The plugin generates three files, a [detailed report](assets/co2footprint_report_sample.html), a [text summary](assets/co2footprint_summary_sample.txt), and a [trace file](assets/co2footprint_trace_sample.txt).  
+The plugin can generate four files, a [detailed report](assets/co2footprint_report_sample.html), a [text summary](assets/co2footprint_summary_sample.txt), a [trace file](assets/co2footprint_trace_sample.txt), and a [provenance file](assets/co2footprint_provenance_sample.json).  
 For more details, see the [output documentation](usage/output.md).
+
+## Optimization
+In addition to emission parameters, the plugin provides recommendations on how to optimize the carbon footprint of runs. For details see the [optimization guide](usage/optimization.md).
 
 ## Contributing
 Before contributing, please read the [contribution guidelines](contributing/guidelines.md) carefully. You may also find the recommended [testing setup](contributing/setup.md) helpful.
@@ -76,7 +79,7 @@ We additionally thank the following people for their extensive assistance in the
 
 ### How to cite:
 ```text
-J. Carl, N. Volkmann, J. Mir-Pedrol, P. Ewels, S. Nahnsen, S. Krakau nextflow-io/nf-co2footprint v1.3.0. (Mar., 2026). nextflow-io. Available: https://github.com/nextflow-io/nf-co2footprint
+J. Carl, N. Volkmann, J. Mir-Pedrol, P. Ewels, S. Nahnsen, S. Krakau nextflow-io/nf-co2footprint v1.4.0. (Mar., 2026). nextflow-io. Available: https://github.com/nextflow-io/nf-co2footprint
 ```
 ```Bibtex
 @software{nf_co2footprint_plugin,
@@ -90,7 +93,7 @@ J. Carl, N. Volkmann, J. Mir-Pedrol, P. Ewels, S. Nahnsen, S. Krakau nextflow-io
     month   =   {March}
     year    =   {2026}
     publisher = {Nextflow-io}
-    version =   {v1.3.0}
+    version =   {v1.4.0}
     url     =   {https://doi.org/10.5281/zenodo.14622304}
     doi     =   {10.5281/zenodo.14622304}
 }

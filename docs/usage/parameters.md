@@ -21,7 +21,7 @@ The following parameters are currently available:
     - `file`: Name of the `.txt` carbon footprint summary file containing the total energy consumption and total estimated CO₂ emission of the pipeline run.
     - `overwrite`: Whether to overwrite the file, if it already exists.
 
-    **Default**: `[enabled: true, file: co2footprint_summary_<timestamp>.txt, overwrite: true]`
+    **Default**: `[enabled: false, file: co2footprint_summary_<timestamp>.txt, overwrite: true]`
 
 - **`report`**  
   Map containing:
@@ -39,10 +39,10 @@ The following parameters are currently available:
     - `overwrite`: Whether to overwrite the file, if it already exists.
     - `emissionMetricsOnly`: Whether to only include emission metrics, such as CO₂ equivalents and electricity consumption.
 
-    **Default**: `[enabled: false, file: co2footprint_report_<timestamp>.html, overwrite: true, emissionMetricsOnly: true]`
+    **Default**: `[enabled: true, file: co2footprint_report_<timestamp>.html, overwrite: true, emissionMetricsOnly: true]`
 
     !!! warning "Preliminary feature"
-        The data file is currently not in its final version. Changes in the near future are very likely.
+        The data file is currently not in its final version. Changes in the near future are likely.
 
 ## Location & Carbon Intensity
 

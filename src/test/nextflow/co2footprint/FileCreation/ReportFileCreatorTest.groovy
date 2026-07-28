@@ -83,10 +83,10 @@ class ReportFileCreatorTest extends Specification{
         )
 
         // Define Record treee
-        CO2RecordTree sessionStats = new CO2RecordTree('session', [level: 'session'])
-        CO2RecordTree workflowStats = sessionStats.addChild(new CO2RecordTree('workflow', [level: 'workflow']))
-        CO2RecordTree processTree =  workflowStats.addChild(new CO2RecordTree('process', [level: 'process']))
-        processTree.addChild(new CO2RecordTree('task', [level: 'task'], co2Record))
+        CO2RecordTree sessionStats = new CO2RecordTree('session', [workflowLevel: 'session'])
+        CO2RecordTree workflowStats = sessionStats.addChild(new CO2RecordTree('workflow', [workflowLevel: 'workflow']))
+        CO2RecordTree processTree =  workflowStats.addChild(new CO2RecordTree('process', [workflowLevel: 'process']))
+        processTree.addChild(new CO2RecordTree('task', [workflowLevel: 'task'], co2Record))
 
         // Define calculator
         CO2FootprintCalculator calculator = new CO2FootprintCalculator(Mock(TDPDataMatrix), config)
@@ -107,15 +107,15 @@ class ReportFileCreatorTest extends Specification{
         ReportFileCreator co2FootprintReport = new ReportFileCreator(reportFileConfig)
 
         when:
-        CO2RecordTree sessionStats = new CO2RecordTree('session', [level: 'session'])
-        CO2RecordTree workflowStats = sessionStats.addChild(new CO2RecordTree('workflow', [level: 'workflow']))
-        CO2RecordTree processTree =  workflowStats.addChild(new CO2RecordTree('process', [level: 'process']))
+        CO2RecordTree sessionStats = new CO2RecordTree('session', [workflowLevel: 'session'])
+        CO2RecordTree workflowStats = sessionStats.addChild(new CO2RecordTree('workflow', [workflowLevel: 'workflow']))
+        CO2RecordTree processTree =  workflowStats.addChild(new CO2RecordTree('process', [workflowLevel: 'process']))
         CO2Record co2Record = new CO2Record(
                 new TraceRecord(), 100.0, co2e,
                 null, null, null, null, null, null, null, null, null, null, null, null, null, null
         )
 
-        processTree.addChild(new CO2RecordTree('task', [level: 'task'], co2Record))
+        processTree.addChild(new CO2RecordTree('task', [workflowLevel: 'task'], co2Record))
         sessionStats.summarize()
         sessionStats.collectAdditionalMetrics()
 

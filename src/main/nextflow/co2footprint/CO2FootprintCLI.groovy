@@ -23,6 +23,10 @@ class CO2FootprintCLI {
      * @return Exit code of the CLI execution, 0 if successful
      */
     static int postRun(Map<String, Object> parsedArgs) {
+        // Ensure duplicate warnings (e.g. unknown CPU model) are deduplicated,
+        // regardless of whether this was reached via CO2FootprintPlugin.exec() or called directly.
+        CO2FootprintFactory.adaptLogging()
+
         // Define trace path
         Path tracePath = parsedArgs.containsKey('tracePath') ? Path.of(parsedArgs.get('tracePath') as String) : null
         Path provenancePath = parsedArgs.containsKey('provenancePath') ? Path.of(parsedArgs.get('provenancePath') as String) : null

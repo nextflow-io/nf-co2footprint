@@ -88,6 +88,28 @@ class ReportFileCreator extends BaseFileCreator{
     }
 
     /**
+     * Remove comments from incorporated scripts.
+     *
+     * @param script Script with comments as a String
+     * @return Script, comments and empty lines removed
+     */
+    static String removeEmptyNComments(String script) {
+        Set<String> commentLineStarts = ['//', '/*', '*', '*/']
+        StringBuilder stringBuilder = new StringBuilder()
+        for(String line : script.lines()) {
+            String lineContent = line.trim()
+            if (lineContent.isEmpty()) { continue }
+
+            if (!commentLineStarts.any({ String commentLineStart -> lineContent.startsWith(commentLineStart) }) ) {
+                stringBuilder.append(line)
+                stringBuilder.append('\n')
+            }
+        }
+
+        return stringBuilder.toString()
+    }
+
+    /**
      * Write the HTML report to disk.
      */
     void write() {
@@ -137,7 +159,9 @@ class ReportFileCreator extends BaseFileCreator{
                         readTemplate('nextflow/trace/assets/datatables.min.js'),
                         readTemplate('nextflow/trace/assets/moment.min.js'),
                         readTemplate('assets/plotly-custom-3.1.2.min.js'),
-                        readTemplate('assets/CO2FootprintReportTemplate.js')
+                        removeEmptyNComments(
+                                readTemplate('assets/CO2FootprintReportTemplate.js')
+                        )
                 ]
         ]
         final String template = readTemplate('assets/CO2FootprintReportTemplate.html')
@@ -181,12 +205,12 @@ class ReportFileCreator extends BaseFileCreator{
     private Map<String, String> makeCO2Total(suffix) {
         // Get workflow level stats
         CO2Record workflowRecord = stats.descentTo('workflow').collect(
-                {CO2RecordTree workflowTree -> workflowTree.co2Record}
+                { CO2RecordTree workflowTree -> workflowTree.co2Record }
         ).sum() as CO2Record
 
         // Retrieve total CO₂ emissions and energy consumption for the given suffix
-        BigDecimal co2e = workflowRecord.get("CO2e${suffix}") as Double
-        BigDecimal energy = workflowRecord.get("energy_consumption${suffix}") as Double
+        BigDecimal co2e = workflowRecord?.get("CO2e${suffix}") as Double
+        BigDecimal energy = workflowRecord?.get("energy_consumption${suffix}") as Double
 
         if (co2e != null) {
             CO2EquivalencesRecord equivalences = co2FootprintComputer.computeCO2footprintEquivalences(co2e)
@@ -237,7 +261,7 @@ class ReportFileCreator extends BaseFileCreator{
      */
     protected Map<String, Object> collectSummary(CO2RecordTree stats=this.stats) {
         // Add an empty map if the process is not already present
-        return stats.collectByLevel('process', ['CO2e', 'energy_consumption', 'CO2e_non_cached', 'energy_consumption_non_cached'])
+        return stats.collectByLevel('process', ['CO2e', 'energy_consumption', 'CO2e_non_cached', 'energy_consumption_non_cached', 'memory', 'peak_rss'])
     }
 
 

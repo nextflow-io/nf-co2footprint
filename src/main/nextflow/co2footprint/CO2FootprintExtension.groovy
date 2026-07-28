@@ -37,6 +37,7 @@ class CO2FootprintExtension extends PluginExtensionPoint {
     void init(Session session) {
         factory = new CO2FootprintFactory()
         this.session = session
+        CO2FootprintFactory.adaptLogging()
     }
 
     /**
@@ -177,12 +178,24 @@ class CO2FootprintExtension extends PluginExtensionPoint {
 
         // Consider that session is not integrated within tasks -> Create a separate CO2Record and put as new tree root
         CO2RecordTree newCo2RecordTree
-        if (co2RecordTree.metaData.get('level') == 'session') {
+        if (co2RecordTree.metaData.get('workflowLevel') == 'session') {
             newCo2RecordTree = new CO2RecordTree(
                     co2RecordTree.name,
                     co2RecordTree.metaData,
-                    observer.createCO2Record(co2RecordTree.co2Record, true)
+                    null,
+                    null
             )
+            
+            // Construct new head job data
+            List<CO2RecordTree> headJobRecordTrees = co2RecordTree.descentTo('head')
+            for (CO2RecordTree headJobRecordTree : headJobRecordTrees) {
+                CO2RecordTree newHeadJobRecordTree = new CO2RecordTree(
+                        headJobRecordTree.name,
+                        headJobRecordTree.metaData,
+                        observer.createCO2Record(headJobRecordTree.co2Record, true)
+                )
+                newCo2RecordTree.addChild(newHeadJobRecordTree)
+            }
             newCo2RecordTree.addChild(observer.workflowStats)
         }
         else {

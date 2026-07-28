@@ -170,6 +170,11 @@ class CO2Record extends TraceRecord {
             return Calculator.min(thisValue, newValue)
         }
 
+        // TaskID can not be accumulated and is replaced by -1 because the result is not a task
+        else if(key == 'task_id') {
+            return '-1'
+        }
+
         // For string fields, store all unique values in a Set
         else if ((key in ['cpu_model', 'status', 'name', 'cpu_power_model']) || (FIELDS.get(key) in ['str'])) {
             return thisValue == newValue ? thisValue : null

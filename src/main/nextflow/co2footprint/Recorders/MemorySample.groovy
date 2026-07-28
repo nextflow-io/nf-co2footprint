@@ -7,6 +7,7 @@ class MemorySample {
     long timestamp
 
     // Memory
+    long memory                 // Committed memory
     long rssBytes               // Resident Set Size
     long virtualMemoryBytes     // VSZ
 }

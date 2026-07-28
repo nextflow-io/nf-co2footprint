@@ -27,7 +27,7 @@ class ProvenanceFileConfig extends BaseFileConfig implements ConfigScope {
     final boolean emissionMetricsOnly
 
     ProvenanceFileConfig(Map provenanceFileConfig, String timestamp=null) {
-        super('provenance', 'json', false)
+        super('provenance', 'json', true)
 
         file = defineFile(provenanceFileConfig, timestamp)
         enabled = defineEnabled(provenanceFileConfig)

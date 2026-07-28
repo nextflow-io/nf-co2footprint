@@ -16,7 +16,7 @@ class ProvenanceFileCreatorTest extends Specification {
         Path jsonLdPath = Path.of(this.class.getResource('/observer/provenance_test.json').toURI())
         CO2RecordTree expectedTaskTree = new CO2RecordTree(
                 '111',
-                [level: 'task'],
+                [workflowLevel: 'task'],
                 new CO2Record([
                         task_id: '111',
                         status: 'COMPLETED',
@@ -36,8 +36,8 @@ class ProvenanceFileCreatorTest extends Specification {
                         memory_energy_function:'runtime_h * memory * 0.3725',
                 ]),
         )
-        CO2RecordTree expectedProcessTree = new CO2RecordTree('observerTestProcess', [level: 'process'], null, null, [expectedTaskTree])
-        CO2RecordTree expectedWorkflowTree = new CO2RecordTree('null', [level: 'workflow'], null, null, [expectedProcessTree])
+        CO2RecordTree expectedProcessTree = new CO2RecordTree('observerTestProcess', [workflowLevel: 'process'], null, null, [expectedTaskTree])
+        CO2RecordTree expectedWorkflowTree = new CO2RecordTree('null', [workflowLevel: 'workflow'], null, null, [expectedProcessTree])
         expectedWorkflowTree.summarize()
 
 
@@ -64,7 +64,7 @@ class ProvenanceFileCreatorTest extends Specification {
                 submit: 1759849601467L
         ])
         CO2Record co2Record = new CO2Record(traceRecord.store)
-        CO2RecordTree recordTree = new CO2RecordTree('task', [level: 'task'], co2Record)
+        CO2RecordTree recordTree = new CO2RecordTree('task', [workflowLevel: 'task'], co2Record)
 
         when:
         creator.create()

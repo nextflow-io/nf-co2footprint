@@ -23,7 +23,7 @@ class SummaryFileConfig extends BaseFileConfig implements ConfigScope {
     final Boolean overwrite
 
     SummaryFileConfig(Map summaryFileConfig, String timestamp=null) {
-        super('summary', 'txt')
+        super('summary', 'txt', false)
 
         file = defineFile(summaryFileConfig, timestamp)
         enabled = defineEnabled(summaryFileConfig)

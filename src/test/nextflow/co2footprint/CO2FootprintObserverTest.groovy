@@ -5,6 +5,7 @@ import nextflow.NextflowMeta
 import nextflow.Session
 import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.TestHelpers.FileChecker
+import nextflow.co2footprint.TestHelpers.Regexes
 import nextflow.executor.NopeExecutor
 import nextflow.processor.TaskHandler
 import nextflow.processor.TaskId
@@ -213,68 +214,28 @@ class CO2FootprintObserverTest extends Specification{
         observer.renderFiles()
 
         then:
-        //
-        // Check Trace File
-        //
-        fileChecker.checkIsFile(tracePath)
-        List<String> traceLines = tracePath.readLines()
-        traceLines.size() == 2
-
-        List<String> headers = traceLines[0].split('\t') as List<String>
-        List<String> values = traceLines[1].split('\t') as List<String>
-        headers.size() == values.size()
-
-        headers == [
-                'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'raw_energy_processor', 'raw_energy_memory',
-                'carbon_intensity', '%cpu', 'memory', 'realtime', 'cpus', 'powerdraw_cpu', 'cpu_model',
-                'cpu_energy_function', 'memory_energy_function'
+        Map multFileCheckConfig = [
+                'trace': [path: tracePath],
+                'summary': [
+                        path: summaryPath,
+                        replacements: [
+                                (Regexes.summaryProvenanceFile): [provenancePath.toString()],
+                                (Regexes.summaryReportFile): [reportPath.toString()],
+                                (Regexes.summarySummaryFile): [summaryPath.toString()],
+                                (Regexes.summaryTraceFile): [tracePath.toString()],
+                        ]
+                ],
+                'report': [
+                        path: reportPath,
+                        replacements: [
+                                (Regexes.filesReportFile): [ provenancePath, reportPath, summaryPath, tracePath ] as List<String>,
+                                (Regexes.workflowStartEndReportFile) : [
+                                        time.format('dd-MMM-YYYY HH:mm:ss'), time.format('dd-MMM-YYYY HH:mm:ss')
+                                ]
+                        ]
+                ],
+                'provenance': [path: provenancePath],
         ]
-
-        values == [
-            '111', 'COMPLETED', '-', '14.02 Wh', '6.73 g', '-', '11.41 Wh', '2.61 Wh',
-            '480 gCO₂e/kWh', '100 %', '7 GB', '1h', '1', '11.41 W', 'Unknown model',
-            'runtime_h * numberOfCores * powerdrawPerCore * coreUsage', 'runtime_h * memory * 0.3725'
-        ] // GA: CO₂e is 6.94g with CI of 475 gCO₂eq/kWh
-
-        fileChecker.compareChecksums(tracePath, '89b295317067dbc72db04ecf5f29e848')
-
-
-        // Check Summary File
-        fileChecker.runChecks(
-                summaryPath,
-                [
-                        28: "  provenanceFile: ${provenancePath}",
-                        29: "  reportFile: ${reportPath}",
-                        30: "  summaryFile: ${summaryPath}",
-                        31: "  traceFile: ${tracePath}"
-                ]
-        )
-
-        // Check Report File
-        fileChecker.runChecks(
-            reportPath,
-            [
-                1534: '    window.options = [' +
-                        '{"option":"ci","value":"480.0"},'+
-                        '{"option":"ciMarket","value":null},' +
-                        '{"option":"cpuEnergyFunction","value":null},' +
-                        '{"option":"customCpuTdpFile","value":null},' +
-                        '{"option":"ignoreCpuModel","value":"false"},' +
-                        '{"option":"location","value":null},' +
-                        '{"option":"machineType","value":null},' +
-                        '{"option":"memoryEnergyFunction","value":null},' +
-                        '{"option":"powerdrawCpuDefault","value":null},' +
-                        "{\"option\":\"provenanceFile\",\"value\":\"${provenancePath}\"}," +
-                        '{"option":"pue","value":"1.0"},' +
-                        "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +
-                        "{\"option\":\"summaryFile\",\"value\":\"${summaryPath}\"}," +
-                        "{\"option\":\"traceFile\",\"value\":\"${tracePath}\"}];",
-                1585: '          ' +
-                        "<span id=\"workflow_start\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>" +
-                        " - <span id=\"workflow_complete\">${time.format('dd-MMM-YYYY HH:mm:ss')}</span>"
-            ]
-        )
-
-        fileChecker.runChecks(provenancePath)
+        fileChecker.runMultiFileChecks(multFileCheckConfig)
     }
 }

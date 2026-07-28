@@ -20,7 +20,7 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import nextflow.cli.PluginAbstractExec
 import nextflow.co2footprint.Parsers.ArgsParser
-import nextflow.co2footprint.Recorders.SessionTraceRecorder
+import nextflow.co2footprint.Recorders.HeadJobTraceRecorder
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.plugin.BasePlugin
@@ -39,7 +39,7 @@ import java.nio.file.Paths
 @Slf4j
 class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
     // Record stats about the session
-    final SessionTraceRecorder sessionTraceRecorder = new SessionTraceRecorder()
+    final HeadJobTraceRecorder headJobTraceRecorder = new HeadJobTraceRecorder()
 
     // Plugin version
     static final String version = readPluginVersion()
@@ -58,7 +58,7 @@ class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
     void start() {
         log.info("nf-co2footprint plugin  ~  version ${version}")
 
-        sessionTraceRecorder.start()
+        headJobTraceRecorder.start()
         super.start()
     }
 
@@ -67,19 +67,30 @@ class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
      */
     @Override
     void stop() {
-        sessionTraceRecorder.stop()
-        TraceRecord sessionRecord = sessionTraceRecorder.report()
+        headJobTraceRecorder.stop()
+        TraceRecord headJobRecord = headJobTraceRecorder.report()
 
         if (observer != null) {
-            CO2Record sessionCO2Record = observer.createCO2Record(sessionRecord)
+            CO2Record headJobCO2Record = observer.createCO2Record(headJobRecord)
             observer.timeCiRecordCollector.stop()
-
+            
+            // Define head job stats
+            CO2RecordTree headJobStats = new CO2RecordTree(
+                    headJobCO2Record.store.get('name', 'Nextflow head job'),
+                    [workflowLevel: 'head'],
+                    headJobCO2Record
+            )
+            
+            // Define session level stats
+            String sessionName = headJobCO2Record.store.get('name', 'Nextflow session')
+            sessionName = sessionName.replace(HeadJobTraceRecorder.headJobSuffix, 'session')
+            
             CO2RecordTree sessionStats = new CO2RecordTree(
-                    sessionCO2Record.store.get('name', null),
-                    [level: 'session'],
-                    sessionCO2Record,
+                    sessionName,
+                    [workflowLevel: 'session'],
                     null,
-                    [observer.workflowStats]
+                    null,
+                    [headJobStats, observer.workflowStats]
             )
 
             // Render files

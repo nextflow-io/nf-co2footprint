@@ -27,7 +27,7 @@
  * @returns {*} The value to render
  */
 function rawOrReadable(data, type) {
-  if (type === 'sort' || $('#nf-table-humanreadable').val() == 'false') {
+  if (type === 'sort' || $('#nf-table-humanreadable').val() === 'false') {
     return data['raw'].value
   }
   if (data.hasOwnProperty('report')) {
@@ -115,6 +115,124 @@ const HOVERLABEL = {
  */
 const PLOT_BG = { plot_bgcolor: '#FCFEFF', paper_bgcolor: '#FFFFFF' }
 
+/**
+ * Extracts a numeric value from a potentially nested report object.
+ * Handles: {raw: {value: num}}, {value: num}, or bare number.
+ * @param {*} obj - The object to extract from
+ * @returns {number|null} The raw numeric value, or null if not found
+ */
+function findValue(obj) {
+  if (obj == null) return null
+  if (typeof obj === 'number') return obj
+  if (typeof obj === 'object') return obj.raw?.value ?? obj.value ?? null
+  return null
+}
+
+/**
+ * Extracts a process-level field from the data summary by key.
+ * @param {object} list - The list object
+ * @param {string} key - The field name (e.g. 'peak_rss', 'memory')
+ * @returns List of selected 
+ */
+function selectEntryRawValue(list, key) {
+  let newList = []
+  for(const entry of list) {
+    newList.push(entry[key].raw.value)
+  }
+  
+  return newList
+}
+
+/**
+ * Extracts a plain string from a task field which may be a raw string,
+ * a number, or the structured object format used by Nextflow's trace data
+ * (e.g. { raw: { value: '…' }, readable: '…', report: '…' }).
+ *
+ * @param {*} value - Raw field value from a trace record
+ * @returns {string}
+ */
+function toString(value) {
+  if (value == null) {
+    return ''
+  }
+  if (typeof value === 'string') {
+    return value
+  }
+  if (typeof value === 'number' || typeof value === 'boolean') {
+    return String(value)
+  }
+  if (typeof value === 'object') {
+    if (value.report != null)   return String(value.report)
+    if (value.readable != null) return String(value.readable)
+    if (value.raw != null) {
+      if (typeof value.raw === 'object' && value.raw.value != null) {
+        return String(value.raw.value)
+      }
+      return String(value.raw)
+    }
+  }
+  return String(value)
+}
+
+/**
+ * Group tasks by their process
+ * We key on the *full* colon-joined path (e.g. "PIPELINE:SUB:PROCESS") to
+ * avoid collisions between processes sharing only the last segment.
+ */
+function sortTasksAndProcesses() {
+  const sortedTasksInProcesses = new Map()
+
+  // Add Date() entry to start and end time of tasks
+  window.data.trace.forEach( task => {
+    task.start.time = new Date(task.start.raw.value)
+    task.complete.time = new Date(task.complete.raw.value)
+  })
+  
+  // Sort tasks by start time
+  window.data.trace = window.data.trace.sort( (a, b) => a.start.time - b.start.time )
+
+  window.data.workflowStart = window.data.trace[0].start.time
+  window.data.workflowEnd = null
+  
+  // Insert tasks by start to a process (also sorted by start through insertion)
+  for (const task of window.data.trace) {
+    // Create entry in process
+    const processKey = task.process.raw.value || 'unknown'
+    if (!sortedTasksInProcesses.has(processKey)) {
+      sortedTasksInProcesses.set(processKey, [])
+    }
+    
+    // Add task in starting order to process
+    sortedTasksInProcesses.get(processKey).push(task)
+    
+    // Search for workflow completion time
+    if (window.data.workflowEnd == null || task.complete.time > window.data.workflowEnd) {
+      window.data.workflowEnd = task.complete.time
+    }
+  }
+  
+  return sortedTasksInProcesses
+}
+
+/**
+ * Collect task events with start and end date over time,
+ * as well as a prepared list with time steps.
+ */
+function collect_task_time_steps() {
+  // Collect all time boundaries
+  window.data.timedTaskEvents = []
+  for (const task of window.data.trace) {
+    window.data.timedTaskEvents.push({time: task.start.time, eventType: 'start', task})
+    window.data.timedTaskEvents.push({time: task.complete.time, eventType: 'complete', task})
+  }
+  window.data.timedTaskEvents = window.data.timedTaskEvents.sort((a, b) => a.time - b.time)
+
+  window.data.timeStepsList = []
+  window.data.timedTaskEvents.forEach( taskEvent => {
+    window.data.timeStepsList.push(taskEvent.time, taskEvent.time)
+  })
+}
+
 // Map for collecting statistics by process (legacy, kept for compatibility)
 window.statsByProcess = {};
 
@@ -128,14 +246,23 @@ $(function () {
     $(this).toggleClass('short')
   })
 
-  // Initialise Bootstrap tooltips on any element with data-toggle="tooltip".
+  // Initialize Bootstrap tooltips on any element with data-toggle="tooltip".
   $('[data-toggle="tooltip"]').tooltip()
 
   // Completed date from now
-  var completed_date = moment($('#workflow_complete').text(), "ddd MMM DD HH:mm:ss .* YYYY")
+  let completed_date = moment($('#workflow_complete').text(), "ddd MMM DD HH:mm:ss .* YYYY")
   if (completed_date.isValid()) {
     $('#completed_fromnow').html('completed ' + completed_date.fromNow() + ', ')
   }
+
+  // Collect tasks by process
+  const sortedTasksInProcesses = sortTasksAndProcesses()
+
+  // ── Build shortest unique display labels via shared utility ────
+  window.data.processDisplayNames = buildUniqueLabels(Array.from(sortedTasksInProcesses.keys()))
+  
+  // Must be executed after sortTasksAndProcesses()
+  collect_task_time_steps()
 
   // ───────────────────────────────────────────────────────────────────────────
   // PER-PROCESS EMISSIONS PLOT
@@ -364,18 +491,18 @@ $(function () {
     }
 
     // Column titles
-    var energyConsumptionProcessorTitle = 'energy consumption (processor) [mWh]'
-    var energyConsumptionMemoryTitle = 'energy consumption (memory) [mWh]'
-    var energyConsumptionTitle = 'energy consumption (incl. PUE) [mWh]' // Default column title
-    var co2EmissionsTitle = 'CO₂e emissions [mg]'
-    if ($('#nf-table-humanreadable').val() == 'true') {
+    let energyConsumptionProcessorTitle = 'energy consumption (processor) [mWh]'
+    let energyConsumptionMemoryTitle = 'energy consumption (memory) [mWh]'
+    let energyConsumptionTitle = 'energy consumption (incl. PUE) [mWh]' // Default column title
+    let co2EmissionsTitle = 'CO₂e emissions [mg]'
+    if ($('#nf-table-humanreadable').val() === 'true') {
       energyConsumptionProcessorTitle = 'energy consumption (processor)'
       energyConsumptionMemoryTitle = 'energy consumption (memory)'
       energyConsumptionTitle = 'energy consumption (incl. PUE)' // Change the column title if the button is selected
       co2EmissionsTitle = 'CO₂e emissions'
     }
 
-    var table = $('#tasks_table').DataTable({
+    let table = $('#tasks_table').DataTable({
       data: window.data.trace,
       columns: [
         { title: 'task_id', data: 'task_id' },
@@ -392,7 +519,7 @@ $(function () {
         { title: 'allocated cpus', data: 'cpus' },
         { title: '%cpu', data: '%cpu' },
         { title: 'allocated memory', data: 'memory' },
-        { title: 'realtime', data: 'time' },
+        { title: 'realtime', data: 'realtime' },
         { title: 'power draw (in W/core)', data: 'powerdraw_cpu' },
         { title: 'cpu model', data: 'cpu_model' },
       ],
@@ -436,8 +563,8 @@ $(function () {
 
     // Column filter button group onClick event to highlight active filter
     $('.buttons-colvisGroup').click(function () {
-      var def = 'btn-secondary'
-      var sel = 'btn-primary'
+      let def = 'btn-secondary'
+      let sel = 'btn-primary'
       $('.buttons-colvisGroup').removeClass(sel).addClass(def)
       $(this).addClass(sel).removeClass(def)
     })
@@ -453,7 +580,7 @@ $(function () {
   }
   else {
     $('#tasks-omitted-table').remove()
-    // Dropdown changed about raw / human readable values in table
+    // Dropdown changed about raw / human-readable values in table
     $('#nf-table-humanreadable').change(function () {
       make_tasks_table()
     })
@@ -470,7 +597,7 @@ $(function () {
       $('#options_table').DataTable().destroy()
     }
 
-    var table = $('#options_table').DataTable({
+    $('#options_table').DataTable({
       data: window.options,
       columns: [
         { title: "Option", data: "option" },
@@ -484,56 +611,42 @@ $(function () {
   // Executor for options table creation (on page load)
   make_options_table()
 
-  //
-  // Carbon intensity plot
-  //
-
-  function make_ci_plot() {
-    var ci_plot_data = []
-
-    // Add Date() entry to start and end time of tasks
-    window.data.trace.forEach(task => {
-      task.start.time = new Date(task.start.raw.value)
-      task.complete.time = new Date(task.complete.raw.value)
+  /**
+   * Accumulate a variable over all task the given key extracts a value that is
+   * added upon task start and subtracted upon task completion
+   * @param taskKey - A key that refers to a task entry
+   * @returns {*[]} A list with accumulated values for every start and end point of a task
+   */
+  function accumulate_over_tasks(taskKey) {
+    // For each subinterval, calculate the total energy from active intervals
+    let current = 0.0
+    let accumulated = []
+    window.data.timedTaskEvents.forEach( taskEvent => {
+      accumulated.push(current)
+      if (taskEvent.eventType === 'start') {
+        current += findValue(taskEvent.task[taskKey])
+      }
+      else if (taskEvent.eventType === 'complete') {
+        current -= findValue(taskEvent.task[taskKey])
+      }
+      accumulated.push(current)
     })
+    
+    return accumulated
+  }
+
+  /**
+   * Carbon intensity plot
+   * @returns {*} The carbon intensity plot
+   */
+  function make_ci_plot() {
+    let ci_plot_data = []
 
     // Tasks:
-    // Collect all time boundaries
-    const timePoints = new Set()
-    for (const task of window.data.trace) {
-      timePoints.add(task.start.time)
-      timePoints.add(task.complete.time)
-    }
-    const sortedTimes = Array.from(timePoints).sort((a, b) => a - b)
-
-    // Define first and last point
-    var [tasksStart, tasksEnd] = [sortedTimes[0], sortedTimes[sortedTimes.length - 1]]
-
-    // For each subinterval, calculate the total energy from active intervals
-    // Add first point to energy trace
-    const timeSteps = [tasksStart], totalEnergy = [0.0]
-    // Add intermediate points to energy trace
-    for (let i = 0; i < sortedTimes.length - 1; i++) {
-      const t0 = sortedTimes[i]
-      const t1 = sortedTimes[i + 1]
-
-      // Sum energy of intervals active in [t0, t1)
-      let total = 0
-      for (const task of window.data.trace) {
-        if (task.start.time <= t0 && task.complete.time >= t1) {
-          total += task.energy_consumption.raw.value
-        }
-      }
-
-      timeSteps.push(t0, t1)
-      totalEnergy.push(total, total)
-    }
-    // Add last point to energy trace
-    timeSteps.push(tasksEnd)
-    totalEnergy.push(0.0)
+    const accumulatedEnergyList= accumulate_over_tasks('energy_consumption')
 
     // CI Records:
-    var ciRecords = new Map()
+    let ciRecords = new Map()
 
     // Change keys to Date() and sort
     for (let [key, value] of Object.entries(window.ciRecords)) {
@@ -541,26 +654,26 @@ $(function () {
     }
     ciRecords = new Map([...ciRecords.entries()].sort((a, b) => a[0] - b[0]))
 
-    if (ciRecords.size == 0) {
-      ciRecords.set(tasksStart, window.data.trace[0].carbon_intensity.raw.value)
-      ciRecords.set(tasksEnd, window.data.trace[0].carbon_intensity.raw.value)
+    if (ciRecords.size === 0) {
+      ciRecords.set(window.data.workflowStart, window.data.trace[0].carbon_intensity.raw.value)
+      ciRecords.set(window.data.workflowEnd, window.data.trace[0].carbon_intensity.raw.value)
     }
     else {
       const times = [...ciRecords.keys()]
       const cis = [...ciRecords.values()]
-      if (tasksStart < times[0]) {
-        ciRecords.set(tasksStart, cis[0])
+      if (window.data.workflowStart < times[0]) {
+        ciRecords.set(window.data.workflowStart , cis[0])
       }
-      if (tasksEnd > times[times.length - 1]) {
-        ciRecords.set(tasksEnd, cis[cis.length - 1])
+      if (window.data.workflowEnd > times[times.length - 1]) {
+        ciRecords.set(window.data.workflowEnd, cis[cis.length - 1])
       }
     }
 
     ciRecords = new Map([...ciRecords.entries()].sort((a, b) => a[0] - b[0]))
     // Step plot for carbon intensity
-    var previousValue = null
-    var timestamps = []
-    var ciValues = []
+    let previousValue = null
+    let timestamps = []
+    let ciValues = []
     for (const [timestamp, value] of ciRecords) {
       if (previousValue != null) {
         timestamps.push(timestamp)
@@ -591,7 +704,7 @@ $(function () {
     ci_plot_data.push(
       {
         name: "Energy consumption",
-        x: timeSteps, y: totalEnergy,
+        x: window.data.timeStepsList, y: accumulatedEnergyList,
         type: "scatter",
         fill: "tozeroy", yaxis: "y2",
         fillcolor: 'rgba(244, 162, 31, 0.24)',
@@ -601,7 +714,7 @@ $(function () {
     )
 
     // Layout:
-    var ci_layout = {
+    let ci_layout = {
       title: { text: "Carbon intensity & energy over time" },
       margin: { l: 140, r: 100, t: 40, b: 60 },
       plot_bgcolor: '#FCFEFF',
@@ -617,7 +730,7 @@ $(function () {
       },
       xaxis: {
         title: { text: "Time", font: { color: '#000000' } },
-        range: [tasksStart, tasksEnd],
+        range: [window.data.workflowStart, window.data.workflowEnd ],
         ticklabelstandoff: 10,
         showgrid: true,
         gridcolor: 'rgba(36,64,87,0.08)',
@@ -661,30 +774,30 @@ $(function () {
   }
 
   function ensure_process_swimlane_container() {
-    var existingPlot = document.getElementById('process-swimlane-plot')
+    let existingPlot = document.getElementById('process-swimlane-plot')
     if (existingPlot) {
       return existingPlot
     }
 
-    var ciPlot = document.getElementById('ci-plot')
+    let ciPlot = document.getElementById('ci-plot')
     if (!ciPlot) {
       return null
     }
 
-    var sectionContainer = ciPlot.closest('.container') || ciPlot.parentElement
+    let sectionContainer = ciPlot.closest('.container') || ciPlot.parentElement
     if (!sectionContainer) {
       return null
     }
 
-    var heading = document.createElement('h3')
+    let heading = document.createElement('h3')
     heading.id = 'process-swimlanes'
     heading.className = 'mt-4'
     heading.textContent = 'Process task timeline'
 
-    var plotDiv = document.createElement('div')
+    let plotDiv = document.createElement('div')
     plotDiv.id = 'process-swimlane-plot'
 
-    var description = document.createElement('p')
+    let description = document.createElement('p')
     description.className = 'mt-3 mb-3'
     description.textContent = 'This Gantt-style swimlane plot shows task runtime windows grouped by process. Each horizontal bar corresponds to one task execution interval.'
 
@@ -705,103 +818,25 @@ $(function () {
     if (!window.data.trace || window.data.trace.length === 0) {
       return null
     }
-
-    var swimlanePlotContainer = ensure_process_swimlane_container()
-    if (!swimlanePlotContainer) {
+    
+    let swimlanePlotContainer = ensure_process_swimlane_container()
+    if (!swimlanePlotContainer || sortedTasksInProcesses.size === 0) {
       return null
     }
 
-    /**
-     * Extracts a plain string from a task field which may be a raw string,
-     * a number, or the structured object format used by Nextflow's trace data
-     * (e.g. { raw: { value: … }, readable: '…', report: '…' }).
-     *
-     * @param {*} value - Raw field value from a trace record
-     * @returns {string}
-     */
-    function normalizeTaskField(value) {
-      if (value == null) {
-        return ''
-      }
-      if (typeof value === 'string') {
-        return value
-      }
-      if (typeof value === 'number' || typeof value === 'boolean') {
-        return String(value)
-      }
-      if (typeof value === 'object') {
-        if (value.report != null)   return String(value.report)
-        if (value.readable != null) return String(value.readable)
-        if (value.raw != null) {
-          if (typeof value.raw === 'object' && value.raw.value != null) {
-            return String(value.raw.value)
-          }
-          return String(value.raw)
-        }
-      }
-      return String(value)
-    }
-
-    // ── Step 1: group tasks by their full process path ──────────────────────
-    // We key on the *full* colon-joined path (e.g. "PIPELINE:SUB:PROCESS") to
-    // avoid collisions between processes sharing only the last segment.
-    const tasksByProcess = new Map()
-    let timelineStart = null
-    let timelineEnd = null
-    for (const task of window.data.trace) {
-      const processKey = normalizeTaskField(task.process) || 'unknown'
-      const start = new Date(task.start?.raw?.value)
-      const complete = new Date(task.complete?.raw?.value)
-
-      if (Number.isNaN(start.getTime()) || Number.isNaN(complete.getTime()) || complete < start) {
-        continue
-      }
-
-      if (!tasksByProcess.has(processKey)) {
-        tasksByProcess.set(processKey, [])
-      }
-
-      tasksByProcess.get(processKey).push({
-        task_id: normalizeTaskField(task.task_id) || 'n/a',
-        status: normalizeTaskField(task.status) || 'n/a',
-        start: start,
-        complete: complete,
-      })
-
-      if (timelineStart == null || start < timelineStart) {
-        timelineStart = start
-      }
-      if (timelineEnd == null || complete > timelineEnd) {
-        timelineEnd = complete
-      }
-    }
-
-    // ── Step 2: sort processes chronologically by their first task start ─────
-    const processFirstStart = new Map()
-    for (const [key, tasks] of tasksByProcess) {
-      processFirstStart.set(key, Math.min(...tasks.map(t => t.start.getTime())))
-    }
-    const processKeys = [...tasksByProcess.keys()].sort(
-      (a, b) => processFirstStart.get(a) - processFirstStart.get(b)
-    )
-    if (processKeys.length === 0) {
-      return null
-    }
-
-    // ── Step 3: build shortest unique display labels via shared utility ────
-    const processDisplayName = buildUniqueLabels(processKeys)
     // Flat array of display names in the same order as processKeys (used for
     // y-axis ticktext and height calculation).
-    const processNames = processKeys.map(k => processDisplayName.get(k))
+    const processKeys = Array.from(sortedTasksInProcesses.keys())
+    const processNames = processKeys.map(k => window.data.processDisplayNames.get(k))
 
-    // ── Step 4: build one Plotly scatter trace per task ──────────────────────
+    // ── Build one Plotly scatter trace per task ──────────────────────
     // Each task is a horizontal line from task.start to task.complete at its
     // assigned y position.  Parallel tasks within the same process are spread
     // across sub-lanes (fractional y offsets within ±laneBandHalfHeight).
     const swimlaneData = []
-    for (const [processIndex, processKey] of processKeys.entries()) {
-      const displayName = processDisplayName.get(processKey)
-      const processTasks = tasksByProcess.get(processKey).sort((a, b) => a.start - b.start)
+    processKeys.forEach( (processKey, processIndex) => {
+      const displayName = window.data.processDisplayNames.get(processKey)
+      const processTasks = sortedTasksInProcesses.get(processKey)
       const laneEndTimes = []   // tracks the latest end-time per sub-lane
       const laneAssignments = [] // sub-lane index for each task
 
@@ -810,7 +845,7 @@ $(function () {
       for (const task of processTasks) {
         let lane = -1
         for (let laneIndex = 0; laneIndex < laneEndTimes.length; laneIndex++) {
-          if (task.start >= laneEndTimes[laneIndex]) {
+          if (task.start.time >= laneEndTimes[laneIndex]) {
             lane = laneIndex
             break
           }
@@ -818,9 +853,9 @@ $(function () {
 
         if (lane === -1) {
           lane = laneEndTimes.length
-          laneEndTimes.push(task.complete)
+          laneEndTimes.push(task.complete.time)
         } else {
-          laneEndTimes[lane] = task.complete
+          laneEndTimes[lane] = task.complete.time
         }
 
         laneAssignments.push(lane)
@@ -833,7 +868,7 @@ $(function () {
       const laneStep = laneCount === 1 ? 0 : (2 * laneBandHalfHeight) / (laneCount - 1)
 
       for (const [taskIndex, task] of processTasks.entries()) {
-        const durationMinutes = (task.complete - task.start) / 60000.0
+        const durationMinutes = (task.complete.time - task.start.time) / 60000.0
         const lane = laneAssignments[taskIndex]
         const laneY = laneCount === 1
           ? processIndex
@@ -843,7 +878,7 @@ $(function () {
         // always shows exactly the hovered task's data.
         swimlaneData.push({
           name: displayName,
-          x: [task.start, task.complete],
+          x: [task.start.time, task.complete.time],
           y: [laneY, laneY],
           type: 'scatter',
           mode: 'lines+markers',
@@ -859,14 +894,14 @@ $(function () {
           showlegend: false,
           hovertemplate: [
             `<b>${displayName}</b>`,
-            `Task ID: ${task.task_id ?? 'n/a'}`,
-            `Status: ${task.status ?? 'n/a'}`,
+            `Task ID: ${task.task_id.raw.value ?? 'n/a'}`,
+            `Status: ${task.status.raw.value ?? 'n/a'}`,
             `Duration: ${durationMinutes.toFixed(1)} min`,
             '<extra></extra>',
           ].join('<br>'),
         })
       }
-    }
+    })
 
     const swimlaneLayout = {
       title: { text: 'Task execution swimlanes by process' },
@@ -879,7 +914,7 @@ $(function () {
       xaxis: {
         title: { text: 'Time' },
         type: 'date',
-        range: timelineStart && timelineEnd ? [timelineStart, timelineEnd] : undefined,
+        range: window.data.workflowStart && window.data.workflowEnd ? [window.data.workflowStart, window.data.workflowEnd] : undefined,
         showgrid: true,
         gridcolor: 'rgba(36,64,87,0.08)',
         zeroline: false,
@@ -942,103 +977,341 @@ $(function () {
       })
   }
 
-  // ───────────────────────────────────────────────────────────────────────────
-  // X-AXIS SYNCHRONISATION BETWEEN CI PLOT AND SWIMLANE PLOT
-  // Panning or zooming either plot mirrors the new x-range onto the other so
-  // both always show the same time window.
-  // ───────────────────────────────────────────────────────────────────────────
-  function link_timeline_xaxis(ciGraphDiv, swimlaneGraphDiv) {
-    if (!ciGraphDiv || !swimlaneGraphDiv) {
-      return
-    }
-
-    // Guard against double-attaching listeners if this function is called again.
-    if (ciGraphDiv._nfTimelineSyncAttached || swimlaneGraphDiv._nfTimelineSyncAttached) {
-      return
-    }
-    ciGraphDiv._nfTimelineSyncAttached = true
-    swimlaneGraphDiv._nfTimelineSyncAttached = true
-
-    // syncInProgress prevents the two plots from triggering each other in an
-    // infinite loop when one relayout causes a relayout in the other.
-    let syncInProgress = false
-
-    // Bootstrap the swimlane to match the CI plot's initial x-axis range.
-    const initialRange = ciGraphDiv.layout?.xaxis?.range
-    if (Array.isArray(initialRange) && initialRange.length === 2) {
-      Plotly.relayout(swimlaneGraphDiv, { 'xaxis.range': initialRange })
-    }
-
-    /**
-     * Propagates a relayout event from one plot to the other.
-     * Handles both the array form ('xaxis.range') and the indexed form
-     * ('xaxis.range[0]' / 'xaxis.range[1]') that Plotly emits depending on
-     * the interaction type.
-     *
-     * @param {object} targetGraphDiv - The plot div to update
-     * @param {object} eventData      - The relayout event payload
-     */
-    function mirrorRelayout(targetGraphDiv, eventData) {
-      if (syncInProgress || !eventData) {
-        return
-      }
-
-      if (eventData['xaxis.autorange']) {
-        // User double-clicked to reset zoom — propagate the autorange reset.
-        syncInProgress = true
-        Plotly.relayout(targetGraphDiv, { 'xaxis.autorange': true })
-          .then(() => { syncInProgress = false })
-          .catch(() => { syncInProgress = false })
-        return
-      }
-
-      // Plotly can deliver the range as either an array property or two indexed
-      // properties — normalise both forms to range0 / range1.
-      let range0 = eventData['xaxis.range[0]']
-      let range1 = eventData['xaxis.range[1]']
-      if ((range0 === undefined || range1 === undefined) && Array.isArray(eventData['xaxis.range'])) {
-        range0 = eventData['xaxis.range'][0]
-        range1 = eventData['xaxis.range'][1]
-      }
-
-      if (range0 !== undefined && range1 !== undefined) {
-        syncInProgress = true
-        Plotly.relayout(targetGraphDiv, { 'xaxis.range': [range0, range1] })
-          .then(() => { syncInProgress = false })
-          .catch(() => { syncInProgress = false })
+  /**
+   * Generates a Nextflow config recommendation block based on process memory usage.
+   * For each process, recommends memory = process_peak_rss * 1.2 (20% headroom),
+   * formatted as `memory = X.GB`. Deduplicates by process key.
+   */
+  function generateMemoryRecommendations() {
+    // Collect memory recommendations
+    window.data.memoryRecommendations = new Map()
+    for (const [processKey, tasks] of sortedTasksInProcesses.entries()) {
+      // Prefer peak_rss (bytes -> GB), fallback to memory (GB)
+      let peakRss = Math.max( ...selectEntryRawValue(tasks, 'peak_rss') )
+      if (peakRss) {
+        window.data.memoryRecommendations.set(processKey, Math.ceil((peakRss / 1e9) * 1.2))
       }
     }
-
-    ciGraphDiv.on('plotly_relayout', (eventData) => {
-      mirrorRelayout(swimlaneGraphDiv, eventData)
-    })
-    ciGraphDiv.on('plotly_doubleclick', () => {
-      if (!syncInProgress) {
-        syncInProgress = true
-        Plotly.relayout(swimlaneGraphDiv, { 'xaxis.autorange': true })
-          .then(() => { syncInProgress = false })
-          .catch(() => { syncInProgress = false })
-      }
-    })
-
-    swimlaneGraphDiv.on('plotly_relayout', (eventData) => {
-      mirrorRelayout(ciGraphDiv, eventData)
-    })
-    swimlaneGraphDiv.on('plotly_doubleclick', () => {
-      if (!syncInProgress) {
-        syncInProgress = true
-        Plotly.relayout(ciGraphDiv, { 'xaxis.autorange': true })
-          .then(() => { syncInProgress = false })
-          .catch(() => { syncInProgress = false })
-      }
-    })
   }
+
+  /**
+   * Renders the memory optimization scatter plot.
+   * Two traces per task:
+   *   1. raw_energy_memory (actual, from memory configured per process)
+   *   2. hypothetical energy (if memory were set to the process peak_rss instead)
+   *   Both plotted against task start time; y-axis is energy in Wh.
+   */
+  function make_memory_optimization_plot() {
+    if (!window.data.timedTaskEvents || window.data.timedTaskEvents.length === 0) {
+      return null
+    }
+    
+    // Collect constant powerdraw of memory
+    let powerdrawMem = findValue(window.data.trace[0].powerdraw_memory)
+    
+    // Track saved energy
+    let savedEnergy = 0.0
+    
+    // Make more complex accumulated lists
+    // -> Accumulates memory energy and its hypothetical counterpart
+    let timeStepsList = []
+    let customDataList = []
+    let accumulatedMemoryEnergyList = []
+    let accumulatedHypotheticalMemoryEnergyList = []
+    let currentHypotheticalMemoryEnergy = 0.0
+    let currentMemoryEnergy = 0.0
+    window.data.timedTaskEvents.forEach( taskEvent => {
+      let processKey = findValue(taskEvent.task.process) || 'unknown'
+      let recommendedMemory = window.data.memoryRecommendations.get(processKey)
+      let processName = window.data.processDisplayNames.get(processKey)
+
+      if (recommendedMemory) {
+        let runtimeH = ((findValue(taskEvent.task.complete) || 0) - (findValue(taskEvent.task.start) || 0)) / 3_600_000
+        let hypotheticalMemoryEnergy = powerdrawMem * recommendedMemory * runtimeH
+        let taskId = findValue(taskEvent.task.task_id)
+        
+        // Push previous values
+        timeStepsList.push(taskEvent.time)
+        customDataList.push({task_id: taskId, process: processName})
+        accumulatedMemoryEnergyList.push(currentMemoryEnergy)
+        accumulatedHypotheticalMemoryEnergyList.push(currentHypotheticalMemoryEnergy)
+        
+        // Add or subtract current value
+        if (taskEvent.eventType === 'start') {
+          currentMemoryEnergy += findValue(taskEvent.task.raw_energy_memory)
+          currentHypotheticalMemoryEnergy += hypotheticalMemoryEnergy
+        }
+        else if (taskEvent.eventType === 'complete') {
+          currentMemoryEnergy -= findValue(taskEvent.task.raw_energy_memory)
+          currentHypotheticalMemoryEnergy -= hypotheticalMemoryEnergy
+        }
+        
+        // Push updated values
+        timeStepsList.push(taskEvent.time)
+        customDataList.push({task_id: taskId, process: processName})
+        accumulatedMemoryEnergyList.push(currentMemoryEnergy)
+        accumulatedHypotheticalMemoryEnergyList.push(currentHypotheticalMemoryEnergy)
+        
+        // Track saved Energy
+        savedEnergy += currentMemoryEnergy-currentHypotheticalMemoryEnergy
+      }
+      
+    })
+
+    if (timeStepsList.length === 0) return null
+    
+    const memory_plot_data = [
+      {
+        name: "Allocated energy consumption",
+        x: timeStepsList, y: accumulatedMemoryEnergyList,
+        color: '#0D6A8A'
+      },
+      {
+        name: "Hypothetical energy consumption",
+        x: timeStepsList, y: accumulatedHypotheticalMemoryEnergyList,
+        color: '#E76F51'
+      }
+    ]
+    
+    // Apply shared trace defaults
+    memory_plot_data.forEach( trace => {
+      trace.type = 'scatter'
+      trace.mode = 'lines'
+      trace.fill = 'tozeroy'
+      trace.line = { shape: "hv", width: 3, color: trace.color }
+      trace.hovertemplate = [
+        `<b>${trace.name}</b>`,
+        `Task ID: %{customdata.task_id}`,
+        `Process: %{customdata.process}`,
+        `Energy: %{y:.5f} Wh`,
+        '<extra></extra>',
+      ].join('<br>')
+      trace.customdata = customDataList
+    })
+
+    let layout = {
+      title: { text: 'Memory optimization' },
+      margin: { l: 140, r: 100, t: 40, b: 60 },
+      height: 320,
+      ...PLOT_BG,
+      xaxis: {
+        title: { text: 'Time' },
+        type: 'date',
+        range: window.data.workflowStart && window.data.workflowEnd ? [window.data.workflowStart, window.data.workflowEnd] : undefined,
+        showgrid: true,
+        gridcolor: 'rgba(36,64,87,0.08)',
+        zeroline: false,
+        showline: false,
+        hoverformat: '%Y-%m-%d %H:%M',
+      },
+      yaxis: {
+        title: { text: 'Memory Energy (Wh)' },
+        rangemode: 'tozero',
+      },
+      legend: {
+        x: 0.99,
+        y: 0.99,
+        xanchor: "right",
+        yanchor: "top",
+        bgcolor: 'rgba(255,255,255,0.80)',
+        bordercolor: 'rgba(36,64,87,0.20)',
+        borderwidth: 1,
+      },
+      showlegend: true,
+      hovermode: 'closest',
+      hoverlabel: HOVERLABEL,
+    }
+
+    return Plotly.newPlot('memory-optimization-plot', memory_plot_data, layout, { responsive: true }), savedEnergy
+  }
+
+  // Variable to block re-editing loop
+  let blockRelayout = false
+  
+  /**
+   * Propagates a relayout event from one plot to the other.
+   * Handles both the array form ('xaxis.range') and the indexed form
+   * ('xaxis.range[0]' / 'xaxis.range[1]') that Plotly emits depending on
+   * the interaction type.
+   *
+   * @param {object} targetPlotDiv  - The plot div to update
+   * @param {object} eventData      - The relayout event payload
+   */
+  function mirrorLayout(targetPlotDiv, eventData) {
+    if (!blockRelayout && eventData) {
+      
+      // Actual Plotly relayout function that is called around a guard variable
+      // otherwise it would trigger an endless loop
+      function doRelayout(update) {
+        blockRelayout = true
+        Plotly.relayout(targetPlotDiv, update)
+            .then(() => { blockRelayout = false })
+            .catch(() => { blockRelayout = false })
+      }
+      // Execution around a Timeout to the next tick to avoid parallel messing with `blockRelayout`
+      setTimeout(function() {
+        // Autorange cases
+        if (eventData['xaxis.autorange']) {
+          doRelayout({ 'xaxis.autorange': true })
+        }
+        if (eventData['yaxis.autorange']) {
+          doRelayout({ 'yaxis.autorange': true })
+        }
+        
+        // X-axis edit case
+        let range0 = eventData['xaxis.range[0]'] || eventData['xaxis.range']?.at(0)
+        let range1 = eventData['xaxis.range[1]'] || eventData['xaxis.range']?.at(1)
+        if (range0 !== undefined && range1 !== undefined) {
+          doRelayout({ 'xaxis.range': [range0, range1] })
+        }
+      }, 0)
+    }
+  }
+
+  /**
+   * X-AXIS SYNCHRONISATION BETWEEN PLOTS
+   * Panning or zooming either plot mirrors the new x-range onto the other so
+   * both always show the same time window.
+   * @param plotDivs An array with all plot div containers
+   */
+  function link_timeline_xaxis(plotDivs) {
+    if(plotDivs == null || plotDivs?.length <= 1) {
+      return
+    }
+
+    for (let current_i = 0; current_i < plotDivs.length; current_i++) {
+      let plotDiv = plotDivs[current_i]
+      let otherDivs = plotDivs.slice(0, current_i).concat(plotDivs.slice(current_i + 1))
+
+      // Prevent multiple attachments
+      if (!plotDiv._nfTimelineSyncAttached){
+        // Attach mirroring trigger on relayout
+        plotDiv.on('plotly_relayout', function(eventData) {
+          otherDivs.forEach( div => { mirrorLayout(div, eventData) } )
+        })
+      }
+      plotDiv._nfTimelineSyncAttached = true
+    }
+  }
+
+  /**
+   * Define the config that can be applied to optimize processes.
+   * @returns {HTMLDetailsElement[]} Details element with configuration
+   */
+  function make_optimization_config() {
+    // Collect configuration String
+    let configLines = ['process {']
+    for (const [processKey, memoryRecommendation] of window.data.memoryRecommendations.entries()) {
+      configLines.push("    withName: '" + processKey + "' {")
+      configLines.push("        memory = " + memoryRecommendation + ".GB")
+      configLines.push("    }")
+    }
+    configLines.push('}')
+
+    // Insert config into HTML script
+    let detailsElement = document.createElement('details')
+    let summaryElement = document.createElement('summary')
+    summaryElement.textContent = 'Recommended configuration to optimize processes'
+    let configElement = document.createElement('pre')
+    configElement.id = 'optimization-config'
+    configElement.textContent = configLines.join('\n')
+
+    detailsElement.append(summaryElement, configElement)
+    
+    return [detailsElement]
+  }
+
+  /**
+   * Generate elements for memory optimization
+   * @returns {(HTMLDivElement|HTMLParagraphElement)[]} Memory optimization elements
+   */
+  function make_memory_optimization_block() {
+    // <h3 id="optimization-memory">Memory</h3>
+    let memoryOptimizationDiv = document.createElement('h3')
+    memoryOptimizationDiv.id = 'optimization-memory'
+    memoryOptimizationDiv.textContent = 'Memory'
+    
+    // <div id="memory-optimization-plot"></div>
+    let memoryOptimizationPlot = document.createElement('div')
+    memoryOptimizationPlot.id = 'memory-optimization-plot'
+    
+    // <p class="mt-3 mb-3">The primary trace (<b>raw_energy_memory</b>) shows the actual memory-attributed energy consumption per task (in Wh). The alternative trace (<b>hypothetical energy</b>) shows what the energy would be if each task used the maximum RSS observed by any task in its process plus and additional 20% to account for variation.</p>
+    let memoryOptimizationText = document.createElement('p')
+    memoryOptimizationText.classList.add('mt-3', 'mb-3')
+    memoryOptimizationText.innerHTML = 'The primary trace (' + 'raw_energy_memory'.italics() + ') shows the actual memory-attributed energy consumption per task (in Wh).' +
+        'The alternative trace (' + 'hypothetical energy'.italics() + ') shows what the energy would be if each task used the maximum RSS observed by any task in its process plus and additional 20% to account for variation.'
+  
+    return [memoryOptimizationDiv, memoryOptimizationPlot, memoryOptimizationText]
+  }
+
+  /**
+   * Generate the optimizations section, if any are recommended
+   * @returns {*[]} A list of promises or null if no promises were made
+   */
+  function generateOptimizations() {
+    let optimizationElements = []
+
+    // Memory optimization recommendations
+    if (window.data.memoryRecommendations?.size > 0) {
+      optimizationElements.push(...make_memory_optimization_block())
+    }
+
+    if (optimizationElements.length > 0) {
+      
+      // <h2 id="optimization" className="section">Optimization</h2>
+      let optimizationHeader = document.createElement('h2')
+      optimizationHeader.id = 'optimization'
+      optimizationHeader.className = 'section'
+      optimizationHeader.textContent = 'Optimization'
+      
+      // <p>The recommendations below are suggestions and may not apply to every case.</p>
+      let optimizationText = document.createElement('p')
+      optimizationText.textContent = 'The recommendations below are suggestions and may not apply to every case'
+      
+      // Add heading elements and recommended configuration
+      optimizationElements.unshift(optimizationHeader, optimizationText)
+      optimizationElements.push(...make_optimization_config())
+      
+      // Add all elements to optimization container <div>
+      let optimizationContainer = document.getElementById('optimization-container')
+      optimizationElements.forEach( optimizationElement => {
+        optimizationContainer.appendChild(optimizationElement)
+      })
+    }
+
+    let optimizationPromises = []
+
+    // Memory optimization plots
+    if (window.data.memoryRecommendations?.size > 0) {
+      let memoryOptimizationPlot, savedEnergy = make_memory_optimization_plot()
+      optimizationPromises.push( memoryOptimizationPlot )
+      
+      // Add summary of saved values
+      document.getElementById('memory-optimization-text').innerHTML += ' Applying the following config can save up to ' + Math.round(savedEnergy * 1000) / 1000 + ' Wh of energy:'
+    }
+    
+    return optimizationPromises
+  }
+
+  /**
+   * Generate Recommendations
+   */
+  function generateRecommendations() {
+    generateMemoryRecommendations()
+  }
+  
+  generateRecommendations()
 
   // Executor for ci plot generation
   Promise.all([
     Promise.resolve(make_ci_plot()),
     Promise.resolve(make_process_swimlane_plot()),
-  ]).then(([ciGraphDiv, swimlaneGraphDiv]) => {
-    link_timeline_xaxis(ciGraphDiv, swimlaneGraphDiv)
+  ]).then(function(promises) {
+    generateOptimizations().forEach( optimizationPromise => {
+      promises.push(Promise.resolve(optimizationPromise))
+    })
+    return Promise.all(promises)
+  }).then(function(promises) {
+    link_timeline_xaxis(promises)
   })
 })

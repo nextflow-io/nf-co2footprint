@@ -3,34 +3,34 @@ package nextflow.co2footprint.Recorders
 import nextflow.trace.TraceRecord
 import spock.lang.Specification
 
-class SessionTraceRecorderTest extends Specification{
+class HeadJobTraceRecorderTest extends Specification{
     def 'test running' () {
         setup:
-        SessionTraceRecorder sessionTraceRecorder = new SessionTraceRecorder()
+        HeadJobTraceRecorder headJobTraceRecorder = new HeadJobTraceRecorder()
 
         when:
-        sessionTraceRecorder.start()
+        headJobTraceRecorder.start()
         sleep(1000)
-        sessionTraceRecorder.stop()
+        headJobTraceRecorder.stop()
 
-        TraceRecord record = sessionTraceRecorder.sessionRecord
+        TraceRecord record = headJobTraceRecorder.headJobRecord
 
         then:
         [
             container:      'JVM',
-            tag:            'Session',
+            tag:            'Head job',
             attempt:        0,
             status:         'COMPLETED',
         ].each { String key, Object value ->
             record.get(key) == value
         }
 
-        sessionTraceRecorder.samples == []
+        headJobTraceRecorder.samples == []
     }
 
     def 'test accumulation'() {
         setup:
-        SessionTraceRecorder sessionTraceRecorder = new SessionTraceRecorder()
+        HeadJobTraceRecorder headJobTraceRecorder = new HeadJobTraceRecorder()
         MemorySample sample1 = new MemorySample(
                 timestamp: System.currentTimeMillis(),
                 rssBytes: 1000, virtualMemoryBytes: 1000,
@@ -41,16 +41,16 @@ class SessionTraceRecorderTest extends Specification{
         )
 
         when:
-        sessionTraceRecorder.start()
-        sessionTraceRecorder.samples.add(sample1)
+        headJobTraceRecorder.start()
+        headJobTraceRecorder.samples.add(sample1)
         sleep(1000)
-        sessionTraceRecorder.samples.add(sample2)
-        sessionTraceRecorder.stop()
+        headJobTraceRecorder.samples.add(sample2)
+        headJobTraceRecorder.stop()
 
-        TraceRecord record = sessionTraceRecorder.sessionRecord
+        TraceRecord record = headJobTraceRecorder.headJobRecord
 
         then:
-        sessionTraceRecorder.samples == [sample1, sample2]
+        headJobTraceRecorder.samples == [sample1, sample2]
         [
                 '%cpu':         100.0,
                 rss:            1024,

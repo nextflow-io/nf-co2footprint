@@ -107,7 +107,7 @@ class CO2FootprintPluginTest extends Specification{
         String pluginVersion = CO2FootprintPlugin.readPluginVersion()
 
         then:
-        pluginVersion == "1.3.0"
+        pluginVersion == "1.4.0"
     }
 
     def 'Empty configuration'() {
@@ -193,7 +193,7 @@ class CO2FootprintPluginTest extends Specification{
         observers.size() == 1
         filesExist(tracePath, summaryPath, reportPath, provenancePath) == [false, false, false, false]
         logChecker.checkLogs(null, [
-            'No output files are enabled - to enable, set `enabled: true` in the sections `trace`, `summary` or `report`.'
+            'No output files are enabled - to enable, set `enabled: true` in the sections `trace`, `summary`, `report` or `provenance`.'
         ])
     }
 }

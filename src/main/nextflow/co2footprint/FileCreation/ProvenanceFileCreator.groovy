@@ -20,6 +20,9 @@ class ProvenanceFileCreator extends BaseFileCreator {
 
     // Whether or not only to write emission metrics
     private boolean emissionMetricsOnly = false
+    
+    // Keys that indicate metadata rather than trace values
+    private static Set<String> metaDataKeys = ['workflowLevel']
 
     /**
      * Constructor for the data/machine-readable file.
@@ -84,13 +87,22 @@ class ProvenanceFileCreator extends BaseFileCreator {
         // Add @id
         ldMap['@id'] = "urn:co2footprint:${treeMap.name}"
 
-        // Add @type based on metaData.level
-        ldMap['@type'] = switch (treeMap.metaData?.level) {
+        // Add @type based on metaData.workflowLevel
+        ldMap['@type'] = switch (treeMap.metaData?.workflowLevel) {
             case 'session' -> 'schema:SoftwareApplication'
+            case 'head' -> 'schema:SoftwareApplication'
             case 'workflow' -> 'bioschemas:ComputationalWorkflow'
             case 'process' -> 'schema:SoftwareApplication'
             case 'task' -> 'schema:Action'
             default -> 'schema:Thing'
+        }
+
+        // Define metadata
+        (treeMap?.metaData as Map<String, Object>)?.each { String key, Object value ->
+            ldMap[key] = [
+                    '@type': 'schema:PropertyValue',
+                    value: value
+            ]
         }
 
         // Transform values to include @type for emissions
@@ -202,6 +214,15 @@ class ProvenanceFileCreator extends BaseFileCreator {
             }
         }
 
+        // Separate metadata from regular trace values
+        Map<String, Object> metaData = [:]
+        metaDataKeys.each { String key ->
+            Map<String, Object> metaMap = ldMap.remove(key) as Map<String, Object>
+            if (metaMap) {
+                metaData[key] = metaMap['value']
+            }
+        }
+
         // Constructs CO2Record
         Map<String, Object> store = [:]
         for (Map.Entry<String, Object> entry: (ldMap).entrySet()){
@@ -212,9 +233,6 @@ class ProvenanceFileCreator extends BaseFileCreator {
             if (key in ['@context', '@id', '@type'] || !(value instanceof Map && value.containsKey('value')) ) {
                 continue
             }
-
-            // Only record value with content
-
 
             // Adjust record according to type
             if (value['@type'] == 'schema:PropertyValue') {
@@ -244,19 +262,20 @@ class ProvenanceFileCreator extends BaseFileCreator {
         CO2Record co2Record = new CO2Record(store)
 
         // Construct a new tree with the name extracted from the @id (removing the "urn:co2footprint:" prefix)
-        CO2RecordTree co2RecordTree = new CO2RecordTree((ldMap['@id'] as String).drop(17), [:], co2Record, null, children)
+        CO2RecordTree co2RecordTree = new CO2RecordTree((ldMap['@id'] as String).drop(17), metaData, co2Record, null, children)
 
-
-        // Add @type based on metaData.level
-        if (ldMap['@type'] == 'schema:SoftwareApplication' && isRoot) {
-            co2RecordTree.metaData['level'] = 'session'
-        }
-        else {
-            co2RecordTree.metaData['level'] = switch (ldMap['@type']) {
-                case 'bioschemas:ComputationalWorkflow' -> 'workflow'
-                case 'schema:SoftwareApplication' -> 'process'
-                case 'schema:Action' -> 'task'
-                default -> 'unknown'
+        // Add @type based on metaData.workflowLevel
+        if(!co2RecordTree.metaData?.workflowLevel) {
+            if (ldMap['@type'] == 'schema:SoftwareApplication' && isRoot) {
+                co2RecordTree.metaData['workflowLevel'] = 'session'
+            }
+            else {
+                co2RecordTree.metaData['workflowLevel'] = switch (ldMap['@type']) {
+                    case 'bioschemas:ComputationalWorkflow' -> 'workflow'
+                    case 'schema:SoftwareApplication' -> 'process'
+                    case 'schema:Action' -> 'task'
+                    default -> 'unknown'
+                }
             }
         }
 

@@ -15,7 +15,7 @@ class CO2RecordTreeTest extends Specification {
     CO2Record co2Record
 
     @Shared
-    CO2RecordTree recordsTree = new CO2RecordTree('workflow', [level: 'workflow'])
+    CO2RecordTree recordsTree = new CO2RecordTree('workflow', [workflowLevel: 'workflow'])
 
     @Shared
     Yaml yaml = new Yaml()
@@ -39,8 +39,8 @@ class CO2RecordTreeTest extends Specification {
                 1.0, 10, 1.0 * 3600000, 1, 1.0, 7.0, 'Some model', 5.0, 5.0, '', ''
         )
 
-        CO2RecordTree process1 = recordsTree.addChild(new CO2RecordTree('process1', [level: 'process']))
-        CO2RecordTree process2 = recordsTree.addChild(new CO2RecordTree('process2', [level: 'process']))
+        CO2RecordTree process1 = recordsTree.addChild(new CO2RecordTree('process1', [workflowLevel: 'process']))
+        CO2RecordTree process2 = recordsTree.addChild(new CO2RecordTree('process2', [workflowLevel: 'process']))
 
         int counter = 0
         [[0.0, 'COMPLETED'], [1.0, 'COMPLETED'], [2.0, 'CACHED']].each { BigDecimal value, String status ->
@@ -50,7 +50,7 @@ class CO2RecordTreeTest extends Specification {
             traceRecord2.putAll([name: "task_${counter}", status: status])
 
             CO2RecordTree process = counter > 2 ? process2 : process1
-            process.addChild(new CO2RecordTree("task_${counter}", [level: 'task'],
+            process.addChild(new CO2RecordTree("task_${counter}", [workflowLevel: 'task'],
                 new CO2Record(
                     traceRecord2, value, value, null, 475.0, null,
                     100.0, 1000**3, 1.0 * 3600000, 1, 1.0, 12.0, 'Unknown model', 5.0, 5.0, null, null
@@ -98,18 +98,18 @@ class CO2RecordTreeTest extends Specification {
 
     def 'Should construct a valid tree node'() {
         when:
-        CO2RecordTree parentNode = new CO2RecordTree('crazy_tesla', [level: 'workflow'])
-        CO2RecordTree processNode1 = parentNode.addChild(new CO2RecordTree('test1', [level: 'process']))
-        CO2RecordTree processNode2 = parentNode.addChild(new CO2RecordTree('test2', [level: 'process']))
-        processNode1.addChild(new CO2RecordTree('1', [level: 'task'], co2Record))
-        processNode2.addChild(new CO2RecordTree('2', [level: 'task'], co2Record))
+        CO2RecordTree parentNode = new CO2RecordTree('crazy_tesla', [workflowLevel: 'workflow'])
+        CO2RecordTree processNode1 = parentNode.addChild(new CO2RecordTree('test1', [workflowLevel: 'process']))
+        CO2RecordTree processNode2 = parentNode.addChild(new CO2RecordTree('test2', [workflowLevel: 'process']))
+        processNode1.addChild(new CO2RecordTree('1', [workflowLevel: 'task'], co2Record))
+        processNode2.addChild(new CO2RecordTree('2', [workflowLevel: 'task'], co2Record))
         parentNode.summarize()
 
         Map parentMap = parentNode.toMap(true, false, false)
         String yamlLines = yaml.dump(parentMap)
         Path outPath = Path.of(this.class.getResource('.').toURI()).complete().resolve('tree').resolve('out')
         outPath.createParentDirectories()
-        outPath.createDirIfNotExists()
+        outPath.mkdirs()
         Path treePath = outPath.resolve('test_tree.yaml')
         treePath.write(yamlLines)
 

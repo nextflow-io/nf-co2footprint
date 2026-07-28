@@ -5,11 +5,29 @@
     },
     "@id": "urn:co2footprint:Unknown workflow",
     "@type": "bioschemas:ComputationalWorkflow",
+    "workflowLevel": {
+        "@type": "schema:PropertyValue",
+        "value": "workflow"
+    },
+    "task_id": {
+        "@type": "schema:PropertyValue",
+        "value": "-1",
+        "additionalProperty": {
+            "readable": "-1"
+        }
+    },
     "status": {
         "@type": "schema:PropertyValue",
         "value": "COMPLETED",
         "additionalProperty": {
             "readable": "COMPLETED"
+        }
+    },
+    "name": {
+        "@type": "schema:PropertyValue",
+        "value": "NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT",
+        "additionalProperty": {
+            "readable": "NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT"
         }
     },
     "energy_consumption": {
@@ -118,11 +136,29 @@
         {
             "@id": "urn:co2footprint:NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT",
             "@type": "schema:SoftwareApplication",
+            "workflowLevel": {
+                "@type": "schema:PropertyValue",
+                "value": "process"
+            },
+            "task_id": {
+                "@type": "schema:PropertyValue",
+                "value": "-1",
+                "additionalProperty": {
+                    "readable": "-1"
+                }
+            },
             "status": {
                 "@type": "schema:PropertyValue",
                 "value": "COMPLETED",
                 "additionalProperty": {
                     "readable": "COMPLETED"
+                }
+            },
+            "name": {
+                "@type": "schema:PropertyValue",
+                "value": "NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT",
+                "additionalProperty": {
+                    "readable": "NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT"
                 }
             },
             "energy_consumption": {
@@ -231,6 +267,10 @@
                 {
                     "@id": "urn:co2footprint:6",
                     "@type": "schema:Action",
+                    "workflowLevel": {
+                        "@type": "schema:PropertyValue",
+                        "value": "task"
+                    },
                     "task_id": {
                         "@type": "schema:PropertyValue",
                         "value": "6",
@@ -358,6 +398,10 @@
                 {
                     "@id": "urn:co2footprint:4",
                     "@type": "schema:Action",
+                    "workflowLevel": {
+                        "@type": "schema:PropertyValue",
+                        "value": "task"
+                    },
                     "task_id": {
                         "@type": "schema:PropertyValue",
                         "value": "4",
