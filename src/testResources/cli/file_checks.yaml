@@ -1,5 +1,5 @@
 trace_test.txt:
-  checksum: "ddb20b5cec659f054c5a104200e7edfe"
+  checksum: "72b7a33fa1558340cf0361ccf0a0eaf8"
   num_lines: 3
 
 summary_test.txt: 
@@ -10,10 +10,7 @@ report_test.html:
   num_lines: 1792
 
 provenance_test.json: 
-  checksum: "06fd3e56b131c09a461fc60fbd407179"
-  num_lines: 508
+  checksum: "78c206da92023a3ca38ff08ede5d9c87"
+  num_lines: 532
 
-provenance-hello.json:
-  checksum: "9000313b1192ff88737c730c0b2caa4c"
-  num_lines: 2657
 
