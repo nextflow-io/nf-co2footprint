@@ -1,6 +1,6 @@
 # New
 ## Features:
-- 
+- Added carbon intensity records to provenance file, if dynamic CIs were fetched
 
 ## Bug Fixes:
 - Support for empty runs
