@@ -116,6 +116,23 @@ const HOVERLABEL = {
 const PLOT_BG = { plot_bgcolor: '#FCFEFF', paper_bgcolor: '#FFFFFF' }
 
 /**
+ * Shared Plotly config: responsive resizing plus SVG (vector) camera-button
+ * downloads instead of the default rasterized PNG, so exported plots stay
+ * sharp at any resolution. height/width are left unset so Plotly captures
+ * the plot at its current on-screen size (and font size) at click-time.
+ * @param {string} filename - Base filename (no extension) for the downloaded image
+ */
+function plotConfig(filename) {
+  return {
+    responsive: true,
+    toImageButtonOptions: {
+      format: 'svg',
+      filename,
+    },
+  }
+}
+
+/**
  * Extracts a numeric value from a potentially nested report object.
  * Handles: {raw: {value: num}}, {value: num}, or bare number.
  * @param {*} obj - The object to extract from
@@ -381,7 +398,7 @@ $(function () {
           ...(state.sorted ? { categoryorder: 'array', categoryarray: shortNames } : {}),
         },
         margin: { l: leftMargin, r: 40, t: 20, b: 60 },
-      }).then(() => {
+      }, plotConfig('co2_report_process_emissions')).then(() => {
         const plotDiv = document.getElementById('process-emissions-plot')
         plotDiv.removeAllListeners('plotly_hover')
         plotDiv.removeAllListeners('plotly_unhover')
@@ -605,6 +622,7 @@ $(function () {
       ],
       "deferRender": true,
       "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
+      "autoWidth": false,
     })
   }
 
@@ -770,7 +788,7 @@ $(function () {
     }
 
     // Create plot:
-    return Plotly.newPlot("ci-plot", ci_plot_data, ci_layout, { responsive: true })
+    return Plotly.newPlot("ci-plot", ci_plot_data, ci_layout, plotConfig('co2_report_carbon_intensity'))
   }
 
   function ensure_process_swimlane_container() {
@@ -938,7 +956,7 @@ $(function () {
       hoverlabel: HOVERLABEL,
     }
 
-    return Plotly.newPlot(swimlanePlotContainer, swimlaneData, swimlaneLayout, { responsive: true })
+    return Plotly.newPlot(swimlanePlotContainer, swimlaneData, swimlaneLayout, plotConfig('co2_report_task_timeline'))
       .then(graphDiv => {
         // Shrink/grow the swimlane height when the user zooms the y-axis.
         // swimlaneLayout.height is the full height for all processes; the listener
@@ -1122,7 +1140,7 @@ $(function () {
       hoverlabel: HOVERLABEL,
     }
 
-    return Plotly.newPlot('memory-optimization-plot', memory_plot_data, layout, { responsive: true }), savedEnergy
+    return Plotly.newPlot('memory-optimization-plot', memory_plot_data, layout, plotConfig('co2_report_memory_optimization')), savedEnergy
   }
 
   // Variable to block re-editing loop
