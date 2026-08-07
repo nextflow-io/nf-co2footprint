@@ -732,9 +732,10 @@ $(function () {
     )
 
     // Layout:
+    // No `title` here on purpose — the heading lives in the HTML above the
+    // plot div so it isn't baked into image/SVG exports of the plot itself.
     let ci_layout = {
-      title: { text: "Carbon intensity & energy over time" },
-      margin: { l: 140, r: 100, t: 40, b: 60 },
+      margin: { l: 140, r: 100, t: 20, b: 60 },
       plot_bgcolor: '#FCFEFF',
       paper_bgcolor: '#FFFFFF',
       legend: {
@@ -921,10 +922,12 @@ $(function () {
       }
     })
 
+    // No `title` here on purpose — the heading lives in the HTML above the
+    // plot div (see ensure_process_swimlane_container) so it isn't baked
+    // into image/SVG exports of the plot itself.
     const swimlaneLayout = {
-      title: { text: 'Task execution swimlanes by process' },
-      // Bottom margin is generous to avoid overlap with the CI plot title below.
-      margin: { l: 140, r: 100, t: 40, b: 80 },
+      // Bottom margin is generous to avoid overlap with the CI plot below.
+      margin: { l: 140, r: 100, t: 20, b: 80 },
       // Height scales with the number of visible processes, matching the
       // per-process emissions plot sizing rules for a consistent feel.
       height: Math.max(200, Math.min(900, 80 + processNames.length * 42)),
@@ -1107,9 +1110,11 @@ $(function () {
       trace.customdata = customDataList
     })
 
+    // No `title` here on purpose — the "Memory" heading (see
+    // make_memory_optimization_block) lives in the HTML above the plot div
+    // so it isn't baked into image/SVG exports of the plot itself.
     let layout = {
-      title: { text: 'Memory optimization' },
-      margin: { l: 140, r: 100, t: 40, b: 60 },
+      margin: { l: 140, r: 100, t: 20, b: 60 },
       height: 320,
       ...PLOT_BG,
       xaxis: {

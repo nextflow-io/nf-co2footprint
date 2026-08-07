@@ -6,7 +6,7 @@ summary_test:
   num_lines: 30
 
 report_test.html:
-  num_lines: 1795
+  num_lines: 1804
 
 provenance_test.json:
   checksum: "ac4186c40cc0292ee5ddaa6935e63830"
