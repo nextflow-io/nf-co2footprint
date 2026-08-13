@@ -1,6 +1,6 @@
 # New
 ## Features:
-- 
+- Added plugin information in top level of provenance file
 
 ## Bug Fixes:
 - Support for empty runs
