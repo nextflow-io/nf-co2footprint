@@ -98,12 +98,10 @@ class CO2PluginFullTest extends Specification {
         fileChecker.compareNumLines(summaryPath, 30)
         fileChecker.compareNumLines(reportPath, 1851)
 
-        // Expected to fail across platforms for now -- Docker Desktop's Linux VM
-        // doesn't expose the same /proc I/O-accounting fields GitHub Actions'
-        // native Linux runners do, so some trace metrics are structurally
-        // missing depending on where this runs. Kept as a full diff instead of
-        // a line-count check so failures show exactly which fields differ.
-        fileChecker.runChecks(dataPath)
+        // includeNulls=true (see integration/nextflow.config) keeps entries
+        // like cpu_model present even when detection is flaky on a given
+        // platform/task, so the line count is deterministic again.
+        fileChecker.compareNumLines(dataPath, 5639)
     }
 
     def unzip(Path inZip, Path outputDir){
