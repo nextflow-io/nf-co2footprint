@@ -98,12 +98,12 @@ class CO2PluginFullTest extends Specification {
         fileChecker.compareNumLines(summaryPath, 30)
         fileChecker.compareNumLines(reportPath, 1851)
 
-        // The provenance JSON's line count depends on details of the live
-        // pipeline run (e.g. observed 4592 on macOS/Docker Desktop locally
-        // vs. 4599 on GitHub Actions' Linux runners for the same code), so
-        // an exact match isn't reliable across environments. Allow a margin.
-        Long dataLines = dataPath.countLines()
-        dataLines >= 4550 && dataLines <= 4650
+        // Expected to fail across platforms for now -- Docker Desktop's Linux VM
+        // doesn't expose the same /proc I/O-accounting fields GitHub Actions'
+        // native Linux runners do, so some trace metrics are structurally
+        // missing depending on where this runs. Kept as a full diff instead of
+        // a line-count check so failures show exactly which fields differ.
+        fileChecker.runChecks(dataPath)
     }
 
     def unzip(Path inZip, Path outputDir){
