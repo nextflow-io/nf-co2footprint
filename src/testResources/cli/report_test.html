@@ -1264,32 +1264,32 @@
             const SL_PX_PER_ROW = 42
             const SL_BASE_HEIGHT = 80
             let heightSyncInProgress = false
-            graphDiv.on('plotly_relayout', eventData => {
-              if (heightSyncInProgress) return
-              if (eventData['yaxis.autorange']) {
-                heightSyncInProgress = true
-                Plotly.relayout(graphDiv, { height: slFullHeight })
-                  .then(() => { heightSyncInProgress = false })
-                  .catch(() => { heightSyncInProgress = false })
-                return
-              }
-              const y0 = eventData['yaxis.range[0]'] !== undefined ? eventData['yaxis.range[0]']
-                : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][0] : undefined)
-              const y1 = eventData['yaxis.range[1]'] !== undefined ? eventData['yaxis.range[1]']
-                : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][1] : undefined)
-              if (y0 !== undefined && y1 !== undefined) {
-                const visibleCount = Math.max(1, Math.round(Math.abs(y1 - y0)))
-                const newHeight = Math.max(120, Math.min(900, SL_BASE_HEIGHT + visibleCount * SL_PX_PER_ROW))
-                if (Math.abs(newHeight - (graphDiv.layout.height ?? slFullHeight)) > 2) {
+              graphDiv.on('plotly_relayout', eventData => {
+                if (heightSyncInProgress) return
+                if (eventData['yaxis.autorange']) {
                   heightSyncInProgress = true
-                  Plotly.relayout(graphDiv, { height: newHeight })
-                    .then(() => { heightSyncInProgress = false })
-                    .catch(() => { heightSyncInProgress = false })
+                  Plotly.relayout(graphDiv, { height: slFullHeight })
+                      .then(() => { heightSyncInProgress = false })
+                      .catch(() => { heightSyncInProgress = false })
+                  return
                 }
-              }
+                const y0 = eventData['yaxis.range[0]'] !== undefined ? eventData['yaxis.range[0]']
+                    : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][0] : undefined)
+                const y1 = eventData['yaxis.range[1]'] !== undefined ? eventData['yaxis.range[1]']
+                    : (Array.isArray(eventData['yaxis.range']) ? eventData['yaxis.range'][1] : undefined)
+                if (y0 !== undefined && y1 !== undefined) {
+                  const visibleCount = Math.max(1, Math.round(Math.abs(y1 - y0)))
+                  const newHeight = Math.max(120, Math.min(900, SL_BASE_HEIGHT + visibleCount * SL_PX_PER_ROW))
+                  if (Math.abs(newHeight - (graphDiv.layout.height ?? slFullHeight)) > 2) {
+                    heightSyncInProgress = true
+                    Plotly.relayout(graphDiv, { height: newHeight })
+                        .then(() => { heightSyncInProgress = false })
+                        .catch(() => { heightSyncInProgress = false })
+                  }
+                }
+              })
+              return graphDiv
             })
-            return graphDiv
-          })
       }
       function generateMemoryRecommendations() {
         window.data.memoryRecommendations = new Map()
