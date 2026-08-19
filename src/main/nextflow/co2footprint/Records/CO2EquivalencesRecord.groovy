@@ -34,7 +34,7 @@ class CO2EquivalencesRecord {
     String getCarKilometersReadable() { new Quantity(carKilometers).toScientificNotation() }
 
     BigDecimal getTreeMonths() { treeMonths }
-    String getTreeMonthsReadable() { new Duration(treeMonths, 'months').toReadable('s', 'years', 0.0) }
+    String getTreeMonthsReadable() { new Duration(treeMonths, 'months').toReadable('s', 'years', 2) }
 
     BigDecimal getPlanePercent() { planePercent }
     String getPlanePercentReadable() { new Percentage(planePercent).toScientificNotation() }

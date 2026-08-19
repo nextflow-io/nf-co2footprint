@@ -1,9 +1,10 @@
 # New
 ## Features:
-- 
+- Two time expressions for better comparison between similar runs for tree sequestration time
 
 ## Bug Fixes:
 - Support for empty runs
+- Removal of "s" from singular time expressions
 
 ## Misc:
 - Improved file checks by automating some exclusions and replacements through regexes
