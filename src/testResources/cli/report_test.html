@@ -668,6 +668,15 @@
       align: 'left',
     }
     const PLOT_BG = { plot_bgcolor: '#FCFEFF', paper_bgcolor: '#FFFFFF' }
+    function plotConfig(filename) {
+      return {
+        responsive: true,
+        toImageButtonOptions: {
+          format: 'svg',
+          filename,
+        },
+      }
+    }
     function findValue(obj) {
       if (obj == null) return null
       if (typeof obj === 'number') return obj
@@ -827,7 +836,7 @@
               ...(state.sorted ? { categoryorder: 'array', categoryarray: shortNames } : {}),
             },
             margin: { l: leftMargin, r: 40, t: 20, b: 60 },
-          }).then(() => {
+          }, plotConfig('co2_report_process_emissions')).then(() => {
             const plotDiv = document.getElementById('process-emissions-plot')
             plotDiv.removeAllListeners('plotly_hover')
             plotDiv.removeAllListeners('plotly_unhover')
@@ -998,6 +1007,7 @@
           ],
           "deferRender": true,
           "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
+          "autoWidth": false,
         })
       }
       make_options_table()
@@ -1075,8 +1085,7 @@
           }
         )
         let ci_layout = {
-          title: { text: "Carbon intensity & energy over time" },
-          margin: { l: 140, r: 100, t: 40, b: 60 },
+          margin: { l: 140, r: 100, t: 20, b: 60 },
           plot_bgcolor: '#FCFEFF',
           paper_bgcolor: '#FFFFFF',
           legend: {
@@ -1125,7 +1134,7 @@
             align: 'left',
           },
         }
-        return Plotly.newPlot("ci-plot", ci_plot_data, ci_layout, { responsive: true })
+        return Plotly.newPlot("ci-plot", ci_plot_data, ci_layout, plotConfig('co2_report_carbon_intensity'))
       }
       function ensure_process_swimlane_container() {
         let existingPlot = document.getElementById('process-swimlane-plot')
@@ -1220,8 +1229,7 @@
           }
         })
         const swimlaneLayout = {
-          title: { text: 'Task execution swimlanes by process' },
-          margin: { l: 140, r: 100, t: 40, b: 80 },
+          margin: { l: 140, r: 100, t: 20, b: 80 },
           height: Math.max(200, Math.min(900, 80 + processNames.length * 42)),
           ...PLOT_BG,
           xaxis: {
@@ -1250,7 +1258,7 @@
           hovermode: 'closest',
           hoverlabel: HOVERLABEL,
         }
-        return Plotly.newPlot(swimlanePlotContainer, swimlaneData, swimlaneLayout, { responsive: true })
+        return Plotly.newPlot(swimlanePlotContainer, swimlaneData, swimlaneLayout, plotConfig('co2_report_task_timeline'))
           .then(graphDiv => {
             const slFullHeight = swimlaneLayout.height
             const SL_PX_PER_ROW = 42
@@ -1359,8 +1367,7 @@
           trace.customdata = customDataList
         })
         let layout = {
-          title: { text: 'Memory optimization' },
-          margin: { l: 140, r: 100, t: 40, b: 60 },
+          margin: { l: 140, r: 100, t: 20, b: 60 },
           height: 320,
           ...PLOT_BG,
           xaxis: {
@@ -1390,7 +1397,7 @@
           hovermode: 'closest',
           hoverlabel: HOVERLABEL,
         }
-        return Plotly.newPlot('memory-optimization-plot', memory_plot_data, layout, { responsive: true }), savedEnergy
+        return Plotly.newPlot('memory-optimization-plot', memory_plot_data, layout, plotConfig('co2_report_memory_optimization')), savedEnergy
       }
       let blockRelayout = false
       function mirrorLayout(targetPlotDiv, eventData) {
@@ -1560,7 +1567,7 @@
         </dd>
 
         <dt>Nextflow command</dt>
-        <dd><pre class="nfcommand"><code>nextflow plugin nf-co2footprint:postRun --tracePath /Users/josuacarl/Codespace/test/nf-co2footprint-fork/build/resources/test/cli/execution-trace-raw.tsv --config /Users/josuacarl/Codespace/test/nf-co2footprint-fork/build/resources/test/cli/test.config</code></pre></dd>
+        <dd><pre class="nfcommand"><code>nextflow plugin nf-co2footprint:postRun --tracePath /Users/nadja/Documents/co2_footprint/co2_plugin_forks/nf-co2footprint/build/resources/test/cli/execution-trace-raw.tsv --config /Users/nadja/Documents/co2_footprint/co2_plugin_forks/nf-co2footprint/build/resources/test/cli/test.config</code></pre></dd>
       </dl>
 
       <dl>
@@ -1689,7 +1696,9 @@
     <!-- Task timeline: process swimlane + CI/energy plot (linked x-axis) -->
     <div class="container">
       <h3 id="ci-records">Task timeline</h3>
+      <h4 id="process-swimlane-plot-title">Task execution swimlanes by process</h4>
       <div id="process-swimlane-plot"></div>
+      <h4 id="ci-plot-title" class="mt-4">Carbon intensity &amp; energy over time</h4>
       <div id="ci-plot"></div>
       <p class="mt-3 mb-3">The upper panel shows each task's execution window grouped by process. The lower panel shows the carbon intensity (CI) and energy consumption over the same timeline. Both panels are linked — zoom or pan one to update the other.</p>
     </div>

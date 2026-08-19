@@ -13,7 +13,6 @@ import nextflow.co2footprint.Records.CO2EquivalencesRecord
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordTree
 import nextflow.co2footprint.Records.CiRecordCollector
-import nextflow.co2footprint.Logging.Markers
 import nextflow.script.WorkflowMetadata
 import nextflow.trace.TraceHelper
 

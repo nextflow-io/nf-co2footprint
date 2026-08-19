@@ -3,10 +3,10 @@
 - 
 
 ## Bug Fixes:
--
+- Support for empty runs
 
 ## Misc:
-- 
+- Improved file checks by automating some exclusions and replacements through regexes
 
 # 1.4.0
 ## Bug Fixes:
