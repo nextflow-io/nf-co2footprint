@@ -1304,7 +1304,6 @@
         if (!window.data.timedTaskEvents || window.data.timedTaskEvents.length === 0) {
           return null
         }
-        let powerdrawMem = findValue(window.data.trace[0].powerdraw_memory)
         let savedEnergy = 0.0
         let timeStepsList = []
         let customDataList = []
@@ -1317,6 +1316,7 @@
           let recommendedMemory = window.data.memoryRecommendations.get(processKey)
           let processName = window.data.processDisplayNames.get(processKey)
           if (recommendedMemory) {
+            let powerdrawMem = findValue(taskEvent.task.powerdraw_memory)
             let runtimeH = ((findValue(taskEvent.task.complete) || 0) - (findValue(taskEvent.task.start) || 0)) / 3_600_000
             let hypotheticalMemoryEnergy = powerdrawMem * recommendedMemory * runtimeH
             let memoryEnergy = findValue(taskEvent.task.raw_energy_memory)
