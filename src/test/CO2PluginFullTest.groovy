@@ -97,10 +97,6 @@ class CO2PluginFullTest extends Specification {
         fileChecker.compareNumLines(tracePath, 8)
         fileChecker.compareNumLines(summaryPath, 30)
         fileChecker.compareNumLines(reportPath, 1851)
-
-        // includeNulls=true (see integration/nextflow.config) keeps entries
-        // like cpu_model present even when detection is flaky on a given
-        // platform/task, so the line count is deterministic again.
         fileChecker.compareNumLines(dataPath, 5639)
     }
 
