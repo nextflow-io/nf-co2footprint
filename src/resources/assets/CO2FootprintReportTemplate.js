@@ -1028,7 +1028,6 @@ $(function () {
     }
 
     // Collect constant powerdraw of memory
-    let powerdrawMem = findValue(window.data.trace[0].powerdraw_memory)
 
     // Track saved energy
     let savedEnergy = 0.0
@@ -1047,6 +1046,7 @@ $(function () {
       let processName = window.data.processDisplayNames.get(processKey)
 
       if (recommendedMemory) {
+        let powerdrawMem = findValue(taskEvent.task.powerdraw_memory)
         let runtimeH = ((findValue(taskEvent.task.complete) || 0) - (findValue(taskEvent.task.start) || 0)) / 3_600_000
         let hypotheticalMemoryEnergy = powerdrawMem * recommendedMemory * runtimeH
         let memoryEnergy = findValue(taskEvent.task.raw_energy_memory)
