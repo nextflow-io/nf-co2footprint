@@ -21,7 +21,10 @@ class ProvenanceFileCreator extends BaseFileCreator {
 
     // Whether or not only to write emission metrics
     private boolean emissionMetricsOnly = false
-    
+
+    // Whether or not to include entries with a `null` raw value
+    private boolean includeNulls = false
+
     // Keys that indicate metadata rather than trace values
     private static Set<String> metaDataKeys = ['workflowLevel']
 
@@ -34,6 +37,7 @@ class ProvenanceFileCreator extends BaseFileCreator {
         super(config)
 
         emissionMetricsOnly = config.emissionMetricsOnly
+        includeNulls = config.includeNulls
 
         if(!config.enabled) {
             this.metaClass.create = { -> null }
@@ -58,7 +62,7 @@ class ProvenanceFileCreator extends BaseFileCreator {
      * @param co2RecordTree A hierarchically structured record tree
      */
     void write(CO2RecordTree co2RecordTree) {
-        Map co2TreeMap = transformToJsonLd(co2RecordTree.toMap(emissionMetricsOnly, false, false))
+        Map co2TreeMap = transformToJsonLd(co2RecordTree.toMap(emissionMetricsOnly, includeNulls, false))
         JsonBuilder jsonBuilder = new JsonBuilder(co2TreeMap)
 
         dataWriter = new Agent<PrintWriter>(file)
@@ -168,22 +172,22 @@ class ProvenanceFileCreator extends BaseFileCreator {
                     ldMap[key] = [
                             '@type': types.get(key, 'schema:QuantitativeValue'),
                             'value': raw.value,
-                            'unitText': raw.scale + raw.unit
+                            'unitText': (raw.scale ?: '') + (raw.unit ?: '')
                     ]
                 }
                 else if (raw.type == 'Duration') {
                     ldMap[key] = [
                             '@type': types.get(key, 'schema:Duration'),
-                            'value': Duration.ofMillis(raw.value as Long).toString(),
-                            'unitText': raw.scale + raw.unit
+                            'value': raw.value != null ? Duration.ofMillis(raw.value as Long).toString() : null,
+                            'unitText': (raw.scale ?: '') + (raw.unit ?: '')
 
                     ]
                 }
                 else if (raw.type == 'DateTime') {
                     ldMap[key] = [
                             '@type': types.get(key, 'schema:DateTime'),
-                            'value':  Instant.ofEpochMilli(raw.value as Long).toString() ,
-                            'unitText': raw.scale + raw.unit
+                            'value': raw.value != null ? Instant.ofEpochMilli(raw.value as Long).toString() : null,
+                            'unitText': (raw.scale ?: '') + (raw.unit ?: '')
                     ]
                 }
 
@@ -265,10 +269,10 @@ class ProvenanceFileCreator extends BaseFileCreator {
                 store[key] = value['value']
             }
             else if (value['@type'] == 'schema:Duration') {
-                store[key] = Duration.parse(value['value'] as String).toMillis()
+                store[key] = value['value'] != null ? Duration.parse(value['value'] as String).toMillis() : null
             }
             else if (value['@type'] == 'schema:DateTime') {
-                store[key] = Instant.parse(value['value'] as String).toEpochMilli()
+                store[key] = value['value'] != null ? Instant.parse(value['value'] as String).toEpochMilli() : null
             }
             else if(value['@type'] == 'schema:ItemList') {
                 List<Object> items = (value['itemListElement'] as List<Map<String, Object>>).collect { Map<String, Object> itemElement ->

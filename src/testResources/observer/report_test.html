@@ -668,6 +668,15 @@
       align: 'left',
     }
     const PLOT_BG = { plot_bgcolor: '#FCFEFF', paper_bgcolor: '#FFFFFF' }
+    function plotConfig(filename) {
+      return {
+        responsive: true,
+        toImageButtonOptions: {
+          format: 'svg',
+          filename,
+        },
+      }
+    }
     function findValue(obj) {
       if (obj == null) return null
       if (typeof obj === 'number') return obj
@@ -827,7 +836,7 @@
               ...(state.sorted ? { categoryorder: 'array', categoryarray: shortNames } : {}),
             },
             margin: { l: leftMargin, r: 40, t: 20, b: 60 },
-          }).then(() => {
+          }, plotConfig('co2_report_process_emissions')).then(() => {
             const plotDiv = document.getElementById('process-emissions-plot')
             plotDiv.removeAllListeners('plotly_hover')
             plotDiv.removeAllListeners('plotly_unhover')
@@ -998,6 +1007,7 @@
           ],
           "deferRender": true,
           "lengthMenu": [[25, 50, 100, -1], [25, 50, 100, "All"]],
+          "autoWidth": false,
         })
       }
       make_options_table()
@@ -1075,8 +1085,7 @@
           }
         )
         let ci_layout = {
-          title: { text: "Carbon intensity & energy over time" },
-          margin: { l: 140, r: 100, t: 40, b: 60 },
+          margin: { l: 140, r: 100, t: 20, b: 60 },
           plot_bgcolor: '#FCFEFF',
           paper_bgcolor: '#FFFFFF',
           legend: {
@@ -1125,7 +1134,7 @@
             align: 'left',
           },
         }
-        return Plotly.newPlot("ci-plot", ci_plot_data, ci_layout, { responsive: true })
+        return Plotly.newPlot("ci-plot", ci_plot_data, ci_layout, plotConfig('co2_report_carbon_intensity'))
       }
       function ensure_process_swimlane_container() {
         let existingPlot = document.getElementById('process-swimlane-plot')
@@ -1220,8 +1229,7 @@
           }
         })
         const swimlaneLayout = {
-          title: { text: 'Task execution swimlanes by process' },
-          margin: { l: 140, r: 100, t: 40, b: 80 },
+          margin: { l: 140, r: 100, t: 20, b: 80 },
           height: Math.max(200, Math.min(900, 80 + processNames.length * 42)),
           ...PLOT_BG,
           xaxis: {
@@ -1250,7 +1258,7 @@
           hovermode: 'closest',
           hoverlabel: HOVERLABEL,
         }
-        return Plotly.newPlot(swimlanePlotContainer, swimlaneData, swimlaneLayout, { responsive: true })
+        return Plotly.newPlot(swimlanePlotContainer, swimlaneData, swimlaneLayout, plotConfig('co2_report_task_timeline'))
           .then(graphDiv => {
             const slFullHeight = swimlaneLayout.height
             const SL_PX_PER_ROW = 42
@@ -1359,8 +1367,7 @@
           trace.customdata = customDataList
         })
         let layout = {
-          title: { text: 'Memory optimization' },
-          margin: { l: 140, r: 100, t: 40, b: 60 },
+          margin: { l: 140, r: 100, t: 20, b: 60 },
           height: 320,
           ...PLOT_BG,
           xaxis: {
@@ -1390,7 +1397,7 @@
           hovermode: 'closest',
           hoverlabel: HOVERLABEL,
         }
-        return Plotly.newPlot('memory-optimization-plot', memory_plot_data, layout, { responsive: true }), savedEnergy
+        return Plotly.newPlot('memory-optimization-plot', memory_plot_data, layout, plotConfig('co2_report_memory_optimization')), savedEnergy
       }
       let blockRelayout = false
       function mirrorLayout(targetPlotDiv, eventData) {
@@ -1506,7 +1513,7 @@
 
 
     window.data = {"trace":[{"task_id":{"raw":{"value":"111","type":"str"},"readable":"111"},"hash":{"raw":{"value":null,"type":"str"},"readable":"-","report":"<div class=\"script_block short\"><code>-</code></div>"},"native_id":{"raw":{"value":null,"type":"str"},"readable":"-"},"process":{"raw":{"value":"observerTestProcess","type":"str"},"readable":"observerTestProcess"},"module":{"raw":{"value":null,"type":"str"},"readable":"-"},"container":{"raw":{"value":null,"type":"str"},"readable":"-"},"tag":{"raw":{"value":null,"type":"str"},"readable":"-"},"name":{"raw":{"value":"111","type":"str"},"readable":"111"},"status":{"raw":{"value":"COMPLETED","type":"str"},"readable":"COMPLETED","report":"<span class=\"badge badge-success\">COMPLETED</span>"},"exit":{"raw":{"value":null,"type":"str"},"readable":"-"},"submit":{"raw":{"value":null,"type":"DateTime","unit":"ms","description":"Unix time"},"readable":"-"},"start":{"raw":{"value":null,"type":"DateTime","unit":"ms","description":"Unix time"},"readable":"-"},"complete":{"raw":{"value":null,"type":"DateTime","unit":"ms","description":"Unix time"},"readable":"-"},"duration":{"raw":{"value":null,"type":"Duration","unit":"ms"},"readable":"-"},"realtime":{"raw":{"value":3600000,"type":"Duration","unit":"ms","scale":""},"readable":"1h","report":"1h"},"%cpu":{"raw":{"value":100.0,"type":"Percentage","unit":"","scale":"%"},"readable":"100 %"},"%mem":{"raw":{"value":null,"type":"Percentage","unit":"%"},"readable":"-"},"rss":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"vmem":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"peak_rss":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"peak_vmem":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"rchar":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"wchar":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"syscr":{"raw":{"value":null,"type":"Number"},"readable":"-"},"syscw":{"raw":{"value":null,"type":"Number"},"readable":"-"},"read_bytes":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"write_bytes":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"attempt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"workdir":{"raw":{"value":null,"type":"str"},"readable":"-"},"script":{"raw":{"value":null,"type":"str"},"readable":"-"},"scratch":{"raw":{"value":null,"type":"str"},"readable":"-"},"queue":{"raw":{"value":null,"type":"str"},"readable":"-"},"cpus":{"raw":{"value":1,"type":"Number","unit":"","scale":""},"readable":"1"},"memory":{"raw":{"value":7E+9,"type":"Bytes","unit":"B","scale":""},"readable":"7 GB"},"disk":{"raw":{"value":null,"type":"Bytes","unit":"B"},"readable":"-"},"time":{"raw":{"value":null,"type":"Duration","unit":"ms"},"readable":"-"},"env":{"raw":{"value":null,"type":"str"},"readable":"-"},"error_action":{"raw":{"value":null,"type":"str"},"readable":"-"},"vol_ctxt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"inv_ctxt":{"raw":{"value":null,"type":"Number"},"readable":"-"},"hostname":{"raw":{"value":null,"type":"str"},"readable":"-"},"cpu_model":{"raw":{"value":"Unknown model","type":"str"},"readable":"Unknown model"},"accelerator":{"raw":{"value":null,"type":"Number"},"readable":"-"},"accelerator_type":{"raw":{"value":null,"type":"str"},"readable":"-"},"energy_consumption":{"raw":{"value":14.01750,"type":"Number","unit":"Wh","scale":""},"readable":"14.02 Wh"},"CO2e":{"raw":{"value":6.728400000,"type":"Number","unit":"g","scale":""},"readable":"6.73 g"},"CO2e_market":{"raw":{"value":null,"type":"Number","unit":"g"},"readable":"-"},"carbon_intensity":{"raw":{"value":480.0,"type":"Number","unit":"gCO\u2082e/kWh","scale":""},"readable":"480 gCO\u2082e/kWh"},"carbon_intensity_market":{"raw":{"value":null,"type":"Number","unit":"gCO\u2082e/kWh"},"readable":"-"},"pue":{"raw":{"value":1.0,"type":"Number","unit":"","scale":""},"readable":"1"},"powerdraw_cpu":{"raw":{"value":11.41,"type":"Number","unit":"W","scale":""},"readable":"11.41 W"},"powerdraw_memory":{"raw":{"value":0.3725,"type":"Number","unit":"W","scale":""},"readable":"372.5 mW"},"cpu_power_model":{"raw":{"value":null,"type":"str"},"readable":"-"},"raw_energy_processor":{"raw":{"value":11.41,"type":"Number","unit":"Wh","scale":""},"readable":"11.41 Wh"},"raw_energy_memory":{"raw":{"value":2.6075,"type":"Number","unit":"Wh","scale":""},"readable":"2.61 Wh"}}],"summary":{"observerTestProcess":{"CO2e":[6.728400000],"energy_consumption":[0.01401750],"CO2e_non_cached":[6.728400000],"energy_consumption_non_cached":[0.01401750],"memory":[7]}}};
-    window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"provenanceFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir5700784671253873674/provenance_test.json"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir5700784671253873674/report_test.html"},{"option":"summaryFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir5700784671253873674/summary_test.txt"},{"option":"traceFile","value":"/var/folders/hy/br8lmc9n32ld843gzkx6yfwh0000gp/T/tmpdir5700784671253873674/trace_test.txt"}];
+    window.options = [{"option":"ci","value":"480.0"},{"option":"ciMarket","value":null},{"option":"customCpuTdpFile","value":null},{"option":"ignoreCpuModel","value":"false"},{"option":"location","value":null},{"option":"machineType","value":null},{"option":"powerdrawCpuDefault","value":null},{"option":"powerdrawMem","value":"0.3725"},{"option":"provenanceFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir1092548852404453994/provenance_test.json"},{"option":"pue","value":"1.0"},{"option":"reportFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir1092548852404453994/report_test.html"},{"option":"summaryFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir1092548852404453994/summary_test.txt"},{"option":"traceFile","value":"/var/folders/y4/7wys728x2_b94h_7v_phrl7w0000gn/T/tmpdir1092548852404453994/trace_test.txt"}];
     window.ciRecords = {};
   </script>
 
@@ -1558,7 +1565,7 @@
       <dl>
         <dt>Run times</dt>
         <dd>
-          <span id="workflow_start">13-Aug-2026 14:58:21</span> - <span id="workflow_complete">13-Aug-2026 14:58:21</span>
+          <span id="workflow_start">07-Aug-2026 14:13:54</span> - <span id="workflow_complete">07-Aug-2026 14:13:54</span>
           (<span id="completed_fromnow"></span>duration: <strong>null</strong>)
         </dd>
 
@@ -1692,7 +1699,9 @@
     <!-- Task timeline: process swimlane + CI/energy plot (linked x-axis) -->
     <div class="container">
       <h3 id="ci-records">Task timeline</h3>
+      <h4 id="process-swimlane-plot-title">Task execution swimlanes by process</h4>
       <div id="process-swimlane-plot"></div>
+      <h4 id="ci-plot-title" class="mt-4">Carbon intensity &amp; energy over time</h4>
       <div id="ci-plot"></div>
       <p class="mt-3 mb-3">The upper panel shows each task's execution window grouped by process. The lower panel shows the carbon intensity (CI) and energy consumption over the same timeline. Both panels are linked — zoom or pan one to update the other.</p>
     </div>
