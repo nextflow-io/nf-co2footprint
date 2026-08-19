@@ -7,7 +7,7 @@ summary_test.txt:
   num_lines: 30
 
 report_test.html:
-  num_lines: 1792
+  num_lines: 1801
 
 provenance_test.json: 
   checksum: "06fd3e56b131c09a461fc60fbd407179"

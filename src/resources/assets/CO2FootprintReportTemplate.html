@@ -280,7 +280,9 @@ ${ assets_js.join("\n\n\n\n").replaceAll("(?m)^", '    ') }
     <!-- Task timeline: process swimlane + CI/energy plot (linked x-axis) -->
     <div class="container">
       <h3 id="ci-records">Task timeline</h3>
+      <h4 id="process-swimlane-plot-title">Task execution swimlanes by process</h4>
       <div id="process-swimlane-plot"></div>
+      <h4 id="ci-plot-title" class="mt-4">Carbon intensity &amp; energy over time</h4>
       <div id="ci-plot"></div>
       <p class="mt-3 mb-3">The upper panel shows each task's execution window grouped by process. The lower panel shows the carbon intensity (CI) and energy consumption over the same timeline. Both panels are linked — zoom or pan one to update the other.</p>
     </div>
