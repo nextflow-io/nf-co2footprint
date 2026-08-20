@@ -4,9 +4,11 @@
 
 ## Bug Fixes:
 - Support for empty runs
+- Lack of display for memory optimization total energy consumption save
 
 ## Misc:
 - Improved file checks by automating some exclusions and replacements through regexes
+- Added maintenance manual
 
 # 1.4.0
 ## Bug Fixes:
