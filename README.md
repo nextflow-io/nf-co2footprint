@@ -123,3 +123,6 @@ To estimate the CPU power draw this project uses CPU TDP data from [WikiChip](ht
 > WikiChip. [https://en.wikichip.org/wiki/WikiChip](https://en.wikichip.org/wiki/WikiChip)
 
 You are free to use, share, and adapt the data under the terms of the CC BY-NC-SA 4.0. For more details and attribution requirements, see the [NOTICE](https://github.com/nextflow-io/nf-co2footprint/blob/master/NOTICE) file.
+
+## License
+Everything in this repository that is not covered by NOTICE is published under the [Apache 2.0 license](https://github.com/nextflow-io/nf-co2footprint/blob/master/LICENSE).
