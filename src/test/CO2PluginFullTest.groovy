@@ -96,7 +96,7 @@ class CO2PluginFullTest extends Specification {
         // Check line count
         fileChecker.compareNumLines(tracePath, 8)
         fileChecker.compareNumLines(summaryPath, 30)
-        fileChecker.compareNumLines(reportPath, 1851)
+        fileChecker.compareNumLines(reportPath, 1853)
         fileChecker.compareNumLines(dataPath, 5639)
     }
 
