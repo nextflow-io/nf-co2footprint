@@ -1,2 +1,2 @@
-task_id	status	name	energy_consumption	CO2e	CO2e_market	raw_energy_processor	raw_energy_memory	carbon_intensity	%cpu	memory	realtime	cpus	powerdraw_cpu	cpu_model
-111	COMPLETED	-	14.02 Wh	6.73 g	-	11.41 Wh	2.61 Wh	480 gCO₂e/kWh	100 %	7 GB	1h	1	11.41 W	Unknown model
+task_id	status	name	energy_consumption	CO2e	CO2e_market	raw_energy_processor	raw_energy_memory	carbon_intensity	%cpu	memory	realtime	cpus	powerdraw_cpu	cpu_model	cpu_energy_function	memory_energy_function
+111	COMPLETED	-	14.02 Wh	6.73 g	-	11.41 Wh	2.61 Wh	480 gCO₂e/kWh	100 %	7 GB	1h	1	11.41 W	Unknown model	runtime_h * numberOfCores * powerdrawPerCore * coreUsage	runtime_h * memory * 0.3725

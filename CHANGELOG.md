@@ -1,5 +1,6 @@
 # New
 ## Features:
+- Added plugin information in top level of provenance file
 - Two time expressions for better comparison between similar runs for tree sequestration time
 
 ## Bug Fixes:
