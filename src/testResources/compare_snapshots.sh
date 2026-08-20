@@ -42,10 +42,13 @@ compareSnapshots() {
         resource=$(findResource "${snapshot}")
         echo "Comparing SNAPSHOT: '${snapshot}' vs. RESOURCE: '${resource}'"
 
-        yes_or_no "Compare files?" && code --wait --diff "${snapshot}" "${resource}"
+        yes_or_no "Compare files?" && eval "${DIFFCMD} ${snapshot} ${resource}"
 
         yes_or_no "Do you want to delete the snapshot?" && rm "${snapshot}"
         done
 }
+
+echo "Use custom command to compare differences?"
+read -e -i 'code --wait --diff' DIFFCMD
 
 compareSnapshots
