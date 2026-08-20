@@ -9,7 +9,7 @@
 ## Misc:
 - Improved file checks by automating some exclusions and replacements through regexes
 - Added maintenance manual
-- Improved automation for snapshot comparison with VSCode
+- Improved automation for snapshot comparison
 
 # 1.4.0
 ## Bug Fixes:
