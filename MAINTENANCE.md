@@ -41,3 +41,5 @@ Small changes can fail many snapshot comparisons — this is normal - adapting t
 3. Update the snapshot if the change was intended (dates/paths are often regex-replaced or excluded, so usually don't need updating)
 4. If a checksum is set, rerun after updating and set the new MD5 checksum
    - The test will tell you whether unexpected difference between old and new file were still found after you adjusted it.
+
+The command `make compareSnapshots` automates this process by iterating through all snapshots in the `failed` directories and opening the VSCode diff comparison. The command `code` needs to be available on `PATH` for this to work.
