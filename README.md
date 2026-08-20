@@ -129,4 +129,4 @@ You are free to use, share, and adapt the data under the terms of the CC BY-NC-S
 
 ## Maintenance
 
-For additional information about the maintenance of nf-co2footprint please refer to the documentation and the [MAINTENANCE file](./MAINTENANCE.md).
+For additional information about the maintenance of nf-co2footprint please refer to the documentation and the [MAINTENANCE file](https://github.com/nextflow-io/nf-co2footprint/blob/master/MAINTENANCE.md).
