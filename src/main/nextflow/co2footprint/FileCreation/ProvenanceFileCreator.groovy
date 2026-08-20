@@ -87,16 +87,18 @@ class ProvenanceFileCreator extends BaseFileCreator {
      * @param ciRecords Carbon intensity records as a Map
      * @return
      */
-    private static Map<String, Object> ciRecordsToJsonLd(Map<Instant, Number> ciRecords ) {
+    private static Map<String, Object> ciRecordsToJsonLd(Map<Instant, Number> ciRecords) {
         Map<String, Object> ciRecordsMap = ['@type': 'schema:ItemList']
+        List<Map<String, Object>> itemListElement = []
         ciRecords.eachWithIndex { Instant instant, Number ci, Integer i ->
-            ciRecordsMap.put( 'itemListElement', 
+            itemListElement.add(
                 [ '@type': 'schema:ListItem', position: i, item: [
                     '@type': 'schema:Observation', observationDate: instant.toString(), value: ci, unitText: 'g/kWh'
                     ]
                 ]
             )
         }
+        ciRecordsMap.put('itemListElement', itemListElement)
         return ciRecordsMap
     }
 
