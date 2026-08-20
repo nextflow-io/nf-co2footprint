@@ -9,24 +9,43 @@ SNAPSHOT_BASE='build/resources/test/'
 RESOURCE_BASE='src/testResources/'
 
 findSnapshots() {
-  find -E . -type f -regex ".*${SNAPSHOT_BASE}.*/failed/.*\$"
+    find -E . -type f -regex ".*${SNAPSHOT_BASE}.*/failed/.*\$"
 }
 
 findResource() {
-  relativePath="${1##*"${SNAPSHOT_BASE}"}"
-  snapshotParts=($(echo ${relativePath} | sed 's/\/failed\//\n\t/g'))  
-  find -E . -type f -regex ".*${RESOURCE_BASE}${snapshotParts[0]}.*${snapshotParts[1]}\$"
+    # Remove base path string
+    relativePath="${1##*"${SNAPSHOT_BASE}"}"
+    
+    # Split at `failed` dir
+    snapshotParts=($(echo ${relativePath} | sed 's/\/failed\//\n\t/g'))
+    
+    # Find matching resource
+    find -E . -type f -regex ".*${RESOURCE_BASE}${snapshotParts[0]}.*${snapshotParts[1]}\$"
 }
 
-checkFiles() {
+# YES or NO prompt
+function yes_or_no {
+    while true; do
+        read -p "$* [y/n]: " yn
+        case $yn in
+            [Yy]*) return 0 ;;
+            [Nn]*) return 1 ;;
+        esac
+    done
+}
+
+# Compare all snapshots
+compareSnapshots() {
     snapshots=($(findSnapshots)) 
     for snapshot in "${snapshots[@]}"
-      do
+        do
         resource=$(findResource "${snapshot}")
         echo "Comparing SNAPSHOT: '${snapshot}' vs. RESOURCE: '${resource}'"
-        read -p "Press Enter to continue" </dev/tty
-        code --wait --diff "${snapshot}" "${resource}"
-      done
+
+        yes_or_no "Compare files?" && code --wait --diff "${snapshot}" "${resource}"
+
+        yes_or_no "Do you want to delete the snapshot?" && rm "${snapshot}"
+        done
 }
 
-checkFiles
+compareSnapshots
