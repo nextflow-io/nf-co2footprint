@@ -1,10 +1,12 @@
 # New
 ## Features:
 - Added plugin information in top level of provenance file
+- Two time expressions for better comparison between similar runs for tree sequestration time
 
 ## Bug Fixes:
 - Support for empty runs
 - Lack of display for memory optimization total energy consumption save
+- Removal of "s" from singular time expressions
 
 ## Misc:
 - Improved file checks by automating some exclusions and replacements through regexes

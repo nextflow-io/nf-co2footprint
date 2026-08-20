@@ -189,14 +189,15 @@ class Quantity extends Metric<BigDecimal> {
      * Get the readable representation of this quantity.
      * Example: '1 GB' for value = 1, scale = 'G', unit = 'B'
      *
+     * @param unit A custom unit
      * @return String 'value scale+unit'
      */
-    String getReadable() {
+    String getReadable(String unit=this.unit) {
         // Remove trailing Zeros and convert to readable String
         String readable = this.value.stripTrailingZeros().toPlainString()
 
         // Add scale and unit with separator only if one of them is given
-        String scaledUnit = (this.scale ?: '') + (this.unit ?: '')
+        String scaledUnit = (this.scale ?: '') + (unit ?: '')
         if (scaledUnit) { readable += this.separator + scaledUnit }
 
         return readable
