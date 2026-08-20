@@ -10,7 +10,7 @@
 - Follow [Nextflow's plugin guidelines](https://docs.seqera.io/nextflow/plugins/developing-plugins)
 - Follow the [Nextflow Gradle plugin guide](https://nextflow.io/docs/latest/guides/gradle-plugin.html#publishing-a-plugin)
 - Before releasing, bump the version everywhere it's hardcoded: `build.gradle`, `CITATION.cff` (`version` + `date-released`), `README.md` (citation block), and `CHANGELOG.md`
-- Make a release on GitHub with `<version>` as a tag and `v<version` as release name
+- Make a release on GitHub with `<version>` as a tag and `v<version>` as release name
   (auto-posts to the nf-co2footprint Slack channel)
 - Check that the GitHub release triggered a new archive on [Zenodo](https://zenodo.org/) and that the DOI badge/citation in `README.md` still points to the correct DOI
 - Post a message to Slack with the highlights of the release
@@ -32,8 +32,7 @@ Sometimes Nextflow changes core code or deprecates older methods. Aim to support
 Setting `NXF_SYNTAX_PARSER=v1` can help to run some older pipelines with a newer Nextflow versions.
 
 ## Tests
-- Run with `make test` or `./gradlew test` (see [setup](docs/contributing/setup.md) for details).
-  - For integration tests, if file endings break, run `dos2unix src/testResources/integration/prepare-environment.sh`.
+Run with `make test` or `./gradlew test` (see [setup](docs/contributing/setup.md) for details). For integration tests, if file endings break, run `dos2unix src/testResources/integration/prepare-environment.sh`.
 
 ### Adjusting failed snapshot tests
 Small changes can fail many snapshot comparisons — this is normal - adapting the tests gets quicker with practice.
