@@ -7,6 +7,7 @@
 
 ## Misc:
 - Improved file checks by automating some exclusions and replacements through regexes
+- Added maintenance manual
 
 # 1.4.0
 ## Bug Fixes:
