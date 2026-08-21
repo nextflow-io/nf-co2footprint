@@ -8,11 +8,14 @@ import nextflow.co2footprint.CO2FootprintPlugin
 import nextflow.co2footprint.Config.ProvenanceFileConfig
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordTree
+import nextflow.co2footprint.Records.CiRecordCollector
 import nextflow.trace.TraceHelper
 
 import java.nio.file.Path
 import java.time.Duration
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 @Slf4j
 class ProvenanceFileCreator extends BaseFileCreator {
@@ -41,7 +44,7 @@ class ProvenanceFileCreator extends BaseFileCreator {
 
         if(!config.enabled) {
             this.metaClass.create = { -> null }
-            this.metaClass.write = { CO2RecordTree X -> null }
+            this.metaClass.write = { CO2RecordTree X, CiRecordCollector Y -> null }
             this.metaClass.close = {  -> null }
         }
     }
@@ -61,8 +64,16 @@ class ProvenanceFileCreator extends BaseFileCreator {
      *
      * @param co2RecordTree A hierarchically structured record tree
      */
-    void write(CO2RecordTree co2RecordTree) {
-        Map co2TreeMap = transformToJsonLd(co2RecordTree.toMap(emissionMetricsOnly, includeNulls, false))
+    void write(CO2RecordTree co2RecordTree, CiRecordCollector timeCiRecordCollector=null) {
+        if (timeCiRecordCollector?.timeCIs) {
+            co2RecordTree.metaData.put(
+                'carbon_intensity_records',
+                ciRecordsToJsonLd(timeCiRecordCollector.timeCIs)
+            )
+        }
+        Map co2TreeMap = transformToJsonLd(
+                co2RecordTree.toMap(emissionMetricsOnly, includeNulls, false)
+        )
         JsonBuilder jsonBuilder = new JsonBuilder(co2TreeMap)
 
         dataWriter = new Agent<PrintWriter>(file)
@@ -86,6 +97,27 @@ class ProvenanceFileCreator extends BaseFileCreator {
             Duration: 'schema:Duration',
             DateTime: 'schema:DateTime',
     ]
+
+    /**
+     * Transform the carbon intensity records to a valid JSON-LD file string.
+     * 
+     * @param ciRecords Carbon intensity records as a Map
+     * @return
+     */
+    private static Map<String, Object> ciRecordsToJsonLd(Map<Instant, Number> ciRecords) {
+        Map<String, Object> ciRecordsMap = ['@type': 'schema:ItemList']
+        List<Map<String, Object>> itemListElement = []
+        ciRecords.eachWithIndex { Instant instant, Number ci, Integer i ->
+            itemListElement.add(
+                [ '@type': 'schema:ListItem', position: i, item: [
+                    '@type': 'schema:Observation', observationDate: instant.toString(), value: ci, unitText: 'g/kWh'
+                    ]
+                ]
+            )
+        }
+        ciRecordsMap.put('itemListElement', itemListElement)
+        return ciRecordsMap
+    }
 
     /**
      * Transform the map to JSON-LD format with schema.org/bioschema.org context and types.
@@ -216,6 +248,10 @@ class ProvenanceFileCreator extends BaseFileCreator {
         }
 
         return ldMap
+    }
+    
+    private Map<String, Object> addCo2RecordsToMap(Map<String, Object> co2Records, Map<String, Object> treeMap) {
+        
     }
 
     static CO2RecordTree read(Path path) {
