@@ -105,7 +105,7 @@ nextflowPlugin {
     nextflowVersion = minimumNextflowVersion
 
     // Plugin metadata
-    provider = 'nextflow'
+    provider = 'QBiC'
     className = 'nextflow.co2footprint.CO2FootprintPlugin'
     extensionPoints = [
             'nextflow.co2footprint.CO2FootprintFactory',

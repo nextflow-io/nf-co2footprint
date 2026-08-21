@@ -1,12 +1,17 @@
 # New
 ## Features:
+- Added plugin information in top level of provenance file
+- Two time expressions for better comparison between similar runs for tree sequestration time
 - Added carbon intensity records to provenance file, if dynamic CIs were fetched
 
 ## Bug Fixes:
 - Support for empty runs
+- Lack of display for memory optimization total energy consumption save
+- Removal of "s" from singular time expressions
 
 ## Misc:
 - Improved file checks by automating some exclusions and replacements through regexes
+- Added maintenance manual
 
 # 1.4.0
 ## Bug Fixes:

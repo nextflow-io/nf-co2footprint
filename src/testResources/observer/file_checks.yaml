@@ -6,8 +6,8 @@ summary_test:
   num_lines: 30
 
 report_test.html:
-  num_lines: 1804
+  num_lines: 1806
 
 provenance_test.json:
-  checksum: "ac4186c40cc0292ee5ddaa6935e63830"
-  num_lines: 404
+  checksum: "108bb8a95319b51cffe5256a67802b70"
+  num_lines: 417
