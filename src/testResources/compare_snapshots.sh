@@ -9,7 +9,7 @@ SNAPSHOT_BASE='build/resources/test/'
 RESOURCE_BASE='src/testResources/'
 
 findSnapshots() {
-    find -E . -type f -regex ".*${SNAPSHOT_BASE}.*/failed/.*\$"
+    find . -type f -regex ".*${SNAPSHOT_BASE}.*/failed/.*\$"
 }
 
 findResource() {
@@ -20,7 +20,7 @@ findResource() {
     snapshotParts=($(echo ${relativePath} | sed 's/\/failed\//\n\t/g'))
     
     # Find matching resource
-    find -E . -type f -regex ".*${RESOURCE_BASE}${snapshotParts[0]}.*${snapshotParts[1]}\$"
+    find . -type f -regex ".*${RESOURCE_BASE}${snapshotParts[0]}.*${snapshotParts[1]}\$"
 }
 
 # YES or NO prompt
@@ -46,6 +46,7 @@ compareSnapshots() {
 
         yes_or_no "Do you want to delete the snapshot?" && rm "${snapshot}"
         done
+    return 0
 }
 
 echo "Use custom command to compare differences?"
