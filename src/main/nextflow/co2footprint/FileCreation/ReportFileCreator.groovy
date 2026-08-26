@@ -28,7 +28,7 @@ class ReportFileCreator extends BaseFileCreator{
     private int maxTasks
 
     // Information for final report
-    private CO2RecordTree stats
+    private CO2RecordTree co2RecordTree
     private CO2FootprintCalculator co2FootprintComputer
     private CO2FootprintConfig config
     private CiRecordCollector timeCiRecordCollector
@@ -59,19 +59,19 @@ class ReportFileCreator extends BaseFileCreator{
     /**
      * Store all data needed for the report.
      *
-     * @param stats         The {@link CO2RecordTree} with all stats.
+     * @param co2RecordTree         The {@link CO2RecordTree} with all stats.
      * @param config        Plugin configuration
      * @param timeCiRecordCollector   Time & CI Record collector that contains a map of all carbon intensities at different times
      * @param workflowMetadata       Nextflow session workflow metadata
      */
     void addEntries(
-            CO2RecordTree stats,
+            CO2RecordTree co2RecordTree,
             CO2FootprintCalculator co2FootprintComputer,
             CO2FootprintConfig config,
             CiRecordCollector timeCiRecordCollector,
             WorkflowMetadata workflowMetadata = null
     ) {
-        this.stats = stats
+        this.co2RecordTree = co2RecordTree
         this.co2FootprintComputer = co2FootprintComputer
         this.config = config
         this.workflowMetadata = workflowMetadata ? workflowMetadata.toMap() : [:]
@@ -204,7 +204,7 @@ class ReportFileCreator extends BaseFileCreator{
     */
     private Map<String, String> makeCO2Total(suffix) {
         // Get workflow level stats
-        CO2Record workflowRecord = stats.descentTo('workflow').collect(
+        CO2Record workflowRecord = co2RecordTree.descentTo('workflow').collect(
                 { CO2RecordTree workflowTree -> workflowTree.co2Record }
         ).sum() as CO2Record
 
@@ -248,32 +248,32 @@ class ReportFileCreator extends BaseFileCreator{
      */
     protected String renderDataJson() {
         return "{" +
-            "\"trace\":${JsonOutput.toJson(collectTasks(stats))}," +
-            "\"summary\":${JsonOutput.toJson(collectSummary(stats))}" +
+            "\"trace\":${JsonOutput.toJson(collectTasks(co2RecordTree))}," +
+            "\"summary\":${JsonOutput.toJson(collectSummary(co2RecordTree))}" +
         "}"
     }
 
     /**
      * Collects statistics at the process level
      *
-     * @param stats CO2RecordTree representation of workflow stats with marked levels
+     * @param co2RecordTree CO2RecordTree representation of workflow stats with marked levels
      * @return Map of the process-specific statistics
      */
-    protected Map<String, Object> collectSummary(CO2RecordTree stats=this.stats) {
+    protected Map<String, Object> collectSummary(CO2RecordTree co2RecordTree=this.co2RecordTree) {
         // Add an empty map if the process is not already present
-        return stats.collectByLevel('process', ['CO2e', 'energy_consumption', 'CO2e_non_cached', 'energy_consumption_non_cached', 'memory', 'peak_rss'])
+        return co2RecordTree.collectByLevel('process', ['CO2e', 'energy_consumption', 'CO2e_non_cached', 'energy_consumption_non_cached', 'memory', 'peak_rss'])
     }
 
 
     /**
      * Collect task-level metrics from the RecordTree up to a maximum number of tasks.
      *
-     * @param stats CO2RecordTree with workflow, process, and task metrics
+     * @param co2RecordTree CO2RecordTree with workflow, process, and task metrics
      * @return List of task value maps
      */
-    protected List<Map<String, Map<String, Object>>> collectTasks(CO2RecordTree stats=this.stats){
+    protected List<Map<String, Map<String, Object>>> collectTasks(CO2RecordTree co2RecordTree=this.co2RecordTree){
         List<Map<String, Map<String, Object>>> results = []
-        List<CO2RecordTree> taskRecordTrees = stats.descentTo('task')
+        List<CO2RecordTree> taskRecordTrees = co2RecordTree.descentTo('task')
         for(int i = 0; i < Math.min(taskRecordTrees.size(), maxTasks); i++) {
             results.add(taskRecordTrees[i].toMap().get('values') as Map<String, Map<String, Object>>)
         }
