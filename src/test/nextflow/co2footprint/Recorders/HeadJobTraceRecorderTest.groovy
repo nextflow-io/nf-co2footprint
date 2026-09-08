@@ -1,5 +1,7 @@
 package nextflow.co2footprint.Recorders
 
+import nextflow.Session
+import nextflow.exception.UnexpectedException
 import nextflow.trace.TraceRecord
 import spock.lang.Specification
 
@@ -64,5 +66,20 @@ class HeadJobTraceRecorderTest extends Specification{
         ].each { String key, Object value ->
             record.get(key) == value
         }
+    }
+
+    def 'test error on multiple sessions'() {
+        setup:
+        HeadJobTraceRecorder headJobTraceRecorder = new HeadJobTraceRecorder()
+        Session session = new Session()
+
+        when:
+        headJobTraceRecorder.start()
+        headJobTraceRecorder.attachSession(session)
+        headJobTraceRecorder.attachSession(session)
+
+
+        then:
+        thrown(UnexpectedException)
     }
 }

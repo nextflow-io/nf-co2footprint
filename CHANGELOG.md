@@ -8,6 +8,7 @@
 - Support for empty runs
 - Lack of display for memory optimization total energy consumption save
 - Removal of "s" from singular time expressions
+- Concurrent modification error on plugin stop
 
 ## Misc:
 - Improved file checks by automating some exclusions and replacements through regexes
