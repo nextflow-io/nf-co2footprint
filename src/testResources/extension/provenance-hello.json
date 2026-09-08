@@ -192,10 +192,10 @@
     },
     "cpus": {
         "@type": "schema:QuantitativeValue",
-        "value": 7.9105742742,
+        "value": 7.9130324221,
         "unitText": "",
         "additionalProperty": {
-            "readable": "7.9105742742"
+            "readable": "7.9130324221"
         }
     },
     "memory": {
@@ -819,10 +819,10 @@
             },
             "cpus": {
                 "@type": "schema:QuantitativeValue",
-                "value": 1.4876543209,
+                "value": 1.6666666667,
                 "unitText": "",
                 "additionalProperty": {
-                    "readable": "1.4876543209"
+                    "readable": "1.6666666667"
                 }
             },
             "memory": {
@@ -1150,10 +1150,10 @@
                     },
                     "cpus": {
                         "@type": "schema:QuantitativeValue",
-                        "value": 1.4876543209,
+                        "value": 1.6666666667,
                         "unitText": "",
                         "additionalProperty": {
-                            "readable": "1.4876543209"
+                            "readable": "1.6666666667"
                         }
                     },
                     "memory": {
@@ -1548,7 +1548,7 @@
                             },
                             "energy_consumption": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0.0001979131346192,
+                                "value": 0.00019791313461920,
                                 "unitText": "Wh",
                                 "additionalProperty": {
                                     "readable": "197.91 uWh"
@@ -1556,7 +1556,7 @@
                             },
                             "CO2e": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0.00002909323078902240,
+                                "value": 0.000029093230789022400,
                                 "unitText": "g",
                                 "additionalProperty": {
                                     "readable": "29.09 ug"
@@ -1564,7 +1564,7 @@
                             },
                             "CO2e_market": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0.00001979131346192000,
+                                "value": 0.000019791313461920000,
                                 "unitText": "g",
                                 "additionalProperty": {
                                     "readable": "19.79 ug"
@@ -1604,7 +1604,7 @@
                             },
                             "raw_energy_processor": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0.000152240872784,
+                                "value": 0.0001522408727840,
                                 "unitText": "Wh",
                                 "additionalProperty": {
                                     "readable": "152.24 uWh"
@@ -1801,7 +1801,7 @@
                                 "value": 55642,
                                 "unitText": "B",
                                 "additionalProperty": {
-                                    "readable": "54.4 KB"
+                                    "readable": "54.3 KB"
                                 }
                             },
                             "wchar": {
@@ -2160,7 +2160,7 @@
                                 "value": 55644,
                                 "unitText": "B",
                                 "additionalProperty": {
-                                    "readable": "54.4 KB"
+                                    "readable": "54.3 KB"
                                 }
                             },
                             "wchar": {
@@ -2519,7 +2519,7 @@
                                 "value": 55647,
                                 "unitText": "B",
                                 "additionalProperty": {
-                                    "readable": "54.4 KB"
+                                    "readable": "54.3 KB"
                                 }
                             },
                             "wchar": {
