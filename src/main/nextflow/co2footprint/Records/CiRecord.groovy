@@ -7,14 +7,11 @@ import nextflow.co2footprint.DataContainers.CIMatch
 import nextflow.co2footprint.Logging.Markers
 
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 
 @Slf4j
 class CiRecord {
     // Time of the CI recording
-    LocalDateTime time = null
+    Instant time = null
 
     // Carbon intensity value
     Number value = null
@@ -31,7 +28,7 @@ class CiRecord {
             CIDataMatrix ciDataMatrix=null,
             String location=null,
             String emApiKey=null,
-            LocalDateTime time=LocalDateTime.now()
+            Instant time=Instant.now()
     ) {
         // Ensure location is upper case
         location = location?.toUpperCase()
@@ -104,12 +101,12 @@ class CiRecord {
             // Parse the successful API response
             Map json = jsonSlurper.parse(ciApiConnection.inputStream) as Map
 
-            this.time = Instant.parse(json['datetime'] as String).atZone(ZoneId.systemDefault()).toLocalDateTime()
+            this.time = Instant.parse(json['datetime'] as String)
             this.value = json['carbonIntensity'] as BigDecimal
             log.info(
                     Markers.unique,
                     "API call successful. " +
-                    "CI: ${this.value} gCO₂e/kWh (${this.time.format(DateTimeFormatter.ofPattern('dd.MM.yyyy HH:mm:ss'))}). " +
+                    "CI: ${this.value} gCO₂e/kWh (${this.time}). " +
                     "Response code: ${ciApiConnection.responseCode} (${ciApiConnection.responseMessage})."
             )
         }

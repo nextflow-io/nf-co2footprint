@@ -289,7 +289,7 @@ class CO2Record extends TraceRecord {
                 Map<String, String> colors = [COMPLETED: 'success', CACHED: 'secondary', ABORTED: 'danger', FAILED: 'danger']
                 "<span class=\"badge badge-${colors[value]}\">${value}</span>"
             }
-            case 'realtime' -> toReadable(key, value).split(' ')[0]
+            case 'realtime' -> value == null ? NA : new Duration(value, 'ms').toReadable( 'ms', 'years', 1)
             default -> null
         }
     }

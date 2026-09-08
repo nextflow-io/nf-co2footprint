@@ -1,9 +1,22 @@
 {
     "@context": {
         "schema": "https://schema.org/",
-        "bioschemas": "https://bioschemas.org"
+        "bioschemas": "https://bioschemas.org",
+        "prov": "http://www.w3.org/ns/prov#"
     },
-    "@id": "urn:co2footprint:fervent_noether-session",
+    "@version": 1.1,
+    "prov:wasGeneratedBy": {
+        "@type": "prov:Activity",
+        "prov:used": {
+            "@type": "schema:SoftwareApplication",
+            "name": "nf-co2footprint",
+            "softwareVersion": "1.4.0",
+            "archivedAt": "https://doi.org/10.5281/zenodo.14622304",
+            "license": "https://www.apache.org/licenses/LICENSE-2.0.html",
+            "usageInfo": "https://nextflow-io.github.io/nf-co2footprint/"
+        }
+    },
+    "@id": "urn:co2footprint:pensive_becquerel-session",
     "@type": "schema:SoftwareApplication",
     "workflowLevel": {
         "@type": "schema:PropertyValue",
@@ -18,9 +31,9 @@
     },
     "name": {
         "@type": "schema:PropertyValue",
-        "value": "fervent_noether-session",
+        "value": "pensive_becquerel-session",
         "additionalProperty": {
-            "readable": "fervent_noether-session"
+            "readable": "pensive_becquerel-session"
         }
     },
     "status": {
@@ -32,53 +45,53 @@
     },
     "submit": {
         "@type": "schema:DateTime",
-        "value": "2026-07-28T09:47:23.668Z",
+        "value": "2026-08-13T12:51:35.125Z",
         "unitText": "ms",
         "additionalProperty": {
-            "readable": "2026-07-28 11:47:23.668"
+            "readable": "2026-08-13 14:51:35.125"
         },
         "description": "Unix time"
     },
     "start": {
         "@type": "schema:DateTime",
-        "value": "2026-07-28T09:47:34.003Z",
+        "value": "2026-08-13T12:51:51.002Z",
         "unitText": "ms",
         "additionalProperty": {
-            "readable": "2026-07-28 11:47:34.003"
+            "readable": "2026-08-13 14:51:51.002"
         },
         "description": "Unix time"
     },
     "complete": {
         "@type": "schema:DateTime",
-        "value": "2026-07-28T09:47:40.305Z",
+        "value": "2026-08-13T12:51:58.283Z",
         "unitText": "ms",
         "additionalProperty": {
-            "readable": "2026-07-28 11:47:40.305"
+            "readable": "2026-08-13 14:51:58.283"
         },
         "description": "Unix time"
     },
     "duration": {
         "@type": "schema:Duration",
-        "value": "PT24.996S",
+        "value": "PT34.267S",
         "unitText": "ms",
         "additionalProperty": {
-            "readable": "25s"
+            "readable": "34.3s"
         }
     },
     "realtime": {
         "@type": "schema:Duration",
-        "value": "PT16.797S",
+        "value": "PT23.595S",
         "unitText": "ms",
         "additionalProperty": {
-            "readable": "16s 797ms"
+            "readable": "23s 595ms"
         }
     },
     "%cpu": {
         "@type": "schema:QuantitativeValue",
-        "value": 182.43031204922983,
+        "value": 193.29778480097133,
         "unitText": "%",
         "additionalProperty": {
-            "readable": "182.43 %"
+            "readable": "193.3 %"
         }
     },
     "%mem": {
@@ -91,31 +104,31 @@
     },
     "rss": {
         "@type": "schema:QuantitativeValue",
-        "value": 271536006.8050247068,
+        "value": 264567585.7535918627,
         "unitText": "B",
         "additionalProperty": {
-            "readable": "259 MB"
+            "readable": "252.3 MB"
         }
     },
     "vmem": {
         "@type": "schema:QuantitativeValue",
-        "value": 40850942097.2145025897,
+        "value": 40523641501.7337571519,
         "unitText": "B",
         "additionalProperty": {
-            "readable": "38 GB"
+            "readable": "37.7 GB"
         }
     },
     "peak_rss": {
         "@type": "schema:QuantitativeValue",
-        "value": 295477248,
+        "value": 268251136,
         "unitText": "B",
         "additionalProperty": {
-            "readable": "281.8 MB"
+            "readable": "255.8 MB"
         }
     },
     "peak_vmem": {
         "@type": "schema:QuantitativeValue",
-        "value": 41106599936,
+        "value": 41087848448,
         "unitText": "B",
         "additionalProperty": {
             "readable": "38.3 GB"
@@ -123,18 +136,18 @@
     },
     "rchar": {
         "@type": "schema:QuantitativeValue",
-        "value": 222762,
+        "value": 222599,
         "unitText": "B",
         "additionalProperty": {
-            "readable": "217.5 KB"
+            "readable": "217.4 KB"
         }
     },
     "wchar": {
         "@type": "schema:QuantitativeValue",
-        "value": 992,
+        "value": 934,
         "unitText": "B",
         "additionalProperty": {
-            "readable": "992 B"
+            "readable": "934 B"
         }
     },
     "syscr": {
@@ -155,18 +168,18 @@
     },
     "read_bytes": {
         "@type": "schema:QuantitativeValue",
-        "value": 18841600,
+        "value": 19976192,
         "unitText": "B",
         "additionalProperty": {
-            "readable": "18 MB"
+            "readable": "19.1 MB"
         }
     },
     "write_bytes": {
         "@type": "schema:QuantitativeValue",
-        "value": 548864,
+        "value": 577536,
         "unitText": "B",
         "additionalProperty": {
-            "readable": "536 KB"
+            "readable": "564 KB"
         }
     },
     "attempt": {
@@ -179,34 +192,34 @@
     },
     "cpus": {
         "@type": "schema:QuantitativeValue",
-        "value": 7.9591593737,
+        "value": 7.9105742742,
         "unitText": "",
         "additionalProperty": {
-            "readable": "7.9591593737"
+            "readable": "7.9105742742"
         }
     },
     "memory": {
         "@type": "schema:QuantitativeValue",
-        "value": 273178624,
+        "value": 268251136,
         "unitText": "B",
         "additionalProperty": {
-            "readable": "273.18 MB"
+            "readable": "268.25 MB"
         }
     },
     "vol_ctxt": {
         "@type": "schema:QuantitativeValue",
-        "value": 214133,
+        "value": 267178,
         "unitText": "",
         "additionalProperty": {
-            "readable": "214133"
+            "readable": "267178"
         }
     },
     "inv_ctxt": {
         "@type": "schema:QuantitativeValue",
-        "value": 135,
+        "value": 149,
         "unitText": "",
         "additionalProperty": {
-            "readable": "135"
+            "readable": "149"
         }
     },
     "cpu_model": {
@@ -218,34 +231,34 @@
     },
     "energy_consumption": {
         "@type": "schema:QuantitativeValue",
-        "value": 0.13694001519007344453763877344000,
+        "value": 0.20374734895534169511696652928,
         "unitText": "Wh",
         "additionalProperty": {
-            "readable": "136.94 mWh"
+            "readable": "203.75 mWh"
         }
     },
     "CO2e": {
         "@type": "schema:QuantitativeValue",
-        "value": 0.018076082005089694678968318094080000,
+        "value": 0.029950860296435229182194079804160,
         "unitText": "g",
         "additionalProperty": {
-            "readable": "18.08 mg"
+            "readable": "29.95 mg"
         }
     },
     "CO2e_market": {
         "@type": "schema:QuantitativeValue",
-        "value": 0.013694001519007344453763877344000000,
+        "value": 0.020374734895534169511696652928000,
         "unitText": "g",
         "additionalProperty": {
-            "readable": "13.69 mg"
+            "readable": "20.37 mg"
         }
     },
     "carbon_intensity": {
         "@type": "schema:QuantitativeValue",
-        "value": 132.0,
+        "value": 147.0,
         "unitText": "gCO\u2082e/kWh",
         "additionalProperty": {
-            "readable": "132 gCO\u2082e/kWh"
+            "readable": "147 gCO\u2082e/kWh"
         }
     },
     "carbon_intensity_market": {
@@ -274,18 +287,18 @@
     },
     "raw_energy_processor": {
         "@type": "schema:QuantitativeValue",
-        "value": 0.1048665374183448180431067488000,
+        "value": 0.1560828074930857395102819456,
         "unitText": "Wh",
         "additionalProperty": {
-            "readable": "104.87 mWh"
+            "readable": "156.08 mWh"
         }
     },
     "raw_energy_memory": {
         "@type": "schema:QuantitativeValue",
-        "value": 0.00047193580478860083200,
+        "value": 0.00064592247256171827200,
         "unitText": "Wh",
         "additionalProperty": {
-            "readable": "471.94 uWh"
+            "readable": "645.92 uWh"
         }
     },
     "cpu_energy_function": {
@@ -304,7 +317,7 @@
     },
     "hasPart": [
         {
-            "@id": "urn:co2footprint:fervent_noether-head_job",
+            "@id": "urn:co2footprint:pensive_becquerel-head_job",
             "@type": "schema:SoftwareApplication",
             "workflowLevel": {
                 "@type": "schema:PropertyValue",
@@ -319,16 +332,16 @@
             },
             "hash": {
                 "@type": "schema:PropertyValue",
-                "value": 333022446,
+                "value": 1339257929,
                 "additionalProperty": {
-                    "readable": "333022446"
+                    "readable": "1339257929"
                 }
             },
             "native_id": {
                 "@type": "schema:PropertyValue",
-                "value": "38306",
+                "value": "72382",
                 "additionalProperty": {
-                    "readable": "38306"
+                    "readable": "72382"
                 }
             },
             "process": {
@@ -354,9 +367,9 @@
             },
             "name": {
                 "@type": "schema:PropertyValue",
-                "value": "fervent_noether-head_job",
+                "value": "pensive_becquerel-head_job",
                 "additionalProperty": {
-                    "readable": "fervent_noether-head_job"
+                    "readable": "pensive_becquerel-head_job"
                 }
             },
             "status": {
@@ -368,66 +381,66 @@
             },
             "submit": {
                 "@type": "schema:DateTime",
-                "value": "2026-07-28T09:47:23.668Z",
+                "value": "2026-08-13T12:51:35.125Z",
                 "unitText": "ms",
                 "additionalProperty": {
-                    "readable": "2026-07-28 11:47:23.668"
+                    "readable": "2026-08-13 14:51:35.125"
                 },
                 "description": "Unix time"
             },
             "start": {
                 "@type": "schema:DateTime",
-                "value": "2026-07-28T09:47:34.003Z",
+                "value": "2026-08-13T12:51:51.002Z",
                 "unitText": "ms",
                 "additionalProperty": {
-                    "readable": "2026-07-28 11:47:34.003"
+                    "readable": "2026-08-13 14:51:51.002"
                 },
                 "description": "Unix time"
             },
             "complete": {
                 "@type": "schema:DateTime",
-                "value": "2026-07-28T09:47:40.305Z",
+                "value": "2026-08-13T12:51:58.283Z",
                 "unitText": "ms",
                 "additionalProperty": {
-                    "readable": "2026-07-28 11:47:40.305"
+                    "readable": "2026-08-13 14:51:58.283"
                 },
                 "description": "Unix time"
             },
             "duration": {
                 "@type": "schema:Duration",
-                "value": "PT16.637S",
+                "value": "PT23.158S",
                 "unitText": "ms",
                 "additionalProperty": {
-                    "readable": "16.6s"
+                    "readable": "23.2s"
                 }
             },
             "realtime": {
                 "@type": "schema:Duration",
-                "value": "PT16.696S",
+                "value": "PT23.271S",
                 "unitText": "ms",
                 "additionalProperty": {
-                    "readable": "16s 696ms"
+                    "readable": "23s 271ms"
                 }
             },
             "%cpu": {
                 "@type": "schema:QuantitativeValue",
-                "value": 182.92654237487503,
+                "value": 194.66628990498424,
                 "unitText": "%",
                 "additionalProperty": {
-                    "readable": "182.93 %"
+                    "readable": "194.67 %"
                 }
             },
             "rss": {
                 "@type": "schema:QuantitativeValue",
-                "value": 273178624,
+                "value": 268251136,
                 "unitText": "B",
                 "additionalProperty": {
-                    "readable": "260.5 MB"
+                    "readable": "255.8 MB"
                 }
             },
             "vmem": {
                 "@type": "schema:QuantitativeValue",
-                "value": 41098063872,
+                "value": 41087848448,
                 "unitText": "B",
                 "additionalProperty": {
                     "readable": "38.3 GB"
@@ -435,15 +448,15 @@
             },
             "peak_rss": {
                 "@type": "schema:QuantitativeValue",
-                "value": 295477248,
+                "value": 268251136,
                 "unitText": "B",
                 "additionalProperty": {
-                    "readable": "281.8 MB"
+                    "readable": "255.8 MB"
                 }
             },
             "peak_vmem": {
                 "@type": "schema:QuantitativeValue",
-                "value": 41106599936,
+                "value": 41087848448,
                 "unitText": "B",
                 "additionalProperty": {
                     "readable": "38.3 GB"
@@ -451,18 +464,18 @@
             },
             "read_bytes": {
                 "@type": "schema:QuantitativeValue",
-                "value": 18010112,
+                "value": 19144704,
                 "unitText": "B",
                 "additionalProperty": {
-                    "readable": "17.2 MB"
+                    "readable": "18.3 MB"
                 }
             },
             "write_bytes": {
                 "@type": "schema:QuantitativeValue",
-                "value": 548864,
+                "value": 577536,
                 "unitText": "B",
                 "additionalProperty": {
-                    "readable": "536 KB"
+                    "readable": "564 KB"
                 }
             },
             "attempt": {
@@ -483,26 +496,26 @@
             },
             "memory": {
                 "@type": "schema:QuantitativeValue",
-                "value": 273178624,
+                "value": 268251136,
                 "unitText": "B",
                 "additionalProperty": {
-                    "readable": "273.18 MB"
+                    "readable": "268.25 MB"
                 }
             },
             "vol_ctxt": {
                 "@type": "schema:QuantitativeValue",
-                "value": 214133,
+                "value": 267178,
                 "unitText": "",
                 "additionalProperty": {
-                    "readable": "214133"
+                    "readable": "267178"
                 }
             },
             "inv_ctxt": {
                 "@type": "schema:QuantitativeValue",
-                "value": 135,
+                "value": 149,
                 "unitText": "",
                 "additionalProperty": {
-                    "readable": "135"
+                    "readable": "149"
                 }
             },
             "cpu_model": {
@@ -514,34 +527,34 @@
             },
             "energy_consumption": {
                 "@type": "schema:QuantitativeValue",
-                "value": 0.13648888133249904453763877344000,
+                "value": 0.20237789188075609511696652928,
                 "unitText": "Wh",
                 "additionalProperty": {
-                    "readable": "136.49 mWh"
+                    "readable": "202.38 mWh"
                 }
             },
             "CO2e": {
                 "@type": "schema:QuantitativeValue",
-                "value": 0.018016532335889873878968318094080000,
+                "value": 0.029749550106471145982194079804160,
                 "unitText": "g",
                 "additionalProperty": {
-                    "readable": "18.02 mg"
+                    "readable": "29.75 mg"
                 }
             },
             "CO2e_market": {
                 "@type": "schema:QuantitativeValue",
-                "value": 0.013648888133249904453763877344000000,
+                "value": 0.020237789188075609511696652928000,
                 "unitText": "g",
                 "additionalProperty": {
-                    "readable": "13.65 mg"
+                    "readable": "20.24 mg"
                 }
             },
             "carbon_intensity": {
                 "@type": "schema:QuantitativeValue",
-                "value": 132.0,
+                "value": 147.0,
                 "unitText": "gCO\u2082e/kWh",
                 "additionalProperty": {
-                    "readable": "132 gCO\u2082e/kWh"
+                    "readable": "147 gCO\u2082e/kWh"
                 }
             },
             "carbon_intensity_market": {
@@ -570,18 +583,18 @@
             },
             "raw_energy_processor": {
                 "@type": "schema:QuantitativeValue",
-                "value": 0.1045195113740568180431067488000,
+                "value": 0.1550293789741737395102819456,
                 "unitText": "Wh",
                 "additionalProperty": {
-                    "readable": "104.52 mWh"
+                    "readable": "155.03 mWh"
                 }
             },
             "raw_energy_memory": {
                 "@type": "schema:QuantitativeValue",
-                "value": 0.00047193580478860083200,
+                "value": 0.00064592247256171827200,
                 "unitText": "Wh",
                 "additionalProperty": {
-                    "readable": "471.94 uWh"
+                    "readable": "645.92 uWh"
                 }
             },
             "cpu_energy_function": {
@@ -600,7 +613,7 @@
             }
         },
         {
-            "@id": "urn:co2footprint:fervent_noether",
+            "@id": "urn:co2footprint:pensive_becquerel",
             "@type": "bioschemas:ComputationalWorkflow",
             "workflowLevel": {
                 "@type": "schema:PropertyValue",
@@ -659,53 +672,53 @@
             },
             "submit": {
                 "@type": "schema:DateTime",
-                "value": "2026-07-28T09:47:36.188Z",
+                "value": "2026-08-13T12:51:53.061Z",
                 "unitText": "ms",
                 "additionalProperty": {
-                    "readable": "2026-07-28 11:47:36.188"
+                    "readable": "2026-08-13 14:51:53.061"
                 },
                 "description": "Unix time"
             },
             "start": {
                 "@type": "schema:DateTime",
-                "value": "2026-07-28T09:47:36.297Z",
+                "value": "2026-08-13T12:51:53.121Z",
                 "unitText": "ms",
                 "additionalProperty": {
-                    "readable": "2026-07-28 11:47:36.297"
+                    "readable": "2026-08-13 14:51:53.121"
                 },
                 "description": "Unix time"
             },
             "complete": {
                 "@type": "schema:DateTime",
-                "value": "2026-07-28T09:47:38.388Z",
+                "value": "2026-08-13T12:51:56.416Z",
                 "unitText": "ms",
                 "additionalProperty": {
-                    "readable": "2026-07-28 11:47:38.388"
+                    "readable": "2026-08-13 14:51:56.416"
                 },
                 "description": "Unix time"
             },
             "duration": {
                 "@type": "schema:Duration",
-                "value": "PT8.359S",
+                "value": "PT11.109S",
                 "unitText": "ms",
                 "additionalProperty": {
-                    "readable": "8.4s"
+                    "readable": "11.1s"
                 }
             },
             "realtime": {
                 "@type": "schema:Duration",
-                "value": "PT0.101S",
+                "value": "PT0.324S",
                 "unitText": "ms",
                 "additionalProperty": {
-                    "readable": "101ms"
+                    "readable": "324ms"
                 }
             },
             "%cpu": {
                 "@type": "schema:QuantitativeValue",
-                "value": 100.4000000000,
+                "value": 95.0061728396,
                 "unitText": "%",
                 "additionalProperty": {
-                    "readable": "100.4 %"
+                    "readable": "95.01 %"
                 }
             },
             "%mem": {
@@ -750,18 +763,18 @@
             },
             "rchar": {
                 "@type": "schema:QuantitativeValue",
-                "value": 222762,
+                "value": 222599,
                 "unitText": "B",
                 "additionalProperty": {
-                    "readable": "217.5 KB"
+                    "readable": "217.4 KB"
                 }
             },
             "wchar": {
                 "@type": "schema:QuantitativeValue",
-                "value": 992,
+                "value": 934,
                 "unitText": "B",
                 "additionalProperty": {
-                    "readable": "992 B"
+                    "readable": "934 B"
                 }
             },
             "syscr": {
@@ -806,10 +819,10 @@
             },
             "cpus": {
                 "@type": "schema:QuantitativeValue",
-                "value": 1.2079207921,
+                "value": 1.4876543209,
                 "unitText": "",
                 "additionalProperty": {
-                    "readable": "1.2079207921"
+                    "readable": "1.4876543209"
                 }
             },
             "memory": {
@@ -845,34 +858,34 @@
             },
             "energy_consumption": {
                 "@type": "schema:QuantitativeValue",
-                "value": 0.0004511338575744,
+                "value": 0.00136945707458560,
                 "unitText": "Wh",
                 "additionalProperty": {
-                    "readable": "451.13 uWh"
+                    "readable": "1.37 mWh"
                 }
             },
             "CO2e": {
                 "@type": "schema:QuantitativeValue",
-                "value": 0.00005954966919982080,
+                "value": 0.000201310189964083200,
                 "unitText": "g",
                 "additionalProperty": {
-                    "readable": "59.55 ug"
+                    "readable": "201.31 ug"
                 }
             },
             "CO2e_market": {
                 "@type": "schema:QuantitativeValue",
-                "value": 0.00004511338575744000,
+                "value": 0.000136945707458560000,
                 "unitText": "g",
                 "additionalProperty": {
-                    "readable": "45.11 ug"
+                    "readable": "136.95 ug"
                 }
             },
             "carbon_intensity": {
                 "@type": "schema:QuantitativeValue",
-                "value": 132.0,
+                "value": 147.0,
                 "unitText": "gCO\u2082e/kWh",
                 "additionalProperty": {
-                    "readable": "132 gCO\u2082e/kWh"
+                    "readable": "147 gCO\u2082e/kWh"
                 }
             },
             "carbon_intensity_market": {
@@ -901,10 +914,10 @@
             },
             "raw_energy_processor": {
                 "@type": "schema:QuantitativeValue",
-                "value": 0.000347026044288,
+                "value": 0.0010534285189120,
                 "unitText": "Wh",
                 "additionalProperty": {
-                    "readable": "347.03 uWh"
+                    "readable": "1.05 mWh"
                 }
             },
             "raw_energy_memory": {
@@ -990,53 +1003,53 @@
                     },
                     "submit": {
                         "@type": "schema:DateTime",
-                        "value": "2026-07-28T09:47:36.188Z",
+                        "value": "2026-08-13T12:51:53.061Z",
                         "unitText": "ms",
                         "additionalProperty": {
-                            "readable": "2026-07-28 11:47:36.188"
+                            "readable": "2026-08-13 14:51:53.061"
                         },
                         "description": "Unix time"
                     },
                     "start": {
                         "@type": "schema:DateTime",
-                        "value": "2026-07-28T09:47:36.297Z",
+                        "value": "2026-08-13T12:51:53.121Z",
                         "unitText": "ms",
                         "additionalProperty": {
-                            "readable": "2026-07-28 11:47:36.297"
+                            "readable": "2026-08-13 14:51:53.121"
                         },
                         "description": "Unix time"
                     },
                     "complete": {
                         "@type": "schema:DateTime",
-                        "value": "2026-07-28T09:47:38.388Z",
+                        "value": "2026-08-13T12:51:56.416Z",
                         "unitText": "ms",
                         "additionalProperty": {
-                            "readable": "2026-07-28 11:47:38.388"
+                            "readable": "2026-08-13 14:51:56.416"
                         },
                         "description": "Unix time"
                     },
                     "duration": {
                         "@type": "schema:Duration",
-                        "value": "PT8.359S",
+                        "value": "PT11.109S",
                         "unitText": "ms",
                         "additionalProperty": {
-                            "readable": "8.4s"
+                            "readable": "11.1s"
                         }
                     },
                     "realtime": {
                         "@type": "schema:Duration",
-                        "value": "PT0.101S",
+                        "value": "PT0.324S",
                         "unitText": "ms",
                         "additionalProperty": {
-                            "readable": "101ms"
+                            "readable": "324ms"
                         }
                     },
                     "%cpu": {
                         "@type": "schema:QuantitativeValue",
-                        "value": 100.4000000000,
+                        "value": 95.0061728396,
                         "unitText": "%",
                         "additionalProperty": {
-                            "readable": "100.4 %"
+                            "readable": "95.01 %"
                         }
                     },
                     "%mem": {
@@ -1081,18 +1094,18 @@
                     },
                     "rchar": {
                         "@type": "schema:QuantitativeValue",
-                        "value": 222762,
+                        "value": 222599,
                         "unitText": "B",
                         "additionalProperty": {
-                            "readable": "217.5 KB"
+                            "readable": "217.4 KB"
                         }
                     },
                     "wchar": {
                         "@type": "schema:QuantitativeValue",
-                        "value": 992,
+                        "value": 934,
                         "unitText": "B",
                         "additionalProperty": {
-                            "readable": "992 B"
+                            "readable": "934 B"
                         }
                     },
                     "syscr": {
@@ -1137,10 +1150,10 @@
                     },
                     "cpus": {
                         "@type": "schema:QuantitativeValue",
-                        "value": 1.2079207921,
+                        "value": 1.4876543209,
                         "unitText": "",
                         "additionalProperty": {
-                            "readable": "1.2079207921"
+                            "readable": "1.4876543209"
                         }
                     },
                     "memory": {
@@ -1176,34 +1189,34 @@
                     },
                     "energy_consumption": {
                         "@type": "schema:QuantitativeValue",
-                        "value": 0.0004511338575744,
+                        "value": 0.00136945707458560,
                         "unitText": "Wh",
                         "additionalProperty": {
-                            "readable": "451.13 uWh"
+                            "readable": "1.37 mWh"
                         }
                     },
                     "CO2e": {
                         "@type": "schema:QuantitativeValue",
-                        "value": 0.00005954966919982080,
+                        "value": 0.000201310189964083200,
                         "unitText": "g",
                         "additionalProperty": {
-                            "readable": "59.55 ug"
+                            "readable": "201.31 ug"
                         }
                     },
                     "CO2e_market": {
                         "@type": "schema:QuantitativeValue",
-                        "value": 0.00004511338575744000,
+                        "value": 0.000136945707458560000,
                         "unitText": "g",
                         "additionalProperty": {
-                            "readable": "45.11 ug"
+                            "readable": "136.95 ug"
                         }
                     },
                     "carbon_intensity": {
                         "@type": "schema:QuantitativeValue",
-                        "value": 132.0,
+                        "value": 147.0,
                         "unitText": "gCO\u2082e/kWh",
                         "additionalProperty": {
-                            "readable": "132 gCO\u2082e/kWh"
+                            "readable": "147 gCO\u2082e/kWh"
                         }
                     },
                     "carbon_intensity_market": {
@@ -1232,10 +1245,10 @@
                     },
                     "raw_energy_processor": {
                         "@type": "schema:QuantitativeValue",
-                        "value": 0.000347026044288,
+                        "value": 0.0010534285189120,
                         "unitText": "Wh",
                         "additionalProperty": {
-                            "readable": "347.03 uWh"
+                            "readable": "1.05 mWh"
                         }
                     },
                     "raw_energy_memory": {
@@ -1277,16 +1290,16 @@
                             },
                             "hash": {
                                 "@type": "schema:PropertyValue",
-                                "value": "1f/c4f538",
+                                "value": "bf/6a995c",
                                 "additionalProperty": {
-                                    "readable": "1f/c4f538"
+                                    "readable": "bf/6a995c"
                                 }
                             },
                             "native_id": {
                                 "@type": "schema:PropertyValue",
-                                "value": 38491,
+                                "value": 72663,
                                 "additionalProperty": {
-                                    "readable": "38491"
+                                    "readable": "72663"
                                 }
                             },
                             "process": {
@@ -1335,53 +1348,53 @@
                             },
                             "submit": {
                                 "@type": "schema:DateTime",
-                                "value": "2026-07-28T09:47:36.263Z",
+                                "value": "2026-08-13T12:51:53.061Z",
                                 "unitText": "ms",
                                 "additionalProperty": {
-                                    "readable": "2026-07-28 11:47:36.263"
+                                    "readable": "2026-08-13 14:51:53.061"
                                 },
                                 "description": "Unix time"
                             },
                             "start": {
                                 "@type": "schema:DateTime",
-                                "value": "2026-07-28T09:47:36.312Z",
+                                "value": "2026-08-13T12:51:53.121Z",
                                 "unitText": "ms",
                                 "additionalProperty": {
-                                    "readable": "2026-07-28 11:47:36.312"
+                                    "readable": "2026-08-13 14:51:53.121"
                                 },
                                 "description": "Unix time"
                             },
                             "complete": {
                                 "@type": "schema:DateTime",
-                                "value": "2026-07-28T09:47:38.214Z",
+                                "value": "2026-08-13T12:51:55.597Z",
                                 "unitText": "ms",
                                 "additionalProperty": {
-                                    "readable": "2026-07-28 11:47:38.214"
+                                    "readable": "2026-08-13 14:51:55.597"
                                 },
                                 "description": "Unix time"
                             },
                             "duration": {
                                 "@type": "schema:Duration",
-                                "value": "PT1.951S",
+                                "value": "PT2.536S",
                                 "unitText": "ms",
                                 "additionalProperty": {
-                                    "readable": "2s"
+                                    "readable": "2.5s"
                                 }
                             },
                             "realtime": {
                                 "@type": "schema:Duration",
-                                "value": "PT0.021S",
+                                "value": "PT0.058S",
                                 "unitText": "ms",
                                 "additionalProperty": {
-                                    "readable": "21ms"
+                                    "readable": "58ms"
                                 }
                             },
                             "%cpu": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 160.0,
+                                "value": 76.7,
                                 "unitText": "%",
                                 "additionalProperty": {
-                                    "readable": "160 %"
+                                    "readable": "76.7 %"
                                 }
                             },
                             "%mem": {
@@ -1426,7 +1439,7 @@
                             },
                             "rchar": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 55689,
+                                "value": 55666,
                                 "unitText": "B",
                                 "additionalProperty": {
                                     "readable": "54.4 KB"
@@ -1434,10 +1447,10 @@
                             },
                             "wchar": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 247,
+                                "value": 246,
                                 "unitText": "B",
                                 "additionalProperty": {
-                                    "readable": "247 B"
+                                    "readable": "246 B"
                                 }
                             },
                             "syscr": {
@@ -1458,10 +1471,10 @@
                             },
                             "read_bytes": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0,
+                                "value": 831488,
                                 "unitText": "B",
                                 "additionalProperty": {
-                                    "readable": "0"
+                                    "readable": "812 KB"
                                 }
                             },
                             "write_bytes": {
@@ -1482,9 +1495,9 @@
                             },
                             "workdir": {
                                 "@type": "schema:PropertyValue",
-                                "value": "/Users/josuacarl/Codespace/test/test_dir/work/1f/c4f538b635f81c94f8d042ab417ac3",
+                                "value": "/Users/josuacarl/Codespace/test/test_dir/work/bf/6a995cd44e5cd9ddb14c65dd06b909",
                                 "additionalProperty": {
-                                    "readable": "/Users/josuacarl/Codespace/test/test_dir/work/1f/c4f538b635f81c94f8d042ab417ac3"
+                                    "readable": "/Users/josuacarl/Codespace/test/test_dir/work/bf/6a995cd44e5cd9ddb14c65dd06b909"
                                 }
                             },
                             "script": {
@@ -1535,34 +1548,34 @@
                             },
                             "energy_consumption": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0.000149481812480,
+                                "value": 0.0001979131346192,
                                 "unitText": "Wh",
                                 "additionalProperty": {
-                                    "readable": "149.48 uWh"
+                                    "readable": "197.91 uWh"
                                 }
                             },
                             "CO2e": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0.0000197315992473600,
+                                "value": 0.00002909323078902240,
                                 "unitText": "g",
                                 "additionalProperty": {
-                                    "readable": "19.73 ug"
+                                    "readable": "29.09 ug"
                                 }
                             },
                             "CO2e_market": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0.0000149481812480000,
+                                "value": 0.00001979131346192000,
                                 "unitText": "g",
                                 "additionalProperty": {
-                                    "readable": "14.95 ug"
+                                    "readable": "19.79 ug"
                                 }
                             },
                             "carbon_intensity": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 132.0,
+                                "value": 147.0,
                                 "unitText": "gCO\u2082e/kWh",
                                 "additionalProperty": {
-                                    "readable": "132 gCO\u2082e/kWh"
+                                    "readable": "147 gCO\u2082e/kWh"
                                 }
                             },
                             "carbon_intensity_market": {
@@ -1591,10 +1604,10 @@
                             },
                             "raw_energy_processor": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0.0001149860096,
+                                "value": 0.000152240872784,
                                 "unitText": "Wh",
                                 "additionalProperty": {
-                                    "readable": "114.99 uWh"
+                                    "readable": "152.24 uWh"
                                 }
                             },
                             "raw_energy_memory": {
@@ -1621,7 +1634,7 @@
                             }
                         },
                         {
-                            "@id": "urn:co2footprint:2",
+                            "@id": "urn:co2footprint:3",
                             "@type": "schema:Action",
                             "workflowLevel": {
                                 "@type": "schema:PropertyValue",
@@ -1629,23 +1642,23 @@
                             },
                             "task_id": {
                                 "@type": "schema:PropertyValue",
-                                "value": 2,
+                                "value": 3,
                                 "additionalProperty": {
-                                    "readable": "2"
+                                    "readable": "3"
                                 }
                             },
                             "hash": {
                                 "@type": "schema:PropertyValue",
-                                "value": "92/d37869",
+                                "value": "bf/ebcfa5",
                                 "additionalProperty": {
-                                    "readable": "92/d37869"
+                                    "readable": "bf/ebcfa5"
                                 }
                             },
                             "native_id": {
                                 "@type": "schema:PropertyValue",
-                                "value": 38471,
+                                "value": 72702,
                                 "additionalProperty": {
-                                    "readable": "38471"
+                                    "readable": "72702"
                                 }
                             },
                             "process": {
@@ -1673,9 +1686,9 @@
                             },
                             "name": {
                                 "@type": "schema:PropertyValue",
-                                "value": "sayHello (2)",
+                                "value": "sayHello (3)",
                                 "additionalProperty": {
-                                    "readable": "sayHello (2)"
+                                    "readable": "sayHello (3)"
                                 }
                             },
                             "status": {
@@ -1694,53 +1707,53 @@
                             },
                             "submit": {
                                 "@type": "schema:DateTime",
-                                "value": "2026-07-28T09:47:36.188Z",
+                                "value": "2026-08-13T12:51:53.278Z",
                                 "unitText": "ms",
                                 "additionalProperty": {
-                                    "readable": "2026-07-28 11:47:36.188"
+                                    "readable": "2026-08-13 14:51:53.278"
                                 },
                                 "description": "Unix time"
                             },
                             "start": {
                                 "@type": "schema:DateTime",
-                                "value": "2026-07-28T09:47:36.297Z",
+                                "value": "2026-08-13T12:51:53.319Z",
                                 "unitText": "ms",
                                 "additionalProperty": {
-                                    "readable": "2026-07-28 11:47:36.297"
+                                    "readable": "2026-08-13 14:51:53.319"
                                 },
                                 "description": "Unix time"
                             },
                             "complete": {
                                 "@type": "schema:DateTime",
-                                "value": "2026-07-28T09:47:38.388Z",
+                                "value": "2026-08-13T12:51:56.416Z",
                                 "unitText": "ms",
                                 "additionalProperty": {
-                                    "readable": "2026-07-28 11:47:38.388"
+                                    "readable": "2026-08-13 14:51:56.416"
                                 },
                                 "description": "Unix time"
                             },
                             "duration": {
                                 "@type": "schema:Duration",
-                                "value": "PT2.2S",
+                                "value": "PT3.138S",
                                 "unitText": "ms",
                                 "additionalProperty": {
-                                    "readable": "2.2s"
+                                    "readable": "3.1s"
                                 }
                             },
                             "realtime": {
                                 "@type": "schema:Duration",
-                                "value": "PT0.024S",
+                                "value": "PT0.086S",
                                 "unitText": "ms",
                                 "additionalProperty": {
-                                    "readable": "24ms"
+                                    "readable": "86ms"
                                 }
                             },
                             "%cpu": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 72.7,
+                                "value": 75.7,
                                 "unitText": "%",
                                 "additionalProperty": {
-                                    "readable": "72.7 %"
+                                    "readable": "75.7 %"
                                 }
                             },
                             "%mem": {
@@ -1785,7 +1798,7 @@
                             },
                             "rchar": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 55689,
+                                "value": 55642,
                                 "unitText": "B",
                                 "additionalProperty": {
                                     "readable": "54.4 KB"
@@ -1793,10 +1806,10 @@
                             },
                             "wchar": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 248,
+                                "value": 228,
                                 "unitText": "B",
                                 "additionalProperty": {
-                                    "readable": "248 B"
+                                    "readable": "228 B"
                                 }
                             },
                             "syscr": {
@@ -1841,16 +1854,16 @@
                             },
                             "workdir": {
                                 "@type": "schema:PropertyValue",
-                                "value": "/Users/josuacarl/Codespace/test/test_dir/work/92/d378699c6fba94b5b0149679a15110",
+                                "value": "/Users/josuacarl/Codespace/test/test_dir/work/bf/ebcfa5c911e1b042c3c7dce0c46715",
                                 "additionalProperty": {
-                                    "readable": "/Users/josuacarl/Codespace/test/test_dir/work/92/d378699c6fba94b5b0149679a15110"
+                                    "readable": "/Users/josuacarl/Codespace/test/test_dir/work/bf/ebcfa5c911e1b042c3c7dce0c46715"
                                 }
                             },
                             "script": {
                                 "@type": "schema:PropertyValue",
-                                "value": "\n    echo 'Ciao world!'\n    ",
+                                "value": "\n    echo 'Hello world!'\n    ",
                                 "additionalProperty": {
-                                    "readable": "\n    echo 'Ciao world!'\n    "
+                                    "readable": "\n    echo 'Hello world!'\n    "
                                 }
                             },
                             "cpus": {
@@ -1894,34 +1907,34 @@
                             },
                             "energy_consumption": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0.0000776246014544,
+                                "value": 0.0002896316991568,
                                 "unitText": "Wh",
                                 "additionalProperty": {
-                                    "readable": "77.62 uWh"
+                                    "readable": "289.63 uWh"
                                 }
                             },
                             "CO2e": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0.00001024644739198080,
+                                "value": 0.00004257585977604960,
                                 "unitText": "g",
                                 "additionalProperty": {
-                                    "readable": "10.25 ug"
+                                    "readable": "42.58 ug"
                                 }
                             },
                             "CO2e_market": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0.00000776246014544000,
+                                "value": 0.00002896316991568000,
                                 "unitText": "g",
                                 "additionalProperty": {
-                                    "readable": "7.76 ug"
+                                    "readable": "28.96 ug"
                                 }
                             },
                             "carbon_intensity": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 132.0,
+                                "value": 147.0,
                                 "unitText": "gCO\u2082e/kWh",
                                 "additionalProperty": {
-                                    "readable": "132 gCO\u2082e/kWh"
+                                    "readable": "147 gCO\u2082e/kWh"
                                 }
                             },
                             "carbon_intensity_market": {
@@ -1950,10 +1963,10 @@
                             },
                             "raw_energy_processor": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0.000059711231888,
+                                "value": 0.000222793614736,
                                 "unitText": "Wh",
                                 "additionalProperty": {
-                                    "readable": "59.71 uWh"
+                                    "readable": "222.79 uWh"
                                 }
                             },
                             "raw_energy_memory": {
@@ -1995,16 +2008,16 @@
                             },
                             "hash": {
                                 "@type": "schema:PropertyValue",
-                                "value": "04/838ece",
+                                "value": "60/d621bb",
                                 "additionalProperty": {
-                                    "readable": "04/838ece"
+                                    "readable": "60/d621bb"
                                 }
                             },
                             "native_id": {
                                 "@type": "schema:PropertyValue",
-                                "value": 38479,
+                                "value": 72673,
                                 "additionalProperty": {
-                                    "readable": "38479"
+                                    "readable": "72673"
                                 }
                             },
                             "process": {
@@ -2053,53 +2066,53 @@
                             },
                             "submit": {
                                 "@type": "schema:DateTime",
-                                "value": "2026-07-28T09:47:36.243Z",
+                                "value": "2026-08-13T12:51:53.118Z",
                                 "unitText": "ms",
                                 "additionalProperty": {
-                                    "readable": "2026-07-28 11:47:36.243"
+                                    "readable": "2026-08-13 14:51:53.118"
                                 },
                                 "description": "Unix time"
                             },
                             "start": {
                                 "@type": "schema:DateTime",
-                                "value": "2026-07-28T09:47:36.310Z",
+                                "value": "2026-08-13T12:51:53.219Z",
                                 "unitText": "ms",
                                 "additionalProperty": {
-                                    "readable": "2026-07-28 11:47:36.310"
+                                    "readable": "2026-08-13 14:51:53.219"
                                 },
                                 "description": "Unix time"
                             },
                             "complete": {
                                 "@type": "schema:DateTime",
-                                "value": "2026-07-28T09:47:38.381Z",
+                                "value": "2026-08-13T12:51:56.012Z",
                                 "unitText": "ms",
                                 "additionalProperty": {
-                                    "readable": "2026-07-28 11:47:38.381"
+                                    "readable": "2026-08-13 14:51:56.012"
                                 },
                                 "description": "Unix time"
                             },
                             "duration": {
                                 "@type": "schema:Duration",
-                                "value": "PT2.138S",
+                                "value": "PT2.894S",
                                 "unitText": "ms",
                                 "additionalProperty": {
-                                    "readable": "2.1s"
+                                    "readable": "2.9s"
                                 }
                             },
                             "realtime": {
                                 "@type": "schema:Duration",
-                                "value": "PT0.026S",
+                                "value": "PT0.158S",
                                 "unitText": "ms",
                                 "additionalProperty": {
-                                    "readable": "26ms"
+                                    "readable": "158ms"
                                 }
                             },
                             "%cpu": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 85.1,
+                                "value": 116.9,
                                 "unitText": "%",
                                 "additionalProperty": {
-                                    "readable": "85.1 %"
+                                    "readable": "116.9 %"
                                 }
                             },
                             "%mem": {
@@ -2144,7 +2157,7 @@
                             },
                             "rchar": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 55690,
+                                "value": 55644,
                                 "unitText": "B",
                                 "additionalProperty": {
                                     "readable": "54.4 KB"
@@ -2152,10 +2165,10 @@
                             },
                             "wchar": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 247,
+                                "value": 229,
                                 "unitText": "B",
                                 "additionalProperty": {
-                                    "readable": "247 B"
+                                    "readable": "229 B"
                                 }
                             },
                             "syscr": {
@@ -2176,10 +2189,10 @@
                             },
                             "read_bytes": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 831488,
+                                "value": 0,
                                 "unitText": "B",
                                 "additionalProperty": {
-                                    "readable": "812 KB"
+                                    "readable": "0"
                                 }
                             },
                             "write_bytes": {
@@ -2200,9 +2213,9 @@
                             },
                             "workdir": {
                                 "@type": "schema:PropertyValue",
-                                "value": "/Users/josuacarl/Codespace/test/test_dir/work/04/838ece8024200f4a6ef541922e9aa2",
+                                "value": "/Users/josuacarl/Codespace/test/test_dir/work/60/d621bb5509841bb0d1f6668b37d169",
                                 "additionalProperty": {
-                                    "readable": "/Users/josuacarl/Codespace/test/test_dir/work/04/838ece8024200f4a6ef541922e9aa2"
+                                    "readable": "/Users/josuacarl/Codespace/test/test_dir/work/60/d621bb5509841bb0d1f6668b37d169"
                                 }
                             },
                             "script": {
@@ -2214,10 +2227,10 @@
                             },
                             "cpus": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 1,
+                                "value": 2,
                                 "unitText": "",
                                 "additionalProperty": {
-                                    "readable": "1"
+                                    "readable": "2"
                                 }
                             },
                             "memory": {
@@ -2253,34 +2266,34 @@
                             },
                             "energy_consumption": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0.0000984358126752,
+                                "value": 0.00082171888358560,
                                 "unitText": "Wh",
                                 "additionalProperty": {
-                                    "readable": "98.44 uWh"
+                                    "readable": "821.72 uWh"
                                 }
                             },
                             "CO2e": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0.00001299352727312640,
+                                "value": 0.000120792675887083200,
                                 "unitText": "g",
                                 "additionalProperty": {
-                                    "readable": "12.99 ug"
+                                    "readable": "120.79 ug"
                                 }
                             },
                             "CO2e_market": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0.00000984358126752000,
+                                "value": 0.000082171888358560000,
                                 "unitText": "g",
                                 "additionalProperty": {
-                                    "readable": "9.84 ug"
+                                    "readable": "82.17 ug"
                                 }
                             },
                             "carbon_intensity": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 132.0,
+                                "value": 147.0,
                                 "unitText": "gCO\u2082e/kWh",
                                 "additionalProperty": {
-                                    "readable": "132 gCO\u2082e/kWh"
+                                    "readable": "147 gCO\u2082e/kWh"
                                 }
                             },
                             "carbon_intensity_market": {
@@ -2309,10 +2322,10 @@
                             },
                             "raw_energy_processor": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0.000075719855904,
+                                "value": 0.0006320914489120,
                                 "unitText": "Wh",
                                 "additionalProperty": {
-                                    "readable": "75.72 uWh"
+                                    "readable": "632.09 uWh"
                                 }
                             },
                             "raw_energy_memory": {
@@ -2354,16 +2367,16 @@
                             },
                             "hash": {
                                 "@type": "schema:PropertyValue",
-                                "value": "f1/abb866",
+                                "value": "6a/1e0fed",
                                 "additionalProperty": {
-                                    "readable": "f1/abb866"
+                                    "readable": "6a/1e0fed"
                                 }
                             },
                             "native_id": {
                                 "@type": "schema:PropertyValue",
-                                "value": 38477,
+                                "value": 72682,
                                 "additionalProperty": {
-                                    "readable": "38477"
+                                    "readable": "72682"
                                 }
                             },
                             "process": {
@@ -2412,53 +2425,53 @@
                             },
                             "submit": {
                                 "@type": "schema:DateTime",
-                                "value": "2026-07-28T09:47:36.226Z",
+                                "value": "2026-08-13T12:51:53.158Z",
                                 "unitText": "ms",
                                 "additionalProperty": {
-                                    "readable": "2026-07-28 11:47:36.226"
+                                    "readable": "2026-08-13 14:51:53.158"
                                 },
                                 "description": "Unix time"
                             },
                             "start": {
                                 "@type": "schema:DateTime",
-                                "value": "2026-07-28T09:47:36.308Z",
+                                "value": "2026-08-13T12:51:53.229Z",
                                 "unitText": "ms",
                                 "additionalProperty": {
-                                    "readable": "2026-07-28 11:47:36.308"
+                                    "readable": "2026-08-13 14:51:53.229"
                                 },
                                 "description": "Unix time"
                             },
                             "complete": {
                                 "@type": "schema:DateTime",
-                                "value": "2026-07-28T09:47:38.296Z",
+                                "value": "2026-08-13T12:51:55.699Z",
                                 "unitText": "ms",
                                 "additionalProperty": {
-                                    "readable": "2026-07-28 11:47:38.296"
+                                    "readable": "2026-08-13 14:51:55.699"
                                 },
                                 "description": "Unix time"
                             },
                             "duration": {
                                 "@type": "schema:Duration",
-                                "value": "PT2.07S",
+                                "value": "PT2.541S",
                                 "unitText": "ms",
                                 "additionalProperty": {
-                                    "readable": "2.1s"
+                                    "readable": "2.5s"
                                 }
                             },
                             "realtime": {
                                 "@type": "schema:Duration",
-                                "value": "PT0.03S",
+                                "value": "PT0.022S",
                                 "unitText": "ms",
                                 "additionalProperty": {
-                                    "readable": "30ms"
+                                    "readable": "22ms"
                                 }
                             },
                             "%cpu": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 94.1,
+                                "value": 61.5,
                                 "unitText": "%",
                                 "additionalProperty": {
-                                    "readable": "94.1 %"
+                                    "readable": "61.5 %"
                                 }
                             },
                             "%mem": {
@@ -2503,7 +2516,7 @@
                             },
                             "rchar": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 55694,
+                                "value": 55647,
                                 "unitText": "B",
                                 "additionalProperty": {
                                     "readable": "54.4 KB"
@@ -2511,10 +2524,10 @@
                             },
                             "wchar": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 250,
+                                "value": 231,
                                 "unitText": "B",
                                 "additionalProperty": {
-                                    "readable": "250 B"
+                                    "readable": "231 B"
                                 }
                             },
                             "syscr": {
@@ -2559,9 +2572,9 @@
                             },
                             "workdir": {
                                 "@type": "schema:PropertyValue",
-                                "value": "/Users/josuacarl/Codespace/test/test_dir/work/f1/abb8663bfa73c947a94fed3fecebc3",
+                                "value": "/Users/josuacarl/Codespace/test/test_dir/work/6a/1e0fedb5281f2d8f09feeedeba7d62",
                                 "additionalProperty": {
-                                    "readable": "/Users/josuacarl/Codespace/test/test_dir/work/f1/abb8663bfa73c947a94fed3fecebc3"
+                                    "readable": "/Users/josuacarl/Codespace/test/test_dir/work/6a/1e0fedb5281f2d8f09feeedeba7d62"
                                 }
                             },
                             "script": {
@@ -2612,34 +2625,34 @@
                             },
                             "energy_consumption": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0.0001255916309648,
+                                "value": 0.0000601933572240,
                                 "unitText": "Wh",
                                 "additionalProperty": {
-                                    "readable": "125.59 uWh"
+                                    "readable": "60.19 uWh"
                                 }
                             },
                             "CO2e": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0.00001657809528735360,
+                                "value": 0.00000884842351192800,
                                 "unitText": "g",
                                 "additionalProperty": {
-                                    "readable": "16.58 ug"
+                                    "readable": "8.85 ug"
                                 }
                             },
                             "CO2e_market": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0.00001255916309648000,
+                                "value": 0.00000601933572240000,
                                 "unitText": "g",
                                 "additionalProperty": {
-                                    "readable": "12.56 ug"
+                                    "readable": "6.02 ug"
                                 }
                             },
                             "carbon_intensity": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 132.0,
+                                "value": 147.0,
                                 "unitText": "gCO\u2082e/kWh",
                                 "additionalProperty": {
-                                    "readable": "132 gCO\u2082e/kWh"
+                                    "readable": "147 gCO\u2082e/kWh"
                                 }
                             },
                             "carbon_intensity_market": {
@@ -2668,10 +2681,10 @@
                             },
                             "raw_energy_processor": {
                                 "@type": "schema:QuantitativeValue",
-                                "value": 0.000096608946896,
+                                "value": 0.000046302582480,
                                 "unitText": "Wh",
                                 "additionalProperty": {
-                                    "readable": "96.61 uWh"
+                                    "readable": "46.3 uWh"
                                 }
                             },
                             "raw_energy_memory": {

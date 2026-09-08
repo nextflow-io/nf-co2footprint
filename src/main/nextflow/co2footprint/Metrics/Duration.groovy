@@ -62,11 +62,6 @@ class Duration extends Quantity {
             } else if (to < from) {
                 steps.subList(to, from).each { BigDecimal it ->  value *= it }
             }
-
-            // Remove 's' for single time units
-            if (value == 1 && ['days', 'weeks', 'months', 'years'].contains(targetUnit)) {
-                targetUnit = targetUnit.dropRight(1)
-            }
         }
 
         unit = targetUnit
@@ -77,16 +72,16 @@ class Duration extends Quantity {
      * Converts a time value to a human-readable string, e.g. "2 days 3 h 4 min".
      * Recursively breaks down the value into the largest possible units.
      *
-     * @param value The time as a number in original given unit
-     * @param unit Given unit of time (default: 'ms')
      * @param smallestUnit The smallest unit to convert to (default: 's')
      * @param largestUnit The largest unit to convert to (default: 'years')
+     * @param maxPositions The number of positions that should be rounded to (default: null)
      * @param threshold The minimum value for the conversion to be included in the output (optional)
      * @return A human-readable string representation of the time value
      */
     String toReadable(
             String smallestUnit = 's',
             String largestUnit = 'years',
+            Integer maxPositions = null,
             BigDecimal threshold = 0.0
     ) {
         BigDecimal value = new BigDecimal(value)
@@ -97,29 +92,61 @@ class Duration extends Quantity {
         units = units.subList(getIdx(smallestUnit, units), getIdx(largestUnit, units) + 1).reverse()
 
         // Iterate from largest to smallest unit and include those that meet the threshold size to be included
-        String timeString = ''
+        List<String> timeStrings = []
         for (String targetUnit : units) {
             Duration currentTime = new Duration(value, unit).scale(targetUnit)
+            
+            // Extend string when criteria are met
+            if (targetUnit == smallestUnit) {
+                currentTime.round(2)
 
-            // Handle the last unit differently
-            if( targetUnit == smallestUnit ) {
-                currentTime.round()     // Keep last two decimals
-
-                timeString += "${currentTime.getReadable()} "
-            } else {
-                currentTime.round(0, RoundingMode.FLOOR)     // Keep only round numbers
-
-                // Add to string and remove added value, if the threshold is reached
-                if ( (threshold == null || currentTime.value > threshold) ) {
-                    value -= new Duration(currentTime.value, targetUnit).scale(unit).value
-                    timeString += "${currentTime.getReadable()} "
-
-                    // Finish execution if value is 0
-                    if (value == 0) { break }
+                timeStrings.add( currentTime.getReadable() )
+            }
+            else {
+                // Keep only whole numbers when extending further and round up when the reaching maximum positions
+                if(timeStrings.size() + 1 == maxPositions) {
+                    currentTime.round(0, RoundingMode.HALF_UP)
+                } else {
+                    currentTime.round(0, RoundingMode.FLOOR)
                 }
+
+                if(threshold == null || currentTime.value > threshold) {
+                    timeStrings.add( currentTime.getReadable() )
+                    
+                    // Subtract value that was put into string
+                    value -= new Duration(currentTime.value, targetUnit).scale(unit).value
+                }
+            } 
+            
+            // Break upon reaching exit condition
+            if(timeStrings.size() == maxPositions || targetUnit == smallestUnit || value == 0) {
+                break
             }
         }
 
-        return timeString.trim()
+        return timeStrings.join(' ')
+    }
+
+    /**
+     * Return the unit in a readable form.
+     * 
+     * @return String of unit in readable form.
+     */
+    String getReadableUnit() {
+        // Remove 's' for single time units
+        if (value == 1 && ['days', 'weeks', 'months', 'years'].contains(unit)) {
+            return unit.dropRight(1)
+        }
+        
+        return unit
+    }
+
+    /**
+     * Return readable form of duration.
+     * 
+     * @return A String with the readable duration.
+     */
+    String getReadable() {
+        return super.getReadable( getReadableUnit() )
     }
 }

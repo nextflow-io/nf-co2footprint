@@ -167,7 +167,7 @@ class CO2FootprintObserver implements TraceObserverV2 {
             reportFile.write()
 
             provenanceFile.create()
-            provenanceFile.write(co2RecordTree)
+            provenanceFile.write(co2RecordTree, timeCiRecordCollector)
         }
 
         // Close all files (writes remaining tasks in the trace file)

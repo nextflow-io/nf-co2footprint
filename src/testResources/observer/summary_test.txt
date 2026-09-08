@@ -5,7 +5,7 @@ Total CO₂e footprint measures of this workflow run (including cached tasks):
 
 Which equals:
   - 0.038 km travelled by car
-  - It takes one tree 5h 21min 43.83s to sequester the equivalent amount of CO₂ from the atmosphere
+  - It takes one tree 5h 22min to sequester the equivalent amount of CO₂ from the atmosphere
   - 0.013 % of a flight from Paris to London
 
 The calculation of these values is based on the carbon footprint computation method developed in the Green Algorithms project:

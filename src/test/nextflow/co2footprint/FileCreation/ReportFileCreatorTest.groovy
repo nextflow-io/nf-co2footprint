@@ -129,8 +129,8 @@ class ReportFileCreatorTest extends Specification{
         co2e                || totalsJsonResult
         0.01                || [CO2e: '10 mg', energy_consumption:'100 kWh', car: '5.71E-5', tree: '28.69s', plane_percent: '2.00E-5 %', plane_flights: null,
                                 CO2e_non_cached:'10 mg', energy_consumption_non_cached:'100 kWh', car_non_cached: '5.71E-5', tree_non_cached: '28.69s', plane_percent_non_cached: '2.00E-5 %', plane_flights_non_cached: null]
-        10_000_000.0        || [CO2e: '10 Mg', energy_consumption:'100 kWh', car: '5.71E4', tree: '908years 9months 3days 19h 38min 55.87s', plane_percent: null, plane_flights: '200',
-                                CO2e_non_cached:'10 Mg', energy_consumption_non_cached:'100 kWh', car_non_cached: '5.71E4', tree_non_cached: '908years 9months 3days 19h 38min 55.87s', plane_percent_non_cached: null, plane_flights_non_cached: '200']
+        10_000_000.0        || [CO2e: '10 Mg', energy_consumption:'100 kWh', car: '5.71E4', tree: '908years 9months', plane_percent: null, plane_flights: '200',
+                                CO2e_non_cached:'10 Mg', energy_consumption_non_cached:'100 kWh', car_non_cached: '5.71E4', tree_non_cached: '908years 9months', plane_percent_non_cached: null, plane_flights_non_cached: '200']
     }
 
     def 'Test data JSON generation' () {
@@ -178,13 +178,13 @@ class ReportFileCreatorTest extends Specification{
                 CO2e: "10 g",
                 energy_consumption:  "100 kWh",
                 car: "0.057",
-                tree: "7h 58min 10.08s",
+                tree: "7h 58min",
                 plane_percent: "0.02 %",
                 plane_flights: null,
                 CO2e_non_cached: "10 g",
                 energy_consumption_non_cached:  "100 kWh",
                 car_non_cached: "0.057",
-                tree_non_cached: "7h 58min 10.08s",
+                tree_non_cached: "7h 58min",
                 plane_percent_non_cached: '0.02 %',
                 plane_flights_non_cached: null
             ]
