@@ -3,6 +3,7 @@ package nextflow.co2footprint.Recorders
 import com.sun.management.OperatingSystemMXBean
 import groovy.util.logging.Slf4j
 import nextflow.Session
+import nextflow.exception.UnexpectedException
 import nextflow.processor.TaskRun
 import nextflow.trace.TraceRecord
 import oshi.SystemInfo
@@ -24,23 +25,43 @@ class HeadJobTraceRecorder {
     static final String headJobSuffix = 'head_job'
     
     // OSHI info handles
-    private final RuntimeMXBean          runtimeBean = ManagementFactory.getRuntimeMXBean()
-    private final OperatingSystemMXBean  osBean      = ManagementFactory.getOperatingSystemMXBean() as OperatingSystemMXBean
-    private final SystemInfo             systemInfo  = new SystemInfo()
-    private final CentralProcessor       processor   = systemInfo.hardware.processor
-    private final OperatingSystem        os          = systemInfo.operatingSystem
+    private final RuntimeMXBean          runtimeBean
+    private final OperatingSystemMXBean  osBean
+    private final SystemInfo             systemInfo
+    private final CentralProcessor       processor
+    private final OperatingSystem        os
 
     // Sampling settings
-    private final Timer timer = new Timer('head-job-trace-recorder', true)
+    private Timer timer
 
     // Process information
     private int pid
     private OSProcess rootProcess
-    private Set<OSProcess> headProcesses = ConcurrentHashMap.newKeySet()
+    private Set<OSProcess> headProcesses
 
     // Aggregation
-    final List<MemorySample> samples = [].asSynchronized() as List<MemorySample>
-    final TraceRecord headJobRecord = new TraceRecord()
+    boolean allowSampling
+    final List<MemorySample> samples
+    final TraceRecord headJobRecord
+
+    /**
+     * Initialize a head job trace recorder that samples from the head job and can accumulate results.
+     */
+    HeadJobTraceRecorder() {
+        runtimeBean = ManagementFactory.getRuntimeMXBean()
+        osBean = ManagementFactory.getOperatingSystemMXBean() as OperatingSystemMXBean
+        systemInfo = new SystemInfo()
+        processor = systemInfo.hardware.processor
+        os = systemInfo.operatingSystem
+
+        timer = null
+        
+        headProcesses = ConcurrentHashMap.newKeySet()
+
+        allowSampling = false
+        samples = ([]  as List<MemorySample>).asSynchronized()
+        headJobRecord = new TraceRecord()
+    }
 
     /**
      * Start the recording of a head job.
@@ -62,6 +83,7 @@ class HeadJobTraceRecorder {
                         cpu_model:      processor.processorIdentifier.name
                 ]
         )
+        allowSampling = true
     }
 
     /**
@@ -70,15 +92,31 @@ class HeadJobTraceRecorder {
      * @param session The current Nextflow session
      */
     void attachSession(Session session) {
+        String runName = session.getRunName()
+        
+        if (timer != null) {
+            String multiSessionAttachedError = "Only one session allowed per HeadJobTraceRecorder. " +
+                    "Attachment of '${runName}' in addition to '${headJobRecord.get('name')}' was attempted."
+            log.error(multiSessionAttachedError)
+            throw new UnexpectedException(multiSessionAttachedError)
+        }
+        
         // Start sampling for memory
-        timer.scheduleAtFixedRate(new TimerTask() { void run() { sample() } } , 0, 500)
+        timer = new Timer("head-job-trace-recorder-${runName}", true)
+        timer.scheduleAtFixedRate(new TimerTask() {
+            void run() { 
+                if (allowSampling) {
+                    sample()
+                }
+            }
+        } , 0, 500)
 
         headJobRecord.putAll(
                 [
                         hash:           session.hashCode(),
                         native_id:      pid as String,
                         process:        'head job',
-                        name:           session.getRunName() + '-' + headJobSuffix,
+                        name:           runName + '-' + headJobSuffix,
                         status:         'STARTED',
                         start:          System.currentTimeMillis(),
                         attempt:        headJobRecord.store.get('attempt', 0) + 1
@@ -131,8 +169,10 @@ class HeadJobTraceRecorder {
      * Stop the sampling and finish accumulating the information in the TraceRecord.
      */
     void stop() {
-        timer.cancel()
-        timer.purge()
+        allowSampling = false
+        timer?.cancel()
+        timer?.purge()
+        timer = null
     }
 
     /**
