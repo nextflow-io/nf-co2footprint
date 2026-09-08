@@ -83,12 +83,6 @@ class CO2FootprintCalculator {
         numberOfCores = Math.max( Math.ceil(cpuUsage / 100), numberOfCores) as Integer // Ensure that the number of cores is at least ceil(%cpu/100)
         final BigDecimal coreUsage = cpuUsage / (100.0 * numberOfCores)
 
-        // Per-core power draw: either custom polynomial model or TDP lookup [W/core]
-        final Closure<Number> cpuPowerModel = useConfiguredOrPrevious(
-                config, ['cpuPowerModel'], config.cpuPowerModel,
-                trace, 'cpu_power_model', isPostRun
-        )
-
         // Assigns powerdraw per core in the following order: 1. Custom polynomial model 2. TDP lookup based on CPU model 3. Previous value from trace
         final BigDecimal powerdrawPerCore
         if (isPostRun && !tdpDataMatrix.matchModel(cpuModel, false, false) && trace.containsKey('powerdraw_cpu')) {
@@ -124,11 +118,6 @@ class CO2FootprintCalculator {
             throw new MissingValueException(message)
         }
 
-        final BigDecimal powerdrawMem  = useConfiguredOrPrevious(
-                config, ['powerdrawMem'], config.powerdrawMem,
-                trace, 'powerdraw_memory', isPostRun
-        ) // [W per GB]
-
         /* ===== Data Center Effectiveness and Carbon Intensity ===== */
 
          // PUE: power usage effectiveness of datacenter [ratio] (>= 1.0)
@@ -153,14 +142,18 @@ class CO2FootprintCalculator {
         /* ===== Energy & Emission Calculation ===== */
 
         // Energy consumption [kWh]
-        BigDecimal rawEnergyProcessor
-        if (cpuPowerModel) {
-            rawEnergyProcessor = runtime_h * numberOfCores * cpuPowerModel(coreUsage) * 0.001
-        }
-        else {
-            rawEnergyProcessor = runtime_h * numberOfCores * powerdrawPerCore * coreUsage * 0.001
-        }
-        BigDecimal rawEnergyMemory = runtime_h * memory * powerdrawMem * 0.001
+        String cpuEnergyFunction = config.cpuEnergyFunction ?: 'runtime_h * numberOfCores * powerdrawPerCore * coreUsage'
+        BigDecimal rawEnergyProcessor = evaluateStringCalculation(
+                cpuEnergyFunction,
+                [runtime_h: runtime_h, numberOfCores: numberOfCores, powerdrawPerCore: powerdrawPerCore, coreUsage: coreUsage]
+        ) * 0.001
+
+        String memoryEnergyFunction = config.memoryEnergyFunction ?: 'runtime_h * memory * 0.3725'
+        BigDecimal rawEnergyMemory = evaluateStringCalculation(
+                memoryEnergyFunction,
+                [runtime_h: runtime_h, memory: memory]
+        ) * 0.001
+                
         BigDecimal energy = pue * (rawEnergyProcessor + rawEnergyMemory)
 
         // Resulting CO₂ emissions
@@ -180,11 +173,11 @@ class CO2FootprintCalculator {
             numberOfCores,
             pue,
             powerdrawPerCore,
-            powerdrawMem,
-            cpuPowerModel as String,
             config.ignoreCpuModel ? 'Custom value' : cpuModel,
             rawEnergyProcessor,
             rawEnergyMemory,
+            cpuEnergyFunction,
+            memoryEnergyFunction
         )
     }
 
@@ -272,5 +265,16 @@ class CO2FootprintCalculator {
         else {
             return configValue
         }
+    }
+
+    /**
+     * Evaluate a string to Groovy code and execute it with the given context parameters.
+     * 
+     * @param functionString A function in String form
+     * @param context parameters that are applied to the given function
+     * @return The result as a BigDecimal number
+     */
+    private static BigDecimal evaluateStringCalculation(String functionString, Map<String, Object> context) {
+        return new GroovyShell(new Binding(context)).evaluate(functionString) as BigDecimal
     }
 }

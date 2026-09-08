@@ -52,13 +52,15 @@ class CO2FootprintCalculatorTest extends Specification{
         round(co2Record.store.CO2e as Double) == expectedCO2
 
         where:
-        cpuModel           | configMap                                              || expectedEnergy   | expectedCO2
-        "Unknown model"    | [:]                                                    || 14.06            | 6.75
-        "AMD EPYC 7251"    | [:]                                                    || 10.11            | 4.85
-        "Unknown model"    | [pue: 1.4]                                             || 19.68            | 9.45
-        "Unknown model"    | [location: 'DE']                                       || 14.06            | 4.69
-        "Unknown model"    | [ci: 338.66]                                           || 14.06            | 4.76
-        "AMD EPYC 7251"    | [cpuPowerModel: {coreUsage -> 0.5 * coreUsage + 10.0}] || 23.11            | 11.09
+        cpuModel           | configMap                                                                      || expectedEnergy   | expectedCO2
+        "Unknown model"    | [:]                                                                            || 14.06            | 6.75
+        "AMD EPYC 7251"    | [:]                                                                            || 10.11            | 4.85
+        "Unknown model"    | [pue: 1.4]                                                                     || 19.68            | 9.45
+        "Unknown model"    | [location: 'DE']                                                               || 14.06            | 4.69
+        "Unknown model"    | [ci: 338.66]                                                                   || 14.06            | 4.76
+        "AMD EPYC 7251"    | [cpuEnergyFunction: 'runtime_h * numberOfCores * (0.5 * coreUsage + 10.0)']    || 23.11            | 11.09
+        "Some model"       | [memoryEnergyFunction: 'memory / 7',
+                              cpuEnergyFunction: 'coreUsage * 2.0' ]                                        || 2.0              | 0.96
     }
 
     // ------ Equivalences Calculation ------

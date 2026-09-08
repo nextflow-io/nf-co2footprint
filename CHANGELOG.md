@@ -51,6 +51,7 @@
 ## Features:
 - Transformation of data file to provenance file with schema.org / bioschemas.org type annotation in JSON-LD data format
 - Added post-run functionality with provenance file
+- Added functionality to apply fully custom memory and CPU power functions
 
 # 1.2.1
 ## Bug Fixes:

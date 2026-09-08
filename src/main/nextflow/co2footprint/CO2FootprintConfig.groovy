@@ -40,7 +40,6 @@ import java.nio.file.Path
  *     }
  *     ci = 300
  *     pue = 1.4
- *     powerdrawMem = 0.67
  * }
  *
  * @author Júlia Mir Pedrol <mirp.julia@gmail.com>, Sabrina Krakau <sabrinakrakau@gmail.com>
@@ -91,10 +90,6 @@ class CO2FootprintConfig implements ConfigScope {
     BigDecimal pue
 
     @ConfigOption
-    @Description('Power draw of memory [W per GB].')
-    final BigDecimal powerdrawMem
-
-    @ConfigOption
     @Description('Turns off pattern matching of CPU names.')
     final Boolean ignoreCpuModel
 
@@ -111,8 +106,12 @@ class CO2FootprintConfig implements ConfigScope {
     String machineType
 
     @ConfigOption
-    @Description('A power model function that takes the parameter `coreUsage`.')
-    final Closure<Number> cpuPowerModel
+    @Description('A customizable energy function that take the following variables: coreUsage, runtime_h, numberOfCores, powerdrawPerCore.')
+    final String cpuEnergyFunction
+
+    @ConfigOption
+    @Description('A customizable energy function that can take the following variables: memory.')
+    final String memoryEnergyFunction
 
     /**
      * No-arg constructor required by Nextflow's v2 config parser to
@@ -149,10 +148,16 @@ class CO2FootprintConfig implements ConfigScope {
         ci = new CiRecord(getCollect('ci', configMap, usedKeys) as BigDecimal, ciData, location, emApiKey)
         ciMarket = getCollect('ciMarket', configMap, usedKeys) as BigDecimal
 
-        // Power model
-        cpuPowerModel = getCollect('cpuPowerModel', configMap, usedKeys) as Closure<BigDecimal>
-        if (cpuPowerModel != null) {
-            log.info("Using custom CPU power model.")
+        // Power model (CPU)
+        cpuEnergyFunction = getCollect('cpuEnergyFunction', configMap, usedKeys)
+        if (cpuEnergyFunction != null) {
+            log.info("Using custom CPU energy function: ${cpuEnergyFunction}.")
+        }
+        
+        // Power model (Memory)
+        memoryEnergyFunction = getCollect('memoryEnergyFunction', configMap, usedKeys)
+        if (memoryEnergyFunction != null) {
+            log.info("Using custom memory energy function: ${memoryEnergyFunction}.")
         }
 
         // Powerdraw factors
@@ -174,10 +179,6 @@ class CO2FootprintConfig implements ConfigScope {
         } else {
             powerdrawCpuDefault = null
         }
-
-        // Powerdraw memory
-        powerdrawMem = configMap.containsKey('powerdrawMem') ?  getCollect('powerdrawMem', configMap, usedKeys) as BigDecimal : 0.3725
-
 
         // Executor (Can define Machine type & PUE, if not already given
         executor = processMap?.get('executor') as String
@@ -328,7 +329,8 @@ class CO2FootprintConfig implements ConfigScope {
         return [
             location: location,
             pue: pue,
-            powerdrawMem: powerdrawMem,
+            cpuEnergyFunction: cpuEnergyFunction,
+            memoryEnergyFunction: memoryEnergyFunction,
             powerdrawCpuDefault: powerdrawCpuDefault,
             ignoreCpuModel: ignoreCpuModel,
             machineType: machineType,
