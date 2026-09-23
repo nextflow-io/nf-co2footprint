@@ -20,7 +20,7 @@ class TraceFileCreator extends BaseFileCreator {
     // Metrics that are written to the trace file
     private List<String> traceMetrics = [
         'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'raw_energy_processor', 'raw_energy_memory', 
-        'carbon_intensity', '%cpu', 'memory', 'realtime', 'cpus', 'powerdraw_cpu', 'cpu_model'
+        'carbon_intensity', '%cpu', 'memory', 'realtime', 'cpus', 'powerdraw_cpu', 'cpu_model', 'cpu_energy_function', 'memory_energy_function'
     ]
 
     // Agent for thread-safe writing to the trace file

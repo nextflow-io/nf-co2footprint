@@ -111,11 +111,7 @@ The following parameters are currently available:
     **Default**: Auto-detected from executor
 
 
-## Hardware Power Draw
-- **`powerdrawMem`**  
-  Power draw from memory in Watts per GB..  
-  **Default**: 0.3725.
-  
+## Hardware Power Draw  
 - **`customCpuTdpFile`**  
   Input CSV file containing custom CPU TDP data. This should contain the following columns: `name`, `tdp (W)`, `logicalCores`. Note that this overwrites TDP values for already provided CPU models. You can find the by default used TDP data [here](https://github.com/nextflow-io/nf-co2footprint/blob/master/src/resources/cpu_tdp_data/CPU_TDP.csv).  
   **Default**: `null`.
@@ -156,13 +152,28 @@ The following parameters are currently available:
     !!! warning "Experimental feature"
         The `cpuPowerModel` parameter is experimental and may change in future releases.
 
-    A power model function that takes the parameter `coreUsage`.
-    
-    If specified, this overrides TDP-based power draw estimation for CPU cores. The function returns the **per-core power draw** (in Watts) as a function of core utilization (0–1).
-    
-    **Example**: `{coreUsage -> 0.5 * coreUsage + 10.0}`
+    A mathematical expression in [infix format](https://en.wikipedia.org/wiki/Infix_notation) that takes the following variables:
+    `coreUsage`[0,1], `runtime_h` [hours], `numberOfCores` [1,), `powerdrawPerCore` [W].
+    The result should be an energy consumption in Wh.
+
+    If specified, this overwrites the previous memory energy function `runtime_h * numberOfCores * powerdrawPerCore * coreUsage`.
+ 
+    **Example**: `'runtime_h * numberOfCores * (0.5 * coreUsage + 10.0)'`
     
     **Example visualization**:
     
     <img src="../assets/custom_powerdraw_function_linear_gh_pages.png" alt="Example custom CPU power model" width="500"/>    
     **Default**: `null`
+ 
+- **`memoryPowerModel`**  
+    
+    !!! warning "Experimental feature"
+        The `memoryPowerModel` parameter is experimental and may change in future releases.
+
+    A mathematical expression in [infix format](https://en.wikipedia.org/wiki/Infix_notation) that takes the following variables:
+    `memory`[GB], `runtime_h` [hours].
+    The result should be an energy consumption in Wh.
+    
+    If specified, this overwrites the previous memory energy function `memory * 0.3725`.
+    
+    **Example**: `'memory * 0.5'`

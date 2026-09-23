@@ -30,7 +30,7 @@ The nf-co2footprint plugin creates three output files:
     - The total session emission estimation includes everything from the point of plugin start to stop in a similar manner to how Nextflow defines a `TraceRecord`, but through the Java-native OSHI library.  
     - The value accumulation from `tasks` over `process` to `workflow` level happens differently for different values:
         - Weighted average
-          - In relation to energy: `carbon_intensity`, `powerdraw_cpu`, `carbon_intensity_market`, `powerdraw_memory`
+          - In relation to energy: `carbon_intensity`, `powerdraw_cpu`, `carbon_intensity_market`
           - In relation to runtime: `%cpu`, `%mem`, `vmem`, `rss`, `cpus`, `pue`
         - Maximum: `memory`, `cpus`, `complete`, `attempt`, `peak_vmem`, `peak_rss`
         - Minimum: `submit`, `start`

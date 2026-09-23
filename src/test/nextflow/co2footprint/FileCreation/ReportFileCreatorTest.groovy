@@ -79,7 +79,7 @@ class ReportFileCreatorTest extends Specification{
 
         CO2Record co2Record = new CO2Record(
             traceRecord, 100.0, 10.0, null, 475.0, null, 100.0, 7,
-                1.0 * 3600000, 1, 1.0, 12.0, 0.3725, null, 'Unknown model', 0.5, 0.5
+                1.0 * 3600000, 1, 1.0, 12.0, 'Unknown model', 0.5, 0.5, '', ''
         )
 
         // Define Record treee
@@ -151,12 +151,13 @@ class ReportFileCreatorTest extends Specification{
                 '[' +
                     '{"option":"ci","value":"475.0"},'+
                     '{"option":"ciMarket","value":null},' +
+                    '{"option":"cpuEnergyFunction","value":null},' +
                     '{"option":"customCpuTdpFile","value":null},' +
                     '{"option":"ignoreCpuModel","value":"false"},' +
                     '{"option":"location","value":null},' +
                     '{"option":"machineType","value":null},' +
+                    '{"option":"memoryEnergyFunction","value":null},' +
                     '{"option":"powerdrawCpuDefault","value":null},' +
-                    '{"option":"powerdrawMem","value":"0.3725"},' +
                     "{\"option\":\"provenanceFile\",\"value\":\"${tempPath}\"}," +
                     '{"option":"pue","value":"1.0"},' +
                     "{\"option\":\"reportFile\",\"value\":\"${reportPath}\"}," +

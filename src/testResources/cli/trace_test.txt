@@ -1,3 +1,3 @@
-task_id	status	name	energy_consumption	CO2e	CO2e_market	raw_energy_processor	raw_energy_memory	carbon_intensity	%cpu	memory	realtime	cpus	powerdraw_cpu	cpu_model
-6	COMPLETED	NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (RAP1_UNINDUCED_REP1)	2.2 mWh	1.06 mg	-	1.54 mWh	666.61 uWh	480 gCO₂e/kWh	97 %	12.88 GB	500ms	2	11.41 W	-
-4	COMPLETED	NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (WT_REP2)	4.36 mWh	2.09 mg	-	3.02 mWh	1.33 mWh	480 gCO₂e/kWh	95.4 %	12.88 GB	1s	2	11.41 W	-
+task_id	status	name	energy_consumption	CO2e	CO2e_market	raw_energy_processor	raw_energy_memory	carbon_intensity	%cpu	memory	realtime	cpus	powerdraw_cpu	cpu_model	cpu_energy_function	memory_energy_function
+6	COMPLETED	NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (RAP1_UNINDUCED_REP1)	2.2 mWh	1.06 mg	-	1.54 mWh	666.61 uWh	480 gCO₂e/kWh	97 %	12.88 GB	500ms	2	11.41 W	-	runtime_h * numberOfCores * powerdrawPerCore * coreUsage	runtime_h * memory * 0.3725
+4	COMPLETED	NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT (WT_REP2)	4.36 mWh	2.09 mg	-	3.02 mWh	1.33 mWh	480 gCO₂e/kWh	95.4 %	12.88 GB	1s	2	11.41 W	-	runtime_h * numberOfCores * powerdrawPerCore * coreUsage	runtime_h * memory * 0.3725

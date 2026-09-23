@@ -77,7 +77,7 @@ class Quantity extends Metric<BigDecimal> {
      */
     Quantity floor(Integer precision=0) {
         if (precision != null) {
-            value = value.setScale(precision, )
+            value = value.setScale(precision, RoundingMode.DOWN)
         }
         return this
     }
