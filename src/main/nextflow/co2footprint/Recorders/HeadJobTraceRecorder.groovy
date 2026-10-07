@@ -148,9 +148,11 @@ class HeadJobTraceRecorder {
                 ] 
         )
 
-        if (samples) {
-            List<Long> rss = samples.collect({ MemorySample sample -> sample.rssBytes})
-            List<Long> vmem = samples.collect({ MemorySample sample -> sample.virtualMemoryBytes})
+        List<MemorySample> sampled = new ArrayList<MemorySample>(samples)
+
+        if (sampled) {
+            List<Long> rss = sampled.collect({ MemorySample sample -> sample.rssBytes})
+            List<Long> vmem = sampled.collect({ MemorySample sample -> sample.virtualMemoryBytes})
             headJobRecord.putAll(
                     [
                             memory:         rss.average(),
