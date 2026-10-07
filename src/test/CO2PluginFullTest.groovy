@@ -63,7 +63,7 @@ class CO2PluginFullTest extends Specification {
 
         when:
         println("Attempting run in directory: ${tempPath.toString()}")
-        ProcessBuilder processBuilder = new ProcessBuilder(["nextflow", "run", "nf-core/demo", "-r", "1.1.0", "-profile", "test,docker", "--outdir", "out", "-c", configPath.toString()])
+        ProcessBuilder processBuilder = new ProcessBuilder(["nextflow", "run", "nf-core/demo", "-r", "1.2.0", "-profile", "test,docker", "--outdir", "out", "-c", configPath.toString()])
         processBuilder.directory(tempPath.toFile())
         Map<String, String> env = processBuilder.environment()
         env.put( 'NXF_PLUGINS_MODE', 'prod')
