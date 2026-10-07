@@ -37,10 +37,9 @@ class HeadJobTraceRecorder {
     // Process information
     private int pid
     private OSProcess rootProcess
-    private Set<OSProcess> headProcesses
+    private Map<Integer, OSProcess> headProcesses
 
     // Aggregation
-    boolean allowSampling
     final List<MemorySample> samples
     final TraceRecord headJobRecord
 
@@ -56,9 +55,8 @@ class HeadJobTraceRecorder {
 
         timer = null
         
-        headProcesses = ConcurrentHashMap.newKeySet()
+        headProcesses = new ConcurrentHashMap<Integer, OSProcess>()
 
-        allowSampling = false
         samples = ([]  as List<MemorySample>).asSynchronized()
         headJobRecord = new TraceRecord()
     }
@@ -69,7 +67,7 @@ class HeadJobTraceRecorder {
     void start() {
         pid = runtimeBean.pid as int
         rootProcess = os.getProcess(pid)
-        headProcesses.add(rootProcess)
+        headProcesses.put(rootProcess.processID, rootProcess)
 
         headJobRecord.putAll(
                 [
@@ -83,7 +81,6 @@ class HeadJobTraceRecorder {
                         cpu_model:      processor.processorIdentifier.name
                 ]
         )
-        allowSampling = true
     }
 
     /**
@@ -103,13 +100,7 @@ class HeadJobTraceRecorder {
         
         // Start sampling for memory
         timer = new Timer("head-job-trace-recorder-${runName}", true)
-        timer.scheduleAtFixedRate(new TimerTask() {
-            void run() { 
-                if (allowSampling) {
-                    sample()
-                }
-            }
-        } , 0, 500)
+        timer.scheduleAtFixedRate(new TimerTask() { void run() { sample() } } , 0, 500)
 
         headJobRecord.putAll(
                 [
@@ -130,8 +121,16 @@ class HeadJobTraceRecorder {
     TraceRecord report() {
         long endTimestamp = System.currentTimeMillis()
 
-        // Reduce the process to values
-        headProcesses.each({ OSProcess p -> p.updateAttributes() })
+        double cpuLoad = 0.0d
+        long readBytes = 0L, writeBytes = 0L, volCtxt = 0L, invCtxt = 0L
+        headProcesses.each({ Integer id, OSProcess p ->
+            p.updateAttributes()
+            cpuLoad     += p.getProcessCpuLoadCumulative()
+            readBytes   += p.bytesRead
+            writeBytes  += p.bytesWritten
+            volCtxt     += p.minorFaults
+            invCtxt     += p.majorFaults
+        })
 
         headJobRecord.putAll(
                 [
@@ -140,26 +139,33 @@ class HeadJobTraceRecorder {
                         duration:       endTimestamp - (headJobRecord.get('submit') as long),
                         realtime:       runtimeBean.uptime,
                         memory:         Runtime.getRuntime().maxMemory(),
-                        '%cpu':         headProcesses.sum({OSProcess p -> p.getProcessCpuLoadCumulative()}) as double * 100,
-                        read_bytes:     headProcesses.sum({ OSProcess p -> p.bytesRead}) as Long,
-                        write_bytes:    headProcesses.sum({ OSProcess p -> p.bytesWritten}) as Long,
-                        vol_ctxt:       headProcesses.sum({ OSProcess p -> p.minorFaults}) as Long,
-                        inv_ctxt:       headProcesses.sum({ OSProcess p -> p.majorFaults}) as Long,
+                        '%cpu':         cpuLoad * 100,
+                        read_bytes:     readBytes,
+                        write_bytes:    writeBytes,
+                        vol_ctxt:       volCtxt,
+                        inv_ctxt:       invCtxt,
                 ] 
         )
 
         List<MemorySample> sampled = new ArrayList<MemorySample>(samples)
 
         if (sampled) {
-            List<Long> rss = sampled.collect({ MemorySample sample -> sample.rssBytes})
-            List<Long> vmem = sampled.collect({ MemorySample sample -> sample.virtualMemoryBytes})
+            long sumRss = 0L, sumVmem = 0L, peakRss = 0L, peakVmem = 0L
+            sampled.each({ MemorySample s ->
+                sumRss  += s.rssBytes
+                sumVmem += s.virtualMemoryBytes
+                peakRss  = Math.max(peakRss, s.rssBytes)
+                peakVmem = Math.max(peakVmem, s.virtualMemoryBytes)
+            })
+            double avgRss = sumRss / (double) sampled.size()
+            double avgVmem = sumVmem / (double) sampled.size()
             headJobRecord.putAll(
                     [
-                            memory:         rss.average(),
-                            rss:            rss.average(),
-                            vmem:           vmem.average(),
-                            peak_rss:       rss.max(),
-                            peak_vmem:      vmem.max(),
+                            memory:         avgRss,
+                            rss:            avgRss,
+                            vmem:           avgVmem,
+                            peak_rss:       peakRss,
+                            peak_vmem:      peakVmem,
                     ]
             )
         }
@@ -171,7 +177,6 @@ class HeadJobTraceRecorder {
      * Stop the sampling and finish accumulating the information in the TraceRecord.
      */
     void stop() {
-        allowSampling = false
         timer?.cancel()
         timer?.purge()
         timer = null
@@ -191,8 +196,8 @@ class HeadJobTraceRecorder {
     List<OSProcess> collectHeadDescendants(OSProcess process) {
         List<OSProcess> allChildren = os.getChildProcesses(process.processID, null, null, 0)
         
-        // Collect information on process child relationship
-        headProcesses.add(process)
+        // Collect information on process child relationship.
+        headProcesses.putIfAbsent(process.processID, process)
         
         List<OSProcess> headChildren = allChildren.findAll( noNextflowTaskRuns )
         List<OSProcess> headDescendents = [process]
@@ -214,16 +219,14 @@ class HeadJobTraceRecorder {
         // Collect active descendant head job processes
         List<OSProcess> activeProcesses = collectHeadDescendants(process)
 
-        if (process != null) {
-            MemorySample sample = new MemorySample(
-                    timestamp: System.currentTimeMillis(),
-                    
-                    // Memory - The RSS value gives the best approximation for allocated resources by the head job
-                    rssBytes: activeProcesses.sum({ OSProcess p -> p.residentSetSize}) as Long,
-                    virtualMemoryBytes: activeProcesses.sum({ OSProcess p -> p.virtualSize}) as Long,
-            )
+        MemorySample sample = new MemorySample(
+                timestamp: System.currentTimeMillis(),
+                
+                // Memory - The RSS value gives the best approximation for allocated resources by the head job
+                rssBytes: activeProcesses.sum({ OSProcess p -> p.residentSetSize}) as Long,
+                virtualMemoryBytes: activeProcesses.sum({ OSProcess p -> p.virtualSize}) as Long,
+        )
 
-            samples.add(sample)
-        }
+        samples.add(sample)
     }
 }

@@ -19,6 +19,7 @@ class HeadJobTraceRecorderTest extends Specification{
         headJobTraceRecorder.start()
         sleep(1000)
         headJobTraceRecorder.stop()
+        headJobTraceRecorder.report()
 
         TraceRecord record = headJobTraceRecorder.headJobRecord
 
@@ -28,7 +29,7 @@ class HeadJobTraceRecorderTest extends Specification{
             tag:            'Head job',
             attempt:        0,
             status:         'COMPLETED',
-        ].each { String key, Object value ->
+        ].every { String key, Object value ->
             record.get(key) == value
         }
 
@@ -53,22 +54,18 @@ class HeadJobTraceRecorderTest extends Specification{
         sleep(1000)
         headJobTraceRecorder.samples.add(sample2)
         headJobTraceRecorder.stop()
+        headJobTraceRecorder.report()
 
         TraceRecord record = headJobTraceRecorder.headJobRecord
 
         then:
         headJobTraceRecorder.samples == [sample1, sample2]
         [
-                '%cpu':         100.0,
-                rss:            1024,
-                vmem:           2048,
-                peak_rss:       1024,
-                peak_vmem:      3072,
-                read_bytes:     1,
-                write_bytes:    0,
-                vol_ctxt:       0,
-                inv_ctxt:       0,
-        ].each { String key, Object value ->
+                rss:            1000.0,
+                vmem:           2000.0,
+                peak_rss:       1000L,
+                peak_vmem:      3000L,
+        ].every { String key, Object value ->
             record.get(key) == value
         }
     }
