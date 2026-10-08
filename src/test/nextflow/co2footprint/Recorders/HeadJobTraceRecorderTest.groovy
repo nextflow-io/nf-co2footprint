@@ -1,7 +1,14 @@
 package nextflow.co2footprint.Recorders
 
+import nextflow.Session
+import nextflow.exception.UnexpectedException
 import nextflow.trace.TraceRecord
 import spock.lang.Specification
+
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
+import java.util.concurrent.locks.LockSupport
 
 class HeadJobTraceRecorderTest extends Specification{
     def 'test running' () {
@@ -12,6 +19,7 @@ class HeadJobTraceRecorderTest extends Specification{
         headJobTraceRecorder.start()
         sleep(1000)
         headJobTraceRecorder.stop()
+        headJobTraceRecorder.report()
 
         TraceRecord record = headJobTraceRecorder.headJobRecord
 
@@ -21,7 +29,7 @@ class HeadJobTraceRecorderTest extends Specification{
             tag:            'Head job',
             attempt:        0,
             status:         'COMPLETED',
-        ].each { String key, Object value ->
+        ].every { String key, Object value ->
             record.get(key) == value
         }
 
@@ -46,23 +54,79 @@ class HeadJobTraceRecorderTest extends Specification{
         sleep(1000)
         headJobTraceRecorder.samples.add(sample2)
         headJobTraceRecorder.stop()
+        headJobTraceRecorder.report()
 
         TraceRecord record = headJobTraceRecorder.headJobRecord
 
         then:
         headJobTraceRecorder.samples == [sample1, sample2]
         [
-                '%cpu':         100.0,
-                rss:            1024,
-                vmem:           2048,
-                peak_rss:       1024,
-                peak_vmem:      3072,
-                read_bytes:     1,
-                write_bytes:    0,
-                vol_ctxt:       0,
-                inv_ctxt:       0,
-        ].each { String key, Object value ->
+                rss:            1000.0,
+                vmem:           2000.0,
+                peak_rss:       1000L,
+                peak_vmem:      3000L,
+        ].every { String key, Object value ->
             record.get(key) == value
         }
+    }
+
+    def 'test error on multiple sessions'() {
+        setup:
+        HeadJobTraceRecorder headJobTraceRecorder = new HeadJobTraceRecorder()
+        Session session = new Session()
+
+        when:
+        headJobTraceRecorder.start()
+        headJobTraceRecorder.attachSession(session)
+        headJobTraceRecorder.attachSession(session)
+
+
+        then:
+        thrown(UnexpectedException)
+    }
+
+    def 'report survives concurrent modification of samples'() {
+        setup:
+        HeadJobTraceRecorder headJobTraceRecorder = new HeadJobTraceRecorder()
+        headJobTraceRecorder.start()
+
+        AtomicReference<Throwable> failure = new AtomicReference<>()
+        AtomicBoolean running = new AtomicBoolean(true)
+        CountDownLatch started = new CountDownLatch(1)
+
+        // The real sampler fires every 500ms; this one appends continuously for a
+        // bounded time, throttled so the list (and memory) stays bounded while the
+        // writer is still adding across every report() iteration.
+        Thread writer = new Thread({
+            started.countDown()
+            while (running.get()) {
+                headJobTraceRecorder.samples.add(new MemorySample(
+                        timestamp: System.currentTimeMillis(),
+                        rssBytes: 1,
+                        virtualMemoryBytes: 1,
+                ))
+                LockSupport.parkNanos(10_000)
+            }
+        }, 'samples-writer')
+        writer.start()
+        started.await()
+
+        when:
+        // Collect concurrently with an actively-appending list. Without the atomic
+        // snapshot in report() the collect iterator throws ConcurrentModificationException.
+        long deadline = System.currentTimeMillis() + 3000
+        try {
+            while (System.currentTimeMillis() < deadline) {
+                headJobTraceRecorder.report()
+            }
+        } catch (Throwable t) {
+            failure.set(t)
+        } finally {
+            running.set(false)
+            writer.join(5000)
+        }
+
+        then:
+        failure.get() == null
     }
 }

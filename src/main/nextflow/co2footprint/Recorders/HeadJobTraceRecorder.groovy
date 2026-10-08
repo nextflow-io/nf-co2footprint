@@ -3,6 +3,7 @@ package nextflow.co2footprint.Recorders
 import com.sun.management.OperatingSystemMXBean
 import groovy.util.logging.Slf4j
 import nextflow.Session
+import nextflow.exception.UnexpectedException
 import nextflow.processor.TaskRun
 import nextflow.trace.TraceRecord
 import oshi.SystemInfo
@@ -24,23 +25,41 @@ class HeadJobTraceRecorder {
     static final String headJobSuffix = 'head_job'
     
     // OSHI info handles
-    private final RuntimeMXBean          runtimeBean = ManagementFactory.getRuntimeMXBean()
-    private final OperatingSystemMXBean  osBean      = ManagementFactory.getOperatingSystemMXBean() as OperatingSystemMXBean
-    private final SystemInfo             systemInfo  = new SystemInfo()
-    private final CentralProcessor       processor   = systemInfo.hardware.processor
-    private final OperatingSystem        os          = systemInfo.operatingSystem
+    private final RuntimeMXBean          runtimeBean
+    private final OperatingSystemMXBean  osBean
+    private final SystemInfo             systemInfo
+    private final CentralProcessor       processor
+    private final OperatingSystem        os
 
     // Sampling settings
-    private final Timer timer = new Timer('head-job-trace-recorder', true)
+    private Timer timer
 
     // Process information
     private int pid
     private OSProcess rootProcess
-    private Set<OSProcess> headProcesses = ConcurrentHashMap.newKeySet()
+    private Map<Integer, OSProcess> headProcesses
 
     // Aggregation
-    final List<MemorySample> samples = [].asSynchronized() as List<MemorySample>
-    final TraceRecord headJobRecord = new TraceRecord()
+    final List<MemorySample> samples
+    final TraceRecord headJobRecord
+
+    /**
+     * Initialize a head job trace recorder that samples from the head job and can accumulate results.
+     */
+    HeadJobTraceRecorder() {
+        runtimeBean = ManagementFactory.getRuntimeMXBean()
+        osBean = ManagementFactory.getOperatingSystemMXBean() as OperatingSystemMXBean
+        systemInfo = new SystemInfo()
+        processor = systemInfo.hardware.processor
+        os = systemInfo.operatingSystem
+
+        timer = null
+        
+        headProcesses = new ConcurrentHashMap<Integer, OSProcess>()
+
+        samples = ([]  as List<MemorySample>).asSynchronized()
+        headJobRecord = new TraceRecord()
+    }
 
     /**
      * Start the recording of a head job.
@@ -48,7 +67,7 @@ class HeadJobTraceRecorder {
     void start() {
         pid = runtimeBean.pid as int
         rootProcess = os.getProcess(pid)
-        headProcesses.add(rootProcess)
+        headProcesses.put(rootProcess.processID, rootProcess)
 
         headJobRecord.putAll(
                 [
@@ -70,7 +89,17 @@ class HeadJobTraceRecorder {
      * @param session The current Nextflow session
      */
     void attachSession(Session session) {
+        String runName = session.getRunName()
+        
+        if (timer != null) {
+            String multiSessionAttachedError = "Only one session allowed per HeadJobTraceRecorder. " +
+                    "Attachment of '${runName}' in addition to '${headJobRecord.get('name')}' was attempted."
+            log.error(multiSessionAttachedError)
+            throw new UnexpectedException(multiSessionAttachedError)
+        }
+        
         // Start sampling for memory
+        timer = new Timer("head-job-trace-recorder-${runName}", true)
         timer.scheduleAtFixedRate(new TimerTask() { void run() { sample() } } , 0, 500)
 
         headJobRecord.putAll(
@@ -78,7 +107,7 @@ class HeadJobTraceRecorder {
                         hash:           session.hashCode(),
                         native_id:      pid as String,
                         process:        'head job',
-                        name:           session.getRunName() + '-' + headJobSuffix,
+                        name:           runName + '-' + headJobSuffix,
                         status:         'STARTED',
                         start:          System.currentTimeMillis(),
                         attempt:        headJobRecord.store.get('attempt', 0) + 1
@@ -92,8 +121,16 @@ class HeadJobTraceRecorder {
     TraceRecord report() {
         long endTimestamp = System.currentTimeMillis()
 
-        // Reduce the process to values
-        headProcesses.each({ OSProcess p -> p.updateAttributes() })
+        double cpuLoad = 0.0d
+        long readBytes = 0L, writeBytes = 0L, volCtxt = 0L, invCtxt = 0L
+        headProcesses.each({ Integer id, OSProcess p ->
+            p.updateAttributes()
+            cpuLoad     += p.getProcessCpuLoadCumulative()
+            readBytes   += p.bytesRead
+            writeBytes  += p.bytesWritten
+            volCtxt     += p.minorFaults
+            invCtxt     += p.majorFaults
+        })
 
         headJobRecord.putAll(
                 [
@@ -102,24 +139,33 @@ class HeadJobTraceRecorder {
                         duration:       endTimestamp - (headJobRecord.get('submit') as long),
                         realtime:       runtimeBean.uptime,
                         memory:         Runtime.getRuntime().maxMemory(),
-                        '%cpu':         headProcesses.sum({OSProcess p -> p.getProcessCpuLoadCumulative()}) as double * 100,
-                        read_bytes:     headProcesses.sum({ OSProcess p -> p.bytesRead}) as Long,
-                        write_bytes:    headProcesses.sum({ OSProcess p -> p.bytesWritten}) as Long,
-                        vol_ctxt:       headProcesses.sum({ OSProcess p -> p.minorFaults}) as Long,
-                        inv_ctxt:       headProcesses.sum({ OSProcess p -> p.majorFaults}) as Long,
+                        '%cpu':         cpuLoad * 100,
+                        read_bytes:     readBytes,
+                        write_bytes:    writeBytes,
+                        vol_ctxt:       volCtxt,
+                        inv_ctxt:       invCtxt,
                 ] 
         )
 
-        if (samples) {
-            List<Long> rss = samples.collect({ MemorySample sample -> sample.rssBytes})
-            List<Long> vmem = samples.collect({ MemorySample sample -> sample.virtualMemoryBytes})
+        List<MemorySample> sampled = new ArrayList<MemorySample>(samples)
+
+        if (sampled) {
+            long sumRss = 0L, sumVmem = 0L, peakRss = 0L, peakVmem = 0L
+            sampled.each({ MemorySample s ->
+                sumRss  += s.rssBytes
+                sumVmem += s.virtualMemoryBytes
+                peakRss  = Math.max(peakRss, s.rssBytes)
+                peakVmem = Math.max(peakVmem, s.virtualMemoryBytes)
+            })
+            double avgRss = sumRss / (double) sampled.size()
+            double avgVmem = sumVmem / (double) sampled.size()
             headJobRecord.putAll(
                     [
-                            memory:         rss.average(),
-                            rss:            rss.average(),
-                            vmem:           vmem.average(),
-                            peak_rss:       rss.max(),
-                            peak_vmem:      vmem.max(),
+                            memory:         avgRss,
+                            rss:            avgRss,
+                            vmem:           avgVmem,
+                            peak_rss:       peakRss,
+                            peak_vmem:      peakVmem,
                     ]
             )
         }
@@ -131,8 +177,9 @@ class HeadJobTraceRecorder {
      * Stop the sampling and finish accumulating the information in the TraceRecord.
      */
     void stop() {
-        timer.cancel()
-        timer.purge()
+        timer?.cancel()
+        timer?.purge()
+        timer = null
     }
 
     /**
@@ -149,8 +196,8 @@ class HeadJobTraceRecorder {
     List<OSProcess> collectHeadDescendants(OSProcess process) {
         List<OSProcess> allChildren = os.getChildProcesses(process.processID, null, null, 0)
         
-        // Collect information on process child relationship
-        headProcesses.add(process)
+        // Collect information on process child relationship.
+        headProcesses.putIfAbsent(process.processID, process)
         
         List<OSProcess> headChildren = allChildren.findAll( noNextflowTaskRuns )
         List<OSProcess> headDescendents = [process]
@@ -172,16 +219,14 @@ class HeadJobTraceRecorder {
         // Collect active descendant head job processes
         List<OSProcess> activeProcesses = collectHeadDescendants(process)
 
-        if (process != null) {
-            MemorySample sample = new MemorySample(
-                    timestamp: System.currentTimeMillis(),
-                    
-                    // Memory - The RSS value gives the best approximation for allocated resources by the head job
-                    rssBytes: activeProcesses.sum({ OSProcess p -> p.residentSetSize}) as Long,
-                    virtualMemoryBytes: activeProcesses.sum({ OSProcess p -> p.virtualSize}) as Long,
-            )
+        MemorySample sample = new MemorySample(
+                timestamp: System.currentTimeMillis(),
+                
+                // Memory - The RSS value gives the best approximation for allocated resources by the head job
+                rssBytes: activeProcesses.sum({ OSProcess p -> p.residentSetSize}) as Long,
+                virtualMemoryBytes: activeProcesses.sum({ OSProcess p -> p.virtualSize}) as Long,
+        )
 
-            samples.add(sample)
-        }
+        samples.add(sample)
     }
 }

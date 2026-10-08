@@ -8,10 +8,12 @@
 - Support for empty runs
 - Lack of display for memory optimization total energy consumption save
 - Removal of "s" from singular time expressions
+- Concurrent modification error on plugin stop
 
 ## Misc:
 - Improved file checks by automating some exclusions and replacements through regexes
 - Added maintenance manual
+- Updated demo pipeline integration test
 
 # 1.4.0
 ## Bug Fixes:
