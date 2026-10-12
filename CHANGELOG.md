@@ -1,5 +1,12 @@
 # New
 ## Features:
+
+## Bug Fixes:
+
+## Misc:
+
+# 1.4.1
+## Features:
 - Added plugin information in top level of provenance file
 - Two time expressions for better comparison between similar runs for tree sequestration time
 - Added carbon intensity records to provenance file, if dynamic CIs were fetched

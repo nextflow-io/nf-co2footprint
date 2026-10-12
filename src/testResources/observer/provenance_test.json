@@ -10,7 +10,7 @@
         "prov:used": {
             "@type": "schema:SoftwareApplication",
             "name": "nf-co2footprint",
-            "softwareVersion": "1.4.0",
+            "softwareVersion": "1.4.1",
             "archivedAt": "https://doi.org/10.5281/zenodo.14622304",
             "license": "https://www.apache.org/licenses/LICENSE-2.0.html",
             "usageInfo": "https://nextflow-io.github.io/nf-co2footprint/"
