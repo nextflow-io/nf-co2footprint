@@ -9,5 +9,5 @@ report_test.html:
   num_lines: 1806
 
 provenance_test.json:
-  checksum: "108bb8a95319b51cffe5256a67802b70"
+  checksum: "c706872a28ec0ebc8f3fc1a7341fbc9d"
   num_lines: 417
