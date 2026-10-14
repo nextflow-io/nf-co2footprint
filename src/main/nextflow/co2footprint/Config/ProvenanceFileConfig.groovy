@@ -26,6 +26,10 @@ class ProvenanceFileConfig extends BaseFileConfig implements ConfigScope {
     @Description('Whether only emission metrics should be reported in the provenance file.')
     final boolean emissionMetricsOnly
 
+    @ConfigOption
+    @Description('Whether to include entries with a `null` raw value in the provenance file.')
+    final boolean includeNulls
+
     ProvenanceFileConfig(Map provenanceFileConfig, String timestamp=null) {
         super('provenance', 'json', true)
 
@@ -36,6 +40,10 @@ class ProvenanceFileConfig extends BaseFileConfig implements ConfigScope {
         emissionMetricsOnly = provenanceFileConfig.containsKey('emissionMetricsOnly') ?
                 CO2FootprintConfig.getCollect('emissionMetricsOnly', provenanceFileConfig, usedKeys) as boolean :
                 true
+
+        includeNulls = provenanceFileConfig.containsKey('includeNulls') ?
+                CO2FootprintConfig.getCollect('includeNulls', provenanceFileConfig, usedKeys) as boolean :
+                false
 
         CO2FootprintConfig.checkKeyUsage(provenanceFileConfig, usedKeys)
     }

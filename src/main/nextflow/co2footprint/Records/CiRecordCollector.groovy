@@ -7,8 +7,6 @@ import nextflow.exception.MissingValueException
 import nextflow.trace.TraceRecord
 
 import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.ConcurrentHashMap
 
@@ -27,7 +25,7 @@ class CiRecordCollector {
     private Timer timer = new Timer(true) // true = daemon thread
 
     // CI values
-    private ConcurrentHashMap<LocalDateTime, Number> timeCIs
+    private ConcurrentHashMap<Instant, Number> timeCIs
 
     // Config
     private CO2FootprintConfig config
@@ -38,7 +36,7 @@ class CiRecordCollector {
      * @param config Configuration instance with CI settings
      * @param timeCIs Optional initial time CI map (default: empty ConcurrentHashMap)
      */
-    CiRecordCollector(CO2FootprintConfig config, ConcurrentHashMap<LocalDateTime, Number> timeCIs=[:] as ConcurrentHashMap) {
+    CiRecordCollector(CO2FootprintConfig config, ConcurrentHashMap<Instant, Number> timeCIs=[:] as ConcurrentHashMap) {
         this.config = config
         this.timeCIs = timeCIs as ConcurrentHashMap
     }
@@ -48,7 +46,7 @@ class CiRecordCollector {
      *
      * @return ConcurrentHashMap of LocalDateTime to BigDecimal representing carbon intensity values
      */
-    ConcurrentHashMap<LocalDateTime, Number> getTimeCIs() { timeCIs }
+    ConcurrentHashMap<Instant, Number> getTimeCIs() { timeCIs }
 
     /**
      * Returns the carbon intensity (CI) for a given trace record.
@@ -58,7 +56,7 @@ class CiRecordCollector {
      * @param traceRecord The trace record containing task start and end times
      * @return The carbon intensity value for the trace record
      */
-    Number getCi(TraceRecord traceRecord) { this.timeCIs ? getWeightedCI(traceRecord) : config.ci.value}
+    Number getCi(TraceRecord traceRecord) { this.timeCIs ? getWeightedCI(traceRecord) : config.ci.value }
 
     /**
      * Adds time CI pairs to CI record
@@ -110,19 +108,13 @@ class CiRecordCollector {
     * @return        The weighted average carbon intensity for the task's runtime
     * @throws        MissingValueException if no CI values are available for the task's time window
     */
-    BigDecimal getWeightedCI(TraceRecord trace, Map<LocalDateTime, Number> timeCIs=this.timeCIs) {
+    BigDecimal getWeightedCI(TraceRecord trace, Map<Instant, Number> timeCIs=this.timeCIs) {
 
         // Obtain recorded star, end, and duration
-        LocalDateTime start = LocalDateTime.ofInstant(
-                Instant.ofEpochMilli(trace.get('start') as Long),
-                ZoneId.systemDefault()
-        )
-        LocalDateTime end = LocalDateTime.ofInstant(
-                Instant.ofEpochMilli(trace.get('complete') as Long),
-                ZoneId.systemDefault()
-        )
+        Instant start = Instant.ofEpochMilli(trace.get('start') as Long)
+        Instant end = Instant.ofEpochMilli(trace.get('complete') as Long)
         Long duration = start.until(end, ChronoUnit.MILLIS)
-        List<LocalDateTime> timestamps = timeCIs.keySet().toList().sort()
+        List<Instant> timestamps = timeCIs.keySet().toList().sort()
 
         if (!timestamps) {
             String message = "No carbon intensity timestamps are available in timeCIs for traceRecord '${trace}' (${start}-${end})."
@@ -130,7 +122,7 @@ class CiRecordCollector {
             throw new MissingValueException(message)
         }
 
-        LocalDateTime activeTimestamp = timestamps.findAll { LocalDateTime time -> time <= start }.max()
+        Instant activeTimestamp = timestamps.findAll { Instant time -> time <= start }.max()
         if (activeTimestamp == null) {
             activeTimestamp = timestamps.min()
         }
@@ -139,17 +131,17 @@ class CiRecordCollector {
             return timeCIs.get(activeTimestamp) as Double
         }
 
-        Closure<Double> getWeight = { LocalDateTime time1, LocalDateTime time2 ->
+        Closure<Double> getWeight = { Instant time1, Instant time2 ->
             (time1.until(time2, ChronoUnit.MILLIS)) / duration
         }
 
-        List<LocalDateTime> changesDuringRun = timestamps.findAll { LocalDateTime time -> time > start && time < end }
+        List<Instant> changesDuringRun = timestamps.findAll { Instant time -> time > start && time < end }
 
         // Calculation of average carbon intensity
         BigDecimal averageCi = 0d
-        LocalDateTime segmentStart = start
+        Instant segmentStart = start
 
-        changesDuringRun.each { LocalDateTime changeTime ->
+        changesDuringRun.each { Instant changeTime ->
             averageCi += (timeCIs.get(activeTimestamp) as BigDecimal) * getWeight(segmentStart, changeTime)
             segmentStart = changeTime
             activeTimestamp = changeTime

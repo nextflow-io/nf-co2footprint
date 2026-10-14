@@ -1,10 +1,27 @@
 {
     "@context": {
         "schema": "https://schema.org/",
-        "bioschemas": "https://bioschemas.org"
+        "bioschemas": "https://bioschemas.org",
+        "prov": "http://www.w3.org/ns/prov#"
+    },
+    "@version": 1.1,
+    "prov:wasGeneratedBy": {
+        "@type": "prov:Activity",
+        "prov:used": {
+            "@type": "schema:SoftwareApplication",
+            "name": "nf-co2footprint",
+            "softwareVersion": "1.4.1",
+            "archivedAt": "https://doi.org/10.5281/zenodo.14622304",
+            "license": "https://www.apache.org/licenses/LICENSE-2.0.html",
+            "usageInfo": "https://nextflow-io.github.io/nf-co2footprint/"
+        }
     },
     "@id": "urn:co2footprint:Unknown workflow",
     "@type": "bioschemas:ComputationalWorkflow",
+    "workflowLevel": {
+        "@type": "schema:PropertyValue",
+        "value": "workflow"
+    },
     "task_id": {
         "@type": "schema:PropertyValue",
         "value": "-1",
@@ -126,6 +143,10 @@
         {
             "@id": "urn:co2footprint:NFCORE_RNASEQ:RNASEQ:FASTQ_QC_TRIM_FILTER_SETSTRANDEDNESS:FQ_LINT",
             "@type": "schema:SoftwareApplication",
+            "workflowLevel": {
+                "@type": "schema:PropertyValue",
+                "value": "process"
+            },
             "task_id": {
                 "@type": "schema:PropertyValue",
                 "value": "-1",
@@ -247,6 +268,10 @@
                 {
                     "@id": "urn:co2footprint:6",
                     "@type": "schema:Action",
+                    "workflowLevel": {
+                        "@type": "schema:PropertyValue",
+                        "value": "task"
+                    },
                     "task_id": {
                         "@type": "schema:PropertyValue",
                         "value": "6",
@@ -368,6 +393,10 @@
                 {
                     "@id": "urn:co2footprint:4",
                     "@type": "schema:Action",
+                    "workflowLevel": {
+                        "@type": "schema:PropertyValue",
+                        "value": "task"
+                    },
                     "task_id": {
                         "@type": "schema:PropertyValue",
                         "value": "4",

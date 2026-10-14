@@ -38,8 +38,9 @@ The following parameters are currently available:
     - `file`: Name of the data/machine-actionable file containing all metrics that were used during footprint calculation in a structured way.
     - `overwrite`: Whether to overwrite the file, if it already exists.
     - `emissionMetricsOnly`: Whether to only include emission metrics, such as CO₂ equivalents and electricity consumption.
+    - `includeNulls`: Whether to include entries with a `null` value (e.g. `cpu_model` when it could not be detected) in the file.
 
-    **Default**: `[enabled: true, file: co2footprint_report_<timestamp>.html, overwrite: true, emissionMetricsOnly: true]`
+    **Default**: `[enabled: true, file: co2footprint_report_<timestamp>.html, overwrite: true, emissionMetricsOnly: true, includeNulls: false]`
 
     !!! warning "Preliminary feature"
         The data file is currently not in its final version. Changes in the near future are likely.

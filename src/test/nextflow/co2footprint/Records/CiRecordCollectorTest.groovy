@@ -7,8 +7,10 @@ import nextflow.trace.TraceRecord
 import spock.lang.Shared
 import spock.lang.Specification
 
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.ZoneOffset
 import java.util.concurrent.ConcurrentHashMap
 
 class CiRecordCollectorTest extends Specification {
@@ -24,7 +26,7 @@ class CiRecordCollectorTest extends Specification {
         CiRecordCollector timeCiRecordCollector = new CiRecordCollector(config)
 
         when:
-        LocalDateTime now = LocalDateTime.now()
+        Instant now = Instant.now()
         timeCiRecordCollector.add(new CiRecord(10, null, null, null, now))
         Map timeCis = timeCiRecordCollector.getTimeCIs()
 
@@ -38,9 +40,9 @@ class CiRecordCollectorTest extends Specification {
         TraceRecord traceRecord = Mock(TraceRecord)
 
         when:
-        LocalDateTime time_10_00_00 =  LocalDateTime.of(2025, 8, 20, 10, 0, 0)
-        LocalDateTime time_10_01_00 =  LocalDateTime.of(2025, 8, 20, 10, 1, 0)
-        LocalDateTime time_10_02_00 =  LocalDateTime.of(2025, 8, 20, 10, 2, 0)
+        Instant time_10_00_00 =  LocalDateTime.of(2025, 8, 20, 10, 0, 0).toInstant(ZoneOffset.UTC)
+        Instant time_10_01_00 =  LocalDateTime.of(2025, 8, 20, 10, 1, 0).toInstant(ZoneOffset.UTC)
+        Instant time_10_02_00 =  LocalDateTime.of(2025, 8, 20, 10, 2, 0).toInstant(ZoneOffset.UTC)
 
         timeCiRecordCollector.add(new CiRecord(10.0, null, null, null, time_10_00_00))
         timeCiRecordCollector.add(new CiRecord(30.0, null, null, null, time_10_01_00))
@@ -60,10 +62,10 @@ class CiRecordCollectorTest extends Specification {
         TraceRecord traceRecord = Mock(TraceRecord)
 
         when:
-        LocalDateTime time_10_00_00 = LocalDateTime.of(2025, 8, 20, 10, 0, 0)
-        LocalDateTime time_10_10_00 = LocalDateTime.of(2025, 8, 20, 10, 10, 0)
-        LocalDateTime time_10_59_00 = LocalDateTime.of(2025, 8, 20, 10, 59, 0)
-        LocalDateTime time_11_00_00 = LocalDateTime.of(2025, 8, 20, 11, 0, 0)
+        Instant time_10_00_00 = LocalDateTime.of(2025, 8, 20, 10, 0, 0).toInstant(ZoneOffset.UTC)
+        Instant time_10_10_00 = LocalDateTime.of(2025, 8, 20, 10, 10, 0).toInstant(ZoneOffset.UTC)
+        Instant time_10_59_00 = LocalDateTime.of(2025, 8, 20, 10, 59, 0).toInstant(ZoneOffset.UTC)
+        Instant time_11_00_00 = LocalDateTime.of(2025, 8, 20, 11, 0, 0).toInstant(ZoneOffset.UTC)
 
         timeCiRecordCollector.add(new CiRecord(100.0, null, null, null, time_10_00_00))
         timeCiRecordCollector.add(new CiRecord(500.0, null, null, null, time_10_10_00))
@@ -84,10 +86,10 @@ class CiRecordCollectorTest extends Specification {
         TraceRecord traceRecord = Mock(TraceRecord)
 
         when:
-        LocalDateTime time_10_00_00 = LocalDateTime.of(2025, 8, 20, 10, 0, 0)
-        LocalDateTime time_10_05_00 = LocalDateTime.of(2025, 8, 20, 10, 5, 0)
-        LocalDateTime time_10_10_00 = LocalDateTime.of(2025, 8, 20, 10, 10, 0)
-        LocalDateTime time_10_20_00 = LocalDateTime.of(2025, 8, 20, 10, 20, 0)
+        Instant time_10_00_00 = LocalDateTime.of(2025, 8, 20, 10, 0, 0).toInstant(ZoneOffset.UTC)
+        Instant time_10_05_00 = LocalDateTime.of(2025, 8, 20, 10, 5, 0).toInstant(ZoneOffset.UTC)
+        Instant time_10_10_00 = LocalDateTime.of(2025, 8, 20, 10, 10, 0).toInstant(ZoneOffset.UTC)
+        Instant time_10_20_00 = LocalDateTime.of(2025, 8, 20, 10, 20, 0).toInstant(ZoneOffset.UTC)
 
         timeCiRecordCollector.add(new CiRecord(100.0, null, null, null, time_10_05_00))
         timeCiRecordCollector.add(new CiRecord(300.0, null, null, null, time_10_10_00))

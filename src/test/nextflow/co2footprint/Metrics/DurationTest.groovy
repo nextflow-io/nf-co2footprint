@@ -21,19 +21,22 @@ class DurationTest extends Specification{
 
     def 'Should convert time to readable Strings'() {
         when:
-        String out = new Duration(value, unit).toReadable(smallestUnit, largestUnit, threshold)
+        String out = new Duration(value, unit).toReadable(smallestUnit, largestUnit, maxPositions, threshold)
 
         then:
         out == expected
 
         where:
-        value   || unit     || smallestUnit     || largestUnit  || threshold    || expected
-        1.0     || 'days'   ||  'h'             ||  'days'      || 0.0          || '1day'
-        2.1     || 'days'   ||  'min'           ||  'days'      || 0.0          || '2days 2h 24min'
-        2.52    || 'days'   ||  'days'          ||  'days'      || 0.0          || '2.52days'
-        3600.0  || 's'      ||  's'             ||  'min'       || 0.0          || '60min'
-        7000    || 'ms'     ||  'ms'            ||  's'         || 0.0          || '7s'
-        7500    || 'ms'     ||  'ms'            ||  's'         || 0.0          || '7s 500ms'
-        3602.1  || 's'      ||  's'             ||  'min'       || 0.0          || '60min 2.1s'
+        value   || unit     || smallestUnit     || largestUnit  || maxPositions || threshold    || expected
+        1.0     || 'days'   ||  'h'             ||  'days'      || 0            || 0.0          || '1day'
+        2.1     || 'days'   ||  'min'           ||  'days'      || 0            || 0.0          || '2days 2h 24min'
+        2.52    || 'days'   ||  'days'          ||  'days'      || 0            || 0.0          || '2.52days'
+        3600.0  || 's'      ||  's'             ||  'min'       || 0            || 0.0          || '60min'
+        7000    || 'ms'     ||  'ms'            ||  's'         || 0            || 0.0          || '7s'
+        7500    || 'ms'     ||  'ms'            ||  's'         || 0            || 0.0          || '7s 500ms'
+        3602.1  || 's'      ||  's'             ||  'min'       || 0            || 0.0          || '60min 2.1s'
+        3602.1  || 's'      ||  's'             ||  'min'       || 1            || 0.0          || '60min'
+        3630.0  || 's'      ||  's'             ||  'min'       || 1            || 0.0          || '61min'
+        3602.5  || 's'      ||  'ms'            ||  'min'       || 2            || 0.0          || '60min 3s'
     }
 }

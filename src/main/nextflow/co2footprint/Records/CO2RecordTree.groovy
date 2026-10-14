@@ -76,7 +76,7 @@ class CO2RecordTree {
             co2Record = children.collect({ CO2RecordTree child -> child.co2Record }).sum() as CO2Record
         }
         
-        if(co2Record.get('name') == null) { co2Record.put('name', name) }
+        if(co2Record?.get('name') == null) { co2Record?.put('name', name) }
 
         return this
     }

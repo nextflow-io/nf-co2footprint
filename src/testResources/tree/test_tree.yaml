@@ -1,5 +1,5 @@
 name: crazy_tesla
-metaData: {level: workflow}
+metaData: {workflowLevel: workflow}
 values:
   task_id:
     raw: {value: '-1', type: str}
@@ -51,7 +51,7 @@ values:
     readable: 10 kWh
 children:
 - name: test1
-  metaData: {level: process}
+  metaData: {workflowLevel: process}
   values:
     task_id:
       raw: &id001 {value: '111', type: str}
@@ -78,29 +78,32 @@ children:
       raw: &id008 {value: 1E+10, type: Bytes, unit: B, scale: ''}
       readable: 10 GB
     realtime:
-      raw: &id009 {value: 3600000.0000, type: Duration, unit: ms, scale: ''}
+      raw: &id009 {value: 3600000.0, type: Duration, unit: ms, scale: ''}
       readable: 1h
     cpus:
       raw: &id010 {value: 1, type: Number, unit: '', scale: ''}
       readable: '1'
+    pue:
+      raw: &id011 {value: 1.0, type: Number, unit: '', scale: ''}
+      readable: '1'
     powerdraw_cpu:
-      raw: &id011 {value: 7.0, type: Number, unit: W, scale: ''}
+      raw: &id012 {value: 7.0, type: Number, unit: W, scale: ''}
       readable: 7 W
     powerdraw_memory:
-      raw: &id012 {value: 0.3725, type: Number, unit: W, scale: ''}
+      raw: &id013 {value: 0.3725, type: Number, unit: W, scale: ''}
       readable: 372.5 mW
     cpu_model:
-      raw: &id012 {value: Some model, type: str}
+      raw: &id014 {value: Some model, type: str}
       readable: Some model
     raw_energy_processor:
-      raw: &id013 {value: 5E+3, type: Number, unit: Wh, scale: ''}
+      raw: &id015 {value: 5.0E+3, type: Number, unit: Wh, scale: ''}
       readable: 5 kWh
     raw_energy_memory:
-      raw: &id014 {value: 5E+3, type: Number, unit: Wh, scale: ''}
+      raw: &id016 {value: 5.0E+3, type: Number, unit: Wh, scale: ''}
       readable: 5 kWh
   children:
   - name: '1'
-    metaData: {level: task}
+    metaData: {workflowLevel: task}
     values:
       task_id:
         raw: *id001
@@ -132,24 +135,27 @@ children:
       cpus:
         raw: *id010
         readable: '1'
-      powerdraw_cpu:
+      pue:
         raw: *id011
+        readable: '1'
+      powerdraw_cpu:
+        raw: *id012
         readable: 7 W
       powerdraw_memory:
-        raw: *id012
+        raw: *id013
         readable: 372.5 mW
       cpu_model:
-        raw: *id012
+        raw: *id014
         readable: Some model
       raw_energy_processor:
-        raw: *id013
+        raw: *id015
         readable: 5 kWh
       raw_energy_memory:
-        raw: *id014
+        raw: *id016
         readable: 5 kWh
     children: []
 - name: test2
-  metaData: {level: process}
+  metaData: {workflowLevel: process}
   values:
     task_id:
       raw: *id001
@@ -182,26 +188,26 @@ children:
       raw: *id010
       readable: '1'
     pue:
-      raw: *id010
+      raw: *id011
       readable: '1'
     powerdraw_cpu:
-      raw: *id011
+      raw: *id012
       readable: 7 W
     powerdraw_memory:
-      raw: *id012
+      raw: *id013
       readable: 372.5 mW
     cpu_model:
-      raw: *id012
+      raw: *id014
       readable: Some model
     raw_energy_processor:
-      raw: *id013
+      raw: *id015
       readable: 5 kWh
     raw_energy_memory:
-      raw: *id014
+      raw: *id016
       readable: 5 kWh
   children:
   - name: '2'
-    metaData: {level: task}
+    metaData: {workflowLevel: task}
     values:
       task_id:
         raw: *id001
@@ -233,19 +239,22 @@ children:
       cpus:
         raw: *id010
         readable: '1'
-      powerdraw_cpu:
+      pue:
         raw: *id011
+        readable: '1'
+      powerdraw_cpu:
+        raw: *id012
         readable: 7 W
       powerdraw_memory:
-        raw: *id012
+        raw: *id013
         readable: 372.5 mW
       cpu_model:
-        raw: *id012
+        raw: *id014
         readable: Some model
       raw_energy_processor:
-        raw: *id013
+        raw: *id015
         readable: 5 kWh
       raw_energy_memory:
-        raw: *id014
+        raw: *id016
         readable: 5 kWh
     children: []

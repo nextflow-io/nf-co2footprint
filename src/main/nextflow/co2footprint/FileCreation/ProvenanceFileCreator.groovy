@@ -4,14 +4,18 @@ import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
 import groovyx.gpars.agent.Agent
+import nextflow.co2footprint.CO2FootprintPlugin
 import nextflow.co2footprint.Config.ProvenanceFileConfig
 import nextflow.co2footprint.Records.CO2Record
 import nextflow.co2footprint.Records.CO2RecordTree
+import nextflow.co2footprint.Records.CiRecordCollector
 import nextflow.trace.TraceHelper
 
 import java.nio.file.Path
 import java.time.Duration
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 @Slf4j
 class ProvenanceFileCreator extends BaseFileCreator {
@@ -20,7 +24,10 @@ class ProvenanceFileCreator extends BaseFileCreator {
 
     // Whether or not only to write emission metrics
     private boolean emissionMetricsOnly = false
-    
+
+    // Whether or not to include entries with a `null` raw value
+    private boolean includeNulls = false
+
     // Keys that indicate metadata rather than trace values
     private static Set<String> metaDataKeys = ['workflowLevel']
 
@@ -33,10 +40,11 @@ class ProvenanceFileCreator extends BaseFileCreator {
         super(config)
 
         emissionMetricsOnly = config.emissionMetricsOnly
+        includeNulls = config.includeNulls
 
         if(!config.enabled) {
             this.metaClass.create = { -> null }
-            this.metaClass.write = { CO2RecordTree X -> null }
+            this.metaClass.write = { CO2RecordTree X, CiRecordCollector Y -> null }
             this.metaClass.close = {  -> null }
         }
     }
@@ -56,14 +64,59 @@ class ProvenanceFileCreator extends BaseFileCreator {
      *
      * @param co2RecordTree A hierarchically structured record tree
      */
-    void write(CO2RecordTree co2RecordTree) {
-        Map co2TreeMap = transformToJsonLd(co2RecordTree.toMap(emissionMetricsOnly, false, false))
+    void write(CO2RecordTree co2RecordTree, CiRecordCollector timeCiRecordCollector=null) {
+        if (timeCiRecordCollector?.timeCIs) {
+            co2RecordTree.metaData.put(
+                'carbon_intensity_records',
+                ciRecordsToJsonLd(timeCiRecordCollector.timeCIs)
+            )
+        }
+        Map co2TreeMap = transformToJsonLd(
+                co2RecordTree.toMap(emissionMetricsOnly, includeNulls, false)
+        )
         JsonBuilder jsonBuilder = new JsonBuilder(co2TreeMap)
 
         dataWriter = new Agent<PrintWriter>(file)
 
         file.print(jsonBuilder.toPrettyString())
         file.flush()
+    }
+    
+    Map<String, String> levelTypes = [
+            session: 'schema:SoftwareApplication',
+            head: 'schema:SoftwareApplication',
+            workflow: 'bioschemas:ComputationalWorkflow',
+            process: 'schema:SoftwareApplication',
+            task: 'schema:Action',
+    ]
+    
+    Map<String, String> types = [
+            Number: 'schema:QuantitativeValue',
+            Percentage: 'schema:QuantitativeValue',
+            Bytes: 'schema:QuantitativeValue',
+            Duration: 'schema:Duration',
+            DateTime: 'schema:DateTime',
+    ]
+
+    /**
+     * Transform the carbon intensity records to a valid JSON-LD file string.
+     * 
+     * @param ciRecords Carbon intensity records as a Map
+     * @return
+     */
+    private static Map<String, Object> ciRecordsToJsonLd(Map<Instant, Number> ciRecords) {
+        Map<String, Object> ciRecordsMap = ['@type': 'schema:ItemList']
+        List<Map<String, Object>> itemListElement = []
+        ciRecords.eachWithIndex { Instant instant, Number ci, Integer i ->
+            itemListElement.add(
+                [ '@type': 'schema:ListItem', position: i, item: [
+                    '@type': 'schema:Observation', observationDate: instant.toString(), value: ci, unitText: 'g/kWh'
+                    ]
+                ]
+            )
+        }
+        ciRecordsMap.put('itemListElement', itemListElement)
+        return ciRecordsMap
     }
 
     /**
@@ -81,6 +134,19 @@ class ProvenanceFileCreator extends BaseFileCreator {
             ldMap['@context'] = [
                     schema    : 'https://schema.org/',
                     bioschemas: 'https://bioschemas.org',
+                    prov: "http://www.w3.org/ns/prov#"
+            ]
+            ldMap['@version'] = 1.1
+            ldMap['prov:wasGeneratedBy'] = [
+                '@type': 'prov:Activity',
+                'prov:used': [
+                    '@type': 'schema:SoftwareApplication',
+                    name: 'nf-co2footprint',
+                    softwareVersion: CO2FootprintPlugin.getVersion(),
+                    archivedAt: 'https://doi.org/10.5281/zenodo.14622304',
+                    license: 'https://www.apache.org/licenses/LICENSE-2.0.html',
+                    usageInfo: 'https://nextflow-io.github.io/nf-co2footprint/'
+                ]
             ]
         }
 
@@ -88,19 +154,12 @@ class ProvenanceFileCreator extends BaseFileCreator {
         ldMap['@id'] = "urn:co2footprint:${treeMap.name}"
 
         // Add @type based on metaData.workflowLevel
-        ldMap['@type'] = switch (treeMap.metaData?.workflowLevel) {
-            case 'session' -> 'schema:SoftwareApplication'
-            case 'head' -> 'schema:SoftwareApplication'
-            case 'workflow' -> 'bioschemas:ComputationalWorkflow'
-            case 'process' -> 'schema:SoftwareApplication'
-            case 'task' -> 'schema:Action'
-            default -> 'schema:Thing'
-        }
+        ldMap['@type'] = levelTypes.get(treeMap.metaData?.workflowLevel, 'schema:Thing') 
 
         // Define metadata
         (treeMap?.metaData as Map<String, Object>)?.each { String key, Object value ->
             ldMap[key] = [
-                    '@type': 'schema:PropertyValue',
+                    '@type': types.get(key, 'schema:PropertyValue'),
                     value: value
             ]
         }
@@ -118,7 +177,7 @@ class ProvenanceFileCreator extends BaseFileCreator {
                 // Adjust record according to type
                 if (raw.type == 'str') {
                     ldMap[key] = [
-                            '@type': 'schema:PropertyValue',
+                            '@type': types.get(key, 'schema:PropertyValue'),
                             'value': raw.value,
                     ]
                 }
@@ -129,7 +188,7 @@ class ProvenanceFileCreator extends BaseFileCreator {
                                 ['@type': 'schema:ListItem',
                                 'position': index + 1,
                                 'item': [
-                                      '@type': 'schema:PropertyValue',
+                                      '@type': types.get(key, 'schema:PropertyValue'),
                                       'value': item
                                     ]
                                 ]
@@ -143,24 +202,24 @@ class ProvenanceFileCreator extends BaseFileCreator {
                 }
                 else if (raw.type as String in ['Number', 'Percentage', 'Bytes']) {
                     ldMap[key] = [
-                            '@type': 'schema:QuantitativeValue',
+                            '@type': types.get(key, 'schema:QuantitativeValue'),
                             'value': raw.value,
-                            'unitText': raw.scale + raw.unit
+                            'unitText': (raw.scale ?: '') + (raw.unit ?: '')
                     ]
                 }
                 else if (raw.type == 'Duration') {
                     ldMap[key] = [
-                            '@type': 'schema:Duration',
-                            'value': Duration.ofMillis(raw.value as Long).toString(),
-                            'unitText': raw.scale + raw.unit
+                            '@type': types.get(key, 'schema:Duration'),
+                            'value': raw.value != null ? Duration.ofMillis(raw.value as Long).toString() : null,
+                            'unitText': (raw.scale ?: '') + (raw.unit ?: '')
 
                     ]
                 }
                 else if (raw.type == 'DateTime') {
                     ldMap[key] = [
-                            '@type': 'schema:DateTime',
-                            'value':  Instant.ofEpochMilli(raw.value as Long).toString() ,
-                            'unitText': raw.scale + raw.unit
+                            '@type': types.get(key, 'schema:DateTime'),
+                            'value': raw.value != null ? Instant.ofEpochMilli(raw.value as Long).toString() : null,
+                            'unitText': (raw.scale ?: '') + (raw.unit ?: '')
                     ]
                 }
 
@@ -189,6 +248,10 @@ class ProvenanceFileCreator extends BaseFileCreator {
         }
 
         return ldMap
+    }
+    
+    private Map<String, Object> addCo2RecordsToMap(Map<String, Object> co2Records, Map<String, Object> treeMap) {
+        
     }
 
     static CO2RecordTree read(Path path) {
@@ -230,7 +293,7 @@ class ProvenanceFileCreator extends BaseFileCreator {
             Object value = entry.getValue()
 
             // Skip JSON-LD elements
-            if (key in ['@context', '@id', '@type'] || !(value instanceof Map && value.containsKey('value')) ) {
+            if (key.startsWith('@') || key.startsWith('prov') || !(value instanceof Map && value.containsKey('value')) ) {
                 continue
             }
 
@@ -242,10 +305,10 @@ class ProvenanceFileCreator extends BaseFileCreator {
                 store[key] = value['value']
             }
             else if (value['@type'] == 'schema:Duration') {
-                store[key] = Duration.parse(value['value'] as String).toMillis()
+                store[key] = value['value'] != null ? Duration.parse(value['value'] as String).toMillis() : null
             }
             else if (value['@type'] == 'schema:DateTime') {
-                store[key] = Instant.parse(value['value'] as String).toEpochMilli()
+                store[key] = value['value'] != null ? Instant.parse(value['value'] as String).toEpochMilli() : null
             }
             else if(value['@type'] == 'schema:ItemList') {
                 List<Object> items = (value['itemListElement'] as List<Map<String, Object>>).collect { Map<String, Object> itemElement ->
@@ -264,7 +327,7 @@ class ProvenanceFileCreator extends BaseFileCreator {
         // Construct a new tree with the name extracted from the @id (removing the "urn:co2footprint:" prefix)
         CO2RecordTree co2RecordTree = new CO2RecordTree((ldMap['@id'] as String).drop(17), metaData, co2Record, null, children)
 
-        // Add @type based on metaData.workflowLevel
+        // Add metaData.workflowLevel based on @type
         if(!co2RecordTree.metaData?.workflowLevel) {
             if (ldMap['@type'] == 'schema:SoftwareApplication' && isRoot) {
                 co2RecordTree.metaData['workflowLevel'] = 'session'
