@@ -19,3 +19,7 @@ install:
 # Publish the plugin
 release:
 	./gradlew releasePlugin
+	
+compareSnapshots:
+	./src/testResources/compare_snapshots.sh
+	
