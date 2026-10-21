@@ -2,6 +2,7 @@
 ## Features:
 
 ## Bug Fixes:
+- Realtime entry disappearing from trace file on 0ms time
 
 ## Misc:
 

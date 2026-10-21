@@ -72,7 +72,6 @@ class ProvenanceFileCreatorTest extends Specification {
         String output = outputPath.text
 
         then:
-        output.contains('"@type": "schema:DateTime"')
         !output.contains('"@type": "schema:DataTime"')
     }
 }

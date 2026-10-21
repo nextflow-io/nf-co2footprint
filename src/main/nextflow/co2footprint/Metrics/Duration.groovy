@@ -46,7 +46,7 @@ class Duration extends Quantity {
      */
     @Override
     Duration scale(String targetUnit='s') {
-        if (value) {
+        if (value != null) {
             // Supported time units
             final List<String> units = ['ns', 'mus', 'ms', 's', 'min', 'h', 'days', 'weeks', 'months', 'years']
             // Conversion factors between units (e.g., 1000 ms = 1 s, 60 s = 1 min, etc.)
@@ -103,7 +103,7 @@ class Duration extends Quantity {
                 timeStrings.add( currentTime.getReadable() )
             }
             else {
-                // Keep only whole numbers when extending further and round up when the reaching maximum positions
+                // Keep only whole numbers when extending further and round up when reaching the maximum positions
                 if(timeStrings.size() + 1 == maxPositions) {
                     currentTime.round(0, RoundingMode.HALF_UP)
                 } else {
@@ -119,7 +119,7 @@ class Duration extends Quantity {
             } 
             
             // Break upon reaching exit condition
-            if(timeStrings.size() == maxPositions || targetUnit == smallestUnit || value == 0) {
+            if(timeStrings.size() == maxPositions || targetUnit == smallestUnit || (value == 0 && !timeStrings.isEmpty())) {
                 break
             }
         }
