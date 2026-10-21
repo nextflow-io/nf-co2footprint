@@ -1,1 +1,6 @@
+# Exclude testResources form GitHub preview of language
 src/testResources/** linguist-vendored
+
+# Ensure bash scripts are always callable on Mac/Linux
+gradlew text eol=lf
+*.sh text eol=lf

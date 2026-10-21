@@ -61,6 +61,7 @@ String groovyVersion = '4.0.31'
 String pf4jVersion = '3.15.0'
 String slf4jVersion = '2.0.18'
 String oshiVersion = '6.10.0'
+String javaluatorVersion = '3.0.6'
 // Test only
 String spockVersion = '2.4-groovy-4.0'
 
@@ -72,6 +73,7 @@ dependencies {
 
     // add here plugins dependencies
     implementation "com.github.oshi:oshi-core:$oshiVersion"
+    implementation "com.fathzer:javaluator:$javaluatorVersion"
 
     // test configuration
     testImplementation "org.apache.groovy:groovy-nio:$groovyVersion"

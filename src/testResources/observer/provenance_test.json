@@ -115,14 +115,6 @@
             "readable": "11.41 W"
         }
     },
-    "powerdraw_memory": {
-        "@type": "schema:QuantitativeValue",
-        "value": 0.3725,
-        "unitText": "W",
-        "additionalProperty": {
-            "readable": "372.5 mW"
-        }
-    },
     "cpu_model": {
         "@type": "schema:PropertyValue",
         "value": "Unknown model",
@@ -144,6 +136,20 @@
         "unitText": "Wh",
         "additionalProperty": {
             "readable": "2.61 Wh"
+        }
+    },
+    "cpu_energy_function": {
+        "@type": "schema:PropertyValue",
+        "value": "runtime_h * numberOfCores * powerdrawPerCore * coreUsage",
+        "additionalProperty": {
+            "readable": "runtime_h * numberOfCores * powerdrawPerCore * coreUsage"
+        }
+    },
+    "memory_energy_function": {
+        "@type": "schema:PropertyValue",
+        "value": "runtime_h * memory * 0.3725",
+        "additionalProperty": {
+            "readable": "runtime_h * memory * 0.3725"
         }
     },
     "hasPart": [
@@ -247,14 +253,6 @@
                     "readable": "11.41 W"
                 }
             },
-            "powerdraw_memory": {
-                "@type": "schema:QuantitativeValue",
-                "value": 0.3725,
-                "unitText": "W",
-                "additionalProperty": {
-                    "readable": "372.5 mW"
-                }
-            },
             "cpu_model": {
                 "@type": "schema:PropertyValue",
                 "value": "Unknown model",
@@ -276,6 +274,20 @@
                 "unitText": "Wh",
                 "additionalProperty": {
                     "readable": "2.61 Wh"
+                }
+            },
+            "cpu_energy_function": {
+                "@type": "schema:PropertyValue",
+                "value": "runtime_h * numberOfCores * powerdrawPerCore * coreUsage",
+                "additionalProperty": {
+                    "readable": "runtime_h * numberOfCores * powerdrawPerCore * coreUsage"
+                }
+            },
+            "memory_energy_function": {
+                "@type": "schema:PropertyValue",
+                "value": "runtime_h * memory * 0.3725",
+                "additionalProperty": {
+                    "readable": "runtime_h * memory * 0.3725"
                 }
             },
             "hasPart": [
@@ -379,14 +391,6 @@
                             "readable": "11.41 W"
                         }
                     },
-                    "powerdraw_memory": {
-                        "@type": "schema:QuantitativeValue",
-                        "value": 0.3725,
-                        "unitText": "W",
-                        "additionalProperty": {
-                            "readable": "372.5 mW"
-                        }
-                    },
                     "cpu_model": {
                         "@type": "schema:PropertyValue",
                         "value": "Unknown model",
@@ -408,6 +412,20 @@
                         "unitText": "Wh",
                         "additionalProperty": {
                             "readable": "2.61 Wh"
+                        }
+                    },
+                    "cpu_energy_function": {
+                        "@type": "schema:PropertyValue",
+                        "value": "runtime_h * numberOfCores * powerdrawPerCore * coreUsage",
+                        "additionalProperty": {
+                            "readable": "runtime_h * numberOfCores * powerdrawPerCore * coreUsage"
+                        }
+                    },
+                    "memory_energy_function": {
+                        "@type": "schema:PropertyValue",
+                        "value": "runtime_h * memory * 0.3725",
+                        "additionalProperty": {
+                            "readable": "runtime_h * memory * 0.3725"
                         }
                     }
                 }

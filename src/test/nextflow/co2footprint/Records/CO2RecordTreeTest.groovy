@@ -36,7 +36,7 @@ class CO2RecordTreeTest extends Specification {
 
         co2Record = new CO2Record(
                 traceRecord, 2.0, 200.0, null, 100.0, null,
-                1.0, 10, 1.0 * 3600000, 1, 1.0, 7.0, 0.3725, null, 'Some model', 5.0, 5.0
+                1.0, 10, 1.0 * 3600000, 1, 1.0, 7.0, 'Some model', 5.0, 5.0, '', ''
         )
 
         CO2RecordTree process1 = recordsTree.addChild(new CO2RecordTree('process1', [workflowLevel: 'process']))
@@ -53,7 +53,7 @@ class CO2RecordTreeTest extends Specification {
             process.addChild(new CO2RecordTree("task_${counter}", [workflowLevel: 'task'],
                 new CO2Record(
                     traceRecord2, value, value, null, 475.0, null,
-                    100.0, 1000**3, 1.0 * 3600000, 1, 1.0, 12.0, 0.3725, null, 'Unknown model', 5.0, 5.0
+                    100.0, 1000**3, 1.0 * 3600000, 1, 1.0, 12.0, 'Unknown model', 5.0, 5.0, null, null
                 )
             ))
         }
@@ -88,11 +88,12 @@ class CO2RecordTreeTest extends Specification {
                 carbon_intensity_market:[null, null, null],
                 pue:[1.0, 1.0, 1.0],
                 powerdraw_cpu:[12.0, 12.0, 12.0],
-                powerdraw_memory:[0.3725, 0.3725, 0.3725],
-                cpu_power_model:[null, null, null],
                 raw_energy_processor:[5.0, 5.0, 5.0],
                 raw_energy_memory:[5.0, 5.0, 5.0],
+                cpu_energy_function:[null, null, null],
+                memory_energy_function:[null, null, null],
         ]]
+
     }
 
     def 'Should construct a valid tree node'() {
