@@ -18,7 +18,7 @@ import nextflow.trace.TraceRecord
 class TraceFileCreator extends BaseFileCreator {
     
     // Metrics that are written to the trace file
-    private List<String> traceMetrics = [
+    static List<String> traceMetrics = [
         'task_id', 'status', 'name', 'energy_consumption', 'CO2e', 'CO2e_market', 'raw_energy_processor', 'raw_energy_memory', 
         'carbon_intensity', '%cpu', 'memory', 'realtime', 'cpus', 'powerdraw_cpu', 'cpu_model'
     ]
@@ -72,9 +72,9 @@ class TraceFileCreator extends BaseFileCreator {
 
         List<String> recordedEntries = co2Record.getReadableEntries(traceMetrics)
 
-        traceWriter.send { PrintWriter writer ->
-            writer.println( String.join('\t', recordedEntries) )
-            writer.flush()
+        traceWriter.send {
+            file.println( String.join('\t', recordedEntries) )
+            file.flush()
         }
     }
 
@@ -83,7 +83,7 @@ class TraceFileCreator extends BaseFileCreator {
      *
      * @param current Map of TaskId to TraceRecord for unfinished tasks
      */
-    void close(Map<TaskId, TraceRecord> current) {
+    void close(Map<TaskId, TraceRecord> current=[:]) {
         if (!created) { return }
 
         // Wait for agent to finish and flush content
@@ -95,7 +95,6 @@ class TraceFileCreator extends BaseFileCreator {
         }
         file.flush()
 
-        file.close()
-        writer.close()
+        super.close()
     }
 }
