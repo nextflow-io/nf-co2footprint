@@ -49,8 +49,7 @@
         "unitText": "ms",
         "additionalProperty": {
             "readable": "2026-08-13 14:51:35.125"
-        },
-        "description": "Unix time"
+        }
     },
     "start": {
         "@type": "schema:DateTime",
@@ -58,8 +57,7 @@
         "unitText": "ms",
         "additionalProperty": {
             "readable": "2026-08-13 14:51:51.002"
-        },
-        "description": "Unix time"
+        }
     },
     "complete": {
         "@type": "schema:DateTime",
@@ -67,8 +65,7 @@
         "unitText": "ms",
         "additionalProperty": {
             "readable": "2026-08-13 14:51:58.283"
-        },
-        "description": "Unix time"
+        }
     },
     "duration": {
         "@type": "schema:Duration",
@@ -379,8 +376,7 @@
                 "unitText": "ms",
                 "additionalProperty": {
                     "readable": "2026-08-13 14:51:35.125"
-                },
-                "description": "Unix time"
+                }
             },
             "start": {
                 "@type": "schema:DateTime",
@@ -388,8 +384,7 @@
                 "unitText": "ms",
                 "additionalProperty": {
                     "readable": "2026-08-13 14:51:51.002"
-                },
-                "description": "Unix time"
+                }
             },
             "complete": {
                 "@type": "schema:DateTime",
@@ -397,8 +392,7 @@
                 "unitText": "ms",
                 "additionalProperty": {
                     "readable": "2026-08-13 14:51:58.283"
-                },
-                "description": "Unix time"
+                }
             },
             "duration": {
                 "@type": "schema:Duration",
@@ -664,8 +658,7 @@
                 "unitText": "ms",
                 "additionalProperty": {
                     "readable": "2026-08-13 14:51:53.061"
-                },
-                "description": "Unix time"
+                }
             },
             "start": {
                 "@type": "schema:DateTime",
@@ -673,8 +666,7 @@
                 "unitText": "ms",
                 "additionalProperty": {
                     "readable": "2026-08-13 14:51:53.121"
-                },
-                "description": "Unix time"
+                }
             },
             "complete": {
                 "@type": "schema:DateTime",
@@ -682,8 +674,7 @@
                 "unitText": "ms",
                 "additionalProperty": {
                     "readable": "2026-08-13 14:51:56.416"
-                },
-                "description": "Unix time"
+                }
             },
             "duration": {
                 "@type": "schema:Duration",
@@ -989,8 +980,7 @@
                         "unitText": "ms",
                         "additionalProperty": {
                             "readable": "2026-08-13 14:51:53.061"
-                        },
-                        "description": "Unix time"
+                        }
                     },
                     "start": {
                         "@type": "schema:DateTime",
@@ -998,8 +988,7 @@
                         "unitText": "ms",
                         "additionalProperty": {
                             "readable": "2026-08-13 14:51:53.121"
-                        },
-                        "description": "Unix time"
+                        }
                     },
                     "complete": {
                         "@type": "schema:DateTime",
@@ -1007,8 +996,7 @@
                         "unitText": "ms",
                         "additionalProperty": {
                             "readable": "2026-08-13 14:51:56.416"
-                        },
-                        "description": "Unix time"
+                        }
                     },
                     "duration": {
                         "@type": "schema:Duration",
@@ -1328,8 +1316,7 @@
                                 "unitText": "ms",
                                 "additionalProperty": {
                                     "readable": "2026-08-13 14:51:53.061"
-                                },
-                                "description": "Unix time"
+                                }
                             },
                             "start": {
                                 "@type": "schema:DateTime",
@@ -1337,8 +1324,7 @@
                                 "unitText": "ms",
                                 "additionalProperty": {
                                     "readable": "2026-08-13 14:51:53.121"
-                                },
-                                "description": "Unix time"
+                                }
                             },
                             "complete": {
                                 "@type": "schema:DateTime",
@@ -1346,8 +1332,7 @@
                                 "unitText": "ms",
                                 "additionalProperty": {
                                     "readable": "2026-08-13 14:51:55.597"
-                                },
-                                "description": "Unix time"
+                                }
                             },
                             "duration": {
                                 "@type": "schema:Duration",
@@ -1681,8 +1666,7 @@
                                 "unitText": "ms",
                                 "additionalProperty": {
                                     "readable": "2026-08-13 14:51:53.278"
-                                },
-                                "description": "Unix time"
+                                }
                             },
                             "start": {
                                 "@type": "schema:DateTime",
@@ -1690,8 +1674,7 @@
                                 "unitText": "ms",
                                 "additionalProperty": {
                                     "readable": "2026-08-13 14:51:53.319"
-                                },
-                                "description": "Unix time"
+                                }
                             },
                             "complete": {
                                 "@type": "schema:DateTime",
@@ -1699,8 +1682,7 @@
                                 "unitText": "ms",
                                 "additionalProperty": {
                                     "readable": "2026-08-13 14:51:56.416"
-                                },
-                                "description": "Unix time"
+                                }
                             },
                             "duration": {
                                 "@type": "schema:Duration",
@@ -2034,8 +2016,7 @@
                                 "unitText": "ms",
                                 "additionalProperty": {
                                     "readable": "2026-08-13 14:51:53.118"
-                                },
-                                "description": "Unix time"
+                                }
                             },
                             "start": {
                                 "@type": "schema:DateTime",
@@ -2043,8 +2024,7 @@
                                 "unitText": "ms",
                                 "additionalProperty": {
                                     "readable": "2026-08-13 14:51:53.219"
-                                },
-                                "description": "Unix time"
+                                }
                             },
                             "complete": {
                                 "@type": "schema:DateTime",
@@ -2052,8 +2032,7 @@
                                 "unitText": "ms",
                                 "additionalProperty": {
                                     "readable": "2026-08-13 14:51:56.012"
-                                },
-                                "description": "Unix time"
+                                }
                             },
                             "duration": {
                                 "@type": "schema:Duration",
@@ -2387,8 +2366,7 @@
                                 "unitText": "ms",
                                 "additionalProperty": {
                                     "readable": "2026-08-13 14:51:53.158"
-                                },
-                                "description": "Unix time"
+                                }
                             },
                             "start": {
                                 "@type": "schema:DateTime",
@@ -2396,8 +2374,7 @@
                                 "unitText": "ms",
                                 "additionalProperty": {
                                     "readable": "2026-08-13 14:51:53.229"
-                                },
-                                "description": "Unix time"
+                                }
                             },
                             "complete": {
                                 "@type": "schema:DateTime",
@@ -2405,8 +2382,7 @@
                                 "unitText": "ms",
                                 "additionalProperty": {
                                     "readable": "2026-08-13 14:51:55.699"
-                                },
-                                "description": "Unix time"
+                                }
                             },
                             "duration": {
                                 "@type": "schema:Duration",

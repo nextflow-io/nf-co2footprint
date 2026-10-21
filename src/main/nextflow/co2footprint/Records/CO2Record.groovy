@@ -229,7 +229,7 @@ class CO2Record extends TraceRecord {
          if (rawValue != null) { return rawValue }
         String type = FIELDS.get(key)
          return switch (type) {
-            case 'date' -> Duration.of(value, 'ms', 'DateTime', 'Unix time').toMap()
+            case 'date' -> Duration.of(value, 'ms', 'DateTime').toMap()
             case 'time' -> Duration.of(value).toMap()
             case 'perc' -> Percentage.of(value).toMap()
             case 'mem' -> Bytes.of(value).toMap()
