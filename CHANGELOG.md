@@ -4,6 +4,7 @@
 ## Bug Fixes:
 
 ## Misc:
+- Removed outdated "Unix time" descriptor in provenance file
 
 # 1.4.1
 ## Features:
