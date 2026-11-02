@@ -102,4 +102,23 @@ class CiRecordCollectorTest extends Specification {
         then:
         weightedCI == 200.0d
     }
+    
+    def 'Test fallback on missing start/complete'() {
+        setup:
+        CiRecordCollector timeCiRecordCollector = new CiRecordCollector(Mock(CO2FootprintConfig))
+        TraceRecord traceRecord = Mock(TraceRecord)
+
+        Instant time_1 = Instant.ofEpochMilli(100)
+        timeCiRecordCollector.add(new CiRecord(200.0, null, null, null, time_1))
+        
+        TraceRecord traceRecord1 = new TraceRecord()
+        traceRecord.get('start') >> null
+        traceRecord.get('complete') >> null
+        
+        when:
+        BigDecimal weightedCI = timeCiRecordCollector.getWeightedCI(traceRecord1)
+        
+        then:
+        weightedCI == 200.0
+    }
 }

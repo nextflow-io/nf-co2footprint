@@ -109,10 +109,12 @@ class CiRecordCollector {
     * @throws        MissingValueException if no CI values are available for the task's time window
     */
     BigDecimal getWeightedCI(TraceRecord trace, Map<Instant, Number> timeCIs=this.timeCIs) {
-
+        Long startMillis = trace.get('start') ? trace.get('start') as Long : 0L
+        Long endMillis = trace.get('complete') ? trace.get('complete') as Long : 0L
+        
         // Obtain recorded star, end, and duration
-        Instant start = Instant.ofEpochMilli(trace.get('start') as Long)
-        Instant end = Instant.ofEpochMilli(trace.get('complete') as Long)
+        Instant start = Instant.ofEpochMilli(startMillis)
+        Instant end = Instant.ofEpochMilli(endMillis)
         Long duration = start.until(end, ChronoUnit.MILLIS)
         List<Instant> timestamps = timeCIs.keySet().toList().sort()
 
