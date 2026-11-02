@@ -4,6 +4,7 @@
 ## Bug Fixes:
 
 ## Misc:
+- Error on skipped task with no start/complete timestamp
 
 # 1.4.1
 ## Features:
