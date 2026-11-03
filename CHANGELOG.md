@@ -4,7 +4,7 @@
 ## Bug Fixes:
 
 ## Misc:
-- Expanded metadata in CITATIONS.cff
+- Expanded metadata in CITATION.cff
 
 # 1.4.1
 ## Features:
