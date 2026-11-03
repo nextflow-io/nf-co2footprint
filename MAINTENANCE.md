@@ -9,7 +9,7 @@
 ## Release
 - Follow [Nextflow's plugin guidelines](https://docs.seqera.io/nextflow/plugins/developing-plugins)
 - Follow the [Nextflow Gradle plugin guide](https://nextflow.io/docs/latest/guides/gradle-plugin.html#publishing-a-plugin)
-- Before releasing, bump the version everywhere it's hardcoded: `build.gradle`, `CITATION.cff` (`version`, `date-released` + `commit` set to the release commit), `README.md` (citation block), and `CHANGELOG.md`
+- Before releasing, bump the version everywhere it's hardcoded: `build.gradle`, `CITATION.cff` (`version`, `date-released`; set `commit` to the release commit after tagging), `README.md` (citation block), and `CHANGELOG.md`
 - Make a release on GitHub with `<version>` as a tag and `v<version>` as release name
   (auto-posts to the nf-co2footprint Slack channel)
 - Check that the GitHub release triggered a new archive on [Zenodo](https://zenodo.org/) and that the DOI badge/citation in `README.md` still points to the correct DOI
