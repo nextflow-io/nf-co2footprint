@@ -44,7 +44,7 @@ compareSnapshots() {
 
         yes_or_no "Compare files?" && eval "${DIFFCMD} ${snapshot} ${resource}"
 
-        yes_or_no "Do you want to delete the snapshot?" && rm "${snapshot}"
+        yes_or_no "Delete the failed file from build/?" && rm "${snapshot}"
         done
     return 0
 }

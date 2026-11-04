@@ -42,5 +42,5 @@ Small changes can fail many snapshot comparisons — this is normal - adapting t
 4. If a checksum is set, rerun after updating and set the new MD5 checksum
    - The test will tell you whether unexpected difference between old and new file were still found after you adjusted it.
 
-The command `make compareSnapshots` automates this process by iterating through all snapshots in the `failed` directories and opening a diff comparison.
-The standard diff comparator `code --diff` needs VSCode needs to be available on `PATH`. An alternative would be `vimdiff` or other CLI solutions.
+Run `make compareSnapshots` (from the repository root) as a shortcut for step 2: it iterates over all files in the `failed` directories, prints each pair of generated file and snapshot, and asks whether to open a diff for it. Updating the snapshot is still done by hand in the diff editor.
+The default diff command is `code --wait --diff`, which requires VSCode on your `PATH`; it can be changed at the first prompt, e.g. to `vimdiff`. The second prompt ("Delete the failed file") only removes the generated file in `build/`, never the snapshot in `src/testResources`.

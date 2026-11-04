@@ -48,3 +48,5 @@ To run your unit tests, run the following command in the project root directory 
 ```bash
 make test
 ```
+
+If snapshot tests fail, see [MAINTENANCE.md](https://github.com/nextflow-io/nf-co2footprint/blob/master/MAINTENANCE.md) or run make compareSnapshots.
