@@ -4,6 +4,7 @@
 ## Bug Fixes:
 
 ## Misc:
+- Removed outdated "Unix time" descriptor in provenance file
 - Expanded metadata in CITATION.cff
 
 # 1.4.1
