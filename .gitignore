@@ -1,0 +1,27 @@
+# Docs / other
+.cache/
+.DS_Store
+
+# Ignore IDE specific files / directories
+.idea
+.vscode
+
+# Ignore Gradle project-specific cache directory
+.gradle
+.nextflow*
+buildSrc/
+
+# Ignore Gradle build output directory
+build
+work
+out
+./co2footprint_*.txt
+./co2footprint_*.html
+site
+**/classes/
+
+# Ignore Python virtual environment
+venv/
+
+# Ignore gradle.properties which may contain GitHub Tokens
+gradle.properties

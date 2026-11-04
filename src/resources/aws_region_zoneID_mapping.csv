@@ -1,0 +1,35 @@
+Region code,Region name,Country,Zone id
+us-east-1,US East (N. Virginia),United States of America,US
+us-east-2,US East (Ohio),United States of America,US
+us-west-1,US West (N. California),United States of America,US
+us-west-2,US West (Oregon),United States of America,US
+af-south-1,Africa (Cape Town),South Africa,ZA
+ap-east-1,Asia Pacific (Hong Kong),Hong Kong,HK
+ap-south-2,Asia Pacific (Hyderabad),India,IN
+ap-southeast-3,Asia Pacific (Jakarta),Indonesia,ID
+ap-southeast-5,Asia Pacific (Malaysia),Malaysia,MY
+ap-southeast-4,Asia Pacific (Melbourne),Australia,AU
+ap-south-1,Asia Pacific (Mumbai),India,IN
+ap-southeast-6,Asia Pacific (New Zealand),New Zealand,NZ
+ap-northeast-3,Asia Pacific (Osaka),Japan,JP
+ap-northeast-2,Asia Pacific (Seoul),South Korea,KR
+ap-southeast-1,Asia Pacific (Singapore),Singapore,SG
+ap-southeast-2,Asia Pacific (Sydney),Australia,AU
+ap-east-2,Asia Pacific (Taipei),Taiwan,TW
+ap-southeast-7,Asia Pacific (Thailand),Thailand,TH
+ap-northeast-1,Asia Pacific (Tokyo),Japan,JP-TK
+ca-central-1,Canada (Central),Canada,CA
+ca-west-1,Canada West (Calgary),Canada,CA
+eu-central-1,Europe (Frankfurt),Germany,DE
+eu-west-1,Europe (Ireland),Ireland,IE
+eu-west-2,Europe (London),United Kingdom,GB
+eu-south-1,Europe (Milan),Italy,IT
+eu-west-3,Europe (Paris),France,FR
+eu-south-2,Europe (Spain),Spain,ES
+eu-north-1,Europe (Stockholm),Sweden,SE
+eu-central-2,Europe (Zurich),Switzerland,CH
+il-central-1,Israel (Tel Aviv),Israel,IL
+mx-central-1,Mexico (Central),Mexico,MX
+me-south-1,Middle East (Bahrain),Bahrain,BH
+me-central-1,Middle East (UAE),United Arab Emirates,AE
+sa-east-1,South America (São Paulo),Brazil,BR

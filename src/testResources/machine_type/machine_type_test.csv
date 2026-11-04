@@ -1,0 +1,4 @@
+executor,machineType,pue
+awsbatch,cloud,1.15
+slurm,compute cluster,1.67
+local,local,1

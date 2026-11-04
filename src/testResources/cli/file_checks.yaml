@@ -1,0 +1,19 @@
+trace_test.txt:
+  checksum: "ddb20b5cec659f054c5a104200e7edfe"
+  num_lines: 3
+
+summary_test.txt: 
+  checksum: "932404f57f1efcd1906209e52193c10e"
+  num_lines: 30
+
+report_test.html:
+  num_lines: 1803
+
+provenance_test.json: 
+  checksum: "e47410adcc0a01df046edcb8cdb631b4"
+  num_lines: 521
+
+provenance-hello.json:
+  checksum: "ad9478e6645df2550df005fa11b68a27"
+  num_lines: 2670
+

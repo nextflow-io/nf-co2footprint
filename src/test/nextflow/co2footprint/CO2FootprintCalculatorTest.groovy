@@ -1,0 +1,165 @@
+package nextflow.co2footprint
+
+import groovy.util.logging.Slf4j
+import nextflow.co2footprint.DataContainers.CIDataMatrix
+import nextflow.co2footprint.DataContainers.TDPDataMatrix
+import nextflow.co2footprint.Records.CO2EquivalencesRecord
+import nextflow.co2footprint.Records.CO2Record
+import nextflow.co2footprint.Records.CiRecordCollector
+import nextflow.exception.MissingValueException
+import nextflow.trace.TraceRecord
+import spock.lang.Shared
+import spock.lang.Specification
+
+import java.nio.file.Paths
+
+@Slf4j
+class CO2FootprintCalculatorTest extends Specification{
+
+    private static BigDecimal round( double value ) {
+        Math.round( value * 100 ) / 100
+    }
+
+    @Shared
+    TDPDataMatrix tdpDataMatrix = TDPDataMatrix.fromCsv(
+        Paths.get(this.class.getResource('/cpu_tdp_data/cpu_tdp_test.csv').toURI())
+    )
+
+    @Shared
+    CIDataMatrix ciDataMatrix = CIDataMatrix.fromCsv(
+            Paths.get(this.class.getResource('/ci_data/ci_yearly_2024_by_location.csv').toURI())
+    )
+
+    // ------ CO₂ Calculation ------
+
+    def "CO2e calculation for various configurations"() {
+        given:
+        def traceRecord = new TraceRecord()
+        traceRecord.task_id = '1'
+        traceRecord.realtime = (1 as Long) * (3600000 as Long)
+        traceRecord.cpus = 2
+        traceRecord.cpu_model = cpuModel
+        traceRecord.'%cpu' = 100.0
+        traceRecord.memory = (7 as Long) * (1000**3 as Long)
+
+        CO2FootprintConfig config = new CO2FootprintConfig(configMap, tdpDataMatrix, ciDataMatrix, [:])
+        CO2FootprintCalculator co2FootprintComputer = new CO2FootprintCalculator(tdpDataMatrix, config)
+        CiRecordCollector timeCiRecordCollector = new CiRecordCollector(config)
+        CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(traceRecord, timeCiRecordCollector)
+
+        expect:
+        round(co2Record.store.energy_consumption*1000 as Double) == expectedEnergy
+        round(co2Record.store.CO2e as Double) == expectedCO2
+
+        where:
+        cpuModel           | configMap                                              || expectedEnergy   | expectedCO2
+        "Unknown model"    | [:]                                                    || 14.06            | 6.75
+        "AMD EPYC 7251"    | [:]                                                    || 10.11            | 4.85
+        "Unknown model"    | [pue: 1.4]                                             || 19.68            | 9.45
+        "Unknown model"    | [location: 'DE']                                       || 14.06            | 4.69
+        "Unknown model"    | [ci: 338.66]                                           || 14.06            | 4.76
+        "AMD EPYC 7251"    | [cpuPowerModel: {coreUsage -> 0.5 * coreUsage + 10.0}] || 23.11            | 11.09
+    }
+
+    // ------ Equivalences Calculation ------
+
+    def 'test CO2e equivalences calculation' () {
+        given:
+        CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, ciDataMatrix, [:])
+        CO2FootprintCalculator co2FootprintComputer = new CO2FootprintCalculator(tdpDataMatrix, config)
+        CO2EquivalencesRecord co2EquivalencesRecord = co2FootprintComputer.computeCO2footprintEquivalences(co2e)
+
+        expect:
+        co2EquivalencesRecord.getCarKilometers().round(4) ==  carKm
+        co2EquivalencesRecord.getTreeMonths().round(4) ==  treeMonths
+        co2EquivalencesRecord.getPlanePercent().round(7) ==  planePercent
+        co2EquivalencesRecord.getPlaneFlightsReadable() == planeFlights
+
+        where:
+        co2e                || carKm        || treeMonths       || planePercent || planeFlights
+        10**5 + 500.0       || 574.2857d    ||  109.5965d       || 201.000000d  || '2'
+        11.587399           || 6.62e-02d    ||  1.26e-02        || 2.317480E-2d || '0'
+    }
+
+    // ------ Test Missing/Null Value Handling ------
+    def "memory assignment logic covers all cases"() {
+        given:
+        // Prepare a TraceRecord with test parameters for each case
+        def traceRecord = new TraceRecord()
+        traceRecord.task_id = '1'
+        traceRecord.realtime = 3600000L
+        traceRecord.cpus = 1
+        traceRecord.cpu_model = "TestCPU"
+        traceRecord.'%cpu' = 100.0
+        traceRecord.memory = memory
+        traceRecord.peak_rss = peak_rss
+
+        // Create config and the CO2FootprintCalculator under test
+        CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, ciDataMatrix, [:])
+        CO2FootprintCalculator co2FootprintComputer = new CO2FootprintCalculator(tdpDataMatrix, config)
+        CiRecordCollector timeCiRecordCollector = new CiRecordCollector(config)
+
+        when:
+        // Try to compute the CO2 footprint, catching any exceptions
+        CO2Record result = null
+        Exception caught = null
+        try {
+            result = co2FootprintComputer.computeTaskCO2footprint(traceRecord, timeCiRecordCollector)
+        } catch (MissingValueException e) {
+            caught = e
+        }
+
+        then:
+        // If we expect an exception, assert it was thrown
+        if (caught) {
+                assert expectException
+        } else {
+            // Otherwise, check that the computed memory matches the expected value (in GB)
+            assert result.store.memory == expectedMemory
+        }
+
+        where:
+        memory             | peak_rss           | expectException | expectedMemory
+        8L*1000**3         | 4L*1000**3         | false           | 8L              // requested memory used
+        null               | 4L*1000**3         | false           | 4L              // peak_rss used (requested null)
+        4L*1000**3         | null               | false           | 4L              // requested used (required null)
+        null               | null               | true            | null            // throws error (both null)
+    }
+    
+    def "Determination of number of CPUs"() {
+        given:
+        def traceRecord = new TraceRecord()
+        traceRecord.task_id = '1'
+        traceRecord.realtime = (1 as Long) * (3600000 as Long)
+        traceRecord.cpus = cpus
+        traceRecord.cpu_model = "Some model"
+        traceRecord.'%cpu' = pCpu
+        traceRecord.memory = (7 as Long) * (1000**3 as Long)
+
+        CO2FootprintConfig config = new CO2FootprintConfig([:], tdpDataMatrix, ciDataMatrix, [:])
+        CO2FootprintCalculator co2FootprintComputer = new CO2FootprintCalculator(tdpDataMatrix, config)
+        CiRecordCollector timeCiRecordCollector = new CiRecordCollector(config)
+        CO2Record co2Record = co2FootprintComputer.computeTaskCO2footprint(traceRecord, timeCiRecordCollector)
+
+        expect:
+        co2Record.store.cpus == expectedCpus
+
+        where:
+        pCpu    | cpus | expectedCpus
+        100.0   | 1    | 1
+        100.0   | 2    | 2
+        150.0   | 1    | 2
+    }
+
+    def "getTraceOrDefault preserves zero values"() {
+        given:
+        def traceRecord = new TraceRecord()
+        traceRecord.realtime = 0L
+        traceRecord.'%cpu' = 0.0d
+
+        expect:
+        CO2FootprintCalculator.getTraceOrDefault(traceRecord, null, 'realtime', 123L, 'missing-realtime') == 0L
+        CO2FootprintCalculator.getTraceOrDefault(traceRecord, null, '%cpu', 100.0d, 'missing-%cpu') == 0.0d
+    }
+
+}
