@@ -5,33 +5,54 @@ authors:
   - family-names: Carl
     given-names: Josua
     orcid: https://orcid.org/0009-0001-7336-9808
+    alias: josuacarl
+    affiliation: "QBiC, University of Tübingen"
   - family-names: Volkmann
     given-names: Nadja
     orcid: https://orcid.org/0009-0003-6788-7531
+    alias: nadnein
+    affiliation: "QBiC, University of Tübingen"
   - family-names: Mir-Pedrol
     given-names: Júlia
     orcid: https://orcid.org/0000-0001-6104-9260
+    alias: mirpedrol
   - family-names: Ewels
     given-names: Philip
     orcid: https://orcid.org/0000-0003-4101-2502
+    alias: ewels
+    affiliation: "Seqera"
   - family-names: Lannelongue
     given-names: Loïc
     orcid: https://orcid.org/0000-0002-9135-1345
+    alias: Llannelongue
+    affiliation: "University of Cambridge"
   - family-names: Nahnsen
     given-names: Sven
     orcid: https://orcid.org/0000-0002-4375-0691
+    affiliation: "QBiC, University of Tübingen"
   - family-names: Krakau
     given-names: Sabrina
     orcid: https://orcid.org/0000-0003-0603-7907
+    alias: skrakau
+    affiliation: "QBiC, University of Tübingen"
 title: "nf-co2footprint - A nextflow plugin to track CO2e emissions"
 version: 1.4.1
 identifiers:
   - type: doi
     value: 10.5281/zenodo.14622304
+    description: "Concept DOI, always resolves to the latest version"
 doi: 10.5281/zenodo.14622304
-date-released: 2026-03-06
+date-released: 2026-10-14
+commit: cb563e227503fe82564f5e6ec0920a1e6f332f6c
+url: "https://nextflow-io.github.io/nf-co2footprint"
 repository-code: "https://github.com/nextflow-io/nf-co2footprint/"
+repository-artifact: "https://registry.nextflow.io/plugins/nf-co2footprint"
+contact:
+  - family-names: Krakau
+    given-names: Sabrina
+    orcid: https://orcid.org/0000-0003-0603-7907
 license: "Apache-2.0"
+license-url: "https://github.com/nextflow-io/nf-co2footprint/blob/master/LICENSE"
 keywords:
   - "co2footprint"
   - "co2 footprint"
@@ -39,6 +60,13 @@ keywords:
   - "carbon emissions"
   - "carbon footprint"
   - "nextflow"
-  - "workflow"
+  - "workflows"
   - "pipeline"
   - "sustainability"
+  - "green computing"
+  - "green algorithms"
+  - "energy consumption"
+  - "energy efficiency"
+  - "bioinformatics"
+  - "linux"
+  - "macos"
