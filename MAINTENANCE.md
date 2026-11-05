@@ -6,6 +6,23 @@
 - Wait for at least one approval by a maintainer to merge
 - Merge into `dev`
 
+## Branch protection on `master`
+`master` takes PRs only from `dev` (releases). The `base-branch-guard` workflow
+(`.github/workflows/base-branch-guard.yml`) is a required check in the branch protection rule
+and fails every other head branch. Forks are exempt: the check exits early when the base
+repository is itself a fork, so a fork's own `master` is unconstrained. It is an accident
+guard, not a security boundary: it runs from the PR's own commit, so it can be edited away by
+a PR; it only stops the mistake of targeting `master` directly.
+
+- To retarget a PR: `gh pr edit <number> --base dev` (or **Edit** next to the PR title). `master`
+  and `dev` have diverged, so re-check the diff afterwards.
+- **Override:** a repository admin merges anyway; the bypass is recorded in the branch
+  protection audit log. A maintainer with only `maintain` role cannot bypass.
+- Enabling the check requires admin rights and the workflow file to be on `master` first, so it
+  is switched on after the next `dev` → `master` release. In the repository settings:
+  **Branches → `master` → Require status checks to pass**, add `base-branch-guard`, and pick
+  **GitHub Actions** as the expected source.
+
 ## Release
 - Follow [Nextflow's plugin guidelines](https://docs.seqera.io/nextflow/plugins/developing-plugins)
 - Follow the [Nextflow Gradle plugin guide](https://nextflow.io/docs/latest/guides/gradle-plugin.html#publishing-a-plugin)

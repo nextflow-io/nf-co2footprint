@@ -1,0 +1,61 @@
+name: base branch guard
+# Required check on master: only PRs from the same repo's dev branch may merge.
+# Runs in forks too but exits early there, so a fork's own master stays unconstrained.
+# An accident guard, not a security boundary - a PR can edit this file. See MAINTENANCE.md.
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+permissions:
+  contents: read
+
+jobs:
+  base-branch-guard:
+    name: base-branch-guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    env:
+      # Branch names are attacker-controlled, so they go through env, never inline into run.
+      BASE: ${{ github.event.pull_request.base.ref }}
+      HEAD_REF: ${{ github.event.pull_request.head.ref }}
+      HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+      REPO: ${{ github.repository }}
+      IS_FORK: ${{ github.event.pull_request.base.repo.fork }}
+      PR: ${{ github.event.pull_request.number }}
+    steps:
+      - name: Require dev as head branch for master
+        run: |
+          set -euo pipefail
+          # Forks are exempt: contributors use their fork's master however they like.
+          if [ "$IS_FORK" = true ]; then
+            echo "Base repository $REPO is a fork. Policy applies to upstream only."
+            exit 0
+          fi
+          if [ "$BASE" != master ]; then
+            echo "Base branch is '$BASE', not master. Nothing to enforce."
+            exit 0
+          fi
+          # Same repository and branch dev. head.repo is null for a deleted fork;
+          # the :- guard keeps `set -u` from tripping on it.
+          if [ "${HEAD_REPO:-}" = "$REPO" ] && [ "$HEAD_REF" = dev ]; then
+            echo "Release PR from '$REPO:dev'. Allowed."
+            exit 0
+          fi
+          cat <<MSG
+          ## master only accepts pull requests from dev
+
+          This PR is from \`${HEAD_REPO:-unknown}:${HEAD_REF}\` into \`master\`. \`master\` is the release
+          branch and is updated only by \`dev\` (a release PR). Work happens on \`dev\`; this PR is
+          probably meant to target \`dev\`.
+
+          Retarget it (keeps the conversation and reviews):
+
+              gh pr edit $PR --base dev
+
+          or use **Edit** next to the PR title and change the base branch. \`master\` and \`dev\`
+          have diverged, so re-check the diff after retargeting.
+
+          A hotfix that cannot wait for \`dev\`: a repository admin can merge anyway; the bypass is
+          recorded in the branch protection audit log.
+          MSG
+          exit 1

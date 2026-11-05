@@ -24,6 +24,13 @@ Commits should be structured like this: `<Type>: <Message>`, with the following 
 
 When submitting a pull-request (PR), please sign-off the [DCO](https://developercertificate.org/) to certify that you are the author of the contribution and you adhere to [Nextflow's open source license](https://github.com/nextflow-io/nextflow/blob/master/COPYING) by adding a `Signed-off-by` line to the contribution commit message. See [here](https://github.com/apps/dco) for more details.
 
+## 🎯 Target `dev`, not `master`
+
+`master` is the release branch. All PRs go against `dev`; a `master` PR is only accepted from
+`dev` itself (a release), and a `base-branch-guard` check enforces this. Retarget a mistaken PR
+with `gh pr edit <number> --base dev`, or use **Edit** next to the PR title. Maintainers can
+still override for a hotfix.
+
 ## 🚩 Github's issue tracking
 
 - When working on an issue, please assign yourself
