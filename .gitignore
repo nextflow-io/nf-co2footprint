@@ -22,6 +22,7 @@ site
 
 # Ignore Python virtual environment
 venv/
+.venv/
 
 # Ignore gradle.properties which may contain GitHub Tokens
 gradle.properties
