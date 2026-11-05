@@ -62,10 +62,16 @@ make test
 
 ## 📄 Change and preview the docs
 
-The docs are generated using [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/). To change the docs, edit the files in the [docs/](https://github.com/nextflow-io/nf-co2footprint/tree/master/docs) folder and run the following command to generate the docs (after installing mkdocs via `pip install mkdocs-material`):
+The docs are generated using [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/). To change the docs, edit the files in the [docs/](https://github.com/nextflow-io/nf-co2footprint/tree/master/docs) folder and run the following command to generate the docs (requires [`uv`](https://docs.astral.sh/uv/)):
 
 ```bash
-mkdocs serve
+make docs-serve
 ```
 
 To preview the docs, open the URL provided by mkdocs in your browser.
+
+The tooling for the docs is a [uv](https://docs.astral.sh/uv/) project in `docs/`. `make docs-serve` installs the exact versions pinned in `docs/uv.lock` before starting the server, and `make docs-build` builds the site locally, failing on warnings. To change a dependency version, edit `docs/pyproject.toml` and re-lock:
+
+```bash
+uv lock --project docs
+```

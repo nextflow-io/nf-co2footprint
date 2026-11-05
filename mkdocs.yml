@@ -5,6 +5,11 @@ repo_name: nextflow-io/nf-co2footprint
 repo_url: https://github.com/nextflow-io/nf-co2footprint
 edit_uri: edit/dev/docs/
 
+# uv project files live in docs/ but are not site content.
+exclude_docs: |
+  pyproject.toml
+  uv.lock
+
 nav:
   - Home:
       - index.md
