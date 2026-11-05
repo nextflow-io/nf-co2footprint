@@ -5,6 +5,7 @@
 
 ## Misc:
 - Removed outdated "Unix time" descriptor in provenance file
+- Added `base-branch-guard` check so `master` only accepts PRs from `dev`
 
 # 1.4.1
 ## Features:
