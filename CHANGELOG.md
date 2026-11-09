@@ -6,6 +6,7 @@
 
 ## Misc:
 - Removed outdated "Unix time" descriptor in provenance file
+- Moved from versioned to fixed SHA actions and fixed mkdocs resolution
 
 # 1.4.1
 ## Features:

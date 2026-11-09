@@ -1,0 +1,20 @@
+# Docs site tooling only. The plugin itself is built by Gradle, not this file.
+[project]
+name = "nf-co2footprint-docs"
+version = "0.0.0"
+requires-python = ">=3.11"
+dependencies = []
+
+[dependency-groups]
+dev = [
+  "mkdocs-material==9.8.0",
+  "pymdown-extensions==12.3",
+  "pillow==13.0.0",
+  "cairosvg==2.9.1",
+]
+
+[tool.uv]
+# Not a distributable package, just a dependency set.
+package = false
+# Floor for contributors; uv.lock is what actually pins versions.
+required-version = ">=0.11"

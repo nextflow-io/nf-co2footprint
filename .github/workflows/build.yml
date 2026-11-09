@@ -23,13 +23,13 @@ jobs:
         run: env | sort
 
       - name: Checkout PR branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 1
           submodules: true
 
       - name: Setup Java ${{ matrix.java_version }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
         with:
           java-version: ${{matrix.java_version}}
           architecture: x64
@@ -44,7 +44,7 @@ jobs:
 
       - name: Upload test and check reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: gradle-check-reports_${{ matrix.java_version }}
           path: |
@@ -53,18 +53,19 @@ jobs:
 
       - name: Upload failed file comparisons
         if: ${{ steps.gradle.outputs.exit_code }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: fails_${{ matrix.java_version }}
           path: |
             **/build/resources/test/**/failed
 
+      # escape: image is a floating :latest tag, this SHA only pins action.yml metadata
       - name: Summarize tests results
         if: always()
-        uses: jeantessier/test-summary-action@v1
+        uses: jeantessier/test-summary-action@f20da2d50ba17d6711664c4e720ae70b30ade6c2 # v1.0.12
 
       - name: Fail if Gradle check failed
         if: ${{ steps.gradle.outputs.exit_code }}
-        run: |
+        run: |-
           echo "Gradle check failed with exit code `${{ steps.gradle.outputs.exit_code }}`. See GitHub Artifacts for a comprehensive report."
           exit ${{ steps.gradle.outputs.exit_code }}
