@@ -1,7 +1,7 @@
 # nf-co2footprint plugin
 A Nextflow plugin to estimate the CO₂ footprint of pipeline runs.
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.16363577.svg)](https://doi.org/10.5281/zenodo.16363577)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.14622304.svg)](https://doi.org/10.5281/zenodo.14622304)
 [![Get help on Slack](https://img.shields.io/badge/slack-nextflow%20%23nf--co2footprint-4A154B?labelColor=000000&logo=slack)](https://nextflow.slack.com/channels/nf-co2footprint)
 
 
@@ -79,7 +79,7 @@ We additionally thank the following people for their extensive assistance in the
 
 ### How to cite:
 ```text
-J. Carl, N. Volkmann, J. Mir-Pedrol, P. Ewels, S. Nahnsen, S. Krakau nextflow-io/nf-co2footprint v1.4.1. (Mar., 2026). nextflow-io. Available: https://github.com/nextflow-io/nf-co2footprint
+J. Carl, N. Volkmann, J. Mir-Pedrol, P. Ewels, L. Lannelongue, S. Nahnsen, S. Krakau nextflow-io/nf-co2footprint v1.4.1. (Oct., 2026). nextflow-io. Available: https://github.com/nextflow-io/nf-co2footprint
 ```
 ```Bibtex
 @software{nf_co2footprint_plugin,
@@ -87,14 +87,15 @@ J. Carl, N. Volkmann, J. Mir-Pedrol, P. Ewels, S. Nahnsen, S. Krakau nextflow-io
                  Nadja Volkmann and
                  Júlia Mir-Pedrol and
                  Phil Ewels and
+                 Loïc Lannelongue and
                  Sven Nahnsen and
-                 Sabrina Krakau}
-    title   =   {nextflow-io/nf-co2footprint - A Nextflow plugin to estimate the CO2e footprint of pipeline runs}
-    month   =   {March}
-    year    =   {2026}
-    publisher = {Nextflow-io}
-    version =   {v1.4.1}
-    url     =   {https://doi.org/10.5281/zenodo.14622304}
+                 Sabrina Krakau},
+    title   =   {nextflow-io/nf-co2footprint - A Nextflow plugin to estimate the CO2e footprint of pipeline runs},
+    month   =   {October},
+    year    =   {2026},
+    publisher = {Nextflow-io},
+    version =   {v1.4.1},
+    url     =   {https://doi.org/10.5281/zenodo.14622304},
     doi     =   {10.5281/zenodo.14622304}
 }
 ```
