@@ -24,6 +24,7 @@
 - Improved file checks by automating some exclusions and replacements through regexes
 - Added maintenance manual
 - Updated demo pipeline integration test
+- Improved automation for snapshot comparison
 
 # 1.4.0
 ## Bug Fixes:
