@@ -156,14 +156,30 @@ class CO2FootprintPlugin extends BasePlugin implements PluginAbstractExec {
      * @param args Ordered list of String arguments
      * @return Exit code (0 = OK)
      */
-    @Override
     int exec(String cmd, List<String> args) {
-        // Change logging so duplicates are omitted
-        CO2FootprintFactory.adaptLogging()
-
         Map<String, Object> parsedArgs = ArgsParser.parse(args)
         return switch (cmd) {
             case 'postRun' -> CO2FootprintCLI.postRun(parsedArgs)
+            default -> {
+                System.err.println("Invalid command: ${cmd}")
+                1
+            }
+        }
+    }
+
+    /**
+     * Function that is executed when `nextflow plugin nf-co2footprint:<CMD> --arg arg1 ...` is called.
+     *
+     * @param pluginId Should be "nf-co2footprint"
+     * @param cmd Given command as a String
+     * @param args Ordered list of String arguments
+     * @param config A parsed Nextflow config as a Map
+     * @return Exit code (0 = OK)
+     */
+    int exec(String pluginId, String cmd, List<String> args, Map config) {
+        Map<String, Object> parsedArgs = ArgsParser.parse(args)
+        return switch (cmd) {
+            case 'postRun' -> CO2FootprintCLI.postRun(parsedArgs, config)
             default -> {
                 System.err.println("Invalid command: ${cmd}")
                 1
