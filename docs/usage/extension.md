@@ -28,12 +28,10 @@ Both modes accept the following arguments:
 The command line functionality utilizes Nextflow configs, like the regular plugin (see [parameters.md](./parameters.md)).
 It is recommended to set the output paths and a fixed carbon intensity value (`ci`) in the config.
 ```bash
-nextflow plugin nf-co2footprint:postRun [--tracePath <path_to_execution_trace.txt> | --provenancePath <path_to_provenance_file.json>] [--config <path_to_nextflow.config>] [--delimiter <delimiter>]
+nextflow [--config <path/to/nextflow.config>] plugin nf-co2footprint:postRun [--tracePath <path_to_execution_trace.txt> | --provenancePath <path_to_provenance_file.json>] [--delimiter <delimiter>]
 ```
 
-In addition to the [shared arguments](#shared-arguments):
-
-- **--config**: Path to a Nextflow config file (output paths, carbon intensity, etc.).
+The config path is applied in the [standard Nextflow hierarchy](https://docs.seqera.io/nextflow/config/#configuration-files).
 
 #### Within a workflow through functions
 The interaction follows the [Nextflow extension function schema](https://nextflow.io/docs/latest/plugins/developing-plugins.html#functions).

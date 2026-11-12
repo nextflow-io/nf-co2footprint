@@ -7,6 +7,7 @@
 ## Misc:
 - Removed outdated "Unix time" descriptor in provenance file
 - Expanded metadata in CITATION.cff
+- Adapted to plugin API changes in Nextflow 26.10.X
 
 # 1.4.1
 ## Features:

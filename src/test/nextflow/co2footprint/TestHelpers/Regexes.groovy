@@ -3,7 +3,7 @@ package nextflow.co2footprint.TestHelpers
 enum Regexes {
     final static String readAbleDateTimeReport = /"type":"DateTime","unit":"ms","scale":""\},"readable":("\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.?\d*")}/
     
-    final static String traceConfigPostRun = '<dd><pre class="nfcommand"><code>nextflow plugin nf-co2footprint:postRun --tracePath (.+?) --config (.+?)</code></pre></dd>'
+    final static String traceConfigPostRun = '<dd><pre class="nfcommand"><code>nextflow plugin nf-co2footprint:postRun --tracePath (.+?) --delimiter (.+?)</code></pre></dd>'
 
     final static String summaryProvenanceFile = 'provenanceFile: (.+)$'
     final static String summaryTraceFile = 'traceFile: (.+)$'

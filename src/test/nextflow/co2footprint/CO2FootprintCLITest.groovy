@@ -17,9 +17,17 @@ class CO2FootprintCLITest extends  Specification {
     private File outputDirectory = outPath.toFile()
 
     private Path tracePath =  outPath.resolve('trace_test.txt')
-    private Path summaryPath = outPath.resolve('summary_test.txt')
     private Path reportPath = outPath.resolve('report_test.html')
     private Path provenancePath = outPath.resolve('provenance_test.json')
+    
+    private Map<String, String> config = [ 
+        co2footprint: [
+            trace: [file: 'build/classes/groovy/test/nextflow/co2footprint/cli/out/trace_test.txt'],
+            summary: [file: 'build/classes/groovy/test/nextflow/co2footprint/cli/out/summary_test.txt'],
+            report: [file: 'build/classes/groovy/test/nextflow/co2footprint/cli/out/report_test.html'],
+            provenance: [file: 'build/classes/groovy/test/nextflow/co2footprint/cli/out/provenance_test.json'],
+        ]
+    ]
 
     def cleanup() {
         outputDirectory.deleteDir()
@@ -28,14 +36,14 @@ class CO2FootprintCLITest extends  Specification {
     def 'test CLI post run'() {
         when:
         String tracePath2 = Path.of(this.class.getResource('/cli/execution-trace-raw.tsv').toURI()).complete().toString()
-        String configPath = Path.of(this.class.getResource('/cli/test.config').toURI()).complete().toString()
+        String delimiter = '\t'
         Map<String, Object> parsedArgs = [
                 tracePath: tracePath2,
-                config: configPath,
-                delimiter: '\t'
+                delimiter: delimiter
         ]
+        
 
-        int exitCode = CO2FootprintCLI.postRun(parsedArgs)
+        int exitCode = CO2FootprintCLI.postRun(parsedArgs, config)
 
         then:
         exitCode == 0
@@ -44,7 +52,7 @@ class CO2FootprintCLITest extends  Specification {
                 'trace': [path: tracePath],
                 'report': [
                     path: reportPath,
-                    replacements: [ (Regexes.traceConfigPostRun): [tracePath2, configPath] ],
+                    replacements: [ (Regexes.traceConfigPostRun): [tracePath2, delimiter] ],
                     exclusions: [ Regexes.readAbleDateTimeReport ]
                 ],
                 'provenance': [path: provenancePath],
@@ -55,14 +63,13 @@ class CO2FootprintCLITest extends  Specification {
     def 'test CLI post other delimiter'() {
         when:
         String tracePath2 = Path.of(this.class.getResource('/cli/execution-trace-raw.tsv').toURI()).complete().toString()
-        String configPath = Path.of(this.class.getResource('/cli/test.config').toURI()).complete().toString()
+        String delimiter = '\t'
         Map<String, Object> parsedArgs = [
                 tracePath: tracePath2,
-                config: configPath,
-                delimiter: '\t'
+                delimiter: delimiter
         ]
 
-        int exitCode = CO2FootprintCLI.postRun(parsedArgs)
+        int exitCode = CO2FootprintCLI.postRun(parsedArgs, config)
 
         then:
         exitCode == 0
@@ -71,7 +78,7 @@ class CO2FootprintCLITest extends  Specification {
             'trace': [path: tracePath],
             'report': [
                 path: reportPath,
-                replacements: [ (Regexes.traceConfigPostRun): [tracePath2, configPath] ],
+                replacements: [ (Regexes.traceConfigPostRun): [tracePath2, delimiter] ],
                 exclusions: [ Regexes.readAbleDateTimeReport ]
             ],
             'provenance': [path: provenancePath],
