@@ -10,6 +10,7 @@ The following table explains since which plugin version a new minimum Nextflow v
 
 | nf-co2footprint version | Nextflow version |
 |-------------------------|------------------|
+| >=1.4.2                 | >= 26.10.0       |
 | >=1.3.0                 | >= 26.04.0       |
 | >=1.0.0-rc.1            | >= 24.10.6       |
 | >=1.0.0-rc              | >= 24.10.5       |

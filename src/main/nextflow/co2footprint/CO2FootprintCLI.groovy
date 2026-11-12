@@ -87,7 +87,6 @@ class CO2FootprintCLI {
      * Define a CO2 footprint configuration if config file is provided.
      *
      * @param config Run config as a Map, optional
-     * @param configPath Path to the config file, optional
      * @return A CO2FootprintObserver instance with the given config or default values
      */
     static CO2FootprintConfig defineConfig(Map config=null) {        
