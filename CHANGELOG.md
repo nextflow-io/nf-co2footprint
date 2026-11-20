@@ -7,6 +7,7 @@
 ## Misc:
 - Removed outdated "Unix time" descriptor in provenance file
 - Expanded metadata in CITATION.cff
+- Pinned GitHub Actions to commit SHAs in CI workflows
 
 # 1.4.1
 ## Features:
